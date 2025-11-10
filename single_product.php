@@ -29,6 +29,7 @@ if (!$product) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -224,7 +225,7 @@ if (!$product) {
             font-weight: 600;
         }
 
-        .breadcrumb-item + .breadcrumb-item::before {
+        .breadcrumb-item+.breadcrumb-item::before {
             content: ">";
             color: #cbd5e0;
         }
@@ -257,9 +258,17 @@ if (!$product) {
             transition: all 0.3s ease;
         }
 
-        .share-btn.facebook { background: #1877f2; }
-        .share-btn.twitter { background: #1da1f2; }
-        .share-btn.whatsapp { background: #25d366; }
+        .share-btn.facebook {
+            background: #1877f2;
+        }
+
+        .share-btn.twitter {
+            background: #1da1f2;
+        }
+
+        .share-btn.whatsapp {
+            background: #25d366;
+        }
 
         .share-btn:hover {
             transform: scale(1.1);
@@ -293,6 +302,7 @@ if (!$product) {
         }
     </style>
 </head>
+
 <body>
     <header class="main-header">
         <div class="container">
@@ -357,11 +367,11 @@ if (!$product) {
             <div class="row g-0">
                 <div class="col-lg-6">
                     <img src=""
-                         alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                         class="product-image"
-                         data-product-id="<?php echo $product['product_id']; ?>"
-                         data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                         data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+                        alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                        class="product-image"
+                        data-product-id="<?php echo $product['product_id']; ?>"
+                        data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
+                        data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
                 </div>
                 <div class="col-lg-6">
                     <div class="product-details">
@@ -414,7 +424,7 @@ if (!$product) {
                                     $keyword = trim($keyword);
                                     if (!empty($keyword)):
                                 ?>
-                                    <span class="keyword-tag"><?php echo htmlspecialchars($keyword); ?></span>
+                                        <span class="keyword-tag"><?php echo htmlspecialchars($keyword); ?></span>
                                 <?php
                                     endif;
                                 endforeach;
@@ -452,38 +462,79 @@ if (!$product) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
         function addToCart(productId) {
-            // Add visual feedback
+            // Show loading state
             const btn = event.target.closest('.add-to-cart-btn');
             const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            btn.disabled = true;
 
-            btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', 1);
 
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
-            }, 1500);
-
-            // Here you would normally send AJAX request to add to cart
-            console.log('Add to cart functionality - Product ID: ' + productId);
-
-            // Update cart count
-            updateCartCount();
+            fetch('actions/add_to_cart_action.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        btn.classList.remove('btn-primary');
+                        btn.classList.add('btn-success');
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.classList.remove('btn-success');
+                            btn.classList.add('btn-primary');
+                            btn.disabled = false;
+                        }, 2000);
+                        updateCartBadge(data.cart_count);
+                        showNotification('Product added to cart successfully!', 'success');
+                    } else {
+                        btn.innerHTML = originalText;
+                        btn.disabled = false;
+                        showNotification(data.message || 'Failed to add product to cart', 'error');
+                    }
+                })
+                .catch(error => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    showNotification('An error occurred. Please try again.', 'error');
+                });
         }
 
         function showCart() {
-            alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+            window.location.href = 'cart.php';
         }
 
-        function updateCartCount() {
-            // This would normally get the actual cart count from storage/database
-            const cartCountElement = document.getElementById('cartCount');
-            let currentCount = parseInt(cartCountElement.textContent);
-            cartCountElement.textContent = currentCount + 1;
+        // Update cart badge (shared with cart.js)
+        function updateCartBadge(count) {
+            const cartBadge = document.getElementById('cartCount');
+            if (cartBadge) {
+                if (count > 0) {
+                    cartBadge.textContent = count;
+                    cartBadge.style.display = 'flex';
+                } else {
+                    cartBadge.style.display = 'none';
+                }
+            }
         }
 
-        function addToWishlist(productId) {
-            alert('Add to wishlist functionality - Product ID: ' + productId);
+        // Show notification (simple toast)
+        function showNotification(message, type = 'info') {
+            const existing = document.querySelector('.notification-toast');
+            if (existing) existing.remove();
+            const notification = document.createElement('div');
+            notification.className = `notification-toast alert alert-${type} position-fixed`;
+            notification.style.cssText = `
+        top: 100px;
+        right: 20px;
+        z-index: 9999;
+        min-width: 300px;
+    `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            setTimeout(() => notification.remove(), 2000);
         }
 
         function shareProduct(platform) {
@@ -492,7 +543,7 @@ if (!$product) {
 
             let shareUrl = '';
 
-            switch(platform) {
+            switch (platform) {
                 case 'facebook':
                     shareUrl = `https://www.facebook.com/sharer/sharer.php?u=${url}`;
                     break;
@@ -554,4 +605,5 @@ if (!$product) {
         });
     </script>
 </body>
+
 </html>

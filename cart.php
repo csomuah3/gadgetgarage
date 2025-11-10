@@ -1,0 +1,481 @@
+<?php
+try {
+    require_once(__DIR__ . '/settings/core.php');
+    require_once(__DIR__ . '/controllers/cart_controller.php');
+    require_once(__DIR__ . '/helpers/image_helper.php');
+
+    $is_logged_in = check_login();
+    $customer_id = $is_logged_in ? $_SESSION['customer_id'] : null;
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+
+    $cart_items = get_user_cart_ctr($customer_id, $ip_address);
+    $cart_total = get_cart_total_ctr($customer_id, $ip_address);
+    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+
+    $categories = [];
+    $brands = [];
+
+    try {
+        require_once(__DIR__ . '/controllers/category_controller.php');
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        error_log("Failed to load categories: " . $e->getMessage());
+    }
+
+    try {
+        require_once(__DIR__ . '/controllers/brand_controller.php');
+        $brands = get_all_brands_ctr();
+    } catch (Exception $e) {
+        error_log("Failed to load brands: " . $e->getMessage());
+    }
+} catch (Exception $e) {
+    die("Critical error: " . $e->getMessage());
+}
+?>
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Shopping Cart - FlavorHub</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #f8fafc;
+            color: #1a202c;
+        }
+
+        .main-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
+            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 12px 0;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #8b5fbf;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .logo .co {
+            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .cart-header {
+            background: linear-gradient(135deg, #8b5fbf 0%, #f093fb 100%);
+            color: white;
+            padding: 3rem 0;
+            margin-bottom: 2rem;
+        }
+
+        .cart-item {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cart-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.15);
+        }
+
+        .product-image {
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            border: none;
+            border-radius: 25px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #7c4dff, #e91e63);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.3);
+        }
+
+        .btn-outline-danger {
+            border: 2px solid #dc3545;
+            color: #dc3545;
+            border-radius: 20px;
+            padding: 8px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-danger:hover {
+            background: #dc3545;
+            color: white;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-btn {
+            background: #8b5fbf;
+            border: none;
+            color: white;
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: #7c4dff;
+            transform: scale(1.1);
+        }
+
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            padding: 5px;
+        }
+
+        .cart-summary {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            padding: 2rem;
+            position: sticky;
+            top: 120px;
+        }
+
+        .empty-cart {
+            text-align: center;
+            padding: 4rem 2rem;
+        }
+
+        .empty-cart-icon {
+            font-size: 4rem;
+            color: #cbd5e0;
+            margin-bottom: 1rem;
+        }
+
+        .navbar-nav .nav-link {
+            color: #4a5568 !important;
+            font-weight: 500;
+            transition: color 0.3s ease;
+            position: relative;
+        }
+
+        .navbar-nav .nav-link:hover {
+            color: #8b5fbf !important;
+        }
+
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 1rem 0;
+        }
+
+        .dropdown-item {
+            padding: 0.75rem 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f8f9ff;
+            color: #8b5fbf;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            font-size: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        @media (max-width: 768px) {
+            .product-image {
+                width: 80px;
+                height: 80px;
+            }
+
+            .cart-header {
+                padding: 2rem 0;
+            }
+
+            .cart-item {
+                margin-bottom: 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="main-header">
+        <div class="container">
+            <nav class="navbar navbar-expand-lg navbar-light">
+                <a class="logo navbar-brand" href="index.php">
+                    Flavor<span class="co">Hub</span>
+                </a>
+
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="index.php">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="all_product.php">All Products</a>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Categories
+                            </a>
+                            <ul class="dropdown-menu">
+                                <?php if (!empty($categories)): ?>
+                                    <?php foreach ($categories as $category): ?>
+                                        <li><a class="dropdown-item" href="all_product.php?category=<?php echo $category['cat_id']; ?>"><?php echo htmlspecialchars($category['cat_name']); ?></a></li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                Brands
+                            </a>
+                            <ul class="dropdown-menu">
+                                <?php if (!empty($brands)): ?>
+                                    <?php foreach ($brands as $brand): ?>
+                                        <li><a class="dropdown-item" href="all_product.php?brand=<?php echo $brand['brand_id']; ?>"><?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link position-relative" href="cart.php">
+                                <i class="fas fa-shopping-cart"></i>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php endif; ?>
+                            </a>
+                        </li>
+                        <?php if ($is_logged_in): ?>
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                                    <i class="fas fa-user"></i> Account
+                                </a>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" href="login/customer_profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="login/logout.php">Logout</a></li>
+                                </ul>
+                            </li>
+                        <?php else: ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="login/user_login.php">Login</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="login/user_register.php">Register</a>
+                            </li>
+                        <?php endif; ?>
+                    </ul>
+                </div>
+            </nav>
+        </div>
+    </header>
+
+    <div class="cart-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-8">
+                    <h1 class="mb-2">
+                        <i class="fas fa-shopping-cart me-3"></i>
+                        Your Shopping Cart
+                    </h1>
+                    <p class="mb-0 fs-5">
+                        <?php if ($cart_count > 0): ?>
+                            You have <?php echo $cart_count; ?> item<?php echo $cart_count > 1 ? 's' : ''; ?> in your cart
+                        <?php else: ?>
+                            Your cart is currently empty
+                        <?php endif; ?>
+                    </p>
+                </div>
+                <div class="col-md-4 text-md-end">
+                    <div class="fs-3 fw-bold">
+                        $<?php echo number_format($cart_total, 2); ?>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container py-4">
+        <?php if (empty($cart_items)): ?>
+            <div class="empty-cart">
+                <div class="empty-cart-icon">
+                    <i class="fas fa-shopping-cart"></i>
+                </div>
+                <h3 class="text-muted mb-3">Your cart is empty</h3>
+                <p class="text-muted mb-4">Looks like you haven't added any items to your cart yet.</p>
+                <a href="all_product.php" class="btn btn-primary btn-lg">
+                    <i class="fas fa-shopping-bag me-2"></i>
+                    Start Shopping
+                </a>
+            </div>
+        <?php else: ?>
+            <div class="row">
+                <div class="col-lg-8">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h4 class="mb-0">Cart Items</h4>
+                        <button type="button" class="btn btn-outline-danger" onclick="emptyCart()">
+                            <i class="fas fa-trash me-2"></i>
+                            Empty Cart
+                        </button>
+                    </div>
+
+                    <div id="cartItemsContainer">
+                        <?php foreach ($cart_items as $item): ?>
+                            <div class="cart-item" data-product-id="<?php echo $item['p_id']; ?>">
+                                <div class="row g-0 align-items-center p-3">
+                                    <div class="col-auto">
+                                        <img src="<?php echo get_product_image_url($item['product_image']); ?>"
+                                             alt="<?php echo htmlspecialchars($item['product_title']); ?>"
+                                             class="product-image">
+                                    </div>
+                                    <div class="col ms-3">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <h5 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h5>
+                                                <p class="text-muted mb-2 small"><?php echo htmlspecialchars($item['product_desc'] ?? ''); ?></p>
+                                                <div class="fw-bold text-primary fs-5">
+                                                    $<?php echo number_format($item['product_price'], 2); ?>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 text-center">
+                                                <div class="quantity-control">
+                                                    <button type="button" class="quantity-btn" onclick="updateQuantity(<?php echo $item['p_id']; ?>, <?php echo $item['qty'] - 1; ?>)">
+                                                        <i class="fas fa-minus"></i>
+                                                    </button>
+                                                    <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
+                                                           min="1" max="99" id="qty-<?php echo $item['p_id']; ?>"
+                                                           onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value)">
+                                                    <button type="button" class="quantity-btn" onclick="updateQuantity(<?php echo $item['p_id']; ?>, <?php echo $item['qty'] + 1; ?>)">
+                                                        <i class="fas fa-plus"></i>
+                                                    </button>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-3 text-end">
+                                                <div class="fw-bold fs-5 text-success mb-2">
+                                                    $<?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
+                                                </div>
+                                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                                        onclick="removeFromCart(<?php echo $item['p_id']; ?>)">
+                                                    <i class="fas fa-times"></i> Remove
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="all_product.php" class="btn btn-outline-primary">
+                            <i class="fas fa-arrow-left me-2"></i>
+                            Continue Shopping
+                        </a>
+                    </div>
+                </div>
+
+                <div class="col-lg-4">
+                    <div class="cart-summary">
+                        <h4 class="mb-4">Order Summary</h4>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Subtotal (<?php echo $cart_count; ?> items):</span>
+                            <span class="fw-bold" id="cartSubtotal">$<?php echo number_format($cart_total, 2); ?></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Shipping:</span>
+                            <span class="text-success fw-bold">FREE</span>
+                        </div>
+
+                        <hr>
+
+                        <div class="d-flex justify-content-between mb-4">
+                            <span class="fs-5 fw-bold">Total:</span>
+                            <span class="fs-5 fw-bold text-primary" id="cartTotal">$<?php echo number_format($cart_total, 2); ?></span>
+                        </div>
+
+                        <?php if ($is_logged_in): ?>
+                            <button type="button" class="btn btn-primary w-100 btn-lg" onclick="proceedToCheckout()">
+                                <i class="fas fa-credit-card me-2"></i>
+                                Proceed to Checkout
+                            </button>
+                        <?php else: ?>
+                            <div class="alert alert-info">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Please <a href="login/user_login.php">login</a> to proceed with checkout.
+                            </div>
+                        <?php endif; ?>
+                    </div>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cart.js"></script>
+</body>
+</html>

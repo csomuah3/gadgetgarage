@@ -34,6 +34,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -269,12 +270,12 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             transition: all 0.3s ease;
         }
 
-        .checkbox-item input[type="checkbox"]:checked + .checkbox-custom {
+        .checkbox-item input[type="checkbox"]:checked+.checkbox-custom {
             background: linear-gradient(135deg, #8b5fbf, #f093fb);
             border-color: #8b5fbf;
         }
 
-        .checkbox-item input[type="checkbox"]:checked + .checkbox-custom::after {
+        .checkbox-item input[type="checkbox"]:checked+.checkbox-custom::after {
             content: '✓';
             position: absolute;
             top: -2px;
@@ -390,7 +391,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             background: rgba(139, 95, 191, 0.1);
         }
 
-        .rating-option input[type="radio"]:checked + label {
+        .rating-option input[type="radio"]:checked+label {
             background: rgba(139, 95, 191, 0.2);
             color: #8b5fbf;
         }
@@ -582,15 +583,13 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .color-circle.all-colors {
-            background: conic-gradient(
-                from 0deg,
-                #ff0000 0deg 60deg,
-                #ffff00 60deg 120deg,
-                #00ff00 120deg 180deg,
-                #00ffff 180deg 240deg,
-                #0000ff 240deg 300deg,
-                #ff00ff 300deg 360deg
-            );
+            background: conic-gradient(from 0deg,
+                    #ff0000 0deg 60deg,
+                    #ffff00 60deg 120deg,
+                    #00ff00 120deg 180deg,
+                    #00ffff 180deg 240deg,
+                    #0000ff 240deg 300deg,
+                    #ff00ff 300deg 360deg);
         }
 
         /* Clear Filters Button */
@@ -600,7 +599,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             border-top: 1px solid rgba(139, 95, 191, 0.1);
         }
 
-        .filter-select, .filter-input {
+        .filter-select,
+        .filter-input {
             width: 100%;
             padding: 15px 20px;
             border: 2px solid #e2e8f0;
@@ -611,7 +611,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             backdrop-filter: blur(10px);
         }
 
-        .filter-select:focus, .filter-input:focus {
+        .filter-select:focus,
+        .filter-input:focus {
             outline: none;
             border-color: #8b5fbf;
             background: rgba(255, 255, 255, 0.95);
@@ -645,7 +646,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             transition: all 0.3s ease;
         }
 
-        .preset-btn:hover, .preset-btn.active {
+        .preset-btn:hover,
+        .preset-btn.active {
             background: linear-gradient(135deg, #8b5fbf, #f093fb);
             color: white;
             border-color: #8b5fbf;
@@ -707,7 +709,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             transition: all 0.3s ease;
         }
 
-        .view-btn.active, .view-btn:hover {
+        .view-btn.active,
+        .view-btn:hover {
             background: #8b5fbf;
             color: white;
             border-color: #8b5fbf;
@@ -882,7 +885,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             backdrop-filter: blur(10px);
         }
 
-        .page-btn:hover, .page-btn.active {
+        .page-btn:hover,
+        .page-btn.active {
             background: linear-gradient(135deg, #8b5fbf, #f093fb);
             color: white;
             border-color: transparent;
@@ -1126,9 +1130,12 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         @keyframes float {
-            0%, 100% {
+
+            0%,
+            100% {
                 transform: translateY(0px) rotate(0deg);
             }
+
             50% {
                 transform: translateY(-20px) rotate(180deg);
             }
@@ -1156,6 +1163,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
     </style>
 </head>
+
 <body>
     <header class="main-header">
         <div class="container">
@@ -1415,11 +1423,11 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                                 <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)">
                                     <div class="product-image-container">
                                         <img src=""
-                                             alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                             class="product-image"
-                                             data-product-id="<?php echo $product['product_id']; ?>"
-                                             data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                                             data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+                                            alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                            class="product-image"
+                                            data-product-id="<?php echo $product['product_id']; ?>"
+                                            data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
+                                            data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
                                         <div class="product-badge">New</div>
                                     </div>
                                     <div class="product-content">
@@ -1454,7 +1462,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
                                 <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                                     <a href="?page=<?php echo $i; ?>"
-                                       class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>">
+                                        class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>">
                                         <?php echo $i; ?>
                                     </a>
                                 <?php endfor; ?>
@@ -1963,37 +1971,37 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                 `;
             } else {
                 productGrid.innerHTML = products.map(product => {
-                    return \`
-                    <div class="product-card" onclick="viewProduct(\${product.product_id})">
-                        <div class="product-image-container">
-                            <img src=""
-                                 alt="\${product.product_title}"
-                                 class="product-image"
-                                 data-product-id="\${product.product_id}"
-                                 data-product-image="\${product.product_image || ''}"
-                                 data-product-title="\${product.product_title}">
-                            <div class="product-badge">New</div>
-                        </div>
-                        <div class="product-content">
-                            <h5 class="product-title">\${product.product_title}</h5>
-                            <div class="product-price">$\${parseFloat(product.product_price).toFixed(2)}</div>
-                            <div class="product-meta">
-                                <span class="meta-tag">
-                                    <i class="fas fa-tag"></i>
-                                    \${product.cat_name || 'N/A'}
-                                </span>
-                                <span class="meta-tag">
-                                    <i class="fas fa-store"></i>
-                                    \${product.brand_name || 'N/A'}
-                                </span>
-                            </div>
-                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(\${product.product_id})">
-                                <i class="fas fa-shopping-cart"></i>
-                                Add to Cart
-                            </button>
-                        </div>
-                    </div>
-                    \`;
+                    return `
+        <div class="product-card" onclick="viewProduct(${product.product_id})">
+            <div class="product-image-container">
+                <img src="${product.product_image || ''}"
+                     alt="${product.product_title}"
+                     class="product-image"
+                     data-product-id="${product.product_id}"
+                     data-product-image="${product.product_image || ''}"
+                     data-product-title="${product.product_title}">
+                <div class="product-badge">New</div>
+            </div>
+            <div class="product-content">
+                <h5 class="product-title">${product.product_title}</h5>
+                <div class="product-price">$${parseFloat(product.product_price).toFixed(2)}</div>
+                <div class="product-meta">
+                    <span class="meta-tag">
+                        <i class="fas fa-tag"></i>
+                        ${product.cat_name || 'N/A'}
+                    </span>
+                    <span class="meta-tag">
+                        <i class="fas fa-store"></i>
+                        ${product.brand_name || 'N/A'}
+                    </span>
+                </div>
+                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.product_id})">
+                    <i class="fas fa-shopping-cart"></i>
+                    Add to Cart
+                </button>
+            </div>
+        </div>
+    `;
                 }).join('');
             }
         }
@@ -2098,4 +2106,5 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         });
     </script>
 </body>
+
 </html>

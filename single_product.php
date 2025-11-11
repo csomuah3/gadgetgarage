@@ -90,7 +90,7 @@ if (!$product) {
         .product-container {
             background: white;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
             border: 1px solid #e5e7eb;
             overflow: hidden;
             margin: 30px 0;
@@ -300,8 +300,8 @@ if (!$product) {
 
         .condition-options {
             display: flex;
+            flex-direction: column;
             gap: 15px;
-            flex-wrap: wrap;
         }
 
         .condition-option {
@@ -310,34 +310,46 @@ if (!$product) {
 
         .condition-label {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            padding: 20px 15px;
+            justify-content: space-between;
+            padding: 20px 25px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
-            min-width: 120px;
-            text-align: center;
+            width: 100%;
         }
 
-        .condition-label i {
-            font-size: 1.5rem;
-            margin-bottom: 8px;
+        .condition-info {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
         }
 
         .condition-label span {
             font-weight: 600;
-            font-size: 1rem;
+            font-size: 1.1rem;
             margin-bottom: 4px;
             color: #1a202c;
         }
 
         .condition-label small {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             color: #64748b;
             line-height: 1.2;
+        }
+
+        .condition-price {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a202c;
+        }
+
+        .condition-discount {
+            font-size: 0.9rem;
+            color: #dc2626;
+            margin-top: 4px;
         }
 
         .excellent-label i {
@@ -520,30 +532,44 @@ if (!$product) {
 
                         <!-- Condition Selection -->
                         <div class="condition-selection mb-4">
-                            <h5 style="color: #8b5fbf; margin-bottom: 15px;">Product Condition</h5>
+                            <h5 style="color: #8b5fbf; margin-bottom: 15px;">Select Condition</h5>
                             <div class="condition-options">
-                                <div class="form-check form-check-inline condition-option">
-                                    <input class="form-check-input" type="radio" name="condition" id="excellent" value="excellent" checked>
-                                    <label class="form-check-label condition-label excellent-label" for="excellent">
-                                        <i class="fas fa-star"></i>
-                                        <span>Excellent</span>
-                                        <small>Brand new condition</small>
+                                <div class="condition-option">
+                                    <input class="form-check-input" type="radio" name="condition" id="excellent" value="excellent" checked style="display: none;">
+                                    <label class="condition-label" for="excellent">
+                                        <div class="condition-info">
+                                            <span>Excellent Condition</span>
+                                            <small>Like new, no visible wear</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="condition-price" id="excellentPrice">GHS<?php echo number_format($product['product_price'], 0); ?></div>
+                                        </div>
                                     </label>
                                 </div>
-                                <div class="form-check form-check-inline condition-option">
-                                    <input class="form-check-input" type="radio" name="condition" id="good" value="good">
-                                    <label class="form-check-label condition-label good-label" for="good">
-                                        <i class="fas fa-thumbs-up"></i>
-                                        <span>Good</span>
-                                        <small>Minor wear signs</small>
+                                <div class="condition-option">
+                                    <input class="form-check-input" type="radio" name="condition" id="good" value="good" style="display: none;">
+                                    <label class="condition-label" for="good">
+                                        <div class="condition-info">
+                                            <span>Good Condition</span>
+                                            <small>Minor scratches, fully functional</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="condition-price" id="goodPrice">GHS<?php echo number_format($product['product_price'] - 100, 0); ?></div>
+                                            <div class="condition-discount">-GHC100</div>
+                                        </div>
                                     </label>
                                 </div>
-                                <div class="form-check form-check-inline condition-option">
-                                    <input class="form-check-input" type="radio" name="condition" id="fair" value="fair">
-                                    <label class="form-check-label condition-label fair-label" for="fair">
-                                        <i class="fas fa-tools"></i>
-                                        <span>Fair</span>
-                                        <small>Visible wear, fully functional</small>
+                                <div class="condition-option">
+                                    <input class="form-check-input" type="radio" name="condition" id="fair" value="fair" style="display: none;">
+                                    <label class="condition-label" for="fair">
+                                        <div class="condition-info">
+                                            <span>Fair Condition</span>
+                                            <small>Visible wear, works perfectly</small>
+                                        </div>
+                                        <div class="text-end">
+                                            <div class="condition-price" id="fairPrice">GHS<?php echo number_format($product['product_price'] - 200, 0); ?></div>
+                                            <div class="condition-discount">-GHC200</div>
+                                        </div>
                                     </label>
                                 </div>
                             </div>
@@ -551,10 +577,13 @@ if (!$product) {
 
                         <!-- Price Display -->
                         <div class="price-section">
-                            <div class="product-price" id="displayPrice">GHS <?php echo number_format($product['product_price'], 2); ?></div>
+                            <div class="product-price" id="displayPrice">GHS<?php echo number_format($product['product_price'], 0); ?></div>
                             <div class="price-breakdown" id="priceBreakdown" style="display: none;">
-                                <div class="original-price">Original Price: <span id="originalPrice">GHS <?php echo number_format($product['product_price'], 2); ?></span></div>
-                                <div class="discount-amount" id="discountAmount">Discount: -GHS 0.00</div>
+                                <div class="original-price">GHS<?php echo number_format($product['product_price'] + 200, 0); ?></div>
+                                <div class="discount-amount" id="discountAmount">17% off</div>
+                            </div>
+                            <div class="mt-2">
+                                <small style="color: rgba(255, 255, 255, 0.8);">Limited time offer - While supplies last</small>
                             </div>
                         </div>
 
@@ -601,10 +630,6 @@ if (!$product) {
                             <button class="add-to-cart-btn" onclick="addToCart(<?php echo $product['product_id']; ?>)">
                                 <i class="fas fa-shopping-cart"></i>
                                 Add to Cart
-                            </button>
-                            <button class="btn btn-outline-secondary" onclick="addToWishlist(<?php echo $product['product_id']; ?>)">
-                                <i class="fas fa-heart"></i>
-                                Wishlist
                             </button>
                         </div>
                     </div>

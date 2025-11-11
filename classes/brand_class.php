@@ -9,9 +9,10 @@ class Brand extends db_connection {
     }
 
     // Add a new brand
-    public function add_brand($brand_name, $category_ids, $user_id) {
+    public function add_brand($brand_name, $category_id, $user_id) {
         // Sanitize inputs
         $brand_name = trim($brand_name);
+        $category_id = (int)$category_id;
         $user_id = (int)$user_id;
 
         // Validate inputs
@@ -19,66 +20,31 @@ class Brand extends db_connection {
             return false;
         }
 
-        if (!is_array($category_ids) || empty($category_ids)) {
-            return false;
-        }
+        // Simple INSERT query without escaping for now to avoid connection issues
+        $sql = "INSERT INTO brands (brand_name, category_id, user_id) VALUES ('$brand_name', $category_id, $user_id)";
 
-        // Ensure database connection
-        if (!$this->db || mysqli_connect_errno()) {
-            $this->db_connect();
-        }
-
-        $brand_name_escaped = mysqli_real_escape_string($this->db, $brand_name);
-
-        // Insert brand
-        $sql = "INSERT INTO brands (brand_name, user_id) VALUES ('$brand_name_escaped', $user_id)";
-        $result = $this->db_write_query($sql);
-
-        if ($result) {
-            $brand_id = mysqli_insert_id($this->db);
-
-            // Insert brand-category relationships
-            foreach ($category_ids as $category_id) {
-                $category_id = (int)$category_id;
-                if ($category_id > 0) {
-                    $sql = "INSERT INTO brand_categories (brand_id, category_id) VALUES ($brand_id, $category_id)";
-                    $this->db_write_query($sql);
-                }
-            }
-
-            return $brand_id;
-        }
-
-        return false;
+        return $this->db_write_query($sql);
     }
 
     // Get all brands for a specific user
     public function get_brands_by_user($user_id) {
         $user_id = (int)$user_id;
 
-        $sql = "SELECT DISTINCT b.brand_id, b.brand_name,
-                GROUP_CONCAT(c.cat_name ORDER BY c.cat_name SEPARATOR ', ') as categories,
-                GROUP_CONCAT(c.cat_id ORDER BY c.cat_name SEPARATOR ',') as category_ids
+        $sql = "SELECT b.brand_id, b.brand_name, b.category_id, c.cat_name
                 FROM brands b
-                LEFT JOIN brand_categories bc ON b.brand_id = bc.brand_id
-                LEFT JOIN categories c ON bc.category_id = c.cat_id
+                LEFT JOIN categories c ON b.category_id = c.cat_id
                 WHERE b.user_id = $user_id
-                GROUP BY b.brand_id, b.brand_name
-                ORDER BY b.brand_name";
+                ORDER BY c.cat_name, b.brand_name";
 
         return $this->db_fetch_all($sql);
     }
 
     // Get all brands (for admin)
     public function get_all_brands() {
-        $sql = "SELECT DISTINCT b.brand_id, b.brand_name,
-                GROUP_CONCAT(c.cat_name ORDER BY c.cat_name SEPARATOR ', ') as categories,
-                GROUP_CONCAT(c.cat_id ORDER BY c.cat_name SEPARATOR ',') as category_ids
+        $sql = "SELECT b.brand_id, b.brand_name, b.category_id, c.cat_name
                 FROM brands b
-                LEFT JOIN brand_categories bc ON b.brand_id = bc.brand_id
-                LEFT JOIN categories c ON bc.category_id = c.cat_id
-                GROUP BY b.brand_id, b.brand_name
-                ORDER BY b.brand_name";
+                LEFT JOIN categories c ON b.category_id = c.cat_id
+                ORDER BY c.cat_name, b.brand_name";
 
         return $this->db_fetch_all($sql);
     }
@@ -87,28 +53,21 @@ class Brand extends db_connection {
     public function get_brand_by_id($brand_id) {
         $brand_id = (int)$brand_id;
 
-        $sql = "SELECT DISTINCT b.brand_id, b.brand_name,
-                GROUP_CONCAT(c.cat_name ORDER BY c.cat_name SEPARATOR ', ') as categories,
-                GROUP_CONCAT(c.cat_id ORDER BY c.cat_name SEPARATOR ',') as category_ids
+        $sql = "SELECT b.brand_id, b.brand_name, b.category_id, c.cat_name
                 FROM brands b
-                LEFT JOIN brand_categories bc ON b.brand_id = bc.brand_id
-                LEFT JOIN categories c ON bc.category_id = c.cat_id
-                WHERE b.brand_id = $brand_id
-                GROUP BY b.brand_id, b.brand_name";
+                LEFT JOIN categories c ON b.category_id = c.cat_id
+                WHERE b.brand_id = $brand_id";
 
         return $this->db_fetch_one($sql);
     }
 
     // Update a brand
-    public function update_brand($brand_id, $brand_name, $category_ids) {
+    public function update_brand($brand_id, $brand_name, $category_id) {
         $brand_id = (int)$brand_id;
+        $category_id = (int)$category_id;
         $brand_name = trim($brand_name);
 
         if (empty($brand_name)) {
-            return false;
-        }
-
-        if (!is_array($category_ids) || empty($category_ids)) {
             return false;
         }
 
@@ -119,28 +78,9 @@ class Brand extends db_connection {
 
         $brand_name_escaped = mysqli_real_escape_string($this->db, $brand_name);
 
-        // Update brand name
-        $sql = "UPDATE brands SET brand_name = '$brand_name_escaped' WHERE brand_id = $brand_id";
-        $result = $this->db_write_query($sql);
+        $sql = "UPDATE brands SET brand_name = '$brand_name_escaped', category_id = $category_id WHERE brand_id = $brand_id";
 
-        if ($result) {
-            // Delete existing brand-category relationships
-            $sql = "DELETE FROM brand_categories WHERE brand_id = $brand_id";
-            $this->db_write_query($sql);
-
-            // Insert new brand-category relationships
-            foreach ($category_ids as $category_id) {
-                $category_id = (int)$category_id;
-                if ($category_id > 0) {
-                    $sql = "INSERT INTO brand_categories (brand_id, category_id) VALUES ($brand_id, $category_id)";
-                    $this->db_write_query($sql);
-                }
-            }
-
-            return true;
-        }
-
-        return false;
+        return $this->db_write_query($sql);
     }
 
     // Delete a brand

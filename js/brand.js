@@ -1,13 +1,13 @@
 $(document).ready(function() {
     loadBrands();
-    loadCategoriesAsCheckboxes();
+    loadCategories();
 
     // Add brand form submission
     $('#addBrandForm').submit(function(e) {
         e.preventDefault();
 
         var brandName = $('#brand_name').val().trim();
-        var categoryIds = getSelectedCategories('category_checkboxes');
+        var categoryId = $('#category_id').val();
 
         // Validate input
         if (brandName === '') {
@@ -20,10 +20,10 @@ $(document).ready(function() {
             return;
         }
 
-        if (categoryIds.length === 0) {
+        if (categoryId === '' || categoryId === '0') {
             Swal.fire({
                 title: 'Validation Error',
-                text: 'Please select at least one category!',
+                text: 'Please select a category!',
                 icon: 'error',
                 confirmButtonColor: '#8b5fbf'
             });
@@ -42,7 +42,7 @@ $(document).ready(function() {
             dataType: 'json',
             data: {
                 brand_name: brandName,
-                category_ids: categoryIds
+                category_id: categoryId
             },
             success: function(response) {
                 if (response.status === 'success') {
@@ -55,7 +55,6 @@ $(document).ready(function() {
                         timerProgressBar: true
                     });
                     $('#addBrandForm')[0].reset();
-                    clearCategoryCheckboxes('category_checkboxes');
                     loadBrands();
                 } else {
                     Swal.fire({
@@ -86,7 +85,7 @@ $(document).ready(function() {
 
         var brandId = $('#edit_brand_id').val();
         var brandName = $('#edit_brand_name').val().trim();
-        var categoryIds = getSelectedCategories('edit_category_checkboxes');
+        var categoryId = $('#edit_category_id').val();
 
         // Validate input
         if (brandName === '') {
@@ -99,10 +98,10 @@ $(document).ready(function() {
             return;
         }
 
-        if (categoryIds.length === 0) {
+        if (categoryId === '' || categoryId === '0') {
             Swal.fire({
                 title: 'Validation Error',
-                text: 'Please select at least one category!',
+                text: 'Please select a category!',
                 icon: 'error',
                 confirmButtonColor: '#8b5fbf'
             });
@@ -122,7 +121,7 @@ $(document).ready(function() {
             data: {
                 brand_id: brandId,
                 brand_name: brandName,
-                category_ids: categoryIds
+                category_id: categoryId
             },
             success: function(response) {
                 if (response.status === 'success') {
@@ -160,30 +159,6 @@ $(document).ready(function() {
     });
 });
 
-// Get selected category IDs from checkboxes
-function getSelectedCategories(containerId) {
-    var categoryIds = [];
-    $('#' + containerId + ' input[type="checkbox"]:checked').each(function() {
-        categoryIds.push(parseInt($(this).val()));
-    });
-    return categoryIds;
-}
-
-// Clear all category checkboxes
-function clearCategoryCheckboxes(containerId) {
-    $('#' + containerId + ' input[type="checkbox"]').prop('checked', false);
-}
-
-// Set category checkboxes based on array of IDs
-function setCategoryCheckboxes(containerId, categoryIds) {
-    clearCategoryCheckboxes(containerId);
-    if (categoryIds && categoryIds.length > 0) {
-        categoryIds.forEach(function(id) {
-            $('#' + containerId + ' input[value="' + id + '"]').prop('checked', true);
-        });
-    }
-}
-
 // Load brands
 function loadBrands() {
     $.ajax({
@@ -203,7 +178,7 @@ function loadBrands() {
     });
 }
 
-// Display brands with their categories
+// Display brands organized by category
 function displayBrands(brands) {
     var tbody = $('#brandTable tbody');
     tbody.empty();
@@ -213,24 +188,37 @@ function displayBrands(brands) {
         return;
     }
 
+    // Group brands by category
+    var groupedBrands = {};
     brands.forEach(function(brand) {
-        var categoriesDisplay = brand.categories || 'No categories';
-        var categoryIds = brand.category_ids ? brand.category_ids.split(',').map(id => parseInt(id.trim())) : [];
+        var categoryName = brand.cat_name || 'Uncategorized';
+        if (!groupedBrands[categoryName]) {
+            groupedBrands[categoryName] = [];
+        }
+        groupedBrands[categoryName].push(brand);
+    });
 
-        var row = '<tr>' +
-            '<td>' + categoriesDisplay + '</td>' +
-            '<td>' + brand.brand_name + '</td>' +
-            '<td>' +
-                '<button class="btn btn-edit btn-sm me-2" onclick="editBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\', [' + categoryIds.join(',') + '])">Edit</button>' +
-                '<button class="btn btn-delete btn-sm" onclick="deleteBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\')">Delete</button>' +
-            '</td>' +
-            '</tr>';
-        tbody.append(row);
+    // Display grouped brands
+    Object.keys(groupedBrands).forEach(function(categoryName) {
+        var categoryBrands = groupedBrands[categoryName];
+
+        categoryBrands.forEach(function(brand, index) {
+            var categoryId = brand.category_id || 0;
+            var row = '<tr>' +
+                '<td>' + (index === 0 ? '<strong>' + categoryName + '</strong>' : '') + '</td>' +
+                '<td>' + brand.brand_name + '</td>' +
+                '<td>' +
+                    '<button class="btn btn-edit btn-sm me-2" onclick="editBrand(' + brand.brand_id + ', \'' + brand.brand_name + '\', ' + categoryId + ')">Edit</button>' +
+                    '<button class="btn btn-delete btn-sm" onclick="deleteBrand(' + brand.brand_id + ', \'' + brand.brand_name + '\')">Delete</button>' +
+                '</td>' +
+                '</tr>';
+            tbody.append(row);
+        });
     });
 }
 
-// Load categories as checkboxes
-function loadCategoriesAsCheckboxes() {
+// Load categories for dropdown
+function loadCategories() {
     $.ajax({
         url: '../actions/fetch_category_action.php',
         type: 'GET',
@@ -240,29 +228,40 @@ function loadCategoriesAsCheckboxes() {
 
             // Handle both response formats
             if (response.status === 'success' || response.success === true) {
-                populateCategoryCheckboxes(response.data);
+                populateCategoryDropdowns(response.data);
             } else {
                 console.error('Failed to load categories:', response.message);
                 // Try to show a user-friendly message
-                $('#category_checkboxes').html('<p class="text-danger">Could not load categories: ' + (response.message || 'Unknown error') + '</p>');
-                $('#edit_category_checkboxes').html('<p class="text-danger">Could not load categories: ' + (response.message || 'Unknown error') + '</p>');
+                Swal.fire({
+                    title: 'Warning',
+                    text: 'Could not load categories. You may need to create categories first.',
+                    icon: 'warning',
+                    confirmButtonColor: '#8b5fbf'
+                });
             }
         },
         error: function(xhr, status, error) {
             console.error('Error loading categories:', error);
-            $('#category_checkboxes').html('<p class="text-danger">Failed to load categories.</p>');
-            $('#edit_category_checkboxes').html('<p class="text-danger">Failed to load categories.</p>');
+            console.error('Response:', xhr.responseText);
+
+            // Show user-friendly error
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to load categories. Please check if categories exist.',
+                icon: 'error',
+                confirmButtonColor: '#8b5fbf'
+            });
         }
     });
 }
 
-// Populate category checkboxes
-function populateCategoryCheckboxes(categories) {
-    var addCheckboxes = $('#category_checkboxes');
-    var editCheckboxes = $('#edit_category_checkboxes');
+// Populate category dropdowns
+function populateCategoryDropdowns(categories) {
+    var addSelect = $('#category_id');
+    var editSelect = $('#edit_category_id');
 
-    addCheckboxes.empty();
-    editCheckboxes.empty();
+    addSelect.empty().append('<option value="">Select Category</option>');
+    editSelect.empty().append('<option value="">Select Category</option>');
 
     if (categories && categories.length > 0) {
         categories.forEach(function(category) {
@@ -271,40 +270,26 @@ function populateCategoryCheckboxes(categories) {
             var catName = category.cat_name || category.category_name || category.name;
 
             if (catId && catName) {
-                var checkboxHtml =
-                    '<div class="form-check mb-2">' +
-                        '<input class="form-check-input" type="checkbox" value="' + catId + '" id="cat_' + catId + '">' +
-                        '<label class="form-check-label" for="cat_' + catId + '">' +
-                            catName +
-                        '</label>' +
-                    '</div>';
-
-                var editCheckboxHtml =
-                    '<div class="form-check mb-2">' +
-                        '<input class="form-check-input" type="checkbox" value="' + catId + '" id="edit_cat_' + catId + '">' +
-                        '<label class="form-check-label" for="edit_cat_' + catId + '">' +
-                            catName +
-                        '</label>' +
-                    '</div>';
-
-                addCheckboxes.append(checkboxHtml);
-                editCheckboxes.append(editCheckboxHtml);
+                var option = '<option value="' + catId + '">' + catName + '</option>';
+                addSelect.append(option);
+                editSelect.append(option);
             }
         });
 
-        console.log('Populated checkboxes with', categories.length, 'categories');
+        console.log('Populated dropdowns with', categories.length, 'categories');
     } else {
         console.log('No categories found to populate');
-        addCheckboxes.append('<p class="text-muted">No categories available</p>');
-        editCheckboxes.append('<p class="text-muted">No categories available</p>');
+        // Add a message to dropdowns
+        addSelect.append('<option disabled>No categories available</option>');
+        editSelect.append('<option disabled>No categories available</option>');
     }
 }
 
 // Edit brand
-function editBrand(brandId, brandName, categoryIds) {
+function editBrand(brandId, brandName, categoryId) {
     $('#edit_brand_id').val(brandId);
     $('#edit_brand_name').val(brandName);
-    setCategoryCheckboxes('edit_category_checkboxes', categoryIds);
+    $('#edit_category_id').val(categoryId);
     $('#editBrandModal').modal('show');
 }
 

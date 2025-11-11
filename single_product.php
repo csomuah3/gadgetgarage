@@ -1,6 +1,7 @@
 <?php
 require_once(__DIR__ . '/settings/core.php');
 require_once(__DIR__ . '/controllers/product_controller.php');
+require_once(__DIR__ . '/controllers/cart_controller.php');
 require_once(__DIR__ . '/helpers/image_helper.php');
 
 $is_logged_in = check_login();
@@ -9,6 +10,11 @@ $is_admin = false;
 if ($is_logged_in) {
     $is_admin = check_admin();
 }
+
+// Get cart count
+$customer_id = $is_logged_in ? $_SESSION['customer_id'] : null;
+$ip_address = $_SERVER['REMOTE_ADDR'];
+$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
 // Get product ID from URL
 $product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
@@ -325,14 +331,17 @@ if (!$product) {
                 <div class="col-lg-3 text-end">
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Cart Icon -->
-                        <a href="#" class="cart-icon position-relative" onclick="showCart()">
+                        <a href="cart.php" class="cart-icon position-relative">
                             <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #8b5fbf;"></i>
-                            <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
-                                0
+                            <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>">
+                                <?php echo $cart_count; ?>
                             </span>
                         </a>
 
                         <?php if ($is_logged_in): ?>
+                            <a href="my_orders.php" class="btn btn-outline-primary me-2">
+                                <i class="fas fa-box"></i> My Orders
+                            </a>
                             <a href="login/logout.php" class="btn btn-outline-danger">Logout</a>
                         <?php else: ?>
                             <a href="login/login.php" class="btn btn-outline-primary">Login</a>
@@ -460,6 +469,7 @@ if (!$product) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cart.js"></script>
     <script>
         function addToCart(productId) {
             // Show loading state

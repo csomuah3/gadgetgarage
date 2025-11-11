@@ -315,6 +315,7 @@ try {
                                 </a>
                                 <ul class="dropdown-menu">
                                     <li><a class="dropdown-item" href="login/customer_profile.php">Profile</a></li>
+                                    <li><a class="dropdown-item" href="my_orders.php">My Orders</a></li>
                                     <li><a class="dropdown-item" href="login/logout.php">Logout</a></li>
                                 </ul>
                             </li>

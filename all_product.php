@@ -1188,6 +1188,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                         </a>
 
                         <?php if ($is_logged_in): ?>
+                            <a href="my_orders.php" class="btn btn-outline-primary me-2">
+                                <i class="fas fa-box"></i> My Orders
+                            </a>
                             <a href="login/logout.php" class="btn btn-outline-danger">Logout</a>
                         <?php else: ?>
                             <a href="login/login.php" class="btn btn-outline-primary">Login</a>
@@ -1481,6 +1484,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/cart.js"></script>
     <script>
         function viewProduct(productId) {
             window.location.href = 'single_product.php?id=' + productId;

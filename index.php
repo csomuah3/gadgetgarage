@@ -6,6 +6,7 @@ ini_set('display_errors', 1);
 try {
 	// Start session and include core functions
 	require_once(__DIR__ . '/settings/core.php');
+	require_once(__DIR__ . '/controllers/cart_controller.php');
 	require_once(__DIR__ . '/helpers/image_helper.php');
 
 	// Check login status and admin status
@@ -15,6 +16,11 @@ try {
 	if ($is_logged_in) {
 		$is_admin = check_admin();
 	}
+
+	// Get cart count
+	$customer_id = $is_logged_in ? $_SESSION['customer_id'] : null;
+	$ip_address = $_SERVER['REMOTE_ADDR'];
+	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
 	// Initialize arrays for navigation
 	$categories = [];
@@ -1345,8 +1351,10 @@ try {
 					<?php else: ?>
 						<!-- Regular user logged in: Cart | Logout -->
 						<div class="header-icon me-2">
-							<i class="fas fa-shopping-cart"></i>
-							<span class="cart-badge">0</span>
+							<a href="cart.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-shopping-cart"></i>
+								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
+							</a>
 						</div>
 						<a href="login/logout.php" class="logout-btn">Logout</a>
 					<?php endif; ?>
@@ -1519,6 +1527,7 @@ try {
 
 	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="js/cart.js"></script>
 	<script>
 		// Search functionality
 		document.querySelector('.search-input').addEventListener('keypress', function(e) {

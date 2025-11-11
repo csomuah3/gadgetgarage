@@ -869,7 +869,8 @@ try {
 		/* Hero Section */
 		/* Hero Banner Styles */
 		.hero-banner-section {
-			padding: 20px 0;
+			
+			padding: 50px 0;
 			background: #f8f9fa;
 		}
 
@@ -961,7 +962,7 @@ try {
 		/* Features Section */
 		.features-section {
 			background: #f0f8f0;
-			padding: 30px 0;
+			padding: 40px 0;
 		}
 
 		.feature-item {
@@ -1138,10 +1139,10 @@ try {
 
 		.popular-categories .section-title {
 			color: #008060;
-			font-size: 2.2rem;
+			font-size: 6.1 rem;
 			font-weight: 700;
-			margin-bottom: 40px;
-			text-align: left;
+			margin-bottom: 30px;
+			text-align: center;
 		}
 
 		.category-card {

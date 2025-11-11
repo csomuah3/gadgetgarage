@@ -54,7 +54,7 @@ try {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Gadget Garage - Premium  Refurbrished Tech Devices & Repair Services</title>
+	<title>Gadget Garage - Premium Refurbrished Tech Devices & Repair Services</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -868,95 +868,202 @@ try {
 
 		/* Hero Section */
 		/* Hero Banner Styles */
+		/* ——— Layout shell ——— */
 		.hero-banner-section {
-			
-			padding: 50px 0;
-			background: #f8f9fa;
+			/* taller section like your screenshot */
+			padding: 24px 0;
+			background: #ffffff;
 		}
 
+		.hero-grid {
+			display: grid;
+			grid-template-columns: 2fr 1fr;
+			/* big left + narrow right */
+			gap: 28px;
+			/* spacing between cards */
+			align-items: stretch;
+			min-height: 560px;
+			/* height close to screenshot */
+		}
+
+		/* ——— Main (left) banner ——— */
 		.main-banner {
-			border-radius: 12px;
-			padding: 50px;
-			height: 400px;
-			display: flex;
-			align-items: center;
+			display: grid;
+			grid-template-columns: 1.15fr 1fr;
+			/* copy left, image right */
+			gap: 24px;
+			padding: 48px;
+			border-radius: 14px;
+			overflow: hidden;
+			position: relative;
+		}
+
+		.main-banner.coral {
+			/* coral/red like your image */
+			background: #ff5b57;
+			/* tweak to #ff5a54 if you prefer */
+			color: #fff;
+		}
+
+		.banner-copy {
+			display: grid;
+			align-content: center;
+			gap: 22px;
 		}
 
 		.banner-title {
-			font-size: 2.5rem;
-			font-weight: 700;
-			color: white;
-			margin-bottom: 15px;
-			line-height: 1.2;
+			font-size: clamp(34px, 5.2vw, 72px);
+			/* big multi-line headline */
+			font-weight: 800;
+			line-height: 1.08;
+			color: #fff;
+			margin: 0;
 		}
 
 		.banner-price {
-			font-size: 1.2rem;
-			color: white;
-			margin-bottom: 20px;
+			font-size: clamp(18px, 2vw, 28px);
+			color: #fff;
+			margin: 0 0 8px;
 		}
 
 		.banner-price .price {
+			font-weight: 800;
+			font-size: 1.2em;
+		}
+
+		.btn-primary {
+			display: inline-flex;
+			align-items: center;
+			justify-content: center;
+			height: 56px;
+			padding: 0 28px;
+			background: #2252d1;
+			/* your brand blue */
+			color: #fff;
+			border-radius: 10px;
 			font-weight: 700;
-			font-size: 1.5rem;
+			letter-spacing: .2px;
+			text-decoration: none;
 		}
 
-		.shop-now-btn, .shop-btn {
-			background: #4f63d2;
-			color: white;
-			border: none;
-			padding: 12px 25px;
-			border-radius: 6px;
-			font-weight: 600;
-			font-size: 0.9rem;
-			cursor: pointer;
-			transition: all 0.3s ease;
+		.banner-media {
+			display: flex;
+			align-items: end;
+			justify-content: center;
 		}
 
-		.shop-now-btn:hover, .shop-btn:hover {
-			background: #3d4fd1;
-		}
-
-		.banner-image img {
+		.banner-media img {
 			width: 100%;
-			max-width: 300px;
-			height: auto;
+			height: 100%;
+			object-fit: contain;
+			/* keep proportions */
+			transform: translateY(8px);
+			/* slight drop like screenshot */
 		}
 
-		/* Side Banners */
-		.side-banner {
+		/* ——— Right column (two stacked cards) ——— */
+		.side-banners {
+			display: grid;
+			grid-template-rows: 1fr 1fr;
+			gap: 28px;
+		}
+
+		.side-card {
+			border-radius: 14px;
+			padding: 36px 28px;
+			display: grid;
+			grid-template-columns: 1fr auto;
+			/* copy left, small image right */
+			align-items: center;
+			gap: 24px;
+			overflow: hidden;
+		}
+
+		/* colors like the screenshot */
+		.side-card.yellow {
+			background: #ffd21f;
+			/* rich yellow */
+			color: #111;
+		}
+
+		.side-card.purple {
+			background: #6f45d8;
+			/* vibrant purple */
+			color: #fff;
+		}
+
+		/* texts on side cards */
+		.side-title {
+			font-size: clamp(22px, 2.4vw, 34px);
+			font-weight: 800;
+			line-height: 1.15;
+			margin: 0 0 10px;
+		}
+
+		.side-price {
+			margin: 0 0 14px;
+			font-weight: 600;
+		}
+
+		.side-price .price {
+			font-weight: 800;
+			font-size: 1.2em;
+		}
+
+		.side-link {
+			font-weight: 800;
+			text-decoration: underline;
+			color: inherit;
+			/* black on yellow, white on purple */
+		}
+
+		.side-media {
+			width: 148px;
+			/* small thumbnail on right */
+			height: 148px;
 			border-radius: 12px;
-			padding: 20px;
-			height: 190px;
-			display: flex;
-			align-items: center;
+			overflow: hidden;
 		}
 
-		.side-banner-content {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
+		.side-media img {
 			width: 100%;
-		}
-
-		.side-text h3 {
-			font-size: 1.2rem;
-			font-weight: 600;
-			color: white;
-			margin-bottom: 8px;
-		}
-
-		.side-text p {
-			color: white;
-			font-size: 0.9rem;
-			margin-bottom: 15px;
-		}
-
-		.side-image img {
-			width: 80px;
-			height: 80px;
+			height: 100%;
 			object-fit: cover;
-			border-radius: 8px;
+		}
+
+		/* ——— Responsiveness ——— */
+		@media (max-width: 992px) {
+			.hero-grid {
+				grid-template-columns: 1fr;
+				min-height: auto;
+			}
+
+			.side-banners {
+				grid-template-rows: none;
+				grid-template-columns: 1fr 1fr;
+			}
+		}
+
+		@media (max-width: 640px) {
+			.main-banner {
+				grid-template-columns: 1fr;
+				/* stack copy over image */
+				padding: 28px;
+			}
+
+			.banner-media {
+				order: -1;
+			}
+
+			/* image first on mobile (optional) */
+			.side-banners {
+				grid-template-columns: 1fr;
+			}
+
+			.side-media {
+				width: 112px;
+				height: 112px;
+			}
 		}
 
 		/* Features Section */
@@ -2220,6 +2327,7 @@ try {
 				opacity: 0;
 				transform: scale(0.8) translateY(-20px);
 			}
+
 			to {
 				opacity: 1;
 				transform: scale(1) translateY(0);
@@ -2568,65 +2676,57 @@ try {
 
 	<!-- Hero Banner Section (matching demo) -->
 	<section class="hero-banner-section">
-		<div class="container-fluid">
-			<div class="row g-3">
-				<!-- Main Banner -->
-				<div class="col-lg-8">
-					<div class="main-banner" style="background: linear-gradient(135deg, #87CEEB 0%, #87CEEB 100%);">
-						<div class="banner-content">
-							<div class="row align-items-center">
-								<div class="col-lg-6">
-									<div class="banner-text">
-										<h1 class="banner-title">Xbox One Official Wireless Model Controller</h1>
-										<p class="banner-price">Starting At <span class="price">GHS 2,360.00</span></p>
-										<button class="shop-now-btn">SHOP NOW</button>
-									</div>
-								</div>
-								<div class="col-lg-6">
-									<div class="banner-image">
-										<img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop&crop=center" alt="Xbox Controller">
-									</div>
-								</div>
-							</div>
-						</div>
+		<div class="container">
+			<div class="hero-grid">
+				<!-- LEFT: MAIN BANNER -->
+				<article class="main-banner coral">
+					<div class="banner-copy">
+						<h1 class="banner-title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</h1>
+						<p class="banner-price">Starting At <span class="price">$236.00</span></p>
+						<a href="#" class="btn-primary">SHOP NOW</a>
 					</div>
-				</div>
 
-				<!-- Side Banners -->
-				<div class="col-lg-4">
-					<div class="side-banners">
-						<!-- T900 Watch Banner -->
-						<div class="side-banner mb-3" style="background: linear-gradient(135deg, #FFD700 0%, #FFD700 100%);">
-							<div class="side-banner-content">
-								<div class="side-text">
-									<h3>T900 Ultra Watch</h3>
-									<p>Starting <strong>GHS 190.00</strong></p>
-									<button class="shop-btn">SHOP NOW</button>
-								</div>
-								<div class="side-image">
-									<img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop&crop=center" alt="Smart Watch">
-								</div>
-							</div>
-						</div>
-
-						<!-- Kids Headphones Banner -->
-						<div class="side-banner" style="background: linear-gradient(135deg, #9333ea 0%, #9333ea 100%);">
-							<div class="side-banner-content">
-								<div class="side-text">
-									<h3>Kids Wireless Headphones</h3>
-									<p>Starting <strong>GHS 360.00</strong></p>
-									<button class="shop-btn">SHOP NOW</button>
-								</div>
-								<div class="side-image">
-									<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Kids Headphones">
-								</div>
-							</div>
-						</div>
+					<div class="banner-media">
+						<img
+							src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=1600&auto=format&fit=crop"
+							alt="iPad Pro" />
 					</div>
+				</article>
+
+				<!-- RIGHT: TWO SIDE CARDS -->
+				<div class="side-banners">
+					<!-- Top -->
+					<article class="side-card yellow">
+						<div class="side-copy">
+							<h3 class="side-title">T900 Ultra<br>Watch</h3>
+							<p class="side-price">Starting <span class="price">$19.00</span></p>
+							<a href="#" class="side-link">SHOP NOW</a>
+						</div>
+						<div class="side-media">
+							<img
+								src="https://images.unsplash.com/photo-1603791452906-bcce5e6d47a5?q=80&w=1200&auto=format&fit=crop"
+								alt="Watch" />
+						</div>
+					</article>
+
+					<!-- Bottom -->
+					<article class="side-card purple">
+						<div class="side-copy">
+							<h3 class="side-title">Kids Wireless<br>Headphones</h3>
+							<p class="side-price">Starting <span class="price">$36.00</span></p>
+							<a href="#" class="side-link">SHOP NOW</a>
+						</div>
+						<div class="side-media">
+							<img
+								src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=1200&auto=format&fit=crop"
+								alt="Headphones" />
+						</div>
+					</article>
 				</div>
 			</div>
 		</div>
 	</section>
+
 
 	<!-- Features Section -->
 	<section class="features-section">
@@ -2682,8 +2782,8 @@ try {
 
 	<!-- Most Popular Categories -->
 	<section class="popular-categories">
-		<div class="container">
-			<h2 class="section-title">Most Popular Categories</h2>
+		<div class="container-fluid">
+			<h2 class="section-title text-center">Most Popular Categories</h2>
 			<div class="row g-4 justify-content-center">
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">

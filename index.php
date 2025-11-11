@@ -124,7 +124,7 @@ try {
 
 		.search-input:focus {
 			outline: none;
-			border-color: #8b5fbf;
+			border-color: #008060;
 			background: white;
 			box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
 		}
@@ -134,7 +134,7 @@ try {
 			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
-			color: #8b5fbf;
+			color: #008060;
 			font-size: 1.1rem;
 		}
 
@@ -143,7 +143,7 @@ try {
 			right: 6px;
 			top: 50%;
 			transform: translateY(-50%);
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			border: none;
 			padding: 8px 16px;
 			border-radius: 20px;
@@ -154,7 +154,7 @@ try {
 		}
 
 		.search-btn:hover {
-			background: linear-gradient(135deg, #764ba2, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-50%) scale(1.05);
 		}
 
@@ -175,14 +175,14 @@ try {
 
 		.header-icon:hover {
 			background: rgba(139, 95, 191, 0.1);
-			color: #8b5fbf;
+			color: #008060;
 		}
 
 		.cart-badge {
 			position: absolute;
 			top: -2px;
 			right: -2px;
-			background: linear-gradient(135deg, #f093fb, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
 			font-size: 0.75rem;
 			padding: 2px 6px;
@@ -196,7 +196,7 @@ try {
 		}
 
 		.login-btn {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			border: none;
 			padding: 10px 20px;
@@ -208,7 +208,7 @@ try {
 		}
 
 		.login-btn:hover {
-			background: linear-gradient(135deg, #764ba2, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-1px);
 			color: white;
 		}
@@ -239,7 +239,7 @@ try {
 		.user-avatar {
 			width: 36px;
 			height: 36px;
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
@@ -296,7 +296,7 @@ try {
 
 		.dropdown-item-custom:hover {
 			background: rgba(139, 95, 191, 0.1);
-			color: #8b5fbf;
+			color: #008060;
 			transform: translateX(3px);
 		}
 
@@ -329,7 +329,7 @@ try {
 		}
 
 		.toggle-switch.active {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 		}
 
 		.toggle-slider {
@@ -377,7 +377,7 @@ try {
 		.section-title {
 			font-size: 3.5rem;
 			font-weight: 800;
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
@@ -431,7 +431,7 @@ try {
 		.pick-price {
 			font-size: 1.5rem;
 			font-weight: 800;
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
@@ -502,7 +502,7 @@ try {
 
 		body.dark-mode .category-item:hover,
 		body.dark-mode .category-item.active {
-			color: #8b5fbf;
+			color: #008060;
 		}
 
 		body.dark-mode .hero-section {
@@ -526,7 +526,7 @@ try {
 
 		body.dark-mode .dropdown-item-custom:hover {
 			background: rgba(139, 95, 191, 0.2);
-			color: #f093fb;
+			color: #006b4e;
 		}
 
 		/* Floating Bubbles Animation */
@@ -617,7 +617,7 @@ try {
 			display: inline-flex;
 			align-items: center;
 			padding: 15px 30px;
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			text-decoration: none;
 			border-radius: 12px;
@@ -628,7 +628,7 @@ try {
 		}
 
 		.view-all-products-btn:hover {
-			background: linear-gradient(135deg, #764ba2, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-2px);
 			box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
 			color: white;
@@ -667,6 +667,48 @@ try {
 
 		.nav-item:hover {
 			color: #008060;
+		}
+
+		/* Blue Shop by Categories Button */
+		.shop-categories-btn {
+			position: relative;
+		}
+
+		.categories-button {
+			background: #4f63d2;
+			color: white;
+			border: none;
+			padding: 12px 20px;
+			border-radius: 6px;
+			font-weight: 600;
+			font-size: 0.9rem;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.categories-button:hover {
+			background: #3d4fd1;
+		}
+
+		.categories-button i:last-child {
+			font-size: 0.8rem;
+			transition: transform 0.3s ease;
+		}
+
+		.shop-categories-btn:hover .categories-button i:last-child {
+			transform: rotate(180deg);
+		}
+
+		.nav-item.flash-deal {
+			color: #ef4444;
+			font-weight: 600;
+		}
+
+		.nav-item.flash-deal:hover {
+			color: #dc2626;
 		}
 
 		.nav-item.dropdown {
@@ -825,84 +867,132 @@ try {
 		}
 
 		/* Hero Section */
-		/* Slideshow Banner Styles */
-		.slideshow_banner {
-			position: relative;
-			width: 100%;
-			min-height: 500px;
-			overflow: hidden;
+		/* Hero Banner Styles */
+		.hero-banner-section {
+			padding: 20px 0;
+			background: #f8f9fa;
 		}
 
-		.slideshow-container {
-			position: relative;
-			width: 100%;
-			height: 100%;
+		.main-banner {
+			border-radius: 12px;
+			padding: 40px;
+			height: 300px;
+			display: flex;
+			align-items: center;
 		}
 
-		.slideshow-wrapper {
-			position: relative;
-			width: 100%;
-			height: 100%;
-		}
-
-		.slide {
-			display: none;
-			width: 100%;
-			min-height: 500px;
-			position: relative;
-			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-		}
-
-		.slide.active {
-			display: block;
-		}
-
-		.slide-content {
-			padding: 80px 0;
-		}
-
-		.slide-text {
-			padding: 0 20px;
-		}
-
-		.slide-title {
-			font-size: 3rem;
+		.banner-title {
+			font-size: 2.5rem;
 			font-weight: 700;
-			color: #1f2937;
-			margin-bottom: 20px;
+			color: white;
+			margin-bottom: 15px;
 			line-height: 1.2;
 		}
 
-		.slide-subtitle {
+		.banner-price {
 			font-size: 1.2rem;
-			color: #6b7280;
-			margin-bottom: 30px;
-			line-height: 1.6;
+			color: white;
+			margin-bottom: 20px;
 		}
 
-		.btn-primary-large {
-			background: #008060;
+		.banner-price .price {
+			font-weight: 700;
+			font-size: 1.5rem;
+		}
+
+		.shop-now-btn, .shop-btn {
+			background: #4f63d2;
 			color: white;
-			padding: 15px 30px;
 			border: none;
-			border-radius: 8px;
-			font-size: 1.1rem;
+			padding: 12px 25px;
+			border-radius: 6px;
 			font-weight: 600;
-			text-decoration: none;
-			display: inline-block;
+			font-size: 0.9rem;
+			cursor: pointer;
 			transition: all 0.3s ease;
 		}
 
-		.btn-primary-large:hover {
-			background: #006b4e;
-			transform: translateY(-2px);
-			color: white;
+		.shop-now-btn:hover, .shop-btn:hover {
+			background: #3d4fd1;
 		}
 
-		.slide-image img {
+		.banner-image img {
 			width: 100%;
+			max-width: 300px;
 			height: auto;
+		}
+
+		/* Side Banners */
+		.side-banner {
 			border-radius: 12px;
+			padding: 20px;
+			height: 140px;
+			display: flex;
+			align-items: center;
+		}
+
+		.side-banner-content {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			width: 100%;
+		}
+
+		.side-text h3 {
+			font-size: 1.2rem;
+			font-weight: 600;
+			color: white;
+			margin-bottom: 8px;
+		}
+
+		.side-text p {
+			color: white;
+			font-size: 0.9rem;
+			margin-bottom: 15px;
+		}
+
+		.side-image img {
+			width: 80px;
+			height: 80px;
+			object-fit: cover;
+			border-radius: 8px;
+		}
+
+		/* Features Section */
+		.features-section {
+			background: #f0f8f0;
+			padding: 30px 0;
+		}
+
+		.feature-item {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+		}
+
+		.feature-icon {
+			width: 50px;
+			height: 50px;
+			background: #ffffff;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #008060;
+			font-size: 1.2rem;
+		}
+
+		.feature-text h4 {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 5px;
+		}
+
+		.feature-text p {
+			color: #6b7280;
+			font-size: 0.9rem;
+			margin: 0;
 		}
 
 		/* Slideshow Navigation */
@@ -1100,7 +1190,7 @@ try {
 			transform: translateY(-50%);
 			width: 1200px;
 			height: 1200px;
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			flex-direction: column;
@@ -1186,7 +1276,7 @@ try {
 		}
 
 		.hero-highlight {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			-webkit-background-clip: text;
 			-webkit-text-fill-color: transparent;
 			background-clip: text;
@@ -1215,7 +1305,7 @@ try {
 		}
 
 		.feature-icon {
-			color: #8b5fbf;
+			color: #008060;
 			font-size: 1.1rem;
 		}
 
@@ -1226,7 +1316,7 @@ try {
 		}
 
 		.cta-primary {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			padding: 14px 28px;
 			border-radius: 25px;
@@ -1238,7 +1328,7 @@ try {
 		}
 
 		.cta-primary:hover {
-			background: linear-gradient(135deg, #764ba2, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-2px);
 			box-shadow: 0 8px 25px rgba(139, 95, 191, 0.3);
 			color: white;
@@ -1246,9 +1336,9 @@ try {
 
 		.cta-secondary {
 			background: white;
-			color: #8b5fbf;
+			color: #008060;
 			padding: 14px 28px;
-			border: 2px solid #8b5fbf;
+			border: 2px solid #008060;
 			border-radius: 25px;
 			text-decoration: none;
 			font-weight: 600;
@@ -1256,7 +1346,7 @@ try {
 		}
 
 		.cta-secondary:hover {
-			background: #8b5fbf;
+			background: #008060;
 			color: white;
 			transform: translateY(-2px);
 		}
@@ -1297,7 +1387,7 @@ try {
 		}
 
 		.promo-badge {
-			background: linear-gradient(135deg, #f093fb, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
 			padding: 6px 16px;
 			border-radius: 16px;
@@ -1320,7 +1410,7 @@ try {
 		}
 
 		.promo-btn {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			padding: 12px 20px;
 			border-radius: 25px;
@@ -1331,14 +1421,14 @@ try {
 		}
 
 		.promo-btn:hover {
-			background: linear-gradient(135deg, #764ba2, #8b5fbf);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
 			transform: scale(1.05);
 		}
 
 		/* Admin Panel Styles - Made bigger with purple theme */
 		.admin-panel {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			padding: 40px;
 			border-radius: 24px;
@@ -1368,7 +1458,7 @@ try {
 
 		.admin-btn {
 			background: white;
-			color: #8b5fbf;
+			color: #008060;
 			padding: 16px 32px;
 			border-radius: 25px;
 			text-decoration: none;
@@ -1379,7 +1469,7 @@ try {
 
 		.admin-btn:hover {
 			background: rgba(255, 255, 255, 0.9);
-			color: #764ba2;
+			color: #006b4e;
 			transform: translateY(-2px);
 		}
 
@@ -2282,11 +2372,13 @@ try {
 	<nav class="main-nav">
 		<div class="container">
 			<div class="nav-menu">
-				<a href="index.php" class="nav-item">Home</a>
-
-				<!-- Shop Dropdown -->
-				<div class="nav-item dropdown" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
-					<a href="all_product.php" class="nav-link">Shop <i class="fas fa-chevron-down"></i></a>
+				<!-- Blue Shop by Categories Button -->
+				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+					<button class="categories-button">
+						<i class="fas fa-bars"></i>
+						SHOP BY CATEGORIES
+						<i class="fas fa-chevron-down"></i>
+					</button>
 					<div class="mega-dropdown" id="shopDropdown">
 						<div class="dropdown-content">
 							<div class="dropdown-column">
@@ -2328,32 +2420,37 @@ try {
 					</div>
 				</div>
 
-				<a href="repair_services.php" class="nav-item">Repair Services</a>
-				<a href="#" class="nav-item">About</a>
-				<a href="#" class="nav-item">Contact</a>
+				<!-- Main Navigation Items -->
+				<a href="index.php" class="nav-item">HOME</a>
+				<a href="all_product.php" class="nav-item">SHOP</a>
+				<a href="#" class="nav-item">COLLECTIONS</a>
+				<a href="repair_services.php" class="nav-item">SMART DEVICES</a>
+				<a href="#" class="nav-item">BLOG</a>
+				<a href="#" class="nav-item">CONTACT</a>
+				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
 			</div>
 		</div>
 	</nav>
 
-	<!-- Slideshow Banner Section (like Shopify demo) -->
-	<section id="shopify-section-template-slideshow-banner" class="shopify-section section slideshow_banner">
-		<div class="slideshow-container">
-			<div class="slideshow-wrapper">
-				<!-- Slide 1 -->
-				<div class="slide active">
-					<div class="slide-content">
-						<div class="container">
+	<!-- Hero Banner Section (matching demo) -->
+	<section class="hero-banner-section">
+		<div class="container-fluid">
+			<div class="row g-3">
+				<!-- Main Banner -->
+				<div class="col-lg-8">
+					<div class="main-banner" style="background: linear-gradient(135deg, #87CEEB 0%, #87CEEB 100%);">
+						<div class="banner-content">
 							<div class="row align-items-center">
 								<div class="col-lg-6">
-									<div class="slide-text">
-										<h1 class="slide-title">Premium Tech Devices</h1>
-										<p class="slide-subtitle">Discover the latest smartphones, laptops, and gadgets</p>
-										<a href="all_product.php" class="btn-primary-large">Shop Now</a>
+									<div class="banner-text">
+										<h1 class="banner-title">Xbox One Official Wireless Model Controller</h1>
+										<p class="banner-price">Starting At <span class="price">$236.00</span></p>
+										<button class="shop-now-btn">SHOP NOW</button>
 									</div>
 								</div>
 								<div class="col-lg-6">
-									<div class="slide-image">
-										<img src="https://via.placeholder.com/600x400/008060/ffffff?text=Latest+Tech" alt="Latest Tech Devices">
+									<div class="banner-image">
+										<img src="https://via.placeholder.com/400x300/87CEEB/000000?text=Xbox+Controller" alt="Xbox Controller">
 									</div>
 								</div>
 							</div>
@@ -2361,131 +2458,200 @@ try {
 					</div>
 				</div>
 
-				<!-- Slide 2 -->
-				<div class="slide">
-					<div class="slide-content">
-						<div class="container">
-							<div class="row align-items-center">
-								<div class="col-lg-6">
-									<div class="slide-text">
-										<h1 class="slide-title">Expert Repair Services</h1>
-										<p class="slide-subtitle">Professional device repair with warranty</p>
-										<a href="repair_services.php" class="btn-primary-large">Book Repair</a>
-									</div>
+				<!-- Side Banners -->
+				<div class="col-lg-4">
+					<div class="side-banners">
+						<!-- T900 Watch Banner -->
+						<div class="side-banner mb-3" style="background: linear-gradient(135deg, #FFD700 0%, #FFD700 100%);">
+							<div class="side-banner-content">
+								<div class="side-text">
+									<h3>T900 Ultra Watch</h3>
+									<p>Starting <strong>$19.00</strong></p>
+									<button class="shop-btn">SHOP NOW</button>
 								</div>
-								<div class="col-lg-6">
-									<div class="slide-image">
-										<img src="https://via.placeholder.com/600x400/008060/ffffff?text=Device+Repair" alt="Device Repair">
-									</div>
+								<div class="side-image">
+									<img src="https://via.placeholder.com/150x150/FFD700/000000?text=Smart+Watch" alt="Smart Watch">
 								</div>
 							</div>
 						</div>
-					</div>
-				</div>
 
-				<!-- Slide 3 -->
-				<div class="slide">
-					<div class="slide-content">
-						<div class="container">
-							<div class="row align-items-center">
-								<div class="col-lg-6">
-									<div class="slide-text">
-										<h1 class="slide-title">Camera Equipment</h1>
-										<p class="slide-subtitle">Professional photography and video gear</p>
-										<a href="all_product.php?category=cameras" class="btn-primary-large">Explore Cameras</a>
-									</div>
+						<!-- Kids Headphones Banner -->
+						<div class="side-banner" style="background: linear-gradient(135deg, #9333ea 0%, #9333ea 100%);">
+							<div class="side-banner-content">
+								<div class="side-text">
+									<h3>Kids Wireless Headphones</h3>
+									<p>Starting <strong>$36.00</strong></p>
+									<button class="shop-btn">SHOP NOW</button>
 								</div>
-								<div class="col-lg-6">
-									<div class="slide-image">
-										<img src="https://via.placeholder.com/600x400/008060/ffffff?text=Professional+Cameras" alt="Professional Cameras">
-									</div>
+								<div class="side-image">
+									<img src="https://via.placeholder.com/150x150/8A2BE2/ffffff?text=Kids+Headphones" alt="Kids Headphones">
 								</div>
 							</div>
 						</div>
 					</div>
 				</div>
 			</div>
-
-			<!-- Navigation dots -->
-			<div class="slideshow-dots">
-				<span class="dot active" onclick="currentSlide(1)"></span>
-				<span class="dot" onclick="currentSlide(2)"></span>
-				<span class="dot" onclick="currentSlide(3)"></span>
-			</div>
-
-			<!-- Navigation arrows -->
-			<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
-			<a class="next" onclick="plusSlides(1)">&#10095;</a>
 		</div>
 	</section>
 
-	<!-- Featured Collections Section -->
-	<section id="shopify-section-template-featured-collection" class="shopify-section section featured-collection">
+	<!-- Features Section -->
+	<section class="features-section">
 		<div class="container">
-			<div class="section-header text-center">
-				<h2 class="section-title">Featured Collections</h2>
-				<p class="section-subtitle">Explore our most popular product categories</p>
+			<div class="row">
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-item">
+						<div class="feature-icon">
+							<i class="fas fa-shipping-fast"></i>
+						</div>
+						<div class="feature-text">
+							<h4>Free Shipping</h4>
+							<p>Free shipping on all order</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-item">
+						<div class="feature-icon">
+							<i class="fas fa-undo-alt"></i>
+						</div>
+						<div class="feature-text">
+							<h4>Money Return</h4>
+							<p>Back guarantee in 7 days</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-item">
+						<div class="feature-icon">
+							<i class="fas fa-percentage"></i>
+						</div>
+						<div class="feature-text">
+							<h4>Member Discount</h4>
+							<p>Onevery order over $120.00</p>
+						</div>
+					</div>
+				</div>
+				<div class="col-lg-3 col-md-6">
+					<div class="feature-item">
+						<div class="feature-icon">
+							<i class="fas fa-gift"></i>
+						</div>
+						<div class="feature-text">
+							<h4>Special Gifts</h4>
+							<p>Contact us Anytime</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Most Popular Categories -->
+	<section class="popular-categories">
+		<div class="container">
+			<h2 class="section-title">Most Popular Categories</h2>
+			<div class="row">
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://via.placeholder.com/80x80/4f63d2/ffffff?text=iPad" alt="Apple iPad">
+						</div>
+						<h4>Apple iPad</h4>
+						<p>(5 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://via.placeholder.com/80x80/6b7280/ffffff?text=Smart" alt="Smart Speaker">
+						</div>
+						<h4>Smart Speaker</h4>
+						<p>(5 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://via.placeholder.com/80x80/f59e0b/ffffff?text=Game" alt="Game Console">
+						</div>
+						<h4>Game Console</h4>
+						<p>(7 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://via.placeholder.com/80x80/22c55e/ffffff?text=AirPods" alt="Pro Air Pods">
+						</div>
+						<h4>Pro Air Pods</h4>
+						<p>(4 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://via.placeholder.com/80x80/f59e0b/ffffff?text=Watch" alt="Smart Watch">
+						</div>
+						<h4>Smart Watch</h4>
+						<p>(5 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://via.placeholder.com/80x80/374151/ffffff?text=360Cam" alt="Gear 360 Camera">
+						</div>
+						<h4>Gear 360 Camera</h4>
+						<p><a href="all_product.php" class="view-all-link">VIEW ALL</a></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Smart Band Promo -->
+	<section class="smart-band-promo">
+		<div class="container">
+			<div class="promo-banner" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
+				<div class="promo-content">
+					<h2>Strap Compatible For Mi Band 5 And Mi Band 6 Wristband</h2>
+					<p>Perfect Fit to Band 5 just 6 Replacement Strap Only</p>
+					<div class="promo-images">
+						<img src="https://via.placeholder.com/100x100/6366f1/ffffff?text=Band1" alt="Smart Band 1">
+						<img src="https://via.placeholder.com/100x100/8b5cf6/ffffff?text=Band2" alt="Smart Band 2">
+						<img src="https://via.placeholder.com/100x100/ec4899/ffffff?text=Band3" alt="Smart Band 3">
+						<img src="https://via.placeholder.com/100x100/f59e0b/ffffff?text=Band4" alt="Smart Band 4">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Products By Category -->
+	<section class="products-by-category">
+		<div class="container">
+			<div class="section-header">
+				<h2>Products By Category</h2>
+				<div class="category-tabs">
+					<button class="category-tab active">GADGETS</button>
+					<button class="category-tab">ACCESSORIES</button>
+					<button class="category-tab">SMART PHONES</button>
+				</div>
 			</div>
 
 			<div class="row">
-				<div class="col-lg-4 col-md-6 mb-4">
-					<div class="collection-card">
-						<div class="collection-image">
-							<img src="https://via.placeholder.com/400x300/f8f9fa/008060?text=Smartphones" alt="Smartphones">
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://via.placeholder.com/200x200/f8f9fa/4f63d2?text=QLED+TV" alt="Samsung Smart TV">
 						</div>
-						<div class="collection-content">
-							<h3 class="collection-title">Smartphones</h3>
-							<p class="collection-description">Latest iPhone, Samsung, and Android devices</p>
-							<a href="all_product.php?category=phones" class="collection-link">Shop Phones</a>
-						</div>
+						<h4>Dell</h4>
+						<p>All in One Samsung Smart TV OLED 4K Black</p>
+						<div class="price">$340.00</div>
+						<button class="product-btn">SOLD OUT</button>
 					</div>
 				</div>
-
-				<div class="col-lg-4 col-md-6 mb-4">
-					<div class="collection-card">
-						<div class="collection-image">
-							<img src="https://via.placeholder.com/400x300/f8f9fa/008060?text=Laptops" alt="Laptops">
-						</div>
-						<div class="collection-content">
-							<h3 class="collection-title">Laptops & Computers</h3>
-							<p class="collection-description">High-performance laptops and desktop computers</p>
-							<a href="all_product.php?category=laptops" class="collection-link">Shop Computers</a>
-						</div>
-					</div>
-				</div>
-
-				<div class="col-lg-4 col-md-6 mb-4">
-					<div class="collection-card">
-						<div class="collection-image">
-							<img src="https://via.placeholder.com/400x300/f8f9fa/008060?text=Cameras" alt="Cameras">
-						</div>
-						<div class="collection-content">
-							<h3 class="collection-title">Photography</h3>
-							<p class="collection-description">Professional cameras and video equipment</p>
-							<a href="all_product.php?category=cameras" class="collection-link">Shop Cameras</a>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- Special Products Section -->
-	<section id="shopify-section-template-special-product" class="shopify-section section special-product">
-		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-lg-6">
-					<div class="special-content">
-						<h2 class="special-title">New Arrivals</h2>
-						<p class="special-description">Be the first to get your hands on the latest tech innovations</p>
-						<a href="all_product.php" class="btn-outline-primary">View New Products</a>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="special-image">
-						<img src="https://via.placeholder.com/500x350/f8f9fa/008060?text=New+Arrivals" alt="New Arrivals">
-					</div>
-				</div>
+				<!-- Add more products here similar to above -->
 			</div>
 		</div>
 	</section>
@@ -2510,7 +2676,7 @@ try {
 			<div class="row" id="topPicksContainer">
 				<div class="col-12 text-center">
 					<div class="loading-spinner">
-						<i class="fas fa-spinner fa-spin fa-2x" style="color: #8b5fbf;"></i>
+						<i class="fas fa-spinner fa-spin fa-2x" style="color: #008060;"></i>
 						<p class="mt-3">Loading top picks...</p>
 					</div>
 				</div>

@@ -178,7 +178,7 @@ function loadBrands() {
     });
 }
 
-// Display brands organized by category
+// Display brands with multiple categories
 function displayBrands(brands) {
     var tbody = $('#brandTable tbody');
     tbody.empty();
@@ -188,32 +188,20 @@ function displayBrands(brands) {
         return;
     }
 
-    // Group brands by category
-    var groupedBrands = {};
     brands.forEach(function(brand) {
-        var categoryName = brand.cat_name || 'Uncategorized';
-        if (!groupedBrands[categoryName]) {
-            groupedBrands[categoryName] = [];
-        }
-        groupedBrands[categoryName].push(brand);
-    });
+        // Handle both old and new data structures
+        var categoryDisplay = brand.category_names || brand.cat_name || 'Uncategorized';
+        var categoryIds = brand.category_ids ? brand.category_ids.split(',').map(id => parseInt(id.trim())) : [brand.category_id || 0];
 
-    // Display grouped brands
-    Object.keys(groupedBrands).forEach(function(categoryName) {
-        var categoryBrands = groupedBrands[categoryName];
-
-        categoryBrands.forEach(function(brand, index) {
-            var categoryId = brand.category_id || 0;
-            var row = '<tr>' +
-                '<td>' + (index === 0 ? '<strong>' + categoryName + '</strong>' : '') + '</td>' +
-                '<td>' + brand.brand_name + '</td>' +
-                '<td>' +
-                    '<button class="btn btn-edit btn-sm me-2" onclick="editBrand(' + brand.brand_id + ', \'' + brand.brand_name + '\', ' + categoryId + ')">Edit</button>' +
-                    '<button class="btn btn-delete btn-sm" onclick="deleteBrand(' + brand.brand_id + ', \'' + brand.brand_name + '\')">Delete</button>' +
-                '</td>' +
-                '</tr>';
-            tbody.append(row);
-        });
+        var row = '<tr>' +
+            '<td>' + categoryDisplay + '</td>' +
+            '<td>' + brand.brand_name + '</td>' +
+            '<td>' +
+                '<button class="btn btn-edit btn-sm me-2" onclick="editBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\', [' + categoryIds.join(',') + '])">Edit</button>' +
+                '<button class="btn btn-delete btn-sm" onclick="deleteBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\')">Delete</button>' +
+            '</td>' +
+            '</tr>';
+        tbody.append(row);
     });
 }
 

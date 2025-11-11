@@ -435,10 +435,11 @@ require_admin(); // only admins
                                         <input type="text" class="form-control" id="brand_name" name="brand_name" placeholder="Enter brand name" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="category_id" class="form-label">Category</label>
-                                        <select class="form-select" id="category_id" name="category_id" required>
-                                            <option value="">Select Category</option>
-                                        </select>
+                                        <label class="form-label">Categories</label>
+                                        <div id="category_checkboxes" class="border rounded p-3" style="max-height: 200px; overflow-y: auto; background: #f8f9fa;">
+                                            <p class="text-muted mb-0">Loading categories...</p>
+                                        </div>
+                                        <small class="form-text text-muted">Select one or more categories for this brand</small>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Add Brand</button>
                                 </form>

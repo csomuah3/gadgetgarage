@@ -178,7 +178,7 @@ function loadBrands() {
     });
 }
 
-// Display brands with multiple categories
+// Display brands with categories
 function displayBrands(brands) {
     var tbody = $('#brandTable tbody');
     tbody.empty();
@@ -189,15 +189,15 @@ function displayBrands(brands) {
     }
 
     brands.forEach(function(brand) {
-        // Handle both old and new data structures
-        var categoryDisplay = brand.category_names || brand.cat_name || 'Uncategorized';
-        var categoryIds = brand.category_ids ? brand.category_ids.split(',').map(id => parseInt(id.trim())) : [brand.category_id || 0];
+        // Handle current single-category structure
+        var categoryDisplay = brand.cat_name || 'Uncategorized';
+        var categoryId = brand.category_id || 0;
 
         var row = '<tr>' +
             '<td>' + categoryDisplay + '</td>' +
             '<td>' + brand.brand_name + '</td>' +
             '<td>' +
-                '<button class="btn btn-edit btn-sm me-2" onclick="editBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\', [' + categoryIds.join(',') + '])">Edit</button>' +
+                '<button class="btn btn-edit btn-sm me-2" onclick="editBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\', ' + categoryId + ')">Edit</button>' +
                 '<button class="btn btn-delete btn-sm" onclick="deleteBrand(' + brand.brand_id + ', \'' + brand.brand_name.replace(/'/g, "\\'") + '\')">Delete</button>' +
             '</td>' +
             '</tr>';

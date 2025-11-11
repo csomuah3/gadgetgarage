@@ -54,7 +54,7 @@ try {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>FlavorHub - Your One-Stop Food Destination</title>
+	<title>Gadget Garage - Premium Tech Devices & Repair Services</title>
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -71,33 +71,34 @@ try {
 
 		body {
 			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-			background-color: #f8fafc;
-			color: #1a202c;
+			background-color: #ffffff;
+			color: #1a1a1a;
 			overflow-x: hidden;
 		}
 
 		/* Header Styles */
 		.main-header {
-			background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-			box-shadow: 0 2px 10px rgba(139, 95, 191, 0.1);
+			background: #ffffff;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
 			top: 0;
 			z-index: 1000;
-			padding: 12px 0;
+			padding: 16px 0;
+			border-bottom: 1px solid #e5e7eb;
 		}
 
 		.logo {
 			font-size: 1.8rem;
 			font-weight: 700;
-			color: #8b5fbf;
+			color: #1f2937;
 			text-decoration: none;
 			display: flex;
 			align-items: center;
 			gap: 8px;
 		}
 
-		.logo .co {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+		.logo .garage {
+			background: linear-gradient(135deg, #000000, #333333);
 			color: white;
 			padding: 4px 8px;
 			border-radius: 6px;
@@ -640,11 +641,13 @@ try {
 		/* Category Navigation */
 		.category-nav {
 			background: white;
-			border-top: 1px solid #e2e8f0;
-			padding: 12px 0;
+			border-top: 1px solid #e5e7eb;
+			border-bottom: 1px solid #e5e7eb;
+			padding: 16px 0;
 			position: sticky;
-			top: 76px;
+			top: 85px;
 			z-index: 999;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 		}
 
 		.category-list {
@@ -663,30 +666,50 @@ try {
 
 		.category-item {
 			white-space: nowrap;
-			padding: 8px 16px;
+			padding: 12px 20px;
 			background: #f8fafc;
-			border: 2px solid #e2e8f0;
-			border-radius: 20px;
-			color: #4b5563;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			color: #374151;
 			text-decoration: none;
 			font-weight: 500;
 			font-size: 0.9rem;
 			transition: all 0.3s ease;
 			cursor: pointer;
+			display: flex;
+			align-items: center;
+			gap: 8px;
 		}
 
 		.category-item:hover,
 		.category-item.active {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: #000000;
 			color: white;
-			border-color: #8b5fbf;
-			transform: translateY(-1px);
+			border-color: #000000;
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 		}
 
 		.category-item.featured {
-			background: linear-gradient(135deg, #8b5fbf, #f093fb);
+			background: #1f2937;
 			color: white;
-			border-color: #8b5fbf;
+			border-color: #1f2937;
+		}
+
+		.category-item.featured:hover {
+			background: #111827;
+			border-color: #111827;
+		}
+
+		.category-item.repair {
+			background: #16a34a;
+			color: white;
+			border-color: #16a34a;
+		}
+
+		.category-item.repair:hover {
+			background: #15803d;
+			border-color: #15803d;
 		}
 
 		/* Hero Section */
@@ -891,9 +914,10 @@ try {
 			box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
 		}
 
-		.promo-card.yellow {
-			background: linear-gradient(135deg, #fbbf24, #f59e0b);
+		.promo-card.tech-blue {
+			background: linear-gradient(135deg, #f8fafc, #e2e8f0);
 			color: #1f2937;
+			border: 1px solid #e5e7eb;
 		}
 
 		.promo-card.white {
@@ -1013,7 +1037,7 @@ try {
 				font-size: 1.4rem;
 			}
 
-			.logo .co {
+			.logo .garage {
 				font-size: 0.85rem;
 			}
 
@@ -1323,13 +1347,13 @@ try {
 			<div class="d-flex align-items-center justify-content-between header-container">
 				<!-- Logo -->
 				<a href="#" class="logo">
-					flavorhub<span class="co">co</span>
+					Gadget<span class="garage">Garage</span>
 				</a>
 
 				<!-- Search Bar -->
 				<form class="search-container" method="GET" action="product_search_result.php">
 					<i class="fas fa-search search-icon"></i>
-					<input type="text" name="query" class="search-input" placeholder="Search products in FlavorHub" required>
+					<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 					<button type="submit" class="search-btn">
 						<i class="fas fa-search"></i>
 					</button>
@@ -1414,14 +1438,34 @@ try {
 	<nav class="category-nav animate__animated animate__fadeInUp">
 		<div class="container">
 			<div class="category-list">
-				<a href="all_product.php" class="category-item featured">All Products</a>
-				<?php if (!empty($categories)): ?>
-					<?php foreach (array_slice($categories, 0, 8) as $category): ?>
-						<a href="all_product.php?cat_id=<?php echo $category['cat_id']; ?>" class="category-item">
-							<?php echo htmlspecialchars($category['cat_name']); ?>
-						</a>
-					<?php endforeach; ?>
-				<?php endif; ?>
+				<a href="all_product.php" class="category-item featured">
+					<i class="fas fa-th-large"></i>
+					All Products
+				</a>
+				<a href="all_product.php?category=phones" class="category-item">
+					<i class="fas fa-mobile-alt"></i>
+					Phones
+				</a>
+				<a href="all_product.php?category=laptops" class="category-item">
+					<i class="fas fa-laptop"></i>
+					Laptops & Desktops
+				</a>
+				<a href="all_product.php?category=ipads" class="category-item">
+					<i class="fas fa-tablet-alt"></i>
+					iPads & Tablets
+				</a>
+				<a href="all_product.php?category=cameras" class="category-item">
+					<i class="fas fa-camera"></i>
+					Cameras
+				</a>
+				<a href="all_product.php?category=video" class="category-item">
+					<i class="fas fa-video"></i>
+					Video Equipment
+				</a>
+				<a href="repair_services.php" class="category-item repair">
+					<i class="fas fa-wrench"></i>
+					Repair Services
+				</a>
 			</div>
 		</div>
 	</nav>
@@ -1433,39 +1477,39 @@ try {
 				<div class="col-lg-6">
 					<div class="hero-content animate-fade-in">
 						<h1 class="hero-title">
-							Your <span class="hero-highlight">Fresh Food Hub</span><br>
-							for Every Craving!
+							Your <span class="hero-highlight">Tech Paradise</span><br>
+							Everything Digital!
 						</h1>
 						<p class="hero-subtitle">
-							Fresh ingredients, quick delivery,<br>
-							and quality guaranteed from farm to table!
+							Premium gadgets, expert repairs,<br>
+							and technology solutions you can trust!
 						</p>
 
 						<div class="hero-features">
 							<div class="feature-item">
 								<i class="fas fa-shipping-fast feature-icon"></i>
-								<span>Fresh Delivery</span>
+								<span>Fast Shipping</span>
 							</div>
 							<div class="feature-item">
-								<i class="fas fa-leaf feature-icon"></i>
-								<span>Farm Fresh</span>
+								<i class="fas fa-tools feature-icon"></i>
+								<span>Expert Repairs</span>
 							</div>
 							<div class="feature-item">
-								<i class="fas fa-headset feature-icon"></i>
-								<span>24/7 Support</span>
+								<i class="fas fa-shield-alt feature-icon"></i>
+								<span>Warranty</span>
 							</div>
 						</div>
 
 						<div class="cta-buttons">
 							<?php if (!$is_logged_in): ?>
 								<a href="login/register.php" class="cta-primary">Get Started</a>
-								<a href="#" class="cta-secondary">Browse Menu</a>
+								<a href="all_product.php" class="cta-secondary">Browse Gadgets</a>
 							<?php elseif ($is_admin): ?>
-								<a href="admin/category.php" class="cta-primary">Manage Kitchen</a>
-								<a href="#" class="cta-secondary">View Analytics</a>
+								<a href="admin/category.php" class="cta-primary">Manage Store</a>
+								<a href="admin/orders.php" class="cta-secondary">View Orders</a>
 							<?php else: ?>
-								<a href="#" class="cta-primary">Order Now</a>
-								<a href="#" class="cta-secondary">View Specials</a>
+								<a href="all_product.php" class="cta-primary">Shop Now</a>
+								<a href="repair_services.php" class="cta-secondary">Repair Services</a>
 							<?php endif; ?>
 						</div>
 					</div>
@@ -1473,16 +1517,16 @@ try {
 				<div class="col-lg-6">
 					<!-- Promotional Cards -->
 					<div class="promo-cards animate-slide-up">
-						<div class="promo-card yellow">
-							<div class="promo-badge">Summer Special</div>
-							<div class="promo-title">Fresh<br>Summer<br>Produce</div>
-							<div class="promo-subtitle">Get the freshest fruits & vegetables<br>at unbeatable prices</div>
-							<a href="#" class="promo-btn">Shop fresh</a>
+						<div class="promo-card tech-blue">
+							<div class="promo-badge">New Arrivals</div>
+							<div class="promo-title">Latest<br>iPhone 15<br>Series</div>
+							<div class="promo-subtitle">Experience cutting-edge technology<br>with unmatched performance</div>
+							<a href="all_product.php?category=phones" class="promo-btn">Shop iPhones</a>
 						</div>
 						<div class="promo-card white">
-							<div class="promo-badge">20% OFF</div>
-							<div class="promo-title">For All<br>Organic<br>Products</div>
-							<a href="#" class="promo-btn">Go organic</a>
+							<div class="promo-badge">FREE Repair</div>
+							<div class="promo-title">Professional<br>Device<br>Repair</div>
+							<a href="repair_services.php" class="promo-btn">Book Service</a>
 						</div>
 					</div>
 				</div>

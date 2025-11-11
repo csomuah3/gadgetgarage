@@ -554,8 +554,8 @@ if (!$product) {
                                             <small>Minor scratches, fully functional</small>
                                         </div>
                                         <div class="text-end">
-                                            <div class="condition-price" id="goodPrice">GHS<?php echo number_format($product['product_price'] - 100, 0); ?></div>
-                                            <div class="condition-discount">-GHC100</div>
+                                            <div class="condition-price" id="goodPrice">GHS<?php echo number_format($product['product_price'] - 300, 0); ?></div>
+                                            <div class="condition-discount">-GHC300</div>
                                         </div>
                                     </label>
                                 </div>
@@ -567,8 +567,8 @@ if (!$product) {
                                             <small>Visible wear, works perfectly</small>
                                         </div>
                                         <div class="text-end">
-                                            <div class="condition-price" id="fairPrice">GHS<?php echo number_format($product['product_price'] - 200, 0); ?></div>
-                                            <div class="condition-discount">-GHC200</div>
+                                            <div class="condition-price" id="fairPrice">GHS<?php echo number_format($product['product_price'] - 400, 0); ?></div>
+                                            <div class="condition-discount">-GHC400</div>
                                         </div>
                                     </label>
                                 </div>

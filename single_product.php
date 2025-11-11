@@ -290,6 +290,105 @@ if (!$product) {
             transform: scale(1.1);
         }
 
+        /* Condition Selection Styles */
+        .condition-selection {
+            background: #f8fafc;
+            border-radius: 12px;
+            padding: 20px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .condition-options {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .condition-option {
+            margin-bottom: 0 !important;
+        }
+
+        .condition-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            min-width: 120px;
+            text-align: center;
+        }
+
+        .condition-label i {
+            font-size: 1.5rem;
+            margin-bottom: 8px;
+        }
+
+        .condition-label span {
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 4px;
+            color: #1a202c;
+        }
+
+        .condition-label small {
+            font-size: 0.8rem;
+            color: #64748b;
+            line-height: 1.2;
+        }
+
+        .excellent-label i {
+            color: #22c55e;
+        }
+
+        .good-label i {
+            color: #3b82f6;
+        }
+
+        .fair-label i {
+            color: #f59e0b;
+        }
+
+        .condition-option input[type="radio"]:checked + .condition-label {
+            border-color: #000000;
+            background: #f8f9fa;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .condition-option input[type="radio"] {
+            display: none;
+        }
+
+        /* Price Section Styles */
+        .price-section {
+            margin-bottom: 25px;
+        }
+
+        .price-breakdown {
+            margin-top: 10px;
+            padding: 15px;
+            background: #f0f9ff;
+            border-radius: 8px;
+            border: 1px solid #bae6fd;
+        }
+
+        .original-price {
+            color: #64748b;
+            text-decoration: line-through;
+            font-size: 1.1rem;
+            margin-bottom: 5px;
+        }
+
+        .discount-amount {
+            color: #dc2626;
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+
         @media (max-width: 768px) {
             .product-details {
                 padding: 20px;
@@ -314,6 +413,15 @@ if (!$product) {
 
             .add-to-cart-btn {
                 justify-content: center;
+            }
+
+            .condition-options {
+                flex-direction: column;
+            }
+
+            .condition-label {
+                min-width: auto;
+                padding: 15px;
             }
         }
     </style>
@@ -409,7 +517,46 @@ if (!$product) {
                         </div>
 
                         <h1 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h1>
-                        <div class="product-price">GHS <?php echo number_format($product['product_price'], 2); ?></div>
+
+                        <!-- Condition Selection -->
+                        <div class="condition-selection mb-4">
+                            <h5 style="color: #8b5fbf; margin-bottom: 15px;">Product Condition</h5>
+                            <div class="condition-options">
+                                <div class="form-check form-check-inline condition-option">
+                                    <input class="form-check-input" type="radio" name="condition" id="excellent" value="excellent" checked>
+                                    <label class="form-check-label condition-label excellent-label" for="excellent">
+                                        <i class="fas fa-star"></i>
+                                        <span>Excellent</span>
+                                        <small>Brand new condition</small>
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline condition-option">
+                                    <input class="form-check-input" type="radio" name="condition" id="good" value="good">
+                                    <label class="form-check-label condition-label good-label" for="good">
+                                        <i class="fas fa-thumbs-up"></i>
+                                        <span>Good</span>
+                                        <small>Minor wear signs</small>
+                                    </label>
+                                </div>
+                                <div class="form-check form-check-inline condition-option">
+                                    <input class="form-check-input" type="radio" name="condition" id="fair" value="fair">
+                                    <label class="form-check-label condition-label fair-label" for="fair">
+                                        <i class="fas fa-tools"></i>
+                                        <span>Fair</span>
+                                        <small>Visible wear, fully functional</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Price Display -->
+                        <div class="price-section">
+                            <div class="product-price" id="displayPrice">GHS <?php echo number_format($product['product_price'], 2); ?></div>
+                            <div class="price-breakdown" id="priceBreakdown" style="display: none;">
+                                <div class="original-price">Original Price: <span id="originalPrice">GHS <?php echo number_format($product['product_price'], 2); ?></span></div>
+                                <div class="discount-amount" id="discountAmount">Discount: -GHS 0.00</div>
+                            </div>
+                        </div>
 
                         <div class="product-meta">
                             <div class="meta-item">
@@ -481,6 +628,10 @@ if (!$product) {
     <script src="js/cart.js"></script>
     <script>
         function addToCart(productId) {
+            // Get selected condition
+            const selectedCondition = document.querySelector('input[name="condition"]:checked').value;
+            const priceData = calculatePrice(selectedCondition);
+
             // Show loading state
             const btn = event.target.closest('.add-to-cart-btn');
             const originalText = btn.innerHTML;
@@ -490,6 +641,8 @@ if (!$product) {
             const formData = new FormData();
             formData.append('product_id', productId);
             formData.append('quantity', 1);
+            formData.append('condition', selectedCondition);
+            formData.append('final_price', priceData.finalPrice);
 
             fetch('actions/add_to_cart_action.php', {
                     method: 'POST',
@@ -508,7 +661,7 @@ if (!$product) {
                             btn.disabled = false;
                         }, 2000);
                         updateCartBadge(data.cart_count);
-                        showNotification('Product added to cart successfully!', 'success');
+                        showNotification(`${selectedCondition.charAt(0).toUpperCase() + selectedCondition.slice(1)} condition product added to cart!`, 'success');
                     } else {
                         btn.innerHTML = originalText;
                         btn.disabled = false;
@@ -606,10 +759,98 @@ if (!$product) {
             return `https://via.placeholder.com/${size}/8b5fbf/ffffff?text=${encodedText}`;
         }
 
+        // Condition-based pricing configuration
+        const categoryPricing = {
+            'Tablets': { // iPads
+                'excellent': 0,
+                'good': 300,
+                'fair': 400
+            },
+            'Laptops': {
+                'excellent': 0,
+                'good': 500,
+                'fair': 700
+            },
+            'Desktops': {
+                'excellent': 0,
+                'good': 700,
+                'fair': 1000
+            },
+            'Cameras': { // Camera and Camera Equipment
+                'excellent': 0,
+                'good': 500,
+                'fair': 750
+            },
+            'Camera Equipment': {
+                'excellent': 0,
+                'good': 500,
+                'fair': 750
+            },
+            'default': { // Default for any other category
+                'excellent': 0,
+                'good': 300,
+                'fair': 400
+            }
+        };
+
+        // Get product data
+        const productCategory = '<?php echo addslashes($product['cat_name']); ?>';
+        const originalPrice = <?php echo $product['product_price']; ?>;
+
+        // Price calculation function
+        function calculatePrice(condition) {
+            const categoryKey = categoryPricing[productCategory] ? productCategory : 'default';
+            const discount = categoryPricing[categoryKey][condition];
+            const finalPrice = originalPrice - discount;
+
+            return {
+                finalPrice: Math.max(finalPrice, 0), // Ensure price doesn't go negative
+                discount: discount
+            };
+        }
+
+        // Update price display
+        function updatePriceDisplay(condition) {
+            const priceData = calculatePrice(condition);
+            const displayPrice = document.getElementById('displayPrice');
+            const priceBreakdown = document.getElementById('priceBreakdown');
+            const originalPriceSpan = document.getElementById('originalPrice');
+            const discountAmount = document.getElementById('discountAmount');
+
+            displayPrice.textContent = `GHS ${priceData.finalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+            if (priceData.discount > 0) {
+                priceBreakdown.style.display = 'block';
+                originalPriceSpan.textContent = `GHS ${originalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                discountAmount.textContent = `Discount: -GHS ${priceData.discount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            } else {
+                priceBreakdown.style.display = 'none';
+            }
+        }
+
+        // Add event listeners to condition radio buttons
+        function initializeConditionSelection() {
+            const conditionInputs = document.querySelectorAll('input[name="condition"]');
+            conditionInputs.forEach(input => {
+                input.addEventListener('change', function() {
+                    if (this.checked) {
+                        updatePriceDisplay(this.value);
+                    }
+                });
+            });
+
+            // Initialize with default selection
+            const defaultCondition = document.querySelector('input[name="condition"]:checked').value;
+            updatePriceDisplay(defaultCondition);
+        }
+
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
             // Load product image
             loadProductImage();
+
+            // Initialize condition-based pricing
+            initializeConditionSelection();
 
             // Animate product details on load
             const productDetails = document.querySelector('.product-details');

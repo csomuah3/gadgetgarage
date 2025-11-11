@@ -7,6 +7,12 @@ function add_to_cart_ctr($product_id, $quantity = 1, $customer_id = null, $ip_ad
     return $cart->add_to_cart($product_id, $quantity, $customer_id, $ip_address);
 }
 
+function add_to_cart_with_condition_ctr($product_id, $quantity = 1, $customer_id = null, $ip_address = null, $condition = 'excellent', $final_price = 0)
+{
+    $cart = new Cart();
+    return $cart->add_to_cart_with_condition($product_id, $quantity, $customer_id, $ip_address, $condition, $final_price);
+}
+
 function update_cart_item_ctr($product_id, $quantity, $customer_id = null, $ip_address = null)
 {
     $cart = new Cart();

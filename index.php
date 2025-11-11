@@ -825,13 +825,271 @@ try {
 		}
 
 		/* Hero Section */
-		.hero-section {
-			background: linear-gradient(135deg, #f8f9ff 0%, #f1f5f9 50%, #e2e8f0 100%);
-			padding: 60px 0;
-			margin-top: 0px;
+		/* Slideshow Banner Styles */
+		.slideshow_banner {
+			position: relative;
+			width: 100%;
+			min-height: 500px;
+			overflow: hidden;
+		}
+
+		.slideshow-container {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.slideshow-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		.slide {
+			display: none;
+			width: 100%;
+			min-height: 500px;
+			position: relative;
+			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+		}
+
+		.slide.active {
+			display: block;
+		}
+
+		.slide-content {
+			padding: 80px 0;
+		}
+
+		.slide-text {
+			padding: 0 20px;
+		}
+
+		.slide-title {
+			font-size: 3rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin-bottom: 20px;
+			line-height: 1.2;
+		}
+
+		.slide-subtitle {
+			font-size: 1.2rem;
+			color: #6b7280;
+			margin-bottom: 30px;
+			line-height: 1.6;
+		}
+
+		.btn-primary-large {
+			background: #008060;
+			color: white;
+			padding: 15px 30px;
+			border: none;
+			border-radius: 8px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			text-decoration: none;
+			display: inline-block;
+			transition: all 0.3s ease;
+		}
+
+		.btn-primary-large:hover {
+			background: #006b4e;
+			transform: translateY(-2px);
+			color: white;
+		}
+
+		.slide-image img {
+			width: 100%;
+			height: auto;
+			border-radius: 12px;
+		}
+
+		/* Slideshow Navigation */
+		.slideshow-dots {
+			text-align: center;
+			margin-top: 20px;
+			position: absolute;
+			bottom: 20px;
+			width: 100%;
+		}
+
+		.dot {
+			height: 12px;
+			width: 12px;
+			margin: 0 5px;
+			background-color: #bbb;
+			border-radius: 50%;
+			display: inline-block;
+			cursor: pointer;
+			transition: background-color 0.3s ease;
+		}
+
+		.dot.active,
+		.dot:hover {
+			background-color: #008060;
+		}
+
+		.prev, .next {
+			cursor: pointer;
+			position: absolute;
+			top: 50%;
+			width: auto;
+			margin-top: -22px;
+			padding: 16px;
+			color: #008060;
+			font-weight: bold;
+			font-size: 18px;
+			border: none;
+			background: rgba(255, 255, 255, 0.8);
+			border-radius: 50%;
+			user-select: none;
+			transition: all 0.3s ease;
+		}
+
+		.next {
+			right: 20px;
+		}
+
+		.prev {
+			left: 20px;
+		}
+
+		.prev:hover, .next:hover {
+			background: rgba(0, 128, 96, 0.8);
+			color: white;
+		}
+
+		/* Featured Collections Styles */
+		.featured-collection {
+			padding: 80px 0;
+			background: #f8f9fa;
+		}
+
+		.section-header {
+			margin-bottom: 50px;
+		}
+
+		.section-title {
+			font-size: 2.5rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin-bottom: 16px;
+		}
+
+		.section-subtitle {
+			font-size: 1.1rem;
+			color: #6b7280;
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.collection-card {
+			background: white;
+			border-radius: 12px;
+			overflow: hidden;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+			transition: all 0.3s ease;
+			height: 100%;
+		}
+
+		.collection-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+		}
+
+		.collection-image {
 			position: relative;
 			overflow: hidden;
-			min-height: 60vh;
+		}
+
+		.collection-image img {
+			width: 100%;
+			height: 250px;
+			object-fit: cover;
+			transition: transform 0.3s ease;
+		}
+
+		.collection-card:hover .collection-image img {
+			transform: scale(1.05);
+		}
+
+		.collection-content {
+			padding: 24px;
+		}
+
+		.collection-title {
+			font-size: 1.5rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 12px;
+		}
+
+		.collection-description {
+			color: #6b7280;
+			margin-bottom: 20px;
+			line-height: 1.6;
+		}
+
+		.collection-link {
+			color: #008060;
+			font-weight: 600;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			transition: color 0.3s ease;
+		}
+
+		.collection-link:hover {
+			color: #006b4e;
+		}
+
+		/* Special Product Section */
+		.special-product {
+			padding: 80px 0;
+			background: white;
+		}
+
+		.special-content {
+			padding: 0 20px;
+		}
+
+		.special-title {
+			font-size: 2.5rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin-bottom: 20px;
+		}
+
+		.special-description {
+			font-size: 1.2rem;
+			color: #6b7280;
+			margin-bottom: 30px;
+			line-height: 1.6;
+		}
+
+		.btn-outline-primary {
+			background: transparent;
+			color: #008060;
+			border: 2px solid #008060;
+			padding: 12px 24px;
+			border-radius: 8px;
+			font-weight: 600;
+			text-decoration: none;
+			display: inline-block;
+			transition: all 0.3s ease;
+		}
+
+		.btn-outline-primary:hover {
+			background: #008060;
+			color: white;
+		}
+
+		.special-image img {
+			width: 100%;
+			height: auto;
+			border-radius: 12px;
 		}
 
 		/* Main Semi-Circle Design (like login page) */
@@ -2077,78 +2335,169 @@ try {
 		</div>
 	</nav>
 
-	<!-- Hero Section -->
-	<section class="hero-section">
-		<div class="container">
-			<div class="row align-items-center">
-				<div class="col-lg-6">
-					<div class="hero-content animate-fade-in">
-						<h1 class="hero-title">
-							Your <span class="hero-highlight">Tech Paradise</span><br>
-							Everything Digital!
-						</h1>
-						<p class="hero-subtitle">
-							Premium gadgets, expert repairs,<br>
-							and technology solutions you can trust!
-						</p>
-
-						<div class="hero-features">
-							<div class="feature-item">
-								<i class="fas fa-shipping-fast feature-icon"></i>
-								<span>Fast Shipping</span>
+	<!-- Slideshow Banner Section (like Shopify demo) -->
+	<section id="shopify-section-template-slideshow-banner" class="shopify-section section slideshow_banner">
+		<div class="slideshow-container">
+			<div class="slideshow-wrapper">
+				<!-- Slide 1 -->
+				<div class="slide active">
+					<div class="slide-content">
+						<div class="container">
+							<div class="row align-items-center">
+								<div class="col-lg-6">
+									<div class="slide-text">
+										<h1 class="slide-title">Premium Tech Devices</h1>
+										<p class="slide-subtitle">Discover the latest smartphones, laptops, and gadgets</p>
+										<a href="all_product.php" class="btn-primary-large">Shop Now</a>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="slide-image">
+										<img src="https://via.placeholder.com/600x400/008060/ffffff?text=Latest+Tech" alt="Latest Tech Devices">
+									</div>
+								</div>
 							</div>
-							<div class="feature-item">
-								<i class="fas fa-tools feature-icon"></i>
-								<span>Expert Repairs</span>
-							</div>
-							<div class="feature-item">
-								<i class="fas fa-shield-alt feature-icon"></i>
-								<span>Warranty</span>
-							</div>
-						</div>
-
-						<div class="cta-buttons">
-							<?php if (!$is_logged_in): ?>
-								<a href="login/register.php" class="cta-primary">Get Started</a>
-								<a href="all_product.php" class="cta-secondary">Browse Gadgets</a>
-							<?php elseif ($is_admin): ?>
-								<a href="admin/category.php" class="cta-primary">Manage Store</a>
-								<a href="admin/orders.php" class="cta-secondary">View Orders</a>
-							<?php else: ?>
-								<a href="all_product.php" class="cta-primary">Shop Now</a>
-								<a href="repair_services.php" class="cta-secondary">Repair Services</a>
-							<?php endif; ?>
 						</div>
 					</div>
 				</div>
-				<div class="col-lg-6">
-					<!-- Promotional Cards -->
-					<div class="promo-cards animate-slide-up">
-						<div class="promo-card tech-blue">
-							<div class="promo-badge">New Arrivals</div>
-							<div class="promo-title">Latest<br>iPhone 15<br>Series</div>
-							<div class="promo-subtitle">Experience cutting-edge technology<br>with unmatched performance</div>
-							<a href="all_product.php?category=phones" class="promo-btn">Shop iPhones</a>
+
+				<!-- Slide 2 -->
+				<div class="slide">
+					<div class="slide-content">
+						<div class="container">
+							<div class="row align-items-center">
+								<div class="col-lg-6">
+									<div class="slide-text">
+										<h1 class="slide-title">Expert Repair Services</h1>
+										<p class="slide-subtitle">Professional device repair with warranty</p>
+										<a href="repair_services.php" class="btn-primary-large">Book Repair</a>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="slide-image">
+										<img src="https://via.placeholder.com/600x400/008060/ffffff?text=Device+Repair" alt="Device Repair">
+									</div>
+								</div>
+							</div>
 						</div>
-						<div class="promo-card white">
-							<div class="promo-badge">FREE Repair</div>
-							<div class="promo-title">Professional<br>Device<br>Repair</div>
-							<a href="repair_services.php" class="promo-btn">Book Service</a>
+					</div>
+				</div>
+
+				<!-- Slide 3 -->
+				<div class="slide">
+					<div class="slide-content">
+						<div class="container">
+							<div class="row align-items-center">
+								<div class="col-lg-6">
+									<div class="slide-text">
+										<h1 class="slide-title">Camera Equipment</h1>
+										<p class="slide-subtitle">Professional photography and video gear</p>
+										<a href="all_product.php?category=cameras" class="btn-primary-large">Explore Cameras</a>
+									</div>
+								</div>
+								<div class="col-lg-6">
+									<div class="slide-image">
+										<img src="https://via.placeholder.com/600x400/008060/ffffff?text=Professional+Cameras" alt="Professional Cameras">
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<!-- Admin Panel (only visible to admins) -->
-			<?php if ($is_admin): ?>
-				<div class="admin-panel animate__animated animate__zoomIn">
-					<h3>Chef Dashboard</h3>
-					<p>Welcome back, <?= htmlspecialchars($_SESSION['name'] ?? 'Chef') ?>! Manage your kitchen.</p>
-					<a href="admin/category.php" class="admin-btn">Manage Kitchen</a>
-				</div>
-			<?php endif; ?>
+			<!-- Navigation dots -->
+			<div class="slideshow-dots">
+				<span class="dot active" onclick="currentSlide(1)"></span>
+				<span class="dot" onclick="currentSlide(2)"></span>
+				<span class="dot" onclick="currentSlide(3)"></span>
+			</div>
+
+			<!-- Navigation arrows -->
+			<a class="prev" onclick="plusSlides(-1)">&#10094;</a>
+			<a class="next" onclick="plusSlides(1)">&#10095;</a>
 		</div>
 	</section>
+
+	<!-- Featured Collections Section -->
+	<section id="shopify-section-template-featured-collection" class="shopify-section section featured-collection">
+		<div class="container">
+			<div class="section-header text-center">
+				<h2 class="section-title">Featured Collections</h2>
+				<p class="section-subtitle">Explore our most popular product categories</p>
+			</div>
+
+			<div class="row">
+				<div class="col-lg-4 col-md-6 mb-4">
+					<div class="collection-card">
+						<div class="collection-image">
+							<img src="https://via.placeholder.com/400x300/f8f9fa/008060?text=Smartphones" alt="Smartphones">
+						</div>
+						<div class="collection-content">
+							<h3 class="collection-title">Smartphones</h3>
+							<p class="collection-description">Latest iPhone, Samsung, and Android devices</p>
+							<a href="all_product.php?category=phones" class="collection-link">Shop Phones</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-4 col-md-6 mb-4">
+					<div class="collection-card">
+						<div class="collection-image">
+							<img src="https://via.placeholder.com/400x300/f8f9fa/008060?text=Laptops" alt="Laptops">
+						</div>
+						<div class="collection-content">
+							<h3 class="collection-title">Laptops & Computers</h3>
+							<p class="collection-description">High-performance laptops and desktop computers</p>
+							<a href="all_product.php?category=laptops" class="collection-link">Shop Computers</a>
+						</div>
+					</div>
+				</div>
+
+				<div class="col-lg-4 col-md-6 mb-4">
+					<div class="collection-card">
+						<div class="collection-image">
+							<img src="https://via.placeholder.com/400x300/f8f9fa/008060?text=Cameras" alt="Cameras">
+						</div>
+						<div class="collection-content">
+							<h3 class="collection-title">Photography</h3>
+							<p class="collection-description">Professional cameras and video equipment</p>
+							<a href="all_product.php?category=cameras" class="collection-link">Shop Cameras</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Special Products Section -->
+	<section id="shopify-section-template-special-product" class="shopify-section section special-product">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-lg-6">
+					<div class="special-content">
+						<h2 class="special-title">New Arrivals</h2>
+						<p class="special-description">Be the first to get your hands on the latest tech innovations</p>
+						<a href="all_product.php" class="btn-outline-primary">View New Products</a>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="special-image">
+						<img src="https://via.placeholder.com/500x350/f8f9fa/008060?text=New+Arrivals" alt="New Arrivals">
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
+	<!-- Admin Panel (only visible to admins) -->
+	<?php if ($is_admin): ?>
+		<div class="admin-panel animate__animated animate__zoomIn">
+			<h3>Admin Dashboard</h3>
+			<p>Welcome back, <?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?>! Manage your store.</p>
+			<a href="admin/category.php" class="admin-btn">Manage Store</a>
+		</div>
+	<?php endif; ?>
 
 	<!-- Top Picks Section -->
 	<section class="top-picks-section py-2">
@@ -2642,12 +2991,65 @@ try {
 			closeNewsletter();
 		}
 
-		// Show newsletter popup after 5 seconds if not shown before
+		// Slideshow functionality
+		let slideIndex = 1;
+		let slideTimer;
+
+		function showSlides(n) {
+			let slides = document.getElementsByClassName('slide');
+			let dots = document.getElementsByClassName('dot');
+
+			if (n > slides.length) { slideIndex = 1 }
+			if (n < 1) { slideIndex = slides.length }
+
+			for (let i = 0; i < slides.length; i++) {
+				slides[i].classList.remove('active');
+			}
+
+			for (let i = 0; i < dots.length; i++) {
+				dots[i].classList.remove('active');
+			}
+
+			if (slides[slideIndex - 1]) {
+				slides[slideIndex - 1].classList.add('active');
+			}
+			if (dots[slideIndex - 1]) {
+				dots[slideIndex - 1].classList.add('active');
+			}
+		}
+
+		function plusSlides(n) {
+			clearTimeout(slideTimer);
+			showSlides(slideIndex += n);
+			autoSlide();
+		}
+
+		function currentSlide(n) {
+			clearTimeout(slideTimer);
+			showSlides(slideIndex = n);
+			autoSlide();
+		}
+
+		function autoSlide() {
+			slideTimer = setTimeout(function() {
+				slideIndex++;
+				showSlides(slideIndex);
+				autoSlide();
+			}, 5000);
+		}
+
+		// Initialize slideshow
+		document.addEventListener('DOMContentLoaded', function() {
+			showSlides(slideIndex);
+			autoSlide();
+		});
+
+		// Show newsletter popup after 15 seconds if not shown before
 		setTimeout(function() {
 			if (!localStorage.getItem('newsletterShown')) {
 				document.getElementById('newsletterPopup').style.display = 'flex';
 			}
-		}, 5000);
+		}, 15000);
 	</script>
 </body>
 

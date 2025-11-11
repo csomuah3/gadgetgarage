@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .form-header .circle-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #000000, #374151);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border-radius: 50%;
             margin-bottom: 20px;
             opacity: 0.9;
@@ -183,7 +183,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-control:focus {
-            border-color: #000000;
+            border-color: #008060;
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
             background: white;
         }
@@ -204,14 +204,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #000000;
+            color: #008060;
             cursor: pointer;
             font-size: 1.1rem;
             transition: color 0.3s ease;
         }
 
         .password-toggle:hover {
-            color: #374151;
+            color: #006b4e;
         }
 
         /* Radio Button Styling */
@@ -220,7 +220,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-check-input {
-            accent-color: #000000;
+            accent-color: #008060;
         }
 
         .form-check-label {
@@ -234,7 +234,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .register-btn {
             width: 100%;
             padding: 15px;
-            background: #000000;
+            background: #008060;
             color: white;
             border: none;
             border-radius: 25px;
@@ -247,7 +247,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .btn-custom:hover,
         .register-btn:hover {
-            background: #374151;
+            background: #006b4e;
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
             color: white;
@@ -288,7 +288,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .login-link a,
         .highlight {
-            color: #000000;
+            color: #008060;
             text-decoration: none;
             font-weight: 500;
         }
@@ -296,7 +296,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         .login-link a:hover,
         .highlight:hover {
             text-decoration: underline;
-            color: #374151;
+            color: #006b4e;
         }
 
         /* Right Side - Massive Circle (145% bigger) */
@@ -307,7 +307,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transform: translateY(-50%);
             width: 1305px;
             height: 1305px;
-            background: linear-gradient(135deg, #000000, #374151);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border-radius: 50%;
             display: flex;
             flex-direction: column;

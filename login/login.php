@@ -110,7 +110,7 @@
         .form-header .circle-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #000000, #374151);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border-radius: 50%;
             margin-bottom: 20px;
             opacity: 0.9;
@@ -164,14 +164,14 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #000000;
+            color: #008060;
             cursor: pointer;
             font-size: 1.1rem;
             transition: color 0.3s ease;
         }
 
         .password-toggle:hover {
-            color: #374151;
+            color: #006b4e;
         }
 
         .form-control::placeholder {
@@ -181,7 +181,7 @@
         }
 
         .form-control:focus {
-            border-color: #000000;
+            border-color: #008060;
             box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
             background: white;
         }
@@ -203,25 +203,25 @@
         }
 
         .remember-me input[type="checkbox"] {
-            accent-color: #000000;
+            accent-color: #008060;
         }
 
         .forgot-password {
-            color: #000000;
+            color: #008060;
             text-decoration: none;
             font-weight: 500;
         }
 
         .forgot-password:hover {
             text-decoration: underline;
-            color: #374151;
+            color: #006b4e;
         }
 
         /* Login Button */
         .login-btn {
             width: 100%;
             padding: 15px;
-            background: #000000;
+            background: #008060;
             color: white;
             border: none;
             border-radius: 25px;
@@ -235,7 +235,7 @@
         .login-btn:hover {
             transform: translateY(-2px);
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            background: #374151;
+            background: #006b4e;
         }
 
         .login-btn:disabled {
@@ -292,7 +292,7 @@
         }
 
         .signup-link a {
-            color: #000000;
+            color: #008060;
             text-decoration: none;
             font-weight: 500;
         }
@@ -309,7 +309,7 @@
             transform: translateY(-50%);
             width: 1305px;
             height: 1305px;
-            background: linear-gradient(135deg, #000000, #374151);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -705,7 +705,7 @@ Your trusted partner for premium tech devices, expert repairs, and innovative so
                         title: 'Validation Error',
                         text: 'Please fill in all fields!',
                         icon: 'error',
-                        confirmButtonColor: '#000000'
+                        confirmButtonColor: '#008060'
                     });
                     return;
                 }
@@ -716,7 +716,7 @@ Your trusted partner for premium tech devices, expert repairs, and innovative so
                         title: 'Validation Error',
                         text: 'Please enter a valid email address!',
                         icon: 'error',
-                        confirmButtonColor: '#000000'
+                        confirmButtonColor: '#008060'
                     });
                     return;
                 }
@@ -727,7 +727,7 @@ Your trusted partner for premium tech devices, expert repairs, and innovative so
                         title: 'Validation Error',
                         text: 'Password must be at least 6 characters long!',
                         icon: 'error',
-                        confirmButtonColor: '#000000'
+                        confirmButtonColor: '#008060'
                     });
                     return;
                 }
@@ -758,7 +758,7 @@ Your trusted partner for premium tech devices, expert repairs, and innovative so
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                confirmButtonColor: '#000000',
+                                confirmButtonColor: '#008060',
                                 timer: 2000,
                                 timerProgressBar: true
                             }).then(() => {
@@ -769,7 +769,7 @@ Your trusted partner for premium tech devices, expert repairs, and innovative so
                                 title: 'Login Failed',
                                 text: response.message,
                                 icon: 'error',
-                                confirmButtonColor: '#000000'
+                                confirmButtonColor: '#008060'
                             });
                         }
                     },
@@ -784,7 +784,7 @@ Your trusted partner for premium tech devices, expert repairs, and innovative so
                             title: 'Connection Error',
                             text: 'Failed to connect to server. Please try again.',
                             icon: 'error',
-                            confirmButtonColor: '#000000'
+                            confirmButtonColor: '#008060'
                         });
                     },
                     complete: function() {

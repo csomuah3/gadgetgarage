@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../classes/brand_class.php';
 
 // Add brand
-function add_brand_ctr($brand_name, $category_id, $user_id) {
+function add_brand_ctr($brand_name, $category_ids, $user_id) {
     $brand = new Brand();
 
     // Check if brand name already exists
@@ -11,7 +11,7 @@ function add_brand_ctr($brand_name, $category_id, $user_id) {
         return ['status' => 'error', 'message' => 'Brand name already exists'];
     }
 
-    $result = $brand->add_brand($brand_name, $category_id, $user_id);
+    $result = $brand->add_brand($brand_name, $category_ids, $user_id);
     if ($result) {
         return ['status' => 'success', 'message' => 'Brand added successfully'];
     } else {
@@ -38,16 +38,16 @@ function get_brand_by_id_ctr($brand_id) {
 }
 
 // Update brand
-function update_brand_ctr($brand_id, $brand_name, $category_id, $user_id) {
+function update_brand_ctr($brand_id, $brand_name, $category_ids, $user_id) {
     $brand = new Brand();
 
     // Check if brand name already exists (excluding current brand)
-    $existing = $brand->check_brand_exists($brand_name, $category_id, $user_id, $brand_id);
+    $existing = $brand->check_brand_exists($brand_name, null, $user_id, $brand_id);
     if ($existing) {
         return ['status' => 'error', 'message' => 'Brand name already exists'];
     }
 
-    $result = $brand->update_brand($brand_id, $brand_name, $category_id);
+    $result = $brand->update_brand($brand_id, $brand_name, $category_ids);
     if ($result) {
         return ['status' => 'success', 'message' => 'Brand updated successfully'];
     } else {

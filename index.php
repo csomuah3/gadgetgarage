@@ -98,7 +98,7 @@ try {
 		}
 
 		.logo .garage {
-			background: linear-gradient(135deg, #000000, #333333);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			padding: 4px 8px;
 			border-radius: 6px;
@@ -666,7 +666,7 @@ try {
 		}
 
 		.nav-item:hover {
-			color: #000000;
+			color: #008060;
 		}
 
 		.nav-item.dropdown {
@@ -686,7 +686,7 @@ try {
 		}
 
 		.nav-link:hover {
-			color: #000000;
+			color: #008060;
 		}
 
 		.nav-link i {
@@ -759,7 +759,7 @@ try {
 		}
 
 		.dropdown-column ul li a:hover {
-			color: #000000;
+			color: #008060;
 			transform: translateX(4px);
 		}
 
@@ -809,7 +809,7 @@ try {
 		}
 
 		.shop-now-btn {
-			background: #000000;
+			background: #008060;
 			color: white;
 			padding: 4px 12px;
 			border-radius: 6px;
@@ -1459,7 +1459,7 @@ try {
 		}
 
 		.footer-logo .garage {
-			background: linear-gradient(135deg, #000000, #333333);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			padding: 4px 8px;
 			border-radius: 6px;
@@ -1493,7 +1493,7 @@ try {
 		}
 
 		.social-link:hover {
-			background: #000000;
+			background: #008060;
 			color: white;
 			transform: translateY(-2px);
 		}
@@ -1523,7 +1523,7 @@ try {
 		}
 
 		.footer-links li a:hover {
-			color: #000000;
+			color: #008060;
 			transform: translateX(4px);
 		}
 
@@ -1573,7 +1573,7 @@ try {
 		.chat-trigger {
 			width: 60px;
 			height: 60px;
-			background: #000000;
+			background: #008060;
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
@@ -1610,7 +1610,7 @@ try {
 
 		.chat-header {
 			padding: 16px 20px;
-			background: #000000;
+			background: #008060;
 			color: white;
 			border-radius: 12px 12px 0 0;
 			display: flex;
@@ -1669,13 +1669,13 @@ try {
 		}
 
 		.chat-input:focus {
-			border-color: #000000;
+			border-color: #008060;
 		}
 
 		.chat-send {
 			width: 40px;
 			height: 40px;
-			background: #000000;
+			background: #008060;
 			color: white;
 			border: none;
 			border-radius: 50%;
@@ -1766,7 +1766,7 @@ try {
 		.newsletter-icon {
 			width: 80px;
 			height: 80px;
-			background: linear-gradient(135deg, #000000, #333333);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
@@ -1807,11 +1807,11 @@ try {
 		}
 
 		.newsletter-input:focus {
-			border-color: #000000;
+			border-color: #008060;
 		}
 
 		.newsletter-btn {
-			background: #000000;
+			background: #008060;
 			color: white;
 			border: none;
 			padding: 15px 30px;
@@ -2567,7 +2567,7 @@ try {
 			container.innerHTML = `
 				<div class="col-12 text-center">
 					<div class="loading-spinner">
-						<i class="fas fa-microchip fa-2x mb-3" style="color: #000000;"></i>
+						<i class="fas fa-microchip fa-2x mb-3" style="color: #008060;"></i>
 						<h4>Coming Soon!</h4>
 						<p>We're preparing amazing tech picks for you.</p>
 						<a href="all_product.php" class="btn btn-primary mt-3">Browse All Products</a>
@@ -2607,7 +2607,7 @@ try {
 				// Add user message
 				const userMessage = document.createElement('div');
 				userMessage.className = 'chat-message user';
-				userMessage.innerHTML = `<p style="background: #000000; color: white; padding: 12px 16px; border-radius: 18px; margin: 0; font-size: 0.9rem; text-align: right;">${message}</p>`;
+				userMessage.innerHTML = `<p style="background: #008060; color: white; padding: 12px 16px; border-radius: 18px; margin: 0; font-size: 0.9rem; text-align: right;">${message}</p>`;
 				chatBody.appendChild(userMessage);
 
 				// Clear input

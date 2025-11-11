@@ -5,7 +5,7 @@ try {
     require_once(__DIR__ . '/helpers/image_helper.php');
 
     $is_logged_in = check_login();
-    $customer_id = $is_logged_in ? $_SESSION['customer_id'] : null;
+    $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     $cart_items = get_user_cart_ctr($customer_id, $ip_address);
@@ -351,7 +351,7 @@ try {
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="fs-3 fw-bold">
-                        $<?php echo number_format($cart_total, 2); ?>
+                        GHS <?php echo number_format($cart_total, 2); ?>
                     </div>
                 </div>
             </div>
@@ -397,7 +397,7 @@ try {
                                                 <h5 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h5>
                                                 <p class="text-muted mb-2 small"><?php echo htmlspecialchars($item['product_desc'] ?? ''); ?></p>
                                                 <div class="fw-bold text-primary fs-5">
-                                                    $<?php echo number_format($item['product_price'], 2); ?>
+                                                    GHS <?php echo number_format($item['product_price'], 2); ?>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-center">
@@ -415,7 +415,7 @@ try {
                                             </div>
                                             <div class="col-md-3 text-end">
                                                 <div class="fw-bold fs-5 text-success mb-2">
-                                                    $<?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
+                                                    GHS <?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
                                                         onclick="removeFromCart(<?php echo $item['p_id']; ?>)">
@@ -443,7 +443,7 @@ try {
 
                         <div class="d-flex justify-content-between mb-3">
                             <span>Subtotal (<?php echo $cart_count; ?> items):</span>
-                            <span class="fw-bold" id="cartSubtotal">$<?php echo number_format($cart_total, 2); ?></span>
+                            <span class="fw-bold" id="cartSubtotal">GHS <?php echo number_format($cart_total, 2); ?></span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-3">
@@ -455,7 +455,7 @@ try {
 
                         <div class="d-flex justify-content-between mb-4">
                             <span class="fs-5 fw-bold">Total:</span>
-                            <span class="fs-5 fw-bold text-primary" id="cartTotal">$<?php echo number_format($cart_total, 2); ?></span>
+                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GHS <?php echo number_format($cart_total, 2); ?></span>
                         </div>
 
                         <?php if ($is_logged_in): ?>

@@ -11,7 +11,7 @@ try {
         exit;
     }
 
-    $customer_id = $_SESSION['customer_id'];
+    $customer_id = $_SESSION['user_id'];
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     $cart_items = get_user_cart_ctr($customer_id, $ip_address);
@@ -435,7 +435,7 @@ try {
                                     </div>
                                     <div class="col-auto">
                                         <div class="fw-bold text-primary">
-                                            $<?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
+                                            GHS <?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
                                         </div>
                                     </div>
                                 </div>
@@ -451,28 +451,28 @@ try {
                     </h4>
 
                     <div class="payment-methods">
-                        <div class="payment-option selected" data-method="credit-card">
+                        <div class="payment-option selected" data-method="mobile-money">
+                            <i class="fas fa-mobile-alt"></i>
+                            <div class="fw-bold">Mobile Money</div>
+                            <small class="text-muted">MTN MoMo, Vodafone Cash, AirtelTigo Money</small>
+                        </div>
+
+                        <div class="payment-option" data-method="credit-card">
                             <i class="fas fa-credit-card"></i>
-                            <div class="fw-bold">Credit Card</div>
-                            <small class="text-muted">Visa, Mastercard, Amex</small>
+                            <div class="fw-bold">Credit/Debit Card</div>
+                            <small class="text-muted">Visa, Mastercard</small>
                         </div>
 
-                        <div class="payment-option" data-method="paypal">
-                            <i class="fab fa-paypal"></i>
-                            <div class="fw-bold">PayPal</div>
-                            <small class="text-muted">Pay with PayPal</small>
+                        <div class="payment-option" data-method="paystack">
+                            <i class="fas fa-wallet"></i>
+                            <div class="fw-bold">Paystack</div>
+                            <small class="text-muted">Secure online payment</small>
                         </div>
 
-                        <div class="payment-option" data-method="apple-pay">
-                            <i class="fab fa-apple-pay"></i>
-                            <div class="fw-bold">Apple Pay</div>
-                            <small class="text-muted">Touch ID or Face ID</small>
-                        </div>
-
-                        <div class="payment-option" data-method="google-pay">
-                            <i class="fab fa-google-pay"></i>
-                            <div class="fw-bold">Google Pay</div>
-                            <small class="text-muted">Pay with Google</small>
+                        <div class="payment-option" data-method="bank-transfer">
+                            <i class="fas fa-university"></i>
+                            <div class="fw-bold">Bank Transfer</div>
+                            <small class="text-muted">Direct bank transfer</small>
                         </div>
                     </div>
 
@@ -489,7 +489,7 @@ try {
                     </a>
                     <button type="button" class="btn btn-primary flex-fill" id="simulatePaymentBtn">
                         <i class="fas fa-lock me-2"></i>
-                        Complete Order - $<?php echo number_format($cart_total, 2); ?>
+                        Complete Order - GHS <?php echo number_format($cart_total, 2); ?>
                     </button>
                 </div>
             </div>
@@ -500,7 +500,7 @@ try {
 
                     <div class="summary-row">
                         <span>Subtotal (<?php echo $cart_count; ?> items):</span>
-                        <span class="ms-auto">$<?php echo number_format($cart_total, 2); ?></span>
+                        <span class="ms-auto">GHS <?php echo number_format($cart_total, 2); ?></span>
                     </div>
 
                     <div class="summary-row">
@@ -515,7 +515,7 @@ try {
 
                     <div class="summary-row total">
                         <span>Total:</span>
-                        <span class="ms-auto">$<?php echo number_format($cart_total, 2); ?></span>
+                        <span class="ms-auto">GHS <?php echo number_format($cart_total, 2); ?></span>
                     </div>
 
                     <div class="mt-4">
@@ -543,7 +543,7 @@ try {
             <div class="modal-content">
                 <div class="modal-header text-center border-0">
                     <div class="w-100">
-                        <i class="fas fa-credit-card payment-icon"></i>
+                        <i class="fas fa-mobile-alt payment-icon"></i>
                         <h4 class="mb-0">Simulate Payment</h4>
                         <p class="mb-0 opacity-90">This is a simulation - no real payment will be processed</p>
                     </div>
@@ -551,17 +551,17 @@ try {
                 <div class="modal-body text-center">
                     <div class="mb-4">
                         <div class="fs-2 fw-bold text-primary mb-2">
-                            $<?php echo number_format($cart_total, 2); ?>
+                            GHS <?php echo number_format($cart_total, 2); ?>
                         </div>
                         <p class="text-muted">
-                            Are you sure you want to proceed with this simulated payment?
+                            Choose your preferred payment method and proceed with this simulated payment.
                         </p>
                     </div>
 
                     <div class="d-grid gap-3">
                         <button type="button" class="btn btn-primary btn-lg" id="confirmPaymentBtn">
                             <i class="fas fa-check me-2"></i>
-                            Yes, I've Paid
+                            Complete Payment
                         </button>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <i class="fas fa-times me-2"></i>

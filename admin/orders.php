@@ -146,7 +146,7 @@ try {
                                                         </span>
                                                     </td>
                                                     <td>
-                                                        <strong>$<?php echo number_format($order['total_amount'], 2); ?></strong>
+                                                        <strong>GHS <?php echo number_format($order['total_amount'], 2); ?></strong>
                                                     </td>
                                                     <td>
                                                         <?php

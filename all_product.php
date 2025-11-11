@@ -14,7 +14,7 @@ if ($is_logged_in) {
 }
 
 // Get cart count
-$customer_id = $is_logged_in ? $_SESSION['customer_id'] : null;
+$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
@@ -1435,7 +1435,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                                     </div>
                                     <div class="product-content">
                                         <h5 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h5>
-                                        <div class="product-price">$<?php echo number_format($product['product_price'], 2); ?></div>
+                                        <div class="product-price">GHS <?php echo number_format($product['product_price'], 2); ?></div>
                                         <div class="product-meta">
                                             <span class="meta-tag">
                                                 <i class="fas fa-tag"></i>
@@ -1988,7 +1988,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             </div>
             <div class="product-content">
                 <h5 class="product-title">${product.product_title}</h5>
-                <div class="product-price">$${parseFloat(product.product_price).toFixed(2)}</div>
+                <div class="product-price">GHS ${parseFloat(product.product_price).toFixed(2)}</div>
                 <div class="product-meta">
                     <span class="meta-tag">
                         <i class="fas fa-tag"></i>

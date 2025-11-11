@@ -10,7 +10,7 @@ try {
         exit;
     }
 
-    $customer_id = $_SESSION['customer_id'];
+    $customer_id = $_SESSION['user_id'];
     $orders = get_user_orders_ctr($customer_id);
 
 } catch (Exception $e) {
@@ -242,7 +242,7 @@ try {
                             <div class="col-md-3 text-end">
                                 <div class="text-muted small">Total:</div>
                                 <div class="fs-5 fw-bold text-primary">
-                                    $<?php echo number_format($order['total_amount'], 2); ?>
+                                    GHS <?php echo number_format($order['total_amount'], 2); ?>
                                 </div>
                             </div>
                         </div>

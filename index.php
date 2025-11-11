@@ -18,7 +18,7 @@ try {
 	}
 
 	// Get cart count
-	$customer_id = $is_logged_in ? $_SESSION['customer_id'] : null;
+	$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 	$ip_address = $_SERVER['REMOTE_ADDR'];
 	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 

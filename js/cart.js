@@ -131,10 +131,10 @@ function updateQuantity(productId, quantity) {
             const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
             if (cartItem) {
                 const priceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
-                const unitPrice = parseFloat(cartItem.querySelector('.fw-bold.text-primary.fs-5').textContent.replace('$', ''));
+                const unitPrice = parseFloat(cartItem.querySelector('.fw-bold.text-primary.fs-5').textContent.replace('GHS ', ''));
                 const newSubtotal = (unitPrice * quantity).toFixed(2);
                 if (priceElement) {
-                    priceElement.textContent = `$${newSubtotal}`;
+                    priceElement.textContent = `GHS ${newSubtotal}`;
                 }
             }
         } else {
@@ -207,11 +207,11 @@ function updateCartTotals(total) {
     const cartTotal = document.getElementById('cartTotal');
 
     if (cartSubtotal) {
-        cartSubtotal.textContent = `$${total}`;
+        cartSubtotal.textContent = `GHS ${total}`;
     }
 
     if (cartTotal) {
-        cartTotal.textContent = `$${total}`;
+        cartTotal.textContent = `GHS ${total}`;
     }
 }
 

@@ -25,7 +25,7 @@ try {
     }
 
     // Verify this order belongs to the logged-in user
-    if ($order['customer_id'] != $_SESSION['customer_id']) {
+    if ($order['customer_id'] != $_SESSION['user_id']) {
         echo '<div class="alert alert-danger">Access denied.</div>';
         exit;
     }
@@ -73,7 +73,7 @@ try {
             <table class="table table-sm">
                 <tr>
                     <td><strong>Payment Amount:</strong></td>
-                    <td>$<?php echo number_format($order['payment_amount'], 2); ?></td>
+                    <td>GHS <?php echo number_format($order['payment_amount'], 2); ?></td>
                 </tr>
                 <tr>
                     <td><strong>Currency:</strong></td>
@@ -114,18 +114,18 @@ try {
                                 </div>
                             </div>
                         </td>
-                        <td>$<?php echo number_format($item['product_price'], 2); ?></td>
+                        <td>GHS <?php echo number_format($item['product_price'], 2); ?></td>
                         <td>
                             <span class="badge bg-secondary"><?php echo $item['qty']; ?></span>
                         </td>
-                        <td class="fw-bold">$<?php echo number_format($item['product_price'] * $item['qty'], 2); ?></td>
+                        <td class="fw-bold">GHS <?php echo number_format($item['product_price'] * $item['qty'], 2); ?></td>
                     </tr>
                 <?php endforeach; ?>
             </tbody>
             <tfoot class="table-light">
                 <tr>
                     <th colspan="3" class="text-end">Total:</th>
-                    <th>$<?php echo number_format($order['payment_amount'], 2); ?></th>
+                    <th>GHS <?php echo number_format($order['payment_amount'], 2); ?></th>
                 </tr>
             </tfoot>
         </table>

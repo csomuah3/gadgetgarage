@@ -21,7 +21,7 @@ if ($quantity <= 0) {
     $quantity = 1;
 }
 
-$customer_id = isset($_SESSION['customer_id']) ? $_SESSION['customer_id'] : null;
+$customer_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 
 try {

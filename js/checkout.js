@@ -100,7 +100,7 @@ function showSuccessModal(orderData) {
                 Order ID: ${orderData.order_id}
             </div>
             <div class="fw-bold fs-5 text-primary">
-                Total Paid: $${orderData.total_amount}
+                Total Paid: GHS ${orderData.total_amount}
             </div>
         </div>
 
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
             // Reset the confirm button when modal is closed
             const confirmBtn = document.getElementById('confirmPaymentBtn');
             if (confirmBtn) {
-                confirmBtn.innerHTML = '<i class="fas fa-check me-2"></i>Yes, I\'ve Paid';
+                confirmBtn.innerHTML = '<i class="fas fa-check me-2"></i>Complete Payment';
                 confirmBtn.disabled = false;
             }
         });

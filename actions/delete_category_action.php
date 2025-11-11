@@ -23,21 +23,22 @@ if ($category_id <= 0) {
 }
 
 try {
-    // FIXED: Pass both category_id AND user_id to verify ownership
-    $existing_category = get_category_ctr($category_id, $user_id);
+    // Check if category exists
+    $existing_category = get_category_ctr($category_id);
 
-    if (!$existing_category) {
-        echo json_encode(['success' => false, 'message' => 'Category not found or access denied']);
+    if (!$existing_category['success']) {
+        echo json_encode(['success' => false, 'message' => 'Category not found']);
         exit();
     }
 
-    // FIXED: Pass both category_id AND user_id to delete function
-    $result = delete_category_ctr($category_id, $user_id);
+    // Delete category
+    $result = delete_category_ctr($category_id);
 
-    if ($result) {
+    if ($result['success']) {
         echo json_encode(['success' => true, 'message' => 'Category deleted successfully']);
     } else {
-        echo json_encode(['success' => false, 'message' => 'Failed to delete category']);
+        $error_message = $result['message'] ?? 'Failed to delete category';
+        echo json_encode(['success' => false, 'message' => $error_message]);
     }
 } catch (Exception $e) {
     echo json_encode(['success' => false, 'message' => 'Error: ' . $e->getMessage()]);

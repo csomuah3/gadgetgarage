@@ -59,7 +59,11 @@ function update_brand_ctr($brand_id, $brand_name, $category_id, $user_id) {
 function delete_brand_ctr($brand_id) {
     $brand = new Brand();
     $result = $brand->delete_brand($brand_id);
-    if ($result) {
+
+    // Check if result is an array (new format) or boolean (old format)
+    if (is_array($result)) {
+        return $result; // Return the detailed response from the brand class
+    } else if ($result) {
         return ['status' => 'success', 'message' => 'Brand deleted successfully'];
     } else {
         return ['status' => 'error', 'message' => 'Failed to delete brand'];

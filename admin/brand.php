@@ -435,10 +435,12 @@ require_admin(); // only admins
                                         <input type="text" class="form-control" id="brand_name" name="brand_name" placeholder="Enter brand name" required>
                                     </div>
                                     <div class="mb-3">
-                                        <label for="category_id" class="form-label">Category</label>
-                                        <select class="form-select" id="category_id" name="category_id" required>
-                                            <option value="">Select Category</option>
-                                        </select>
+                                        <label for="category_ids" class="form-label">Categories</label>
+                                        <div id="category_checkboxes" class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                            <!-- Categories will be loaded here as checkboxes -->
+                                            <p class="text-muted">Loading categories...</p>
+                                        </div>
+                                        <small class="text-muted">Select one or more categories for this brand</small>
                                     </div>
                                     <button type="submit" class="btn btn-primary">Add Brand</button>
                                 </form>
@@ -487,10 +489,12 @@ require_admin(); // only admins
                             <input type="text" class="form-control" id="edit_brand_name" name="brand_name" required>
                         </div>
                         <div class="mb-3">
-                            <label for="edit_category_id" class="form-label">Category</label>
-                            <select class="form-select" id="edit_category_id" name="category_id" required>
-                                <option value="">Select Category</option>
-                            </select>
+                            <label for="edit_category_ids" class="form-label">Categories</label>
+                            <div id="edit_category_checkboxes" class="border rounded p-3" style="max-height: 200px; overflow-y: auto;">
+                                <!-- Categories will be loaded here as checkboxes -->
+                                <p class="text-muted">Loading categories...</p>
+                            </div>
+                            <small class="text-muted">Select one or more categories for this brand</small>
                         </div>
                     </div>
                     <div class="modal-footer">

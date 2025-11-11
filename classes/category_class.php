@@ -102,6 +102,60 @@ class Category extends db_connection
     public function delete_category(int $cat_id): array
     {
         $cat_id = (int)$cat_id;
+
+        // First check if there are any products using this category
+        $check_sql = "SELECT COUNT(*) as product_count FROM products WHERE product_cat = $cat_id";
+        $result = $this->db_fetch_one($check_sql);
+
+        if ($result && $result['product_count'] > 0) {
+            return [
+                'success' => false,
+                'code' => 'HAS_PRODUCTS',
+                'message' => 'Cannot delete category: ' . $result['product_count'] . ' product(s) are using this category. Please reassign or delete the products first.'
+            ];
+        }
+
+        // Check if any brands are associated with this category (if brands table has category_id)
+        $brand_check_sql = "SELECT COUNT(*) as brand_count FROM brands WHERE category_id = $cat_id";
+        $brand_result = $this->db_fetch_one($brand_check_sql);
+
+        if ($brand_result && $brand_result['brand_count'] > 0) {
+            return [
+                'success' => false,
+                'code' => 'HAS_BRANDS',
+                'message' => 'Cannot delete category: ' . $brand_result['brand_count'] . ' brand(s) are associated with this category. Please reassign or delete the brands first.'
+            ];
+        }
+
+        // Also check cart items that might reference products with this category
+        $cart_check_sql = "SELECT COUNT(*) as cart_count FROM cart c
+                          INNER JOIN products p ON c.p_id = p.product_id
+                          WHERE p.product_cat = $cat_id";
+        $cart_result = $this->db_fetch_one($cart_check_sql);
+
+        if ($cart_result && $cart_result['cart_count'] > 0) {
+            return [
+                'success' => false,
+                'code' => 'HAS_CART_ITEMS',
+                'message' => 'Cannot delete category: Products from this category are currently in shopping carts. Please remove them from carts first.'
+            ];
+        }
+
+        // Also check order details
+        $order_check_sql = "SELECT COUNT(*) as order_count FROM orderdetails od
+                           INNER JOIN products p ON od.product_id = p.product_id
+                           WHERE p.product_cat = $cat_id";
+        $order_result = $this->db_fetch_one($order_check_sql);
+
+        if ($order_result && $order_result['order_count'] > 0) {
+            return [
+                'success' => false,
+                'code' => 'HAS_ORDERS',
+                'message' => 'Cannot delete category: This category has products in existing orders and cannot be deleted for record keeping purposes.'
+            ];
+        }
+
+        // If no dependencies found, proceed with deletion
         $sql = "DELETE FROM categories WHERE cat_id = $cat_id";
         $ok  = $this->db_query($sql);
 

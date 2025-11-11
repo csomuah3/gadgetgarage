@@ -577,13 +577,10 @@ if (!$product) {
 
                         <!-- Price Display -->
                         <div class="price-section">
-                            <div class="product-price" id="displayPrice">GHS<?php echo number_format($product['product_price'], 0); ?></div>
+                            <div class="product-price" id="displayPrice">GHS <?php echo number_format($product['product_price'], 2); ?></div>
                             <div class="price-breakdown" id="priceBreakdown" style="display: none;">
-                                <div class="original-price">GHS<?php echo number_format($product['product_price'] + 200, 0); ?></div>
-                                <div class="discount-amount" id="discountAmount">17% off</div>
-                            </div>
-                            <div class="mt-2">
-                                <small style="color: rgba(255, 255, 255, 0.8);">Limited time offer - While supplies last</small>
+                                <div class="original-price">Original Price: <span id="originalPrice">GHS <?php echo number_format($product['product_price'], 2); ?></span></div>
+                                <div class="discount-amount" id="discountAmount">Discount: -GHS 0.00</div>
                             </div>
                         </div>
 
@@ -630,6 +627,10 @@ if (!$product) {
                             <button class="add-to-cart-btn" onclick="addToCart(<?php echo $product['product_id']; ?>)">
                                 <i class="fas fa-shopping-cart"></i>
                                 Add to Cart
+                            </button>
+                            <button class="btn btn-outline-secondary" onclick="addToWishlist(<?php echo $product['product_id']; ?>)">
+                                <i class="fas fa-heart"></i>
+                                Wishlist
                             </button>
                         </div>
                     </div>

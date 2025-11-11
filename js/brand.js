@@ -244,8 +244,8 @@ function loadCategoriesAsCheckboxes() {
             } else {
                 console.error('Failed to load categories:', response.message);
                 // Try to show a user-friendly message
-                $('#category_checkboxes').html('<p class="text-danger">Could not load categories. You may need to create categories first.</p>');
-                $('#edit_category_checkboxes').html('<p class="text-danger">Could not load categories.</p>');
+                $('#category_checkboxes').html('<p class="text-danger">Could not load categories: ' + (response.message || 'Unknown error') + '</p>');
+                $('#edit_category_checkboxes').html('<p class="text-danger">Could not load categories: ' + (response.message || 'Unknown error') + '</p>');
             }
         },
         error: function(xhr, status, error) {

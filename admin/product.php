@@ -883,8 +883,9 @@ require_admin(); // only admins
                                     <input type="text" class="form-control" id="product_title" name="product_title" required>
                                 </div>
                                 <div class="col-md-4 mb-3">
-                                    <label for="product_price" class="form-label">Price (GH₵)</label>
+                                    <label for="product_price" class="form-label">Base Price - Excellent Condition (GH₵)</label>
                                     <input type="number" step="0.01" min="0" class="form-control" id="product_price" name="product_price" required>
+                                    <div class="form-text">This is the full price for excellent condition. Good/Fair prices will be calculated automatically based on category.</div>
                                 </div>
                             </div>
 

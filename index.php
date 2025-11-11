@@ -1182,6 +1182,194 @@ try {
 			border-radius: 12px;
 		}
 
+		/* Most Popular Categories */
+		.popular-categories {
+			padding: 60px 0;
+			background: white;
+		}
+
+		.popular-categories .section-title {
+			color: #008060;
+			font-size: 2.2rem;
+			font-weight: 700;
+			margin-bottom: 40px;
+			text-align: left;
+		}
+
+		.category-card {
+			text-align: center;
+			padding: 20px;
+			background: white;
+			border-radius: 12px;
+			transition: all 0.3s ease;
+			border: 1px solid #f1f1f1;
+		}
+
+		.category-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+		}
+
+		.category-icon {
+			margin-bottom: 15px;
+		}
+
+		.category-icon img {
+			width: 80px;
+			height: 80px;
+			border-radius: 50%;
+			object-fit: cover;
+		}
+
+		.category-card h4 {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 8px;
+		}
+
+		.category-card p {
+			color: #6b7280;
+			font-size: 0.9rem;
+			margin: 0;
+		}
+
+		.view-all-link {
+			color: #4f63d2;
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		/* Smart Band Promo */
+		.smart-band-promo {
+			padding: 40px 0;
+			background: white;
+		}
+
+		.promo-banner {
+			border-radius: 15px;
+			padding: 30px;
+			color: white;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.promo-banner h2 {
+			font-size: 1.8rem;
+			font-weight: 600;
+			margin-bottom: 10px;
+		}
+
+		.promo-banner p {
+			font-size: 1rem;
+			margin-bottom: 30px;
+			opacity: 0.9;
+		}
+
+		.promo-images {
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			flex-wrap: wrap;
+		}
+
+		.promo-images img {
+			width: 80px;
+			height: 80px;
+			border-radius: 12px;
+			border: 3px solid rgba(255, 255, 255, 0.3);
+		}
+
+		/* Products by Category */
+		.products-by-category {
+			padding: 60px 0;
+			background: #f8f9fa;
+		}
+
+		.products-by-category .section-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 40px;
+		}
+
+		.products-by-category h2 {
+			font-size: 2rem;
+			font-weight: 700;
+			color: #1f2937;
+		}
+
+		.category-tabs {
+			display: flex;
+			gap: 10px;
+		}
+
+		.category-tab {
+			padding: 8px 20px;
+			border: 1px solid #e5e7eb;
+			background: white;
+			color: #6b7280;
+			border-radius: 6px;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.category-tab.active {
+			background: #1f2937;
+			color: white;
+			border-color: #1f2937;
+		}
+
+		.product-card {
+			background: white;
+			border-radius: 12px;
+			padding: 20px;
+			text-align: center;
+			border: 1px solid #e5e7eb;
+			margin-bottom: 30px;
+		}
+
+		.product-image img {
+			width: 100%;
+			height: 150px;
+			object-fit: cover;
+			border-radius: 8px;
+			margin-bottom: 15px;
+		}
+
+		.product-card h4 {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #4f63d2;
+			margin-bottom: 8px;
+		}
+
+		.product-card p {
+			font-size: 0.9rem;
+			color: #6b7280;
+			margin-bottom: 10px;
+		}
+
+		.product-card .price {
+			font-size: 1.1rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin-bottom: 15px;
+		}
+
+		.product-btn {
+			background: #e5e7eb;
+			color: #6b7280;
+			border: none;
+			padding: 8px 16px;
+			border-radius: 6px;
+			font-size: 0.8rem;
+			font-weight: 600;
+			cursor: not-allowed;
+		}
+
 		/* Main Semi-Circle Design (like login page) */
 		.hero-circle {
 			position: absolute;
@@ -2450,7 +2638,7 @@ try {
 								</div>
 								<div class="col-lg-6">
 									<div class="banner-image">
-										<img src="https://via.placeholder.com/400x300/87CEEB/000000?text=Xbox+Controller" alt="Xbox Controller">
+										<img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=400&h=300&fit=crop&crop=center" alt="Xbox Controller">
 									</div>
 								</div>
 							</div>
@@ -2470,7 +2658,7 @@ try {
 									<button class="shop-btn">SHOP NOW</button>
 								</div>
 								<div class="side-image">
-									<img src="https://via.placeholder.com/150x150/FFD700/000000?text=Smart+Watch" alt="Smart Watch">
+									<img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop&crop=center" alt="Smart Watch">
 								</div>
 							</div>
 						</div>
@@ -2484,7 +2672,7 @@ try {
 									<button class="shop-btn">SHOP NOW</button>
 								</div>
 								<div class="side-image">
-									<img src="https://via.placeholder.com/150x150/8A2BE2/ffffff?text=Kids+Headphones" alt="Kids Headphones">
+									<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Kids Headphones">
 								</div>
 							</div>
 						</div>
@@ -2550,11 +2738,11 @@ try {
 	<section class="popular-categories">
 		<div class="container">
 			<h2 class="section-title">Most Popular Categories</h2>
-			<div class="row">
+			<div class="row g-4">
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://via.placeholder.com/80x80/4f63d2/ffffff?text=iPad" alt="Apple iPad">
+							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="Apple iPad">
 						</div>
 						<h4>Apple iPad</h4>
 						<p>(5 Items)</p>
@@ -2563,7 +2751,7 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://via.placeholder.com/80x80/6b7280/ffffff?text=Smart" alt="Smart Speaker">
+							<img src="https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=150&h=150&fit=crop&crop=center" alt="Smart Speaker">
 						</div>
 						<h4>Smart Speaker</h4>
 						<p>(5 Items)</p>
@@ -2572,7 +2760,7 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://via.placeholder.com/80x80/f59e0b/ffffff?text=Game" alt="Game Console">
+							<img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=150&fit=crop&crop=center" alt="Game Console">
 						</div>
 						<h4>Game Console</h4>
 						<p>(7 Items)</p>
@@ -2581,7 +2769,7 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://via.placeholder.com/80x80/22c55e/ffffff?text=AirPods" alt="Pro Air Pods">
+							<img src="https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=150&h=150&fit=crop&crop=center" alt="Pro Air Pods">
 						</div>
 						<h4>Pro Air Pods</h4>
 						<p>(4 Items)</p>
@@ -2590,7 +2778,7 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://via.placeholder.com/80x80/f59e0b/ffffff?text=Watch" alt="Smart Watch">
+							<img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop&crop=center" alt="Smart Watch">
 						</div>
 						<h4>Smart Watch</h4>
 						<p>(5 Items)</p>
@@ -2599,9 +2787,9 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://via.placeholder.com/80x80/374151/ffffff?text=360Cam" alt="Gear 360 Camera">
+							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Headphones">
 						</div>
-						<h4>Gear 360 Camera</h4>
+						<h4>Headphones</h4>
 						<p><a href="all_product.php" class="view-all-link">VIEW ALL</a></p>
 					</div>
 				</div>
@@ -2617,10 +2805,10 @@ try {
 					<h2>Strap Compatible For Mi Band 5 And Mi Band 6 Wristband</h2>
 					<p>Perfect Fit to Band 5 just 6 Replacement Strap Only</p>
 					<div class="promo-images">
-						<img src="https://via.placeholder.com/100x100/6366f1/ffffff?text=Band1" alt="Smart Band 1">
-						<img src="https://via.placeholder.com/100x100/8b5cf6/ffffff?text=Band2" alt="Smart Band 2">
-						<img src="https://via.placeholder.com/100x100/ec4899/ffffff?text=Band3" alt="Smart Band 3">
-						<img src="https://via.placeholder.com/100x100/f59e0b/ffffff?text=Band4" alt="Smart Band 4">
+						<img src="https://images.unsplash.com/photo-1557935728-e6d1eaabe558?w=100&h=100&fit=crop&crop=center" alt="Smart Band 1">
+						<img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop&crop=center" alt="Smart Band 2">
+						<img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=100&h=100&fit=crop&crop=center" alt="Smart Band 3">
+						<img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=100&h=100&fit=crop&crop=center" alt="Smart Band 4">
 					</div>
 				</div>
 			</div>
@@ -2639,11 +2827,11 @@ try {
 				</div>
 			</div>
 
-			<div class="row">
+			<div class="row g-4">
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="product-card">
 						<div class="product-image">
-							<img src="https://via.placeholder.com/200x200/f8f9fa/4f63d2?text=QLED+TV" alt="Samsung Smart TV">
+							<img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=200&h=150&fit=crop&crop=center" alt="Samsung Smart TV">
 						</div>
 						<h4>Dell</h4>
 						<p>All in One Samsung Smart TV OLED 4K Black</p>
@@ -2651,7 +2839,50 @@ try {
 						<button class="product-btn">SOLD OUT</button>
 					</div>
 				</div>
-				<!-- Add more products here similar to above -->
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=200&h=150&fit=crop&crop=center" alt="Apple iMac">
+						</div>
+						<h4>Dell</h4>
+						<p>Apple iMac Pro (19.5-inch, 64GB) Cellular, 64GB</p>
+						<div class="price">$190.00</div>
+						<button class="product-btn">OPTIONS</button>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=200&h=150&fit=crop&crop=center" alt="Apple MacBook">
+						</div>
+						<h4>Apple</h4>
+						<p>13in MacBook Core i3 11th Gen Inspiron 3511 17in</p>
+						<div class="price">$600.00</div>
+						<button class="product-btn">OPTIONS</button>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=200&h=150&fit=crop&crop=center" alt="AirPods">
+						</div>
+						<h4>Canon</h4>
+						<p>Google Pixel Buds, Passbook O3, Nest Wi-Fi</p>
+						<div class="price">$89.00 $80.00</div>
+						<button class="product-btn">OPTIONS</button>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&h=150&fit=crop&crop=center" alt="Samsung Tablet">
+						</div>
+						<h4>Samsung</h4>
+						<p>HP Spectre x360 2-in-1 Laptop 13.5in OLED2K Black</p>
+						<div class="price">$320.00</div>
+						<button class="product-btn">OPTIONS</button>
+					</div>
+				</div>
 			</div>
 		</div>
 	</section>

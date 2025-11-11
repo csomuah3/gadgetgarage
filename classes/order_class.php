@@ -101,7 +101,10 @@ class Order extends db_connection
 
     public function generate_invoice_number()
     {
-        return date('Ymd') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        // Generate a simple 6-7 digit invoice number to ensure it fits in any integer column
+        // Format: HHMMSSRR (hour, minute, second, 2-digit random)
+        // This will generate numbers like: 14532301 (max 8 digits)
+        return date('His') . str_pad(rand(1, 99), 2, '0', STR_PAD_LEFT);
     }
 
     public function generate_order_reference()

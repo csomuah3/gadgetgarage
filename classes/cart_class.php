@@ -8,7 +8,7 @@ class Cart extends db_connection
         $this->db_connect();
     }
 
-    public function add_to_cart($product_id, $customer_id = null, $ip_address = null, $quantity = 1)
+    public function add_to_cart($product_id, $quantity = 1, $customer_id = null, $ip_address = null)
     {
         if (!$this->check_product_exists_in_cart($product_id, $customer_id, $ip_address)) {
             $product_id = mysqli_real_escape_string($this->db, $product_id);
@@ -19,7 +19,7 @@ class Cart extends db_connection
             $sql = "INSERT INTO cart (p_id, c_id, ip_add, qty) VALUES ($product_id, $customer_id, $ip_address, $quantity)";
             return $this->db_write_query($sql);
         } else {
-            return $this->increment_cart_quantity($product_id, $customer_id, $ip_address, $quantity);
+            return $this->increment_cart_quantity($product_id, $quantity, $customer_id, $ip_address);
         }
     }
 
@@ -39,7 +39,7 @@ class Cart extends db_connection
         return $result ? true : false;
     }
 
-    public function increment_cart_quantity($product_id, $customer_id = null, $ip_address = null, $quantity = 1)
+    public function increment_cart_quantity($product_id, $quantity = 1, $customer_id = null, $ip_address = null)
     {
         $product_id = mysqli_real_escape_string($this->db, $product_id);
         $quantity = mysqli_real_escape_string($this->db, $quantity);
@@ -55,7 +55,7 @@ class Cart extends db_connection
         return $this->db_write_query($sql);
     }
 
-    public function update_cart_quantity($product_id, $customer_id = null, $ip_address = null, $quantity)
+    public function update_cart_quantity($product_id, $quantity, $customer_id = null, $ip_address = null)
     {
         $product_id = mysqli_real_escape_string($this->db, $product_id);
         $quantity = mysqli_real_escape_string($this->db, $quantity);

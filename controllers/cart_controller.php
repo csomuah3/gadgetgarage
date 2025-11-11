@@ -1,16 +1,16 @@
 <?php
 require_once __DIR__ . '/../classes/cart_class.php';
 
-function add_to_cart_ctr($product_id, $customer_id = null, $ip_address = null, $quantity = 1)
+function add_to_cart_ctr($product_id, $quantity = 1, $customer_id = null, $ip_address = null)
 {
     $cart = new Cart();
-    return $cart->add_to_cart($product_id, $customer_id, $ip_address, $quantity);
+    return $cart->add_to_cart($product_id, $quantity, $customer_id, $ip_address);
 }
 
-function update_cart_item_ctr($product_id, $customer_id = null, $ip_address = null, $quantity)
+function update_cart_item_ctr($product_id, $quantity, $customer_id = null, $ip_address = null)
 {
     $cart = new Cart();
-    return $cart->update_cart_quantity($product_id, $customer_id, $ip_address, $quantity);
+    return $cart->update_cart_quantity($product_id, $quantity, $customer_id, $ip_address);
 }
 
 function remove_from_cart_ctr($product_id, $customer_id = null, $ip_address = null)

@@ -25,7 +25,7 @@ $customer_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 
 try {
-    $result = add_to_cart_ctr($product_id, $customer_id, $ip_address, $quantity);
+    $result = add_to_cart_ctr($product_id, $quantity, $customer_id, $ip_address);
 
     if ($result) {
         $cart_count = get_cart_count_ctr($customer_id, $ip_address);

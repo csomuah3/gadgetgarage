@@ -2684,7 +2684,7 @@ try {
 	<section class="popular-categories">
 		<div class="container">
 			<h2 class="section-title">Most Popular Categories</h2>
-			<div class="row g-4">
+			<div class="row g-4 justify-content-center">
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">

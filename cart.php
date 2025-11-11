@@ -9,8 +9,8 @@ try {
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     $cart_items = get_user_cart_ctr($customer_id, $ip_address);
-    $cart_total = get_cart_total_ctr($customer_id, $ip_address);
-    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    $cart_total = get_cart_total_ctr($customer_id, $ip_address) ?: 0;
+    $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
 
     $categories = [];
     $brands = [];

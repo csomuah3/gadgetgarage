@@ -101,7 +101,7 @@ class Order extends db_connection
 
     public function generate_invoice_number()
     {
-        return 'INV' . date('Ymd') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+        return date('Ymd') . str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
     }
 
     public function generate_order_reference()

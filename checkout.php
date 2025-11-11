@@ -444,6 +444,126 @@ try {
                     </div>
                 </div>
 
+                <!-- Contact Information -->
+                <div class="checkout-card">
+                    <h4 class="mb-4">
+                        <i class="fas fa-user me-2"></i>
+                        Contact Information
+                    </h4>
+                    <form id="contactForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">First Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="first_name" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Last Name <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="last_name" required>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Email Address <span class="text-danger">*</span></label>
+                                <input type="email" class="form-control" name="email" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Phone Number <span class="text-danger">*</span></label>
+                                <input type="tel" class="form-control" name="phone" placeholder="+233 XX XXX XXXX" required>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Shipping Address -->
+                <div class="checkout-card">
+                    <h4 class="mb-4">
+                        <i class="fas fa-shipping-fast me-2"></i>
+                        Shipping Address
+                    </h4>
+                    <form id="shippingForm">
+                        <div class="mb-3">
+                            <label class="form-label">Street Address <span class="text-danger">*</span></label>
+                            <input type="text" class="form-control" name="street_address" placeholder="House number and street name" required>
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label">Apartment, suite, etc. (optional)</label>
+                            <input type="text" class="form-control" name="apartment" placeholder="Apartment, suite, unit, building, floor, etc.">
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">City <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="city" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Region <span class="text-danger">*</span></label>
+                                <select class="form-control" name="region" required>
+                                    <option value="">Select Region</option>
+                                    <option value="Greater Accra">Greater Accra</option>
+                                    <option value="Ashanti">Ashanti</option>
+                                    <option value="Western">Western</option>
+                                    <option value="Central">Central</option>
+                                    <option value="Eastern">Eastern</option>
+                                    <option value="Volta">Volta</option>
+                                    <option value="Northern">Northern</option>
+                                    <option value="Upper East">Upper East</option>
+                                    <option value="Upper West">Upper West</option>
+                                    <option value="Brong Ahafo">Brong Ahafo</option>
+                                </select>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Billing Address -->
+                <div class="checkout-card">
+                    <h4 class="mb-4">
+                        <i class="fas fa-receipt me-2"></i>
+                        Billing Address
+                    </h4>
+                    <div class="mb-3">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="sameBillingAddress" checked>
+                            <label class="form-check-label" for="sameBillingAddress">
+                                Billing address is the same as shipping address
+                            </label>
+                        </div>
+                    </div>
+                    <div id="billingAddressForm" style="display: none;">
+                        <form id="billingForm">
+                            <div class="mb-3">
+                                <label class="form-label">Street Address <span class="text-danger">*</span></label>
+                                <input type="text" class="form-control" name="billing_street_address">
+                            </div>
+                            <div class="mb-3">
+                                <label class="form-label">Apartment, suite, etc. (optional)</label>
+                                <input type="text" class="form-control" name="billing_apartment">
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">City <span class="text-danger">*</span></label>
+                                    <input type="text" class="form-control" name="billing_city">
+                                </div>
+                                <div class="col-md-6 mb-3">
+                                    <label class="form-label">Region <span class="text-danger">*</span></label>
+                                    <select class="form-control" name="billing_region">
+                                        <option value="">Select Region</option>
+                                        <option value="Greater Accra">Greater Accra</option>
+                                        <option value="Ashanti">Ashanti</option>
+                                        <option value="Western">Western</option>
+                                        <option value="Central">Central</option>
+                                        <option value="Eastern">Eastern</option>
+                                        <option value="Volta">Volta</option>
+                                        <option value="Northern">Northern</option>
+                                        <option value="Upper East">Upper East</option>
+                                        <option value="Upper West">Upper West</option>
+                                        <option value="Brong Ahafo">Brong Ahafo</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
                 <div class="checkout-card">
                     <h4 class="mb-4">
                         <i class="fas fa-credit-card me-2"></i>

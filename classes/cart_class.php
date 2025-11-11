@@ -135,7 +135,7 @@ class Cart extends db_connection
         }
 
         $result = $this->db_fetch_one($sql);
-        return $result ? $result['total'] : 0;
+        return $result && $result['total'] !== null ? floatval($result['total']) : 0;
     }
 
     public function get_cart_count($customer_id = null, $ip_address = null)
@@ -149,7 +149,7 @@ class Cart extends db_connection
         }
 
         $result = $this->db_fetch_one($sql);
-        return $result ? $result['count'] : 0;
+        return $result && $result['count'] !== null ? intval($result['count']) : 0;
     }
 }
 ?>

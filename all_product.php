@@ -27,9 +27,9 @@ $all_products = [
         'rating' => 4.8,
         'reviews' => 156,
         'conditions' => [
-            'excellent' => ['price' => 8500, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 7800, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 6900, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 3200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2800, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2400, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['6.7-inch display', 'A17 Pro chip', '256GB storage', '48MP camera']
     ],
@@ -43,9 +43,9 @@ $all_products = [
         'rating' => 4.7,
         'reviews' => 203,
         'conditions' => [
-            'excellent' => ['price' => 7200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 6500, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 5800, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 2800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2400, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2000, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['6.8-inch display', 'Snapdragon 8 Gen 3', '256GB storage', '200MP camera']
     ],
@@ -60,9 +60,9 @@ $all_products = [
         'rating' => 4.9,
         'reviews' => 89,
         'conditions' => [
-            'excellent' => ['price' => 15200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 14100, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 12800, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 4800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 4200, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 3600, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['16-inch Liquid Retina display', 'M3 chip', '512GB SSD', '18-hour battery']
     ],
@@ -76,9 +76,9 @@ $all_products = [
         'rating' => 4.6,
         'reviews' => 124,
         'conditions' => [
-            'excellent' => ['price' => 6800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 6200, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 5500, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 2400, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2000, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 1600, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['13.4-inch FHD+', 'Intel Core i7', '512GB SSD', '16GB RAM']
     ],
@@ -126,9 +126,9 @@ $all_products = [
         'rating' => 4.9,
         'reviews' => 145,
         'conditions' => [
-            'excellent' => ['price' => 12500, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 11200, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 9800, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 3500, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 3000, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2500, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['24.2MP full-frame sensor', '4K video', 'In-body stabilization', 'Dual card slots']
     ],
@@ -142,9 +142,9 @@ $all_products = [
         'rating' => 4.8,
         'reviews' => 178,
         'conditions' => [
-            'excellent' => ['price' => 14200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 12800, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 11400, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 3800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 3300, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2800, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['33MP full-frame sensor', '4K 60p video', '5-axis stabilization', 'Dual CFexpress slots']
     ],
@@ -159,9 +159,9 @@ $all_products = [
         'rating' => 4.9,
         'reviews' => 67,
         'conditions' => [
-            'excellent' => ['price' => 18900, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 17200, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 15800, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 5200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 4600, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 4000, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['10-bit 4K recording', 'S-Log3 gamma', 'Dual base ISO', 'Professional audio inputs']
     ],
@@ -175,11 +175,176 @@ $all_products = [
         'rating' => 4.7,
         'reviews' => 89,
         'conditions' => [
-            'excellent' => ['price' => 8900, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 8100, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 7200, 'description' => 'Visible wear, works perfectly']
+            'excellent' => ['price' => 2800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2400, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2000, 'description' => 'Visible wear, works perfectly']
         ],
         'features' => ['6K Super 35 sensor', 'Built-in ND filters', 'CFast 2.0 & SD slots', 'Blackmagic RAW']
+    ],
+    // More Smartphones
+    [
+        'id' => 11,
+        'category' => 'smartphones',
+        'brand' => 'samsung',
+        'name' => 'Samsung Galaxy S23 Ultra',
+        'description' => 'Premium Android smartphone with S Pen, 200MP camera, and AI features',
+        'image' => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
+        'rating' => 4.6,
+        'reviews' => 142,
+        'conditions' => [
+            'excellent' => ['price' => 2900, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2500, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2100, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['6.8-inch display', 'Snapdragon 8 Gen 2', '256GB storage', '200MP camera']
+    ],
+    [
+        'id' => 12,
+        'category' => 'smartphones',
+        'brand' => 'apple',
+        'name' => 'iPhone 14 Pro',
+        'description' => 'Previous generation iPhone with A16 Bionic chip and Dynamic Island',
+        'image' => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
+        'rating' => 4.7,
+        'reviews' => 289,
+        'conditions' => [
+            'excellent' => ['price' => 2600, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2200, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 1800, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['6.1-inch display', 'A16 Bionic chip', '128GB storage', '48MP camera']
+    ],
+    // More Laptops
+    [
+        'id' => 13,
+        'category' => 'laptops',
+        'brand' => 'dell',
+        'name' => 'Dell XPS 15',
+        'description' => 'Premium 15-inch laptop with stunning 4K OLED display',
+        'image' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=400&fit=crop',
+        'rating' => 4.5,
+        'reviews' => 98,
+        'conditions' => [
+            'excellent' => ['price' => 3200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 2800, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2400, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['15.6-inch 4K OLED', 'Intel Core i7', '512GB SSD', '16GB RAM']
+    ],
+    [
+        'id' => 14,
+        'category' => 'laptops',
+        'brand' => 'apple',
+        'name' => 'MacBook Air M2',
+        'description' => 'Ultra-thin laptop with M2 chip and all-day battery life',
+        'image' => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
+        'rating' => 4.8,
+        'reviews' => 156,
+        'conditions' => [
+            'excellent' => ['price' => 3800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 3400, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 3000, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['13.6-inch Liquid Retina', 'M2 chip', '256GB SSD', '18-hour battery']
+    ],
+    // More iPads
+    [
+        'id' => 15,
+        'category' => 'ipads',
+        'brand' => 'apple',
+        'name' => 'iPad 10th Gen',
+        'description' => 'Colorful and versatile iPad with A14 Bionic chip',
+        'image' => 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop',
+        'rating' => 4.4,
+        'reviews' => 203,
+        'conditions' => [
+            'excellent' => ['price' => 1200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 1000, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 800, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['10.9-inch display', 'A14 Bionic chip', '64GB storage', 'USB-C connector']
+    ],
+    [
+        'id' => 16,
+        'category' => 'ipads',
+        'brand' => 'apple',
+        'name' => 'iPad Mini 6th Gen',
+        'description' => 'Compact powerhouse with A15 Bionic and Apple Pencil support',
+        'image' => 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop',
+        'rating' => 4.6,
+        'reviews' => 87,
+        'conditions' => [
+            'excellent' => ['price' => 1600, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 1400, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 1200, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['8.3-inch display', 'A15 Bionic chip', '256GB storage', 'Apple Pencil 2 support']
+    ],
+    // More Cameras
+    [
+        'id' => 17,
+        'category' => 'cameras',
+        'brand' => 'canon',
+        'name' => 'Canon EOS R5',
+        'description' => 'High-resolution full-frame mirrorless camera for professionals',
+        'image' => 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=400&fit=crop',
+        'rating' => 4.9,
+        'reviews' => 67,
+        'conditions' => [
+            'excellent' => ['price' => 4200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 3800, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 3400, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['45MP full-frame sensor', '8K video', 'In-body stabilization', 'Dual card slots']
+    ],
+    [
+        'id' => 18,
+        'category' => 'cameras',
+        'brand' => 'nikon',
+        'name' => 'Nikon Z6 II',
+        'description' => 'Versatile full-frame mirrorless camera with excellent low-light performance',
+        'image' => 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=400&fit=crop',
+        'rating' => 4.7,
+        'reviews' => 124,
+        'conditions' => [
+            'excellent' => ['price' => 3400, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 3000, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 2600, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['24.5MP full-frame sensor', '4K video', 'Dual processors', 'XQD/CFexpress slots']
+    ],
+    // More Video Equipment
+    [
+        'id' => 19,
+        'category' => 'video',
+        'brand' => 'blackmagic',
+        'name' => 'Blackmagic URSA Mini Pro 12K',
+        'description' => 'Professional cinema camera with revolutionary 12K sensor',
+        'image' => 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=400&h=400&fit=crop',
+        'rating' => 4.8,
+        'reviews' => 34,
+        'conditions' => [
+            'excellent' => ['price' => 6200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 5600, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 5000, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['12K Super 35 sensor', 'Interchangeable lens mount', 'CFast 2.0 & SD slots', 'Blackmagic RAW']
+    ],
+    [
+        'id' => 20,
+        'category' => 'video',
+        'brand' => 'sony',
+        'name' => 'Sony A7S III',
+        'description' => 'Ultimate low-light video camera with 4K 120p recording',
+        'image' => 'https://images.unsplash.com/photo-1581833971394-9135dfe71455?w=400&h=400&fit=crop',
+        'rating' => 4.9,
+        'reviews' => 89,
+        'conditions' => [
+            'excellent' => ['price' => 4600, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 4100, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 3600, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['12.1MP full-frame sensor', '4K 120p video', 'Dual base ISO', 'S-Log3 recording']
     ]
 ];
 
@@ -1843,18 +2008,35 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             <!-- Right Content - Products -->
             <div class="col-lg-9 col-md-8" id="productContent">
-                <div class="stats-bar">
-                    <div class="product-count">
-                        <i class="fas fa-box"></i>
-                        Showing <?php echo count($products_to_display); ?> of <?php echo $total_products; ?> products
+                <div class="stats-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div style="display: flex; align-items: center; gap: 20px;">
+                        <div class="product-count" style="color: #6b7280; font-size: 0.9rem;">
+                            <i class="fas fa-box" style="margin-right: 8px;"></i>
+                            Showing <?php echo count($products_to_display); ?> of <?php echo $total_products; ?> products
+                        </div>
+                        <!-- Sort Dropdown -->
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <span style="color: #6b7280; font-size: 0.9rem; font-weight: 500;">Sort by:</span>
+                            <select id="sortSelect" onchange="sortProducts()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #374151; font-size: 0.9rem; cursor: pointer;">
+                                <option value="alphabetically-az">Alphabetically, A-Z</option>
+                                <option value="alphabetically-za">Alphabetically, Z-A</option>
+                                <option value="price-low-high">Price, low to high</option>
+                                <option value="price-high-low">Price, high to low</option>
+                                <option value="rating-high-low">Rating, high to low</option>
+                                <option value="newest">Date, new to old</option>
+                            </select>
+                        </div>
                     </div>
-                    <div class="view-toggle">
-                        <button class="view-btn active" onclick="toggleView('grid')" title="Grid View">
-                            <i class="fas fa-th"></i>
-                        </button>
-                        <button class="view-btn" onclick="toggleView('list')" title="List View">
-                            <i class="fas fa-list"></i>
-                        </button>
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <span style="color: #6b7280; font-size: 0.9rem; font-weight: 500;"><?php echo $total_products; ?> Products</span>
+                        <div class="view-toggle" style="display: flex; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden;">
+                            <button class="view-btn active" onclick="toggleView('grid')" title="Grid View" style="padding: 8px 12px; border: none; background: #2563eb; color: white; cursor: pointer;">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="view-btn" onclick="toggleView('list')" title="List View" style="padding: 8px 12px; border: none; background: white; color: #6b7280; cursor: pointer;">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -1868,89 +2050,64 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <?php else: ?>
                         <div class="product-grid" id="productGrid">
                             <?php foreach ($products_to_display as $product): ?>
-                                <div class="product-card" style="background: linear-gradient(135deg, #4f63d2 0%, #667eea 100%); color: white; border-radius: 15px; padding: 20px; margin-bottom: 30px;">
-                                    <div class="product-image-container" style="position: relative; margin-bottom: 20px;">
-                                        <div style="background: #ffd700; border-radius: 12px; padding: 20px; text-align: center;">
-                                            <img src="<?php echo $product['image']; ?>"
-                                                alt="<?php echo htmlspecialchars($product['name']); ?>"
-                                                style="width: 250px; height: 200px; object-fit: contain; border-radius: 8px;">
+                                <div class="product-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; transition: box-shadow 0.3s ease; margin-bottom: 30px;">
+                                    <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
+                                        <img src="<?php echo $product['image']; ?>"
+                                            alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                            style="width: 100%; height: 200px; object-fit: contain;">
+                                        <div class="product-actions" style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
+                                            <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                                                <i class="far fa-heart" style="color: #666;"></i>
+                                            </button>
+                                            <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                                                <i class="fas fa-random" style="color: #666;"></i>
+                                            </button>
                                         </div>
-                                        <div class="product-badge" style="position: absolute; top: 10px; left: 10px; background: white; color: #4f63d2; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">SPECIAL OFFER</div>
                                     </div>
 
-                                    <div class="product-content">
-                                        <h5 class="product-title" style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px;"><?php echo htmlspecialchars($product['name']); ?></h5>
-                                        <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;"><?php echo htmlspecialchars($product['description']); ?></p>
-
-                                        <!-- Key Features -->
-                                        <div class="key-features" style="margin-bottom: 15px;">
-                                            <h6 style="font-size: 0.9rem; margin-bottom: 8px;">Key Features</h6>
-                                            <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
-                                                <?php foreach (array_slice($product['features'], 0, 3) as $feature): ?>
-                                                    <li style="margin-bottom: 3px;"><i class="fas fa-check" style="color: #ffd700; margin-right: 5px;"></i> <?php echo htmlspecialchars($feature); ?></li>
-                                                <?php endforeach; ?>
-                                            </ul>
+                                    <div class="product-content" style="padding: 20px;">
+                                        <!-- Brand -->
+                                        <div style="color: #6b7280; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px;">
+                                            <?php echo ucfirst($product['brand']); ?>
                                         </div>
 
+                                        <!-- Product Name -->
+                                        <h5 style="color: #1f2937; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4;">
+                                            <?php echo htmlspecialchars($product['name']); ?>
+                                        </h5>
+
                                         <!-- Product Rating -->
-                                        <div class="product-rating" style="margin-bottom: 15px;">
-                                            <div class="stars" style="color: #ffd700; display: inline-block; margin-right: 10px;">
+                                        <div class="product-rating" style="display: flex; align-items: center; margin-bottom: 15px;">
+                                            <div class="stars" style="color: #fbbf24; display: flex; gap: 2px; margin-right: 8px;">
                                                 <?php
                                                 $rating = $product['rating'];
-                                                $full_stars = floor($rating);
-                                                $has_half = ($rating - $full_stars) >= 0.5;
-
                                                 for ($i = 1; $i <= 5; $i++) {
-                                                    if ($i <= $full_stars) {
-                                                        echo '<i class="fas fa-star"></i>';
-                                                    } else if ($i == $full_stars + 1 && $has_half) {
-                                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                                    if ($i <= $rating) {
+                                                        echo '<i class="fas fa-star" style="font-size: 0.8rem;"></i>';
                                                     } else {
-                                                        echo '<i class="far fa-star"></i>';
+                                                        echo '<i class="far fa-star" style="font-size: 0.8rem;"></i>';
                                                     }
                                                 }
                                                 ?>
                                             </div>
-                                            <span style="font-size: 0.9rem; opacity: 0.9;">(<?php echo $product['reviews']; ?> reviews)</span>
                                         </div>
 
-                                        <!-- Condition Selection -->
-                                        <div class="condition-selector" style="margin-bottom: 20px;">
-                                            <h6 style="font-size: 0.9rem; margin-bottom: 10px;">Select Condition</h6>
-                                            <?php foreach ($product['conditions'] as $condition => $details): ?>
-                                                <div class="condition-option" style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; margin-bottom: 8px; border: 2px solid transparent; cursor: pointer;"
-                                                     onclick="selectCondition(this, <?php echo $details['price']; ?>, '<?php echo $condition; ?>')">
-                                                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                                                        <div>
-                                                            <div style="font-weight: 600; font-size: 0.9rem;"><?php echo ucfirst($condition); ?> Condition</div>
-                                                            <div style="font-size: 0.8rem; opacity: 0.8;"><?php echo $details['description']; ?></div>
-                                                        </div>
-                                                        <div style="font-weight: 600; color: #ffd700;">GHS <?php echo number_format($details['price']); ?></div>
-                                                    </div>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
-
-                                        <!-- Current Price Display -->
+                                        <!-- Price -->
                                         <div class="product-pricing" style="margin-bottom: 15px;">
-                                            <span class="current-price" style="font-size: 1.5rem; font-weight: 700; color: #ffd700;">GHS <?php echo number_format($product['conditions']['excellent']['price']); ?></span>
-                                            <span style="text-decoration: line-through; opacity: 0.7; margin-left: 10px;">GHS <?php echo number_format($product['conditions']['excellent']['price'] + 500); ?></span>
-                                            <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin-left: 10px;">17% off</span>
+                                            <?php
+                                            $original_price = $product['conditions']['excellent']['price'] + 800;
+                                            $sale_price = $product['conditions']['excellent']['price'];
+                                            ?>
+                                            <div style="display: flex; align-items: center; gap: 8px;">
+                                                <span style="text-decoration: line-through; color: #9ca3af; font-size: 0.9rem;">GHS <?php echo number_format($original_price); ?></span>
+                                                <span style="color: #2563eb; font-size: 1.2rem; font-weight: 600;">GHS <?php echo number_format($sale_price); ?></span>
+                                            </div>
                                         </div>
 
-                                        <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 15px; font-style: italic;">Limited time offer - While supplies last</div>
-
-                                        <!-- Add to Cart Button -->
-                                        <button class="add-to-cart-btn"
-                                                data-product-id="<?php echo $product['id']; ?>"
-                                                data-condition="excellent"
-                                                data-price="<?php echo $product['conditions']['excellent']['price']; ?>"
-                                                style="width: 100%; background: #ffd700; color: #4f63d2; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
-                                                onmouseover="this.style.background='#ffed4e'"
-                                                onmouseout="this.style.background='#ffd700'"
-                                                onclick="addToCart(this)">
-                                            <i class="fas fa-shopping-cart" style="margin-right: 5px;"></i>
-                                            Add to Cart
+                                        <!-- Options Button -->
+                                        <button onclick="showConditionModal(<?php echo $product['id']; ?>)"
+                                                style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
+                                            OPTIONS
                                         </button>
                                     </div>
                                 </div>
@@ -2866,6 +3023,24 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <button class="chat-send">
                     <i class="fas fa-paper-plane"></i>
                 </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Condition Selection Modal -->
+    <div id="conditionModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; justify-content: center; align-items: center;">
+        <div style="background: white; border-radius: 12px; padding: 30px; max-width: 500px; width: 90%; max-height: 80vh; overflow-y: auto;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 1px solid #e5e7eb;">
+                <h4 style="color: #1f2937; margin: 0; font-size: 1.3rem; font-weight: 600;">Select Condition</h4>
+                <button onclick="closeConditionModal()" style="background: none; border: none; font-size: 1.5rem; color: #6b7280; cursor: pointer; padding: 5px; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center;">×</button>
+            </div>
+
+            <div id="modalProductInfo" style="margin-bottom: 25px;">
+                <!-- Product info will be populated here -->
+            </div>
+
+            <div id="modalConditions">
+                <!-- Condition options will be populated here -->
             </div>
         </div>
     </div>

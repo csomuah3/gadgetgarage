@@ -1443,6 +1443,416 @@ try {
 			}
 		}
 
+		/* Footer Styles */
+		.main-footer {
+			background: #ffffff;
+			border-top: 1px solid #e5e7eb;
+			padding: 60px 0 20px;
+			margin-top: 80px;
+		}
+
+		.footer-logo {
+			font-size: 1.8rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin-bottom: 16px;
+		}
+
+		.footer-logo .garage {
+			background: linear-gradient(135deg, #000000, #333333);
+			color: white;
+			padding: 4px 8px;
+			border-radius: 6px;
+			font-size: 1rem;
+			font-weight: 600;
+		}
+
+		.footer-description {
+			color: #6b7280;
+			font-size: 0.95rem;
+			margin-bottom: 24px;
+			line-height: 1.6;
+		}
+
+		.social-links {
+			display: flex;
+			gap: 12px;
+		}
+
+		.social-link {
+			width: 40px;
+			height: 40px;
+			background: #f3f4f6;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #6b7280;
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+
+		.social-link:hover {
+			background: #000000;
+			color: white;
+			transform: translateY(-2px);
+		}
+
+		.footer-title {
+			font-size: 1.1rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 20px;
+		}
+
+		.footer-links {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.footer-links li {
+			margin-bottom: 12px;
+		}
+
+		.footer-links li a {
+			color: #6b7280;
+			text-decoration: none;
+			font-size: 0.9rem;
+			transition: all 0.3s ease;
+		}
+
+		.footer-links li a:hover {
+			color: #000000;
+			transform: translateX(4px);
+		}
+
+		.footer-divider {
+			border: none;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+			margin: 40px 0 20px;
+		}
+
+		.footer-bottom {
+			padding-top: 20px;
+		}
+
+		.copyright {
+			color: #6b7280;
+			font-size: 0.9rem;
+			margin: 0;
+		}
+
+		.payment-methods {
+			display: flex;
+			gap: 8px;
+			justify-content: end;
+			align-items: center;
+		}
+
+		.payment-methods img {
+			height: 25px;
+			border-radius: 4px;
+			opacity: 0.8;
+			transition: opacity 0.3s ease;
+		}
+
+		.payment-methods img:hover {
+			opacity: 1;
+		}
+
+		/* Live Chat Widget */
+		.live-chat-widget {
+			position: fixed;
+			bottom: 20px;
+			left: 20px;
+			z-index: 1000;
+		}
+
+		.chat-trigger {
+			width: 60px;
+			height: 60px;
+			background: #000000;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-size: 1.5rem;
+			cursor: pointer;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+			transition: all 0.3s ease;
+		}
+
+		.chat-trigger:hover {
+			background: #374151;
+			transform: scale(1.1);
+		}
+
+		.chat-panel {
+			position: absolute;
+			bottom: 80px;
+			left: 0;
+			width: 350px;
+			height: 450px;
+			background: white;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+			border: 1px solid #e5e7eb;
+			display: none;
+			flex-direction: column;
+		}
+
+		.chat-panel.active {
+			display: flex;
+		}
+
+		.chat-header {
+			padding: 16px 20px;
+			background: #000000;
+			color: white;
+			border-radius: 12px 12px 0 0;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.chat-header h4 {
+			margin: 0;
+			font-size: 1.1rem;
+			font-weight: 600;
+		}
+
+		.chat-close {
+			background: none;
+			border: none;
+			color: white;
+			font-size: 1.2rem;
+			cursor: pointer;
+			padding: 0;
+		}
+
+		.chat-body {
+			flex: 1;
+			padding: 20px;
+			overflow-y: auto;
+		}
+
+		.chat-message {
+			margin-bottom: 16px;
+		}
+
+		.chat-message.bot p {
+			background: #f3f4f6;
+			padding: 12px 16px;
+			border-radius: 18px;
+			margin: 0;
+			color: #374151;
+			font-size: 0.9rem;
+		}
+
+		.chat-footer {
+			padding: 16px 20px;
+			border-top: 1px solid #e5e7eb;
+			display: flex;
+			gap: 12px;
+		}
+
+		.chat-input {
+			flex: 1;
+			padding: 12px 16px;
+			border: 1px solid #e5e7eb;
+			border-radius: 25px;
+			outline: none;
+			font-size: 0.9rem;
+		}
+
+		.chat-input:focus {
+			border-color: #000000;
+		}
+
+		.chat-send {
+			width: 40px;
+			height: 40px;
+			background: #000000;
+			color: white;
+			border: none;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: background 0.3s ease;
+		}
+
+		.chat-send:hover {
+			background: #374151;
+		}
+
+		/* Newsletter Popup Styles */
+		.newsletter-popup {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 9999;
+			display: none;
+		}
+
+		.newsletter-popup.show {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.newsletter-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(4px);
+		}
+
+		.newsletter-modal {
+			background: white;
+			border-radius: 20px;
+			padding: 40px;
+			max-width: 500px;
+			width: 90%;
+			position: relative;
+			z-index: 10000;
+			text-align: center;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			animation: newsletterSlideIn 0.4s ease-out;
+		}
+
+		@keyframes newsletterSlideIn {
+			from {
+				opacity: 0;
+				transform: scale(0.8) translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: scale(1) translateY(0);
+			}
+		}
+
+		.newsletter-close {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			background: #f3f4f6;
+			border: none;
+			width: 35px;
+			height: 35px;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #6b7280;
+			transition: all 0.3s ease;
+		}
+
+		.newsletter-close:hover {
+			background: #e5e7eb;
+			color: #374151;
+		}
+
+		.newsletter-icon {
+			width: 80px;
+			height: 80px;
+			background: linear-gradient(135deg, #000000, #333333);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 20px;
+			color: white;
+			font-size: 2rem;
+		}
+
+		.newsletter-content h3 {
+			color: #1f2937;
+			font-size: 2rem;
+			font-weight: 700;
+			margin-bottom: 10px;
+		}
+
+		.newsletter-content p {
+			color: #6b7280;
+			font-size: 1.1rem;
+			margin-bottom: 25px;
+			line-height: 1.5;
+		}
+
+		.newsletter-form {
+			display: flex;
+			gap: 10px;
+			margin-bottom: 20px;
+		}
+
+		.newsletter-input {
+			flex: 1;
+			padding: 15px 20px;
+			border: 2px solid #e5e7eb;
+			border-radius: 50px;
+			font-size: 1rem;
+			outline: none;
+			transition: border-color 0.3s ease;
+		}
+
+		.newsletter-input:focus {
+			border-color: #000000;
+		}
+
+		.newsletter-btn {
+			background: #000000;
+			color: white;
+			border: none;
+			padding: 15px 30px;
+			border-radius: 50px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			white-space: nowrap;
+		}
+
+		.newsletter-btn:hover {
+			background: #374151;
+			transform: translateY(-1px);
+		}
+
+		.newsletter-disclaimer {
+			color: #9ca3af;
+			font-size: 0.9rem;
+			margin: 0;
+		}
+
+		@media (max-width: 768px) {
+			.newsletter-modal {
+				margin: 20px;
+				padding: 30px;
+			}
+
+			.newsletter-form {
+				flex-direction: column;
+			}
+
+			.newsletter-content h3 {
+				font-size: 1.7rem;
+			}
+
+			.newsletter-content p {
+				font-size: 1rem;
+			}
+		}
+
 		/* Animation Classes */
 		.animate-fade-in {
 			animation: fadeIn 0.6s ease-out;
@@ -1473,6 +1883,36 @@ try {
 			to {
 				opacity: 1;
 				transform: translateY(0);
+			}
+		}
+
+		/* Mobile Responsive Styles for Footer and Chat */
+		@media (max-width: 768px) {
+			.main-footer {
+				padding: 40px 0 20px;
+			}
+
+			.footer-logo {
+				font-size: 1.5rem;
+			}
+
+			.footer-title {
+				font-size: 1rem;
+			}
+
+			.payment-methods {
+				justify-content: center;
+				margin-top: 20px;
+			}
+
+			.chat-panel {
+				width: calc(100vw - 40px);
+				height: 400px;
+			}
+
+			.live-chat-widget {
+				bottom: 15px;
+				left: 15px;
 			}
 		}
 
@@ -1714,7 +2154,7 @@ try {
 	<section class="top-picks-section py-2">
 		<div class="container">
 			<div class="text-center mb-3">
-				<h2 class="section-title">FlavorHub's Top Picks for You</h2>
+				<h2 class="section-title">Gadget Garage's Top Picks for You</h2>
 				<p class="section-subtitle">Discover our most popular and trending products this week</p>
 			</div>
 
@@ -1735,6 +2175,132 @@ try {
 			</div>
 		</div>
 	</section>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="row">
+					<div class="col-lg-4 col-md-6 mb-4">
+						<div class="footer-brand">
+							<h3 class="footer-logo">Gadget<span class="garage">Garage</span></h3>
+							<p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+							<div class="social-links">
+								<a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+							</div>
+						</div>
+					</div>
+					<div class="col-lg-2 col-md-6 mb-4">
+						<h5 class="footer-title">Shop</h5>
+						<ul class="footer-links">
+							<li><a href="all_product.php?category=phones">Smartphones</a></li>
+							<li><a href="all_product.php?category=laptops">Laptops</a></li>
+							<li><a href="all_product.php?category=ipads">Tablets</a></li>
+							<li><a href="all_product.php?category=cameras">Cameras</a></li>
+							<li><a href="all_product.php?category=video">Video Equipment</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-2 col-md-6 mb-4">
+						<h5 class="footer-title">Services</h5>
+						<ul class="footer-links">
+							<li><a href="repair_services.php">Device Repair</a></li>
+							<li><a href="#">Tech Support</a></li>
+							<li><a href="#">Data Recovery</a></li>
+							<li><a href="#">Setup Services</a></li>
+							<li><a href="#">Warranty</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-2 col-md-6 mb-4">
+						<h5 class="footer-title">Company</h5>
+						<ul class="footer-links">
+							<li><a href="#">About Us</a></li>
+							<li><a href="#">Contact</a></li>
+							<li><a href="#">Careers</a></li>
+							<li><a href="#">Blog</a></li>
+							<li><a href="#">Press</a></li>
+						</ul>
+					</div>
+					<div class="col-lg-2 col-md-6 mb-4">
+						<h5 class="footer-title">Support</h5>
+						<ul class="footer-links">
+							<li><a href="#">Help Center</a></li>
+							<li><a href="#">Shipping Info</a></li>
+							<li><a href="#">Returns</a></li>
+							<li><a href="#">Privacy Policy</a></li>
+							<li><a href="#">Terms of Service</a></li>
+						</ul>
+					</div>
+				</div>
+				<hr class="footer-divider">
+				<div class="footer-bottom">
+					<div class="row align-items-center">
+						<div class="col-md-6">
+							<p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+						</div>
+						<div class="col-md-6 text-end">
+							<div class="payment-methods">
+								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=VISA" alt="Visa">
+								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=MC" alt="Mastercard">
+								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=AMEX" alt="American Express">
+								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=GPAY" alt="Google Pay">
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<!-- Newsletter Popup -->
+	<div class="newsletter-popup" id="newsletterPopup">
+		<div class="newsletter-overlay" onclick="closeNewsletter()"></div>
+		<div class="newsletter-modal">
+			<button class="newsletter-close" onclick="closeNewsletter()">
+				<i class="fas fa-times"></i>
+			</button>
+			<div class="newsletter-content">
+				<div class="newsletter-icon">
+					<i class="fas fa-envelope"></i>
+				</div>
+				<h3>Stay Updated!</h3>
+				<p>Get the latest tech deals, new arrivals, and exclusive offers delivered to your inbox.</p>
+				<form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
+					<input type="email" placeholder="Enter your email address" required class="newsletter-input">
+					<button type="submit" class="newsletter-btn">Subscribe Now</button>
+				</form>
+				<p class="newsletter-disclaimer">We respect your privacy. Unsubscribe at any time.</p>
+			</div>
+		</div>
+	</div>
+
+	<!-- Live Chat Widget -->
+	<div class="live-chat-widget" id="liveChatWidget">
+		<div class="chat-trigger" onclick="toggleLiveChat()">
+			<i class="fas fa-comments"></i>
+		</div>
+		<div class="chat-panel" id="chatPanel">
+			<div class="chat-header">
+				<h4>Live Chat</h4>
+				<button class="chat-close" onclick="toggleLiveChat()">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="chat-body">
+				<div class="chat-message bot">
+					<p>Hello! How can we help you today?</p>
+				</div>
+			</div>
+			<div class="chat-footer">
+				<input type="text" class="chat-input" placeholder="Type your message...">
+				<button class="chat-send">
+					<i class="fas fa-paper-plane"></i>
+				</button>
+			</div>
+		</div>
+	</div>
 
 	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1987,7 +2553,7 @@ try {
 								</div>
 								<span class="rating-text">(${ratings[index]})</span>
 							</div>
-							<p class="pick-description">${product.product_desc || 'Delicious and fresh product from FlavorHub kitchen.'}</p>
+							<p class="pick-description">${product.product_desc || 'Premium tech device from Gadget Garage.'}</p>
 						</a>
 					</div>
 				`;
@@ -2001,13 +2567,64 @@ try {
 			container.innerHTML = `
 				<div class="col-12 text-center">
 					<div class="loading-spinner">
-						<i class="fas fa-utensils fa-2x mb-3" style="color: #8b5fbf;"></i>
+						<i class="fas fa-microchip fa-2x mb-3" style="color: #000000;"></i>
 						<h4>Coming Soon!</h4>
-						<p>Our chefs are preparing amazing top picks for you.</p>
+						<p>We're preparing amazing tech picks for you.</p>
 						<a href="all_product.php" class="btn btn-primary mt-3">Browse All Products</a>
 					</div>
 				</div>
 			`;
+		}
+
+		// Live chat functionality
+		function toggleLiveChat() {
+			const chatPanel = document.getElementById('chatPanel');
+			chatPanel.classList.toggle('active');
+		}
+
+		// Add live chat event listeners
+		document.addEventListener('DOMContentLoaded', function() {
+			const chatInput = document.querySelector('.chat-input');
+			const chatSend = document.querySelector('.chat-send');
+
+			if (chatInput && chatSend) {
+				chatInput.addEventListener('keypress', function(e) {
+					if (e.key === 'Enter') {
+						sendChatMessage();
+					}
+				});
+
+				chatSend.addEventListener('click', sendChatMessage);
+			}
+		});
+
+		function sendChatMessage() {
+			const chatInput = document.querySelector('.chat-input');
+			const chatBody = document.querySelector('.chat-body');
+			const message = chatInput.value.trim();
+
+			if (message) {
+				// Add user message
+				const userMessage = document.createElement('div');
+				userMessage.className = 'chat-message user';
+				userMessage.innerHTML = `<p style="background: #000000; color: white; padding: 12px 16px; border-radius: 18px; margin: 0; font-size: 0.9rem; text-align: right;">${message}</p>`;
+				chatBody.appendChild(userMessage);
+
+				// Clear input
+				chatInput.value = '';
+
+				// Simulate bot response
+				setTimeout(() => {
+					const botMessage = document.createElement('div');
+					botMessage.className = 'chat-message bot';
+					botMessage.innerHTML = `<p>Thank you for your message! Our team will get back to you shortly. For immediate assistance, please call our support line.</p>`;
+					chatBody.appendChild(botMessage);
+					chatBody.scrollTop = chatBody.scrollHeight;
+				}, 1000);
+
+				// Scroll to bottom
+				chatBody.scrollTop = chatBody.scrollHeight;
+			}
 		}
 	</script>
 </body>

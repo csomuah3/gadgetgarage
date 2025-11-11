@@ -38,7 +38,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Products - FlavorHub</title>
+    <title>All Products - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -53,51 +53,48 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%);
+            background: #ffffff;
             color: #1a202c;
             position: relative;
             overflow-x: hidden;
         }
 
-        /* Background Pattern */
+        /* Clean background */
         body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background:
-                radial-gradient(circle at 20% 20%, rgba(139, 95, 191, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 80% 80%, rgba(240, 147, 251, 0.05) 0%, transparent 50%),
-                radial-gradient(circle at 40% 60%, rgba(139, 95, 191, 0.03) 0%, transparent 50%);
-            z-index: -1;
+            display: none;
         }
 
         .main-header {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-            box-shadow: 0 4px 20px rgba(139, 95, 191, 0.15);
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 15px 0;
-            backdrop-filter: blur(10px);
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #8b5fbf;
+            color: #1f2937;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .logo .garage {
+            background: linear-gradient(135deg, #000000, #333333);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
         .page-title {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #1f2937;
             background-clip: text;
             font-size: 2.5rem;
             font-weight: 800;
@@ -114,18 +111,17 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             transform: translateX(-50%);
             width: 80px;
             height: 4px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: #000000;
             border-radius: 2px;
         }
 
         /* Sidebar Layout Styles */
         .filters-sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
+            background: #ffffff;
             padding: 25px;
-            border-radius: 20px;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.12);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border-radius: 12px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            border: 1px solid #e5e7eb;
             position: sticky;
             top: 20px;
             max-height: calc(100vh - 40px);
@@ -138,11 +134,11 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             align-items: center;
             margin-bottom: 25px;
             padding-bottom: 15px;
-            border-bottom: 2px solid rgba(139, 95, 191, 0.1);
+            border-bottom: 2px solid #e5e7eb;
         }
 
         .filter-title {
-            color: #8b5fbf;
+            color: #1f2937;
             font-weight: 700;
             font-size: 1.2rem;
             margin: 0;
@@ -163,8 +159,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .filter-close:hover {
-            background: rgba(139, 95, 191, 0.1);
-            color: #8b5fbf;
+            background: rgba(0, 0, 0, 0.1);
+            color: #000000;
         }
 
         .filter-subtitle {
@@ -178,7 +174,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .filter-group {
             margin-bottom: 25px;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(139, 95, 191, 0.1);
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .filter-group:last-child {
@@ -203,9 +199,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         .search-input:focus {
             outline: none;
-            border-color: #8b5fbf;
+            border-color: #000000;
             background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
         }
 
         .search-icon {
@@ -213,7 +209,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             right: 12px;
             top: 50%;
             transform: translateY(-50%);
-            color: #8b5fbf;
+            color: #000000;
             font-size: 0.9rem;
         }
 
@@ -250,8 +246,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .checkbox-item:hover {
-            color: #8b5fbf;
-            background: rgba(139, 95, 191, 0.05);
+            color: #000000;
+            background: rgba(0, 0, 0, 0.05);
             border-radius: 5px;
             padding-left: 5px;
         }
@@ -271,8 +267,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .checkbox-item input[type="checkbox"]:checked+.checkbox-custom {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
-            border-color: #8b5fbf;
+            background: #000000;
+            border-color: #000000;
         }
 
         .checkbox-item input[type="checkbox"]:checked+.checkbox-custom::after {
@@ -296,7 +292,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .apply-filters-btn {
-            background: linear-gradient(135deg, #28a745, #20c997);
+            background: #000000;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -314,9 +310,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .apply-filters-btn:hover {
-            background: linear-gradient(135deg, #218838, #1a936f);
+            background: #374151;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(40, 167, 69, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         /* Mobile Styles */
@@ -388,12 +384,12 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .rating-option label:hover {
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(0, 0, 0, 0.1);
         }
 
         .rating-option input[type="radio"]:checked+label {
-            background: rgba(139, 95, 191, 0.2);
-            color: #8b5fbf;
+            background: rgba(0, 0, 0, 0.2);
+            color: #000000;
         }
 
         .stars {
@@ -427,7 +423,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .price-slider-range {
             position: absolute;
             height: 6px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: #000000;
             border-radius: 3px;
             left: 0%;
             right: 0%;
@@ -450,7 +446,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             appearance: none;
             width: 18px;
             height: 18px;
-            background: #8b5fbf;
+            background: #000000;
             border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
@@ -461,7 +457,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .price-slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
-            background: #8b5fbf;
+            background: #000000;
             border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
@@ -474,11 +470,258 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
-            color: #8b5fbf;
+            color: #000000;
         }
 
         .price-separator {
             color: #666;
+        }
+
+        /* Footer Styles */
+        .main-footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 60px 0 20px;
+            margin-top: 80px;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo .garage {
+            background: linear-gradient(135deg, #000000, #333333);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #000000;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links li a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links li a:hover {
+            color: #000000;
+            transform: translateX(4px);
+        }
+
+        .footer-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+            margin: 40px 0 20px;
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 8px;
+            justify-content: end;
+            align-items: center;
+        }
+
+        .payment-methods img {
+            height: 25px;
+            border-radius: 4px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .payment-methods img:hover {
+            opacity: 1;
+        }
+
+        /* Live Chat Widget */
+        .live-chat-widget {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+        }
+
+        .chat-trigger {
+            width: 60px;
+            height: 60px;
+            background: #000000;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .chat-trigger:hover {
+            background: #374151;
+            transform: scale(1.1);
+        }
+
+        .chat-panel {
+            position: absolute;
+            bottom: 80px;
+            left: 0;
+            width: 350px;
+            height: 450px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid #e5e7eb;
+            display: none;
+            flex-direction: column;
+        }
+
+        .chat-panel.active {
+            display: flex;
+        }
+
+        .chat-header {
+            padding: 16px 20px;
+            background: #000000;
+            color: white;
+            border-radius: 12px 12px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .chat-header h4 {
+            margin: 0;
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .chat-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .chat-body {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chat-message {
+            margin-bottom: 16px;
+        }
+
+        .chat-message.bot p {
+            background: #f3f4f6;
+            padding: 12px 16px;
+            border-radius: 18px;
+            margin: 0;
+            color: #374151;
+            font-size: 0.9rem;
+        }
+
+        .chat-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            gap: 12px;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 25px;
+            outline: none;
+            font-size: 0.9rem;
+        }
+
+        .chat-input:focus {
+            border-color: #000000;
+        }
+
+        .chat-send {
+            width: 40px;
+            height: 40px;
+            background: #000000;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s ease;
+        }
+
+        .chat-send:hover {
+            background: #374151;
         }
 
         /* Tag Filter Styles */
@@ -813,10 +1056,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .product-price {
             font-size: 1.5rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            background-clip: text;
+            color: #000000;
             margin-bottom: 15px;
         }
 
@@ -833,17 +1073,17 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             align-items: center;
             gap: 6px;
             padding: 6px 12px;
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(0, 0, 0, 0.1);
             border-radius: 20px;
             font-size: 0.85rem;
-            color: #8b5fbf;
+            color: #000000;
             font-weight: 500;
         }
 
         .add-to-cart-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: #000000;
             color: white;
             border: none;
             border-radius: 15px;
@@ -860,9 +1100,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .add-to-cart-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: #374151;
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
         }
 
         .pagination {
@@ -875,23 +1115,22 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         .page-btn {
             padding: 12px 18px;
-            border: 2px solid rgba(139, 95, 191, 0.2);
+            border: 2px solid rgba(0, 0, 0, 0.2);
             background: rgba(255, 255, 255, 0.9);
-            color: #8b5fbf;
+            color: #000000;
             text-decoration: none;
             border-radius: 12px;
             transition: all 0.3s ease;
             font-weight: 600;
-            backdrop-filter: blur(10px);
         }
 
         .page-btn:hover,
         .page-btn.active {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: #000000;
             color: white;
             border-color: transparent;
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
         }
 
         .no-products {
@@ -1170,12 +1409,11 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             <div class="row align-items-center">
                 <div class="col-lg-2">
                     <a href="index.php" class="logo">
-                        <i class="fas fa-utensils"></i>
-                        <span>FlavorHub</span>
+                        Gadget<span class="garage">Garage</span>
                     </a>
                 </div>
                 <div class="col-lg-8 text-end">
-                    <h1 class="mb-0" style="color: #8b5fbf; font-weight: 700;">All Products</h1>
+                    <h1 class="mb-0" style="color: #1f2937; font-weight: 700;">All Products</h1>
                 </div>
                 <div class="col-lg-2 text-end">
                     <div class="d-flex align-items-center justify-content-end gap-3">
@@ -2108,7 +2346,163 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                 executeFilters();
             });
         });
+
+        // Live chat functionality
+        function toggleLiveChat() {
+            const chatPanel = document.getElementById('chatPanel');
+            chatPanel.classList.toggle('active');
+        }
+
+        function sendChatMessage() {
+            const chatInput = document.querySelector('.chat-input');
+            const chatBody = document.querySelector('.chat-body');
+            const message = chatInput.value.trim();
+
+            if (message) {
+                // Add user message
+                const userMessage = document.createElement('div');
+                userMessage.className = 'chat-message user';
+                userMessage.innerHTML = `<p style="background: #000000; color: white; padding: 12px 16px; border-radius: 18px; margin: 0; font-size: 0.9rem; text-align: right;">${message}</p>`;
+                chatBody.appendChild(userMessage);
+
+                // Clear input
+                chatInput.value = '';
+
+                // Simulate bot response
+                setTimeout(() => {
+                    const botMessage = document.createElement('div');
+                    botMessage.className = 'chat-message bot';
+                    botMessage.innerHTML = `<p>Thank you for your message! Our team will get back to you shortly.</p>`;
+                    chatBody.appendChild(botMessage);
+                    chatBody.scrollTop = chatBody.scrollHeight;
+                }, 1000);
+
+                // Scroll to bottom
+                chatBody.scrollTop = chatBody.scrollHeight;
+            }
+        }
+
+        // Add chat event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatInput = document.querySelector('.chat-input');
+            const chatSend = document.querySelector('.chat-send');
+
+            if (chatInput && chatSend) {
+                chatInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        sendChatMessage();
+                    }
+                });
+
+                chatSend.addEventListener('click', sendChatMessage);
+            }
+        });
     </script>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <h3 class="footer-logo">Gadget<span class="garage">Garage</span></h3>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Shop</h5>
+                        <ul class="footer-links">
+                            <li><a href="all_product.php?category=phones">Smartphones</a></li>
+                            <li><a href="all_product.php?category=laptops">Laptops</a></li>
+                            <li><a href="all_product.php?category=ipads">Tablets</a></li>
+                            <li><a href="all_product.php?category=cameras">Cameras</a></li>
+                            <li><a href="all_product.php?category=video">Video Equipment</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Services</h5>
+                        <ul class="footer-links">
+                            <li><a href="repair_services.php">Device Repair</a></li>
+                            <li><a href="#">Tech Support</a></li>
+                            <li><a href="#">Data Recovery</a></li>
+                            <li><a href="#">Setup Services</a></li>
+                            <li><a href="#">Warranty</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Company</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">About Us</a></li>
+                            <li><a href="#">Contact</a></li>
+                            <li><a href="#">Careers</a></li>
+                            <li><a href="#">Blog</a></li>
+                            <li><a href="#">Press</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Support</h5>
+                        <ul class="footer-links">
+                            <li><a href="#">Help Center</a></li>
+                            <li><a href="#">Shipping Info</a></li>
+                            <li><a href="#">Returns</a></li>
+                            <li><a href="#">Privacy Policy</a></li>
+                            <li><a href="#">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <div class="payment-methods">
+                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=VISA" alt="Visa">
+                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=MC" alt="Mastercard">
+                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=AMEX" alt="American Express">
+                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=GPAY" alt="Google Pay">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Live Chat Widget -->
+    <div class="live-chat-widget" id="liveChatWidget">
+        <div class="chat-trigger" onclick="toggleLiveChat()">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chat-panel" id="chatPanel">
+            <div class="chat-header">
+                <h4>Live Chat</h4>
+                <button class="chat-close" onclick="toggleLiveChat()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-body">
+                <div class="chat-message bot">
+                    <p>Hello! How can we help you find the perfect tech device today?</p>
+                </div>
+            </div>
+            <div class="chat-footer">
+                <input type="text" class="chat-input" placeholder="Type your message...">
+                <button class="chat-send">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 
 </html>

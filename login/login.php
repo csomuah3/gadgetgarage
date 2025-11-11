@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>Login - Taste of Africa</title>
+    <title>Login - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -20,7 +20,7 @@
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -110,7 +110,7 @@
         .form-header .circle-icon {
             width: 40px;
             height: 40px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #000000, #374151);
             border-radius: 50%;
             margin-bottom: 20px;
             opacity: 0.9;
@@ -118,10 +118,10 @@
 
         .form-title {
             font-size: 2rem;
-            color: #8b5fbf;
+            color: #1f2937;
             text-align: center;
             margin-bottom: 30px;
-            font-weight: 400;
+            font-weight: 600;
         }
 
         /* Form Styling */
@@ -164,14 +164,14 @@
             transform: translateY(-50%);
             background: none;
             border: none;
-            color: #8b5fbf;
+            color: #000000;
             cursor: pointer;
             font-size: 1.1rem;
             transition: color 0.3s ease;
         }
 
         .password-toggle:hover {
-            color: #764ba2;
+            color: #374151;
         }
 
         .form-control::placeholder {
@@ -181,8 +181,8 @@
         }
 
         .form-control:focus {
-            border-color: #8b5fbf;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            border-color: #000000;
+            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
             background: white;
         }
 
@@ -203,25 +203,25 @@
         }
 
         .remember-me input[type="checkbox"] {
-            accent-color: #8b5fbf;
+            accent-color: #000000;
         }
 
         .forgot-password {
-            color: #8b5fbf;
+            color: #000000;
             text-decoration: none;
             font-weight: 500;
         }
 
         .forgot-password:hover {
             text-decoration: underline;
-            color: #764ba2;
+            color: #374151;
         }
 
         /* Login Button */
         .login-btn {
             width: 100%;
             padding: 15px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: #000000;
             color: white;
             border: none;
             border-radius: 25px;
@@ -234,7 +234,8 @@
 
         .login-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            background: #374151;
         }
 
         .login-btn:disabled {
@@ -291,7 +292,7 @@
         }
 
         .signup-link a {
-            color: #8b5fbf;
+            color: #000000;
             text-decoration: none;
             font-weight: 500;
         }
@@ -308,7 +309,7 @@
             transform: translateY(-50%);
             width: 1305px;
             height: 1305px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #000000, #374151);
             border-radius: 50%;
             display: flex;
             flex-direction: column;
@@ -622,7 +623,7 @@
     <div class="login-container animate__animated animate__fadeIn">
         <div class="form-header">
             <div class="circle-icon"></div>
-            <div class="form-title">Welcome Back! Please Log In</div>
+            <div class="form-title">Welcome Back to Gadget Garage</div>
         </div>
 
         <form id="login-form">
@@ -670,10 +671,10 @@
     <!-- Massive Circle (Right Side) - 145% bigger -->
     <div class="brand-side">
         <div class="main-circle">
-            <div class="food-hub-text">Food Hub</div>
+            <div class="food-hub-text">Gadget<br>Garage</div>
         </div>
         <p class="brand-description">
-            Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text.
+Your trusted partner for premium tech devices, expert repairs, and innovative solutions. Join thousands of satisfied customers.
         </p>
         <a href="#" class="learn-more-btn">
             Learn More
@@ -704,7 +705,7 @@
                         title: 'Validation Error',
                         text: 'Please fill in all fields!',
                         icon: 'error',
-                        confirmButtonColor: '#8b5fbf'
+                        confirmButtonColor: '#000000'
                     });
                     return;
                 }
@@ -715,7 +716,7 @@
                         title: 'Validation Error',
                         text: 'Please enter a valid email address!',
                         icon: 'error',
-                        confirmButtonColor: '#8b5fbf'
+                        confirmButtonColor: '#000000'
                     });
                     return;
                 }
@@ -726,7 +727,7 @@
                         title: 'Validation Error',
                         text: 'Password must be at least 6 characters long!',
                         icon: 'error',
-                        confirmButtonColor: '#8b5fbf'
+                        confirmButtonColor: '#000000'
                     });
                     return;
                 }
@@ -757,7 +758,7 @@
                                 title: 'Success!',
                                 text: response.message,
                                 icon: 'success',
-                                confirmButtonColor: '#8b5fbf',
+                                confirmButtonColor: '#000000',
                                 timer: 2000,
                                 timerProgressBar: true
                             }).then(() => {
@@ -768,7 +769,7 @@
                                 title: 'Login Failed',
                                 text: response.message,
                                 icon: 'error',
-                                confirmButtonColor: '#8b5fbf'
+                                confirmButtonColor: '#000000'
                             });
                         }
                     },
@@ -783,7 +784,7 @@
                             title: 'Connection Error',
                             text: 'Failed to connect to server. Please try again.',
                             icon: 'error',
-                            confirmButtonColor: '#8b5fbf'
+                            confirmButtonColor: '#000000'
                         });
                     },
                     complete: function() {

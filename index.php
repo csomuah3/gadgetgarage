@@ -2626,6 +2626,28 @@ try {
 				chatBody.scrollTop = chatBody.scrollHeight;
 			}
 		}
+
+		// Newsletter popup functions
+		function closeNewsletter() {
+			document.getElementById('newsletterPopup').style.display = 'none';
+			localStorage.setItem('newsletterShown', 'true');
+		}
+
+		function subscribeNewsletter(event) {
+			event.preventDefault();
+			const email = event.target.querySelector('.newsletter-input').value;
+
+			// Here you would typically send the email to your backend
+			alert('Thank you for subscribing! You will receive updates at ' + email);
+			closeNewsletter();
+		}
+
+		// Show newsletter popup after 5 seconds if not shown before
+		setTimeout(function() {
+			if (!localStorage.getItem('newsletterShown')) {
+				document.getElementById('newsletterPopup').style.display = 'flex';
+			}
+		}, 5000);
 	</script>
 </body>
 

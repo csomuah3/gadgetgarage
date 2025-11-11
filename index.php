@@ -767,7 +767,7 @@ try {
 		.dropdown-content {
 			display: grid;
 			grid-template-columns: repeat(4, 1fr);
-			gap: 32px;
+			gap: 40px;
 		}
 
 		.dropdown-column h4 {

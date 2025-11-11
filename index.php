@@ -638,78 +638,190 @@ try {
 			margin-right: 8px;
 		}
 
-		/* Category Navigation */
-		.category-nav {
-			background: white;
-			border-top: 1px solid #e5e7eb;
+		/* Main Navigation */
+		.main-nav {
+			background: #ffffff;
 			border-bottom: 1px solid #e5e7eb;
-			padding: 16px 0;
+			padding: 12px 0;
 			position: sticky;
 			top: 85px;
 			z-index: 999;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 		}
 
-		.category-list {
+		.nav-menu {
 			display: flex;
 			align-items: center;
-			gap: 8px;
-			overflow-x: auto;
-			padding: 0 16px;
-			scrollbar-width: none;
-			-ms-overflow-style: none;
+			gap: 32px;
 		}
 
-		.category-list::-webkit-scrollbar {
-			display: none;
-		}
-
-		.category-item {
-			white-space: nowrap;
-			padding: 12px 20px;
-			background: #f8fafc;
-			border: 1px solid #e5e7eb;
-			border-radius: 8px;
-			color: #374151;
+		.nav-item {
+			color: #1f2937;
 			text-decoration: none;
 			font-weight: 500;
-			font-size: 0.9rem;
+			font-size: 1rem;
+			padding: 12px 0;
 			transition: all 0.3s ease;
-			cursor: pointer;
+			position: relative;
+		}
+
+		.nav-item:hover {
+			color: #000000;
+		}
+
+		.nav-item.dropdown {
+			position: relative;
+		}
+
+		.nav-link {
+			color: #1f2937;
+			text-decoration: none;
+			font-weight: 500;
+			font-size: 1rem;
+			padding: 12px 0;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.3s ease;
+		}
+
+		.nav-link:hover {
+			color: #000000;
+		}
+
+		.nav-link i {
+			font-size: 0.8rem;
+			transition: transform 0.3s ease;
+		}
+
+		.dropdown:hover .nav-link i {
+			transform: rotate(180deg);
+		}
+
+		/* Mega Dropdown */
+		.mega-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 800px;
+			background: #ffffff;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+			padding: 32px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(10px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.mega-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.dropdown-content {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 32px;
+		}
+
+		.dropdown-column h4 {
+			color: #1f2937;
+			font-size: 1.1rem;
+			font-weight: 600;
+			margin-bottom: 16px;
+			border-bottom: 2px solid #f3f4f6;
+			padding-bottom: 8px;
+		}
+
+		.dropdown-column ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.dropdown-column ul li {
+			margin-bottom: 8px;
+		}
+
+		.dropdown-column ul li a {
+			color: #6b7280;
+			text-decoration: none;
+			font-size: 0.95rem;
 			display: flex;
 			align-items: center;
 			gap: 8px;
+			padding: 8px 0;
+			transition: all 0.3s ease;
 		}
 
-		.category-item:hover,
-		.category-item.active {
+		.dropdown-column ul li a:hover {
+			color: #000000;
+			transform: translateX(4px);
+		}
+
+		.dropdown-column ul li a i {
+			color: #9ca3af;
+			width: 16px;
+		}
+
+		.dropdown-column.featured {
+			border-left: 2px solid #f3f4f6;
+			padding-left: 24px;
+		}
+
+		.featured-item {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+			padding: 16px;
+			border-radius: 12px;
+			background: #f8fafc;
+			border: 1px solid #e5e7eb;
+			transition: all 0.3s ease;
+		}
+
+		.featured-item:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		.featured-item img {
+			width: 60px;
+			height: 40px;
+			object-fit: cover;
+			border-radius: 6px;
+		}
+
+		.featured-text strong {
+			color: #1f2937;
+			font-size: 0.9rem;
+			font-weight: 600;
+		}
+
+		.featured-text p {
+			color: #6b7280;
+			font-size: 0.8rem;
+			margin: 4px 0;
+		}
+
+		.shop-now-btn {
 			background: #000000;
 			color: white;
-			border-color: #000000;
-			transform: translateY(-2px);
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+			padding: 4px 12px;
+			border-radius: 6px;
+			text-decoration: none;
+			font-size: 0.8rem;
+			font-weight: 500;
+			transition: all 0.3s ease;
 		}
 
-		.category-item.featured {
-			background: #1f2937;
+		.shop-now-btn:hover {
+			background: #374151;
 			color: white;
-			border-color: #1f2937;
-		}
-
-		.category-item.featured:hover {
-			background: #111827;
-			border-color: #111827;
-		}
-
-		.category-item.repair {
-			background: #16a34a;
-			color: white;
-			border-color: #16a34a;
-		}
-
-		.category-item.repair:hover {
-			background: #15803d;
-			border-color: #15803d;
 		}
 
 		/* Hero Section */
@@ -1017,6 +1129,40 @@ try {
 		@media (max-width: 768px) {
 			.main-header {
 				padding: 10px 0;
+			}
+
+			.main-nav {
+				padding: 8px 0;
+			}
+
+			.nav-menu {
+				gap: 20px;
+				overflow-x: auto;
+				scrollbar-width: none;
+				-ms-overflow-style: none;
+			}
+
+			.nav-menu::-webkit-scrollbar {
+				display: none;
+			}
+
+			.mega-dropdown {
+				width: 350px;
+				padding: 20px;
+			}
+
+			.dropdown-content {
+				grid-template-columns: repeat(2, 1fr);
+				gap: 20px;
+			}
+
+			.dropdown-column.featured {
+				grid-column: span 2;
+				border-left: none;
+				border-top: 2px solid #f3f4f6;
+				padding-left: 0;
+				padding-top: 20px;
+				margin-top: 20px;
 			}
 
 			.header-container {
@@ -1434,38 +1580,59 @@ try {
 		</div>
 	</header>
 
-	<!-- Category Navigation -->
-	<nav class="category-nav animate__animated animate__fadeInUp">
+	<!-- Main Navigation -->
+	<nav class="main-nav">
 		<div class="container">
-			<div class="category-list">
-				<a href="all_product.php" class="category-item featured">
-					<i class="fas fa-th-large"></i>
-					All Products
-				</a>
-				<a href="all_product.php?category=phones" class="category-item">
-					<i class="fas fa-mobile-alt"></i>
-					Phones
-				</a>
-				<a href="all_product.php?category=laptops" class="category-item">
-					<i class="fas fa-laptop"></i>
-					Laptops & Desktops
-				</a>
-				<a href="all_product.php?category=ipads" class="category-item">
-					<i class="fas fa-tablet-alt"></i>
-					iPads & Tablets
-				</a>
-				<a href="all_product.php?category=cameras" class="category-item">
-					<i class="fas fa-camera"></i>
-					Cameras
-				</a>
-				<a href="all_product.php?category=video" class="category-item">
-					<i class="fas fa-video"></i>
-					Video Equipment
-				</a>
-				<a href="repair_services.php" class="category-item repair">
-					<i class="fas fa-wrench"></i>
-					Repair Services
-				</a>
+			<div class="nav-menu">
+				<a href="index.php" class="nav-item">Home</a>
+
+				<!-- Shop Dropdown -->
+				<div class="nav-item dropdown" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+					<a href="all_product.php" class="nav-link">Shop <i class="fas fa-chevron-down"></i></a>
+					<div class="mega-dropdown" id="shopDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>Mobile Devices</h4>
+								<ul>
+									<li><a href="all_product.php?category=phones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads & Tablets</a></li>
+									<li><a href="all_product.php?category=accessories"><i class="fas fa-headphones"></i> Mobile Accessories</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>Computing</h4>
+								<ul>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+									<li><a href="all_product.php?category=accessories"><i class="fas fa-keyboard"></i> PC Accessories</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>Photography & Video</h4>
+								<ul>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
+									<li><a href="all_product.php?category=video"><i class="fas fa-video"></i> Video Equipment</a></li>
+									<li><a href="all_product.php?category=accessories"><i class="fas fa-camera-retro"></i> Camera Accessories</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column featured">
+								<h4>Featured</h4>
+								<div class="featured-item">
+									<img src="https://via.placeholder.com/120x80/000000/ffffff?text=New+Arrivals" alt="New Arrivals">
+									<div class="featured-text">
+										<strong>New Arrivals</strong>
+										<p>Latest tech gadgets</p>
+										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<a href="repair_services.php" class="nav-item">Repair Services</a>
+				<a href="#" class="nav-item">About</a>
+				<a href="#" class="nav-item">Contact</a>
 			</div>
 		</div>
 	</nav>
@@ -1590,23 +1757,25 @@ try {
 			}
 		}
 
-		// Category navigation
-		document.querySelectorAll('.category-item').forEach(item => {
-			item.addEventListener('click', function(e) {
-				e.preventDefault();
+		// Dropdown navigation functions
+		function showDropdown() {
+			const dropdown = document.getElementById('shopDropdown');
+			if (dropdown) {
+				dropdown.classList.add('show');
+			}
+		}
 
-				// Remove active class from all items
-				document.querySelectorAll('.category-item').forEach(cat => {
-					cat.classList.remove('active');
-				});
-
-				// Add active class to clicked item
-				this.classList.add('active');
-
-				// Add your category filtering logic here
-				console.log('Category selected:', this.textContent);
-			});
-		});
+		function hideDropdown() {
+			const dropdown = document.getElementById('shopDropdown');
+			if (dropdown) {
+				// Add small delay to allow moving to dropdown
+				setTimeout(() => {
+					if (!dropdown.matches(':hover') && !dropdown.closest('.dropdown').matches(':hover')) {
+						dropdown.classList.remove('show');
+					}
+				}, 100);
+			}
+		}
 
 		// Smooth scrolling for internal links
 		document.querySelectorAll('a[href^="#"]').forEach(anchor => {

@@ -1,10 +1,6 @@
 <?php
 require_once(__DIR__ . '/settings/core.php');
-require_once(__DIR__ . '/controllers/product_controller.php');
-require_once(__DIR__ . '/controllers/category_controller.php');
-require_once(__DIR__ . '/controllers/brand_controller.php');
 require_once(__DIR__ . '/controllers/cart_controller.php');
-require_once(__DIR__ . '/helpers/image_helper.php');
 
 $is_logged_in = check_login();
 $is_admin = false;
@@ -16,20 +12,231 @@ if ($is_logged_in) {
 // Get cart count
 $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
-$cart_count = get_cart_count_ctr($customer_id, $ip_address);
+$cart_count = 0; // Will update this after implementing cart
 
-// Get all products, categories, and brands
-$products = view_all_products_ctr();
-$categories = get_all_categories_ctr();
-$brands = get_all_brands_ctr();
+// Sample products for our 5 categories with real images and data
+$all_products = [
+    // Smartphones
+    [
+        'id' => 1,
+        'category' => 'smartphones',
+        'brand' => 'apple',
+        'name' => 'iPhone 15 Pro Max',
+        'description' => 'Latest iPhone with Titanium design, A17 Pro chip, and advanced camera system',
+        'image' => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
+        'rating' => 4.8,
+        'reviews' => 156,
+        'conditions' => [
+            'excellent' => ['price' => 8500, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 7800, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 6900, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['6.7-inch display', 'A17 Pro chip', '256GB storage', '48MP camera']
+    ],
+    [
+        'id' => 2,
+        'category' => 'smartphones',
+        'brand' => 'samsung',
+        'name' => 'Samsung Galaxy S24 Ultra',
+        'description' => 'Premium Android smartphone with S Pen, 200MP camera, and AI features',
+        'image' => 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop',
+        'rating' => 4.7,
+        'reviews' => 203,
+        'conditions' => [
+            'excellent' => ['price' => 7200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 6500, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 5800, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['6.8-inch display', 'Snapdragon 8 Gen 3', '256GB storage', '200MP camera']
+    ],
+    // Laptops
+    [
+        'id' => 3,
+        'category' => 'laptops',
+        'brand' => 'apple',
+        'name' => 'MacBook Pro 16-inch M3',
+        'description' => 'Professional laptop with M3 chip for creative professionals and developers',
+        'image' => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
+        'rating' => 4.9,
+        'reviews' => 89,
+        'conditions' => [
+            'excellent' => ['price' => 15200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 14100, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 12800, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['16-inch Liquid Retina display', 'M3 chip', '512GB SSD', '18-hour battery']
+    ],
+    [
+        'id' => 4,
+        'category' => 'laptops',
+        'brand' => 'dell',
+        'name' => 'Dell XPS 13',
+        'description' => 'Ultra-portable laptop with stunning InfinityEdge display and premium build',
+        'image' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=400&fit=crop',
+        'rating' => 4.6,
+        'reviews' => 124,
+        'conditions' => [
+            'excellent' => ['price' => 6800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 6200, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 5500, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['13.4-inch FHD+', 'Intel Core i7', '512GB SSD', '16GB RAM']
+    ],
+    // iPads
+    [
+        'id' => 5,
+        'category' => 'ipads',
+        'brand' => 'apple',
+        'name' => 'iPad Pro 12.9-inch M2',
+        'description' => 'Ultimate iPad experience with M2 chip and Liquid Retina XDR display',
+        'image' => 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop',
+        'rating' => 4.8,
+        'reviews' => 167,
+        'conditions' => [
+            'excellent' => ['price' => 7800, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 7100, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 6200, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['12.9-inch XDR display', 'M2 chip', '256GB storage', 'Apple Pencil support']
+    ],
+    [
+        'id' => 6,
+        'category' => 'ipads',
+        'brand' => 'apple',
+        'name' => 'iPad Air 5th Gen',
+        'description' => 'Powerful iPad with M1 chip in a colorful and portable design',
+        'image' => 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop',
+        'rating' => 4.7,
+        'reviews' => 98,
+        'conditions' => [
+            'excellent' => ['price' => 4200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 3800, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 3300, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['10.9-inch display', 'M1 chip', '64GB storage', 'Touch ID']
+    ],
+    // Cameras
+    [
+        'id' => 7,
+        'category' => 'cameras',
+        'brand' => 'canon',
+        'name' => 'Canon EOS R6 Mark II',
+        'description' => 'Full-frame mirrorless camera for professional photography and videography',
+        'image' => 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=400&fit=crop',
+        'rating' => 4.9,
+        'reviews' => 145,
+        'conditions' => [
+            'excellent' => ['price' => 12500, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 11200, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 9800, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['24.2MP full-frame sensor', '4K video', 'In-body stabilization', 'Dual card slots']
+    ],
+    [
+        'id' => 8,
+        'category' => 'cameras',
+        'brand' => 'sony',
+        'name' => 'Sony A7 IV',
+        'description' => 'Versatile full-frame camera with exceptional image quality and performance',
+        'image' => 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=400&fit=crop',
+        'rating' => 4.8,
+        'reviews' => 178,
+        'conditions' => [
+            'excellent' => ['price' => 14200, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 12800, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 11400, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['33MP full-frame sensor', '4K 60p video', '5-axis stabilization', 'Dual CFexpress slots']
+    ],
+    // Video Equipment
+    [
+        'id' => 9,
+        'category' => 'video',
+        'brand' => 'sony',
+        'name' => 'Sony FX3 Cinema Camera',
+        'description' => 'Professional cinema camera with full-frame sensor for filmmaking',
+        'image' => 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=400&h=400&fit=crop',
+        'rating' => 4.9,
+        'reviews' => 67,
+        'conditions' => [
+            'excellent' => ['price' => 18900, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 17200, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 15800, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['10-bit 4K recording', 'S-Log3 gamma', 'Dual base ISO', 'Professional audio inputs']
+    ],
+    [
+        'id' => 10,
+        'category' => 'video',
+        'brand' => 'blackmagic',
+        'name' => 'Blackmagic Pocket 6K Pro',
+        'description' => 'Compact cinema camera with Super 35 sensor and professional features',
+        'image' => 'https://images.unsplash.com/photo-1581833971394-9135dfe71455?w=400&h=400&fit=crop',
+        'rating' => 4.7,
+        'reviews' => 89,
+        'conditions' => [
+            'excellent' => ['price' => 8900, 'description' => 'Like new, no visible wear'],
+            'good' => ['price' => 8100, 'description' => 'Minor scratches, fully functional'],
+            'fair' => ['price' => 7200, 'description' => 'Visible wear, works perfectly']
+        ],
+        'features' => ['6K Super 35 sensor', 'Built-in ND filters', 'CFast 2.0 & SD slots', 'Blackmagic RAW']
+    ]
+];
 
-// Pagination settings
-$products_per_page = 10;
-$total_products = count($products);
+// Define categories for filter buttons
+$categories = [
+    ['cat_id' => 'smartphones', 'cat_name' => 'Smartphones'],
+    ['cat_id' => 'laptops', 'cat_name' => 'Laptops'],
+    ['cat_id' => 'ipads', 'cat_name' => 'iPads'],
+    ['cat_id' => 'cameras', 'cat_name' => 'Cameras'],
+    ['cat_id' => 'video', 'cat_name' => 'Video Equipment']
+];
+
+// Define brands for filter buttons
+$brands = [
+    ['brand_id' => 'apple', 'brand_name' => 'Apple'],
+    ['brand_id' => 'samsung', 'brand_name' => 'Samsung'],
+    ['brand_id' => 'dell', 'brand_name' => 'Dell'],
+    ['brand_id' => 'sony', 'brand_name' => 'Sony'],
+    ['brand_id' => 'blackmagic', 'brand_name' => 'Blackmagic'],
+    ['brand_id' => 'canon', 'brand_name' => 'Canon'],
+    ['brand_id' => 'nikon', 'brand_name' => 'Nikon']
+];
+
+// Filter products based on URL parameters
+$category_filter = $_GET['category'] ?? 'all';
+$brand_filter = $_GET['brand'] ?? 'all';
+$condition_filter = $_GET['condition'] ?? 'all';
+$search_query = $_GET['search'] ?? '';
+
+$filtered_products = $all_products;
+
+if ($category_filter !== 'all') {
+    $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
+        return $product['category'] === $category_filter;
+    });
+}
+
+if ($brand_filter !== 'all') {
+    $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
+        return $product['brand'] === $brand_filter;
+    });
+}
+
+if (!empty($search_query)) {
+    $filtered_products = array_filter($filtered_products, function($product) use ($search_query) {
+        return stripos($product['name'], $search_query) !== false ||
+               stripos($product['description'], $search_query) !== false;
+    });
+}
+
+// Pagination
+$products_per_page = 12;
+$total_products = count($filtered_products);
 $total_pages = ceil($total_products / $products_per_page);
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
-$products_to_display = array_slice($products, $offset, $products_per_page);
+$products_to_display = array_slice($filtered_products, $offset, $products_per_page);
 ?>
 
 <!DOCTYPE html>
@@ -1661,31 +1868,88 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                     <?php else: ?>
                         <div class="product-grid" id="productGrid">
                             <?php foreach ($products_to_display as $product): ?>
-                                <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)">
-                                    <div class="product-image-container">
-                                        <img src=""
-                                            alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                            class="product-image"
-                                            data-product-id="<?php echo $product['product_id']; ?>"
-                                            data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                                            data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
-                                        <div class="product-badge">New</div>
-                                    </div>
-                                    <div class="product-content">
-                                        <h5 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h5>
-                                        <div class="product-price">GHS <?php echo number_format($product['product_price'], 2); ?></div>
-                                        <div class="product-meta">
-                                            <span class="meta-tag">
-                                                <i class="fas fa-tag"></i>
-                                                <?php echo htmlspecialchars($product['cat_name'] ?? 'N/A'); ?>
-                                            </span>
-                                            <span class="meta-tag">
-                                                <i class="fas fa-store"></i>
-                                                <?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?>
-                                            </span>
+                                <div class="product-card" style="background: linear-gradient(135deg, #4f63d2 0%, #667eea 100%); color: white; border-radius: 15px; padding: 20px; margin-bottom: 30px;">
+                                    <div class="product-image-container" style="position: relative; margin-bottom: 20px;">
+                                        <div style="background: #ffd700; border-radius: 12px; padding: 20px; text-align: center;">
+                                            <img src="<?php echo $product['image']; ?>"
+                                                alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                                style="width: 250px; height: 200px; object-fit: contain; border-radius: 8px;">
                                         </div>
-                                        <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(<?php echo $product['product_id']; ?>)">
-                                            <i class="fas fa-shopping-cart"></i>
+                                        <div class="product-badge" style="position: absolute; top: 10px; left: 10px; background: white; color: #4f63d2; padding: 5px 10px; border-radius: 15px; font-size: 0.8rem; font-weight: 600;">SPECIAL OFFER</div>
+                                    </div>
+
+                                    <div class="product-content">
+                                        <h5 class="product-title" style="font-size: 1.3rem; font-weight: 600; margin-bottom: 10px;"><?php echo htmlspecialchars($product['name']); ?></h5>
+                                        <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;"><?php echo htmlspecialchars($product['description']); ?></p>
+
+                                        <!-- Key Features -->
+                                        <div class="key-features" style="margin-bottom: 15px;">
+                                            <h6 style="font-size: 0.9rem; margin-bottom: 8px;">Key Features</h6>
+                                            <ul style="list-style: none; padding: 0; font-size: 0.8rem;">
+                                                <?php foreach (array_slice($product['features'], 0, 3) as $feature): ?>
+                                                    <li style="margin-bottom: 3px;"><i class="fas fa-check" style="color: #ffd700; margin-right: 5px;"></i> <?php echo htmlspecialchars($feature); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        </div>
+
+                                        <!-- Product Rating -->
+                                        <div class="product-rating" style="margin-bottom: 15px;">
+                                            <div class="stars" style="color: #ffd700; display: inline-block; margin-right: 10px;">
+                                                <?php
+                                                $rating = $product['rating'];
+                                                $full_stars = floor($rating);
+                                                $has_half = ($rating - $full_stars) >= 0.5;
+
+                                                for ($i = 1; $i <= 5; $i++) {
+                                                    if ($i <= $full_stars) {
+                                                        echo '<i class="fas fa-star"></i>';
+                                                    } else if ($i == $full_stars + 1 && $has_half) {
+                                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                                    } else {
+                                                        echo '<i class="far fa-star"></i>';
+                                                    }
+                                                }
+                                                ?>
+                                            </div>
+                                            <span style="font-size: 0.9rem; opacity: 0.9;">(<?php echo $product['reviews']; ?> reviews)</span>
+                                        </div>
+
+                                        <!-- Condition Selection -->
+                                        <div class="condition-selector" style="margin-bottom: 20px;">
+                                            <h6 style="font-size: 0.9rem; margin-bottom: 10px;">Select Condition</h6>
+                                            <?php foreach ($product['conditions'] as $condition => $details): ?>
+                                                <div class="condition-option" style="background: rgba(255,255,255,0.1); border-radius: 8px; padding: 10px; margin-bottom: 8px; border: 2px solid transparent; cursor: pointer;"
+                                                     onclick="selectCondition(this, <?php echo $details['price']; ?>, '<?php echo $condition; ?>')">
+                                                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                                                        <div>
+                                                            <div style="font-weight: 600; font-size: 0.9rem;"><?php echo ucfirst($condition); ?> Condition</div>
+                                                            <div style="font-size: 0.8rem; opacity: 0.8;"><?php echo $details['description']; ?></div>
+                                                        </div>
+                                                        <div style="font-weight: 600; color: #ffd700;">GHS <?php echo number_format($details['price']); ?></div>
+                                                    </div>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+
+                                        <!-- Current Price Display -->
+                                        <div class="product-pricing" style="margin-bottom: 15px;">
+                                            <span class="current-price" style="font-size: 1.5rem; font-weight: 700; color: #ffd700;">GHS <?php echo number_format($product['conditions']['excellent']['price']); ?></span>
+                                            <span style="text-decoration: line-through; opacity: 0.7; margin-left: 10px;">GHS <?php echo number_format($product['conditions']['excellent']['price'] + 500); ?></span>
+                                            <span style="background: #ff6b6b; color: white; padding: 2px 6px; border-radius: 4px; font-size: 0.8rem; margin-left: 10px;">17% off</span>
+                                        </div>
+
+                                        <div style="font-size: 0.8rem; opacity: 0.8; margin-bottom: 15px; font-style: italic;">Limited time offer - While supplies last</div>
+
+                                        <!-- Add to Cart Button -->
+                                        <button class="add-to-cart-btn"
+                                                data-product-id="<?php echo $product['id']; ?>"
+                                                data-condition="excellent"
+                                                data-price="<?php echo $product['conditions']['excellent']['price']; ?>"
+                                                style="width: 100%; background: #ffd700; color: #4f63d2; border: none; padding: 12px; border-radius: 8px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;"
+                                                onmouseover="this.style.background='#ffed4e'"
+                                                onmouseout="this.style.background='#ffd700'"
+                                                onclick="addToCart(this)">
+                                            <i class="fas fa-shopping-cart" style="margin-right: 5px;"></i>
                                             Add to Cart
                                         </button>
                                     </div>
@@ -1728,24 +1992,127 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             window.location.href = 'single_product.php?id=' + productId;
         }
 
-        function addToCart(productId) {
+        function selectCondition(element, price, condition) {
+            // Remove active class from all condition options in this product
+            const productCard = element.closest('.product-card');
+            const allConditions = productCard.querySelectorAll('.condition-option');
+            allConditions.forEach(opt => {
+                opt.style.border = '2px solid transparent';
+                opt.style.background = 'rgba(255,255,255,0.1)';
+            });
+
+            // Highlight selected condition
+            element.style.border = '2px solid #ffd700';
+            element.style.background = 'rgba(255,215,0,0.2)';
+
+            // Update price display
+            const priceElement = productCard.querySelector('.current-price');
+            priceElement.textContent = 'GHS ' + price.toLocaleString();
+
+            // Update add to cart button data
+            const cartBtn = productCard.querySelector('.add-to-cart-btn');
+            cartBtn.setAttribute('data-condition', condition);
+            cartBtn.setAttribute('data-price', price);
+        }
+
+        function addToCart(button) {
+            const productId = button.getAttribute('data-product-id');
+            const condition = button.getAttribute('data-condition');
+            const price = button.getAttribute('data-price');
+
             // Add visual feedback
-            const btn = event.target.closest('.add-to-cart-btn');
-            const originalText = btn.innerHTML;
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            button.disabled = true;
 
-            btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            // Send AJAX request to add to cart
+            fetch('actions/add_to_cart.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    product_id: productId,
+                    condition: condition,
+                    price: price,
+                    quantity: 1
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    button.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    button.style.background = '#10b981';
 
+                    // Update cart count if available
+                    const cartCounter = document.querySelector('.cart-counter');
+                    if (cartCounter && data.cart_count) {
+                        cartCounter.textContent = data.cart_count;
+                        cartCounter.style.display = 'inline';
+                    }
+
+                    // Show success notification
+                    showNotification(data.message, 'success');
+                } else {
+                    button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                    button.style.background = '#ef4444';
+                    showNotification(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error adding to cart:', error);
+                button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                button.style.background = '#ef4444';
+                showNotification('Failed to add product to cart', 'error');
+            })
+            .finally(() => {
+                // Reset button after 2 seconds
+                setTimeout(() => {
+                    button.innerHTML = originalText;
+                    button.style.background = '#ffd700';
+                    button.disabled = false;
+                }, 2000);
+            });
+        }
+
+        function showNotification(message, type) {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : '#ef4444'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 8px;
+                box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+                z-index: 9999;
+                font-weight: 500;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = message;
+
+            // Add animation keyframes
+            if (!document.getElementById('notificationStyles')) {
+                const style = document.createElement('style');
+                style.id = 'notificationStyles';
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+
+            document.body.appendChild(notification);
+
+            // Remove after 3 seconds
             setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
-            }, 1500);
-
-            // Here you would normally send AJAX request to add to cart
-            console.log('Add to cart functionality - Product ID: ' + productId);
-
-            // Update cart count
-            updateCartCount();
+                notification.style.animation = 'slideIn 0.3s ease reverse';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
         }
 
         function showCart() {

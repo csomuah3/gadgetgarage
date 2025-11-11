@@ -875,8 +875,8 @@ try {
 
 		.main-banner {
 			border-radius: 12px;
-			padding: 40px;
-			height: 300px;
+			padding: 50px;
+			height: 400px;
 			display: flex;
 			align-items: center;
 		}
@@ -995,60 +995,7 @@ try {
 			margin: 0;
 		}
 
-		/* Slideshow Navigation */
-		.slideshow-dots {
-			text-align: center;
-			margin-top: 20px;
-			position: absolute;
-			bottom: 20px;
-			width: 100%;
-		}
-
-		.dot {
-			height: 12px;
-			width: 12px;
-			margin: 0 5px;
-			background-color: #bbb;
-			border-radius: 50%;
-			display: inline-block;
-			cursor: pointer;
-			transition: background-color 0.3s ease;
-		}
-
-		.dot.active,
-		.dot:hover {
-			background-color: #008060;
-		}
-
-		.prev, .next {
-			cursor: pointer;
-			position: absolute;
-			top: 50%;
-			width: auto;
-			margin-top: -22px;
-			padding: 16px;
-			color: #008060;
-			font-weight: bold;
-			font-size: 18px;
-			border: none;
-			background: rgba(255, 255, 255, 0.8);
-			border-radius: 50%;
-			user-select: none;
-			transition: all 0.3s ease;
-		}
-
-		.next {
-			right: 20px;
-		}
-
-		.prev {
-			left: 20px;
-		}
-
-		.prev:hover, .next:hover {
-			background: rgba(0, 128, 96, 0.8);
-			color: white;
-		}
+		/* Removed unused slideshow styles */
 
 		/* Featured Collections Styles */
 		.featured-collection {
@@ -2573,8 +2520,7 @@ try {
 								<h4>Mobile Devices</h4>
 								<ul>
 									<li><a href="all_product.php?category=phones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads & Tablets</a></li>
-									<li><a href="all_product.php?category=accessories"><i class="fas fa-headphones"></i> Mobile Accessories</a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
@@ -2582,7 +2528,6 @@ try {
 								<ul>
 									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
 									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
-									<li><a href="all_product.php?category=accessories"><i class="fas fa-keyboard"></i> PC Accessories</a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
@@ -2590,13 +2535,12 @@ try {
 								<ul>
 									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
 									<li><a href="all_product.php?category=video"><i class="fas fa-video"></i> Video Equipment</a></li>
-									<li><a href="all_product.php?category=accessories"><i class="fas fa-camera-retro"></i> Camera Accessories</a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
 								<h4>Featured</h4>
 								<div class="featured-item">
-									<img src="https://via.placeholder.com/120x80/000000/ffffff?text=New+Arrivals" alt="New Arrivals">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
@@ -2632,7 +2576,7 @@ try {
 								<div class="col-lg-6">
 									<div class="banner-text">
 										<h1 class="banner-title">Xbox One Official Wireless Model Controller</h1>
-										<p class="banner-price">Starting At <span class="price">$236.00</span></p>
+										<p class="banner-price">Starting At <span class="price">GHS 2,360.00</span></p>
 										<button class="shop-now-btn">SHOP NOW</button>
 									</div>
 								</div>
@@ -2654,7 +2598,7 @@ try {
 							<div class="side-banner-content">
 								<div class="side-text">
 									<h3>T900 Ultra Watch</h3>
-									<p>Starting <strong>$19.00</strong></p>
+									<p>Starting <strong>GHS 190.00</strong></p>
 									<button class="shop-btn">SHOP NOW</button>
 								</div>
 								<div class="side-image">
@@ -2668,7 +2612,7 @@ try {
 							<div class="side-banner-content">
 								<div class="side-text">
 									<h3>Kids Wireless Headphones</h3>
-									<p>Starting <strong>$36.00</strong></p>
+									<p>Starting <strong>GHS 360.00</strong></p>
 									<button class="shop-btn">SHOP NOW</button>
 								</div>
 								<div class="side-image">
@@ -2742,73 +2686,64 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="Apple iPad">
+							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop&crop=center" alt="Smartphones">
 						</div>
-						<h4>Apple iPad</h4>
+						<h4>Smartphones</h4>
+						<p>(12 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop&crop=center" alt="Laptops">
+						</div>
+						<h4>Laptops</h4>
+						<p>(8 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="iPads">
+						</div>
+						<h4>iPads</h4>
+						<p>(6 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Cameras">
+						</div>
+						<h4>Cameras</h4>
+						<p>(10 Items)</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=150&h=150&fit=crop&crop=center" alt="Video Equipment">
+						</div>
+						<h4>Video Equipment</h4>
 						<p>(5 Items)</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1589492477829-5e65395b66cc?w=150&h=150&fit=crop&crop=center" alt="Smart Speaker">
-						</div>
-						<h4>Smart Speaker</h4>
-						<p>(5 Items)</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1606144042614-b2417e99c4e3?w=150&h=150&fit=crop&crop=center" alt="Game Console">
-						</div>
-						<h4>Game Console</h4>
-						<p>(7 Items)</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=150&h=150&fit=crop&crop=center" alt="Pro Air Pods">
-						</div>
-						<h4>Pro Air Pods</h4>
-						<p>(4 Items)</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=150&h=150&fit=crop&crop=center" alt="Smart Watch">
-						</div>
-						<h4>Smart Watch</h4>
-						<p>(5 Items)</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Headphones">
-						</div>
-						<h4>Headphones</h4>
-						<p><a href="all_product.php" class="view-all-link">VIEW ALL</a></p>
 					</div>
 				</div>
 			</div>
 		</div>
 	</section>
 
-	<!-- Smart Band Promo -->
+	<!-- Camera & Video Equipment Promo -->
 	<section class="smart-band-promo">
 		<div class="container">
 			<div class="promo-banner" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
 				<div class="promo-content">
-					<h2>Strap Compatible For Mi Band 5 And Mi Band 6 Wristband</h2>
-					<p>Perfect Fit to Band 5 just 6 Replacement Strap Only</p>
+					<h2>Professional Camera & Video Equipment Collection</h2>
+					<p>Capture Life's Perfect Moments with Premium Photography & Video Gear</p>
 					<div class="promo-images">
-						<img src="https://images.unsplash.com/photo-1557935728-e6d1eaabe558?w=100&h=100&fit=crop&crop=center" alt="Smart Band 1">
-						<img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=100&h=100&fit=crop&crop=center" alt="Smart Band 2">
-						<img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=100&h=100&fit=crop&crop=center" alt="Smart Band 3">
-						<img src="https://images.unsplash.com/photo-1434494878577-86c23bcb06b9?w=100&h=100&fit=crop&crop=center" alt="Smart Band 4">
+						<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=100&h=100&fit=crop&crop=center" alt="DSLR Camera">
+						<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=100&h=100&fit=crop&crop=center" alt="Video Camera">
+						<img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=100&h=100&fit=crop&crop=center" alt="Camera Lens">
+						<img src="https://images.unsplash.com/photo-1581833971394-9135dfe71455?w=100&h=100&fit=crop&crop=center" alt="Tripod">
 					</div>
 				</div>
 			</div>
@@ -2821,9 +2756,9 @@ try {
 			<div class="section-header">
 				<h2>Products By Category</h2>
 				<div class="category-tabs">
-					<button class="category-tab active">GADGETS</button>
-					<button class="category-tab">ACCESSORIES</button>
-					<button class="category-tab">SMART PHONES</button>
+					<button class="category-tab active">SMARTPHONES</button>
+					<button class="category-tab">LAPTOPS</button>
+					<button class="category-tab">CAMERAS</button>
 				</div>
 			</div>
 
@@ -2831,55 +2766,55 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="product-card">
 						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=200&h=150&fit=crop&crop=center" alt="Samsung Smart TV">
-						</div>
-						<h4>Dell</h4>
-						<p>All in One Samsung Smart TV OLED 4K Black</p>
-						<div class="price">$340.00</div>
-						<button class="product-btn">SOLD OUT</button>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1593305841991-05c297ba4575?w=200&h=150&fit=crop&crop=center" alt="Apple iMac">
-						</div>
-						<h4>Dell</h4>
-						<p>Apple iMac Pro (19.5-inch, 64GB) Cellular, 64GB</p>
-						<div class="price">$190.00</div>
-						<button class="product-btn">OPTIONS</button>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1542393545-10f5cde2c810?w=200&h=150&fit=crop&crop=center" alt="Apple MacBook">
+							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=150&fit=crop&crop=center" alt="iPhone 15">
 						</div>
 						<h4>Apple</h4>
-						<p>13in MacBook Core i3 11th Gen Inspiron 3511 17in</p>
-						<div class="price">$600.00</div>
+						<p>iPhone 15 Pro Max 256GB Natural Titanium</p>
+						<div class="price">GHS 8,500.00</div>
 						<button class="product-btn">OPTIONS</button>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="product-card">
 						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1588423771073-b8903fbb85b5?w=200&h=150&fit=crop&crop=center" alt="AirPods">
+							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=150&fit=crop&crop=center" alt="MacBook Pro">
+						</div>
+						<h4>Apple</h4>
+						<p>MacBook Pro 16-inch M3 Pro 512GB Space Black</p>
+						<div class="price">GHS 15,200.00</div>
+						<button class="product-btn">OPTIONS</button>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&h=150&fit=crop&crop=center" alt="iPad Pro">
+						</div>
+						<h4>Apple</h4>
+						<p>iPad Pro 12.9-inch M2 WiFi + Cellular 256GB</p>
+						<div class="price">GHS 7,800.00</div>
+						<button class="product-btn">OPTIONS</button>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="product-card">
+						<div class="product-image">
+							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=200&h=150&fit=crop&crop=center" alt="Canon Camera">
 						</div>
 						<h4>Canon</h4>
-						<p>Google Pixel Buds, Passbook O3, Nest Wi-Fi</p>
-						<div class="price">$89.00 $80.00</div>
+						<p>Canon EOS R6 Mark II Mirrorless Camera Body</p>
+						<div class="price">GHS 12,500.00</div>
 						<button class="product-btn">OPTIONS</button>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="product-card">
 						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1587829741301-dc798b83add3?w=200&h=150&fit=crop&crop=center" alt="Samsung Tablet">
+							<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=200&h=150&fit=crop&crop=center" alt="Video Camera">
 						</div>
-						<h4>Samsung</h4>
-						<p>HP Spectre x360 2-in-1 Laptop 13.5in OLED2K Black</p>
-						<div class="price">$320.00</div>
+						<h4>Sony</h4>
+						<p>Sony FX3 Full-Frame Cinema Camera Professional</p>
+						<div class="price">GHS 18,900.00</div>
 						<button class="product-btn">OPTIONS</button>
 					</div>
 				</div>
@@ -3388,58 +3323,7 @@ try {
 			closeNewsletter();
 		}
 
-		// Slideshow functionality
-		let slideIndex = 1;
-		let slideTimer;
-
-		function showSlides(n) {
-			let slides = document.getElementsByClassName('slide');
-			let dots = document.getElementsByClassName('dot');
-
-			if (n > slides.length) { slideIndex = 1 }
-			if (n < 1) { slideIndex = slides.length }
-
-			for (let i = 0; i < slides.length; i++) {
-				slides[i].classList.remove('active');
-			}
-
-			for (let i = 0; i < dots.length; i++) {
-				dots[i].classList.remove('active');
-			}
-
-			if (slides[slideIndex - 1]) {
-				slides[slideIndex - 1].classList.add('active');
-			}
-			if (dots[slideIndex - 1]) {
-				dots[slideIndex - 1].classList.add('active');
-			}
-		}
-
-		function plusSlides(n) {
-			clearTimeout(slideTimer);
-			showSlides(slideIndex += n);
-			autoSlide();
-		}
-
-		function currentSlide(n) {
-			clearTimeout(slideTimer);
-			showSlides(slideIndex = n);
-			autoSlide();
-		}
-
-		function autoSlide() {
-			slideTimer = setTimeout(function() {
-				slideIndex++;
-				showSlides(slideIndex);
-				autoSlide();
-			}, 5000);
-		}
-
-		// Initialize slideshow
-		document.addEventListener('DOMContentLoaded', function() {
-			showSlides(slideIndex);
-			autoSlide();
-		});
+		// Hero banner functionality (no slideshow needed)
 
 		// Show newsletter popup after 15 seconds if not shown before
 		setTimeout(function() {

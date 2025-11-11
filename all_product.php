@@ -2921,6 +2921,133 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 chatSend.addEventListener('click', sendChatMessage);
             }
         });
+
+        // Product Modal Functions
+        function showConditionModal(productId) {
+            // Find the product data
+            const products = <?php echo json_encode($all_products); ?>;
+            const product = products.find(p => p.id == productId);
+
+            if (!product) return;
+
+            // Populate product info
+            document.getElementById('modalProductInfo').innerHTML = `
+                <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
+                    <img src="${product.image}" alt="${product.name}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <div>
+                        <h6 style="color: #6b7280; font-size: 0.9rem; margin: 0 0 5px 0;">${product.brand.charAt(0).toUpperCase() + product.brand.slice(1)}</h6>
+                        <h5 style="color: #1f2937; margin: 0; font-size: 1.1rem;">${product.name}</h5>
+                    </div>
+                </div>
+            `;
+
+            // Populate condition options
+            let conditionsHtml = '<div style="display: flex; flex-direction: column; gap: 12px;">';
+
+            Object.entries(product.conditions).forEach(([condition, details]) => {
+                const original_price = details.price + 800;
+                conditionsHtml += `
+                    <div onclick="selectModalCondition(this, ${product.id}, '${condition}', ${details.price})"
+                         style="border: 2px solid #e5e7eb; border-radius: 8px; padding: 15px; cursor: pointer; transition: all 0.2s; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div>
+                                <div style="font-weight: 600; color: #1f2937; margin-bottom: 4px;">${condition.charAt(0).toUpperCase() + condition.slice(1)} Condition</div>
+                                <div style="color: #6b7280; font-size: 0.9rem;">${details.description}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="text-decoration: line-through; color: #9ca3af; font-size: 0.9rem;">GHS ${original_price.toLocaleString()}</div>
+                                <div style="color: #2563eb; font-weight: 600; font-size: 1.1rem;">GHS ${details.price.toLocaleString()}</div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            conditionsHtml += '</div>';
+            document.getElementById('modalConditions').innerHTML = conditionsHtml;
+
+            // Show modal
+            document.getElementById('conditionModal').style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function selectModalCondition(element, productId, condition, price) {
+            // Remove active styling from all options
+            document.querySelectorAll('#modalConditions > div > div').forEach(opt => {
+                opt.style.border = '2px solid #e5e7eb';
+                opt.style.background = 'white';
+            });
+
+            // Apply active styling to selected option
+            element.style.border = '2px solid #2563eb';
+            element.style.background = '#eff6ff';
+
+            // Add "Add to Cart" button if not already present
+            let addToCartBtn = document.getElementById('modalAddToCartBtn');
+            if (!addToCartBtn) {
+                addToCartBtn = document.createElement('button');
+                addToCartBtn.id = 'modalAddToCartBtn';
+                addToCartBtn.style.cssText = 'width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; margin-top: 20px; cursor: pointer; transition: background-color 0.2s;';
+                addToCartBtn.innerHTML = '<i class="fas fa-shopping-cart" style="margin-right: 8px;"></i>Add to Cart';
+                document.getElementById('modalConditions').appendChild(addToCartBtn);
+            }
+
+            // Update button data and click handler
+            addToCartBtn.setAttribute('data-product-id', productId);
+            addToCartBtn.setAttribute('data-condition', condition);
+            addToCartBtn.setAttribute('data-price', price);
+            addToCartBtn.onclick = function() {
+                addToCart(this);
+                closeConditionModal();
+            };
+        }
+
+        function closeConditionModal() {
+            document.getElementById('conditionModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Product Sorting Functions
+        function sortProducts() {
+            const sortValue = document.getElementById('sortSelect').value;
+            const productGrid = document.getElementById('productGrid');
+            const products = Array.from(productGrid.children);
+
+            products.sort((a, b) => {
+                switch(sortValue) {
+                    case 'alphabetically-az':
+                        return a.querySelector('h5').textContent.localeCompare(b.querySelector('h5').textContent);
+                    case 'alphabetically-za':
+                        return b.querySelector('h5').textContent.localeCompare(a.querySelector('h5').textContent);
+                    case 'price-low-high':
+                        const priceA = parseInt(a.querySelector('[style*="color: #2563eb"]').textContent.replace(/[^0-9]/g, ''));
+                        const priceB = parseInt(b.querySelector('[style*="color: #2563eb"]').textContent.replace(/[^0-9]/g, ''));
+                        return priceA - priceB;
+                    case 'price-high-low':
+                        const priceA2 = parseInt(a.querySelector('[style*="color: #2563eb"]').textContent.replace(/[^0-9]/g, ''));
+                        const priceB2 = parseInt(b.querySelector('[style*="color: #2563eb"]').textContent.replace(/[^0-9]/g, ''));
+                        return priceB2 - priceA2;
+                    case 'rating-high-low':
+                        const ratingA = a.querySelectorAll('.fas.fa-star').length;
+                        const ratingB = b.querySelectorAll('.fas.fa-star').length;
+                        return ratingB - ratingA;
+                    default:
+                        return 0;
+                }
+            });
+
+            // Clear and re-append sorted products
+            productGrid.innerHTML = '';
+            products.forEach(product => productGrid.appendChild(product));
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('conditionModal');
+            if (event.target === modal) {
+                closeConditionModal();
+            }
+        });
     </script>
 
     <!-- Footer -->

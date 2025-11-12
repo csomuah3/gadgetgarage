@@ -1543,14 +1543,177 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
         }
 
-        .hero-bar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 25px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        /* Hero Banner Styles */
+        .hero-banner-section {
+            padding: 24px 0;
+            background: #ffffff;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 28px;
+            align-items: stretch;
+            min-height: 560px;
+        }
+
+        .main-banner {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 24px;
+            padding: 48px;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-banner.coral {
+            background: #ff5b57;
+            color: #fff;
+        }
+
+        .banner-copy {
+            display: grid;
+            align-content: center;
+            gap: 22px;
+        }
+
+        .banner-title {
+            font-size: clamp(34px, 5.2vw, 72px);
+            font-weight: 800;
+            line-height: 1.08;
+            color: #fff;
+            margin: 0;
+        }
+
+        .banner-price {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .banner-price .price {
+            color: #fff;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #ff5b57;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+        }
+
+        .banner-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .side-banners {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .side-card {
+            display: grid;
+            grid-template-columns: 1fr 80px;
+            gap: 16px;
+            padding: 24px;
+            border-radius: 12px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-card.yellow {
+            background: #fbbf24;
+            color: #1f2937;
+        }
+
+        .side-card.purple {
+            background: #8b5fbf;
+            color: white;
+        }
+
+        .side-copy {
+            display: grid;
+            align-content: center;
+            gap: 8px;
+        }
+
+        .side-title {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .side-price {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .side-price .price {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .side-media {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .side-media img {
+            width: 60px;
+            height: 60px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .side-banners {
+                grid-template-rows: none;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-banner {
+                grid-template-columns: 1fr;
+                padding: 28px;
+            }
+
+            .banner-media {
+                order: -1;
+            }
+
+            .side-banners {
+                grid-template-columns: 1fr;
+            }
+
+            .side-media img {
+                width: 50px;
+                height: 50px;
+            }
         }
 
         .hero-actions .btn {
@@ -1819,24 +1982,54 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         <div class="bubble"></div>
     </div>
 
-    <div class="container-fluid mt-4">
-        <!-- Hero Bar -->
-        <div class="hero-bar mb-4">
-            <div class="d-flex align-items-center justify-content-between">
-                <a href="index.php" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Home
-                </a>
-                <h1 class="page-title mb-0">All Products</h1>
-                <div class="hero-actions">
-                    <!-- Mobile filter toggle -->
-                    <button class="btn btn-outline-primary d-lg-none" id="mobileFilterToggle">
-                        <i class="fas fa-filter"></i>
-                        Filters
-                    </button>
+    <!-- Hero Banner Section -->
+    <section class="hero-banner-section">
+        <div class="container">
+            <div class="hero-grid">
+                <!-- LEFT: MAIN BANNER -->
+                <article class="main-banner coral">
+                    <div class="banner-copy">
+                        <h1 class="banner-title">Discover Amazing<br>Tech Products<br>All in One Place</h1>
+                        <p class="banner-price">Starting At <span class="price">$19.00</span></p>
+                        <a href="#products" class="btn-primary">BROWSE NOW</a>
+                    </div>
+
+                    <div class="banner-media">
+                        <img
+                            src="https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1600&auto=format&fit=crop"
+                            alt="Tech Products" />
+                    </div>
+                </article>
+
+                <!-- RIGHT: TWO SIDE CARDS -->
+                <div class="side-banners">
+                    <!-- Top -->
+                    <article class="side-card yellow">
+                        <div class="side-copy">
+                            <h3 class="side-title">Premium<br>Laptops</h3>
+                            <p class="side-price">From <span class="price">$299.00</span></p>
+                        </div>
+                        <div class="side-media">
+                            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop" alt="Laptops" />
+                        </div>
+                    </article>
+
+                    <!-- Bottom -->
+                    <article class="side-card purple">
+                        <div class="side-copy">
+                            <h3 class="side-title">Smart<br>Phones</h3>
+                            <p class="side-price">From <span class="price">$89.00</span></p>
+                        </div>
+                        <div class="side-media">
+                            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=400&auto=format&fit=crop" alt="Smartphones" />
+                        </div>
+                    </article>
                 </div>
             </div>
         </div>
+    </section>
+
+    <div class="container-fluid mt-4">
 
         <div class="row">
             <!-- Left Sidebar - Filters -->

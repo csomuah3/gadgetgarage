@@ -972,6 +972,18 @@ try {
 		.services-strip{background:#ecfff0;padding:22px 0;margin-top:18px;border-radius:10px}
 		.service-item{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;color:#004a1f}
 
+		/* POPULAR CATEGORIES */
+		.popular-categories{padding:80px 0;background:var(--light-bg)}
+		.section-title{font-weight:800;font-size:2rem;margin-bottom:8px}
+		.section-sub{color:var(--muted);margin-bottom:36px}
+		.category-card{background:#fff;border-radius:var(--card-radius);padding:24px 18px;text-align:center;box-shadow:var(--shadow-1);transition:.25s;height:100%;cursor:pointer;}
+		.category-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-2)}
+		.category-icon{width:100%;height:140px;border-radius:10px;overflow:hidden;margin-bottom:14px}
+		.category-icon img{width:100%;height:100%;object-fit:cover}
+		.category-card h4{font-size:1.1rem;font-weight:700;margin-bottom:6px}
+		.category-card p{color:#555;font-size:.95rem;margin:0}
+		.price{color:var(--brand-blue);font-weight:800}
+
 		/* BRANDS — Infinite marquee + Magic Bento hover */
 		.brands-area{background:#0b0b13;color:#eae9f7;padding:56px 0;position:relative;overflow:hidden}
 		.brands-area h2{color:#fff}
@@ -2788,6 +2800,46 @@ try {
 		</div>
 	</section>
 
+	<!-- MOST POPULAR CATEGORIES (5) -->
+	<section class="popular-categories">
+		<div class="container-fluid">
+			<h2 class="section-title text-center">Most Popular Categories</h2>
+			<p class="section-sub text-center">Top picks across our store</p>
+
+			<div class="row g-4 justify-content-center">
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card" onclick="window.location.href='all_product.php?category=phones'">
+						<div class="category-icon"><img src="https://images.unsplash.com/photo-1510557880182-3f8c5f7b63d9?q=80&w=600&auto=format" alt="Smartphones"></div>
+						<h4>Smartphones</h4><p>From <span class="price">₵2,300</span></p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card" onclick="window.location.href='all_product.php?category=laptops'">
+						<div class="category-icon"><img src="https://images.unsplash.com/photo-1587202372775-98927e7d2e1c?q=80&w=600&auto=format" alt="Laptops"></div>
+						<h4>Laptops</h4><p>From <span class="price">₵4,800</span></p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card" onclick="window.location.href='all_product.php?category=cameras'">
+						<div class="category-icon"><img src="https://images.unsplash.com/photo-1508896694512-7a3a7eede1b0?q=80&w=600&auto=format" alt="Cameras"></div>
+						<h4>Cameras</h4><p>From <span class="price">₵1,900</span></p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card" onclick="window.location.href='all_product.php?category=tablets'">
+						<div class="category-icon"><img src="https://images.unsplash.com/photo-1605902711622-cfb43c4437d7?q=80&w=600&auto=format" alt="Tablets"></div>
+						<h4>Tablets</h4><p>From <span class="price">₵2,100</span></p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card" onclick="window.location.href='all_product.php?category=accessories'">
+						<div class="category-icon"><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=600&auto=format" alt="Accessories"></div>
+						<h4>Accessories</h4><p>From <span class="price">₵150</span></p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
 
 	<!-- Features Section -->
 	<section class="features-section">

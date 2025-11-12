@@ -210,13 +210,167 @@ if (!$product) {
             color: #2d3748;
         }
 
-        .hero-bar {
+        /* Hero Banner Styles */
+        .hero-banner-section {
+            padding: 24px 0;
             background: #ffffff;
+        }
+
+        .hero-grid {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 28px;
+            align-items: stretch;
+            min-height: 560px;
+        }
+
+        .main-banner {
+            display: grid;
+            grid-template-columns: 1.15fr 1fr;
+            gap: 24px;
+            padding: 48px;
+            border-radius: 14px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .main-banner.coral {
+            background: #ff5b57;
+            color: #fff;
+        }
+
+        .banner-copy {
+            display: grid;
+            align-content: center;
+            gap: 22px;
+        }
+
+        .banner-title {
+            font-size: clamp(24px, 4vw, 48px);
+            font-weight: 800;
+            line-height: 1.08;
+            color: #fff;
+            margin: 0;
+        }
+
+        .banner-price {
+            font-size: 18px;
+            color: rgba(255,255,255,0.9);
+        }
+
+        .banner-price .price {
+            color: #fff;
+            font-weight: 700;
+            font-size: 24px;
+        }
+
+        .btn-primary {
+            background: #fff;
+            color: #ff5b57;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 700;
+            display: inline-block;
+            transition: all 0.3s ease;
+            width: fit-content;
+        }
+
+        .btn-primary:hover {
+            background: rgba(255,255,255,0.9);
+            transform: translateY(-2px);
+            color: #ff5b57;
+        }
+
+        .banner-media img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 8px;
+        }
+
+        .side-banners {
+            display: grid;
+            grid-template-rows: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .side-card {
+            display: grid;
+            grid-template-columns: 1fr 80px;
+            gap: 16px;
+            padding: 24px;
             border-radius: 12px;
-            padding: 25px 30px;
-            margin-bottom: 30px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .side-card.yellow {
+            background: #fbbf24;
+            color: #1f2937;
+        }
+
+        .side-card.purple {
+            background: #8b5fbf;
+            color: white;
+        }
+
+        .side-copy {
+            display: grid;
+            align-content: center;
+            gap: 8px;
+        }
+
+        .side-title {
+            font-size: 16px;
+            font-weight: 700;
+            line-height: 1.2;
+            margin: 0;
+        }
+
+        .side-price {
+            font-size: 12px;
+            margin: 0;
+            opacity: 0.9;
+        }
+
+        .side-price .price {
+            font-weight: 700;
+            font-size: 14px;
+        }
+
+        .side-media {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        @media (max-width: 992px) {
+            .hero-grid {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .side-banners {
+                grid-template-rows: none;
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .main-banner {
+                grid-template-columns: 1fr;
+                padding: 28px;
+            }
+
+            .banner-media {
+                order: -1;
+            }
+
+            .side-banners {
+                grid-template-columns: 1fr;
+            }
         }
 
         .hero-actions .btn {
@@ -481,25 +635,52 @@ if (!$product) {
         </div>
     </header>
 
-    <div class="container mt-4">
-        <!-- Hero Bar -->
-        <div class="hero-bar">
-            <div class="d-flex align-items-center justify-content-between">
-                <a href="all_product.php" class="back-btn">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Products
-                </a>
-                <div class="hero-title">
-                    <h2 class="mb-0 text-muted" style="font-size: 1.2rem; font-weight: 600;">Product Details</h2>
-                </div>
-                <div class="hero-actions">
-                    <button class="btn btn-outline-success" onclick="shareProduct('whatsapp')">
-                        <i class="fab fa-whatsapp"></i>
-                        Share
-                    </button>
+    <!-- Hero Banner Section -->
+    <section class="hero-banner-section">
+        <div class="container">
+            <div class="hero-grid">
+                <!-- LEFT: MAIN BANNER -->
+                <article class="main-banner coral">
+                    <div class="banner-copy">
+                        <h1 class="banner-title"><?php echo htmlspecialchars($product['product_title']); ?></h1>
+                        <p class="banner-price">Starting At <span class="price">GHS <?php echo number_format($product['product_price'], 2); ?></span></p>
+                        <a href="#product-details" class="btn-primary">VIEW DETAILS</a>
+                    </div>
+
+                    <div class="banner-media">
+                        <img src="" alt="<?php echo htmlspecialchars($product['product_title']); ?>" class="product-hero-image" data-product-id="<?php echo $product['product_id']; ?>">
+                    </div>
+                </article>
+
+                <!-- RIGHT: TWO SIDE CARDS -->
+                <div class="side-banners">
+                    <!-- Top -->
+                    <article class="side-card yellow">
+                        <div class="side-copy">
+                            <h3 class="side-title">Premium<br>Quality</h3>
+                            <p class="side-price">Tested & <span class="price">Verified</span></p>
+                        </div>
+                        <div class="side-media">
+                            <i class="fas fa-star" style="font-size: 30px; color: #1f2937;"></i>
+                        </div>
+                    </article>
+
+                    <!-- Bottom -->
+                    <article class="side-card purple">
+                        <div class="side-copy">
+                            <h3 class="side-title">Fast<br>Shipping</h3>
+                            <p class="side-price">Free <span class="price">Delivery</span></p>
+                        </div>
+                        <div class="side-media">
+                            <i class="fas fa-shipping-fast" style="font-size: 30px; color: white;"></i>
+                        </div>
+                    </article>
                 </div>
             </div>
         </div>
+    </section>
+
+    <div class="container mt-4" id="product-details">
 
         <div class="product-container">
             <div class="row g-0">
@@ -761,6 +942,7 @@ if (!$product) {
         // Image Loading System
         function loadProductImage() {
             const img = document.querySelector('.product-image');
+            const heroImg = document.querySelector('.product-hero-image');
             const productId = img.getAttribute('data-product-id');
             const productTitle = img.getAttribute('data-product-title');
 
@@ -769,14 +951,19 @@ if (!$product) {
                 .then(data => {
                     if (data.success && data.url) {
                         img.src = data.url;
+                        if (heroImg) heroImg.src = data.url;
                     } else {
                         // Use placeholder
-                        img.src = generatePlaceholderUrl(productTitle, '600x400');
+                        const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
+                        img.src = placeholderUrl;
+                        if (heroImg) heroImg.src = placeholderUrl;
                     }
                 })
                 .catch(error => {
                     console.log('Image load error - using placeholder');
-                    img.src = generatePlaceholderUrl(productTitle, '600x400');
+                    const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
+                    img.src = placeholderUrl;
+                    if (heroImg) heroImg.src = placeholderUrl;
                 });
         }
 

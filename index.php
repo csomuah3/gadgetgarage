@@ -743,6 +743,7 @@ try {
 		/* Mega Dropdown */
 		.mega-dropdown {
 			position: absolute;
+			
 			top: 100%;
 			left: 0;
 			width: 800px;
@@ -752,8 +753,8 @@ try {
 			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 			padding: 32px;
 			opacity: 0;
-			visibility: hidden;
-			transform: translateY(10px);
+			visibility: visible;
+			transform: translateY(0px);
 			transition: all 0.3s ease;
 			z-index: 1000;
 		}
@@ -1012,7 +1013,7 @@ try {
 		.category-card {
 			background: #fff;
 			border-radius: var(--card-radius);
-			padding: 24px 18px;
+			padding: 34px 18px;
 			text-align: center;
 			box-shadow: var(--shadow-1);
 			transition: .25s;
@@ -1028,7 +1029,7 @@ try {
 		.category-icon {
 			width: 100%;
 			height: 140px;
-			border-radius: 10px;
+			border-radius: 25px;
 			overflow: hidden;
 			margin-bottom: 14px
 		}

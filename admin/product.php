@@ -806,7 +806,8 @@ require_admin(); // only admins
             <li><a href="category.php"><i class="fas fa-list"></i> Categories</a></li>
             <li><a href="brand.php"><i class="fas fa-tags"></i> Brands</a></li>
             <li><a href="#" class="active"><i class="fas fa-box"></i> Products</a></li>
-            <li><a href="#"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+            <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+            <li><a href="appointments.php"><i class="fas fa-calendar-check"></i> Appointments</a></li>
             <li><a href="#"><i class="fas fa-users"></i> Customers</a></li>
             <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
             <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>

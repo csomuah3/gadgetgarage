@@ -12,6 +12,7 @@ if (!check_login()) {
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_id = (int)($_POST['product_id'] ?? 0);
+    $force_delete = isset($_POST['force_delete']) && $_POST['force_delete'] === 'true';
 
     // Validate input
     if ($product_id <= 0) {
@@ -20,7 +21,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $result = delete_product_ctr($product_id);
+        if ($force_delete) {
+            $result = force_delete_product_ctr($product_id);
+        } else {
+            $result = delete_product_ctr($product_id);
+        }
         echo json_encode($result);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to delete product: ' . $e->getMessage()]);

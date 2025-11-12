@@ -28,8 +28,8 @@ require_admin(); // only admins
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f1f5f9 50%, #e2e8f0 100%);
-            color: #1a202c;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
+            color: #047857;
             padding: 0 !important;
             position: relative;
             overflow-x: hidden;
@@ -47,7 +47,7 @@ require_admin(); // only admins
         .bg-circle-1 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.1), rgba(240, 147, 251, 0.1));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
             top: 10%;
             right: 15%;
             animation: float1 8s ease-in-out infinite;
@@ -56,7 +56,7 @@ require_admin(); // only admins
         .bg-circle-2 {
             width: 150px;
             height: 150px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.08), rgba(139, 95, 191, 0.08));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
             bottom: 20%;
             left: 10%;
             animation: float2 10s ease-in-out infinite reverse;
@@ -76,7 +76,7 @@ require_admin(); // only admins
         /* Header Styles */
         .main-header {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -87,7 +87,7 @@ require_admin(); // only admins
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #8b5fbf;
+            color: #10b981;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -95,7 +95,7 @@ require_admin(); // only admins
         }
 
         .logo .co {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
@@ -110,11 +110,11 @@ require_admin(); // only admins
             top: 80px;
             width: 320px;
             height: calc(100vh - 80px);
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             z-index: 999;
             padding: 20px;
-            box-shadow: 4px 0 15px rgba(139, 95, 191, 0.2);
+            box-shadow: 4px 0 15px rgba(16, 185, 129, 0.2);
             transition: transform 0.3s ease;
         }
 
@@ -187,7 +187,7 @@ require_admin(); // only admins
             position: fixed;
             top: 90px;
             left: 10px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             border: none;
             width: 40px;
@@ -199,11 +199,11 @@ require_admin(); // only admins
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 2px 8px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
 
         .sidebar-toggle:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #059669, #10b981);
             transform: scale(1.05);
         }
 
@@ -211,7 +211,7 @@ require_admin(); // only admins
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 16px;
-            box-shadow: 0 4px 20px rgba(139, 95, 191, 0.08);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
             padding: 2rem !important;
             margin: 2rem auto;
             position: relative;
@@ -219,13 +219,13 @@ require_admin(); // only admins
         }
 
         .h4 {
-            color: #1a202c;
+            color: #047857;
             font-weight: 700;
             font-size: 2.2rem;
         }
 
         .btn-outline-secondary {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             border: none;
             padding: 8px 20px;
@@ -236,7 +236,7 @@ require_admin(); // only admins
         }
 
         .btn-outline-secondary:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #059669, #10b981);
             color: white;
             transform: translateY(-1px);
         }
@@ -250,12 +250,12 @@ require_admin(); // only admins
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: #8b5fbf;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             border: none;
             padding: 12px 24px;
             border-radius: 12px;
@@ -265,21 +265,21 @@ require_admin(); // only admins
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #059669, #10b981);
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .table {
             border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.05);
+            box-shadow: 0 2px 10px rgba(16, 185, 129, 0.05);
             font-size: 1.1rem;
         }
 
         .table thead th {
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            color: #374151;
+            color: #047857;
             font-weight: 600;
             border: none;
             padding: 18px;
@@ -294,12 +294,12 @@ require_admin(); // only admins
         }
 
         .table tbody tr:hover {
-            background: rgba(139, 95, 191, 0.05);
+            background: rgba(16, 185, 129, 0.05);
         }
 
         /* Edit Button - Regular Purple */
         .btn-edit {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             border: none;
             padding: 8px 16px;
@@ -311,7 +311,7 @@ require_admin(); // only admins
         }
 
         .btn-edit:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #059669, #10b981);
             transform: translateY(-1px);
             color: white;
         }

@@ -643,12 +643,67 @@ function deleteProduct(productId, productTitle) {
                         });
                         loadProducts();
                     } else {
-                        Swal.fire({
-                            title: 'Error',
-                            text: response.message,
-                            icon: 'error',
-                            confirmButtonColor: '#8b5fbf'
-                        });
+                        // Check if the error is due to dependencies
+                        if (response.message && response.message.includes('referenced by')) {
+                            Swal.fire({
+                                title: 'Cannot Delete Product',
+                                text: response.message,
+                                icon: 'warning',
+                                showCancelButton: true,
+                                confirmButtonColor: '#dc3545',
+                                cancelButtonColor: '#6c757d',
+                                confirmButtonText: 'Force Delete',
+                                cancelButtonText: 'Cancel'
+                            }).then((forceResult) => {
+                                if (forceResult.isConfirmed) {
+                                    // Force delete
+                                    $.ajax({
+                                        url: '../actions/delete_product_action.php',
+                                        type: 'POST',
+                                        dataType: 'json',
+                                        data: {
+                                            product_id: productId,
+                                            force_delete: 'true'
+                                        },
+                                        success: function(forceResponse) {
+                                            if (forceResponse.status === 'success') {
+                                                Swal.fire({
+                                                    title: 'Deleted!',
+                                                    text: forceResponse.message,
+                                                    icon: 'success',
+                                                    confirmButtonColor: '#8b5fbf',
+                                                    timer: 2000,
+                                                    timerProgressBar: true
+                                                });
+                                                loadProducts();
+                                            } else {
+                                                Swal.fire({
+                                                    title: 'Error',
+                                                    text: forceResponse.message,
+                                                    icon: 'error',
+                                                    confirmButtonColor: '#8b5fbf'
+                                                });
+                                            }
+                                        },
+                                        error: function() {
+                                            Swal.fire({
+                                                title: 'Connection Error',
+                                                text: 'Failed to force delete. Please try again.',
+                                                icon: 'error',
+                                                confirmButtonColor: '#8b5fbf'
+                                            });
+                                        }
+                                    });
+                                }
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Error',
+                                text: response.message,
+                                icon: 'error',
+                                confirmButtonColor: '#8b5fbf'
+                            });
+                        }
                     }
                 },
                 error: function(xhr, status, error) {

@@ -1004,6 +1004,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 30px;
             margin-bottom: 50px;
+            width: 100%;
         }
 
         .product-grid.list-view {
@@ -1020,6 +1021,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             cursor: pointer;
             border: 1px solid rgba(255, 255, 255, 0.3);
             position: relative;
+            width: 100%;
+            max-width: none;
+            min-height: 450px;
         }
 
         .product-card:hover {
@@ -1784,26 +1788,26 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="product-grid" id="productGrid">
                             <?php foreach ($products_to_display as $product): ?>
                                 <div class="product-card">
-                                    <a href="single_product.php?pid=<?php echo $product['product_id']; ?>" style="text-decoration: none; color: inherit; display: block;">
+                                    <a href="single_product.php?pid=<?php echo $product['product_id']; ?>" style="text-decoration: none; color: inherit; display: block; height: 100%;">
                                         <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
                                             <img src="uploads/products/<?php echo $product['product_image']; ?>"
                                                 alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                                                 style="width: 100%; height: 200px; object-fit: contain;"
                                                 onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'; this.style.backgroundColor='#f3f4f6';">
-                                        <div class="product-actions" style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
-                                            <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                                                <i class="far fa-heart" style="color: #666;"></i>
-                                            </button>
-                                            <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
-                                                <i class="fas fa-random" style="color: #666;"></i>
-                                            </button>
+                                            <div class="product-actions" style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
+                                                <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="event.stopPropagation(); event.preventDefault();">
+                                                    <i class="far fa-heart" style="color: #666;"></i>
+                                                </button>
+                                                <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="event.stopPropagation(); event.preventDefault();">
+                                                    <i class="fas fa-random" style="color: #666;"></i>
+                                                </button>
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="product-content" style="padding: 20px;">
+                                        <div class="product-content" style="padding: 20px;">
                                         <!-- Brand -->
                                         <div style="color: #6b7280; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px;">
-                                            <?php echo ucfirst($product['brand']); ?>
+                                            <?php echo ucfirst($product['brand_name'] ?? 'Unknown Brand'); ?>
                                         </div>
 
                                         <!-- Product Name -->

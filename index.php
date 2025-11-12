@@ -908,7 +908,7 @@ try {
 
 		.main-banner.coral {
 			/* coral/red like your image */
-			padding-left: 23px;
+			padding-left: 0;
 			background: #ff5b57;
 			/* tweak to #ff5a54 if you prefer */
 			color: #fff;

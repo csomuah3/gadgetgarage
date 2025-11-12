@@ -123,8 +123,40 @@ class Product extends db_connection {
     // Delete a product
     public function delete_product($product_id) {
         $product_id = (int)$product_id;
+
+        // Check for dependencies in various tables
+        $dependencies = [];
+
+        // Check cart items
+        $cart_check = "SELECT COUNT(*) as count FROM cart WHERE p_id = $product_id";
+        $cart_result = $this->db_fetch_one($cart_check);
+        if ($cart_result && $cart_result['count'] > 0) {
+            $dependencies[] = $cart_result['count'] . " item(s) in shopping carts";
+        }
+
+        // Check order details
+        $order_check = "SELECT COUNT(*) as count FROM orderdetails WHERE product_id = $product_id";
+        $order_result = $this->db_fetch_one($order_check);
+        if ($order_result && $order_result['count'] > 0) {
+            $dependencies[] = $order_result['count'] . " order(s)";
+        }
+
+        // If there are dependencies, return error with details
+        if (!empty($dependencies)) {
+            $message = "Cannot delete product. It is referenced by: " . implode(", ", $dependencies) . ". ";
+            $message .= "Please remove these references first or contact support.";
+            return ['status' => 'error', 'message' => $message];
+        }
+
+        // If no dependencies, proceed with deletion
         $sql = "DELETE FROM products WHERE product_id = $product_id";
-        return $this->db_write_query($sql);
+        $result = $this->db_write_query($sql);
+
+        if ($result) {
+            return ['status' => 'success', 'message' => 'Product deleted successfully'];
+        } else {
+            return ['status' => 'error', 'message' => 'Failed to delete product from database'];
+        }
     }
 
     // Check if product title exists
@@ -175,6 +207,34 @@ class Product extends db_connection {
 
     public function view_single_product($id) {
         return $this->get_product_by_id($id);
+    }
+
+    // Remove product from all cart items (helper method for deletion)
+    public function remove_from_all_carts($product_id) {
+        $product_id = (int)$product_id;
+        $sql = "DELETE FROM cart WHERE p_id = $product_id";
+        return $this->db_write_query($sql);
+    }
+
+    // Force delete product (removes dependencies first)
+    public function force_delete_product($product_id) {
+        $product_id = (int)$product_id;
+
+        // Remove from all carts first
+        $this->remove_from_all_carts($product_id);
+
+        // Note: We keep order history intact for business records
+        // but you could also add a method to archive orders if needed
+
+        // Now delete the product
+        $sql = "DELETE FROM products WHERE product_id = $product_id";
+        $result = $this->db_write_query($sql);
+
+        if ($result) {
+            return ['status' => 'success', 'message' => 'Product deleted successfully (removed from carts)'];
+        } else {
+            return ['status' => 'error', 'message' => 'Failed to delete product from database'];
+        }
     }
 }
 ?>

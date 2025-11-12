@@ -28,8 +28,8 @@ require_admin(); // only admins
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f8f9ff 0%, #f1f5f9 50%, #e2e8f0 100%);
-            color: #1a202c;
+            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
+            color: #047857;
             padding: 0 !important;
             position: relative;
             overflow-x: hidden;
@@ -47,7 +47,7 @@ require_admin(); // only admins
         .bg-circle-1 {
             width: 200px;
             height: 200px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.1), rgba(240, 147, 251, 0.1));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
             top: 10%;
             right: 15%;
             animation: float1 8s ease-in-out infinite;
@@ -56,7 +56,7 @@ require_admin(); // only admins
         .bg-circle-2 {
             width: 150px;
             height: 150px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.08), rgba(139, 95, 191, 0.08));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
             bottom: 20%;
             left: 10%;
             animation: float2 10s ease-in-out infinite reverse;
@@ -65,7 +65,7 @@ require_admin(); // only admins
         .bg-circle-3 {
             width: 120px;
             height: 120px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.06), rgba(240, 147, 251, 0.06));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(52, 211, 153, 0.06));
             top: 60%;
             left: 70%;
             animation: float3 12s ease-in-out infinite;
@@ -74,7 +74,7 @@ require_admin(); // only admins
         .bg-circle-4 {
             width: 180px;
             height: 180px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.09), rgba(240, 147, 251, 0.09));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(52, 211, 153, 0.09));
             top: 30%;
             left: 50%;
             animation: float1 14s ease-in-out infinite reverse;
@@ -83,7 +83,7 @@ require_admin(); // only admins
         .bg-circle-5 {
             width: 100px;
             height: 100px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.07), rgba(139, 95, 191, 0.07));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.07), rgba(16, 185, 129, 0.07));
             bottom: 40%;
             right: 25%;
             animation: float2 9s ease-in-out infinite;
@@ -92,7 +92,7 @@ require_admin(); // only admins
         .bg-circle-6 {
             width: 90px;
             height: 90px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.05), rgba(240, 147, 251, 0.05));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(52, 211, 153, 0.05));
             top: 80%;
             left: 80%;
             animation: float3 11s ease-in-out infinite reverse;
@@ -101,7 +101,7 @@ require_admin(); // only admins
         .bg-circle-7 {
             width: 160px;
             height: 160px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.08), rgba(139, 95, 191, 0.08));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
             top: 5%;
             left: 30%;
             animation: float1 13s ease-in-out infinite;
@@ -110,7 +110,7 @@ require_admin(); // only admins
         .bg-circle-8 {
             width: 110px;
             height: 110px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.06), rgba(240, 147, 251, 0.06));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(52, 211, 153, 0.06));
             bottom: 60%;
             right: 40%;
             animation: float2 15s ease-in-out infinite reverse;
@@ -119,7 +119,7 @@ require_admin(); // only admins
         .bg-circle-9 {
             width: 130px;
             height: 130px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.07), rgba(139, 95, 191, 0.07));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.07), rgba(16, 185, 129, 0.07));
             top: 45%;
             right: 5%;
             animation: float3 10s ease-in-out infinite;
@@ -128,7 +128,7 @@ require_admin(); // only admins
         .bg-circle-10 {
             width: 80px;
             height: 80px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.04), rgba(240, 147, 251, 0.04));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(52, 211, 153, 0.04));
             bottom: 10%;
             left: 40%;
             animation: float1 16s ease-in-out infinite reverse;
@@ -137,7 +137,7 @@ require_admin(); // only admins
         .bg-circle-11 {
             width: 140px;
             height: 140px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.09), rgba(139, 95, 191, 0.09));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.09), rgba(16, 185, 129, 0.09));
             top: 70%;
             left: 25%;
             animation: float2 12s ease-in-out infinite;
@@ -147,7 +147,7 @@ require_admin(); // only admins
         .big-bubble-1 {
             width: 300px;
             height: 300px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.12), rgba(240, 147, 251, 0.12));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.12));
             top: 5%;
             right: 5%;
             animation: bigFloat1 18s ease-in-out infinite;
@@ -156,7 +156,7 @@ require_admin(); // only admins
         .big-bubble-2 {
             width: 250px;
             height: 250px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.10), rgba(139, 95, 191, 0.10));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.10), rgba(16, 185, 129, 0.10));
             bottom: 15%;
             left: 5%;
             animation: bigFloat2 20s ease-in-out infinite reverse;
@@ -165,7 +165,7 @@ require_admin(); // only admins
         .big-bubble-3 {
             width: 280px;
             height: 280px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.11), rgba(240, 147, 251, 0.11));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.11), rgba(52, 211, 153, 0.11));
             top: 25%;
             left: 75%;
             animation: bigFloat3 16s ease-in-out infinite;
@@ -174,7 +174,7 @@ require_admin(); // only admins
         .big-bubble-4 {
             width: 220px;
             height: 220px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.09), rgba(139, 95, 191, 0.09));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.09), rgba(16, 185, 129, 0.09));
             top: 55%;
             right: 10%;
             animation: bigFloat1 22s ease-in-out infinite reverse;
@@ -183,7 +183,7 @@ require_admin(); // only admins
         .big-bubble-5 {
             width: 260px;
             height: 260px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.08), rgba(240, 147, 251, 0.08));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(52, 211, 153, 0.08));
             bottom: 45%;
             left: 60%;
             animation: bigFloat2 19s ease-in-out infinite;
@@ -192,7 +192,7 @@ require_admin(); // only admins
         .big-bubble-6 {
             width: 240px;
             height: 240px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.07), rgba(139, 95, 191, 0.07));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.07), rgba(16, 185, 129, 0.07));
             top: 40%;
             left: 40%;
             animation: bigFloat3 17s ease-in-out infinite reverse;
@@ -201,7 +201,7 @@ require_admin(); // only admins
         .big-bubble-7 {
             width: 290px;
             height: 290px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.10), rgba(240, 147, 251, 0.10));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.10), rgba(52, 211, 153, 0.10));
             top: 75%;
             right: 30%;
             animation: bigFloat1 21s ease-in-out infinite;
@@ -210,7 +210,7 @@ require_admin(); // only admins
         .big-bubble-8 {
             width: 230px;
             height: 230px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.08), rgba(139, 95, 191, 0.08));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
             bottom: 70%;
             left: 20%;
             animation: bigFloat2 15s ease-in-out infinite reverse;
@@ -219,7 +219,7 @@ require_admin(); // only admins
         .big-bubble-9 {
             width: 270px;
             height: 270px;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.09), rgba(240, 147, 251, 0.09));
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(52, 211, 153, 0.09));
             top: 10%;
             left: 50%;
             animation: bigFloat3 23s ease-in-out infinite;
@@ -228,7 +228,7 @@ require_admin(); // only admins
         .big-bubble-10 {
             width: 210px;
             height: 210px;
-            background: linear-gradient(135deg, rgba(240, 147, 251, 0.06), rgba(139, 95, 191, 0.06));
+            background: linear-gradient(135deg, rgba(52, 211, 153, 0.06), rgba(16, 185, 129, 0.06));
             bottom: 25%;
             right: 50%;
             animation: bigFloat1 14s ease-in-out infinite reverse;
@@ -321,7 +321,7 @@ require_admin(); // only admins
             top: 80px;
             width: 320px;
             height: calc(100vh - 80px);
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             padding: 30px 20px;
             z-index: 999;
@@ -399,7 +399,7 @@ require_admin(); // only admins
             position: fixed;
             top: 90px;
             left: 10px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             border: none;
             border-radius: 50%;
@@ -411,11 +411,11 @@ require_admin(); // only admins
             cursor: pointer;
             transition: all 0.3s ease;
             z-index: 1001;
-            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
         .sidebar-toggle:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #059669, #10b981);
             transform: scale(1.05);
         }
 
@@ -427,18 +427,18 @@ require_admin(); // only admins
         .main-header {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(139, 95, 191, 0.1);
+            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
             padding: 1rem 0;
             position: sticky;
             top: 0;
             z-index: 999;
-            box-shadow: 0 2px 20px rgba(139, 95, 191, 0.08);
+            box-shadow: 0 2px 20px rgba(16, 185, 129, 0.08);
         }
 
         .logo {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #8b5fbf;
+            color: #10b981;
             text-decoration: none;
             transition: all 0.3s ease;
         }
@@ -449,13 +449,13 @@ require_admin(); // only admins
         }
 
         .co {
-            background: linear-gradient(135deg, #8b5fbf, #a855f7);
+            background: linear-gradient(135deg, #10b981, #a855f7);
             color: white;
             padding: 0.25rem 0.5rem;
             border-radius: 0.375rem;
             font-size: 0.875rem;
             margin-left: 0.5rem;
-            box-shadow: 0 2px 8px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
         }
 
         /* Content Area */
@@ -468,7 +468,7 @@ require_admin(); // only admins
         .page-title {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #1a202c;
+            color: #047857;
             margin-bottom: 2rem;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
@@ -478,8 +478,8 @@ require_admin(); // only admins
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 1rem;
-            border: 1px solid rgba(139, 95, 191, 0.1);
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1);
             margin-bottom: 2rem;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -487,11 +487,11 @@ require_admin(); // only admins
 
         .admin-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15);
         }
 
         .card-header {
-            background: linear-gradient(135deg, #8b5fbf, #6366f1);
+            background: linear-gradient(135deg, #10b981, #6366f1);
             color: white;
             padding: 1.25rem 1.5rem;
             font-weight: 600;
@@ -506,7 +506,7 @@ require_admin(); // only admins
         /* Form Elements */
         .form-label {
             font-weight: 600;
-            color: #374151;
+            color: #047857;
             margin-bottom: 0.5rem;
         }
 
@@ -519,8 +519,8 @@ require_admin(); // only admins
         }
 
         .form-control:focus, .form-select:focus {
-            border-color: #8b5fbf;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
             background: #ffffff;
         }
 
@@ -544,14 +544,14 @@ require_admin(); // only admins
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #8b5fbf, #6366f1);
+            background: linear-gradient(135deg, #10b981, #6366f1);
             color: white;
-            box-shadow: 0 4px 12px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .btn-primary:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 95, 191, 0.4);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
             background: linear-gradient(135deg, #7c3aed, #5b21b6);
         }
 
@@ -594,7 +594,7 @@ require_admin(); // only admins
             background: rgba(255, 255, 255, 0.95);
             border-radius: 0.75rem;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
         }
 
         .table {
@@ -604,7 +604,7 @@ require_admin(); // only admins
 
         .table thead th {
             background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            color: #374151;
+            color: #047857;
             font-weight: 600;
             border: none;
             padding: 1rem;
@@ -620,7 +620,7 @@ require_admin(); // only admins
         }
 
         .table tbody tr:hover {
-            background: rgba(139, 95, 191, 0.05);
+            background: rgba(16, 185, 129, 0.05);
         }
 
         .product-image {
@@ -636,7 +636,7 @@ require_admin(); // only admins
             width: 120px;
             height: 120px;
             object-fit: cover;
-            border: 4px solid #8b5fbf;
+            border: 4px solid #10b981;
             transition: all 0.3s ease;
         }
 
@@ -660,7 +660,7 @@ require_admin(); // only admins
         }
 
         .uploaded-image:hover {
-            border-color: #8b5fbf;
+            border-color: #10b981;
             transform: scale(1.02);
         }
 
@@ -670,7 +670,7 @@ require_admin(); // only admins
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(139, 95, 191, 0.8);
+            background: rgba(16, 185, 129, 0.8);
             color: white;
             display: flex;
             align-items: center;
@@ -706,7 +706,7 @@ require_admin(); // only admins
         }
 
         .progress-bar {
-            background: linear-gradient(135deg, #8b5fbf, #6366f1);
+            background: linear-gradient(135deg, #10b981, #6366f1);
         }
 
         /* Responsive */

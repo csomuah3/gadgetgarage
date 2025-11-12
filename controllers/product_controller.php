@@ -65,11 +65,21 @@ function update_product_ctr($product_id, $product_title, $product_price, $produc
 function delete_product_ctr($product_id) {
     $product = new Product();
     $result = $product->delete_product($product_id);
-    if ($result) {
+
+    // Check if result is an array (new detailed response) or boolean (old response)
+    if (is_array($result)) {
+        return $result; // Return the detailed response from the product class
+    } else if ($result) {
         return ['status' => 'success', 'message' => 'Product deleted successfully'];
     } else {
         return ['status' => 'error', 'message' => 'Failed to delete product'];
     }
+}
+
+// Force delete product (removes dependencies)
+function force_delete_product_ctr($product_id) {
+    $product = new Product();
+    return $product->force_delete_product($product_id);
 }
 
 // Search products

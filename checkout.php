@@ -5,15 +5,10 @@ try {
     require_once(__DIR__ . '/helpers/image_helper.php');
 
     $is_logged_in = check_login();
-
-    if (!$is_logged_in) {
-        header("Location: login/user_login.php");
-        exit;
-    }
-
-    $customer_id = $_SESSION['user_id'];
+    $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
+    // Get cart items for both logged-in and guest users
     $cart_items = get_user_cart_ctr($customer_id, $ip_address);
     $cart_total = get_cart_total_ctr($customer_id, $ip_address);
     $cart_count = get_cart_count_ctr($customer_id, $ip_address);
@@ -366,15 +361,36 @@ try {
                                 <i class="fas fa-shopping-cart"></i> Cart (<?php echo $cart_count; ?>)
                             </a>
                         </li>
+                        <?php if ($is_logged_in): ?>
                         <li class="nav-item dropdown">
                             <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-                                <i class="fas fa-user"></i> Account
+                                <i class="fas fa-user-check"></i> <?php echo htmlspecialchars($_SESSION['customer_name'] ?? 'Account'); ?>
                             </a>
                             <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="login/customer_profile.php">Profile</a></li>
-                                <li><a class="dropdown-item" href="login/logout.php">Logout</a></li>
+                                <li><a class="dropdown-item" href="login/customer_profile.php">
+                                    <i class="fas fa-user"></i> Profile
+                                </a></li>
+                                <li><a class="dropdown-item" href="my_orders.php">
+                                    <i class="fas fa-box"></i> My Orders
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="login/logout.php">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a></li>
                             </ul>
                         </li>
+                        <?php else: ?>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login/user_login.php">
+                                <i class="fas fa-sign-in-alt"></i> Login
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="login/user_register.php">
+                                <i class="fas fa-user-plus"></i> Register
+                            </a>
+                        </li>
+                        <?php endif; ?>
                     </ul>
                 </div>
             </nav>
@@ -446,17 +462,46 @@ try {
                     </div>
                 </div>
 
+                <!-- Login Status / Guest Checkout -->
+                <?php if (!$is_logged_in): ?>
+                <div class="checkout-card">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <div class="alert alert-info mb-0">
+                                <i class="fas fa-info-circle me-2"></i>
+                                <strong>Checkout Options:</strong> You can continue as a guest or
+                                <a href="login/user_login.php" class="alert-link">login</a> to your account for a faster checkout experience.
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="guestCheckout" checked>
+                                <label class="form-check-label fw-bold" for="guestCheckout">
+                                    Continue as Guest
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <?php endif; ?>
+
                 <!-- Contact Information -->
                 <div class="checkout-card">
                     <h4 class="mb-4">
                         <i class="fas fa-user me-2"></i>
                         Contact Information
+                        <?php if ($is_logged_in): ?>
+                            <small class="text-success ms-2">
+                                <i class="fas fa-check-circle"></i> Logged in as <?php echo htmlspecialchars($_SESSION['user_email'] ?? 'User'); ?>
+                            </small>
+                        <?php endif; ?>
                     </h4>
                     <form id="contactForm">
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">First Name <span class="text-danger">*</span></label>
-                                <input type="text" class="form-control" name="first_name" required>
+                                <input type="text" class="form-control" name="first_name"
+                                       value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_name'] ?? '') : ''; ?>" required>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Last Name <span class="text-danger">*</span></label>
@@ -466,11 +511,18 @@ try {
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Email Address <span class="text-danger">*</span></label>
-                                <input type="email" class="form-control" name="email" required>
+                                <input type="email" class="form-control" name="email"
+                                       value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['user_email'] ?? '') : ''; ?>"
+                                       <?php echo $is_logged_in ? 'readonly' : ''; ?> required>
+                                <?php if ($is_logged_in): ?>
+                                    <small class="text-muted">Email cannot be changed for logged-in users</small>
+                                <?php endif; ?>
                             </div>
                             <div class="col-md-6 mb-3">
                                 <label class="form-label">Phone Number <span class="text-danger">*</span></label>
-                                <input type="tel" class="form-control" name="phone" placeholder="+233 XX XXX XXXX" required>
+                                <input type="tel" class="form-control" name="phone"
+                                       value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_contact'] ?? '') : ''; ?>"
+                                       placeholder="+233 XX XXX XXXX" required>
                             </div>
                         </div>
                     </form>

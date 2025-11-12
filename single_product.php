@@ -923,7 +923,7 @@ if (!$product) {
                         </div>
 
                         <!-- Add to Cart Button -->
-                        <button onclick="addToCartWithCondition(<?php echo $product['product_id']; ?>)" id="addToCartBtn"
+                        <button onclick="showEnhancedAddToCartModal(<?php echo $product['product_id']; ?>, '<?php echo htmlspecialchars($product['product_title'], ENT_QUOTES); ?>', selectedPrice)" id="addToCartBtn"
                                 style="width: 100%; background: white; color: #4f46e5; border: none; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
                             <i class="fas fa-shopping-cart"></i>
                             Add to Cart - GH₵<span id="cartButtonPrice"><?php echo number_format($product['product_price'], 0); ?></span>
@@ -1015,6 +1015,167 @@ if (!$product) {
         // Initialize condition selection
         function initializeConditionSelection() {
             selectCondition('excellent', originalPrice);
+        }
+
+        // Enhanced Add to Cart Modal Function
+        function showEnhancedAddToCartModal(productId, productName, productPrice) {
+            // Get current product image URL
+            const productImageElement = document.querySelector('.main-product-image');
+            let productImage = '';
+            if (productImageElement && productImageElement.src) {
+                productImage = productImageElement.src;
+            }
+
+            // Remove existing modal
+            const existingModal = document.getElementById('addToCartModal');
+            if (existingModal) existingModal.remove();
+
+            const modal = document.createElement('div');
+            modal.id = 'addToCartModal';
+            modal.className = 'cart-modal-overlay';
+            modal.innerHTML = `
+                <div class="cart-modal">
+                    <div class="cart-modal-header">
+                        <h3><i class="fas fa-shopping-cart"></i> Add to Cart</h3>
+                        <button class="cart-modal-close" onclick="closeEnhancedAddToCartModal()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+                    <div class="cart-modal-body">
+                        <div class="product-preview">
+                            <img src="${productImage || 'https://via.placeholder.com/80x80'}" alt="${productName}" class="product-image">
+                            <div class="product-info">
+                                <h4>${productName}</h4>
+                                <div class="price-display">
+                                    <span class="current-price">GH₵ <span id="modalPrice">${selectedPrice.toFixed(2)}</span></span>
+                                </div>
+                                <div class="condition-info" style="margin-top: 8px; font-size: 0.9rem; color: #6b7280;">
+                                    <span id="modalCondition">${selectedCondition.charAt(0).toUpperCase() + selectedCondition.slice(1)} Condition</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="quantity-controls">
+                            <label>Quantity:</label>
+                            <div class="quantity-input-group">
+                                <button class="quantity-btn minus" onclick="updateEnhancedModalQuantity(-1)">
+                                    <i class="fas fa-minus"></i>
+                                </button>
+                                <input type="number" id="modalQuantity" value="1" min="1" max="99" readonly>
+                                <button class="quantity-btn plus" onclick="updateEnhancedModalQuantity(1)">
+                                    <i class="fas fa-plus"></i>
+                                </button>
+                            </div>
+                        </div>
+                        <div class="total-price">
+                            <strong>Total: GH₵ <span id="modalTotal">${selectedPrice.toFixed(2)}</span></strong>
+                        </div>
+                    </div>
+                    <div class="cart-modal-footer">
+                        <button class="btn btn-secondary" onclick="closeEnhancedAddToCartModal()">Cancel</button>
+                        <button class="btn btn-primary" onclick="confirmEnhancedAddToCart(${productId})" id="confirmAddBtn">
+                            <i class="fas fa-cart-plus"></i> Add to Cart
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Store modal data
+            window.enhancedModalData = {
+                productId: productId,
+                productName: productName,
+                unitPrice: selectedPrice,
+                quantity: 1,
+                condition: selectedCondition
+            };
+
+            // Show modal with animation
+            setTimeout(() => modal.classList.add('show'), 10);
+        }
+
+        function updateEnhancedModalQuantity(change) {
+            const quantityInput = document.getElementById('modalQuantity');
+            const totalElement = document.getElementById('modalTotal');
+
+            if (!quantityInput || !window.enhancedModalData) return;
+
+            let newQuantity = window.enhancedModalData.quantity + change;
+
+            // Enforce minimum of 1 and maximum of 99
+            if (newQuantity < 1) newQuantity = 1;
+            if (newQuantity > 99) newQuantity = 99;
+
+            window.enhancedModalData.quantity = newQuantity;
+            quantityInput.value = newQuantity;
+
+            // Update total price
+            const total = (window.enhancedModalData.unitPrice * newQuantity).toFixed(2);
+            totalElement.textContent = total;
+
+            // Add visual feedback
+            quantityInput.style.transform = 'scale(1.1)';
+            setTimeout(() => quantityInput.style.transform = 'scale(1)', 200);
+        }
+
+        function confirmEnhancedAddToCart(productId) {
+            if (!window.enhancedModalData) return;
+
+            const confirmBtn = document.getElementById('confirmAddBtn');
+            const originalText = confirmBtn.innerHTML;
+
+            // Show loading state
+            confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            confirmBtn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', window.enhancedModalData.quantity);
+            formData.append('condition', window.enhancedModalData.condition);
+            formData.append('final_price', window.enhancedModalData.unitPrice);
+
+            fetch('actions/add_to_cart_action.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    // Success animation
+                    confirmBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    confirmBtn.classList.add('btn-success');
+                    confirmBtn.classList.remove('btn-primary');
+
+                    updateCartBadge(data.cart_count);
+
+                    // Show success notification with quantity info
+                    showNotification(`Added ${window.enhancedModalData.quantity} item(s) to cart successfully!`, 'success');
+
+                    // Close modal after delay
+                    setTimeout(() => {
+                        closeEnhancedAddToCartModal();
+                    }, 1500);
+                } else {
+                    confirmBtn.innerHTML = originalText;
+                    confirmBtn.disabled = false;
+                    showNotification(data.message || 'Failed to add product to cart', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                confirmBtn.innerHTML = originalText;
+                confirmBtn.disabled = false;
+                showNotification('An error occurred. Please try again.', 'error');
+            });
+        }
+
+        function closeEnhancedAddToCartModal() {
+            const modal = document.getElementById('addToCartModal');
+            if (modal) {
+                modal.classList.remove('show');
+                setTimeout(() => modal.remove(), 300);
+            }
+            window.enhancedModalData = null;
         }
 
         // New add to cart function for condition-based pricing

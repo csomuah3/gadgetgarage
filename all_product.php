@@ -2560,7 +2560,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         ${product.brand_name || 'N/A'}
                     </span>
                 </div>
-                <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(${product.product_id})">
+                <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${product.product_id}, '${product.product_title.replace(/'/g, "\\'")}', ${product.product_price}, '${product.product_image || ''}')">
                     <i class="fas fa-shopping-cart"></i>
                     Add to Cart
                 </button>

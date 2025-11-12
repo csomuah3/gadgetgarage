@@ -225,6 +225,155 @@ function checkEmptyCart() {
     }
 }
 
+// Enhanced Add to Cart Modal
+function showAddToCartModal(productId, productName, productPrice, productImage) {
+    // Remove existing modal
+    const existingModal = document.getElementById('addToCartModal');
+    if (existingModal) existingModal.remove();
+
+    const modal = document.createElement('div');
+    modal.id = 'addToCartModal';
+    modal.className = 'cart-modal-overlay';
+    modal.innerHTML = `
+        <div class="cart-modal">
+            <div class="cart-modal-header">
+                <h3><i class="fas fa-shopping-cart"></i> Add to Cart</h3>
+                <button class="cart-modal-close" onclick="closeAddToCartModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="cart-modal-body">
+                <div class="product-preview">
+                    <img src="${productImage || 'https://via.placeholder.com/80x80'}" alt="${productName}" class="product-image">
+                    <div class="product-info">
+                        <h4>${productName}</h4>
+                        <div class="price-display">
+                            <span class="current-price">GHS <span id="modalPrice">${parseFloat(productPrice).toFixed(2)}</span></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="quantity-controls">
+                    <label>Quantity:</label>
+                    <div class="quantity-input-group">
+                        <button class="quantity-btn minus" onclick="updateModalQuantity(-1)">
+                            <i class="fas fa-minus"></i>
+                        </button>
+                        <input type="number" id="modalQuantity" value="1" min="1" max="99" readonly>
+                        <button class="quantity-btn plus" onclick="updateModalQuantity(1)">
+                            <i class="fas fa-plus"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="total-price">
+                    <strong>Total: GHS <span id="modalTotal">${parseFloat(productPrice).toFixed(2)}</span></strong>
+                </div>
+            </div>
+            <div class="cart-modal-footer">
+                <button class="btn btn-secondary" onclick="closeAddToCartModal()">Cancel</button>
+                <button class="btn btn-primary" onclick="confirmAddToCart(${productId})" id="confirmAddBtn">
+                    <i class="fas fa-cart-plus"></i> Add to Cart
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Store modal data
+    window.modalData = {
+        productId: productId,
+        productName: productName,
+        unitPrice: parseFloat(productPrice),
+        quantity: 1
+    };
+
+    // Show modal with animation
+    setTimeout(() => modal.classList.add('show'), 10);
+}
+
+function updateModalQuantity(change) {
+    const quantityInput = document.getElementById('modalQuantity');
+    const priceElement = document.getElementById('modalPrice');
+    const totalElement = document.getElementById('modalTotal');
+
+    if (!quantityInput || !window.modalData) return;
+
+    let newQuantity = window.modalData.quantity + change;
+
+    // Enforce minimum of 1 and maximum of 99
+    if (newQuantity < 1) newQuantity = 1;
+    if (newQuantity > 99) newQuantity = 99;
+
+    window.modalData.quantity = newQuantity;
+    quantityInput.value = newQuantity;
+
+    // Update total price
+    const total = (window.modalData.unitPrice * newQuantity).toFixed(2);
+    totalElement.textContent = total;
+
+    // Add visual feedback
+    quantityInput.style.transform = 'scale(1.1)';
+    setTimeout(() => quantityInput.style.transform = 'scale(1)', 200);
+}
+
+function confirmAddToCart(productId) {
+    if (!window.modalData) return;
+
+    const confirmBtn = document.getElementById('confirmAddBtn');
+    const originalText = confirmBtn.innerHTML;
+
+    // Show loading state
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+    confirmBtn.disabled = true;
+
+    const formData = new FormData();
+    formData.append('product_id', productId);
+    formData.append('quantity', window.modalData.quantity);
+
+    fetch('actions/add_to_cart_action.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            // Success animation
+            confirmBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
+            confirmBtn.classList.add('btn-success');
+            confirmBtn.classList.remove('btn-primary');
+
+            updateCartBadge(data.cart_count);
+
+            // Show success notification
+            showNotification(`Added ${window.modalData.quantity} item(s) to cart successfully!`, 'success');
+
+            // Close modal after delay
+            setTimeout(() => {
+                closeAddToCartModal();
+            }, 1500);
+        } else {
+            confirmBtn.innerHTML = originalText;
+            confirmBtn.disabled = false;
+            showNotification(data.message || 'Failed to add product to cart', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+        showNotification('An error occurred. Please try again.', 'error');
+    });
+}
+
+function closeAddToCartModal() {
+    const modal = document.getElementById('addToCartModal');
+    if (modal) {
+        modal.classList.remove('show');
+        setTimeout(() => modal.remove(), 300);
+    }
+    window.modalData = null;
+}
+
 // Show notification
 function showNotification(message, type = 'info') {
     // Remove existing notifications
@@ -283,7 +432,7 @@ function getNotificationIcon(type) {
     }
 }
 
-// Add CSS for animations
+// Add CSS for animations and modal styles
 const style = document.createElement('style');
 style.textContent = `
     @keyframes slideInRight {
@@ -305,6 +454,255 @@ style.textContent = `
         to {
             transform: translateX(100%);
             opacity: 0;
+        }
+    }
+
+    /* Enhanced Add to Cart Modal Styles */
+    .cart-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 10000;
+        opacity: 0;
+        transition: opacity 0.3s ease;
+    }
+
+    .cart-modal-overlay.show {
+        opacity: 1;
+    }
+
+    .cart-modal {
+        background: white;
+        border-radius: 16px;
+        width: 90%;
+        max-width: 500px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        transform: scale(0.8);
+        transition: transform 0.3s ease;
+        overflow: hidden;
+    }
+
+    .cart-modal-overlay.show .cart-modal {
+        transform: scale(1);
+    }
+
+    .cart-modal-header {
+        background: #4f46e5;
+        color: white;
+        padding: 20px 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .cart-modal-header h3 {
+        margin: 0;
+        font-size: 1.3rem;
+        font-weight: 600;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .cart-modal-close {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1.2rem;
+        cursor: pointer;
+        padding: 5px;
+        border-radius: 50%;
+        transition: background 0.2s ease;
+    }
+
+    .cart-modal-close:hover {
+        background: rgba(255, 255, 255, 0.2);
+    }
+
+    .cart-modal-body {
+        padding: 24px;
+    }
+
+    .product-preview {
+        display: flex;
+        gap: 16px;
+        margin-bottom: 24px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid #e5e7eb;
+    }
+
+    .product-preview .product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: cover;
+        border-radius: 12px;
+        border: 2px solid #f3f4f6;
+    }
+
+    .product-info h4 {
+        margin: 0 0 8px 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: #1f2937;
+        line-height: 1.3;
+    }
+
+    .price-display .current-price {
+        font-size: 1.3rem;
+        font-weight: 700;
+        color: #059669;
+    }
+
+    .quantity-controls {
+        margin-bottom: 20px;
+    }
+
+    .quantity-controls label {
+        display: block;
+        margin-bottom: 12px;
+        font-weight: 600;
+        color: #374151;
+    }
+
+    .quantity-input-group {
+        display: flex;
+        align-items: center;
+        gap: 0;
+        width: fit-content;
+        border: 2px solid #e5e7eb;
+        border-radius: 12px;
+        overflow: hidden;
+    }
+
+    .quantity-btn {
+        background: #f9fafb;
+        border: none;
+        width: 44px;
+        height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-size: 0.9rem;
+        color: #6b7280;
+    }
+
+    .quantity-btn:hover {
+        background: #e5e7eb;
+        color: #374151;
+    }
+
+    .quantity-btn:active {
+        transform: scale(0.95);
+    }
+
+    .quantity-btn.minus {
+        border-right: 1px solid #e5e7eb;
+    }
+
+    .quantity-btn.plus {
+        border-left: 1px solid #e5e7eb;
+    }
+
+    #modalQuantity {
+        border: none;
+        width: 60px;
+        height: 44px;
+        text-align: center;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background: white;
+        outline: none;
+        transition: transform 0.2s ease;
+    }
+
+    .total-price {
+        background: #f0f9ff;
+        padding: 16px;
+        border-radius: 12px;
+        text-align: center;
+        margin-bottom: 20px;
+        border: 2px solid #bae6fd;
+    }
+
+    .total-price strong {
+        font-size: 1.4rem;
+        color: #0c4a6e;
+    }
+
+    .cart-modal-footer {
+        padding: 20px 24px;
+        background: #f9fafb;
+        display: flex;
+        gap: 12px;
+        justify-content: flex-end;
+    }
+
+    .cart-modal-footer .btn {
+        padding: 12px 24px;
+        border-radius: 10px;
+        font-weight: 600;
+        border: none;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .cart-modal-footer .btn-secondary {
+        background: #e5e7eb;
+        color: #6b7280;
+    }
+
+    .cart-modal-footer .btn-secondary:hover {
+        background: #d1d5db;
+        color: #374151;
+    }
+
+    .cart-modal-footer .btn-primary {
+        background: #4f46e5;
+        color: white;
+    }
+
+    .cart-modal-footer .btn-primary:hover {
+        background: #4338ca;
+    }
+
+    .cart-modal-footer .btn-success {
+        background: #059669;
+        color: white;
+    }
+
+    @media (max-width: 576px) {
+        .cart-modal {
+            width: 95%;
+            margin: 0 10px;
+        }
+
+        .cart-modal-header {
+            padding: 16px 20px;
+        }
+
+        .cart-modal-body {
+            padding: 20px;
+        }
+
+        .product-preview {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .cart-modal-footer {
+            padding: 16px 20px;
+            flex-direction: column;
         }
     }
 `;

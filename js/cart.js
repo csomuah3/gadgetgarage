@@ -127,14 +127,26 @@ function updateQuantity(productId, quantity) {
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
 
-            // Update the subtotal for this item
+            // Update the subtotal for this item - try multiple selectors
             const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
             if (cartItem) {
-                const priceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
-                const unitPrice = parseFloat(cartItem.querySelector('.fw-bold.text-primary.fs-5').textContent.replace('GHS ', ''));
-                const newSubtotal = (unitPrice * quantity).toFixed(2);
-                if (priceElement) {
+                // Try different price element selectors
+                let priceElement = cartItem.querySelector('.fw-bold.fs-5.text-success') ||
+                                 cartItem.querySelector('.price') ||
+                                 cartItem.querySelector('[class*="price"]') ||
+                                 cartItem.querySelector('.text-success');
+
+                let unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5') ||
+                                     cartItem.querySelector('.unit-price') ||
+                                     cartItem.querySelector('[data-unit-price]');
+
+                if (priceElement && unitPriceElement) {
+                    const unitPrice = parseFloat(unitPriceElement.textContent.replace(/[^\d.]/g, ''));
+                    const newSubtotal = (unitPrice * quantity).toFixed(2);
                     priceElement.textContent = `GHS ${newSubtotal}`;
+                } else {
+                    // Fallback: reload the page to get updated prices
+                    setTimeout(() => location.reload(), 1000);
                 }
             }
         } else {

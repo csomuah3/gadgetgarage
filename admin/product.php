@@ -838,37 +838,6 @@ require_admin(); // only admins
             <div class="content-area">
                 <h1 class="page-title">Product Management</h1>
 
-                <!-- Bulk Image Upload -->
-                <div class="admin-card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-images me-2"></i>Bulk Image Upload for Products
-                    </div>
-                    <div class="card-body">
-                        <form id="bulkUploadForm" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-8">
-                                    <label for="bulk_images" class="form-label">Select Product Images</label>
-                                    <input type="file" class="form-control" id="bulk_images" name="images[]" multiple accept="image/*" required>
-                                    <div class="form-text">Select multiple images (JPG, PNG, GIF, WEBP). Max 5MB per file.</div>
-                                </div>
-                                <div class="col-md-4">
-                                    <label for="image_prefix" class="form-label">Image Name Prefix</label>
-                                    <input type="text" class="form-control" id="image_prefix" placeholder="e.g. product_main">
-                                    <div class="form-text">Optional: Add prefix to organize images</div>
-                                </div>
-                            </div>
-                            <button type="submit" class="btn btn-primary mt-3">
-                                <i class="fas fa-upload me-2"></i>Upload Images
-                            </button>
-                        </form>
-                        <div id="upload-progress" class="mt-3" style="display: none;">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div id="uploaded-images" class="mt-3"></div>
-                    </div>
-                </div>
 
                 <!-- Add Product Form -->
                 <div class="admin-card">
@@ -913,14 +882,22 @@ require_admin(); // only admins
                                 <textarea class="form-control" id="product_desc" name="product_desc" rows="3"></textarea>
                             </div>
 
+                            <div class="mb-3">
+                                <label for="product_keywords" class="form-label">Keywords</label>
+                                <input type="text" class="form-control" id="product_keywords" name="product_keywords" placeholder="Separate with commas">
+                            </div>
+
+                            <!-- Image Upload Section -->
                             <div class="row">
                                 <div class="col-md-6 mb-3">
-                                    <label for="product_image" class="form-label">Product Image</label>
+                                    <label for="product_image" class="form-label">Main Product Image</label>
                                     <input type="file" class="form-control" id="product_image" name="product_image" accept="image/*">
+                                    <div class="form-text">Upload the main product image</div>
                                 </div>
                                 <div class="col-md-6 mb-3">
-                                    <label for="product_keywords" class="form-label">Keywords</label>
-                                    <input type="text" class="form-control" id="product_keywords" name="product_keywords" placeholder="Separate with commas">
+                                    <label for="additional_images" class="form-label">Additional Images</label>
+                                    <input type="file" class="form-control" id="additional_images" name="additional_images[]" multiple accept="image/*">
+                                    <div class="form-text">Upload additional product images (optional)</div>
                                 </div>
                             </div>
 
@@ -958,6 +935,42 @@ require_admin(); // only admins
                                 </tbody>
                             </table>
                         </div>
+                    </div>
+                </div>
+
+                <!-- Bulk Image Upload for Existing Products -->
+                <div class="admin-card mb-4">
+                    <div class="card-header">
+                        <i class="fas fa-images me-2"></i>Bulk Image Upload for Existing Products
+                    </div>
+                    <div class="card-body">
+                        <form id="bulkUploadForm" enctype="multipart/form-data">
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <label for="bulk_product_id" class="form-label">Select Product</label>
+                                    <select class="form-select" id="bulk_product_id" name="product_id" required>
+                                        <option value="">Choose a product...</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-6">
+                                    <label for="bulk_images" class="form-label">Select Product Images</label>
+                                    <input type="file" class="form-control" id="bulk_images" name="images[]" multiple accept="image/*" required>
+                                    <div class="form-text">Select multiple images (JPG, PNG, GIF, WEBP). Max 5MB per file.</div>
+                                </div>
+                                <div class="col-md-2">
+                                    <label class="form-label">&nbsp;</label>
+                                    <button type="submit" class="btn btn-primary d-block w-100">
+                                        <i class="fas fa-upload me-2"></i>Upload Images
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                        <div id="upload-progress" class="mt-3" style="display: none;">
+                            <div class="progress">
+                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
+                            </div>
+                        </div>
+                        <div id="uploaded-images" class="mt-3"></div>
                     </div>
                 </div>
             </div>

@@ -921,9 +921,9 @@ try {
 		}
 
 		.banner-title {
-			font-size: clamp(26px, 5.2vw, 72px);
+			font-size: clamp(32px, 5vw, 48px);
 			/* big multi-line headline */
-			font-weight: 800;
+			font-weight: 600;
 			line-height: 1.08;
 			color: #fff;
 			margin: 0;
@@ -1249,183 +1249,91 @@ try {
 			}
 		}
 
-		/* BRANDS — Infinite marquee + Magic Bento hover */
+		/* Brands Section */
 		.brands-area {
-			background: #ffffff;
-			color: #333;
-			padding: 56px 0;
-			position: relative;
+			background: #f8f9fa;
+			padding: 60px 0;
+			overflow: hidden;
 		}
 
 		.brands-area h2 {
 			color: #333;
 			margin-bottom: 20px;
+			text-align: center;
 		}
 
 		.brands-area .section-sub {
-			color: #666 !important;
+			color: #666;
 			margin-bottom: 40px;
+			text-align: center;
 		}
 
-		.brands-grid {
-			display: grid;
-			grid-template-columns: repeat(6, 1fr);
-			gap: 25px;
-			max-width: 1400px;
-			margin: 0 auto;
-			padding: 20px;
+		.brands-container {
+			display: flex;
+			flex-direction: column;
+			gap: 30px;
+			overflow: hidden;
+		}
+
+		.brand-row {
+			display: flex;
+			gap: 30px;
+			animation: scroll 30s linear infinite;
+		}
+
+		.brand-row:nth-child(2) {
+			animation-direction: reverse;
+			animation-duration: 35s;
 		}
 
 		.brand-card {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			border: none;
-			border-radius: 20px;
-			padding: 25px 15px;
-			text-align: center;
-			transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+			background: white;
+			border: 2px solid #e5e7eb;
+			border-radius: 12px;
+			padding: 20px;
+			min-width: 150px;
+			height: 80px;
 			display: flex;
-			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			height: 120px;
-			position: relative;
-			overflow: hidden;
-			cursor: pointer;
-		}
-
-		.brand-card:nth-child(6n+1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-		.brand-card:nth-child(6n+2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-		.brand-card:nth-child(6n+3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-		.brand-card:nth-child(6n+4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-		.brand-card:nth-child(6n+5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-		.brand-card:nth-child(6n+6) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
-
-		.brand-card::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
-			opacity: 0;
-			transition: opacity 0.3s ease;
-		}
-
-		.brand-card:hover::before {
-			opacity: 1;
+			transition: all 0.3s ease;
+			flex-shrink: 0;
 		}
 
 		.brand-card:hover {
-			transform: translateY(-8px) scale(1.05);
-			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+			transform: translateY(-2px);
+			border-color: #d1d5db;
 		}
 
 		.brand-card img {
-			max-width: 70px;
+			max-width: 80px;
 			max-height: 40px;
 			object-fit: contain;
-			filter: brightness(0) invert(1);
+			filter: grayscale(100%) opacity(0.7);
 			transition: all 0.3s ease;
-			margin-bottom: 8px;
 		}
 
 		.brand-card:hover img {
-			filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
-			transform: scale(1.1);
+			filter: grayscale(0%) opacity(1);
 		}
 
-		.brand-name {
-			color: white;
-			font-size: 0.85rem;
-			font-weight: 600;
-			text-shadow: 0 1px 2px rgba(0,0,0,0.1);
-			letter-spacing: 0.5px;
-		}
-
-		@media (max-width: 1200px) {
-			.brands-grid {
-				grid-template-columns: repeat(5, 1fr);
-				gap: 20px;
-			}
-		}
-
-		@media (max-width: 992px) {
-			.brands-grid {
-				grid-template-columns: repeat(4, 1fr);
-				gap: 18px;
-			}
-		}
-
-		@media (max-width: 768px) {
-			.brands-grid {
-				grid-template-columns: repeat(3, 1fr);
-				gap: 15px;
-			}
-			.brand-card {
-				height: 100px;
-				padding: 20px 10px;
-			}
-		}
-
-		@media (max-width: 480px) {
-			.brands-grid {
-				grid-template-columns: repeat(2, 1fr);
-			}
-		}
-
-		@keyframes scrollX {
+		@keyframes scroll {
 			from {
-				transform: translateX(0)
+				transform: translateX(0);
 			}
-
 			to {
-				transform: translateX(-50%)
+				transform: translateX(-100%);
 			}
 		}
 
-		.brand-card {
-			width: 140px;
-			height: 86px;
-			border-radius: 16px;
-			position: relative;
-			isolation: isolate;
-			background: rgba(255, 255, 255, .03);
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			border: 1px solid rgba(255, 255, 255, .08)
+		/* Pause animation on hover */
+		.brands-container:hover .brand-row {
+			animation-play-state: paused;
 		}
 
-		.brand-card img {
-			max-width: 90px;
-			max-height: 44px;
-			filter: grayscale(100%) brightness(1.2);
-			opacity: .9;
-			transition: .3s
-		}
 
-		.brand-card:hover img {
-			filter: none;
-			opacity: 1
-		}
 
-		/* magic bento glow */
-		.brand-card.bento::before {
-			content: "";
-			position: absolute;
-			inset: -2px;
-			border-radius: 18px;
-			background: conic-gradient(from 180deg at 50% 50%, rgba(162, 95, 255, .6), rgba(64, 0, 255, .6), rgba(255, 60, 172, .6), rgba(162, 95, 255, .6));
-			filter: blur(18px);
-			opacity: 0;
-			transition: .35s;
-			z-index: -1;
-		}
-
-		.brand-card.bento:hover::before {
-			opacity: .75
-		}
 
 		/* TESTIMONIALS — circular orbit */
 		.testimonials {
@@ -3808,97 +3716,113 @@ try {
 			<h2 class="section-title text-center">Popular Brands</h2>
 			<p class="section-sub text-center">Trusted makers of phones, cameras, laptops & accessories</p>
 
-			<div class="brands-grid">
-				<!-- Row 1: Computer & Laptop Brands -->
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/apple.com" alt="Apple">
-					<div class="brand-name">Apple</div>
+			<div class="brands-container">
+				<div class="brand-row">
+					<!-- First Row - duplicate for seamless loop -->
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/apple.com" alt="Apple">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/dell.com" alt="Dell">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/hp.com" alt="HP">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/asus.com" alt="ASUS">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/acer.com" alt="Acer">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/canon.com" alt="Canon">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/nikon.com" alt="Nikon">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/sony.com" alt="Sony">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic">
+					</div>
+					<div class="brand-card">
+						<img src="https://1000logos.net/wp-content/uploads/2018/02/Fujifilm-logo.png" alt="Fujifilm">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/gopro.com" alt="GoPro">
+					</div>
+					<!-- Duplicate for seamless loop -->
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/apple.com" alt="Apple">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/dell.com" alt="Dell">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/hp.com" alt="HP">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/asus.com" alt="ASUS">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/acer.com" alt="Acer">
+					</div>
 				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/dell.com" alt="Dell">
-					<div class="brand-name">Dell</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/hp.com" alt="HP">
-					<div class="brand-name">HP</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo">
-					<div class="brand-name">Lenovo</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/asus.com" alt="ASUS">
-					<div class="brand-name">ASUS</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/acer.com" alt="Acer">
-					<div class="brand-name">Acer</div>
-				</div>
-
-				<!-- Row 2: Camera & Photography Brands -->
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/canon.com" alt="Canon">
-					<div class="brand-name">Canon</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/nikon.com" alt="Nikon">
-					<div class="brand-name">Nikon</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/sony.com" alt="Sony">
-					<div class="brand-name">Sony</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic">
-					<div class="brand-name">Panasonic</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://1000logos.net/wp-content/uploads/2018/02/Fujifilm-logo.png" alt="Fujifilm">
-					<div class="brand-name">Fujifilm</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/gopro.com" alt="GoPro">
-					<div class="brand-name">GoPro</div>
-				</div>
-
-				<!-- Row 3: Tech & Mobile Brands -->
-				<div class="brand-card">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/DJI_logo.svg/2560px-DJI_logo.svg.png" alt="DJI">
-					<div class="brand-name">DJI</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/samsung.com" alt="Samsung">
-					<div class="brand-name">Samsung</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/google.com" alt="Google">
-					<div class="brand-name">Google</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/2048px-Xiaomi_logo_%282021-%29.svg.png" alt="Xiaomi">
-					<div class="brand-name">Xiaomi</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Huawei_Standard_logo.svg/2560px-Huawei_Standard_logo.svg.png" alt="Huawei">
-					<div class="brand-name">Huawei</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft">
-					<div class="brand-name">Microsoft</div>
-				</div>
-
-				<!-- Row 4: Gaming & Accessories -->
-				<div class="brand-card">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/MSI_Logo.svg/2560px-MSI_Logo.svg.png" alt="MSI">
-					<div class="brand-name">MSI</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Razer_Logo.svg/2560px-Razer_Logo.svg.png" alt="Razer">
-					<div class="brand-name">Razer</div>
-				</div>
-				<div class="brand-card">
-					<img src="https://logo.clearbit.com/amazon.com" alt="Amazon">
-					<div class="brand-name">Amazon</div>
+				<div class="brand-row">
+					<!-- Second Row -->
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/DJI_logo.svg/2560px-DJI_logo.svg.png" alt="DJI">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/samsung.com" alt="Samsung">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/google.com" alt="Google">
+					</div>
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/2048px-Xiaomi_logo_%282021-%29.svg.png" alt="Xiaomi">
+					</div>
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Huawei_Standard_logo.svg/2560px-Huawei_Standard_logo.svg.png" alt="Huawei">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft">
+					</div>
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/MSI_Logo.svg/2560px-MSI_Logo.svg.png" alt="MSI">
+					</div>
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Razer_Logo.svg/2560px-Razer_Logo.svg.png" alt="Razer">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/amazon.com" alt="Amazon">
+					</div>
+					<!-- Duplicate for seamless loop -->
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/DJI_logo.svg/2560px-DJI_logo.svg.png" alt="DJI">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/samsung.com" alt="Samsung">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/google.com" alt="Google">
+					</div>
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/2048px-Xiaomi_logo_%282021-%29.svg.png" alt="Xiaomi">
+					</div>
+					<div class="brand-card">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Huawei_Standard_logo.svg/2560px-Huawei_Standard_logo.svg.png" alt="Huawei">
+					</div>
+					<div class="brand-card">
+						<img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft">
+					</div>
 				</div>
 			</div>
 		</div>

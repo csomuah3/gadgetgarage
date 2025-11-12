@@ -9,7 +9,20 @@ $(document).ready(function() {
 
         var formData = new FormData();
         var files = $('#bulk_images')[0].files;
+        var productId = $('#bulk_product_id').val();
 
+        // Validate product selection
+        if (!productId || productId === '') {
+            Swal.fire({
+                title: 'Validation Error',
+                text: 'Please select a product first!',
+                icon: 'error',
+                confirmButtonColor: '#8b5fbf'
+            });
+            return;
+        }
+
+        // Validate file selection
         if (files.length === 0) {
             Swal.fire({
                 title: 'Validation Error',
@@ -20,15 +33,12 @@ $(document).ready(function() {
             return;
         }
 
+        // Add product ID to FormData
+        formData.append('product_id', productId);
+
         // Append files to FormData
         for (var i = 0; i < files.length; i++) {
             formData.append('images[]', files[i]);
-        }
-
-        // Add image prefix if provided
-        var imagePrefix = $('#image_prefix').val().trim();
-        if (imagePrefix) {
-            formData.append('image_prefix', imagePrefix);
         }
 
         // Show progress
@@ -37,9 +47,9 @@ $(document).ready(function() {
         var originalText = $btn.text();
         $btn.prop('disabled', true).html('<span class="spinner-border spinner-border-sm me-2" role="status"></span>Uploading...');
 
-        // AJAX upload
+        // AJAX upload to new bulk upload action
         $.ajax({
-            url: '../actions/bulk_upload_action.php',
+            url: '../actions/bulk_image_upload_action.php',
             type: 'POST',
             data: formData,
             processData: false,
@@ -66,14 +76,14 @@ $(document).ready(function() {
                     });
 
                     // Display uploaded images
-                    displayUploadedImages(response.files);
+                    displayBulkUploadedImages(response.uploaded_images);
                     $('#bulkUploadForm')[0].reset();
 
-                    if (response.warnings && response.warnings.length > 0) {
+                    if (response.errors && response.errors.length > 0) {
                         setTimeout(function() {
                             Swal.fire({
                                 title: 'Some files had issues',
-                                html: response.warnings.join('<br>'),
+                                html: response.errors.join('<br>'),
                                 icon: 'warning',
                                 confirmButtonColor: '#8b5fbf'
                             });
@@ -852,3 +862,70 @@ function loadProductImages() {
         });
     }, 100);
 }
+
+// Display bulk uploaded images
+function displayBulkUploadedImages(images) {
+    var imagesHtml = '<div class="row">';
+    images.forEach(function(image) {
+        imagesHtml += `
+            <div class="col-md-3 mb-3">
+                <div class="uploaded-image-item">
+                    <img src="../uploads/products/${image.filename}" alt="${image.original_name}" class="uploaded-image">
+                    <div class="image-overlay">
+                        <button class="copy-url-btn" onclick="copyImageUrl('${image.filename}')">
+                            <i class="fas fa-copy me-1"></i>Copy URL
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+    });
+    imagesHtml += '</div>';
+    $('#uploaded-images').html(imagesHtml);
+}
+
+// Copy image URL to clipboard
+function copyImageUrl(filename) {
+    var baseUrl = window.location.origin + window.location.pathname.replace('admin/product.php', '');
+    var imageUrl = baseUrl + 'uploads/products/' + filename;
+
+    navigator.clipboard.writeText(imageUrl).then(function() {
+        Swal.fire({
+            title: 'Copied!',
+            text: 'Image URL copied to clipboard',
+            icon: 'success',
+            confirmButtonColor: '#8b5fbf',
+            timer: 1500,
+            timerProgressBar: true
+        });
+    });
+}
+
+// Load products for bulk upload dropdown
+function loadProductsForBulkUpload() {
+    $.ajax({
+        url: '../actions/fetch_product_action.php',
+        type: 'GET',
+        dataType: 'json',
+        success: function(response) {
+            if (response.status === 'success') {
+                var productSelect = $('#bulk_product_id');
+                productSelect.empty().append('<option value="">Choose a product...</option>');
+
+                response.products.forEach(function(product) {
+                    productSelect.append(
+                        `<option value="${product.product_id}">${product.product_title}</option>`
+                    );
+                });
+            }
+        },
+        error: function() {
+            console.error('Failed to load products for bulk upload');
+        }
+    });
+}
+
+// Initialize bulk upload on page load
+$(document).ready(function() {
+    loadProductsForBulkUpload();
+});

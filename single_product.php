@@ -568,6 +568,163 @@ if (!$product) {
                 padding: 15px;
             }
         }
+
+        /* Product Gallery Styles */
+        .product-gallery {
+            position: relative;
+            display: flex;
+            height: 100%;
+            background: #f8f9fa;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .thumbnail-container {
+            width: 100px;
+            background: #e9ecef;
+            border-right: 1px solid #dee2e6;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .thumbnail-list {
+            display: flex;
+            flex-direction: column;
+            padding: 10px;
+            gap: 8px;
+            overflow-y: auto;
+            max-height: 100%;
+        }
+
+        .thumbnail-item {
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .thumbnail-item:hover {
+            border-color: #6c757d;
+            transform: scale(1.05);
+        }
+
+        .thumbnail-item.active {
+            border-color: #007bff;
+            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+        }
+
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .main-image-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: white;
+        }
+
+        .main-product-image {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+            border-radius: 0;
+        }
+
+        .gallery-arrow {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0, 0, 0, 0.7);
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .gallery-arrow:hover {
+            background: rgba(0, 0, 0, 0.9);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .gallery-arrow-left {
+            left: 20px;
+        }
+
+        .gallery-arrow-right {
+            right: 20px;
+        }
+
+        /* Scroll arrows for thumbnails */
+        .thumbnail-scroll-up,
+        .thumbnail-scroll-down {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0, 0, 0, 0.6);
+            color: white;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            z-index: 10;
+        }
+
+        .thumbnail-scroll-up {
+            top: 5px;
+        }
+
+        .thumbnail-scroll-down {
+            bottom: 5px;
+        }
+
+        @media (max-width: 768px) {
+            .product-gallery {
+                flex-direction: column-reverse;
+                height: auto;
+            }
+
+            .thumbnail-container {
+                width: 100%;
+                height: 100px;
+                border-right: none;
+                border-top: 1px solid #dee2e6;
+            }
+
+            .thumbnail-list {
+                flex-direction: row;
+                overflow-x: auto;
+                overflow-y: hidden;
+                padding: 10px;
+            }
+
+            .thumbnail-item {
+                flex-shrink: 0;
+            }
+
+            .main-image-container {
+                min-height: 400px;
+            }
+        }
     </style>
 </head>
 
@@ -641,12 +798,33 @@ if (!$product) {
         <div class="product-container">
             <div class="row g-0">
                 <div class="col-lg-6">
-                    <img src=""
-                        alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                        class="product-image"
-                        data-product-id="<?php echo $product['product_id']; ?>"
-                        data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                        data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+                    <!-- Product Image Gallery -->
+                    <div class="product-gallery">
+                        <!-- Main Image Display -->
+                        <div class="main-image-container">
+                            <img src="" id="mainProductImage"
+                                alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                class="main-product-image"
+                                data-product-id="<?php echo $product['product_id']; ?>"
+                                data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
+                                data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+
+                            <!-- Navigation Arrows -->
+                            <button class="gallery-arrow gallery-arrow-left" onclick="previousImage()" style="display: none;">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button class="gallery-arrow gallery-arrow-right" onclick="nextImage()" style="display: none;">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                        </div>
+
+                        <!-- Thumbnail Gallery (Left Side) -->
+                        <div class="thumbnail-container">
+                            <div class="thumbnail-list" id="thumbnailList">
+                                <!-- Thumbnails will be loaded here dynamically -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <div class="col-lg-6">
                     <div class="product-details" style="padding: 40px; background: #4f46e5; color: white; height: 100%;">
@@ -967,9 +1145,62 @@ if (!$product) {
             }
         }
 
-        // Image Loading System
+        // Gallery Image Loading System
+        let productImages = [];
+        let currentImageIndex = 0;
+
         function loadProductImage() {
-            const img = document.querySelector('.product-image');
+            const img = document.querySelector('.main-product-image');
+            if (!img) {
+                // Fallback for old product-image class
+                const oldImg = document.querySelector('.product-image');
+                if (oldImg) {
+                    loadSingleImage(oldImg);
+                    return;
+                }
+            }
+
+            const productId = img.getAttribute('data-product-id');
+            const productTitle = img.getAttribute('data-product-title');
+
+            // Load main product image first
+            fetch(`actions/upload_product_image_action.php?action=get_image_url&product_id=${productId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.url) {
+                        productImages = [{
+                            url: data.url,
+                            filename: data.filename || 'main-image',
+                            isMain: true
+                        }];
+                    } else {
+                        // Use placeholder for main image
+                        const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
+                        productImages = [{
+                            url: placeholderUrl,
+                            filename: 'placeholder',
+                            isMain: true
+                        }];
+                    }
+
+                    // For now, just display the main image in gallery format
+                    // Future: Add logic to load additional images from bulk uploads
+                    updateGalleryDisplay();
+                })
+                .catch(error => {
+                    console.log('Image load error - using placeholder');
+                    const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
+                    productImages = [{
+                        url: placeholderUrl,
+                        filename: 'placeholder',
+                        isMain: true
+                    }];
+                    updateGalleryDisplay();
+                });
+        }
+
+        function loadSingleImage(img) {
+            // Fallback function for compatibility with old single image structure
             const heroImg = document.querySelector('.product-hero-image');
             const productId = img.getAttribute('data-product-id');
             const productTitle = img.getAttribute('data-product-title');
@@ -981,18 +1212,62 @@ if (!$product) {
                         img.src = data.url;
                         if (heroImg) heroImg.src = data.url;
                     } else {
-                        // Use placeholder
                         const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
                         img.src = placeholderUrl;
                         if (heroImg) heroImg.src = placeholderUrl;
                     }
-                })
-                .catch(error => {
-                    console.log('Image load error - using placeholder');
-                    const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
-                    img.src = placeholderUrl;
-                    if (heroImg) heroImg.src = placeholderUrl;
                 });
+        }
+
+        function updateGalleryDisplay() {
+            const mainImg = document.querySelector('.main-product-image');
+            const thumbnailList = document.querySelector('#thumbnailList');
+
+            if (!mainImg || !thumbnailList || productImages.length === 0) return;
+
+            // Set main image
+            mainImg.src = productImages[currentImageIndex].url;
+
+            // Update thumbnails (only show if more than 1 image)
+            if (productImages.length > 1) {
+                let thumbnailsHtml = '';
+                productImages.forEach((image, index) => {
+                    const activeClass = index === currentImageIndex ? 'active' : '';
+                    thumbnailsHtml += `
+                        <div class="thumbnail-item ${activeClass}" onclick="selectImage(${index})">
+                            <img src="${image.url}" alt="Product image ${index + 1}">
+                        </div>
+                    `;
+                });
+                thumbnailList.innerHTML = thumbnailsHtml;
+
+                // Show navigation arrows
+                const leftArrow = document.querySelector('.gallery-arrow-left');
+                const rightArrow = document.querySelector('.gallery-arrow-right');
+                if (leftArrow) leftArrow.style.display = 'flex';
+                if (rightArrow) rightArrow.style.display = 'flex';
+            }
+        }
+
+        function selectImage(index) {
+            if (index >= 0 && index < productImages.length) {
+                currentImageIndex = index;
+                updateGalleryDisplay();
+            }
+        }
+
+        function previousImage() {
+            if (productImages.length > 1) {
+                currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : productImages.length - 1;
+                updateGalleryDisplay();
+            }
+        }
+
+        function nextImage() {
+            if (productImages.length > 1) {
+                currentImageIndex = currentImageIndex < productImages.length - 1 ? currentImageIndex + 1 : 0;
+                updateGalleryDisplay();
+            }
         }
 
         function generatePlaceholderUrl(text, size = '600x400') {

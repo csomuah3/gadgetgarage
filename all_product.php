@@ -1777,11 +1777,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <?php else: ?>
                         <div class="product-grid" id="productGrid">
                             <?php foreach ($products_to_display as $product): ?>
-                                <div class="product-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; transition: box-shadow 0.3s ease; margin-bottom: 30px;">
-                                    <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
-                                        <img src="<?php echo $product['product_image']; ?>"
-                                            alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                            style="width: 100%; height: 200px; object-fit: contain;">
+                                <a href="single_product.php?pid=<?php echo $product['product_id']; ?>" style="text-decoration: none; color: inherit;">
+                                    <div class="product-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; margin-bottom: 30px; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                        <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
+                                            <img src="uploads/products/<?php echo $product['product_image']; ?>"
+                                                alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                                style="width: 100%; height: 200px; object-fit: contain;"
+                                                onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'; this.style.backgroundColor='#f3f4f6';">
                                         <div class="product-actions" style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
                                             <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
                                                 <i class="far fa-heart" style="color: #666;"></i>
@@ -1817,33 +1819,30 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             </div>
                                         </div>
 
-                                        <!-- Stock Status -->
-                                        <div class="stock-status" style="margin-bottom: 15px;">
+                                        <!-- Social Proof -->
+                                        <div class="social-proof" style="margin-bottom: 15px;">
                                             <?php
                                             $stock = $product['stock_quantity'] ?? 0;
-                                            if ($stock > 10) {
-                                                echo '<span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">In Stock (' . $stock . ')</span>';
-                                            } elseif ($stock > 0) {
-                                                echo '<span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">Low Stock (' . $stock . ')</span>';
+                                            if ($stock > 0) {
+                                                // Generate random social proof messages
+                                                $proofs = [
+                                                    "🔥 " . rand(2, 8) . " people have this in their basket",
+                                                    "👀 " . rand(5, 15) . " people viewed this today",
+                                                    "⚡ " . rand(3, 12) . " people bought this recently",
+                                                    "🛒 " . rand(4, 9) . " people are considering this",
+                                                    "📦 " . rand(2, 6) . " people added to cart today",
+                                                    "🎯 Popular choice - " . rand(8, 20) . " views today",
+                                                    "💫 Trending - " . rand(3, 7) . " recent purchases"
+                                                ];
+                                                $randomProof = $proofs[array_rand($proofs)];
+                                                echo '<span style="background: #f0f9ff; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">' . $randomProof . '</span>';
                                             } else {
                                                 echo '<span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">Out of Stock</span>';
                                             }
                                             ?>
                                         </div>
-
-                                        <!-- View Product Button -->
-                                        <?php if ($stock > 0): ?>
-                                        <a href="single_product.php?pid=<?php echo $product['product_id']; ?>"
-                                           style="display: block; width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; text-decoration: none; text-align: center; transition: background-color 0.2s;">
-                                            VIEW PRODUCT
-                                        </a>
-                                        <?php else: ?>
-                                        <div style="display: block; width: 100%; background: #9ca3af; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; text-align: center; cursor: not-allowed;">
-                                            OUT OF STOCK
-                                        </div>
-                                        <?php endif; ?>
                                     </div>
-                                </div>
+                                </a>
                             <?php endforeach; ?>
                         </div>
 

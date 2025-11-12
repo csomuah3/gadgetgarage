@@ -4,6 +4,13 @@ require_once __DIR__ . '/../controllers/brand_controller.php';
 
 header('Content-Type: application/json');
 
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
+// Log all incoming data for debugging
+error_log("ADD BRAND - POST data: " . print_r($_POST, true));
+
 // Check if user is logged in using core function
 if (!check_login()) {
     echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
@@ -29,9 +36,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        error_log("ADD BRAND - Calling controller with: brand_name=$brand_name, category_id=$category_id, user_id=$user_id");
         $result = add_brand_ctr($brand_name, $category_id, $user_id);
+        error_log("ADD BRAND - Controller result: " . print_r($result, true));
         echo json_encode($result);
     } catch (Exception $e) {
+        error_log("ADD BRAND - Exception: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Failed to add brand: ' . $e->getMessage()]);
     }
 } else {

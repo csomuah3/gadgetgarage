@@ -882,10 +882,14 @@ require_admin(); // only admins
                                     <label for="product_title" class="form-label">Product Title</label>
                                     <input type="text" class="form-control" id="product_title" name="product_title" required>
                                 </div>
-                                <div class="col-md-4 mb-3">
-                                    <label for="product_price" class="form-label">Base Price - Excellent Condition (GH₵)</label>
+                                <div class="col-md-3 mb-3">
+                                    <label for="product_price" class="form-label">Price (GH₵)</label>
                                     <input type="number" step="0.01" min="0" class="form-control" id="product_price" name="product_price" required>
-                                    <div class="form-text">This is the full price for excellent condition. Good/Fair prices will be calculated automatically based on category.</div>
+                                </div>
+                                <div class="col-md-3 mb-3">
+                                    <label for="stock_quantity" class="form-label">Stock Quantity</label>
+                                    <input type="number" min="0" class="form-control" id="stock_quantity" name="stock_quantity" value="10" required>
+                                    <div class="form-text">Number of items in stock</div>
                                 </div>
                             </div>
 
@@ -941,6 +945,7 @@ require_admin(); // only admins
                                         <th>Image</th>
                                         <th>Product Title</th>
                                         <th>Price</th>
+                                        <th>Stock</th>
                                         <th>Category</th>
                                         <th>Brand</th>
                                         <th>Actions</th>
@@ -976,9 +981,13 @@ require_admin(); // only admins
                                 <label for="edit_product_title" class="form-label">Product Title</label>
                                 <input type="text" class="form-control" id="edit_product_title" name="product_title" required>
                             </div>
-                            <div class="col-md-6 mb-3">
+                            <div class="col-md-4 mb-3">
                                 <label for="edit_product_price" class="form-label">Price (GH₵)</label>
                                 <input type="number" step="0.01" min="0" class="form-control" id="edit_product_price" name="product_price" required>
+                            </div>
+                            <div class="col-md-2 mb-3">
+                                <label for="edit_stock_quantity" class="form-label">Stock</label>
+                                <input type="number" min="0" class="form-control" id="edit_stock_quantity" name="stock_quantity" required>
                             </div>
                         </div>
 

@@ -9,7 +9,7 @@ class Product extends db_connection {
     }
 
     // Add a new product
-    public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id) {
+    public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity = 10) {
         // Sanitize inputs
         $product_title = trim($product_title);
         $product_price = (float)$product_price;
@@ -18,6 +18,7 @@ class Product extends db_connection {
         $product_keywords = trim($product_keywords);
         $category_id = (int)$category_id;
         $brand_id = (int)$brand_id;
+        $stock_quantity = (int)$stock_quantity;
 
         // Validate inputs
         if (empty($product_title) || $product_price <= 0) {
@@ -25,8 +26,8 @@ class Product extends db_connection {
         }
 
         // Simple INSERT query
-        $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand)
-                VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id)";
+        $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
+                VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id, $stock_quantity)";
 
         return $this->db_write_query($sql);
     }

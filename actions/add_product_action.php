@@ -58,6 +58,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_keywords = trim($_POST['product_keywords'] ?? '');
     $category_id = (int)($_POST['category_id'] ?? 0);
     $brand_id = (int)($_POST['brand_id'] ?? 0);
+    $stock_quantity = (int)($_POST['stock_quantity'] ?? 10);
 
     // Validate input
     if (empty($product_title)) {
@@ -81,7 +82,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $result = add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id);
+        $result = add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity);
         echo json_encode($result);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to add product: ' . $e->getMessage()]);

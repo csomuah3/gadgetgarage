@@ -1,11 +1,11 @@
 <?php
-session_start();
+require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../controllers/brand_controller.php';
 
 header('Content-Type: application/json');
 
-// Check if user is logged in
-if (!isset($_SESSION['user_id'])) {
+// Check if user is logged in using core function
+if (!check_login()) {
     echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
     exit;
 }
@@ -13,7 +13,7 @@ if (!isset($_SESSION['user_id'])) {
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $brand_id = (int)($_POST['brand_id'] ?? 0);
     $brand_name = trim($_POST['brand_name'] ?? '');
-    $user_id = $_SESSION['user_id'];
+    $user_id = get_user_id();
 
     // Simple single category approach
     $category_id = isset($_POST['category_id']) ? (int)$_POST['category_id'] : 0;

@@ -1022,6 +1022,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             position: relative;
         }
 
+        .product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 40px rgba(139, 95, 191, 0.25);
+            border-color: rgba(139, 95, 191, 0.4);
+        }
+
         .product-card::before {
             content: '';
             position: absolute;
@@ -1777,8 +1783,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <?php else: ?>
                         <div class="product-grid" id="productGrid">
                             <?php foreach ($products_to_display as $product): ?>
-                                <a href="single_product.php?pid=<?php echo $product['product_id']; ?>" style="text-decoration: none; color: inherit;">
-                                    <div class="product-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; transition: all 0.3s ease; margin-bottom: 30px; cursor: pointer;" onmouseover="this.style.transform='translateY(-5px)'; this.style.boxShadow='0 10px 25px rgba(0,0,0,0.15)'" onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none'">
+                                <div class="product-card">
+                                    <a href="single_product.php?pid=<?php echo $product['product_id']; ?>" style="text-decoration: none; color: inherit; display: block;">
                                         <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
                                             <img src="uploads/products/<?php echo $product['product_image']; ?>"
                                                 alt="<?php echo htmlspecialchars($product['product_title']); ?>"
@@ -1841,8 +1847,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             }
                                             ?>
                                         </div>
-                                    </div>
-                                </a>
+                                    </a>
+                                </div>
                             <?php endforeach; ?>
                         </div>
 

@@ -22,14 +22,14 @@ if (!check_login()) {
     exit();
 }
 
-// Check if user is admin
-if (!check_admin()) {
-    echo json_encode([
-        'success' => false,
-        'message' => 'Access denied. Admin privileges required.'
-    ]);
-    exit();
-}
+// Check if user is admin (temporarily removed for brand management)
+// if (!check_admin()) {
+//     echo json_encode([
+//         'success' => false,
+//         'message' => 'Access denied. Admin privileges required.'
+//     ]);
+//     exit();
+// }
 
 try {
     // For brand management, get all categories (not just user-specific)

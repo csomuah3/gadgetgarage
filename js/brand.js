@@ -1,4 +1,5 @@
 $(document).ready(function() {
+    console.log('Brand management page loaded');
     loadBrands();
     loadCategories();
 
@@ -161,19 +162,34 @@ $(document).ready(function() {
 
 // Load brands
 function loadBrands() {
+    console.log('Loading brands...');
     $.ajax({
         url: '../actions/fetch_brand_action.php',
         type: 'GET',
         dataType: 'json',
         success: function(response) {
+            console.log('Brands response:', response);
             if (response.status === 'success') {
                 displayBrands(response.data);
             } else {
                 console.error('Error fetching brands:', response.message);
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Failed to load brands: ' + response.message,
+                    icon: 'error',
+                    confirmButtonColor: '#8b5fbf'
+                });
             }
         },
         error: function(xhr, status, error) {
             console.error('AJAX Error:', error);
+            console.error('Response text:', xhr.responseText);
+            Swal.fire({
+                title: 'Connection Error',
+                text: 'Failed to load brands. Please refresh the page.',
+                icon: 'error',
+                confirmButtonColor: '#8b5fbf'
+            });
         }
     });
 }

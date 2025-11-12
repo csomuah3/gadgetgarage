@@ -16,7 +16,7 @@ class Cart extends db_connection
             $ip_address = $ip_address ? "'" . mysqli_real_escape_string($this->db, $ip_address) . "'" : 'NULL';
             $quantity = mysqli_real_escape_string($this->db, $quantity);
 
-            $sql = "INSERT INTO cart (p_id, c_id, ip_add, qty) VALUES ($product_id, $customer_id, $ip_address, $quantity)";
+            $sql = "INSERT INTO cart (p_id, user_id, ip_add, qty) VALUES ($product_id, $customer_id, $ip_address, $quantity)";
             return $this->db_write_query($sql);
         } else {
             return $this->increment_cart_quantity($product_id, $quantity, $customer_id, $ip_address);
@@ -38,12 +38,12 @@ class Cart extends db_connection
 
             // Try to insert with condition and final_price columns
             // If columns don't exist, fall back to basic insert
-            $sql = "INSERT INTO cart (p_id, c_id, ip_add, qty, condition_type, final_price) VALUES ($product_id, $customer_id, $ip_address, $quantity, '$condition', $final_price)";
+            $sql = "INSERT INTO cart (p_id, user_id, ip_add, qty, condition_type, final_price) VALUES ($product_id, $customer_id, $ip_address, $quantity, '$condition', $final_price)";
             $result = $this->db_write_query($sql);
 
             if (!$result) {
                 // If insert fails (likely due to missing columns), use basic insert
-                $sql_basic = "INSERT INTO cart (p_id, c_id, ip_add, qty) VALUES ($product_id, $customer_id, $ip_address, $quantity)";
+                $sql_basic = "INSERT INTO cart (p_id, user_id, ip_add, qty) VALUES ($product_id, $customer_id, $ip_address, $quantity)";
                 return $this->db_write_query($sql_basic);
             }
 
@@ -61,9 +61,9 @@ class Cart extends db_connection
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
             // Check if condition column exists and use it, otherwise just check product
-            $sql = "SELECT * FROM cart WHERE p_id = $product_id AND c_id = $customer_id";
+            $sql = "SELECT * FROM cart WHERE p_id = $product_id AND user_id = $customer_id";
             if ($this->column_exists('cart', 'condition_type')) {
-                $sql = "SELECT * FROM cart WHERE p_id = $product_id AND c_id = $customer_id AND condition_type = '$condition'";
+                $sql = "SELECT * FROM cart WHERE p_id = $product_id AND user_id = $customer_id AND condition_type = '$condition'";
             }
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
@@ -86,9 +86,9 @@ class Cart extends db_connection
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
             if ($this->column_exists('cart', 'condition_type')) {
-                $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND c_id = $customer_id AND condition_type = '$condition'";
+                $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND user_id = $customer_id AND condition_type = '$condition'";
             } else {
-                $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND c_id = $customer_id";
+                $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND user_id = $customer_id";
             }
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
@@ -115,7 +115,7 @@ class Cart extends db_connection
 
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "SELECT * FROM cart WHERE p_id = $product_id AND c_id = $customer_id";
+            $sql = "SELECT * FROM cart WHERE p_id = $product_id AND user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "SELECT * FROM cart WHERE p_id = $product_id AND ip_add = '$ip_address'";
@@ -132,7 +132,7 @@ class Cart extends db_connection
 
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND c_id = $customer_id";
+            $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "UPDATE cart SET qty = qty + $quantity WHERE p_id = $product_id AND ip_add = '$ip_address'";
@@ -148,7 +148,7 @@ class Cart extends db_connection
 
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "UPDATE cart SET qty = $quantity WHERE p_id = $product_id AND c_id = $customer_id";
+            $sql = "UPDATE cart SET qty = $quantity WHERE p_id = $product_id AND user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "UPDATE cart SET qty = $quantity WHERE p_id = $product_id AND ip_add = '$ip_address'";
@@ -163,7 +163,7 @@ class Cart extends db_connection
 
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "DELETE FROM cart WHERE p_id = $product_id AND c_id = $customer_id";
+            $sql = "DELETE FROM cart WHERE p_id = $product_id AND user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "DELETE FROM cart WHERE p_id = $product_id AND ip_add = '$ip_address'";
@@ -190,7 +190,7 @@ class Cart extends db_connection
             $sql = "SELECT $base_select
                     FROM cart c
                     JOIN products p ON c.p_id = p.product_id
-                    WHERE c.c_id = $customer_id";
+                    WHERE c.user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "SELECT $base_select
@@ -206,7 +206,7 @@ class Cart extends db_connection
     {
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "DELETE FROM cart WHERE c_id = $customer_id";
+            $sql = "DELETE FROM cart WHERE user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "DELETE FROM cart WHERE ip_add = '$ip_address'";
@@ -224,12 +224,12 @@ class Cart extends db_connection
                 $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
                         FROM cart c
                         JOIN products p ON c.p_id = p.product_id
-                        WHERE c.c_id = $customer_id";
+                        WHERE c.user_id = $customer_id";
             } else {
                 $sql = "SELECT SUM(c.qty * p.product_price) as total
                         FROM cart c
                         JOIN products p ON c.p_id = p.product_id
-                        WHERE c.c_id = $customer_id";
+                        WHERE c.user_id = $customer_id";
             }
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
@@ -254,7 +254,7 @@ class Cart extends db_connection
     {
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "SELECT SUM(qty) as count FROM cart WHERE c_id = $customer_id";
+            $sql = "SELECT SUM(qty) as count FROM cart WHERE user_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             $sql = "SELECT SUM(qty) as count FROM cart WHERE ip_add = '$ip_address'";

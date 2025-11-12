@@ -871,7 +871,7 @@ if (!$product) {
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
                             <!-- Excellent Condition -->
-                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('excellent', <?php echo floatval($product['product_price']); ?>)" id="excellent-option">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo floatval($product['product_price']); ?>">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
@@ -884,7 +884,7 @@ if (!$product) {
                             </div>
 
                             <!-- Good Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('good', <?php echo floatval($product['product_price']) - 100; ?>)" id="good-option">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo floatval($product['product_price']) - 100; ?>">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Good Condition</div>
@@ -898,7 +898,7 @@ if (!$product) {
                             </div>
 
                             <!-- Fair Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('fair', <?php echo floatval($product['product_price']) - 200; ?>)" id="fair-option">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo floatval($product['product_price']) - 200; ?>">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Fair Condition</div>
@@ -959,19 +959,25 @@ if (!$product) {
         let originalPrice = <?php echo floatval($product['product_price']); ?>;
 
 
-        // Select condition function for the new design
-        function selectCondition(condition, price) {
+        // Select condition function for the new design - make it globally accessible
+        window.selectCondition = function(condition, price) {
+            console.log('selectCondition called:', condition, price);
             selectedCondition = condition;
             selectedPrice = price;
 
             // Update visual selection
             document.querySelectorAll('[id$="-option"]').forEach(option => {
                 option.style.background = 'rgba(255,255,255,0.1)';
+                option.style.borderColor = 'transparent';
             });
 
             const selectedOption = document.getElementById(condition + '-option');
             if (selectedOption) {
-                selectedOption.style.background = 'rgba(255,255,255,0.25)';
+                selectedOption.style.background = 'rgba(255,255,255,0.3)';
+                selectedOption.style.border = '2px solid #10b981';
+                console.log('Selected option updated:', selectedOption);
+            } else {
+                console.error('Selected option not found:', condition + '-option');
             }
 
             // Update pricing display
@@ -1340,6 +1346,17 @@ if (!$product) {
 
             // Initialize condition-based pricing
             initializeConditionSelection();
+
+            // Add event listeners for condition selection
+            const conditionOptions = document.querySelectorAll('[data-condition]');
+            conditionOptions.forEach(option => {
+                option.addEventListener('click', function() {
+                    const condition = this.getAttribute('data-condition');
+                    const price = parseFloat(this.getAttribute('data-price'));
+                    console.log('Condition clicked:', condition, price);
+                    selectCondition(condition, price);
+                });
+            });
 
             // Animate product details on load
             const productDetails = document.querySelector('.product-details');

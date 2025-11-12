@@ -60,4 +60,10 @@ function generate_order_reference_ctr()
     $order = new Order();
     return $order->generate_order_reference();
 }
+
+function get_all_orders_ctr()
+{
+    $order = new Order();
+    return $order->get_all_orders();
+}
 ?>

@@ -190,5 +190,23 @@ class Order extends db_connection
             'order_reference' => $this->generate_order_reference()
         ];
     }
+
+    public function get_all_orders()
+    {
+        $sql = "SELECT o.*, c.customer_name, c.customer_email, c.customer_contact,
+                       COUNT(od.product_id) as item_count,
+                       SUM(od.qty) as total_items,
+                       p.amt as total_amount,
+                       p.currency,
+                       p.payment_date
+                FROM orders o
+                JOIN customer c ON o.customer_id = c.customer_id
+                LEFT JOIN orderdetails od ON o.order_id = od.order_id
+                LEFT JOIN payment p ON o.order_id = p.order_id
+                GROUP BY o.order_id
+                ORDER BY o.order_date DESC";
+
+        return $this->db_fetch_all($sql);
+    }
 }
 ?>

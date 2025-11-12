@@ -32,21 +32,22 @@ try {
     $db->db_connect();
     $appointments_query = "SELECT
                             ra.appointment_id,
-                            ra.customer_name,
-                            ra.customer_email,
+                            COALESCE(c.customer_name, 'Walk-in Customer') as customer_name,
+                            COALESCE(c.customer_email, '') as customer_email,
                             ra.customer_phone,
-                            ra.device_type,
+                            ra.device_info as device_type,
                             ra.issue_description,
-                            ra.preferred_date,
-                            ra.preferred_time,
+                            ra.appointment_date as preferred_date,
+                            ra.appointment_time as preferred_time,
                             ra.status,
                             ra.created_at,
-                            s.name as specialist_name,
-                            rit.issue_name,
-                            rit.base_price
+                            COALESCE(s.name, 'Unassigned') as specialist_name,
+                            COALESCE(rit.issue_name, 'General Issue') as issue_name,
+                            COALESCE(ra.estimated_cost, 0) as base_price
                           FROM repair_appointments ra
+                          LEFT JOIN customer c ON ra.customer_id = c.customer_id
                           LEFT JOIN specialists s ON ra.specialist_id = s.specialist_id
-                          LEFT JOIN repair_issue_types rit ON ra.issue_type_id = rit.issue_type_id
+                          LEFT JOIN repair_issue_types rit ON ra.issue_id = rit.issue_id
                           ORDER BY ra.created_at DESC";
 
     $appointments = $db->db_fetch_all($appointments_query);

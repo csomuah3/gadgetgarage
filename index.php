@@ -3622,7 +3622,7 @@ try {
 			if (dropdown) {
 				// Add small delay to allow moving to dropdown
 				setTimeout(() => {
-					if (!dropdown.matches(':hover') && !dropdown.closest('.dropdown').matches(':hover')) {
+					if (!dropdown.matches(':hover') && !dropdown.closest('.shop-categories-btn').matches(':hover')) {
 						dropdown.classList.remove('show');
 					}
 				}, 100);

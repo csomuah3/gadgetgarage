@@ -9,13 +9,10 @@ class Brand extends db_connection {
     }
 
     // Add a new brand (single category for now, compatible with existing structure)
-    public function add_brand($brand_name, $category_ids, $user_id) {
+    public function add_brand($brand_name, $category_id, $user_id) {
         // Sanitize inputs
         $brand_name = trim($brand_name);
         $user_id = (int)$user_id;
-
-        // For now, take the first category ID to work with existing structure
-        $category_id = is_array($category_ids) ? $category_ids[0] : $category_ids;
         $category_id = (int)$category_id;
 
         // Validate inputs
@@ -82,12 +79,9 @@ class Brand extends db_connection {
     }
 
     // Update a brand
-    public function update_brand($brand_id, $brand_name, $category_ids) {
+    public function update_brand($brand_id, $brand_name, $category_id) {
         $brand_id = (int)$brand_id;
         $brand_name = trim($brand_name);
-
-        // For now, take the first category ID to work with existing structure
-        $category_id = is_array($category_ids) ? $category_ids[0] : $category_ids;
         $category_id = (int)$category_id;
 
         if (empty($brand_name) || $category_id <= 0) {
@@ -130,8 +124,8 @@ class Brand extends db_connection {
             }
         }
 
-        // Check for dependencies first (skip if products table doesn't exist)
-        $sql_check = "SELECT COUNT(*) as product_count FROM products WHERE brand_id = $brand_id";
+        // Check for dependencies first (check both brand_id and product_brand fields)
+        $sql_check = "SELECT COUNT(*) as product_count FROM products WHERE product_brand = $brand_id";
         $result = $this->db_fetch_one($sql_check);
 
         if ($result && $result['product_count'] > 0) {
@@ -155,6 +149,12 @@ class Brand extends db_connection {
     // Check if brand exists (for duplicate prevention) - now checks per category
     public function check_brand_exists($brand_name, $category_id = null, $user_id = null, $exclude_brand_id = null) {
         $brand_name = trim($brand_name);
+
+        // Ensure database connection
+        if (!$this->db || mysqli_connect_errno()) {
+            $this->db_connect();
+        }
+
         $brand_name_escaped = mysqli_real_escape_string($this->db, $brand_name);
 
         $sql = "SELECT brand_id FROM brands WHERE brand_name = '$brand_name_escaped'";
@@ -173,7 +173,7 @@ class Brand extends db_connection {
         }
 
         $result = $this->db_fetch_one($sql);
-        return $result !== false;
+        return ($result !== false && $result !== null);
     }
 
     // Get brands by category

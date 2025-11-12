@@ -1,5 +1,4 @@
 $(document).ready(function() {
-    console.log('Brand management page loaded');
     loadBrands();
     loadCategories();
 
@@ -162,17 +161,14 @@ $(document).ready(function() {
 
 // Load brands
 function loadBrands() {
-    console.log('Loading brands...');
     $.ajax({
         url: '../actions/fetch_brand_action.php',
         type: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log('Brands response:', response);
             if (response.status === 'success') {
                 displayBrands(response.data);
             } else {
-                console.error('Error fetching brands:', response.message);
                 Swal.fire({
                     title: 'Error',
                     text: 'Failed to load brands: ' + response.message,
@@ -182,8 +178,6 @@ function loadBrands() {
             }
         },
         error: function(xhr, status, error) {
-            console.error('AJAX Error:', error);
-            console.error('Response text:', xhr.responseText);
             Swal.fire({
                 title: 'Connection Error',
                 text: 'Failed to load brands. Please refresh the page.',
@@ -228,14 +222,10 @@ function loadCategories() {
         type: 'GET',
         dataType: 'json',
         success: function(response) {
-            console.log('Categories response:', response); // Debug log
-
             // Handle both response formats
             if (response.status === 'success' || response.success === true) {
                 populateCategoryDropdowns(response.data);
             } else {
-                console.error('Failed to load categories:', response.message);
-                // Try to show a user-friendly message
                 Swal.fire({
                     title: 'Warning',
                     text: 'Could not load categories. You may need to create categories first.',
@@ -245,10 +235,6 @@ function loadCategories() {
             }
         },
         error: function(xhr, status, error) {
-            console.error('Error loading categories:', error);
-            console.error('Response:', xhr.responseText);
-
-            // Show user-friendly error
             Swal.fire({
                 title: 'Error',
                 text: 'Failed to load categories. Please check if categories exist.',
@@ -279,10 +265,7 @@ function populateCategoryDropdowns(categories) {
                 editSelect.append(option);
             }
         });
-
-        console.log('Populated dropdowns with', categories.length, 'categories');
     } else {
-        console.log('No categories found to populate');
         // Add a message to dropdowns
         addSelect.append('<option disabled>No categories available</option>');
         editSelect.append('<option disabled>No categories available</option>');

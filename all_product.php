@@ -2376,17 +2376,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             button.disabled = true;
 
             // Send AJAX request to add to cart
-            fetch('actions/add_to_cart.php', {
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('condition', condition);
+            formData.append('final_price', price);
+            formData.append('quantity', 1);
+
+            fetch('actions/add_to_cart_action.php', {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    product_id: productId,
-                    condition: condition,
-                    price: price,
-                    quantity: 1
-                })
+                body: formData
             })
             .then(response => response.json())
             .then(data => {

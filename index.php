@@ -1058,28 +1058,60 @@ try {
 
 		/* BRANDS — Infinite marquee + Magic Bento hover */
 		.brands-area {
-			background: #0b0b13;
-			color: #eae9f7;
+			background: #ffffff;
+			color: #333;
 			padding: 56px 0;
 			position: relative;
-			overflow: hidden
 		}
 
 		.brands-area h2 {
-			color: #fff
+			color: #333;
+			margin-bottom: 20px;
 		}
 
-		.brands-marquee {
-			mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent)
+		.brands-area .section-sub {
+			color: #666 !important;
+			margin-bottom: 40px;
 		}
 
-		.marquee-track {
+		.brands-grid {
+			display: grid;
+			grid-template-columns: repeat(6, 1fr);
+			gap: 30px;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		.brand-card {
+			background: white;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			padding: 30px 20px;
+			text-align: center;
+			transition: all 0.3s ease;
 			display: flex;
-			gap: 24px;
-			list-style: none;
-			padding: 0;
-			margin: 0;
-			animation: scrollX 35s linear infinite
+			align-items: center;
+			justify-content: center;
+			height: 100px;
+		}
+
+		.brand-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+			border-color: #008060;
+		}
+
+		.brand-card img {
+			max-width: 80px;
+			max-height: 50px;
+			object-fit: contain;
+		}
+
+		@media (max-width: 768px) {
+			.brands-grid {
+				grid-template-columns: repeat(3, 1fr);
+				gap: 20px;
+			}
 		}
 
 		@keyframes scrollX {
@@ -3292,42 +3324,22 @@ try {
 	<section class="brands-area">
 		<div class="container">
 			<h2 class="section-title text-center">Popular Brands</h2>
-			<p class="section-sub text-center" style="color:#bdbbe7">Trusted makers of phones, cameras, laptops & accessories</p>
+			<p class="section-sub text-center">Trusted makers of phones, cameras, laptops & accessories</p>
 
-			<div class="brands-marquee">
-				<ul class="marquee-track" id="brandTrack">
-					<!-- ONE LOOP (PNG favicons via Clearbit) -->
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/apple.com" alt="Apple"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/dell.com" alt="Dell"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/hp.com" alt="HP"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/asus.com" alt="ASUS"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/acer.com" alt="Acer"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/canon.com" alt="Canon"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/nikon.com" alt="Nikon"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/sony.com" alt="Sony"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/samsung.com" alt="Samsung"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/google.com" alt="Google"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/xiaomi.com" alt="Xiaomi"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft"></li>
+			<div class="brands-grid">
+				<div class="brand-card"><img src="https://logo.clearbit.com/apple.com" alt="Apple"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/dell.com" alt="Dell"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/hp.com" alt="HP"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/asus.com" alt="ASUS"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/acer.com" alt="Acer"></div>
 
-					<!-- DUPLICATE LOOP for seamless infinite scroll -->
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/apple.com" alt="Apple"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/dell.com" alt="Dell"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/hp.com" alt="HP"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/asus.com" alt="ASUS"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/acer.com" alt="Acer"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/canon.com" alt="Canon"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/nikon.com" alt="Nikon"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/sony.com" alt="Sony"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/samsung.com" alt="Samsung"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/google.com" alt="Google"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/xiaomi.com" alt="Xiaomi"></li>
-					<li class="brand-card bento"><img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft"></li>
-				</ul>
+				<div class="brand-card"><img src="https://logo.clearbit.com/canon.com" alt="Canon"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/nikon.com" alt="Nikon"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/sony.com" alt="Sony"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/samsung.com" alt="Samsung"></div>
+				<div class="brand-card"><img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft"></div>
 			</div>
 		</div>
 	</section>

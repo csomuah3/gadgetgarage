@@ -582,19 +582,59 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             const btn = event.target.closest('.add-to-cart-btn');
             const originalText = btn.innerHTML;
 
-            btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-            btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            btn.disabled = true;
 
-            setTimeout(() => {
-                btn.innerHTML = originalText;
-                btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
-            }, 1500);
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', 1);
+            formData.append('condition', 'excellent');
+            formData.append('final_price', 0); // Will be calculated by backend
 
-            // Here you would normally send AJAX request to add to cart
-            console.log('Add to cart functionality - Product ID: ' + productId);
+            fetch('actions/add_to_cart_action.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
 
-            // Update cart count
-            updateCartCount();
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
+                        btn.disabled = false;
+                    }, 1500);
+
+                    // Update cart count if available
+                    const cartCounter = document.querySelector('.cart-counter');
+                    if (cartCounter && data.cart_count) {
+                        cartCounter.textContent = data.cart_count;
+                        cartCounter.style.display = 'inline';
+                    }
+                } else {
+                    btn.innerHTML = 'Error!';
+                    btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
+                        btn.disabled = false;
+                    }, 2000);
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                btn.innerHTML = 'Error!';
+                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+
+                setTimeout(() => {
+                    btn.innerHTML = originalText;
+                    btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
+                    btn.disabled = false;
+                }, 2000);
+            });
         }
 
         function showCart() {

@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
 
         // Insert appointment (adjusted for your existing table structure)
         $insert_query = "INSERT INTO repair_appointments
-                        (customer_id, specialist_id, issue_type_id, appointment_date, appointment_time,
+                        (customer_id, specialist_id, issue_id, appointment_date, appointment_time,
                          customer_phone, device_info, issue_description, status)
                         VALUES ($customer_id, $specialist_id, $issue_id, '$appointment_date', '$appointment_time',
                                '$customer_phone', '$device_info', '$issue_description', 'scheduled')";

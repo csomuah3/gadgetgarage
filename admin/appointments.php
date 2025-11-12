@@ -41,7 +41,7 @@ try {
                             ra.appointment_time as preferred_time,
                             ra.status,
                             ra.created_at,
-                            COALESCE(s.name, 'Unassigned') as specialist_name,
+                            COALESCE(s.specialist_name, 'Unassigned') as specialist_name,
                             COALESCE(rit.issue_name, 'General Issue') as issue_name,
                             COALESCE(ra.estimated_cost, 0) as base_price
                           FROM repair_appointments ra

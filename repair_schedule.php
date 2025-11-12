@@ -70,11 +70,16 @@ try {
     $db->db_connect();
 
     // Get issue and specialist details
-    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = ?", [$issue_id]);
-    $specialist = $db->db_fetch_one("SELECT * FROM specialists WHERE specialist_id = ?", [$specialist_id]);
+    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = $issue_id");
+    $specialist = $db->db_fetch_one("SELECT * FROM specialists WHERE specialist_id = $specialist_id");
+
+    if (!$issue || !$specialist) {
+        $error_message = "Unable to load appointment details. Please try again later.";
+    }
 
 } catch (Exception $e) {
     $error_message = "Unable to load appointment details. Please try again later.";
+    error_log("Database error: " . $e->getMessage());
 }
 ?>
 
@@ -594,13 +599,10 @@ try {
                             <span class="summary-value" id="selectedTime">Not selected</span>
                         </div>
 
-                        <?php if ($issue): ?>
+                        <?php if ($issue && isset($issue['base_cost'])): ?>
                         <div class="summary-item">
-                            <span class="summary-label">Estimated Cost:</span>
-                            <span class="summary-value">
-                                GHS <?php echo number_format($issue['estimated_cost_min'], 0); ?> -
-                                <?php echo number_format($issue['estimated_cost_max'], 0); ?>
-                            </span>
+                            <span class="summary-label">Base Cost:</span>
+                            <span class="summary-value">GHS <?php echo number_format($issue['base_cost'], 0); ?></span>
                         </div>
                         <?php endif; ?>
 

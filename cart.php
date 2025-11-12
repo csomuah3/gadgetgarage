@@ -397,8 +397,18 @@ try {
                                             <div class="col-md-6">
                                                 <h5 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h5>
                                                 <p class="text-muted mb-2 small"><?php echo htmlspecialchars($item['product_desc'] ?? ''); ?></p>
+                                                <?php if (isset($item['condition_type'])): ?>
+                                                <div class="condition-badge mb-2">
+                                                    <span class="badge bg-secondary">Condition: <?php echo ucfirst($item['condition_type']); ?></span>
+                                                </div>
+                                                <?php endif; ?>
                                                 <div class="fw-bold text-primary fs-5">
-                                                    GHS <?php echo number_format($item['product_price'], 2); ?>
+                                                    <?php
+                                                    $price = (isset($item['final_price']) && $item['final_price'] > 0)
+                                                        ? $item['final_price']
+                                                        : $item['product_price'];
+                                                    echo 'GHS ' . number_format($price, 2);
+                                                    ?>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-center">
@@ -416,7 +426,12 @@ try {
                                             </div>
                                             <div class="col-md-3 text-end">
                                                 <div class="fw-bold fs-5 text-success mb-2">
-                                                    GHS <?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
+                                                    <?php
+                                                    $price = (isset($item['final_price']) && $item['final_price'] > 0)
+                                                        ? $item['final_price']
+                                                        : $item['product_price'];
+                                                    echo 'GHS ' . number_format($price * $item['qty'], 2);
+                                                    ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
                                                         onclick="removeFromCart(<?php echo $item['p_id']; ?>)">

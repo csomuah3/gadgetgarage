@@ -174,15 +174,26 @@ class Cart extends db_connection
 
     public function get_user_cart($customer_id = null, $ip_address = null)
     {
+        // Build base query with condition support
+        $base_select = "c.*, p.product_title, p.product_price, p.product_image, p.product_desc";
+
+        // Add condition columns if they exist
+        if ($this->column_exists('cart', 'condition_type')) {
+            $base_select .= ", c.condition_type";
+        }
+        if ($this->column_exists('cart', 'final_price')) {
+            $base_select .= ", c.final_price";
+        }
+
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "SELECT c.*, p.product_title, p.product_price, p.product_image, p.product_desc
+            $sql = "SELECT $base_select
                     FROM cart c
                     JOIN products p ON c.p_id = p.product_id
                     WHERE c.c_id = $customer_id";
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
-            $sql = "SELECT c.*, p.product_title, p.product_price, p.product_image, p.product_desc
+            $sql = "SELECT $base_select
                     FROM cart c
                     JOIN products p ON c.p_id = p.product_id
                     WHERE c.ip_add = '$ip_address'";
@@ -208,16 +219,31 @@ class Cart extends db_connection
     {
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            $sql = "SELECT SUM(c.qty * p.product_price) as total
-                    FROM cart c
-                    JOIN products p ON c.p_id = p.product_id
-                    WHERE c.c_id = $customer_id";
+            // Use final_price if available, otherwise fall back to product_price
+            if ($this->column_exists('cart', 'final_price')) {
+                $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
+                        FROM cart c
+                        JOIN products p ON c.p_id = p.product_id
+                        WHERE c.c_id = $customer_id";
+            } else {
+                $sql = "SELECT SUM(c.qty * p.product_price) as total
+                        FROM cart c
+                        JOIN products p ON c.p_id = p.product_id
+                        WHERE c.c_id = $customer_id";
+            }
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
-            $sql = "SELECT SUM(c.qty * p.product_price) as total
-                    FROM cart c
-                    JOIN products p ON c.p_id = p.product_id
-                    WHERE c.ip_add = '$ip_address'";
+            if ($this->column_exists('cart', 'final_price')) {
+                $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
+                        FROM cart c
+                        JOIN products p ON c.p_id = p.product_id
+                        WHERE c.ip_add = '$ip_address'";
+            } else {
+                $sql = "SELECT SUM(c.qty * p.product_price) as total
+                        FROM cart c
+                        JOIN products p ON c.p_id = p.product_id
+                        WHERE c.ip_add = '$ip_address'";
+            }
         }
 
         $result = $this->db_fetch_one($sql);

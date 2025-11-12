@@ -1,89 +1,76 @@
 <?php
-session_start();
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../settings/core.php';
+require_admin(); // only admins
+
+// Include database connection
 require_once __DIR__ . '/../settings/db_class.php';
 
-if (!check_login()) {
-    header("Location: ../login/user_login.php");
-    exit;
-}
-
-if (!check_admin()) {
-    header("Location: ../index.php");
-    exit;
-}
-
-// Handle status update
+// Handle appointment status update
 if (isset($_POST['update_status'])) {
     $appointment_id = intval($_POST['appointment_id']);
     $new_status = $_POST['status'];
 
-    try {
-        $db = new db_connection();
-        $db->db_connect();
+    $db = new db_connection();
+    $db->db_connect();
+    $sql = "UPDATE repair_appointments SET status = '$new_status' WHERE appointment_id = $appointment_id";
+    $result = $db->db_write_query($sql);
 
-        $update_query = "UPDATE repair_appointments SET status = '$new_status', updated_at = NOW() WHERE appointment_id = $appointment_id";
-        $result = $db->db_query($update_query);
-
-        if ($result) {
-            $success_message = "Appointment status updated successfully!";
-        } else {
-            $error_message = "Failed to update appointment status.";
-        }
-    } catch (Exception $e) {
-        $error_message = "Error updating status: " . $e->getMessage();
+    if ($result) {
+        $success_message = "Appointment status updated successfully!";
+    } else {
+        $error_message = "Failed to update appointment status.";
     }
 }
 
-// Get all appointments with details
+// Get all appointments
 try {
-    $appointments_query = "SELECT ra.*,
-                                 COALESCE(c.customer_name, 'Walk-in Customer') as customer_name,
-                                 COALESCE(c.customer_email, '') as customer_email,
-                                 s.specialist_name,
-                                 s.specialist_email,
-                                 rit.issue_name,
-                                 rit.icon_class
-                          FROM repair_appointments ra
-                          LEFT JOIN customer c ON ra.customer_id = c.customer_id
-                          JOIN specialists s ON ra.specialist_id = s.specialist_id
-                          JOIN repair_issue_types rit ON ra.issue_id = rit.issue_id
-                          ORDER BY ra.appointment_date DESC, ra.appointment_time DESC";
-
     $db = new db_connection();
     $db->db_connect();
-    $appointments = $db->db_fetch_all($appointments_query);
+    $appointments_query = "SELECT
+                            ra.appointment_id,
+                            ra.customer_name,
+                            ra.customer_email,
+                            ra.customer_phone,
+                            ra.device_type,
+                            ra.issue_description,
+                            ra.preferred_date,
+                            ra.preferred_time,
+                            ra.status,
+                            ra.created_at,
+                            s.name as specialist_name,
+                            rit.issue_name,
+                            rit.base_price
+                          FROM repair_appointments ra
+                          LEFT JOIN specialists s ON ra.specialist_id = s.specialist_id
+                          LEFT JOIN repair_issue_types rit ON ra.issue_type_id = rit.issue_type_id
+                          ORDER BY ra.created_at DESC";
 
-    // Get appointment statistics
-    $stats_query = "SELECT
-                      COUNT(*) as total_appointments,
-                      SUM(CASE WHEN ra.status = 'scheduled' THEN 1 ELSE 0 END) as scheduled_appointments,
-                      SUM(CASE WHEN ra.status = 'confirmed' THEN 1 ELSE 0 END) as confirmed_appointments,
-                      SUM(CASE WHEN ra.status = 'in_progress' THEN 1 ELSE 0 END) as in_progress_appointments,
-                      SUM(CASE WHEN ra.status = 'completed' THEN 1 ELSE 0 END) as completed_appointments,
-                      SUM(CASE WHEN ra.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_appointments
-                    FROM repair_appointments ra";
-    $stats = $db->db_fetch_one($stats_query);
+    $appointments = $db->db_fetch_all($appointments_query);
+    if (!$appointments) $appointments = [];
 
 } catch (Exception $e) {
-    $error_message = "Error loading appointments: " . $e->getMessage();
     $appointments = [];
-    $stats = [];
+    $error_message = "Unable to load appointments: " . $e->getMessage();
 }
 ?>
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Repair Appointments - Gadget Garage Admin</title>
+    <meta charset="utf-8">
+    <title>Manage Appointments - Gadget Garage Admin</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
         /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -94,644 +81,588 @@ try {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
             color: #065f46;
+            padding: 0 !important;
+            position: relative;
+            overflow-x: hidden;
             min-height: 100vh;
         }
 
-        /* Animated Background Elements */
-        .bg-decoration {
+        /* Animated Background Circles */
+        .bg-circle {
             position: fixed;
             border-radius: 50%;
             pointer-events: none;
             z-index: 1;
-            opacity: 0.6;
         }
 
-        .bg-decoration-1 {
+        .bg-circle-1 {
             width: 200px;
             height: 200px;
             background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
             top: 10%;
-            right: 15%;
-            animation: float 8s ease-in-out infinite;
+            left: 80%;
+            animation: float1 8s ease-in-out infinite;
         }
 
-        .bg-decoration-2 {
+        .bg-circle-2 {
             width: 150px;
             height: 150px;
             background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
             bottom: 20%;
-            left: 10%;
-            animation: float 10s ease-in-out infinite reverse;
+            right: 85%;
+            animation: float2 10s ease-in-out infinite reverse;
         }
 
-        @keyframes float {
+        .bg-circle-3 {
+            width: 180px;
+            height: 180px;
+            background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(52, 211, 153, 0.09));
+            top: 60%;
+            left: 5%;
+            animation: float3 12s ease-in-out infinite;
+        }
+
+        /* Animation Keyframes */
+        @keyframes float1 {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            25% { transform: translateY(-20px) translateX(10px); }
+            50% { transform: translateY(0px) translateX(20px); }
+            75% { transform: translateY(20px) translateX(10px); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translateY(0px) translateX(0px); }
+            33% { transform: translateY(15px) translateX(-15px); }
+            66% { transform: translateY(-10px) translateX(15px); }
+        }
+
+        @keyframes float3 {
             0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(90deg); }
-            50% { transform: translateY(-10px) rotate(180deg); }
-            75% { transform: translateY(-15px) rotate(270deg); }
+            50% { transform: translateY(-25px) rotate(5deg); }
         }
 
+        /* Header Styles */
         .main-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 1.5rem 0;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            position: sticky;
+            position: fixed;
             top: 0;
+            left: 0;
+            width: 100%;
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
             z-index: 1000;
+            transition: all 0.3s ease;
+            height: 80px;
+        }
+
+        .header-container {
+            height: 80px;
+            display: flex;
+            align-items: center;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: #047857;
+            color: #10b981;
             text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            transition: all 0.3s ease;
         }
 
-        .logo .garage {
+        .logo:hover {
+            color: #059669;
+            transform: scale(1.05);
+        }
+
+        .co {
             background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
             font-size: 1rem;
-            font-weight: 600;
+            margin-left: 4px;
         }
 
+        /* Left Sidebar - Starts after header */
         .sidebar {
-            background: linear-gradient(135deg, #047857, #059669);
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 320px;
+            height: calc(100vh - 80px);
+            background: linear-gradient(135deg, #10b981, #34d399);
             color: white;
-            min-height: calc(100vh - 100px);
-            position: relative;
-            z-index: 10;
-            border-radius: 0 20px 20px 0;
-            box-shadow: 4px 0 20px rgba(16, 185, 129, 0.1);
+            z-index: 999;
+            padding: 20px;
+            box-shadow: 4px 0 15px rgba(16, 185, 129, 0.2);
+            transition: transform 0.3s ease;
         }
 
-        .sidebar .nav-link {
-            color: rgba(255, 255, 255, 0.8);
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin: 4px 8px;
-            transition: all 0.3s ease;
-            border: none;
-            text-decoration: none;
+        .sidebar.sidebar-hidden {
+            transform: translateX(-100%);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .sidebar-header h3 {
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .sidebar-header p {
+            font-size: 1.1rem;
+            opacity: 0.8;
+        }
+
+        .sidebar-menu {
+            list-style: none;
+        }
+
+        .sidebar-menu li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar-menu a {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
+            padding: 14px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            font-size: 1.1rem;
         }
 
-        .sidebar .nav-link:hover, .sidebar .nav-link.active {
+        .sidebar-menu a:hover {
             background: rgba(255, 255, 255, 0.2);
-            color: white;
             transform: translateX(5px);
         }
 
-        .sidebar .nav-link i {
-            width: 20px;
-            text-align: center;
+        .sidebar-menu a.active {
+            background: rgba(255, 255, 255, 0.25);
         }
 
+        /* Main Content - Adjusted for wider sidebar */
         .main-content {
-            padding: 2rem;
+            margin-left: 320px;
             position: relative;
             z-index: 10;
+            transition: margin-left 0.3s ease;
         }
 
-        .stats-cards .stat-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 1.5rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
-            transition: all 0.3s ease;
-            text-align: center;
+        .main-content.sidebar-hidden {
+            margin-left: 0;
         }
 
-        .stats-cards .stat-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.1);
-        }
-
-        .stat-icon {
+        /* Sidebar Toggle Button */
+        .sidebar-toggle {
+            position: fixed;
+            top: 90px;
+            left: 20px;
+            z-index: 1001;
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+            border: none;
             width: 50px;
             height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1rem;
-            font-size: 1.5rem;
-            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
         }
 
-        .stat-number {
-            font-size: 2rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 0.5rem;
+        .sidebar-toggle:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
         }
 
-        .stat-label {
-            color: #6b7280;
-            font-size: 0.9rem;
-            font-weight: 500;
+        .sidebar-toggle.sidebar-hidden {
+            left: 20px;
         }
 
-        .appointments-table-container {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
-            padding: 2rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
+        /* Content Container */
+        .content-container {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            margin: 100px 30px 30px;
+            padding: 40px;
             position: relative;
-            z-index: 10;
+            overflow: hidden;
+        }
+
+        .content-header {
+            margin-bottom: 30px;
+        }
+
+        .content-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #065f46;
+            margin-bottom: 10px;
+        }
+
+        .content-subtitle {
+            font-size: 1.2rem;
+            color: #6b7280;
+        }
+
+        /* Appointments Table */
+        .appointments-table {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
         }
 
         .table {
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: none;
-            border: none;
+            margin-bottom: 0;
         }
 
-        .table thead th {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            color: #047857;
+        .table th {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
             font-weight: 600;
             border: none;
-            padding: 18px;
-            font-size: 0.9rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            padding: 15px;
         }
 
-        .table tbody td {
-            padding: 16px 18px;
-            border-color: #f1f5f9;
+        .table td {
+            padding: 15px;
             vertical-align: middle;
-        }
-
-        .table tbody tr {
-            transition: all 0.2s ease;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .table tbody tr:hover {
             background: rgba(16, 185, 129, 0.05);
-            transform: scale(1.01);
         }
 
         .status-badge {
             padding: 6px 12px;
             border-radius: 20px;
-            font-weight: 500;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .btn-action {
-            padding: 8px 12px;
+        .status-pending {
+            background: #fef3c7;
+            color: #92400e;
+        }
+
+        .status-confirmed {
+            background: #dbeafe;
+            color: #1e40af;
+        }
+
+        .status-completed {
+            background: #d1fae5;
+            color: #065f46;
+        }
+
+        .status-cancelled {
+            background: #fee2e2;
+            color: #991b1b;
+        }
+
+        .btn-sm {
+            padding: 8px 15px;
+            font-size: 0.875rem;
             border-radius: 8px;
-            border: none;
-            font-size: 0.85rem;
             font-weight: 500;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            border: none;
             transition: all 0.3s ease;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
         }
 
-        .btn-view {
-            background: linear-gradient(135deg, #3b82f6, #60a5fa);
-            color: white;
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
         }
 
-        .btn-view:hover {
-            background: linear-gradient(135deg, #2563eb, #3b82f6);
-            transform: translateY(-1px);
-            color: white;
-        }
-
-        .btn-status {
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            margin: 2px;
-            transition: all 0.2s ease;
-        }
-
-        .btn-status:hover {
-            background: linear-gradient(135deg, #059669, #10b981);
-            transform: translateY(-1px);
-            color: white;
-        }
-
-        .alert {
-            border-radius: 12px;
-            border: none;
-            padding: 1rem 1.5rem;
-        }
-
-        .alert-success {
-            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
-            color: #047857;
-        }
-
-        .alert-danger {
-            background: linear-gradient(135deg, #fecaca, #fca5a5);
-            color: #dc2626;
-        }
-
-        .appointment-details {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .appointment-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1rem;
-        }
-
+        /* Empty State */
         .empty-state {
             text-align: center;
-            padding: 4rem 2rem;
+            padding: 60px 20px;
             color: #6b7280;
         }
 
         .empty-state i {
             font-size: 4rem;
-            margin-bottom: 1rem;
-            opacity: 0.3;
+            margin-bottom: 20px;
+            opacity: 0.5;
         }
 
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .empty-state p {
+            font-size: 1.1rem;
+        }
+
+        /* Responsive */
         @media (max-width: 768px) {
-            .main-content {
-                padding: 1rem;
+            .sidebar {
+                transform: translateX(-100%);
+                width: 280px;
             }
 
-            .sidebar {
-                border-radius: 0;
+            .sidebar.sidebar-visible {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar-toggle {
+                left: 20px;
+            }
+
+            .content-container {
+                margin: 100px 15px 15px;
+                padding: 20px;
+            }
+
+            .content-title {
+                font-size: 2rem;
+            }
+
+            .table-responsive {
+                font-size: 0.875rem;
             }
         }
     </style>
 </head>
-<body>
-    <!-- Background Decorations -->
-    <div class="bg-decoration bg-decoration-1"></div>
-    <div class="bg-decoration bg-decoration-2"></div>
 
-    <!-- Header -->
+<body>
+    <!-- Animated Background Circles -->
+    <div class="bg-circle bg-circle-1"></div>
+    <div class="bg-circle bg-circle-2"></div>
+    <div class="bg-circle bg-circle-3"></div>
+
+    <!-- Sidebar Toggle Button -->
+    <button class="sidebar-toggle" onclick="toggleSidebar()">
+        <i class="fas fa-bars"></i>
+    </button>
+
+    <!-- Sidebar - Always Visible -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <h3>Admin Panel</h3>
+            <p>Manage appointments</p>
+        </div>
+        <ul class="sidebar-menu">
+            <li><a href="../index.php"><i class="fas fa-home"></i> Dashboard</a></li>
+            <li><a href="category.php"><i class="fas fa-list"></i> Categories</a></li>
+            <li><a href="brand.php"><i class="fas fa-tags"></i> Brands</a></li>
+            <li><a href="product.php"><i class="fas fa-box"></i> Products</a></li>
+            <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
+            <li><a href="appointments.php" class="active"><i class="fas fa-calendar-check"></i> Appointments</a></li>
+            <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
+            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
+        </ul>
+    </div>
+
+    <!-- Main Header -->
     <header class="main-header">
-        <div class="container-fluid">
-            <div class="d-flex justify-content-between align-items-center">
+        <div class="container-fluid px-4">
+            <div class="d-flex align-items-center justify-content-between header-container">
+                <!-- Logo -->
                 <a href="../index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
+                    Gadget<span class="co">Garage</span>
                 </a>
-                <div class="d-flex align-items-center gap-3">
-                    <span class="text-muted">Admin Panel</span>
-                    <a href="../login/logout.php" class="btn btn-outline-danger">
-                        <i class="fas fa-sign-out-alt"></i> Logout
-                    </a>
+
+                <!-- Header Actions -->
+                <div class="header-actions">
+                    <!-- User Avatar with Dropdown -->
+                    <div class="user-dropdown">
+                        <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?>">
+                            <?= strtoupper(substr($_SESSION['name'] ?? 'A', 0, 1)) ?>
+                        </div>
+                        <div class="dropdown-menu-custom">
+                            <a href="../login/logout.php" class="dropdown-item-custom">
+                                <i class="fas fa-sign-out-alt me-2"></i>Logout
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </header>
 
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 p-0">
-                <div class="sidebar">
-                    <div class="p-3">
-                        <h5 class="text-white mb-4">
-                            <i class="fas fa-tachometer-alt"></i> Dashboard
-                        </h5>
-                        <nav class="nav flex-column">
-                            <a class="nav-link" href="../index.php">
-                                <i class="fas fa-home"></i> Home
-                            </a>
-                            <a class="nav-link" href="product.php">
-                                <i class="fas fa-box"></i> Products
-                            </a>
-                            <a class="nav-link" href="category.php">
-                                <i class="fas fa-tags"></i> Categories
-                            </a>
-                            <a class="nav-link" href="brand.php">
-                                <i class="fas fa-trademark"></i> Brands
-                            </a>
-                            <a class="nav-link" href="orders.php">
-                                <i class="fas fa-shopping-bag"></i> Orders
-                            </a>
-                            <a class="nav-link active" href="appointments.php">
-                                <i class="fas fa-calendar-alt"></i> Appointments
-                            </a>
-                        </nav>
-                    </div>
-                </div>
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="content-container">
+            <div class="content-header">
+                <h1 class="content-title">Appointment Management</h1>
+                <p class="content-subtitle">Monitor and manage repair appointments</p>
             </div>
 
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10">
-                <div class="main-content">
-                    <!-- Page Header -->
-                    <div class="d-flex justify-content-between align-items-center mb-4">
-                        <div>
-                            <h1 class="h2 mb-1">Repair Appointments</h1>
-                            <p class="text-muted mb-0">Manage customer repair appointments and schedules</p>
-                        </div>
-                        <div class="d-flex gap-2">
-                            <button class="btn btn-action btn-view" onclick="location.reload()">
-                                <i class="fas fa-sync-alt"></i> Refresh
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Alerts -->
-                    <?php if (isset($success_message)): ?>
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <i class="fas fa-check-circle"></i> <?php echo $success_message; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-
-                    <?php if (isset($error_message)): ?>
-                        <div class="alert alert-danger alert-dismissible fade show">
-                            <i class="fas fa-exclamation-triangle"></i> <?php echo $error_message; ?>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                        </div>
-                    <?php endif; ?>
-
-                    <!-- Statistics Cards -->
-                    <?php if (!empty($stats)): ?>
-                    <div class="stats-cards row g-3 mb-4">
-                        <div class="col-md-2 col-sm-6">
-                            <div class="stat-card">
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
-                                    <i class="fas fa-calendar"></i>
-                                </div>
-                                <div class="stat-number"><?php echo number_format($stats['total_appointments']); ?></div>
-                                <div class="stat-label">Total</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-6">
-                            <div class="stat-card">
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
-                                    <i class="fas fa-clock"></i>
-                                </div>
-                                <div class="stat-number"><?php echo number_format($stats['scheduled_appointments']); ?></div>
-                                <div class="stat-label">Scheduled</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-6">
-                            <div class="stat-card">
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
-                                    <i class="fas fa-check"></i>
-                                </div>
-                                <div class="stat-number"><?php echo number_format($stats['confirmed_appointments']); ?></div>
-                                <div class="stat-label">Confirmed</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-6">
-                            <div class="stat-card">
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
-                                    <i class="fas fa-cog"></i>
-                                </div>
-                                <div class="stat-number"><?php echo number_format($stats['in_progress_appointments']); ?></div>
-                                <div class="stat-label">In Progress</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-6">
-                            <div class="stat-card">
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
-                                    <i class="fas fa-check-circle"></i>
-                                </div>
-                                <div class="stat-number"><?php echo number_format($stats['completed_appointments']); ?></div>
-                                <div class="stat-label">Completed</div>
-                            </div>
-                        </div>
-                        <div class="col-md-2 col-sm-6">
-                            <div class="stat-card">
-                                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #f87171);">
-                                    <i class="fas fa-times-circle"></i>
-                                </div>
-                                <div class="stat-number"><?php echo number_format($stats['cancelled_appointments']); ?></div>
-                                <div class="stat-label">Cancelled</div>
-                            </div>
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <!-- Appointments Table -->
-                    <div class="appointments-table-container">
-                        <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Recent Appointments</h5>
-                            <div class="d-flex gap-2">
-                                <select class="form-select form-select-sm" style="width: auto;" onchange="filterAppointments(this.value)">
-                                    <option value="">All Status</option>
-                                    <option value="scheduled">Scheduled</option>
-                                    <option value="confirmed">Confirmed</option>
-                                    <option value="in_progress">In Progress</option>
-                                    <option value="completed">Completed</option>
-                                    <option value="cancelled">Cancelled</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <?php if (empty($appointments)): ?>
-                            <div class="empty-state">
-                                <i class="fas fa-calendar-times"></i>
-                                <h4>No Appointments Found</h4>
-                                <p>When customers schedule repair appointments, they will appear here.</p>
-                            </div>
-                        <?php else: ?>
-                            <div class="table-responsive">
-                                <table class="table" id="appointmentsTable">
-                                    <thead>
-                                        <tr>
-                                            <th>Appointment</th>
-                                            <th>Customer</th>
-                                            <th>Issue</th>
-                                            <th>Specialist</th>
-                                            <th>Date & Time</th>
-                                            <th>Status</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php foreach ($appointments as $appointment): ?>
-                                            <tr data-status="<?php echo strtolower($appointment['status']); ?>">
-                                                <td>
-                                                    <div>
-                                                        <strong>#<?php echo $appointment['appointment_id']; ?></strong><br>
-                                                        <small class="text-muted">
-                                                            <?php echo date('M d, Y', strtotime($appointment['created_at'])); ?>
-                                                        </small>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <strong><?php echo htmlspecialchars($appointment['customer_name']); ?></strong><br>
-                                                        <small class="text-muted">
-                                                            <i class="fas fa-phone"></i>
-                                                            <?php echo htmlspecialchars($appointment['customer_phone']); ?>
-                                                        </small>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div class="appointment-details">
-                                                        <div class="appointment-icon">
-                                                            <i class="<?php echo htmlspecialchars($appointment['icon_class']); ?>"></i>
-                                                        </div>
-                                                        <div>
-                                                            <strong><?php echo htmlspecialchars($appointment['issue_name']); ?></strong><br>
-                                                            <?php if ($appointment['device_info']): ?>
-                                                                <small class="text-muted"><?php echo htmlspecialchars($appointment['device_info']); ?></small>
-                                                            <?php endif; ?>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <strong><?php echo htmlspecialchars($appointment['specialist_name']); ?></strong><br>
-                                                        <small class="text-muted"><?php echo htmlspecialchars($appointment['specialist_email']); ?></small>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <div>
-                                                        <?php echo date('M d, Y', strtotime($appointment['appointment_date'])); ?><br>
-                                                        <small class="text-muted">
-                                                            <i class="fas fa-clock"></i>
-                                                            <?php echo date('g:i A', strtotime($appointment['appointment_time'])); ?>
-                                                        </small>
-                                                    </div>
-                                                </td>
-                                                <td>
-                                                    <?php
-                                                    $status_class = match(strtolower($appointment['status'])) {
-                                                        'scheduled' => 'bg-warning text-dark',
-                                                        'confirmed' => 'bg-info text-white',
-                                                        'in_progress' => 'bg-primary text-white',
-                                                        'completed' => 'bg-success text-white',
-                                                        'cancelled' => 'bg-danger text-white',
-                                                        default => 'bg-secondary text-white'
-                                                    };
-                                                    ?>
-                                                    <span class="status-badge <?php echo $status_class; ?>">
-                                                        <?php echo ucfirst(str_replace('_', ' ', $appointment['status'])); ?>
-                                                    </span>
-                                                </td>
-                                                <td>
-                                                    <div class="d-flex gap-1 flex-wrap">
-                                                        <?php if (strtolower($appointment['status']) !== 'completed' && strtolower($appointment['status']) !== 'cancelled'): ?>
-                                                            <div class="btn-group">
-                                                                <button type="button" class="btn-status dropdown-toggle" data-bs-toggle="dropdown">
-                                                                    <i class="fas fa-cog"></i>
-                                                                </button>
-                                                                <ul class="dropdown-menu">
-                                                                    <?php if (strtolower($appointment['status']) === 'scheduled'): ?>
-                                                                    <li>
-                                                                        <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
-                                                                            <input type="hidden" name="status" value="confirmed">
-                                                                            <button type="submit" name="update_status" class="dropdown-item">
-                                                                                <i class="fas fa-check text-info"></i> Confirm Appointment
-                                                                            </button>
-                                                                        </form>
-                                                                    </li>
-                                                                    <?php endif; ?>
-
-                                                                    <?php if (in_array(strtolower($appointment['status']), ['scheduled', 'confirmed'])): ?>
-                                                                    <li>
-                                                                        <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
-                                                                            <input type="hidden" name="status" value="in_progress">
-                                                                            <button type="submit" name="update_status" class="dropdown-item">
-                                                                                <i class="fas fa-cog text-primary"></i> Start Service
-                                                                            </button>
-                                                                        </form>
-                                                                    </li>
-                                                                    <?php endif; ?>
-
-                                                                    <?php if (strtolower($appointment['status']) === 'in_progress'): ?>
-                                                                    <li>
-                                                                        <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
-                                                                            <input type="hidden" name="status" value="completed">
-                                                                            <button type="submit" name="update_status" class="dropdown-item">
-                                                                                <i class="fas fa-check text-success"></i> Mark Completed
-                                                                            </button>
-                                                                        </form>
-                                                                    </li>
-                                                                    <?php endif; ?>
-
-                                                                    <li><hr class="dropdown-divider"></li>
-                                                                    <li>
-                                                                        <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
-                                                                            <input type="hidden" name="status" value="cancelled">
-                                                                            <button type="submit" name="update_status" class="dropdown-item text-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">
-                                                                                <i class="fas fa-times text-danger"></i> Cancel Appointment
-                                                                            </button>
-                                                                        </form>
-                                                                    </li>
-                                                                </ul>
-                                                            </div>
-                                                        <?php endif; ?>
-
-                                                        <a href="tel:<?php echo $appointment['customer_phone']; ?>" class="btn-action btn-view" title="Call Customer">
-                                                            <i class="fas fa-phone"></i>
-                                                        </a>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        <?php endforeach; ?>
-                                    </tbody>
-                                </table>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+            <?php if (isset($success_message)): ?>
+                <div class="alert alert-success alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($success_message) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
                 </div>
+            <?php endif; ?>
+
+            <?php if (isset($error_message)): ?>
+                <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                    <?= htmlspecialchars($error_message) ?>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                </div>
+            <?php endif; ?>
+
+            <div class="appointments-table">
+                <?php if (!empty($appointments)): ?>
+                    <div class="table-responsive">
+                        <table class="table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Customer</th>
+                                    <th>Device & Issue</th>
+                                    <th>Specialist</th>
+                                    <th>Date & Time</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php foreach ($appointments as $appointment): ?>
+                                    <tr>
+                                        <td><strong>#<?= htmlspecialchars($appointment['appointment_id']) ?></strong></td>
+                                        <td>
+                                            <div>
+                                                <strong><?= htmlspecialchars($appointment['customer_name']) ?></strong><br>
+                                                <small class="text-muted"><?= htmlspecialchars($appointment['customer_email']) ?></small><br>
+                                                <small class="text-muted"><?= htmlspecialchars($appointment['customer_phone']) ?></small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <div>
+                                                <strong><?= htmlspecialchars($appointment['device_type']) ?></strong><br>
+                                                <small class="text-muted"><?= htmlspecialchars($appointment['issue_name'] ?? 'General Issue') ?></small><br>
+                                                <small class="text-info">GH₵<?= number_format($appointment['base_price'] ?? 0, 2) ?></small>
+                                            </div>
+                                        </td>
+                                        <td><?= htmlspecialchars($appointment['specialist_name'] ?? 'Unassigned') ?></td>
+                                        <td>
+                                            <div>
+                                                <strong><?= date('M j, Y', strtotime($appointment['preferred_date'])) ?></strong><br>
+                                                <small class="text-muted"><?= htmlspecialchars($appointment['preferred_time']) ?></small>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <span class="status-badge status-<?= strtolower($appointment['status']) ?>">
+                                                <?= htmlspecialchars(ucfirst($appointment['status'])) ?>
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <div class="btn-group" role="group">
+                                                <button class="btn btn-primary btn-sm" onclick="updateStatus(<?= $appointment['appointment_id'] ?>)">
+                                                    <i class="fas fa-edit"></i> Update
+                                                </button>
+                                                <button class="btn btn-info btn-sm" onclick="viewAppointment(<?= $appointment['appointment_id'] ?>)">
+                                                    <i class="fas fa-eye"></i> View
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                <?php else: ?>
+                    <div class="empty-state">
+                        <i class="fas fa-calendar-check"></i>
+                        <h3>No Appointments Found</h3>
+                        <p>When customers book repair appointments, they will appear here.</p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
 
+    <!-- Bootstrap JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function filterAppointments(status) {
-            const table = document.getElementById('appointmentsTable');
-            const rows = table.querySelectorAll('tbody tr');
 
-            rows.forEach(row => {
-                if (status === '' || row.dataset.status === status) {
-                    row.style.display = '';
+    <script>
+        // Sidebar functionality
+        let sidebarHidden = false;
+
+        function toggleSidebar() {
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            const toggleBtn = document.querySelector('.sidebar-toggle');
+            const toggleIcon = toggleBtn.querySelector('i');
+
+            if (window.innerWidth <= 768) {
+                // Mobile behavior
+                sidebar.classList.toggle('sidebar-visible');
+                if (sidebar.classList.contains('sidebar-visible')) {
+                    toggleIcon.classList.remove('fa-bars');
+                    toggleIcon.classList.add('fa-times');
                 } else {
-                    row.style.display = 'none';
+                    toggleIcon.classList.remove('fa-times');
+                    toggleIcon.classList.add('fa-bars');
                 }
-            });
+            } else {
+                // Desktop behavior
+                sidebarHidden = !sidebarHidden;
+                if (sidebarHidden) {
+                    sidebar.classList.add('sidebar-hidden');
+                    mainContent.classList.add('sidebar-hidden');
+                    toggleBtn.classList.add('sidebar-hidden');
+                    toggleIcon.classList.remove('fa-bars');
+                    toggleIcon.classList.add('fa-chevron-right');
+                } else {
+                    sidebar.classList.remove('sidebar-hidden');
+                    mainContent.classList.remove('sidebar-hidden');
+                    toggleBtn.classList.remove('sidebar-hidden');
+                    toggleIcon.classList.remove('fa-chevron-right');
+                    toggleIcon.classList.add('fa-bars');
+                }
+            }
         }
 
-        // Auto-refresh appointments every 60 seconds
-        setInterval(() => {
-            location.reload();
-        }, 60000);
+        // Appointment management functions
+        function updateStatus(appointmentId) {
+            const newStatus = prompt('Enter new status (pending, confirmed, completed, cancelled):');
+            if (newStatus && ['pending', 'confirmed', 'completed', 'cancelled'].includes(newStatus.toLowerCase())) {
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.innerHTML = `
+                    <input type="hidden" name="update_status" value="1">
+                    <input type="hidden" name="appointment_id" value="${appointmentId}">
+                    <input type="hidden" name="status" value="${newStatus.toLowerCase()}">
+                `;
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+
+        function viewAppointment(appointmentId) {
+            alert('Appointment details for #' + appointmentId + ' - Feature coming soon!');
+        }
     </script>
 </body>
+
 </html>

@@ -1,7 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../settings/core.php';
-require_once __DIR__ . '/../controllers/order_controller.php';
+require_once __DIR__ . '/../settings/db_class.php';
 
 if (!check_login()) {
     header("Location: ../login/user_login.php");
@@ -15,48 +15,59 @@ if (!check_admin()) {
 
 // Handle status update
 if (isset($_POST['update_status'])) {
-    $order_id = intval($_POST['order_id']);
+    $appointment_id = intval($_POST['appointment_id']);
     $new_status = $_POST['status'];
 
-    if (update_order_status_ctr($order_id, $new_status)) {
-        $success_message = "Order status updated successfully!";
-    } else {
-        $error_message = "Failed to update order status.";
+    try {
+        $db = new db_connection();
+        $db->db_connect();
+
+        $update_query = "UPDATE repair_appointments SET status = ?, updated_at = NOW() WHERE appointment_id = ?";
+        $result = $db->db_query($update_query, [$new_status, $appointment_id]);
+
+        if ($result) {
+            $success_message = "Appointment status updated successfully!";
+        } else {
+            $error_message = "Failed to update appointment status.";
+        }
+    } catch (Exception $e) {
+        $error_message = "Error updating status: " . $e->getMessage();
     }
 }
 
-// Get all orders with enhanced query
+// Get all appointments with details
 try {
-    $orders_query = "SELECT o.*, c.customer_name, c.customer_email, c.customer_contact,
-                           COUNT(od.product_id) as item_count,
-                           SUM(od.qty) as total_items,
-                           p.amt as total_amount,
-                           p.currency,
-                           p.payment_date
-                    FROM orders o
-                    JOIN customer c ON o.customer_id = c.customer_id
-                    LEFT JOIN orderdetails od ON o.order_id = od.order_id
-                    LEFT JOIN payment p ON o.order_id = p.order_id
-                    GROUP BY o.order_id
-                    ORDER BY o.order_date DESC";
+    $appointments_query = "SELECT ra.*,
+                                 COALESCE(c.customer_name, 'Walk-in Customer') as customer_name,
+                                 COALESCE(c.customer_email, '') as customer_email,
+                                 s.specialist_name,
+                                 s.specialist_email,
+                                 rit.issue_name,
+                                 rit.icon_class
+                          FROM repair_appointments ra
+                          LEFT JOIN customer c ON ra.customer_id = c.customer_id
+                          JOIN specialists s ON ra.specialist_id = s.specialist_id
+                          JOIN repair_issue_types rit ON ra.issue_id = rit.issue_id
+                          ORDER BY ra.appointment_date DESC, ra.appointment_time DESC";
 
     $db = new db_connection();
     $db->db_connect();
-    $orders = $db->db_fetch_all($orders_query);
+    $appointments = $db->db_fetch_all($appointments_query);
 
-    // Get order statistics
+    // Get appointment statistics
     $stats_query = "SELECT
-                      COUNT(*) as total_orders,
-                      SUM(CASE WHEN o.order_status = 'pending' THEN 1 ELSE 0 END) as pending_orders,
-                      SUM(CASE WHEN o.order_status = 'processing' THEN 1 ELSE 0 END) as processing_orders,
-                      SUM(CASE WHEN o.order_status = 'completed' THEN 1 ELSE 0 END) as completed_orders,
-                      SUM(CASE WHEN o.order_status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_orders
-                    FROM orders o";
+                      COUNT(*) as total_appointments,
+                      SUM(CASE WHEN ra.status = 'scheduled' THEN 1 ELSE 0 END) as scheduled_appointments,
+                      SUM(CASE WHEN ra.status = 'confirmed' THEN 1 ELSE 0 END) as confirmed_appointments,
+                      SUM(CASE WHEN ra.status = 'in_progress' THEN 1 ELSE 0 END) as in_progress_appointments,
+                      SUM(CASE WHEN ra.status = 'completed' THEN 1 ELSE 0 END) as completed_appointments,
+                      SUM(CASE WHEN ra.status = 'cancelled' THEN 1 ELSE 0 END) as cancelled_appointments
+                    FROM repair_appointments ra";
     $stats = $db->db_fetch_one($stats_query);
 
 } catch (Exception $e) {
-    $error_message = "Error loading orders: " . $e->getMessage();
-    $orders = [];
+    $error_message = "Error loading appointments: " . $e->getMessage();
+    $appointments = [];
     $stats = [];
 }
 ?>
@@ -66,7 +77,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Order Management - Gadget Garage Admin</title>
+    <title>Repair Appointments - Gadget Garage Admin</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -231,7 +242,7 @@ try {
             font-weight: 500;
         }
 
-        .orders-table-container {
+        .appointments-table-container {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 16px;
@@ -341,13 +352,13 @@ try {
             color: #dc2626;
         }
 
-        .order-customer {
+        .appointment-details {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .customer-avatar {
+        .appointment-icon {
             width: 40px;
             height: 40px;
             border-radius: 50%;
@@ -356,8 +367,7 @@ try {
             align-items: center;
             justify-content: center;
             color: white;
-            font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 1rem;
         }
 
         .empty-state {
@@ -427,10 +437,10 @@ try {
                             <a class="nav-link" href="brand.php">
                                 <i class="fas fa-trademark"></i> Brands
                             </a>
-                            <a class="nav-link active" href="orders.php">
+                            <a class="nav-link" href="orders.php">
                                 <i class="fas fa-shopping-bag"></i> Orders
                             </a>
-                            <a class="nav-link" href="appointments.php">
+                            <a class="nav-link active" href="appointments.php">
                                 <i class="fas fa-calendar-alt"></i> Appointments
                             </a>
                         </nav>
@@ -444,8 +454,8 @@ try {
                     <!-- Page Header -->
                     <div class="d-flex justify-content-between align-items-center mb-4">
                         <div>
-                            <h1 class="h2 mb-1">Order Management</h1>
-                            <p class="text-muted mb-0">Monitor and manage customer orders</p>
+                            <h1 class="h2 mb-1">Repair Appointments</h1>
+                            <p class="text-muted mb-0">Manage customer repair appointments and schedules</p>
                         </div>
                         <div class="d-flex gap-2">
                             <button class="btn btn-action btn-view" onclick="location.reload()">
@@ -472,173 +482,223 @@ try {
                     <!-- Statistics Cards -->
                     <?php if (!empty($stats)): ?>
                     <div class="stats-cards row g-3 mb-4">
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-2 col-sm-6">
                             <div class="stat-card">
                                 <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
-                                    <i class="fas fa-shopping-cart"></i>
+                                    <i class="fas fa-calendar"></i>
                                 </div>
-                                <div class="stat-number"><?php echo number_format($stats['total_orders']); ?></div>
-                                <div class="stat-label">Total Orders</div>
+                                <div class="stat-number"><?php echo number_format($stats['total_appointments']); ?></div>
+                                <div class="stat-label">Total</div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-2 col-sm-6">
                             <div class="stat-card">
                                 <div class="stat-icon" style="background: linear-gradient(135deg, #f59e0b, #fbbf24);">
                                     <i class="fas fa-clock"></i>
                                 </div>
-                                <div class="stat-number"><?php echo number_format($stats['pending_orders']); ?></div>
-                                <div class="stat-label">Pending</div>
+                                <div class="stat-number"><?php echo number_format($stats['scheduled_appointments']); ?></div>
+                                <div class="stat-label">Scheduled</div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-2 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: linear-gradient(135deg, #8b5cf6, #a78bfa);">
+                                    <i class="fas fa-check"></i>
+                                </div>
+                                <div class="stat-number"><?php echo number_format($stats['confirmed_appointments']); ?></div>
+                                <div class="stat-label">Confirmed</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-6">
                             <div class="stat-card">
                                 <div class="stat-icon" style="background: linear-gradient(135deg, #3b82f6, #60a5fa);">
                                     <i class="fas fa-cog"></i>
                                 </div>
-                                <div class="stat-number"><?php echo number_format($stats['processing_orders']); ?></div>
-                                <div class="stat-label">Processing</div>
+                                <div class="stat-number"><?php echo number_format($stats['in_progress_appointments']); ?></div>
+                                <div class="stat-label">In Progress</div>
                             </div>
                         </div>
-                        <div class="col-md-3 col-sm-6">
+                        <div class="col-md-2 col-sm-6">
                             <div class="stat-card">
                                 <div class="stat-icon" style="background: linear-gradient(135deg, #10b981, #34d399);">
-                                    <i class="fas fa-check"></i>
+                                    <i class="fas fa-check-circle"></i>
                                 </div>
-                                <div class="stat-number"><?php echo number_format($stats['completed_orders']); ?></div>
+                                <div class="stat-number"><?php echo number_format($stats['completed_appointments']); ?></div>
                                 <div class="stat-label">Completed</div>
+                            </div>
+                        </div>
+                        <div class="col-md-2 col-sm-6">
+                            <div class="stat-card">
+                                <div class="stat-icon" style="background: linear-gradient(135deg, #ef4444, #f87171);">
+                                    <i class="fas fa-times-circle"></i>
+                                </div>
+                                <div class="stat-number"><?php echo number_format($stats['cancelled_appointments']); ?></div>
+                                <div class="stat-label">Cancelled</div>
                             </div>
                         </div>
                     </div>
                     <?php endif; ?>
 
-                    <!-- Orders Table -->
-                    <div class="orders-table-container">
+                    <!-- Appointments Table -->
+                    <div class="appointments-table-container">
                         <div class="d-flex justify-content-between align-items-center mb-3">
-                            <h5 class="mb-0">Recent Orders</h5>
+                            <h5 class="mb-0">Recent Appointments</h5>
                             <div class="d-flex gap-2">
-                                <select class="form-select form-select-sm" style="width: auto;" onchange="filterOrders(this.value)">
+                                <select class="form-select form-select-sm" style="width: auto;" onchange="filterAppointments(this.value)">
                                     <option value="">All Status</option>
-                                    <option value="pending">Pending</option>
-                                    <option value="processing">Processing</option>
+                                    <option value="scheduled">Scheduled</option>
+                                    <option value="confirmed">Confirmed</option>
+                                    <option value="in_progress">In Progress</option>
                                     <option value="completed">Completed</option>
                                     <option value="cancelled">Cancelled</option>
                                 </select>
                             </div>
                         </div>
 
-                        <?php if (empty($orders)): ?>
+                        <?php if (empty($appointments)): ?>
                             <div class="empty-state">
-                                <i class="fas fa-inbox"></i>
-                                <h4>No Orders Found</h4>
-                                <p>When customers place orders, they will appear here.</p>
+                                <i class="fas fa-calendar-times"></i>
+                                <h4>No Appointments Found</h4>
+                                <p>When customers schedule repair appointments, they will appear here.</p>
                             </div>
                         <?php else: ?>
                             <div class="table-responsive">
-                                <table class="table" id="ordersTable">
+                                <table class="table" id="appointmentsTable">
                                     <thead>
                                         <tr>
-                                            <th>Order</th>
+                                            <th>Appointment</th>
                                             <th>Customer</th>
-                                            <th>Items</th>
-                                            <th>Total</th>
+                                            <th>Issue</th>
+                                            <th>Specialist</th>
+                                            <th>Date & Time</th>
                                             <th>Status</th>
-                                            <th>Date</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <?php foreach ($orders as $order): ?>
-                                            <tr data-status="<?php echo strtolower($order['order_status']); ?>">
+                                        <?php foreach ($appointments as $appointment): ?>
+                                            <tr data-status="<?php echo strtolower($appointment['status']); ?>">
                                                 <td>
                                                     <div>
-                                                        <strong>#<?php echo $order['order_id']; ?></strong><br>
-                                                        <small class="text-muted"><?php echo htmlspecialchars($order['invoice_no']); ?></small>
+                                                        <strong>#<?php echo $appointment['appointment_id']; ?></strong><br>
+                                                        <small class="text-muted">
+                                                            <?php echo date('M d, Y', strtotime($appointment['created_at'])); ?>
+                                                        </small>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <div class="order-customer">
-                                                        <div class="customer-avatar">
-                                                            <?php echo strtoupper(substr($order['customer_name'], 0, 1)); ?>
+                                                    <div>
+                                                        <strong><?php echo htmlspecialchars($appointment['customer_name']); ?></strong><br>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-phone"></i>
+                                                            <?php echo htmlspecialchars($appointment['customer_phone']); ?>
+                                                        </small>
+                                                    </div>
+                                                </td>
+                                                <td>
+                                                    <div class="appointment-details">
+                                                        <div class="appointment-icon">
+                                                            <i class="<?php echo htmlspecialchars($appointment['icon_class']); ?>"></i>
                                                         </div>
                                                         <div>
-                                                            <strong><?php echo htmlspecialchars($order['customer_name']); ?></strong><br>
-                                                            <small class="text-muted"><?php echo htmlspecialchars($order['customer_email']); ?></small>
+                                                            <strong><?php echo htmlspecialchars($appointment['issue_name']); ?></strong><br>
+                                                            <?php if ($appointment['device_info']): ?>
+                                                                <small class="text-muted"><?php echo htmlspecialchars($appointment['device_info']); ?></small>
+                                                            <?php endif; ?>
                                                         </div>
                                                     </div>
                                                 </td>
                                                 <td>
-                                                    <span class="badge bg-info rounded-pill">
-                                                        <?php echo $order['total_items']; ?> items
-                                                    </span>
+                                                    <div>
+                                                        <strong><?php echo htmlspecialchars($appointment['specialist_name']); ?></strong><br>
+                                                        <small class="text-muted"><?php echo htmlspecialchars($appointment['specialist_email']); ?></small>
+                                                    </div>
                                                 </td>
                                                 <td>
-                                                    <strong>GHS <?php echo number_format($order['total_amount'], 2); ?></strong>
+                                                    <div>
+                                                        <?php echo date('M d, Y', strtotime($appointment['appointment_date'])); ?><br>
+                                                        <small class="text-muted">
+                                                            <i class="fas fa-clock"></i>
+                                                            <?php echo date('g:i A', strtotime($appointment['appointment_time'])); ?>
+                                                        </small>
+                                                    </div>
                                                 </td>
                                                 <td>
                                                     <?php
-                                                    $status_class = match(strtolower($order['order_status'])) {
-                                                        'pending' => 'bg-warning text-dark',
-                                                        'processing' => 'bg-info text-white',
+                                                    $status_class = match(strtolower($appointment['status'])) {
+                                                        'scheduled' => 'bg-warning text-dark',
+                                                        'confirmed' => 'bg-info text-white',
+                                                        'in_progress' => 'bg-primary text-white',
                                                         'completed' => 'bg-success text-white',
                                                         'cancelled' => 'bg-danger text-white',
                                                         default => 'bg-secondary text-white'
                                                     };
                                                     ?>
                                                     <span class="status-badge <?php echo $status_class; ?>">
-                                                        <?php echo ucfirst($order['order_status']); ?>
+                                                        <?php echo ucfirst(str_replace('_', ' ', $appointment['status'])); ?>
                                                     </span>
                                                 </td>
                                                 <td>
-                                                    <div>
-                                                        <?php echo date('M d, Y', strtotime($order['order_date'])); ?><br>
-                                                        <small class="text-muted"><?php echo date('h:i A', strtotime($order['order_date'])); ?></small>
-                                                    </div>
-                                                </td>
-                                                <td>
                                                     <div class="d-flex gap-1 flex-wrap">
-                                                        <a href="#" class="btn-action btn-view" onclick="viewOrderDetails(<?php echo $order['order_id']; ?>)">
-                                                            <i class="fas fa-eye"></i>
-                                                        </a>
-
-                                                        <?php if (strtolower($order['order_status']) !== 'completed'): ?>
+                                                        <?php if (strtolower($appointment['status']) !== 'completed' && strtolower($appointment['status']) !== 'cancelled'): ?>
                                                             <div class="btn-group">
                                                                 <button type="button" class="btn-status dropdown-toggle" data-bs-toggle="dropdown">
                                                                     <i class="fas fa-cog"></i>
                                                                 </button>
                                                                 <ul class="dropdown-menu">
-                                                                    <?php if (strtolower($order['order_status']) !== 'processing'): ?>
+                                                                    <?php if (strtolower($appointment['status']) === 'scheduled'): ?>
                                                                     <li>
                                                                         <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
-                                                                            <input type="hidden" name="status" value="processing">
+                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
+                                                                            <input type="hidden" name="status" value="confirmed">
                                                                             <button type="submit" name="update_status" class="dropdown-item">
-                                                                                <i class="fas fa-cog text-info"></i> Set Processing
+                                                                                <i class="fas fa-check text-info"></i> Confirm Appointment
                                                                             </button>
                                                                         </form>
                                                                     </li>
                                                                     <?php endif; ?>
+
+                                                                    <?php if (in_array(strtolower($appointment['status']), ['scheduled', 'confirmed'])): ?>
                                                                     <li>
                                                                         <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
+                                                                            <input type="hidden" name="status" value="in_progress">
+                                                                            <button type="submit" name="update_status" class="dropdown-item">
+                                                                                <i class="fas fa-cog text-primary"></i> Start Service
+                                                                            </button>
+                                                                        </form>
+                                                                    </li>
+                                                                    <?php endif; ?>
+
+                                                                    <?php if (strtolower($appointment['status']) === 'in_progress'): ?>
+                                                                    <li>
+                                                                        <form method="POST" style="display: inline;">
+                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
                                                                             <input type="hidden" name="status" value="completed">
                                                                             <button type="submit" name="update_status" class="dropdown-item">
                                                                                 <i class="fas fa-check text-success"></i> Mark Completed
                                                                             </button>
                                                                         </form>
                                                                     </li>
+                                                                    <?php endif; ?>
+
                                                                     <li><hr class="dropdown-divider"></li>
                                                                     <li>
                                                                         <form method="POST" style="display: inline;">
-                                                                            <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
+                                                                            <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
                                                                             <input type="hidden" name="status" value="cancelled">
-                                                                            <button type="submit" name="update_status" class="dropdown-item text-danger" onclick="return confirm('Are you sure you want to cancel this order?')">
-                                                                                <i class="fas fa-times text-danger"></i> Cancel Order
+                                                                            <button type="submit" name="update_status" class="dropdown-item text-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                                                                <i class="fas fa-times text-danger"></i> Cancel Appointment
                                                                             </button>
                                                                         </form>
                                                                     </li>
                                                                 </ul>
                                                             </div>
                                                         <?php endif; ?>
+
+                                                        <a href="tel:<?php echo $appointment['customer_phone']; ?>" class="btn-action btn-view" title="Call Customer">
+                                                            <i class="fas fa-phone"></i>
+                                                        </a>
                                                     </div>
                                                 </td>
                                             </tr>
@@ -653,58 +713,10 @@ try {
         </div>
     </div>
 
-    <!-- Order Details Modal -->
-    <div class="modal fade" id="orderDetailsModal" tabindex="-1">
-        <div class="modal-dialog modal-xl">
-            <div class="modal-content">
-                <div class="modal-header bg-light">
-                    <h5 class="modal-title">
-                        <i class="fas fa-receipt text-primary"></i> Order Details
-                    </h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                </div>
-                <div class="modal-body" id="orderDetailsContent">
-                    <!-- Order details will be loaded here -->
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        function viewOrderDetails(orderId) {
-            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-            const content = document.getElementById('orderDetailsContent');
-
-            content.innerHTML = `
-                <div class="text-center p-4">
-                    <i class="fas fa-spinner fa-spin fa-2x text-primary"></i>
-                    <p class="mt-3 mb-0">Loading order details...</p>
-                </div>
-            `;
-            modal.show();
-
-            // Fetch order details via AJAX
-            fetch(`../actions/get_admin_order_details.php?order_id=${orderId}`)
-                .then(response => response.text())
-                .then(data => {
-                    content.innerHTML = data;
-                })
-                .catch(error => {
-                    content.innerHTML = `
-                        <div class="alert alert-danger">
-                            <i class="fas fa-exclamation-triangle"></i>
-                            Error loading order details. Please try again.
-                        </div>
-                    `;
-                });
-        }
-
-        function filterOrders(status) {
-            const table = document.getElementById('ordersTable');
+        function filterAppointments(status) {
+            const table = document.getElementById('appointmentsTable');
             const rows = table.querySelectorAll('tbody tr');
 
             rows.forEach(row => {
@@ -716,13 +728,10 @@ try {
             });
         }
 
-        // Auto-refresh orders every 30 seconds
+        // Auto-refresh appointments every 60 seconds
         setInterval(() => {
-            // Only refresh if no modal is open
-            if (!document.querySelector('.modal.show')) {
-                location.reload();
-            }
-        }, 30000);
+            location.reload();
+        }, 60000);
     </script>
 </body>
 </html>

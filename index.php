@@ -1079,40 +1079,107 @@ try {
 		.brands-grid {
 			display: grid;
 			grid-template-columns: repeat(6, 1fr);
-			gap: 30px;
-			max-width: 1200px;
+			gap: 25px;
+			max-width: 1400px;
 			margin: 0 auto;
+			padding: 20px;
 		}
 
 		.brand-card {
-			background: white;
-			border: 1px solid #e5e7eb;
-			border-radius: 12px;
-			padding: 30px 20px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			border: none;
+			border-radius: 20px;
+			padding: 25px 15px;
 			text-align: center;
-			transition: all 0.3s ease;
+			transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
 			display: flex;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			height: 100px;
+			height: 120px;
+			position: relative;
+			overflow: hidden;
+			cursor: pointer;
+		}
+
+		.brand-card:nth-child(6n+1) { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
+		.brand-card:nth-child(6n+2) { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
+		.brand-card:nth-child(6n+3) { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
+		.brand-card:nth-child(6n+4) { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
+		.brand-card:nth-child(6n+5) { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
+		.brand-card:nth-child(6n+6) { background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%); }
+
+		.brand-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, rgba(255,255,255,0.05) 100%);
+			opacity: 0;
+			transition: opacity 0.3s ease;
+		}
+
+		.brand-card:hover::before {
+			opacity: 1;
 		}
 
 		.brand-card:hover {
-			transform: translateY(-5px);
-			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
-			border-color: #008060;
+			transform: translateY(-8px) scale(1.05);
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
 		}
 
 		.brand-card img {
-			max-width: 80px;
-			max-height: 50px;
+			max-width: 70px;
+			max-height: 40px;
 			object-fit: contain;
+			filter: brightness(0) invert(1);
+			transition: all 0.3s ease;
+			margin-bottom: 8px;
+		}
+
+		.brand-card:hover img {
+			filter: brightness(0) invert(1) drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+			transform: scale(1.1);
+		}
+
+		.brand-name {
+			color: white;
+			font-size: 0.85rem;
+			font-weight: 600;
+			text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+			letter-spacing: 0.5px;
+		}
+
+		@media (max-width: 1200px) {
+			.brands-grid {
+				grid-template-columns: repeat(5, 1fr);
+				gap: 20px;
+			}
+		}
+
+		@media (max-width: 992px) {
+			.brands-grid {
+				grid-template-columns: repeat(4, 1fr);
+				gap: 18px;
+			}
 		}
 
 		@media (max-width: 768px) {
 			.brands-grid {
 				grid-template-columns: repeat(3, 1fr);
-				gap: 20px;
+				gap: 15px;
+			}
+			.brand-card {
+				height: 100px;
+				padding: 20px 10px;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.brands-grid {
+				grid-template-columns: repeat(2, 1fr);
 			}
 		}
 
@@ -1599,6 +1666,220 @@ try {
 			width: 100%;
 			height: auto;
 			border-radius: 12px;
+		}
+
+		/* Repair Studio Section */
+		.repair-studio-section {
+			padding: 80px 0;
+			background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.repair-content {
+			padding-right: 2rem;
+		}
+
+		.repair-badge {
+			display: inline-flex;
+			align-items: center;
+			background: linear-gradient(135deg, #10b981, #34d399);
+			color: white;
+			padding: 8px 16px;
+			border-radius: 25px;
+			font-size: 0.9rem;
+			font-weight: 600;
+			margin-bottom: 1.5rem;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.repair-title {
+			font-size: 3rem;
+			font-weight: 700;
+			color: #047857;
+			margin-bottom: 1.5rem;
+			line-height: 1.2;
+		}
+
+		.repair-description {
+			font-size: 1.2rem;
+			color: #065f46;
+			margin-bottom: 2rem;
+			line-height: 1.6;
+		}
+
+		.repair-features {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+			margin-bottom: 2.5rem;
+		}
+
+		.feature-item {
+			display: flex;
+			align-items: center;
+			gap: 0.75rem;
+			color: #047857;
+			font-weight: 500;
+		}
+
+		.feature-item i {
+			width: 20px;
+			height: 20px;
+			background: linear-gradient(135deg, #10b981, #34d399);
+			color: white;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.8rem;
+		}
+
+		.repair-cta-btn {
+			display: inline-flex;
+			align-items: center;
+			background: linear-gradient(135deg, #10b981, #34d399);
+			color: white;
+			padding: 15px 30px;
+			border-radius: 50px;
+			text-decoration: none;
+			font-weight: 600;
+			font-size: 1.1rem;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
+		}
+
+		.repair-cta-btn:hover {
+			background: linear-gradient(135deg, #059669, #10b981);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+			color: white;
+		}
+
+		.repair-visual {
+			position: relative;
+		}
+
+		.repair-image-container {
+			position: relative;
+			border-radius: 20px;
+			overflow: hidden;
+			margin-bottom: 2rem;
+		}
+
+		.repair-main-image {
+			width: 100%;
+			height: 400px;
+			object-fit: cover;
+			border-radius: 20px;
+		}
+
+		.floating-elements {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+		}
+
+		.floating-icon {
+			position: absolute;
+			width: 60px;
+			height: 60px;
+			background: rgba(255, 255, 255, 0.95);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+			animation: float 3s ease-in-out infinite;
+		}
+
+		.floating-icon i {
+			font-size: 1.5rem;
+			color: #10b981;
+		}
+
+		.floating-icon.phone {
+			top: 15%;
+			right: 10%;
+			animation-delay: 0s;
+		}
+
+		.floating-icon.laptop {
+			top: 60%;
+			left: 5%;
+			animation-delay: 1s;
+		}
+
+		.floating-icon.tablet {
+			top: 35%;
+			right: 15%;
+			animation-delay: 2s;
+		}
+
+		.floating-icon.watch {
+			bottom: 15%;
+			right: 25%;
+			animation-delay: 1.5s;
+		}
+
+		@keyframes float {
+			0%, 100% { transform: translateY(0px); }
+			50% { transform: translateY(-10px); }
+		}
+
+		.repair-stats {
+			display: flex;
+			justify-content: space-around;
+			background: rgba(255, 255, 255, 0.95);
+			border-radius: 15px;
+			padding: 1.5rem;
+			box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
+		}
+
+		.stat-item {
+			text-align: center;
+		}
+
+		.stat-number {
+			font-size: 2rem;
+			font-weight: 700;
+			color: #047857;
+			margin-bottom: 0.25rem;
+		}
+
+		.stat-label {
+			font-size: 0.9rem;
+			color: #6b7280;
+			font-weight: 500;
+		}
+
+		@media (max-width: 768px) {
+			.repair-title {
+				font-size: 2rem;
+			}
+
+			.repair-content {
+				padding-right: 0;
+				margin-bottom: 3rem;
+			}
+
+			.repair-features {
+				flex-direction: row;
+				flex-wrap: wrap;
+				gap: 0.5rem;
+			}
+
+			.floating-icon {
+				width: 45px;
+				height: 45px;
+			}
+
+			.floating-icon i {
+				font-size: 1.2rem;
+			}
 		}
 
 		/* Most Popular Categories */
@@ -3226,6 +3507,81 @@ try {
 		</div>
 	</section>
 
+	<!-- Repair Studio Section -->
+	<section class="repair-studio-section">
+		<div class="container-fluid">
+			<div class="row align-items-center">
+				<div class="col-lg-6">
+					<div class="repair-content">
+						<div class="repair-badge">
+							<i class="fas fa-tools me-2"></i>
+							Professional Repair Services
+						</div>
+						<h2 class="repair-title">Get Your Device Fixed by Experts</h2>
+						<p class="repair-description">
+							From cracked screens to battery issues, our certified technicians can repair any device.
+							Schedule your appointment today and get your gadgets working like new again.
+						</p>
+						<div class="repair-features">
+							<div class="feature-item">
+								<i class="fas fa-shield-alt"></i>
+								<span>Certified Technicians</span>
+							</div>
+							<div class="feature-item">
+								<i class="fas fa-clock"></i>
+								<span>Same-Day Service</span>
+							</div>
+							<div class="feature-item">
+								<i class="fas fa-award"></i>
+								<span>90-Day Warranty</span>
+							</div>
+						</div>
+						<a href="repair_services.php" class="repair-cta-btn">
+							<i class="fas fa-calendar-plus me-2"></i>
+							Schedule Repair
+						</a>
+					</div>
+				</div>
+				<div class="col-lg-6">
+					<div class="repair-visual">
+						<div class="repair-image-container">
+							<img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=800&auto=format&fit=crop"
+								 alt="Device Repair Services" class="repair-main-image">
+							<div class="floating-elements">
+								<div class="floating-icon phone">
+									<i class="fas fa-mobile-alt"></i>
+								</div>
+								<div class="floating-icon laptop">
+									<i class="fas fa-laptop"></i>
+								</div>
+								<div class="floating-icon tablet">
+									<i class="fas fa-tablet-alt"></i>
+								</div>
+								<div class="floating-icon watch">
+									<i class="fas fa-stopwatch"></i>
+								</div>
+							</div>
+						</div>
+						<div class="repair-stats">
+							<div class="stat-item">
+								<div class="stat-number">2500+</div>
+								<div class="stat-label">Devices Repaired</div>
+							</div>
+							<div class="stat-item">
+								<div class="stat-number">98%</div>
+								<div class="stat-label">Success Rate</div>
+							</div>
+							<div class="stat-item">
+								<div class="stat-number">24h</div>
+								<div class="stat-label">Average Turnaround</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</section>
+
 	<!-- Most Popular Categories -->
 	<section class="popular-categories">
 		<div class="container-fluid">
@@ -3419,19 +3775,97 @@ try {
 			<p class="section-sub text-center">Trusted makers of phones, cameras, laptops & accessories</p>
 
 			<div class="brands-grid">
-				<div class="brand-card"><img src="https://logo.clearbit.com/apple.com" alt="Apple"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/dell.com" alt="Dell"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/hp.com" alt="HP"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/asus.com" alt="ASUS"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/acer.com" alt="Acer"></div>
+				<!-- Row 1: Computer & Laptop Brands -->
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/apple.com" alt="Apple">
+					<div class="brand-name">Apple</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/dell.com" alt="Dell">
+					<div class="brand-name">Dell</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/hp.com" alt="HP">
+					<div class="brand-name">HP</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo">
+					<div class="brand-name">Lenovo</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/asus.com" alt="ASUS">
+					<div class="brand-name">ASUS</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/acer.com" alt="Acer">
+					<div class="brand-name">Acer</div>
+				</div>
 
-				<div class="brand-card"><img src="https://logo.clearbit.com/canon.com" alt="Canon"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/nikon.com" alt="Nikon"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/sony.com" alt="Sony"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/samsung.com" alt="Samsung"></div>
-				<div class="brand-card"><img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft"></div>
+				<!-- Row 2: Camera & Photography Brands -->
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/canon.com" alt="Canon">
+					<div class="brand-name">Canon</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/nikon.com" alt="Nikon">
+					<div class="brand-name">Nikon</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/sony.com" alt="Sony">
+					<div class="brand-name">Sony</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/panasonic.com" alt="Panasonic">
+					<div class="brand-name">Panasonic</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://1000logos.net/wp-content/uploads/2018/02/Fujifilm-logo.png" alt="Fujifilm">
+					<div class="brand-name">Fujifilm</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/gopro.com" alt="GoPro">
+					<div class="brand-name">GoPro</div>
+				</div>
+
+				<!-- Row 3: Tech & Mobile Brands -->
+				<div class="brand-card">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/DJI_logo.svg/2560px-DJI_logo.svg.png" alt="DJI">
+					<div class="brand-name">DJI</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/samsung.com" alt="Samsung">
+					<div class="brand-name">Samsung</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/google.com" alt="Google">
+					<div class="brand-name">Google</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Xiaomi_logo_%282021-%29.svg/2048px-Xiaomi_logo_%282021-%29.svg.png" alt="Xiaomi">
+					<div class="brand-name">Xiaomi</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/04/Huawei_Standard_logo.svg/2560px-Huawei_Standard_logo.svg.png" alt="Huawei">
+					<div class="brand-name">Huawei</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/microsoft.com" alt="Microsoft">
+					<div class="brand-name">Microsoft</div>
+				</div>
+
+				<!-- Row 4: Gaming & Accessories -->
+				<div class="brand-card">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/9e/MSI_Logo.svg/2560px-MSI_Logo.svg.png" alt="MSI">
+					<div class="brand-name">MSI</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ed/Razer_Logo.svg/2560px-Razer_Logo.svg.png" alt="Razer">
+					<div class="brand-name">Razer</div>
+				</div>
+				<div class="brand-card">
+					<img src="https://logo.clearbit.com/amazon.com" alt="Amazon">
+					<div class="brand-name">Amazon</div>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -3618,9 +4052,12 @@ try {
 		}
 
 		// Dropdown navigation functions
+		let dropdownTimeout;
+
 		function showDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
 			if (dropdown) {
+				clearTimeout(dropdownTimeout);
 				dropdown.classList.add('show');
 			}
 		}
@@ -3628,14 +4065,36 @@ try {
 		function hideDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
 			if (dropdown) {
-				// Add small delay to allow moving to dropdown
-				setTimeout(() => {
-					if (!dropdown.matches(':hover') && !dropdown.closest('.shop-categories-btn').matches(':hover')) {
-						dropdown.classList.remove('show');
-					}
-				}, 100);
+				// Clear any existing timeout
+				clearTimeout(dropdownTimeout);
+				// Set a delay before hiding to allow moving to dropdown
+				dropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
 			}
 		}
+
+		// Enhanced dropdown behavior
+		document.addEventListener('DOMContentLoaded', function() {
+			const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+			const dropdown = document.getElementById('shopDropdown');
+
+			if (shopCategoriesBtn && dropdown) {
+				// Show dropdown on button hover
+				shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+
+				// Hide dropdown when leaving button (with delay)
+				shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+
+				// Keep dropdown open when hovering over it
+				dropdown.addEventListener('mouseenter', function() {
+					clearTimeout(dropdownTimeout);
+				});
+
+				// Hide dropdown when leaving dropdown area
+				dropdown.addEventListener('mouseleave', hideDropdown);
+			}
+		});
 
 		// Smooth scrolling for internal links
 		document.querySelectorAll('a[href^="#"]').forEach(anchor => {

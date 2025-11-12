@@ -1803,14 +1803,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         <img src="uploads/products/<?php echo $product['product_image']; ?>"
                                             alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                                             style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;"
-                                            onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'"
+                                            onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
                                             onerror="this.src='https://via.placeholder.com/200x200?text=No+Image';">
                                     </div>
 
                                     <!-- Product Content -->
                                     <div style="padding: 25px;">
                                         <!-- Product Title -->
-                                        <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'">
+                                        <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
                                             <?php echo htmlspecialchars($product['product_title']); ?>
                                         </h3>
 
@@ -1840,7 +1840,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         </div>
 
                                         <!-- Rating -->
-                                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
                                             <div style="color: #fbbf24; margin-right: 8px;">
                                                 <?php
                                                 $full_stars = floor($rating);
@@ -1861,6 +1861,30 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
                                         </div>
 
+                                        <!-- Social Proof -->
+                                        <div style="margin-bottom: 20px;">
+                                            <?php
+                                            // Generate random social proof messages
+                                            $social_proofs = [
+                                                rand(1, 5) . " people just looked at this",
+                                                rand(2, 8) . " people have this in their basket",
+                                                rand(3, 12) . " people viewed this today",
+                                                rand(1, 6) . " people bought this recently",
+                                                rand(2, 7) . " people are considering this item",
+                                                rand(4, 15) . " people viewed this in the last hour",
+                                                rand(1, 4) . " people added this to cart today",
+                                                rand(2, 9) . " people are watching this item",
+                                                rand(3, 10) . " people have this on their wishlist",
+                                                rand(1, 5) . " people just purchased this"
+                                            ];
+                                            $selected_proof = $social_proofs[array_rand($social_proofs)];
+                                            ?>
+                                            <div style="background: rgba(79, 70, 229, 0.1); color: #4f46e5; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px;">
+                                                <i class="fas fa-eye" style="font-size: 0.8rem;"></i>
+                                                <?php echo $selected_proof; ?>
+                                            </div>
+                                        </div>
+
                                         <!-- Pricing -->
                                         <div style="margin-bottom: 25px;">
                                             <div style="display: flex; align-items: center; gap: 12px;">
@@ -1877,9 +1901,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         </div>
 
                                         <!-- View Details Button -->
-                                        <button onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'"
+                                        <button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
                                                 style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                            <i class="fas fa-shopping-cart"></i>
+                                            <i class="fas fa-eye"></i>
                                             View Details
                                         </button>
                                     </div>
@@ -1920,6 +1944,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <script>
         function viewProduct(productId) {
             window.location.href = 'single_product.php?id=' + productId;
+        }
+
+        function viewProductDetails(productId) {
+            window.location.href = 'single_product.php?pid=' + productId;
         }
 
         function selectCondition(element, price, condition) {

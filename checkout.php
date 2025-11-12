@@ -513,9 +513,9 @@ try {
                                 <label class="form-label">Email Address <span class="text-danger">*</span></label>
                                 <input type="email" class="form-control" name="email"
                                        value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['user_email'] ?? '') : ''; ?>"
-                                       <?php echo $is_logged_in ? 'readonly' : ''; ?> required>
+                                       required>
                                 <?php if ($is_logged_in): ?>
-                                    <small class="text-muted">Email cannot be changed for logged-in users</small>
+                                    <small class="text-muted">You can update your email address if needed</small>
                                 <?php endif; ?>
                             </div>
                             <div class="col-md-6 mb-3">

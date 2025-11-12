@@ -101,15 +101,18 @@ function removeFromCart(productId) {
 
 // Update quantity
 function updateQuantity(productId, quantity) {
+    // Convert to integer and enforce limits
+    quantity = parseInt(quantity);
+
     if (quantity < 1) {
-        removeFromCart(productId);
-        return;
+        quantity = 1; // Don't allow less than 1
+        document.getElementById(`qty-${productId}`).value = 1;
     }
 
     if (quantity > 99) {
+        quantity = 99;
         showNotification('Maximum quantity is 99', 'warning');
         document.getElementById(`qty-${productId}`).value = 99;
-        return;
     }
 
     const formData = new FormData();
@@ -127,25 +130,60 @@ function updateQuantity(productId, quantity) {
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
 
-            // Update the subtotal for this item - try multiple selectors
-            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+            // Update the subtotal for this item - more comprehensive approach
+            const cartItem = document.querySelector(`[data-product-id="${productId}"]`) ||
+                           document.querySelector(`tr[data-product-id="${productId}"]`) ||
+                           document.querySelector(`div[data-product-id="${productId}"]`);
+
             if (cartItem) {
-                // Try different price element selectors
-                let priceElement = cartItem.querySelector('.fw-bold.fs-5.text-success') ||
-                                 cartItem.querySelector('.price') ||
-                                 cartItem.querySelector('[class*="price"]') ||
-                                 cartItem.querySelector('.text-success');
+                // Find the unit price (try multiple approaches)
+                let unitPrice = 0;
+                const possibleUnitPriceElements = [
+                    cartItem.querySelector('.unit-price'),
+                    cartItem.querySelector('[data-unit-price]'),
+                    cartItem.querySelector('.fw-bold.text-primary.fs-5'),
+                    cartItem.querySelector('.product-price'),
+                    cartItem.querySelector('.price-per-unit')
+                ];
 
-                let unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5') ||
-                                     cartItem.querySelector('.unit-price') ||
-                                     cartItem.querySelector('[data-unit-price]');
+                for (let element of possibleUnitPriceElements) {
+                    if (element) {
+                        const priceText = element.textContent || element.getAttribute('data-unit-price') || '';
+                        const extractedPrice = parseFloat(priceText.replace(/[^\d.]/g, ''));
+                        if (!isNaN(extractedPrice) && extractedPrice > 0) {
+                            unitPrice = extractedPrice;
+                            break;
+                        }
+                    }
+                }
 
-                if (priceElement && unitPriceElement) {
-                    const unitPrice = parseFloat(unitPriceElement.textContent.replace(/[^\d.]/g, ''));
+                // Find the total price element to update
+                const totalPriceElements = [
+                    cartItem.querySelector('.item-total'),
+                    cartItem.querySelector('.fw-bold.fs-5.text-success'),
+                    cartItem.querySelector('.total-price'),
+                    cartItem.querySelector('.item-price-total'),
+                    cartItem.querySelector('[class*="total"]')
+                ];
+
+                let totalPriceElement = null;
+                for (let element of totalPriceElements) {
+                    if (element) {
+                        totalPriceElement = element;
+                        break;
+                    }
+                }
+
+                if (unitPrice > 0 && totalPriceElement) {
                     const newSubtotal = (unitPrice * quantity).toFixed(2);
-                    priceElement.textContent = `GHS ${newSubtotal}`;
+                    totalPriceElement.textContent = `GHS ${newSubtotal}`;
+
+                    // Add visual feedback
+                    totalPriceElement.style.fontWeight = 'bold';
+                    totalPriceElement.style.color = '#059669';
                 } else {
-                    // Fallback: reload the page to get updated prices
+                    // If we can't find price elements, reload page for updated totals
+                    console.log('Could not find price elements, reloading...');
                     setTimeout(() => location.reload(), 1000);
                 }
             }
@@ -159,6 +197,40 @@ function updateQuantity(productId, quantity) {
         console.error('Error:', error);
         showNotification('An error occurred. Please try again.', 'error');
     });
+}
+
+// Increment quantity
+function incrementQuantity(productId) {
+    const quantityInput = document.getElementById(`qty-${productId}`);
+    if (quantityInput) {
+        let currentQuantity = parseInt(quantityInput.value) || 1;
+        let newQuantity = currentQuantity + 1;
+
+        if (newQuantity > 99) {
+            showNotification('Maximum quantity is 99', 'warning');
+            return;
+        }
+
+        quantityInput.value = newQuantity;
+        updateQuantity(productId, newQuantity);
+    }
+}
+
+// Decrement quantity
+function decrementQuantity(productId) {
+    const quantityInput = document.getElementById(`qty-${productId}`);
+    if (quantityInput) {
+        let currentQuantity = parseInt(quantityInput.value) || 1;
+        let newQuantity = currentQuantity - 1;
+
+        if (newQuantity < 1) {
+            newQuantity = 1;
+            showNotification('Minimum quantity is 1', 'info');
+        }
+
+        quantityInput.value = newQuantity;
+        updateQuantity(productId, newQuantity);
+    }
 }
 
 // Empty cart
@@ -256,7 +328,7 @@ function showAddToCartModal(productId, productName, productPrice, productImage) 
             </div>
             <div class="cart-modal-body">
                 <div class="product-preview">
-                    <img src="${productImage || 'https://via.placeholder.com/80x80'}" alt="${productName}" class="product-image">
+                    <img src="${productImage || 'https://via.placeholder.com/80x80/8b5fbf/ffffff?text=Product'}" alt="${productName}" class="product-image" onerror="this.src='https://via.placeholder.com/80x80/8b5fbf/ffffff?text=Product'">
                     <div class="product-info">
                         <h4>${productName}</h4>
                         <div class="price-display">

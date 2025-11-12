@@ -413,13 +413,13 @@ try {
                                             </div>
                                             <div class="col-md-3 text-center">
                                                 <div class="quantity-control">
-                                                    <button type="button" class="quantity-btn" onclick="updateQuantity(<?php echo $item['p_id']; ?>, <?php echo $item['qty'] - 1; ?>)">
+                                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(<?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
                                                            min="1" max="99" id="qty-<?php echo $item['p_id']; ?>"
                                                            onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value)">
-                                                    <button type="button" class="quantity-btn" onclick="updateQuantity(<?php echo $item['p_id']; ?>, <?php echo $item['qty'] + 1; ?>)">
+                                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>

@@ -1321,8 +1321,20 @@ if (!$product) {
 
             const productId = img.getAttribute('data-product-id');
             const productTitle = img.getAttribute('data-product-title');
+            const productImageFromDB = img.getAttribute('data-product-image');
 
-            // Load main product image first
+            // Use direct database image URL if available
+            if (productImageFromDB && productImageFromDB.trim() !== '') {
+                productImages = [{
+                    url: productImageFromDB,
+                    filename: 'main-image',
+                    isMain: true
+                }];
+                updateGalleryDisplay();
+                return;
+            }
+
+            // Fallback: Try to fetch from upload system
             fetch(`actions/upload_product_image_action.php?action=get_image_url&product_id=${productId}`)
                 .then(response => response.json())
                 .then(data => {
@@ -1341,9 +1353,6 @@ if (!$product) {
                             isMain: true
                         }];
                     }
-
-                    // For now, just display the main image in gallery format
-                    // Future: Add logic to load additional images from bulk uploads
                     updateGalleryDisplay();
                 })
                 .catch(error => {

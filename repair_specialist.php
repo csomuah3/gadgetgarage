@@ -3,14 +3,38 @@ session_start();
 require_once __DIR__ . '/settings/core.php';
 require_once __DIR__ . '/settings/db_class.php';
 
-// Get repair issue types
+// Get issue details from URL
+$issue_id = isset($_GET['issue_id']) ? intval($_GET['issue_id']) : 0;
+$issue_name = isset($_GET['issue_name']) ? $_GET['issue_name'] : '';
+
+if ($issue_id <= 0) {
+    header('Location: repair_services.php');
+    exit;
+}
+
 try {
     $db = new db_connection();
     $db->db_connect();
-    $issue_types = $db->db_fetch_all("SELECT * FROM repair_issue_types ORDER BY issue_name");
+
+    // Get issue details
+    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = ?", [$issue_id]);
+
+    if (!$issue) {
+        header('Location: repair_services.php');
+        exit;
+    }
+
+    // Get specialists for this issue
+    $specialists_query = "SELECT s.*, si.issue_id
+                         FROM specialists s
+                         JOIN specialist_issues si ON s.specialist_id = si.specialist_id
+                         WHERE si.issue_id = ? AND s.is_available = 1
+                         ORDER BY s.rating DESC, s.experience_years DESC";
+    $specialists = $db->db_fetch_all($specialists_query, [$issue_id]);
+
 } catch (Exception $e) {
-    $issue_types = [];
-    $error_message = "Unable to load repair services. Please try again later.";
+    $error_message = "Unable to load specialists. Please try again later.";
+    $specialists = [];
 }
 ?>
 
@@ -19,7 +43,7 @@ try {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Repair Services - Gadget Garage</title>
+    <title>Select Specialist - <?php echo htmlspecialchars($issue_name); ?> - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -123,32 +147,12 @@ try {
             transform: translateY(-1px);
         }
 
-        /* Main Content */
+        /* Progress Steps */
         .hero-section {
-            padding: 4rem 0 2rem;
+            padding: 2rem 0 1rem;
             text-align: center;
             position: relative;
             z-index: 10;
-        }
-
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 1rem;
-        }
-
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: #065f46;
-            margin-bottom: 0.5rem;
-        }
-
-        .hero-description {
-            color: #6b7280;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
         }
 
         .progress-steps {
@@ -156,7 +160,7 @@ try {
             justify-content: center;
             align-items: center;
             gap: 2rem;
-            margin: 3rem 0;
+            margin: 2rem 0;
         }
 
         .step {
@@ -171,16 +175,22 @@ try {
             width: 30px;
             height: 30px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
+            background: #e5e7eb;
+            color: #6b7280;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
         }
 
+        .step.completed .step-number {
+            background: linear-gradient(135deg, #10b981, #34d399);
+            color: white;
+        }
+
         .step.active .step-number {
             background: linear-gradient(135deg, #047857, #059669);
+            color: white;
         }
 
         .step-separator {
@@ -189,30 +199,42 @@ try {
             background: #e5e7eb;
         }
 
-        /* Issue Types Grid */
-        .issues-section {
+        /* Main Content */
+        .main-content {
             padding: 2rem 0;
             position: relative;
             z-index: 10;
         }
 
         .section-title {
-            text-align: center;
             font-size: 2.5rem;
             font-weight: 700;
             color: #047857;
-            margin-bottom: 3rem;
+            margin-bottom: 1rem;
+            text-align: center;
         }
 
-        .issues-grid {
+        .issue-info {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin: 0 auto 3rem;
+            max-width: 600px;
+            text-align: center;
+            border: 1px solid rgba(16, 185, 129, 0.1);
+            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
+        }
+
+        .specialists-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 2rem;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        .issue-card {
+        .specialist-card {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-radius: 20px;
@@ -225,7 +247,7 @@ try {
             overflow: hidden;
         }
 
-        .issue-card::before {
+        .specialist-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -237,58 +259,81 @@ try {
             transition: transform 0.3s ease;
         }
 
-        .issue-card:hover {
+        .specialist-card:hover {
             transform: translateY(-8px);
             box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
         }
 
-        .issue-card:hover::before {
+        .specialist-card:hover::before {
             transform: scaleX(1);
         }
 
-        .issue-icon {
+        .specialist-avatar {
             width: 80px;
             height: 80px;
-            border-radius: 20px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #10b981, #34d399);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
             font-size: 2rem;
+            font-weight: 700;
             color: white;
-            background: linear-gradient(135deg, #10b981, #34d399);
         }
 
-        .issue-title {
-            font-size: 1.5rem;
+        .specialist-name {
+            font-size: 1.4rem;
             font-weight: 700;
             color: #047857;
-            margin-bottom: 1rem;
             text-align: center;
+            margin-bottom: 0.5rem;
         }
 
-        .issue-description {
+        .specialist-specialization {
             color: #6b7280;
             text-align: center;
             margin-bottom: 1.5rem;
-            line-height: 1.6;
+            font-style: italic;
         }
 
-        .issue-price {
+        .specialist-stats {
+            display: flex;
+            justify-content: space-around;
+            margin-bottom: 1.5rem;
+        }
+
+        .stat {
             text-align: center;
-            margin-top: auto;
         }
 
-        .price-range {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #059669;
+        .stat-value {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #047857;
         }
 
-        .price-label {
-            font-size: 0.9rem;
+        .stat-label {
+            font-size: 0.8rem;
             color: #6b7280;
-            margin-top: 0.25rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 2px;
+            margin-bottom: 1rem;
+        }
+
+        .star {
+            color: #fbbf24;
+            font-size: 1rem;
+        }
+
+        .star.empty {
+            color: #e5e7eb;
         }
 
         .continue-btn {
@@ -330,11 +375,19 @@ try {
             }
         }
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2rem;
-            }
+        .no-specialists {
+            text-align: center;
+            padding: 4rem 2rem;
+            color: #6b7280;
+        }
 
+        .no-specialists i {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
             .progress-steps {
                 flex-direction: column;
                 gap: 1rem;
@@ -344,7 +397,7 @@ try {
                 display: none;
             }
 
-            .issues-grid {
+            .specialists-grid {
                 grid-template-columns: 1fr;
                 padding: 0 1rem;
             }
@@ -370,9 +423,9 @@ try {
                 <a href="index.php" class="logo">
                     Gadget<span class="garage">Garage</span>
                 </a>
-                <a href="index.php" class="btn-back">
+                <a href="repair_services.php" class="btn-back">
                     <i class="fas fa-arrow-left"></i>
-                    Back to Home
+                    Back to Issues
                 </a>
             </div>
         </div>
@@ -381,23 +434,14 @@ try {
     <!-- Hero Section -->
     <section class="hero-section">
         <div class="container">
-            <div class="d-flex justify-content-center align-items-center mb-3">
-                <i class="fas fa-tools me-2" style="color: #10b981; font-size: 1.5rem;"></i>
-                <span style="color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Professional Repair Services</span>
-            </div>
-
-            <h1 class="hero-title">Device Repair Services</h1>
-            <p class="hero-subtitle">Get your device repaired by certified experts. Schedule an appointment</p>
-            <p class="hero-description">within 24 hours and receive expert care.</p>
-
             <!-- Progress Steps -->
             <div class="progress-steps">
-                <div class="step active">
+                <div class="step completed">
                     <div class="step-number">1</div>
                     <span>Issue Type</span>
                 </div>
                 <div class="step-separator"></div>
-                <div class="step">
+                <div class="step active">
                     <div class="step-number">2</div>
                     <span>Specialist</span>
                 </div>
@@ -407,13 +451,24 @@ try {
                     <span>Schedule</span>
                 </div>
             </div>
+
+            <!-- Issue Info -->
+            <div class="issue-info">
+                <h2 style="color: #047857; margin-bottom: 0.5rem;">
+                    <i class="<?php echo htmlspecialchars($issue['icon_class']); ?> me-2"></i>
+                    <?php echo htmlspecialchars($issue['issue_name']); ?>
+                </h2>
+                <p style="color: #6b7280; margin: 0;">
+                    <?php echo htmlspecialchars($issue['issue_description']); ?>
+                </p>
+            </div>
         </div>
     </section>
 
-    <!-- Issues Section -->
-    <section class="issues-section">
+    <!-- Specialists Section -->
+    <section class="main-content">
         <div class="container">
-            <h2 class="section-title">What's wrong with your device?</h2>
+            <h1 class="section-title">Choose Your Specialist</h1>
 
             <?php if (isset($error_message)): ?>
                 <div class="alert alert-danger text-center mb-4">
@@ -422,66 +477,113 @@ try {
                 </div>
             <?php endif; ?>
 
-            <div class="issues-grid">
-                <?php foreach ($issue_types as $issue): ?>
-                    <div class="issue-card" onclick="selectIssue(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name']); ?>')">
-                        <div class="issue-icon">
-                            <i class="<?php echo htmlspecialchars($issue['icon_class']); ?>"></i>
-                        </div>
-                        <h3 class="issue-title"><?php echo htmlspecialchars($issue['issue_name']); ?></h3>
-                        <p class="issue-description"><?php echo htmlspecialchars($issue['issue_description']); ?></p>
-                        <div class="issue-price">
-                            <div class="price-range">
-                                GHS <?php echo number_format($issue['estimated_cost_min'], 0); ?> -
-                                <?php echo number_format($issue['estimated_cost_max'], 0); ?>
+            <?php if (empty($specialists)): ?>
+                <div class="no-specialists">
+                    <i class="fas fa-user-times"></i>
+                    <h4>No Specialists Available</h4>
+                    <p>We're sorry, but there are no specialists available for this issue type at the moment.<br>
+                       Please contact us directly or try again later.</p>
+                    <a href="repair_services.php" class="btn btn-outline-primary mt-3">
+                        <i class="fas fa-arrow-left"></i> Choose Different Issue
+                    </a>
+                </div>
+            <?php else: ?>
+                <div class="specialists-grid">
+                    <?php foreach ($specialists as $specialist): ?>
+                        <div class="specialist-card" onclick="selectSpecialist(<?php echo $specialist['specialist_id']; ?>, '<?php echo htmlspecialchars($specialist['specialist_name']); ?>')">
+                            <div class="specialist-avatar">
+                                <?php echo strtoupper(substr($specialist['specialist_name'], 0, 2)); ?>
                             </div>
-                            <div class="price-label">Estimated Cost</div>
+
+                            <h3 class="specialist-name"><?php echo htmlspecialchars($specialist['specialist_name']); ?></h3>
+                            <p class="specialist-specialization"><?php echo htmlspecialchars($specialist['specialization']); ?></p>
+
+                            <div class="specialist-stats">
+                                <div class="stat">
+                                    <div class="stat-value"><?php echo $specialist['experience_years']; ?>+</div>
+                                    <div class="stat-label">Years Experience</div>
+                                </div>
+                                <div class="stat">
+                                    <div class="stat-value"><?php echo number_format($specialist['rating'], 1); ?></div>
+                                    <div class="stat-label">Rating</div>
+                                </div>
+                            </div>
+
+                            <div class="rating-stars">
+                                <?php
+                                $rating = $specialist['rating'];
+                                $fullStars = floor($rating);
+                                $halfStar = ($rating - $fullStars) >= 0.5;
+                                $emptyStars = 5 - $fullStars - ($halfStar ? 1 : 0);
+
+                                for ($i = 0; $i < $fullStars; $i++) {
+                                    echo '<i class="fas fa-star star"></i>';
+                                }
+                                if ($halfStar) {
+                                    echo '<i class="fas fa-star-half-alt star"></i>';
+                                }
+                                for ($i = 0; $i < $emptyStars; $i++) {
+                                    echo '<i class="fas fa-star star empty"></i>';
+                                }
+                                ?>
+                            </div>
+
+                            <?php if ($specialist['specialist_email']): ?>
+                                <p style="text-align: center; color: #6b7280; font-size: 0.9rem; margin: 0;">
+                                    <i class="fas fa-envelope me-1"></i>
+                                    <?php echo htmlspecialchars($specialist['specialist_email']); ?>
+                                </p>
+                            <?php endif; ?>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
+                    <?php endforeach; ?>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 
     <!-- Continue Button -->
-    <button class="continue-btn" id="continueBtn" onclick="proceedToSpecialist()">
+    <button class="continue-btn" id="continueBtn" onclick="proceedToSchedule()">
         Continue
         <i class="fas fa-arrow-right ms-2"></i>
     </button>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        let selectedIssue = null;
-        let selectedIssueName = '';
+        let selectedSpecialist = null;
+        let selectedSpecialistName = '';
 
-        function selectIssue(issueId, issueName) {
+        function selectSpecialist(specialistId, specialistName) {
             // Remove previous selection
-            document.querySelectorAll('.issue-card').forEach(card => {
+            document.querySelectorAll('.specialist-card').forEach(card => {
                 card.classList.remove('selected');
                 card.style.background = '';
                 card.style.border = '';
             });
 
-            // Select current issue
+            // Select current specialist
             event.currentTarget.classList.add('selected');
             event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
             event.currentTarget.style.border = '2px solid #10b981';
 
-            selectedIssue = issueId;
-            selectedIssueName = issueName;
+            selectedSpecialist = specialistId;
+            selectedSpecialistName = specialistName;
 
             // Show continue button
             document.getElementById('continueBtn').classList.add('show');
         }
 
-        function proceedToSpecialist() {
-            if (selectedIssue) {
-                window.location.href = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
+        function proceedToSchedule() {
+            if (selectedSpecialist) {
+                const urlParams = new URLSearchParams(window.location.search);
+                const issueId = urlParams.get('issue_id');
+                const issueName = urlParams.get('issue_name');
+
+                window.location.href = `repair_schedule.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}&specialist_id=${selectedSpecialist}&specialist_name=${encodeURIComponent(selectedSpecialistName)}`;
             }
         }
 
         // Add hover effects
-        document.querySelectorAll('.issue-card').forEach(card => {
+        document.querySelectorAll('.specialist-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 if (!this.classList.contains('selected')) {
                     this.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';

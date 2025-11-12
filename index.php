@@ -871,6 +871,7 @@ try {
 		/* ——— Layout shell ——— */
 		.hero-banner-section {
 			/* taller section like your screenshot */
+			width: 80%;
 			padding: 24px 0;
 			background: #ffffff;
 		}
@@ -2882,7 +2883,6 @@ try {
 	<section class="popular-categories">
 		<div class="container-fluid">
 			<h2 class="section-title text-center">Most Popular Categories</h2>
-			<p class="section-sub text-center">Top picks across our store</p>
 			<div class="row g-4 justify-content-center">
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">

@@ -34,344 +34,7 @@ try {
     $brands = [];
 }
 
-// Products are already fetched from database above
-// No hardcoded data needed - use real database products
-// Commenting out hardcoded data - will clean up rest
-$removed_hardcoded_products = [
-    // Smartphones
-    [
-        'id' => 1,
-        'category' => 'smartphones',
-        'brand' => 'apple',
-        'name' => 'iPhone 15 Pro Max',
-        'description' => 'Latest iPhone with Titanium design, A17 Pro chip, and advanced camera system',
-        'image' => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
-        'rating' => 4.8,
-        'reviews' => 156,
-        'conditions' => [
-            'excellent' => ['price' => 3200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2800, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2400, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['6.7-inch display', 'A17 Pro chip', '256GB storage', '48MP camera']
-    ],
-    [
-        'id' => 2,
-        'category' => 'smartphones',
-        'brand' => 'samsung',
-        'name' => 'Samsung Galaxy S24 Ultra',
-        'description' => 'Premium Android smartphone with S Pen, 200MP camera, and AI features',
-        'image' => 'https://images.unsplash.com/photo-1610945265064-0e34e5519bbf?w=400&h=400&fit=crop',
-        'rating' => 4.7,
-        'reviews' => 203,
-        'conditions' => [
-            'excellent' => ['price' => 2800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2400, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2000, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['6.8-inch display', 'Snapdragon 8 Gen 3', '256GB storage', '200MP camera']
-    ],
-    // Laptops
-    [
-        'id' => 3,
-        'category' => 'laptops',
-        'brand' => 'apple',
-        'name' => 'MacBook Pro 16-inch M3',
-        'description' => 'Professional laptop with M3 chip for creative professionals and developers',
-        'image' => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
-        'rating' => 4.9,
-        'reviews' => 89,
-        'conditions' => [
-            'excellent' => ['price' => 4800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 4200, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 3600, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['16-inch Liquid Retina display', 'M3 chip', '512GB SSD', '18-hour battery']
-    ],
-    [
-        'id' => 4,
-        'category' => 'laptops',
-        'brand' => 'dell',
-        'name' => 'Dell XPS 13',
-        'description' => 'Ultra-portable laptop with stunning InfinityEdge display and premium build',
-        'image' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=400&fit=crop',
-        'rating' => 4.6,
-        'reviews' => 124,
-        'conditions' => [
-            'excellent' => ['price' => 2400, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2000, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 1600, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['13.4-inch FHD+', 'Intel Core i7', '512GB SSD', '16GB RAM']
-    ],
-    // iPads
-    [
-        'id' => 5,
-        'category' => 'ipads',
-        'brand' => 'apple',
-        'name' => 'iPad Pro 12.9-inch M2',
-        'description' => 'Ultimate iPad experience with M2 chip and Liquid Retina XDR display',
-        'image' => 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop',
-        'rating' => 4.8,
-        'reviews' => 167,
-        'conditions' => [
-            'excellent' => ['price' => 7800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 7100, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 6200, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['12.9-inch XDR display', 'M2 chip', '256GB storage', 'Apple Pencil support']
-    ],
-    [
-        'id' => 6,
-        'category' => 'ipads',
-        'brand' => 'apple',
-        'name' => 'iPad Air 5th Gen',
-        'description' => 'Powerful iPad with M1 chip in a colorful and portable design',
-        'image' => 'https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=400&fit=crop',
-        'rating' => 4.7,
-        'reviews' => 98,
-        'conditions' => [
-            'excellent' => ['price' => 4200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 3800, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 3300, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['10.9-inch display', 'M1 chip', '64GB storage', 'Touch ID']
-    ],
-    // Cameras
-    [
-        'id' => 7,
-        'category' => 'cameras',
-        'brand' => 'canon',
-        'name' => 'Canon EOS R6 Mark II',
-        'description' => 'Full-frame mirrorless camera for professional photography and videography',
-        'image' => 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=400&fit=crop',
-        'rating' => 4.9,
-        'reviews' => 145,
-        'conditions' => [
-            'excellent' => ['price' => 3500, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 3000, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2500, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['24.2MP full-frame sensor', '4K video', 'In-body stabilization', 'Dual card slots']
-    ],
-    [
-        'id' => 8,
-        'category' => 'cameras',
-        'brand' => 'sony',
-        'name' => 'Sony A7 IV',
-        'description' => 'Versatile full-frame camera with exceptional image quality and performance',
-        'image' => 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=400&fit=crop',
-        'rating' => 4.8,
-        'reviews' => 178,
-        'conditions' => [
-            'excellent' => ['price' => 3800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 3300, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2800, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['33MP full-frame sensor', '4K 60p video', '5-axis stabilization', 'Dual CFexpress slots']
-    ],
-    // Video Equipment
-    [
-        'id' => 9,
-        'category' => 'video',
-        'brand' => 'sony',
-        'name' => 'Sony FX3 Cinema Camera',
-        'description' => 'Professional cinema camera with full-frame sensor for filmmaking',
-        'image' => 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=400&h=400&fit=crop',
-        'rating' => 4.9,
-        'reviews' => 67,
-        'conditions' => [
-            'excellent' => ['price' => 5200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 4600, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 4000, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['10-bit 4K recording', 'S-Log3 gamma', 'Dual base ISO', 'Professional audio inputs']
-    ],
-    [
-        'id' => 10,
-        'category' => 'video',
-        'brand' => 'blackmagic',
-        'name' => 'Blackmagic Pocket 6K Pro',
-        'description' => 'Compact cinema camera with Super 35 sensor and professional features',
-        'image' => 'https://images.unsplash.com/photo-1581833971394-9135dfe71455?w=400&h=400&fit=crop',
-        'rating' => 4.7,
-        'reviews' => 89,
-        'conditions' => [
-            'excellent' => ['price' => 2800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2400, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2000, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['6K Super 35 sensor', 'Built-in ND filters', 'CFast 2.0 & SD slots', 'Blackmagic RAW']
-    ],
-    // More Smartphones
-    [
-        'id' => 11,
-        'category' => 'smartphones',
-        'brand' => 'samsung',
-        'name' => 'Samsung Galaxy S23 Ultra',
-        'description' => 'Premium Android smartphone with S Pen, 200MP camera, and AI features',
-        'image' => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
-        'rating' => 4.6,
-        'reviews' => 142,
-        'conditions' => [
-            'excellent' => ['price' => 2900, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2500, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2100, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['6.8-inch display', 'Snapdragon 8 Gen 2', '256GB storage', '200MP camera']
-    ],
-    [
-        'id' => 12,
-        'category' => 'smartphones',
-        'brand' => 'apple',
-        'name' => 'iPhone 14 Pro',
-        'description' => 'Previous generation iPhone with A16 Bionic chip and Dynamic Island',
-        'image' => 'https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=400&h=400&fit=crop',
-        'rating' => 4.7,
-        'reviews' => 289,
-        'conditions' => [
-            'excellent' => ['price' => 2600, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2200, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 1800, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['6.1-inch display', 'A16 Bionic chip', '128GB storage', '48MP camera']
-    ],
-    // More Laptops
-    [
-        'id' => 13,
-        'category' => 'laptops',
-        'brand' => 'dell',
-        'name' => 'Dell XPS 15',
-        'description' => 'Premium 15-inch laptop with stunning 4K OLED display',
-        'image' => 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&h=400&fit=crop',
-        'rating' => 4.5,
-        'reviews' => 98,
-        'conditions' => [
-            'excellent' => ['price' => 3200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 2800, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2400, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['15.6-inch 4K OLED', 'Intel Core i7', '512GB SSD', '16GB RAM']
-    ],
-    [
-        'id' => 14,
-        'category' => 'laptops',
-        'brand' => 'apple',
-        'name' => 'MacBook Air M2',
-        'description' => 'Ultra-thin laptop with M2 chip and all-day battery life',
-        'image' => 'https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=400&h=400&fit=crop',
-        'rating' => 4.8,
-        'reviews' => 156,
-        'conditions' => [
-            'excellent' => ['price' => 3800, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 3400, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 3000, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['13.6-inch Liquid Retina', 'M2 chip', '256GB SSD', '18-hour battery']
-    ],
-    // More iPads
-    [
-        'id' => 15,
-        'category' => 'ipads',
-        'brand' => 'apple',
-        'name' => 'iPad 10th Gen',
-        'description' => 'Colorful and versatile iPad with A14 Bionic chip',
-        'image' => 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop',
-        'rating' => 4.4,
-        'reviews' => 203,
-        'conditions' => [
-            'excellent' => ['price' => 1200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 1000, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 800, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['10.9-inch display', 'A14 Bionic chip', '64GB storage', 'USB-C connector']
-    ],
-    [
-        'id' => 16,
-        'category' => 'ipads',
-        'brand' => 'apple',
-        'name' => 'iPad Mini 6th Gen',
-        'description' => 'Compact powerhouse with A15 Bionic and Apple Pencil support',
-        'image' => 'https://images.unsplash.com/photo-1561154464-82e9adf32764?w=400&h=400&fit=crop',
-        'rating' => 4.6,
-        'reviews' => 87,
-        'conditions' => [
-            'excellent' => ['price' => 1600, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 1400, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 1200, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['8.3-inch display', 'A15 Bionic chip', '256GB storage', 'Apple Pencil 2 support']
-    ],
-    // More Cameras
-    [
-        'id' => 17,
-        'category' => 'cameras',
-        'brand' => 'canon',
-        'name' => 'Canon EOS R5',
-        'description' => 'High-resolution full-frame mirrorless camera for professionals',
-        'image' => 'https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=400&h=400&fit=crop',
-        'rating' => 4.9,
-        'reviews' => 67,
-        'conditions' => [
-            'excellent' => ['price' => 4200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 3800, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 3400, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['45MP full-frame sensor', '8K video', 'In-body stabilization', 'Dual card slots']
-    ],
-    [
-        'id' => 18,
-        'category' => 'cameras',
-        'brand' => 'nikon',
-        'name' => 'Nikon Z6 II',
-        'description' => 'Versatile full-frame mirrorless camera with excellent low-light performance',
-        'image' => 'https://images.unsplash.com/photo-1502920917128-1aa500764cbd?w=400&h=400&fit=crop',
-        'rating' => 4.7,
-        'reviews' => 124,
-        'conditions' => [
-            'excellent' => ['price' => 3400, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 3000, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 2600, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['24.5MP full-frame sensor', '4K video', 'Dual processors', 'XQD/CFexpress slots']
-    ],
-    // More Video Equipment
-    [
-        'id' => 19,
-        'category' => 'video',
-        'brand' => 'blackmagic',
-        'name' => 'Blackmagic URSA Mini Pro 12K',
-        'description' => 'Professional cinema camera with revolutionary 12K sensor',
-        'image' => 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=400&h=400&fit=crop',
-        'rating' => 4.8,
-        'reviews' => 34,
-        'conditions' => [
-            'excellent' => ['price' => 6200, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 5600, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 5000, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['12K Super 35 sensor', 'Interchangeable lens mount', 'CFast 2.0 & SD slots', 'Blackmagic RAW']
-    ],
-    [
-        'id' => 20,
-        'category' => 'video',
-        'brand' => 'sony',
-        'name' => 'Sony A7S III',
-        'description' => 'Ultimate low-light video camera with 4K 120p recording',
-        'image' => 'https://images.unsplash.com/photo-1581833971394-9135dfe71455?w=400&h=400&fit=crop',
-        'rating' => 4.9,
-        'reviews' => 89,
-        'conditions' => [
-            'excellent' => ['price' => 4600, 'description' => 'Like new, no visible wear'],
-            'good' => ['price' => 4100, 'description' => 'Minor scratches, fully functional'],
-            'fair' => ['price' => 3600, 'description' => 'Visible wear, works perfectly']
-        ],
-        'features' => ['12.1MP full-frame sensor', '4K 120p video', 'Dual base ISO', 'S-Log3 recording']
-    ]
-];
-
-// Categories and brands already fetched from database above
-// Using real data instead of hardcoded arrays
+// Products and categories fetched from database above
 
 // Filter products based on URL parameters
 $category_filter = $_GET['category'] ?? 'all';
@@ -2116,8 +1779,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             <?php foreach ($products_to_display as $product): ?>
                                 <div class="product-card" style="background: white; border: 1px solid #e5e7eb; border-radius: 8px; overflow: hidden; transition: box-shadow 0.3s ease; margin-bottom: 30px;">
                                     <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
-                                        <img src="<?php echo $product['image']; ?>"
-                                            alt="<?php echo htmlspecialchars($product['name']); ?>"
+                                        <img src="<?php echo $product['product_image']; ?>"
+                                            alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                                             style="width: 100%; height: 200px; object-fit: contain;">
                                         <div class="product-actions" style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
                                             <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;">
@@ -2137,42 +1800,28 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                         <!-- Product Name -->
                                         <h5 style="color: #1f2937; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4;">
-                                            <?php echo htmlspecialchars($product['name']); ?>
+                                            <?php echo htmlspecialchars($product['product_title']); ?>
                                         </h5>
 
-                                        <!-- Product Rating -->
-                                        <div class="product-rating" style="display: flex; align-items: center; margin-bottom: 15px;">
-                                            <div class="stars" style="color: #fbbf24; display: flex; gap: 2px; margin-right: 8px;">
-                                                <?php
-                                                $rating = $product['rating'];
-                                                for ($i = 1; $i <= 5; $i++) {
-                                                    if ($i <= $rating) {
-                                                        echo '<i class="fas fa-star" style="font-size: 0.8rem;"></i>';
-                                                    } else {
-                                                        echo '<i class="far fa-star" style="font-size: 0.8rem;"></i>';
-                                                    }
-                                                }
-                                                ?>
-                                            </div>
+                                        <!-- Product Category -->
+                                        <div class="product-category" style="margin-bottom: 15px;">
+                                            <span style="background: #e5f3ff; color: #0066cc; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">
+                                                <?php echo htmlspecialchars($product['cat_name'] ?? 'Uncategorized'); ?>
+                                            </span>
                                         </div>
 
                                         <!-- Price -->
                                         <div class="product-pricing" style="margin-bottom: 15px;">
-                                            <?php
-                                            $original_price = $product['conditions']['excellent']['price'] + 800;
-                                            $sale_price = $product['conditions']['excellent']['price'];
-                                            ?>
                                             <div style="display: flex; align-items: center; gap: 8px;">
-                                                <span style="text-decoration: line-through; color: #9ca3af; font-size: 0.9rem;">GHS <?php echo number_format($original_price); ?></span>
-                                                <span style="color: #2563eb; font-size: 1.2rem; font-weight: 600;">GHS <?php echo number_format($sale_price); ?></span>
+                                                <span style="color: #059669; font-weight: 600; font-size: 1.2rem;">GHS <?php echo number_format($product['product_price']); ?></span>
                                             </div>
                                         </div>
 
-                                        <!-- Options Button -->
-                                        <button onclick="showConditionModal(<?php echo $product['id']; ?>)"
-                                                style="width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; cursor: pointer; transition: background-color 0.2s;">
-                                            OPTIONS
-                                        </button>
+                                        <!-- View Product Button -->
+                                        <a href="single_product.php?pid=<?php echo $product['product_id']; ?>"
+                                           style="display: block; width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; text-decoration: none; text-align: center; transition: background-color 0.2s;">
+                                            VIEW PRODUCT
+                                        </a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

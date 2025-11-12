@@ -14,16 +14,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $brand_name = trim($_POST['brand_name'] ?? '');
     $user_id = get_user_id();
 
-    // Handle both single category (legacy) and multiple categories
-    $category_ids = [];
-
-    if (isset($_POST['category_ids']) && is_array($_POST['category_ids'])) {
-        // New format: array of category IDs
-        $category_ids = array_filter(array_map('intval', $_POST['category_ids']), function($id) { return $id > 0; });
-    } elseif (isset($_POST['category_id']) && $_POST['category_id'] > 0) {
-        // Legacy format: single category ID
-        $category_ids = [(int)$_POST['category_id']];
-    }
+    // Simple single category approach
+    $category_id = isset($_POST['category_id']) ? (int)$_POST['category_id'] : 0;
 
     // Validate input
     if (empty($brand_name)) {
@@ -31,13 +23,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if (empty($category_ids)) {
-        echo json_encode(['status' => 'error', 'message' => 'Please select at least one category']);
+    if ($category_id <= 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Please select a category']);
         exit;
     }
 
     try {
-        $result = add_brand_ctr($brand_name, $category_ids, $user_id);
+        $result = add_brand_ctr($brand_name, $category_id, $user_id);
         echo json_encode($result);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to add brand: ' . $e->getMessage()]);

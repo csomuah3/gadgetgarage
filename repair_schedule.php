@@ -27,20 +27,29 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
         $device_info = $_POST['device_info'] ?? '';
         $issue_description = $_POST['issue_description'] ?? '';
 
+        // Escape values for security
+        $customer_id = $customer_id ? mysqli_real_escape_string($db->db_conn(), $customer_id) : 'NULL';
+        $specialist_id = mysqli_real_escape_string($db->db_conn(), $specialist_id);
+        $issue_id = mysqli_real_escape_string($db->db_conn(), $issue_id);
+        $appointment_date = mysqli_real_escape_string($db->db_conn(), $appointment_date);
+        $appointment_time = mysqli_real_escape_string($db->db_conn(), $appointment_time);
+        $customer_phone = mysqli_real_escape_string($db->db_conn(), $customer_phone);
+        $device_info = mysqli_real_escape_string($db->db_conn(), $device_info);
+        $issue_description = mysqli_real_escape_string($db->db_conn(), $issue_description);
+
         // Insert appointment
         $insert_query = "INSERT INTO repair_appointments
                         (customer_id, specialist_id, issue_id, appointment_date, appointment_time,
                          customer_phone, device_info, issue_description, status)
-                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, 'scheduled')";
+                        VALUES ($customer_id, $specialist_id, $issue_id, '$appointment_date', '$appointment_time',
+                               '$customer_phone', '$device_info', '$issue_description', 'scheduled')";
 
-        $result = $db->db_query($insert_query, [
-            $customer_id, $specialist_id, $issue_id, $appointment_date,
-            $appointment_time, $customer_phone, $device_info, $issue_description
-        ]);
+        $result = $db->db_write_query($insert_query);
 
         if ($result) {
             $success_message = "Your appointment has been scheduled successfully!";
-            $appointment_id = $db->db_lastinsert();
+            // Get the last inserted ID using mysqli_insert_id
+            $appointment_id = mysqli_insert_id($db->db_conn());
         } else {
             $error_message = "Failed to schedule appointment. Please try again.";
         }

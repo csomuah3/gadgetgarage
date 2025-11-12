@@ -1,6 +1,10 @@
 <?php
 require_once(__DIR__ . '/settings/core.php');
 require_once(__DIR__ . '/controllers/cart_controller.php');
+require_once(__DIR__ . '/controllers/product_controller.php');
+require_once(__DIR__ . '/controllers/category_controller.php');
+require_once(__DIR__ . '/controllers/brand_controller.php');
+require_once(__DIR__ . '/helpers/image_helper.php');
 
 $is_logged_in = check_login();
 $is_admin = false;
@@ -12,10 +16,28 @@ if ($is_logged_in) {
 // Get cart count
 $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
-$cart_count = 0; // Will update this after implementing cart
+$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Sample products for our 5 categories with real images and data
-$all_products = [
+// Get real products from database
+$all_products = get_all_products_ctr();
+
+// Get real categories and brands from database
+try {
+    $categories = get_all_categories_ctr();
+} catch (Exception $e) {
+    $categories = [];
+}
+
+try {
+    $brands = get_all_brands_ctr();
+} catch (Exception $e) {
+    $brands = [];
+}
+
+// Products are already fetched from database above
+// No hardcoded data needed - use real database products
+// Commenting out hardcoded data - will clean up rest
+$removed_hardcoded_products = [
     // Smartphones
     [
         'id' => 1,
@@ -348,25 +370,8 @@ $all_products = [
     ]
 ];
 
-// Define categories for filter buttons
-$categories = [
-    ['cat_id' => 'smartphones', 'cat_name' => 'Smartphones'],
-    ['cat_id' => 'laptops', 'cat_name' => 'Laptops'],
-    ['cat_id' => 'ipads', 'cat_name' => 'iPads'],
-    ['cat_id' => 'cameras', 'cat_name' => 'Cameras'],
-    ['cat_id' => 'video', 'cat_name' => 'Video Equipment']
-];
-
-// Define brands for filter buttons
-$brands = [
-    ['brand_id' => 'apple', 'brand_name' => 'Apple'],
-    ['brand_id' => 'samsung', 'brand_name' => 'Samsung'],
-    ['brand_id' => 'dell', 'brand_name' => 'Dell'],
-    ['brand_id' => 'sony', 'brand_name' => 'Sony'],
-    ['brand_id' => 'blackmagic', 'brand_name' => 'Blackmagic'],
-    ['brand_id' => 'canon', 'brand_name' => 'Canon'],
-    ['brand_id' => 'nikon', 'brand_name' => 'Nikon']
-];
+// Categories and brands already fetched from database above
+// Using real data instead of hardcoded arrays
 
 // Filter products based on URL parameters
 $category_filter = $_GET['category'] ?? 'all';
@@ -378,20 +383,20 @@ $filtered_products = $all_products;
 
 if ($category_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
-        return $product['category'] === $category_filter;
+        return $product['cat_name'] === $category_filter;
     });
 }
 
 if ($brand_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
-        return $product['brand'] === $brand_filter;
+        return $product['brand_name'] === $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
     $filtered_products = array_filter($filtered_products, function($product) use ($search_query) {
-        return stripos($product['name'], $search_query) !== false ||
-               stripos($product['description'], $search_query) !== false;
+        return stripos($product['product_title'], $search_query) !== false ||
+               stripos($product['product_desc'], $search_query) !== false;
     });
 }
 

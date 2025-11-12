@@ -32,15 +32,13 @@ if (!check_admin()) {
 }
 
 try {
-    // Get user ID from session
-    $user_id = $_SESSION['user_id'];
+    // For brand management, get all categories (not just user-specific)
+    $categories = get_all_categories_ctr();
 
-    // Invoke the relevant function from the category controller to fetch all categories created by user
-    $categories = get_user_categories_ctr($user_id);
-
-    // Return success response with the categories to the caller
+    // Return success response with both formats for compatibility
     echo json_encode([
         'success' => true,
+        'status' => 'success',
         'data' => $categories,
         'message' => 'Categories fetched successfully',
         'count' => count($categories)
@@ -49,6 +47,7 @@ try {
     // Return error response to the caller
     echo json_encode([
         'success' => false,
+        'status' => 'error',
         'message' => 'Error fetching categories: ' . $e->getMessage()
     ]);
 }

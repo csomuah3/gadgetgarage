@@ -137,12 +137,17 @@ class Brand extends db_connection {
         }
     }
 
-    // Check if brand exists (for duplicate prevention)
+    // Check if brand exists (for duplicate prevention) - now checks per category
     public function check_brand_exists($brand_name, $category_id = null, $user_id = null, $exclude_brand_id = null) {
         $brand_name = trim($brand_name);
         $brand_name_escaped = mysqli_real_escape_string($this->db, $brand_name);
 
         $sql = "SELECT brand_id FROM brands WHERE brand_name = '$brand_name_escaped'";
+
+        // Check within the same category only (allows Apple for both iPhones and iPads)
+        if ($category_id) {
+            $sql .= " AND category_id = " . (int)$category_id;
+        }
 
         if ($user_id) {
             $sql .= " AND user_id = " . (int)$user_id;

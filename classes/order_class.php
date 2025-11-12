@@ -117,6 +117,24 @@ class Order extends db_connection
         return mysqli_insert_id($this->db);
     }
 
+    private function reduce_product_stock($product_id, $quantity)
+    {
+        $product_id = mysqli_real_escape_string($this->db, $product_id);
+        $quantity = mysqli_real_escape_string($this->db, $quantity);
+
+        // First check current stock to prevent negative stock
+        $check_sql = "SELECT stock_quantity FROM products WHERE product_id = $product_id";
+        $current_stock = $this->db_fetch_one($check_sql);
+
+        if (!$current_stock || $current_stock['stock_quantity'] < $quantity) {
+            return false; // Not enough stock available
+        }
+
+        // Reduce stock quantity
+        $sql = "UPDATE products SET stock_quantity = stock_quantity - $quantity WHERE product_id = $product_id";
+        return $this->db_write_query($sql);
+    }
+
     public function process_cart_to_order($customer_id, $ip_address = null)
     {
         // Get cart items
@@ -146,9 +164,14 @@ class Order extends db_connection
             return false;
         }
 
-        // Add order details for each cart item
+        // Add order details for each cart item and reduce stock
         foreach ($cart_items as $item) {
             if (!$this->add_order_details($order_id, $item['p_id'], $item['qty'])) {
+                return false;
+            }
+
+            // Reduce stock quantity for the product
+            if (!$this->reduce_product_stock($item['p_id'], $item['qty'])) {
                 return false;
             }
         }

@@ -1817,11 +1817,31 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             </div>
                                         </div>
 
+                                        <!-- Stock Status -->
+                                        <div class="stock-status" style="margin-bottom: 15px;">
+                                            <?php
+                                            $stock = $product['stock_quantity'] ?? 0;
+                                            if ($stock > 10) {
+                                                echo '<span style="background: #dcfce7; color: #166534; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">In Stock (' . $stock . ')</span>';
+                                            } elseif ($stock > 0) {
+                                                echo '<span style="background: #fef3c7; color: #92400e; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">Low Stock (' . $stock . ')</span>';
+                                            } else {
+                                                echo '<span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">Out of Stock</span>';
+                                            }
+                                            ?>
+                                        </div>
+
                                         <!-- View Product Button -->
+                                        <?php if ($stock > 0): ?>
                                         <a href="single_product.php?pid=<?php echo $product['product_id']; ?>"
                                            style="display: block; width: 100%; background: #2563eb; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; text-decoration: none; text-align: center; transition: background-color 0.2s;">
                                             VIEW PRODUCT
                                         </a>
+                                        <?php else: ?>
+                                        <div style="display: block; width: 100%; background: #9ca3af; color: white; border: none; padding: 12px; border-radius: 6px; font-weight: 600; text-align: center; cursor: not-allowed;">
+                                            OUT OF STOCK
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

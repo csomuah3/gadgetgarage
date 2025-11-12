@@ -115,7 +115,22 @@ class Brand extends db_connection {
     public function delete_brand($brand_id) {
         $brand_id = (int)$brand_id;
 
-        // Check for dependencies first
+        // First, check what columns exist in the brands table
+        $columns_check = "SHOW COLUMNS FROM brands";
+        $columns = $this->db_fetch_all($columns_check);
+
+        // Find the primary key column name
+        $pk_column = 'brand_id'; // default
+        if ($columns) {
+            foreach ($columns as $column) {
+                if (isset($column['Key']) && $column['Key'] === 'PRI') {
+                    $pk_column = $column['Field'];
+                    break;
+                }
+            }
+        }
+
+        // Check for dependencies first (skip if products table doesn't exist)
         $sql_check = "SELECT COUNT(*) as product_count FROM products WHERE brand_id = $brand_id";
         $result = $this->db_fetch_one($sql_check);
 
@@ -126,8 +141,8 @@ class Brand extends db_connection {
             ];
         }
 
-        // Delete the brand
-        $sql = "DELETE FROM brands WHERE brand_id = $brand_id";
+        // Delete the brand using the correct primary key column name
+        $sql = "DELETE FROM brands WHERE $pk_column = $brand_id";
         $result = $this->db_write_query($sql);
 
         if ($result) {

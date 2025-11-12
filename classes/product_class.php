@@ -35,7 +35,7 @@ class Product extends db_connection {
     // Get all products
     public function get_all_products() {
         $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand,
+                       p.product_cat, p.product_brand, p.stock_quantity,
                        c.cat_name, b.brand_name
                 FROM products p
                 LEFT JOIN categories c ON p.product_cat = c.cat_id
@@ -50,7 +50,7 @@ class Product extends db_connection {
         $category_id = (int)$category_id;
 
         $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand,
+                       p.product_cat, p.product_brand, p.stock_quantity,
                        c.cat_name, b.brand_name
                 FROM products p
                 LEFT JOIN categories c ON p.product_cat = c.cat_id
@@ -66,7 +66,7 @@ class Product extends db_connection {
         $brand_id = (int)$brand_id;
 
         $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand,
+                       p.product_cat, p.product_brand, p.stock_quantity,
                        c.cat_name, b.brand_name
                 FROM products p
                 LEFT JOIN categories c ON p.product_cat = c.cat_id
@@ -82,7 +82,7 @@ class Product extends db_connection {
         $product_id = (int)$product_id;
 
         $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand,
+                       p.product_cat, p.product_brand, p.stock_quantity,
                        c.cat_name, b.brand_name
                 FROM products p
                 LEFT JOIN categories c ON p.product_cat = c.cat_id
@@ -147,7 +147,7 @@ class Product extends db_connection {
         $search_term = trim($search_term);
 
         $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand,
+                       p.product_cat, p.product_brand, p.stock_quantity,
                        c.cat_name, b.brand_name
                 FROM products p
                 LEFT JOIN categories c ON p.product_cat = c.cat_id

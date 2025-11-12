@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once __DIR__ . '/../controllers/cart_controller.php';
+require_once __DIR__ . '/../controllers/product_controller.php';
 
 header('Content-Type: application/json');
 
@@ -37,6 +38,22 @@ $customer_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 
 try {
+    // Check stock availability before adding to cart
+    $product = get_product_by_id_ctr($product_id);
+    if (!$product) {
+        echo json_encode(['success' => false, 'message' => 'Product not found']);
+        exit;
+    }
+
+    $available_stock = $product['stock_quantity'] ?? 0;
+    if ($available_stock < $quantity) {
+        if ($available_stock == 0) {
+            echo json_encode(['success' => false, 'message' => 'Product is out of stock']);
+        } else {
+            echo json_encode(['success' => false, 'message' => "Only {$available_stock} items available in stock"]);
+        }
+        exit;
+    }
     // Try to add with condition first, fallback to basic if it fails
     $result = add_to_cart_with_condition_ctr($product_id, $quantity, $customer_id, $ip_address, $condition, $final_price);
 

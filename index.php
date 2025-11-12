@@ -908,6 +908,7 @@ try {
 
 		.main-banner.coral {
 			/* coral/red like your image */
+			padding-left: 23px;
 			background: #ff5b57;
 			/* tweak to #ff5a54 if you prefer */
 			color: #fff;
@@ -920,7 +921,7 @@ try {
 		}
 
 		.banner-title {
-			font-size: clamp(34px, 5.2vw, 72px);
+			font-size: clamp(26px, 5.2vw, 72px);
 			/* big multi-line headline */
 			font-weight: 800;
 			line-height: 1.08;

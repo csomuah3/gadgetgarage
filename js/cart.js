@@ -99,10 +99,13 @@ function removeFromCart(productId) {
     }
 }
 
-// Update price display only (without server call)
+// Update price display immediately
 function updateItemPriceDisplay(productId, quantity) {
     const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
-    if (!cartItem) return;
+    if (!cartItem) {
+        console.log('Cart item not found for product:', productId);
+        return;
+    }
 
     // Find the unit price (blue text)
     const unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5');
@@ -110,17 +113,29 @@ function updateItemPriceDisplay(productId, quantity) {
     const totalPriceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
 
     if (unitPriceElement && totalPriceElement) {
-        // Extract unit price number
-        const unitPriceText = unitPriceElement.textContent.replace('GHS ', '').replace(/,/g, '');
+        // Extract unit price number - remove GHS, commas, and any other formatting
+        let unitPriceText = unitPriceElement.textContent;
+        unitPriceText = unitPriceText.replace('GHS', '').replace(/,/g, '').replace(/\s/g, '');
         const unitPrice = parseFloat(unitPriceText);
 
         if (!isNaN(unitPrice) && unitPrice > 0) {
-            // Calculate new total
+            // Calculate new total: unit price × quantity
             const newTotal = unitPrice * quantity;
-            totalPriceElement.textContent = `GHS ${newTotal.toFixed(2)}`;
 
-            console.log(`Price updated: ${quantity} × ${unitPrice} = ${newTotal.toFixed(2)}`);
+            // Format the price properly with commas for thousands
+            const formattedTotal = newTotal.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            totalPriceElement.textContent = `GHS ${formattedTotal}`;
+
+            console.log(`Updated: ${quantity} × GHS ${unitPrice} = GHS ${formattedTotal}`);
+        } else {
+            console.log('Invalid unit price:', unitPriceText);
         }
+    } else {
+        console.log('Price elements not found for product:', productId);
     }
 }
 
@@ -168,54 +183,76 @@ function updateQuantity(productId, quantity) {
     });
 }
 
-// Plus button - increment quantity
+// PLUS BUTTON - Add 1 to quantity and update price
 function incrementQuantity(productId) {
-    const quantityInput = document.getElementById(`qty-${productId}`);
-    if (!quantityInput) return;
+    console.log('Plus button clicked for product:', productId);
 
+    const quantityInput = document.getElementById(`qty-${productId}`);
+    if (!quantityInput) {
+        console.log('Quantity input not found for product:', productId);
+        return;
+    }
+
+    // Get current quantity from input
     let currentQuantity = parseInt(quantityInput.value) || 1;
     let newQuantity = currentQuantity + 1;
 
+    // Check maximum limit
     if (newQuantity > 99) {
         showNotification('Maximum quantity is 99', 'warning');
         return;
     }
 
-    // Update input value
+    console.log(`Incrementing from ${currentQuantity} to ${newQuantity}`);
+
+    // Update the input field immediately
     quantityInput.value = newQuantity;
 
-    // Update price display immediately
+    // Update the price display immediately
     updateItemPriceDisplay(productId, newQuantity);
 
-    // Update on server
+    // Update server in background
     updateQuantityOnServer(productId, newQuantity);
 }
 
-// Minus button - decrement quantity
+// MINUS BUTTON - Subtract 1 from quantity and update price
 function decrementQuantity(productId) {
-    const quantityInput = document.getElementById(`qty-${productId}`);
-    if (!quantityInput) return;
+    console.log('Minus button clicked for product:', productId);
 
+    const quantityInput = document.getElementById(`qty-${productId}`);
+    if (!quantityInput) {
+        console.log('Quantity input not found for product:', productId);
+        return;
+    }
+
+    // Get current quantity from input
     let currentQuantity = parseInt(quantityInput.value) || 1;
     let newQuantity = currentQuantity - 1;
 
+    // Check minimum limit - DON'T GO BELOW 1
     if (newQuantity < 1) {
         newQuantity = 1;
         showNotification('Minimum quantity is 1', 'info');
+        quantityInput.value = 1; // Make sure input shows 1
+        return; // Don't update anything if already at minimum
     }
 
-    // Update input value
+    console.log(`Decrementing from ${currentQuantity} to ${newQuantity}`);
+
+    // Update the input field immediately
     quantityInput.value = newQuantity;
 
-    // Update price display immediately
+    // Update the price display immediately
     updateItemPriceDisplay(productId, newQuantity);
 
-    // Update on server
+    // Update server in background
     updateQuantityOnServer(productId, newQuantity);
 }
 
-// Server update function (separate from display update)
+// Server update function - updates cart on server
 function updateQuantityOnServer(productId, quantity) {
+    console.log(`Updating server: Product ${productId} to quantity ${quantity}`);
+
     const formData = new FormData();
     formData.append('product_id', productId);
     formData.append('quantity', quantity);
@@ -226,15 +263,23 @@ function updateQuantityOnServer(productId, quantity) {
     })
     .then(response => response.json())
     .then(data => {
+        console.log('Server response:', data);
+
         if (data.success) {
+            // Update cart badge and overall totals
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
+            console.log('Server update successful');
         } else {
+            console.error('Server update failed:', data.message);
             showNotification(data.message || 'Failed to update cart', 'error');
+            // Don't reload, keep the user's changes visible
         }
     })
     .catch(error => {
-        console.error('Error:', error);
+        console.error('Network error updating cart:', error);
+        showNotification('Network error - changes may not be saved', 'warning');
+        // Don't reload, keep the user's changes visible
     });
 }
 

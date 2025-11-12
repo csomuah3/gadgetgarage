@@ -24,7 +24,7 @@ try {
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Orders - FlavorHub</title>
+    <title>My Orders - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <style>
@@ -54,7 +54,7 @@ try {
         .logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: #8b5fbf;
+            color: #000000;
             text-decoration: none;
             display: flex;
             align-items: center;
@@ -62,7 +62,7 @@ try {
         }
 
         .logo .co {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #000000, #333333);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
@@ -71,7 +71,7 @@ try {
         }
 
         .page-header {
-            background: linear-gradient(135deg, #8b5fbf 0%, #f093fb 100%);
+            background: linear-gradient(135deg, #000000 0%, #333333 100%);
             color: white;
             padding: 3rem 0;
             margin-bottom: 2rem;
@@ -88,7 +88,7 @@ try {
 
         .order-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
         }
 
         .order-header {
@@ -129,7 +129,7 @@ try {
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #000000, #333333);
             border: none;
             border-radius: 25px;
             padding: 12px 30px;
@@ -161,7 +161,7 @@ try {
         <div class="container">
             <nav class="navbar navbar-expand-lg navbar-light">
                 <a class="logo navbar-brand" href="index.php">
-                    Flavor<span class="co">Hub</span>
+                    Gadget<span class="co">Garage</span>
                 </a>
 
                 <div class="navbar-nav ms-auto">

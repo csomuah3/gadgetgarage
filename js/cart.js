@@ -99,22 +99,50 @@ function removeFromCart(productId) {
     }
 }
 
-// Update quantity
+// Update price display only (without server call)
+function updateItemPriceDisplay(productId, quantity) {
+    const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
+    if (!cartItem) return;
+
+    // Find the unit price (blue text)
+    const unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5');
+    // Find the total price (green text above remove button)
+    const totalPriceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
+
+    if (unitPriceElement && totalPriceElement) {
+        // Extract unit price number
+        const unitPriceText = unitPriceElement.textContent.replace('GHS ', '').replace(/,/g, '');
+        const unitPrice = parseFloat(unitPriceText);
+
+        if (!isNaN(unitPrice) && unitPrice > 0) {
+            // Calculate new total
+            const newTotal = unitPrice * quantity;
+            totalPriceElement.textContent = `GHS ${newTotal.toFixed(2)}`;
+
+            console.log(`Price updated: ${quantity} × ${unitPrice} = ${newTotal.toFixed(2)}`);
+        }
+    }
+}
+
+// Update quantity on server and update display
 function updateQuantity(productId, quantity) {
-    // Convert to integer and enforce limits
     quantity = parseInt(quantity);
 
     if (quantity < 1) {
-        quantity = 1; // Don't allow less than 1
+        quantity = 1;
         document.getElementById(`qty-${productId}`).value = 1;
     }
 
     if (quantity > 99) {
         quantity = 99;
-        showNotification('Maximum quantity is 99', 'warning');
         document.getElementById(`qty-${productId}`).value = 99;
+        showNotification('Maximum quantity is 99', 'warning');
     }
 
+    // Update display immediately
+    updateItemPriceDisplay(productId, quantity);
+
+    // Send to server
     const formData = new FormData();
     formData.append('product_id', productId);
     formData.append('quantity', quantity);
@@ -126,83 +154,88 @@ function updateQuantity(productId, quantity) {
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            showNotification('Quantity updated', 'success');
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
-
-            // Update the individual item total price (above remove button)
-            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
-
-            if (cartItem) {
-                // Find the unit price element (the single item price)
-                const unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5');
-                // Find the total price element (the one above the remove button)
-                const totalPriceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
-
-                if (unitPriceElement && totalPriceElement) {
-                    // Extract the unit price
-                    const unitPriceText = unitPriceElement.textContent.replace('GHS ', '').replace(',', '');
-                    const unitPrice = parseFloat(unitPriceText);
-
-                    if (!isNaN(unitPrice) && unitPrice > 0) {
-                        // Calculate new total for this item
-                        const newItemTotal = (unitPrice * quantity).toFixed(2);
-                        totalPriceElement.textContent = `GHS ${parseFloat(newItemTotal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-
-                        console.log(`Updated item ${productId}: ${quantity} × GHS ${unitPrice} = GHS ${newItemTotal}`);
-                    } else {
-                        console.log('Invalid unit price found, reloading page...');
-                        setTimeout(() => location.reload(), 1000);
-                    }
-                } else {
-                    console.log('Price elements not found, reloading page...');
-                    setTimeout(() => location.reload(), 1000);
-                }
-            }
+            showNotification('Cart updated', 'success');
         } else {
-            showNotification(data.message || 'Failed to update quantity', 'error');
-            // Reset the input to previous value
-            location.reload();
+            showNotification(data.message || 'Failed to update cart', 'error');
+            location.reload(); // Reload if server update failed
         }
     })
     .catch(error => {
         console.error('Error:', error);
-        showNotification('An error occurred. Please try again.', 'error');
+        showNotification('Error updating cart', 'error');
     });
 }
 
-// Increment quantity
+// Plus button - increment quantity
 function incrementQuantity(productId) {
     const quantityInput = document.getElementById(`qty-${productId}`);
-    if (quantityInput) {
-        let currentQuantity = parseInt(quantityInput.value) || 1;
-        let newQuantity = currentQuantity + 1;
+    if (!quantityInput) return;
 
-        if (newQuantity > 99) {
-            showNotification('Maximum quantity is 99', 'warning');
-            return;
-        }
+    let currentQuantity = parseInt(quantityInput.value) || 1;
+    let newQuantity = currentQuantity + 1;
 
-        quantityInput.value = newQuantity;
-        updateQuantity(productId, newQuantity);
+    if (newQuantity > 99) {
+        showNotification('Maximum quantity is 99', 'warning');
+        return;
     }
+
+    // Update input value
+    quantityInput.value = newQuantity;
+
+    // Update price display immediately
+    updateItemPriceDisplay(productId, newQuantity);
+
+    // Update on server
+    updateQuantityOnServer(productId, newQuantity);
 }
 
-// Decrement quantity
+// Minus button - decrement quantity
 function decrementQuantity(productId) {
     const quantityInput = document.getElementById(`qty-${productId}`);
-    if (quantityInput) {
-        let currentQuantity = parseInt(quantityInput.value) || 1;
-        let newQuantity = currentQuantity - 1;
+    if (!quantityInput) return;
 
-        if (newQuantity < 1) {
-            newQuantity = 1;
-            showNotification('Minimum quantity is 1', 'info');
-        }
+    let currentQuantity = parseInt(quantityInput.value) || 1;
+    let newQuantity = currentQuantity - 1;
 
-        quantityInput.value = newQuantity;
-        updateQuantity(productId, newQuantity);
+    if (newQuantity < 1) {
+        newQuantity = 1;
+        showNotification('Minimum quantity is 1', 'info');
     }
+
+    // Update input value
+    quantityInput.value = newQuantity;
+
+    // Update price display immediately
+    updateItemPriceDisplay(productId, newQuantity);
+
+    // Update on server
+    updateQuantityOnServer(productId, newQuantity);
+}
+
+// Server update function (separate from display update)
+function updateQuantityOnServer(productId, quantity) {
+    const formData = new FormData();
+    formData.append('product_id', productId);
+    formData.append('quantity', quantity);
+
+    fetch('actions/update_quantity_action.php', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.success) {
+            updateCartBadge(data.cart_count);
+            updateCartTotals(data.cart_total);
+        } else {
+            showNotification(data.message || 'Failed to update cart', 'error');
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
 }
 
 // Empty cart

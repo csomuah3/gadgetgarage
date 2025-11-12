@@ -1058,6 +1058,197 @@ try {
 			font-weight: 800
 		}
 
+		/* DEALS OF THE WEEK — Special offers section */
+		.deals-section {
+			background: linear-gradient(135deg, #f8f9ff 0%, #e8efff 100%);
+			padding: 80px 0;
+			position: relative;
+		}
+
+		.deals-container {
+			max-width: 1400px;
+			margin: 0 auto;
+			padding: 40px;
+			background: white;
+			border-radius: 20px;
+			border: 2px solid #e5e7eb;
+			box-shadow: 0 10px 50px rgba(0, 0, 0, 0.1);
+		}
+
+		.deals-title {
+			color: #1f2937;
+			font-size: 2.5rem;
+			font-weight: 800;
+			margin-bottom: 40px;
+			text-align: left;
+		}
+
+		.deals-grid {
+			display: grid;
+			grid-template-columns: repeat(3, 1fr);
+			gap: 40px;
+			align-items: center;
+		}
+
+		.deal-card {
+			background: white;
+			border-radius: 16px;
+			padding: 30px;
+			position: relative;
+			transition: transform 0.3s ease;
+		}
+
+		.deal-card:hover {
+			transform: translateY(-5px);
+		}
+
+		.deal-discount {
+			position: absolute;
+			top: -10px;
+			left: 20px;
+			background: #ef4444;
+			color: white;
+			padding: 8px 16px;
+			border-radius: 20px;
+			font-weight: 700;
+			font-size: 0.9rem;
+			z-index: 10;
+		}
+
+		.deal-image {
+			width: 100%;
+			height: 200px;
+			object-fit: contain;
+			margin-bottom: 20px;
+			border-radius: 12px;
+			background: #f8f9fa;
+			padding: 20px;
+		}
+
+		.deal-brand {
+			color: #6b7280;
+			font-size: 0.9rem;
+			font-weight: 600;
+			margin-bottom: 8px;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.deal-title {
+			color: #1f2937;
+			font-size: 1.2rem;
+			font-weight: 700;
+			margin-bottom: 12px;
+			line-height: 1.3;
+		}
+
+		.deal-rating {
+			display: flex;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+
+		.deal-rating .stars {
+			color: #fbbf24;
+			margin-right: 8px;
+		}
+
+		.deal-pricing {
+			margin-bottom: 20px;
+		}
+
+		.deal-original-price {
+			color: #9ca3af;
+			text-decoration: line-through;
+			font-size: 1rem;
+			margin-right: 8px;
+		}
+
+		.deal-current-price {
+			color: #4f46e5;
+			font-size: 1.5rem;
+			font-weight: 800;
+		}
+
+		.countdown-timer {
+			background: #f3f4f6;
+			border-radius: 12px;
+			padding: 15px;
+			margin-bottom: 20px;
+			text-align: center;
+		}
+
+		.countdown-grid {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 10px;
+			margin-bottom: 5px;
+		}
+
+		.countdown-item {
+			text-align: center;
+		}
+
+		.countdown-number {
+			display: block;
+			font-size: 1.5rem;
+			font-weight: 800;
+			color: #1f2937;
+			line-height: 1;
+		}
+
+		.countdown-label {
+			display: block;
+			font-size: 0.75rem;
+			color: #6b7280;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			margin-top: 2px;
+		}
+
+		.deal-options-btn {
+			width: 100%;
+			background: #e5e7eb;
+			color: #4b5563;
+			border: none;
+			padding: 15px;
+			border-radius: 12px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+		}
+
+		.deal-options-btn:hover {
+			background: #d1d5db;
+			transform: translateY(-2px);
+		}
+
+		@media (max-width: 1200px) {
+			.deals-grid {
+				grid-template-columns: 1fr;
+				gap: 30px;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.deals-container {
+				margin: 0 20px;
+				padding: 30px 20px;
+			}
+
+			.deals-title {
+				font-size: 2rem;
+				text-align: center;
+			}
+
+			.countdown-number {
+				font-size: 1.2rem;
+			}
+		}
+
 		/* BRANDS — Infinite marquee + Magic Bento hover */
 		.brands-area {
 			background: #ffffff;
@@ -1668,219 +1859,6 @@ try {
 			border-radius: 12px;
 		}
 
-		/* Repair Studio Section */
-		.repair-studio-section {
-			padding: 80px 0;
-			background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 100%);
-			position: relative;
-			overflow: hidden;
-		}
-
-		.repair-content {
-			padding-right: 2rem;
-		}
-
-		.repair-badge {
-			display: inline-flex;
-			align-items: center;
-			background: linear-gradient(135deg, #10b981, #34d399);
-			color: white;
-			padding: 8px 16px;
-			border-radius: 25px;
-			font-size: 0.9rem;
-			font-weight: 600;
-			margin-bottom: 1.5rem;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-		}
-
-		.repair-title {
-			font-size: 3rem;
-			font-weight: 700;
-			color: #047857;
-			margin-bottom: 1.5rem;
-			line-height: 1.2;
-		}
-
-		.repair-description {
-			font-size: 1.2rem;
-			color: #065f46;
-			margin-bottom: 2rem;
-			line-height: 1.6;
-		}
-
-		.repair-features {
-			display: flex;
-			flex-direction: column;
-			gap: 1rem;
-			margin-bottom: 2.5rem;
-		}
-
-		.feature-item {
-			display: flex;
-			align-items: center;
-			gap: 0.75rem;
-			color: #047857;
-			font-weight: 500;
-		}
-
-		.feature-item i {
-			width: 20px;
-			height: 20px;
-			background: linear-gradient(135deg, #10b981, #34d399);
-			color: white;
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 0.8rem;
-		}
-
-		.repair-cta-btn {
-			display: inline-flex;
-			align-items: center;
-			background: linear-gradient(135deg, #10b981, #34d399);
-			color: white;
-			padding: 15px 30px;
-			border-radius: 50px;
-			text-decoration: none;
-			font-weight: 600;
-			font-size: 1.1rem;
-			transition: all 0.3s ease;
-			box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-		}
-
-		.repair-cta-btn:hover {
-			background: linear-gradient(135deg, #059669, #10b981);
-			transform: translateY(-2px);
-			box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
-			color: white;
-		}
-
-		.repair-visual {
-			position: relative;
-		}
-
-		.repair-image-container {
-			position: relative;
-			border-radius: 20px;
-			overflow: hidden;
-			margin-bottom: 2rem;
-		}
-
-		.repair-main-image {
-			width: 100%;
-			height: 400px;
-			object-fit: cover;
-			border-radius: 20px;
-		}
-
-		.floating-elements {
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-		}
-
-		.floating-icon {
-			position: absolute;
-			width: 60px;
-			height: 60px;
-			background: rgba(255, 255, 255, 0.95);
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-			animation: float 3s ease-in-out infinite;
-		}
-
-		.floating-icon i {
-			font-size: 1.5rem;
-			color: #10b981;
-		}
-
-		.floating-icon.phone {
-			top: 15%;
-			right: 10%;
-			animation-delay: 0s;
-		}
-
-		.floating-icon.laptop {
-			top: 60%;
-			left: 5%;
-			animation-delay: 1s;
-		}
-
-		.floating-icon.tablet {
-			top: 35%;
-			right: 15%;
-			animation-delay: 2s;
-		}
-
-		.floating-icon.watch {
-			bottom: 15%;
-			right: 25%;
-			animation-delay: 1.5s;
-		}
-
-		@keyframes float {
-			0%, 100% { transform: translateY(0px); }
-			50% { transform: translateY(-10px); }
-		}
-
-		.repair-stats {
-			display: flex;
-			justify-content: space-around;
-			background: rgba(255, 255, 255, 0.95);
-			border-radius: 15px;
-			padding: 1.5rem;
-			box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
-		}
-
-		.stat-item {
-			text-align: center;
-		}
-
-		.stat-number {
-			font-size: 2rem;
-			font-weight: 700;
-			color: #047857;
-			margin-bottom: 0.25rem;
-		}
-
-		.stat-label {
-			font-size: 0.9rem;
-			color: #6b7280;
-			font-weight: 500;
-		}
-
-		@media (max-width: 768px) {
-			.repair-title {
-				font-size: 2rem;
-			}
-
-			.repair-content {
-				padding-right: 0;
-				margin-bottom: 3rem;
-			}
-
-			.repair-features {
-				flex-direction: row;
-				flex-wrap: wrap;
-				gap: 0.5rem;
-			}
-
-			.floating-icon {
-				width: 45px;
-				height: 45px;
-			}
-
-			.floating-icon i {
-				font-size: 1.2rem;
-			}
-		}
 
 		/* Most Popular Categories */
 		.popular-categories {
@@ -3248,13 +3226,6 @@ try {
 					Gadget<span class="garage">Garage</span>
 				</a>
 
-				<!-- Navigation Menu -->
-				<nav class="navbar-nav">
-					<a href="repair_services.php" class="nav-link">
-						<i class="fas fa-tools"></i>
-						Repair Studio
-					</a>
-				</nav>
 
 				<!-- Search Bar -->
 				<form class="search-container" method="GET" action="product_search_result.php">
@@ -3393,8 +3364,8 @@ try {
 				<a href="index.php" class="nav-item">HOME</a>
 				<a href="all_product.php" class="nav-item">SHOP</a>
 				<a href="#" class="nav-item">COLLECTIONS</a>
-				<a href="repair_services.php" class="nav-item">SMART DEVICES</a>
 				<a href="#" class="nav-item">BLOG</a>
+				<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
 				<a href="#" class="nav-item">CONTACT</a>
 				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
 			</div>
@@ -3507,80 +3478,6 @@ try {
 		</div>
 	</section>
 
-	<!-- Repair Studio Section -->
-	<section class="repair-studio-section">
-		<div class="container-fluid">
-			<div class="row align-items-center">
-				<div class="col-lg-6">
-					<div class="repair-content">
-						<div class="repair-badge">
-							<i class="fas fa-tools me-2"></i>
-							Professional Repair Services
-						</div>
-						<h2 class="repair-title">Get Your Device Fixed by Experts</h2>
-						<p class="repair-description">
-							From cracked screens to battery issues, our certified technicians can repair any device.
-							Schedule your appointment today and get your gadgets working like new again.
-						</p>
-						<div class="repair-features">
-							<div class="feature-item">
-								<i class="fas fa-shield-alt"></i>
-								<span>Certified Technicians</span>
-							</div>
-							<div class="feature-item">
-								<i class="fas fa-clock"></i>
-								<span>Same-Day Service</span>
-							</div>
-							<div class="feature-item">
-								<i class="fas fa-award"></i>
-								<span>90-Day Warranty</span>
-							</div>
-						</div>
-						<a href="repair_services.php" class="repair-cta-btn">
-							<i class="fas fa-calendar-plus me-2"></i>
-							Schedule Repair
-						</a>
-					</div>
-				</div>
-				<div class="col-lg-6">
-					<div class="repair-visual">
-						<div class="repair-image-container">
-							<img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?q=80&w=800&auto=format&fit=crop"
-								 alt="Device Repair Services" class="repair-main-image">
-							<div class="floating-elements">
-								<div class="floating-icon phone">
-									<i class="fas fa-mobile-alt"></i>
-								</div>
-								<div class="floating-icon laptop">
-									<i class="fas fa-laptop"></i>
-								</div>
-								<div class="floating-icon tablet">
-									<i class="fas fa-tablet-alt"></i>
-								</div>
-								<div class="floating-icon watch">
-									<i class="fas fa-stopwatch"></i>
-								</div>
-							</div>
-						</div>
-						<div class="repair-stats">
-							<div class="stat-item">
-								<div class="stat-number">2500+</div>
-								<div class="stat-label">Devices Repaired</div>
-							</div>
-							<div class="stat-item">
-								<div class="stat-number">98%</div>
-								<div class="stat-label">Success Rate</div>
-							</div>
-							<div class="stat-item">
-								<div class="stat-number">24h</div>
-								<div class="stat-label">Average Turnaround</div>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 
 	<!-- Most Popular Categories -->
 	<section class="popular-categories">
@@ -3764,6 +3661,143 @@ try {
 					<i class="fas fa-eye me-2"></i>
 					View All Products
 				</a>
+			</div>
+		</div>
+	</section>
+
+	<!-- DEALS OF THE WEEK — Special offers section -->
+	<section class="deals-section">
+		<div class="deals-container">
+			<h2 class="deals-title">Deals Of The Week</h2>
+
+			<div class="deals-grid">
+				<!-- Deal 1: Canon Washing Machine -->
+				<div class="deal-card">
+					<div class="deal-discount">-23%</div>
+					<img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop&crop=center" alt="Canon Washing Machine" class="deal-image">
+					<div class="deal-brand">Canon</div>
+					<h3 class="deal-title">12KG 1600rpm 3-in-1 Combo Washing Machine</h3>
+					<div class="deal-rating">
+						<div class="stars">
+							<i class="far fa-star"></i>
+							<i class="far fa-star"></i>
+							<i class="far fa-star"></i>
+							<i class="far fa-star"></i>
+							<i class="far fa-star"></i>
+						</div>
+					</div>
+					<div class="deal-pricing">
+						<span class="deal-original-price">$130.00</span>
+						<span class="deal-current-price">$100.00</span>
+					</div>
+					<div class="countdown-timer">
+						<div class="countdown-grid">
+							<div class="countdown-item">
+								<span class="countdown-number" id="days1">335</span>
+								<span class="countdown-label">Days</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="hours1">15</span>
+								<span class="countdown-label">Hour</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="minutes1">35</span>
+								<span class="countdown-label">Min</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="seconds1">01</span>
+								<span class="countdown-label">Sec</span>
+							</div>
+						</div>
+					</div>
+					<button class="deal-options-btn" onclick="window.location.href='all_product.php'">OPTIONS</button>
+				</div>
+
+				<!-- Deal 2: Apple iPad -->
+				<div class="deal-card">
+					<div class="deal-discount">-8%</div>
+					<img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&crop=center" alt="iPad m2" class="deal-image">
+					<div class="deal-brand">Apple m2</div>
+					<h3 class="deal-title">iPad m2</h3>
+					<div class="deal-rating">
+						<div class="stars">
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="far fa-star"></i>
+						</div>
+						<span>(4.4)</span>
+					</div>
+					<div class="deal-pricing">
+						<span class="deal-original-price">GH₵1,624</span>
+						<span class="deal-current-price">GH₵1,400</span>
+					</div>
+					<div class="countdown-timer">
+						<div class="countdown-grid">
+							<div class="countdown-item">
+								<span class="countdown-number" id="days2">335</span>
+								<span class="countdown-label">Days</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="hours2">15</span>
+								<span class="countdown-label">Hour</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="minutes2">35</span>
+								<span class="countdown-label">Min</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="seconds2">01</span>
+								<span class="countdown-label">Sec</span>
+							</div>
+						</div>
+					</div>
+					<button class="deal-options-btn" onclick="window.location.href='all_product.php'">OPTIONS</button>
+				</div>
+
+				<!-- Deal 3: LG Apple iPad Mini -->
+				<div class="deal-card">
+					<div class="deal-discount">-19%</div>
+					<img src="https://images.unsplash.com/photo-1542119621-a8e5bf80c227?w=400&h=300&fit=crop&crop=center" alt="Apple iPad Mini" class="deal-image">
+					<div class="deal-brand">LG</div>
+					<h3 class="deal-title">Apple iPad Mini 6th Gen 8.3 Inch With Wi-fi</h3>
+					<div class="deal-rating">
+						<div class="stars">
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+							<i class="fas fa-star"></i>
+						</div>
+						<span>(5)</span>
+					</div>
+					<div class="deal-pricing">
+						<span class="deal-original-price">GH₵250.00</span>
+						<span class="deal-current-price">GH₵230.00</span>
+					</div>
+					<div class="countdown-timer">
+						<div class="countdown-grid">
+							<div class="countdown-item">
+								<span class="countdown-number" id="days3">427</span>
+								<span class="countdown-label">Days</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="hours3">15</span>
+								<span class="countdown-label">Hour</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="minutes3">35</span>
+								<span class="countdown-label">Min</span>
+							</div>
+							<div class="countdown-item">
+								<span class="countdown-number" id="seconds3">01</span>
+								<span class="countdown-label">Sec</span>
+							</div>
+						</div>
+					</div>
+					<button class="deal-options-btn" onclick="window.location.href='all_product.php'">OPTIONS</button>
+				</div>
 			</div>
 		</div>
 	</section>
@@ -4418,6 +4452,66 @@ try {
 				});
 			});
 		}
+
+		// Countdown timer functionality for deals
+		function updateCountdown() {
+			const timers = [
+				{
+					days: document.getElementById('days1'),
+					hours: document.getElementById('hours1'),
+					minutes: document.getElementById('minutes1'),
+					seconds: document.getElementById('seconds1'),
+					endTime: new Date().getTime() + (335 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
+				},
+				{
+					days: document.getElementById('days2'),
+					hours: document.getElementById('hours2'),
+					minutes: document.getElementById('minutes2'),
+					seconds: document.getElementById('seconds2'),
+					endTime: new Date().getTime() + (335 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
+				},
+				{
+					days: document.getElementById('days3'),
+					hours: document.getElementById('hours3'),
+					minutes: document.getElementById('minutes3'),
+					seconds: document.getElementById('seconds3'),
+					endTime: new Date().getTime() + (427 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
+				}
+			];
+
+			function updateAllTimers() {
+				timers.forEach((timer, index) => {
+					const now = new Date().getTime();
+					const distance = timer.endTime - now;
+
+					if (distance > 0) {
+						const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+						const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+						const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+						const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+						timer.days.textContent = days.toString().padStart(3, '0');
+						timer.hours.textContent = hours.toString().padStart(2, '0');
+						timer.minutes.textContent = minutes.toString().padStart(2, '0');
+						timer.seconds.textContent = seconds.toString().padStart(2, '0');
+					} else {
+						timer.days.textContent = '000';
+						timer.hours.textContent = '00';
+						timer.minutes.textContent = '00';
+						timer.seconds.textContent = '00';
+					}
+				});
+			}
+
+			// Update immediately
+			updateAllTimers();
+
+			// Update every second
+			setInterval(updateAllTimers, 1000);
+		}
+
+		// Initialize countdown when page loads
+		document.addEventListener('DOMContentLoaded', updateCountdown);
 	</script>
 </body>
 

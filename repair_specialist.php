@@ -17,7 +17,7 @@ try {
     $db->db_connect();
 
     // Get issue details
-    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = ?", [$issue_id]);
+    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = $issue_id");
 
     if (!$issue) {
         header('Location: repair_services.php');
@@ -28,9 +28,9 @@ try {
     $specialists_query = "SELECT s.*, si.issue_id
                          FROM specialists s
                          JOIN specialist_issues si ON s.specialist_id = si.specialist_id
-                         WHERE si.issue_id = ? AND s.is_available = 1
+                         WHERE si.issue_id = $issue_id AND s.is_available = 1
                          ORDER BY s.rating DESC, s.experience_years DESC";
-    $specialists = $db->db_fetch_all($specialists_query, [$issue_id]);
+    $specialists = $db->db_fetch_all($specialists_query);
 
 } catch (Exception $e) {
     $error_message = "Unable to load specialists. Please try again later.";

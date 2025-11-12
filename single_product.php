@@ -871,7 +871,7 @@ if (!$product) {
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
                             <!-- Excellent Condition -->
-                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('excellent', <?php echo $product['product_price']; ?>)" id="excellent-option">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('excellent', <?php echo floatval($product['product_price']); ?>)" id="excellent-option">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
@@ -884,7 +884,7 @@ if (!$product) {
                             </div>
 
                             <!-- Good Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('good', <?php echo $product['product_price'] - 100; ?>)" id="good-option">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('good', <?php echo floatval($product['product_price']) - 100; ?>)" id="good-option">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Good Condition</div>
@@ -898,7 +898,7 @@ if (!$product) {
                             </div>
 
                             <!-- Fair Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('fair', <?php echo $product['product_price'] - 200; ?>)" id="fair-option">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('fair', <?php echo floatval($product['product_price']) - 200; ?>)" id="fair-option">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Fair Condition</div>
@@ -955,8 +955,9 @@ if (!$product) {
     <script>
         // Global variables for condition selection
         let selectedCondition = 'excellent';
-        let selectedPrice = <?php echo $product['product_price']; ?>;
-        let originalPrice = <?php echo $product['product_price']; ?>;
+        let selectedPrice = <?php echo floatval($product['product_price']); ?>;
+        let originalPrice = <?php echo floatval($product['product_price']); ?>;
+
 
         // Select condition function for the new design
         function selectCondition(condition, price) {
@@ -968,24 +969,37 @@ if (!$product) {
                 option.style.background = 'rgba(255,255,255,0.1)';
             });
 
-            document.getElementById(condition + '-option').style.background = 'rgba(255,255,255,0.25)';
+            const selectedOption = document.getElementById(condition + '-option');
+            if (selectedOption) {
+                selectedOption.style.background = 'rgba(255,255,255,0.25)';
+            }
 
             // Update pricing display
-            document.getElementById('currentPrice').textContent = 'GH₵' + price.toLocaleString();
-            document.getElementById('cartButtonPrice').textContent = price.toLocaleString();
+            const currentPrice = document.getElementById('currentPrice');
+            const cartButtonPrice = document.getElementById('cartButtonPrice');
+
+            if (currentPrice) {
+                currentPrice.textContent = 'GH₵' + price.toLocaleString();
+            }
+            if (cartButtonPrice) {
+                cartButtonPrice.textContent = price.toLocaleString();
+            }
 
             // Show/hide discount information
+            const originalPriceElement = document.getElementById('originalPrice');
+            const discountBadge = document.getElementById('discountBadge');
+
             if (condition !== 'excellent') {
-                document.getElementById('originalPrice').style.display = 'inline';
-                document.getElementById('discountBadge').style.display = 'inline';
+                if (originalPriceElement) originalPriceElement.style.display = 'inline';
+                if (discountBadge) discountBadge.style.display = 'inline';
 
                 const discountAmount = originalPrice - price;
                 const discountPercent = Math.round((discountAmount / originalPrice) * 100);
-                document.getElementById('discountBadge').textContent = discountPercent + '% off';
-                document.getElementById('originalPrice').textContent = 'GH₵' + originalPrice.toLocaleString();
+                if (discountBadge) discountBadge.textContent = discountPercent + '% off';
+                if (originalPriceElement) originalPriceElement.textContent = 'GH₵' + originalPrice.toLocaleString();
             } else {
-                document.getElementById('originalPrice').style.display = 'none';
-                document.getElementById('discountBadge').style.display = 'none';
+                if (originalPriceElement) originalPriceElement.style.display = 'none';
+                if (discountBadge) discountBadge.style.display = 'none';
             }
         }
 
@@ -996,7 +1010,18 @@ if (!$product) {
 
         // New add to cart function for condition-based pricing
         function addToCartWithCondition(productId) {
+
+            if (!selectedCondition || selectedPrice <= 0) {
+                showNotification('Please select a condition first', 'error');
+                return;
+            }
+
             const btn = document.getElementById('addToCartBtn');
+            if (!btn) {
+                showNotification('Add to cart button not found', 'error');
+                return;
+            }
+
             const originalText = btn.innerHTML;
 
             // Show loading state
@@ -1013,7 +1038,12 @@ if (!$product) {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
             .then(data => {
                 if (data.success) {
                     btn.innerHTML = '<i class="fas fa-check"></i> Added Successfully!';
@@ -1040,53 +1070,6 @@ if (!$product) {
             });
         }
 
-        function addToCart(productId) {
-            // Get selected condition
-            const selectedCondition = document.querySelector('input[name="condition"]:checked').value;
-            const priceData = calculatePrice(selectedCondition);
-
-            // Show loading state
-            const btn = event.target.closest('.add-to-cart-btn');
-            const originalText = btn.innerHTML;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
-            btn.disabled = true;
-
-            const formData = new FormData();
-            formData.append('product_id', productId);
-            formData.append('quantity', 1);
-            formData.append('condition', selectedCondition);
-            formData.append('final_price', priceData.finalPrice);
-
-            fetch('actions/add_to_cart_action.php', {
-                    method: 'POST',
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-                        btn.classList.remove('btn-primary');
-                        btn.classList.add('btn-success');
-                        setTimeout(() => {
-                            btn.innerHTML = originalText;
-                            btn.classList.remove('btn-success');
-                            btn.classList.add('btn-primary');
-                            btn.disabled = false;
-                        }, 2000);
-                        updateCartBadge(data.cart_count);
-                        showNotification(`${selectedCondition.charAt(0).toUpperCase() + selectedCondition.slice(1)} condition product added to cart!`, 'success');
-                    } else {
-                        btn.innerHTML = originalText;
-                        btn.disabled = false;
-                        showNotification(data.message || 'Failed to add product to cart', 'error');
-                    }
-                })
-                .catch(error => {
-                    btn.innerHTML = originalText;
-                    btn.disabled = false;
-                    showNotification('An error occurred. Please try again.', 'error');
-                });
-        }
 
         function showCart() {
             window.location.href = 'cart.php';
@@ -1094,7 +1077,7 @@ if (!$product) {
 
         // Update cart badge (shared with cart.js)
         function updateCartBadge(count) {
-            const cartBadge = document.getElementById('cartCount');
+            const cartBadge = document.getElementById('cartBadge');
             if (cartBadge) {
                 if (count > 0) {
                     cartBadge.textContent = count;
@@ -1344,24 +1327,14 @@ if (!$product) {
             }
         }
 
-        // Add event listeners to condition radio buttons
+        // Initialize condition selection for the new design
         function initializeConditionSelection() {
-            const conditionInputs = document.querySelectorAll('input[name="condition"]');
-            conditionInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    if (this.checked) {
-                        updatePriceDisplay(this.value);
-                    }
-                });
-            });
-
-            // Initialize with default selection
-            const defaultCondition = document.querySelector('input[name="condition"]:checked').value;
-            updatePriceDisplay(defaultCondition);
+            selectCondition('excellent', originalPrice);
         }
 
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
+
             // Load product image
             loadProductImage();
 
@@ -1370,14 +1343,17 @@ if (!$product) {
 
             // Animate product details on load
             const productDetails = document.querySelector('.product-details');
-            productDetails.style.opacity = '0';
-            productDetails.style.transform = 'translateY(20px)';
+            if (productDetails) {
+                productDetails.style.opacity = '0';
+                productDetails.style.transform = 'translateY(20px)';
 
-            setTimeout(() => {
-                productDetails.style.transition = 'all 0.6s ease';
-                productDetails.style.opacity = '1';
-                productDetails.style.transform = 'translateY(0)';
-            }, 200);
+                setTimeout(() => {
+                    productDetails.style.transition = 'all 0.6s ease';
+                    productDetails.style.opacity = '1';
+                    productDetails.style.transform = 'translateY(0)';
+                }, 200);
+            }
+
         });
 
         // Live chat functionality

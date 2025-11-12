@@ -14,6 +14,9 @@ if ($issue_id <= 0 || $specialist_id <= 0) {
     exit;
 }
 
+// Debug: Check if we have the required data
+error_log("Debug: issue_id=$issue_id, specialist_id=$specialist_id, issue_name=$issue_name, specialist_name=$specialist_name");
+
 // Handle appointment submission
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])) {
     try {
@@ -37,9 +40,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
         $device_info = mysqli_real_escape_string($db->db_conn(), $device_info);
         $issue_description = mysqli_real_escape_string($db->db_conn(), $issue_description);
 
-        // Insert appointment
+        // Insert appointment (adjusted for your existing table structure)
         $insert_query = "INSERT INTO repair_appointments
-                        (customer_id, specialist_id, issue_id, appointment_date, appointment_time,
+                        (customer_id, specialist_id, issue_type_id, appointment_date, appointment_time,
                          customer_phone, device_info, issue_description, status)
                         VALUES ($customer_id, $specialist_id, $issue_id, '$appointment_date', '$appointment_time',
                                '$customer_phone', '$device_info', '$issue_description', 'scheduled')";
@@ -56,6 +59,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
 
     } catch (Exception $e) {
         $error_message = "An error occurred: " . $e->getMessage();
+        // Log the error for debugging
+        error_log("Repair appointment error: " . $e->getMessage());
+        error_log("Query: " . $insert_query);
     }
 }
 

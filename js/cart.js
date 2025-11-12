@@ -130,60 +130,32 @@ function updateQuantity(productId, quantity) {
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
 
-            // Update the subtotal for this item - more comprehensive approach
-            const cartItem = document.querySelector(`[data-product-id="${productId}"]`) ||
-                           document.querySelector(`tr[data-product-id="${productId}"]`) ||
-                           document.querySelector(`div[data-product-id="${productId}"]`);
+            // Update the individual item total price (above remove button)
+            const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
 
             if (cartItem) {
-                // Find the unit price (try multiple approaches)
-                let unitPrice = 0;
-                const possibleUnitPriceElements = [
-                    cartItem.querySelector('.unit-price'),
-                    cartItem.querySelector('[data-unit-price]'),
-                    cartItem.querySelector('.fw-bold.text-primary.fs-5'),
-                    cartItem.querySelector('.product-price'),
-                    cartItem.querySelector('.price-per-unit')
-                ];
+                // Find the unit price element (the single item price)
+                const unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5');
+                // Find the total price element (the one above the remove button)
+                const totalPriceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
 
-                for (let element of possibleUnitPriceElements) {
-                    if (element) {
-                        const priceText = element.textContent || element.getAttribute('data-unit-price') || '';
-                        const extractedPrice = parseFloat(priceText.replace(/[^\d.]/g, ''));
-                        if (!isNaN(extractedPrice) && extractedPrice > 0) {
-                            unitPrice = extractedPrice;
-                            break;
-                        }
+                if (unitPriceElement && totalPriceElement) {
+                    // Extract the unit price
+                    const unitPriceText = unitPriceElement.textContent.replace('GHS ', '').replace(',', '');
+                    const unitPrice = parseFloat(unitPriceText);
+
+                    if (!isNaN(unitPrice) && unitPrice > 0) {
+                        // Calculate new total for this item
+                        const newItemTotal = (unitPrice * quantity).toFixed(2);
+                        totalPriceElement.textContent = `GHS ${parseFloat(newItemTotal).toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+
+                        console.log(`Updated item ${productId}: ${quantity} × GHS ${unitPrice} = GHS ${newItemTotal}`);
+                    } else {
+                        console.log('Invalid unit price found, reloading page...');
+                        setTimeout(() => location.reload(), 1000);
                     }
-                }
-
-                // Find the total price element to update
-                const totalPriceElements = [
-                    cartItem.querySelector('.item-total'),
-                    cartItem.querySelector('.fw-bold.fs-5.text-success'),
-                    cartItem.querySelector('.total-price'),
-                    cartItem.querySelector('.item-price-total'),
-                    cartItem.querySelector('[class*="total"]')
-                ];
-
-                let totalPriceElement = null;
-                for (let element of totalPriceElements) {
-                    if (element) {
-                        totalPriceElement = element;
-                        break;
-                    }
-                }
-
-                if (unitPrice > 0 && totalPriceElement) {
-                    const newSubtotal = (unitPrice * quantity).toFixed(2);
-                    totalPriceElement.textContent = `GHS ${newSubtotal}`;
-
-                    // Add visual feedback
-                    totalPriceElement.style.fontWeight = 'bold';
-                    totalPriceElement.style.color = '#059669';
                 } else {
-                    // If we can't find price elements, reload page for updated totals
-                    console.log('Could not find price elements, reloading...');
+                    console.log('Price elements not found, reloading page...');
                     setTimeout(() => location.reload(), 1000);
                 }
             }

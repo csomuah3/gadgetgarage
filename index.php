@@ -743,7 +743,7 @@ try {
 		/* Mega Dropdown */
 		.mega-dropdown {
 			position: absolute;
-			
+
 			top: 100%;
 			left: 0;
 			width: 800px;
@@ -1098,7 +1098,7 @@ try {
 
 		.brand-card:hover {
 			transform: translateY(-5px);
-			box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
 			border-color: #008060;
 		}
 
@@ -1659,32 +1659,84 @@ try {
 		}
 
 		/* Smart Band Promo */
+		/* Smart Band Promo */
 		.smart-band-promo {
 			padding: 40px 0;
 			background: white;
 		}
 
+		/* main banner container */
 		.promo-banner {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
 			border-radius: 15px;
 			padding: 30px;
 			color: white;
-			text-align: center;
 			position: relative;
 			overflow: hidden;
+			text-align: left;
+			/* switched from center */
+			gap: 30px;
+			background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+		}
+
+		/* text content */
+		.promo-content {
+			flex: 1;
+			min-width: 260px;
+			z-index: 1;
 		}
 
 		.promo-banner h2 {
-			font-size: 1.8rem;
-			font-weight: 600;
+			font-size: 2rem;
+			font-weight: 700;
 			margin-bottom: 10px;
+			line-height: 1.2;
 		}
 
 		.promo-banner p {
 			font-size: 1rem;
-			margin-bottom: 30px;
+			margin-bottom: 25px;
 			opacity: 0.9;
+			max-width: 42ch;
 		}
 
+		/* call-to-action button */
+		.cta-btn {
+			display: inline-block;
+			background: #fff;
+			color: #6a5af9;
+			padding: 12px 22px;
+			border-radius: 10px;
+			font-weight: 600;
+			text-decoration: none;
+			transition: all 0.3s ease;
+		}
+
+		.cta-btn:hover {
+			background: #eceaff;
+			transform: translateY(-2px);
+		}
+
+		/* hero image column */
+		.promo-visual {
+			flex: 1;
+			display: flex;
+			justify-content: flex-end;
+		}
+
+		.promo-visual img {
+			width: 100%;
+			max-width: 520px;
+			height: auto;
+			border-radius: 15px;
+			object-fit: cover;
+			box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+		}
+
+		/* --- older promo-images (small icons) --- */
+		/* you can keep this for other banners if needed */
 		.promo-images {
 			display: flex;
 			justify-content: center;
@@ -1698,6 +1750,29 @@ try {
 			border-radius: 12px;
 			border: 3px solid rgba(255, 255, 255, 0.3);
 		}
+
+		/* responsive tweaks */
+		@media (max-width: 768px) {
+			.promo-banner {
+				flex-direction: column;
+				text-align: center;
+			}
+
+			.promo-content {
+				flex: none;
+			}
+
+			.promo-visual {
+				justify-content: center;
+				margin-top: 20px;
+			}
+
+			.promo-banner p {
+				margin-bottom: 20px;
+			}
+		}
+
+
 
 		/* Products by Category */
 		.products-by-category {
@@ -3153,7 +3228,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop&crop=center" alt="Smartphones">
 						</div>
 						<h4>Smartphones</h4>
-						<p>(12 Items)</p>
+						<p>From 2500 Cedis</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3162,7 +3237,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop&crop=center" alt="Laptops">
 						</div>
 						<h4>Laptops</h4>
-						<p>(8 Items)</p>
+						<p>From 4000 Cedis</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3171,7 +3246,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="iPads">
 						</div>
 						<h4>iPads</h4>
-						<p>(6 Items)</p>
+						<p>From 3000 Cedis</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3180,7 +3255,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Cameras">
 						</div>
 						<h4>Cameras</h4>
-						<p>(10 Items)</p>
+						<p>From 5000 Cedis</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3189,7 +3264,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=150&h=150&fit=crop&crop=center" alt="Video Equipment">
 						</div>
 						<h4>Video Equipment</h4>
-						<p>(5 Items)</p>
+						<p>From 1200 Cedis</p>
 					</div>
 				</div>
 			</div>
@@ -3197,22 +3272,29 @@ try {
 	</section>
 
 	<!-- Camera & Video Equipment Promo -->
+	<!-- DJI Osmo Pocket 3 Promo -->
 	<section class="smart-band-promo">
 		<div class="container">
-			<div class="promo-banner" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);">
+			<div class="promo-banner" style="background: linear-gradient(135deg, #7f56d9 0%, #6a5af9 100%);">
 				<div class="promo-content">
-					<h2>Professional Camera & Video Equipment Collection</h2>
-					<p>Capture Life's Perfect Moments with Premium Photography & Video Gear</p>
-					<div class="promo-images">
-						<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=100&h=100&fit=crop&crop=center" alt="DSLR Camera">
-						<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=100&h=100&fit=crop&crop=center" alt="Video Camera">
-						<img src="https://images.unsplash.com/photo-1581833971358-2c8b550f87b3?w=100&h=100&fit=crop&crop=center" alt="Camera Lens">
-						<img src="https://images.unsplash.com/photo-1581833971394-9135dfe71455?w=100&h=100&fit=crop&crop=center" alt="Tripod">
-					</div>
+					<h2>DJI Osmo Pocket 3 — Small Frame, Big Flex 🎥</h2>
+					<p>
+						Meet the vlogging beast that fits in your hand.
+						4K clarity, buttery-smooth shots, and creator-level power —
+						ready to shoot, edit, and post anywhere you go.
+					</p>
+					<a href="#" class="cta-btn">Shop Now →</a>
+				</div>
+
+				<div class="promo-image">
+					<img
+						src="https://images.unsplash.com/photo-1617088675215-7c7df7d2fa33?w=1200&h=700&fit=crop"
+						alt="DJI Osmo Pocket 3 camera on table">
 				</div>
 			</div>
 		</div>
 	</section>
+
 
 	<!-- Products By Category -->
 	<section class="products-by-category">

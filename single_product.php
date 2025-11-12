@@ -871,7 +871,7 @@ if (!$product) {
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
                             <!-- Excellent Condition -->
-                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo floatval($product['product_price']); ?>" onclick="window.selectCondition('excellent', <?php echo floatval($product['product_price']); ?>)">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo floatval($product['product_price']); ?>" onclick="selectCondition('excellent', <?php echo floatval($product['product_price']); ?>)">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
@@ -884,7 +884,7 @@ if (!$product) {
                             </div>
 
                             <!-- Good Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo floatval($product['product_price']) - 100; ?>" onclick="window.selectCondition('good', <?php echo floatval($product['product_price']) - 100; ?>)">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo floatval($product['product_price']) - 100; ?>" onclick="selectCondition('good', <?php echo floatval($product['product_price']) - 100; ?>)">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Good Condition</div>
@@ -898,7 +898,7 @@ if (!$product) {
                             </div>
 
                             <!-- Fair Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo floatval($product['product_price']) - 200; ?>" onclick="window.selectCondition('fair', <?php echo floatval($product['product_price']) - 200; ?>)">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo floatval($product['product_price']) - 200; ?>" onclick="selectCondition('fair', <?php echo floatval($product['product_price']) - 200; ?>)">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Fair Condition</div>
@@ -959,7 +959,7 @@ if (!$product) {
         let originalPrice = <?php echo floatval($product['product_price']); ?>;
 
         // IMMEDIATE function definition - available right away
-        window.selectCondition = function(condition, price) {
+        function selectCondition(condition, price) {
             alert('Condition clicked: ' + condition + ' Price: ' + price);
             console.log('selectCondition called:', condition, price);
             selectedCondition = condition;
@@ -1009,8 +1009,10 @@ if (!$product) {
                 if (originalPriceElement) originalPriceElement.style.display = 'none';
                 if (discountBadge) discountBadge.style.display = 'none';
             }
-        };
+        }
 
+        // Make function available globally
+        window.selectCondition = selectCondition;
 
         // Initialize condition selection
         function initializeConditionSelection() {
@@ -1309,7 +1311,6 @@ if (!$product) {
 
         // Get product data
         const productCategory = '<?php echo addslashes($product['cat_name']); ?>';
-        const originalPrice = <?php echo $product['product_price']; ?>;
 
         // Price calculation function
         function calculatePrice(condition) {

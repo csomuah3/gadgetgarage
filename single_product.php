@@ -960,6 +960,7 @@ if (!$product) {
 
         // IMMEDIATE function definition - available right away
         window.selectCondition = function(condition, price) {
+            alert('Condition clicked: ' + condition + ' Price: ' + price);
             console.log('selectCondition called:', condition, price);
             selectedCondition = condition;
             selectedPrice = parseFloat(price);

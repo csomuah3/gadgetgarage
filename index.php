@@ -871,7 +871,13 @@ try {
 		/* ——— Layout shell ——— */
 		.hero-banner-section {
 			/* taller section like your screenshot */
-			width: 80%;
+			width: 100%;
+			max-width: 100%;
+			margin: 0 auto;
+			display: flex;
+			justify-content: space-between;
+			gap: 20px;
+			padding: 0 30px;
 			padding: 24px 0;
 			background: #ffffff;
 		}
@@ -970,61 +976,270 @@ try {
 		}
 
 		/* SERVICES STRIP */
-		.services-strip{background:#ecfff0;padding:22px 0;margin-top:18px;border-radius:10px}
-		.service-item{display:flex;align-items:center;justify-content:center;gap:10px;font-weight:600;color:#004a1f}
+		.services-strip {
+			background: #ecfff0;
+			padding: 22px 0;
+			margin-top: 18px;
+			border-radius: 10px
+		}
+
+		.service-item {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			font-weight: 600;
+			color: #004a1f
+		}
 
 		/* POPULAR CATEGORIES */
-		.popular-categories{padding:80px 0;background:var(--light-bg)}
-		.section-title{font-weight:800;font-size:2rem;margin-bottom:8px}
-		.section-sub{color:var(--muted);margin-bottom:36px}
-		.category-card{background:#fff;border-radius:var(--card-radius);padding:24px 18px;text-align:center;box-shadow:var(--shadow-1);transition:.25s;height:100%;cursor:pointer;}
-		.category-card:hover{transform:translateY(-6px);box-shadow:var(--shadow-2)}
-		.category-icon{width:100%;height:140px;border-radius:10px;overflow:hidden;margin-bottom:14px}
-		.category-icon img{width:100%;height:100%;object-fit:cover}
-		.category-card h4{font-size:1.1rem;font-weight:700;margin-bottom:6px}
-		.category-card p{color:#555;font-size:.95rem;margin:0}
-		.price{color:var(--brand-blue);font-weight:800}
+		.popular-categories {
+			padding: 80px 0;
+			background: var(--light-bg)
+		}
+
+		.section-title {
+			font-weight: 800;
+			font-size: 2rem;
+			margin-bottom: 8px
+		}
+
+		.section-sub {
+			color: var(--muted);
+			margin-bottom: 36px
+		}
+
+		.category-card {
+			background: #fff;
+			border-radius: var(--card-radius);
+			padding: 24px 18px;
+			text-align: center;
+			box-shadow: var(--shadow-1);
+			transition: .25s;
+			height: 100%;
+			cursor: pointer;
+		}
+
+		.category-card:hover {
+			transform: translateY(-6px);
+			box-shadow: var(--shadow-2)
+		}
+
+		.category-icon {
+			width: 100%;
+			height: 140px;
+			border-radius: 10px;
+			overflow: hidden;
+			margin-bottom: 14px
+		}
+
+		.category-icon img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover
+		}
+
+		.category-card h4 {
+			font-size: 1.1rem;
+			font-weight: 700;
+			margin-bottom: 6px
+		}
+
+		.category-card p {
+			color: #555;
+			font-size: .95rem;
+			margin: 0
+		}
+
+		.price {
+			color: var(--brand-blue);
+			font-weight: 800
+		}
 
 		/* BRANDS — Infinite marquee + Magic Bento hover */
-		.brands-area{background:#0b0b13;color:#eae9f7;padding:56px 0;position:relative;overflow:hidden}
-		.brands-area h2{color:#fff}
-		.brands-marquee{mask-image:linear-gradient(to right, transparent, black 10%, black 90%, transparent)}
-		.marquee-track{display:flex;gap:24px;list-style:none;padding:0;margin:0;animation:scrollX 35s linear infinite}
-		@keyframes scrollX{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-		.brand-card{width:140px;height:86px;border-radius:16px;position:relative;isolation:isolate;background:rgba(255,255,255,.03);display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.08)}
-		.brand-card img{max-width:90px;max-height:44px;filter:grayscale(100%) brightness(1.2);opacity:.9;transition:.3s}
-		.brand-card:hover img{filter:none;opacity:1}
-		/* magic bento glow */
-		.brand-card.bento::before{
-		  content:"";position:absolute;inset:-2px;border-radius:18px;background:conic-gradient(from 180deg at 50% 50%, rgba(162,95,255,.6), rgba(64,0,255,.6), rgba(255,60,172,.6), rgba(162,95,255,.6));
-		  filter:blur(18px);opacity:0;transition:.35s;z-index:-1;
+		.brands-area {
+			background: #0b0b13;
+			color: #eae9f7;
+			padding: 56px 0;
+			position: relative;
+			overflow: hidden
 		}
-		.brand-card.bento:hover::before{opacity:.75}
+
+		.brands-area h2 {
+			color: #fff
+		}
+
+		.brands-marquee {
+			mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent)
+		}
+
+		.marquee-track {
+			display: flex;
+			gap: 24px;
+			list-style: none;
+			padding: 0;
+			margin: 0;
+			animation: scrollX 35s linear infinite
+		}
+
+		@keyframes scrollX {
+			from {
+				transform: translateX(0)
+			}
+
+			to {
+				transform: translateX(-50%)
+			}
+		}
+
+		.brand-card {
+			width: 140px;
+			height: 86px;
+			border-radius: 16px;
+			position: relative;
+			isolation: isolate;
+			background: rgba(255, 255, 255, .03);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border: 1px solid rgba(255, 255, 255, .08)
+		}
+
+		.brand-card img {
+			max-width: 90px;
+			max-height: 44px;
+			filter: grayscale(100%) brightness(1.2);
+			opacity: .9;
+			transition: .3s
+		}
+
+		.brand-card:hover img {
+			filter: none;
+			opacity: 1
+		}
+
+		/* magic bento glow */
+		.brand-card.bento::before {
+			content: "";
+			position: absolute;
+			inset: -2px;
+			border-radius: 18px;
+			background: conic-gradient(from 180deg at 50% 50%, rgba(162, 95, 255, .6), rgba(64, 0, 255, .6), rgba(255, 60, 172, .6), rgba(162, 95, 255, .6));
+			filter: blur(18px);
+			opacity: 0;
+			transition: .35s;
+			z-index: -1;
+		}
+
+		.brand-card.bento:hover::before {
+			opacity: .75
+		}
 
 		/* TESTIMONIALS — circular orbit */
-		.testimonials{background:#fff;padding:72px 0}
-		.orbit-wrap{position:relative;width:420px;height:420px;margin:0 auto}
-		.orbit-center{
-		  position:absolute;inset:0;margin:auto;width:220px;height:220px;border-radius:18px;
-		  background:#f8f9fc;box-shadow:0 3px 12px rgba(0,0,0,.08);display:flex;align-items:center;justify-content:center;padding:18px;text-align:center
+		.testimonials {
+			background: #fff;
+			padding: 72px 0
 		}
-		.orbit-center p{margin:0;font-size:.98rem;color:#333}
-		.orbit{position:absolute;inset:0;border-radius:50%;animation:spin 24s linear infinite}
-		@keyframes spin{from{transform:rotate(0)}to{transform:rotate(360deg)}}
-		.avatar{
-		  position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);
-		  width:70px;height:70px;border-radius:50%;overflow:hidden;border:3px solid #fff;box-shadow:0 6px 16px rgba(0,0,0,.18);cursor:pointer;transition:transform .25s
+
+		.orbit-wrap {
+			position: relative;
+			width: 420px;
+			height: 420px;
+			margin: 0 auto
 		}
-		.avatar img{width:100%;height:100%;object-fit:cover}
-		.avatar:hover{transform:translate(-50%,-50%) scale(1.08)}
+
+		.orbit-center {
+			position: absolute;
+			inset: 0;
+			margin: auto;
+			width: 220px;
+			height: 220px;
+			border-radius: 18px;
+			background: #f8f9fc;
+			box-shadow: 0 3px 12px rgba(0, 0, 0, .08);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 18px;
+			text-align: center
+		}
+
+		.orbit-center p {
+			margin: 0;
+			font-size: .98rem;
+			color: #333
+		}
+
+		.orbit {
+			position: absolute;
+			inset: 0;
+			border-radius: 50%;
+			animation: spin 24s linear infinite
+		}
+
+		@keyframes spin {
+			from {
+				transform: rotate(0)
+			}
+
+			to {
+				transform: rotate(360deg)
+			}
+		}
+
+		.avatar {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%);
+			width: 70px;
+			height: 70px;
+			border-radius: 50%;
+			overflow: hidden;
+			border: 3px solid #fff;
+			box-shadow: 0 6px 16px rgba(0, 0, 0, .18);
+			cursor: pointer;
+			transition: transform .25s
+		}
+
+		.avatar img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover
+		}
+
+		.avatar:hover {
+			transform: translate(-50%, -50%) scale(1.08)
+		}
+
 		/* positions (degrees) */
-		.a1{transform:translate(-50%,-50%) rotate(0deg) translate(180px) rotate(0deg)}
-		.a2{transform:translate(-50%,-50%) rotate(60deg) translate(180px) rotate(-60deg)}
-		.a3{transform:translate(-50%,-50%) rotate(120deg) translate(180px) rotate(-120deg)}
-		.a4{transform:translate(-50%,-50%) rotate(180deg) translate(180px) rotate(-180deg)}
-		.a5{transform:translate(-50%,-50%) rotate(240deg) translate(180px) rotate(-240deg)}
-		.a6{transform:translate(-50%,-50%) rotate(300deg) translate(180px) rotate(-300deg)}
-		.orbit:hover{animation-play-state:paused}
+		.a1 {
+			transform: translate(-50%, -50%) rotate(0deg) translate(180px) rotate(0deg)
+		}
+
+		.a2 {
+			transform: translate(-50%, -50%) rotate(60deg) translate(180px) rotate(-60deg)
+		}
+
+		.a3 {
+			transform: translate(-50%, -50%) rotate(120deg) translate(180px) rotate(-120deg)
+		}
+
+		.a4 {
+			transform: translate(-50%, -50%) rotate(180deg) translate(180px) rotate(-180deg)
+		}
+
+		.a5 {
+			transform: translate(-50%, -50%) rotate(240deg) translate(180px) rotate(-240deg)
+		}
+
+		.a6 {
+			transform: translate(-50%, -50%) rotate(300deg) translate(180px) rotate(-300deg)
+		}
+
+		.orbit:hover {
+			animation-play-state: paused
+		}
 
 		.side-card {
 			border-radius: 14px;
@@ -1123,9 +1338,24 @@ try {
 				height: 112px;
 			}
 
-			.orbit-wrap{width:320px;height:320px}
-			.orbit-center{width:200px;height:200px}
-			.a1,.a2,.a3,.a4,.a5,.a6{transform:translate(-50%,-50%) rotate(var(--r,0)) translate(135px) rotate(calc(var(--r,0) * -1))}
+			.orbit-wrap {
+				width: 320px;
+				height: 320px
+			}
+
+			.orbit-center {
+				width: 200px;
+				height: 200px
+			}
+
+			.a1,
+			.a2,
+			.a3,
+			.a4,
+			.a5,
+			.a6 {
+				transform: translate(-50%, -50%) rotate(var(--r, 0)) translate(135px) rotate(calc(var(--r, 0) * -1))
+			}
 		}
 
 		/* Features Section */
@@ -3113,22 +3343,22 @@ try {
 					<p id="quote">"Fantastic service and fast delivery. My laptop arrived in two days!" — <strong>Yaw</strong></p>
 				</div>
 				<div class="orbit" id="orbit">
-					<div class="avatar a1" data-quote=""Fantastic service and fast delivery. My laptop arrived in two days!" — Yaw">
+					<div class="avatar a1" data-quote="" Fantastic service and fast delivery. My laptop arrived in two days!" — Yaw">
 						<img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=200&auto=format" alt="Yaw">
 					</div>
-					<div class="avatar a2" data-quote=""The prices in GHS are great and checkout was smooth." — Akua">
+					<div class="avatar a2" data-quote="" The prices in GHS are great and checkout was smooth." — Akua">
 						<img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format" alt="Akua">
 					</div>
-					<div class="avatar a3" data-quote=""Customer support helped me pick the right camera." — Kofi">
+					<div class="avatar a3" data-quote="" Customer support helped me pick the right camera." — Kofi">
 						<img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format" alt="Kofi">
 					</div>
-					<div class="avatar a4" data-quote=""Authentic brands and solid warranty—highly recommend." — Ama">
+					<div class="avatar a4" data-quote="" Authentic brands and solid warranty—highly recommend." — Ama">
 						<img src="https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=200&auto=format" alt="Ama">
 					</div>
-					<div class="avatar a5" data-quote=""Got my headphones the same day in Accra. Great!" — Nii">
+					<div class="avatar a5" data-quote="" Got my headphones the same day in Accra. Great!" — Nii">
 						<img src="https://images.unsplash.com/photo-1541534401786-2077eed87a72?q=80&w=200&auto=format" alt="Nii">
 					</div>
-					<div class="avatar a6" data-quote=""Their deals of the week are unbeatable." — Abena">
+					<div class="avatar a6" data-quote="" Their deals of the week are unbeatable." — Abena">
 						<img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=200&auto=format" alt="Abena">
 					</div>
 				</div>
@@ -3615,12 +3845,12 @@ try {
 		const quoteEl = document.getElementById('quote');
 		const orbit = document.getElementById('orbit');
 		if (quoteEl && orbit) {
-			document.querySelectorAll('.avatar').forEach(a=>{
-				a.addEventListener('mouseenter', ()=>{
+			document.querySelectorAll('.avatar').forEach(a => {
+				a.addEventListener('mouseenter', () => {
 					quoteEl.textContent = a.dataset.quote;
 					orbit.style.animationPlayState = 'paused';
 				});
-				a.addEventListener('mouseleave', ()=>{
+				a.addEventListener('mouseleave', () => {
 					orbit.style.animationPlayState = 'running';
 				});
 			});

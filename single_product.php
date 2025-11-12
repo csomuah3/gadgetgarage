@@ -923,7 +923,7 @@ if (!$product) {
                         </div>
 
                         <!-- Add to Cart Button -->
-                        <button onclick="showEnhancedAddToCartModal(<?php echo $product['product_id']; ?>, '<?php echo htmlspecialchars($product['product_title'], ENT_QUOTES); ?>', selectedPrice)" id="addToCartBtn"
+                        <button onclick="addToCartWithCondition(<?php echo $product['product_id']; ?>)" id="addToCartBtn"
                                 style="width: 100%; background: white; color: #4f46e5; border: none; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
                             <i class="fas fa-shopping-cart"></i>
                             Add to Cart - GH₵<span id="cartButtonPrice"><?php echo number_format($product['product_price'], 0); ?></span>

@@ -1133,6 +1133,43 @@ try {
 			padding: 40px 0;
 		}
 
+		.features-bar {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			padding: 40px 0;
+		}
+
+		.features-bar .feature-item {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			margin-top: 0;
+		}
+
+		.features-bar .feature-icon {
+			width: 50px;
+			height: 50px;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #ffffff;
+			font-size: 1.2rem;
+		}
+
+		.features-bar .feature-content h5 {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #ffffff;
+			margin-bottom: 5px;
+		}
+
+		.features-bar .feature-content p {
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 0.9rem;
+			margin: 0;
+		}
+
 		.feature-item {
 			margin-top: 30px;
 			display: flex;
@@ -2845,6 +2882,7 @@ try {
 	<section class="popular-categories">
 		<div class="container-fluid">
 			<h2 class="section-title text-center">Most Popular Categories</h2>
+			<p class="section-sub text-center">Top picks across our store</p>
 			<div class="row g-4 justify-content-center">
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">

@@ -2787,94 +2787,42 @@ try {
 			</div>
 		</div>
 
-		<!-- Services row -->
-		<div class="services-strip mt-4">
-			<div class="container">
-				<div class="row text-center g-3">
-					<div class="col-6 col-md-3"><div class="service-item">🚚 Free Shipping</div></div>
-					<div class="col-6 col-md-3"><div class="service-item">💸 Money Return</div></div>
-					<div class="col-6 col-md-3"><div class="service-item">🎁 Special Gifts</div></div>
-					<div class="col-6 col-md-3"><div class="service-item">⭐ Member Discount</div></div>
-				</div>
-			</div>
-		</div>
-	</section>
-
-	<!-- MOST POPULAR CATEGORIES (5) -->
-	<section class="popular-categories">
-		<div class="container-fluid">
-			<h2 class="section-title text-center">Most Popular Categories</h2>
-			<p class="section-sub text-center">Top picks across our store</p>
-
-			<div class="row g-4 justify-content-center">
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card" onclick="window.location.href='all_product.php?category=phones'">
-						<div class="category-icon"><img src="https://images.unsplash.com/photo-1510557880182-3f8c5f7b63d9?q=80&w=600&auto=format" alt="Smartphones"></div>
-						<h4>Smartphones</h4><p>From <span class="price">₵2,300</span></p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card" onclick="window.location.href='all_product.php?category=laptops'">
-						<div class="category-icon"><img src="https://images.unsplash.com/photo-1587202372775-98927e7d2e1c?q=80&w=600&auto=format" alt="Laptops"></div>
-						<h4>Laptops</h4><p>From <span class="price">₵4,800</span></p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card" onclick="window.location.href='all_product.php?category=cameras'">
-						<div class="category-icon"><img src="https://images.unsplash.com/photo-1508896694512-7a3a7eede1b0?q=80&w=600&auto=format" alt="Cameras"></div>
-						<h4>Cameras</h4><p>From <span class="price">₵1,900</span></p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card" onclick="window.location.href='all_product.php?category=tablets'">
-						<div class="category-icon"><img src="https://images.unsplash.com/photo-1605902711622-cfb43c4437d7?q=80&w=600&auto=format" alt="Tablets"></div>
-						<h4>Tablets</h4><p>From <span class="price">₵2,100</span></p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card" onclick="window.location.href='all_product.php?category=accessories'">
-						<div class="category-icon"><img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?q=80&w=600&auto=format" alt="Accessories"></div>
-						<h4>Accessories</h4><p>From <span class="price">₵150</span></p>
-					</div>
-				</div>
-			</div>
-		</div>
 	</section>
 
 	<!-- Features Section -->
-	<section class="features-section">
-		<div class="container">
-			<div class="row">
+	<section class="features-bar">
+		<div class="container-fluid">
+			<div class="row g-4">
 				<div class="col-lg-3 col-md-6">
 					<div class="feature-item">
 						<div class="feature-icon">
 							<i class="fas fa-shipping-fast"></i>
 						</div>
-						<div class="feature-text">
-							<h4>Free Shipping</h4>
-							<p>Free shipping on all order</p>
+						<div class="feature-content">
+							<h5>Free Shipping</h5>
+							<p>Free shipping all order over $99</p>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6">
 					<div class="feature-item">
 						<div class="feature-icon">
-							<i class="fas fa-undo-alt"></i>
+							<i class="fas fa-undo"></i>
 						</div>
-						<div class="feature-text">
-							<h4>Money Return</h4>
-							<p>Back guarantee in 7 days</p>
+						<div class="feature-content">
+							<h5>Money Return</h5>
+							<p>Back guarantee under 5 days</p>
 						</div>
 					</div>
 				</div>
 				<div class="col-lg-3 col-md-6">
 					<div class="feature-item">
 						<div class="feature-icon">
-							<i class="fas fa-percentage"></i>
+							<i class="fas fa-user-friends"></i>
 						</div>
-						<div class="feature-text">
-							<h4>Member Discount</h4>
-							<p>Onevery order over $120.00</p>
+						<div class="feature-content">
+							<h5>Member Discount</h5>
+							<p>Onevery order over $140.00</p>
 						</div>
 					</div>
 				</div>
@@ -2883,9 +2831,9 @@ try {
 						<div class="feature-icon">
 							<i class="fas fa-gift"></i>
 						</div>
-						<div class="feature-text">
-							<h4>Special Gifts</h4>
-							<p>Contact us Anytime</p>
+						<div class="feature-content">
+							<h5>Special Gifts</h5>
+							<p>New product get special gifts</p>
 						</div>
 					</div>
 				</div>

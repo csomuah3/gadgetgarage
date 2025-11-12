@@ -649,126 +649,111 @@ if (!$product) {
                         data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
                 </div>
                 <div class="col-lg-6">
-                    <div class="product-details">
-                        <div class="d-flex justify-content-between align-items-start mb-3">
-                            <span class="product-id">ID: <?php echo $product['product_id']; ?></span>
-                            <div class="share-buttons">
-                                <button class="share-btn facebook" onclick="shareProduct('facebook')" title="Share on Facebook">
-                                    <i class="fab fa-facebook-f"></i>
-                                </button>
-                                <button class="share-btn twitter" onclick="shareProduct('twitter')" title="Share on Twitter">
-                                    <i class="fab fa-twitter"></i>
-                                </button>
-                                <button class="share-btn whatsapp" onclick="shareProduct('whatsapp')" title="Share on WhatsApp">
-                                    <i class="fab fa-whatsapp"></i>
-                                </button>
-                            </div>
+                    <div class="product-details" style="padding: 40px; background: #4f46e5; color: white; height: 100%;">
+                        <!-- Special Offer Header -->
+                        <div style="margin-bottom: 20px;">
+                            <span style="background: white; color: #4f46e5; padding: 8px 16px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.5px;">SPECIAL OFFER</span>
                         </div>
 
-                        <h1 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h1>
+                        <!-- Product Title -->
+                        <h1 style="color: white; font-size: 2.2rem; font-weight: 800; margin-bottom: 15px; line-height: 1.2;"><?php echo htmlspecialchars($product['product_title']); ?></h1>
 
-                        <!-- Condition Selection -->
-                        <div class="condition-selection mb-4">
-                            <h5 style="color: #008060; margin-bottom: 15px;">Select Condition</h5>
-                            <div class="condition-options">
-                                <div class="condition-option">
-                                    <input class="form-check-input" type="radio" name="condition" id="excellent" value="excellent" checked style="display: none;">
-                                    <label class="condition-label" for="excellent">
-                                        <div class="condition-info">
-                                            <span>Excellent Condition</span>
-                                            <small>Like new, no visible wear</small>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="condition-price" id="excellentPrice">GHS<?php echo number_format($product['product_price'], 0); ?></div>
-                                        </div>
-                                    </label>
+                        <!-- Product Description -->
+                        <p style="color: rgba(255,255,255,0.9); font-size: 1.1rem; margin-bottom: 25px; line-height: 1.6;">
+                            <?php
+                            $description = $product['product_desc'] ?? 'The ultimate professional device with advanced features. Perfect for intensive workflows and high-performance tasks.';
+                            echo htmlspecialchars(strlen($description) > 120 ? substr($description, 0, 120) . '...' : $description);
+                            ?>
+                        </p>
+
+                        <!-- Key Features -->
+                        <div style="margin-bottom: 30px;">
+                            <h5 style="color: white; margin-bottom: 15px; font-weight: 600;">Key Features</h5>
+                            <?php
+                            // Generate features based on product category and brand
+                            $category = $product['cat_name'] ?? 'Electronic';
+                            $brand = $product['brand_name'] ?? 'Premium';
+                            $features = [
+                                '• ' . ucfirst($brand) . ' brand with premium quality',
+                                '• ' . ucfirst($category) . ' device specifications',
+                                '• High-performance components',
+                                '• Professional-grade reliability',
+                                '• Advanced connectivity options'
+                            ];
+                            foreach($features as $feature): ?>
+                                <div style="color: rgba(255,255,255,0.95); margin-bottom: 8px; display: flex; align-items: center;">
+                                    <i class="fas fa-check" style="color: #10b981; margin-right: 12px; font-size: 0.9rem;"></i>
+                                    <?php echo $feature; ?>
                                 </div>
-                                <div class="condition-option">
-                                    <input class="form-check-input" type="radio" name="condition" id="good" value="good" style="display: none;">
-                                    <label class="condition-label" for="good">
-                                        <div class="condition-info">
-                                            <span>Good Condition</span>
-                                            <small>Minor scratches, fully functional</small>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="condition-price" id="goodPrice">GHS<?php echo number_format($product['product_price'] - 300, 0); ?></div>
-                                            <div class="condition-discount">-GHC300</div>
-                                        </div>
-                                    </label>
-                                </div>
-                                <div class="condition-option">
-                                    <input class="form-check-input" type="radio" name="condition" id="fair" value="fair" style="display: none;">
-                                    <label class="condition-label" for="fair">
-                                        <div class="condition-info">
-                                            <span>Fair Condition</span>
-                                            <small>Visible wear, works perfectly</small>
-                                        </div>
-                                        <div class="text-end">
-                                            <div class="condition-price" id="fairPrice">GHS<?php echo number_format($product['product_price'] - 400, 0); ?></div>
-                                            <div class="condition-discount">-GHC400</div>
-                                        </div>
-                                    </label>
+                            <?php endforeach; ?>
+                        </div>
+
+                        <!-- Select Condition -->
+                        <div style="margin-bottom: 30px;">
+                            <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
+
+                            <!-- Excellent Condition -->
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('excellent', <?php echo $product['product_price']; ?>)" id="excellent-option">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
+                                        <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Like new, no visible wear</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($product['product_price'], 0); ?></div>
+                                    </div>
                                 </div>
                             </div>
+
+                            <!-- Good Condition -->
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('good', <?php echo $product['product_price'] - 100; ?>)" id="good-option">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">Good Condition</div>
+                                        <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Minor scratches, fully functional</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($product['product_price'] - 100, 0); ?></div>
+                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵100</div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Fair Condition -->
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" onclick="selectCondition('fair', <?php echo $product['product_price'] - 200; ?>)" id="fair-option">
+                                <div style="display: flex; justify-content: space-between; align-items: center;">
+                                    <div>
+                                        <div style="font-weight: 600; margin-bottom: 5px;">Fair Condition</div>
+                                        <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Visible wear, works perfectly</div>
+                                    </div>
+                                    <div style="text-align: right;">
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($product['product_price'] - 200, 0); ?></div>
+                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵200</div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <!-- Price Display -->
-                        <div class="price-section">
-                            <div class="product-price" id="displayPrice">GHS <?php echo number_format($product['product_price'], 2); ?></div>
-                            <div class="price-breakdown" id="priceBreakdown" style="display: none;">
-                                <div class="original-price">Original Price: <span id="originalPrice">GHS <?php echo number_format($product['product_price'], 2); ?></span></div>
-                                <div class="discount-amount" id="discountAmount">Discount: -GHS 0.00</div>
+                        <!-- Pricing Display -->
+                        <div style="margin-bottom: 30px;">
+                            <div style="display: flex; align-items: center; gap: 15px; margin-bottom: 8px;">
+                                <span id="currentPrice" style="color: white; font-size: 2.5rem; font-weight: 800;">GH₵<?php echo number_format($product['product_price'], 0); ?></span>
+                                <span id="originalPrice" style="color: rgba(255,255,255,0.6); font-size: 1.5rem; text-decoration: line-through; display: none;">GH₵<?php echo number_format($product['product_price'] * 1.13, 0); ?></span>
+                                <span id="discountBadge" style="background: #ef4444; color: white; padding: 4px 8px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; display: none;">13% off</span>
                             </div>
+                            <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Limited time offer - While supplies last</div>
                         </div>
 
-                        <div class="product-meta">
-                            <div class="meta-item">
-                                <i class="fas fa-tag"></i>
-                                <span><?php echo htmlspecialchars($product['cat_name'] ?? 'N/A'); ?></span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-store"></i>
-                                <span><?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?></span>
-                            </div>
-                            <div class="meta-item">
-                                <i class="fas fa-box"></i>
-                                <span>In Stock</span>
-                            </div>
-                        </div>
+                        <!-- Add to Cart Button -->
+                        <button onclick="addToCartWithCondition(<?php echo $product['product_id']; ?>)" id="addToCartBtn"
+                                style="width: 100%; background: white; color: #4f46e5; border: none; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                            <i class="fas fa-shopping-cart"></i>
+                            Add to Cart - GH₵<span id="cartButtonPrice"><?php echo number_format($product['product_price'], 0); ?></span>
+                        </button>
 
-                        <?php if (!empty($product['product_desc'])): ?>
-                            <div class="product-description">
-                                <h5 style="color: #008060; margin-bottom: 15px;">Description</h5>
-                                <p><?php echo nl2br(htmlspecialchars($product['product_desc'])); ?></p>
-                            </div>
-                        <?php endif; ?>
-
-                        <?php if (!empty($product['product_keywords'])): ?>
-                            <div class="product-keywords">
-                                <h6 style="color: #008060; margin-bottom: 10px;">Tags</h6>
-                                <?php
-                                $keywords = explode(',', $product['product_keywords']);
-                                foreach ($keywords as $keyword):
-                                    $keyword = trim($keyword);
-                                    if (!empty($keyword)):
-                                ?>
-                                        <span class="keyword-tag"><?php echo htmlspecialchars($keyword); ?></span>
-                                <?php
-                                    endif;
-                                endforeach;
-                                ?>
-                            </div>
-                        <?php endif; ?>
-
-                        <div class="action-buttons">
-                            <button class="add-to-cart-btn" onclick="addToCart(<?php echo $product['product_id']; ?>)">
-                                <i class="fas fa-shopping-cart"></i>
-                                Add to Cart
-                            </button>
-                            <button class="btn btn-outline-secondary" onclick="addToWishlist(<?php echo $product['product_id']; ?>)">
-                                <i class="fas fa-heart"></i>
-                                Wishlist
-                            </button>
+                        <div style="color: rgba(255,255,255,0.7); font-size: 0.85rem; text-align: center;">
+                            <i class="fas fa-shield-alt" style="margin-right: 5px;"></i>
+                            Secure checkout • Free delivery • 30-day return policy
                         </div>
                     </div>
                 </div>

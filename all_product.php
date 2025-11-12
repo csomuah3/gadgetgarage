@@ -1786,72 +1786,103 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     <?php else: ?>
                         <div class="product-grid" id="productGrid">
-                            <?php foreach ($products_to_display as $product): ?>
-                                <div class="product-card">
-                                    <a href="single_product.php?pid=<?php echo $product['product_id']; ?>" style="text-decoration: none; color: inherit; display: block; height: 100%;">
-                                        <div class="product-image-container" style="position: relative; background: #f8f9fa; padding: 20px; text-align: center;">
-                                            <img src="uploads/products/<?php echo $product['product_image']; ?>"
-                                                alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                                style="width: 100%; height: 200px; object-fit: contain;"
-                                                onerror="this.src='https://via.placeholder.com/200x200?text=No+Image'; this.style.backgroundColor='#f3f4f6';">
-                                            <div class="product-actions" style="position: absolute; top: 10px; right: 10px; display: flex; gap: 8px;">
-                                                <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="event.stopPropagation(); event.preventDefault();">
-                                                    <i class="far fa-heart" style="color: #666;"></i>
-                                                </button>
-                                                <button class="action-btn" style="background: white; border: 1px solid #ddd; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; cursor: pointer;" onclick="event.stopPropagation(); event.preventDefault();">
-                                                    <i class="fas fa-random" style="color: #666;"></i>
-                                                </button>
-                                            </div>
-                                        </div>
+                            <?php foreach ($products_to_display as $product):
+                                // Calculate random discount percentage (13% shown in your example)
+                                $discount_percentage = rand(10, 25);
+                                $original_price = $product['product_price'] * (1 + $discount_percentage / 100);
+                                $rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
+                            ?>
+                                <div class="product-card" style="background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.3s ease;">
+                                    <!-- Discount Badge -->
+                                    <div style="position: absolute; top: 15px; left: 15px; background: #ef4444; color: white; padding: 8px 12px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; z-index: 10;">
+                                        <?php echo $discount_percentage; ?>% off
+                                    </div>
 
-                                        <div class="product-content" style="padding: 20px;">
-                                        <!-- Brand -->
-                                        <div style="color: #6b7280; font-size: 0.9rem; font-weight: 500; margin-bottom: 8px;">
-                                            <?php echo ucfirst($product['brand_name'] ?? 'Unknown Brand'); ?>
-                                        </div>
+                                    <!-- Product Image -->
+                                    <div style="position: relative; background: #f8f9fa; padding: 30px; text-align: center; height: 250px; display: flex; align-items: center; justify-content: center;">
+                                        <img src="uploads/products/<?php echo $product['product_image']; ?>"
+                                            alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                            style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;"
+                                            onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'"
+                                            onerror="this.src='https://via.placeholder.com/200x200?text=No+Image';">
+                                    </div>
 
-                                        <!-- Product Name -->
-                                        <h5 style="color: #1f2937; font-size: 1.1rem; font-weight: 600; margin-bottom: 12px; line-height: 1.4;">
+                                    <!-- Product Content -->
+                                    <div style="padding: 25px;">
+                                        <!-- Product Title -->
+                                        <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'">
                                             <?php echo htmlspecialchars($product['product_title']); ?>
-                                        </h5>
+                                        </h3>
 
-                                        <!-- Product Category -->
-                                        <div class="product-category" style="margin-bottom: 15px;">
-                                            <span style="background: #e5f3ff; color: #0066cc; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem;">
-                                                <?php echo htmlspecialchars($product['cat_name'] ?? 'Uncategorized'); ?>
-                                            </span>
+                                        <!-- Product Description -->
+                                        <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 15px; line-height: 1.5;">
+                                            <?php
+                                            $description = $product['product_desc'] ?? 'High-quality product perfect for your needs. Experience superior performance and reliability.';
+                                            echo htmlspecialchars(strlen($description) > 80 ? substr($description, 0, 80) . '...' : $description);
+                                            ?>
+                                        </p>
+
+                                        <!-- Key Features -->
+                                        <div style="margin-bottom: 20px;">
+                                            <?php
+                                            // Generate some random tech specs based on product type
+                                            $features = [
+                                                '• ' . ucfirst($product['brand_name'] ?? 'Premium') . ' brand quality',
+                                                '• ' . ucfirst($product['cat_name'] ?? 'Electronic') . ' category',
+                                                '• High-performance specifications'
+                                            ];
+                                            foreach($features as $feature): ?>
+                                                <div style="color: #4b5563; font-size: 0.85rem; margin-bottom: 4px; display: flex; align-items: center;">
+                                                    <i class="fas fa-check" style="color: #10b981; margin-right: 8px; font-size: 0.7rem;"></i>
+                                                    <?php echo $feature; ?>
+                                                </div>
+                                            <?php endforeach; ?>
                                         </div>
 
-                                        <!-- Price -->
-                                        <div class="product-pricing" style="margin-bottom: 15px;">
-                                            <div style="display: flex; align-items: center; gap: 8px;">
-                                                <span style="color: #059669; font-weight: 600; font-size: 1.2rem;">GHS <?php echo number_format($product['product_price']); ?></span>
+                                        <!-- Rating -->
+                                        <div style="display: flex; align-items: center; margin-bottom: 20px;">
+                                            <div style="color: #fbbf24; margin-right: 8px;">
+                                                <?php
+                                                $full_stars = floor($rating);
+                                                $half_star = $rating - $full_stars >= 0.5;
+
+                                                for($i = 0; $i < $full_stars; $i++) {
+                                                    echo '<i class="fas fa-star"></i>';
+                                                }
+                                                if($half_star) {
+                                                    echo '<i class="fas fa-star-half-alt"></i>';
+                                                    $full_stars++;
+                                                }
+                                                for($i = $full_stars; $i < 5; $i++) {
+                                                    echo '<i class="far fa-star"></i>';
+                                                }
+                                                ?>
+                                            </div>
+                                            <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
+                                        </div>
+
+                                        <!-- Pricing -->
+                                        <div style="margin-bottom: 25px;">
+                                            <div style="display: flex; align-items: center; gap: 12px;">
+                                                <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 800;">
+                                                    GH₵<?php echo number_format($product['product_price'], 0); ?>
+                                                </span>
+                                                <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through;">
+                                                    GH₵<?php echo number_format($original_price, 0); ?>
+                                                </span>
+                                            </div>
+                                            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px;">
+                                                Limited time offer - While supplies last
                                             </div>
                                         </div>
 
-                                        <!-- Social Proof -->
-                                        <div class="social-proof" style="margin-bottom: 15px;">
-                                            <?php
-                                            $stock = $product['stock_quantity'] ?? 0;
-                                            if ($stock > 0) {
-                                                // Generate random social proof messages
-                                                $proofs = [
-                                                    "🔥 " . rand(2, 8) . " people have this in their basket",
-                                                    "👀 " . rand(5, 15) . " people viewed this today",
-                                                    "⚡ " . rand(3, 12) . " people bought this recently",
-                                                    "🛒 " . rand(4, 9) . " people are considering this",
-                                                    "📦 " . rand(2, 6) . " people added to cart today",
-                                                    "🎯 Popular choice - " . rand(8, 20) . " views today",
-                                                    "💫 Trending - " . rand(3, 7) . " recent purchases"
-                                                ];
-                                                $randomProof = $proofs[array_rand($proofs)];
-                                                echo '<span style="background: #f0f9ff; color: #0369a1; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">' . $randomProof . '</span>';
-                                            } else {
-                                                echo '<span style="background: #fee2e2; color: #991b1b; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 500;">Out of Stock</span>';
-                                            }
-                                            ?>
-                                        </div>
-                                    </a>
+                                        <!-- View Details Button -->
+                                        <button onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'"
+                                                style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                            <i class="fas fa-shopping-cart"></i>
+                                            View Details
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
                         </div>

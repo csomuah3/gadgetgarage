@@ -61,7 +61,7 @@ try {
         $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         echo json_encode([
             'success' => true,
-            'message' => 'Product added to cart successfully',
+            'message' => 'You have successfully added "' . $product['product_title'] . '" to your cart',
             'cart_count' => $cart_count
         ]);
     } else {
@@ -71,7 +71,7 @@ try {
             $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             echo json_encode([
                 'success' => true,
-                'message' => 'Product added to cart successfully (basic)',
+                'message' => 'You have successfully added "' . $product['product_title'] . '" to your cart',
                 'cart_count' => $cart_count
             ]);
         } else {

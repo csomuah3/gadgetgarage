@@ -193,17 +193,19 @@ class Order extends db_connection
 
     public function get_all_orders()
     {
-        $sql = "SELECT o.*, c.customer_name, c.customer_email, c.customer_contact,
-                       COUNT(od.product_id) as item_count,
+        $sql = "SELECT o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status,
+                       c.customer_name, c.customer_email, c.customer_contact,
+                       COUNT(DISTINCT od.product_id) as item_count,
                        SUM(od.qty) as total_items,
-                       p.amt as total_amount,
-                       p.currency,
-                       p.payment_date
+                       COALESCE(MAX(p.amt), 0) as total_amount,
+                       COALESCE(MAX(p.currency), 'GHS') as currency,
+                       MAX(p.payment_date) as payment_date
                 FROM orders o
                 JOIN customer c ON o.customer_id = c.customer_id
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
-                GROUP BY o.order_id
+                GROUP BY o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status,
+                         c.customer_name, c.customer_email, c.customer_contact
                 ORDER BY o.order_date DESC";
 
         return $this->db_fetch_all($sql);

@@ -871,7 +871,7 @@ if (!$product) {
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
                             <!-- Excellent Condition -->
-                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo floatval($product['product_price']); ?>">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo floatval($product['product_price']); ?>" onclick="window.selectCondition('excellent', <?php echo floatval($product['product_price']); ?>)"">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
@@ -963,21 +963,23 @@ if (!$product) {
         window.selectCondition = function(condition, price) {
             console.log('selectCondition called:', condition, price);
             selectedCondition = condition;
-            selectedPrice = price;
+            selectedPrice = parseFloat(price);
 
-            // Update visual selection
-            document.querySelectorAll('[id$="-option"]').forEach(option => {
+            // Update visual selection - reset all options first
+            const allOptions = document.querySelectorAll('[data-condition]');
+            allOptions.forEach(option => {
                 option.style.background = 'rgba(255,255,255,0.1)';
-                option.style.borderColor = 'transparent';
+                option.style.border = 'none';
+                option.style.transform = 'scale(1)';
             });
 
-            const selectedOption = document.getElementById(condition + '-option');
+            // Highlight selected option
+            const selectedOption = document.querySelector(`[data-condition="${condition}"]`);
             if (selectedOption) {
                 selectedOption.style.background = 'rgba(255,255,255,0.3)';
                 selectedOption.style.border = '2px solid #10b981';
-                console.log('Selected option updated:', selectedOption);
-            } else {
-                console.error('Selected option not found:', condition + '-option');
+                selectedOption.style.transform = 'scale(1.02)';
+                console.log('Selected option updated:', condition);
             }
 
             // Update pricing display
@@ -985,10 +987,10 @@ if (!$product) {
             const cartButtonPrice = document.getElementById('cartButtonPrice');
 
             if (currentPrice) {
-                currentPrice.textContent = 'GH₵' + price.toLocaleString();
+                currentPrice.textContent = 'GH₵' + selectedPrice.toLocaleString();
             }
             if (cartButtonPrice) {
-                cartButtonPrice.textContent = price.toLocaleString();
+                cartButtonPrice.textContent = selectedPrice.toLocaleString();
             }
 
             // Show/hide discount information
@@ -999,7 +1001,7 @@ if (!$product) {
                 if (originalPriceElement) originalPriceElement.style.display = 'inline';
                 if (discountBadge) discountBadge.style.display = 'inline';
 
-                const discountAmount = originalPrice - price;
+                const discountAmount = originalPrice - selectedPrice;
                 const discountPercent = Math.round((discountAmount / originalPrice) * 100);
                 if (discountBadge) discountBadge.textContent = discountPercent + '% off';
                 if (originalPriceElement) originalPriceElement.textContent = 'GH₵' + originalPrice.toLocaleString();
@@ -1016,8 +1018,14 @@ if (!$product) {
 
         // New add to cart function for condition-based pricing
         function addToCartWithCondition(productId) {
+            console.log('Add to cart called with:', {
+                productId: productId,
+                selectedCondition: selectedCondition,
+                selectedPrice: selectedPrice
+            });
 
             if (!selectedCondition || selectedPrice <= 0) {
+                console.error('Invalid selection:', { selectedCondition, selectedPrice });
                 showNotification('Please select a condition first', 'error');
                 return;
             }
@@ -1340,22 +1348,72 @@ if (!$product) {
 
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOM Content Loaded - Starting initialization');
 
             // Load product image
             loadProductImage();
 
             // Initialize condition-based pricing
+            console.log('Initializing condition selection');
             initializeConditionSelection();
 
-            // Add event listeners for condition selection
+            // Add event listeners for condition selection with multiple fallback methods
             const conditionOptions = document.querySelectorAll('[data-condition]');
-            conditionOptions.forEach(option => {
-                option.addEventListener('click', function() {
-                    const condition = this.getAttribute('data-condition');
-                    const price = parseFloat(this.getAttribute('data-price'));
-                    console.log('Condition clicked:', condition, price);
+            console.log('Found condition options:', conditionOptions.length);
+
+            conditionOptions.forEach((option, index) => {
+                const condition = option.getAttribute('data-condition');
+                const price = parseFloat(option.getAttribute('data-price'));
+
+                console.log(`Setting up listeners for option ${index + 1}:`, condition, price);
+
+                // Method 1: Click event listener
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Click listener triggered:', condition, price);
                     selectCondition(condition, price);
                 });
+
+                // Method 2: Mouse down for immediate response
+                option.addEventListener('mousedown', function(e) {
+                    console.log('Mousedown listener triggered:', condition, price);
+                    selectCondition(condition, price);
+                });
+
+                // Method 3: Touch events for mobile
+                option.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    console.log('Touch listener triggered:', condition, price);
+                    selectCondition(condition, price);
+                });
+
+                // Method 4: Add onclick attribute as fallback
+                option.setAttribute('onclick', `selectCondition('${condition}', ${price})`);
+
+                // Visual feedback on hover
+                option.addEventListener('mouseenter', function() {
+                    if (selectedCondition !== condition) {
+                        this.style.background = 'rgba(255,255,255,0.2)';
+                    }
+                });
+
+                option.addEventListener('mouseleave', function() {
+                    if (selectedCondition !== condition) {
+                        this.style.background = 'rgba(255,255,255,0.1)';
+                    }
+                });
+            });
+
+            // Add global click handler as final fallback
+            document.addEventListener('click', function(e) {
+                const clickedElement = e.target.closest('[data-condition]');
+                if (clickedElement) {
+                    const condition = clickedElement.getAttribute('data-condition');
+                    const price = parseFloat(clickedElement.getAttribute('data-price'));
+                    console.log('Global click handler triggered:', condition, price);
+                    selectCondition(condition, price);
+                }
             });
 
             // Animate product details on load

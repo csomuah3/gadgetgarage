@@ -1543,177 +1543,67 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
         }
 
-        /* Hero Banner Styles */
-        .hero-banner-section {
-            padding: 24px 0;
+        /* Main Navigation */
+        .main-nav {
             background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+            position: sticky;
+            top: 85px;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .hero-grid {
-            display: grid;
-            grid-template-columns: 2fr 1fr;
-            gap: 28px;
-            align-items: stretch;
-            min-height: 560px;
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 32px;
         }
 
-        .main-banner {
-            display: grid;
-            grid-template-columns: 1.15fr 1fr;
-            gap: 24px;
-            padding: 48px;
-            border-radius: 14px;
-            overflow: hidden;
+        .nav-item {
+            color: #1f2937;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 12px 0;
+            transition: all 0.3s ease;
             position: relative;
         }
 
-        .main-banner.coral {
-            background: #ff5b57;
-            color: #fff;
+        .nav-item:hover {
+            color: #008060;
         }
 
-        .banner-copy {
-            display: grid;
-            align-content: center;
-            gap: 22px;
+        .shop-categories-btn {
+            position: relative;
         }
 
-        .banner-title {
-            font-size: clamp(34px, 5.2vw, 72px);
-            font-weight: 800;
-            line-height: 1.08;
-            color: #fff;
-            margin: 0;
-        }
-
-        .banner-price {
-            font-size: 18px;
-            color: rgba(255,255,255,0.9);
-        }
-
-        .banner-price .price {
-            color: #fff;
-            font-weight: 700;
-            font-size: 24px;
-        }
-
-        .btn-primary {
-            background: #fff;
-            color: #ff5b57;
+        .categories-button {
+            background: #4f63d2;
+            color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 700;
-            display: inline-block;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .btn-primary:hover {
-            background: rgba(255,255,255,0.9);
-            transform: translateY(-2px);
+        .categories-button:hover {
+            background: #3d4fd1;
         }
 
-        .banner-media img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 8px;
+        .nav-item.flash-deal {
+            color: #ef4444;
+            font-weight: 600;
         }
 
-        .side-banners {
-            display: grid;
-            grid-template-rows: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .side-card {
-            display: grid;
-            grid-template-columns: 1fr 80px;
-            gap: 16px;
-            padding: 24px;
-            border-radius: 12px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .side-card.yellow {
-            background: #fbbf24;
-            color: #1f2937;
-        }
-
-        .side-card.purple {
-            background: #8b5fbf;
-            color: white;
-        }
-
-        .side-copy {
-            display: grid;
-            align-content: center;
-            gap: 8px;
-        }
-
-        .side-title {
-            font-size: 16px;
-            font-weight: 700;
-            line-height: 1.2;
-            margin: 0;
-        }
-
-        .side-price {
-            font-size: 12px;
-            margin: 0;
-            opacity: 0.9;
-        }
-
-        .side-price .price {
-            font-weight: 700;
-            font-size: 14px;
-        }
-
-        .side-media {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .side-media img {
-            width: 60px;
-            height: 60px;
-            object-fit: cover;
-            border-radius: 6px;
-        }
-
-        @media (max-width: 992px) {
-            .hero-grid {
-                grid-template-columns: 1fr;
-                min-height: auto;
-            }
-
-            .side-banners {
-                grid-template-rows: none;
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
-        @media (max-width: 640px) {
-            .main-banner {
-                grid-template-columns: 1fr;
-                padding: 28px;
-            }
-
-            .banner-media {
-                order: -1;
-            }
-
-            .side-banners {
-                grid-template-columns: 1fr;
-            }
-
-            .side-media img {
-                width: 50px;
-                height: 50px;
-            }
+        .nav-item.flash-deal:hover {
+            color: #dc2626;
         }
 
         .hero-actions .btn {
@@ -1954,7 +1844,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Cart Icon -->
                         <a href="cart.php" class="cart-icon position-relative">
-                            <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #8b5fbf;"></i>
+                            <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #008060;"></i>
                             <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>">
                                 <?php echo $cart_count; ?>
                             </span>
@@ -1982,52 +1872,28 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         <div class="bubble"></div>
     </div>
 
-    <!-- Hero Banner Section -->
-    <section class="hero-banner-section">
+    <!-- Main Navigation -->
+    <nav class="main-nav">
         <div class="container">
-            <div class="hero-grid">
-                <!-- LEFT: MAIN BANNER -->
-                <article class="main-banner coral">
-                    <div class="banner-copy">
-                        <h1 class="banner-title">Discover Amazing<br>Tech Products<br>All in One Place</h1>
-                        <p class="banner-price">Starting At <span class="price">$19.00</span></p>
-                        <a href="#products" class="btn-primary">BROWSE NOW</a>
-                    </div>
-
-                    <div class="banner-media">
-                        <img
-                            src="https://images.unsplash.com/photo-1472851294608-062f824d29cc?q=80&w=1600&auto=format&fit=crop"
-                            alt="Tech Products" />
-                    </div>
-                </article>
-
-                <!-- RIGHT: TWO SIDE CARDS -->
-                <div class="side-banners">
-                    <!-- Top -->
-                    <article class="side-card yellow">
-                        <div class="side-copy">
-                            <h3 class="side-title">Premium<br>Laptops</h3>
-                            <p class="side-price">From <span class="price">$299.00</span></p>
-                        </div>
-                        <div class="side-media">
-                            <img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?q=80&w=400&auto=format&fit=crop" alt="Laptops" />
-                        </div>
-                    </article>
-
-                    <!-- Bottom -->
-                    <article class="side-card purple">
-                        <div class="side-copy">
-                            <h3 class="side-title">Smart<br>Phones</h3>
-                            <p class="side-price">From <span class="price">$89.00</span></p>
-                        </div>
-                        <div class="side-media">
-                            <img src="https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=400&auto=format&fit=crop" alt="Smartphones" />
-                        </div>
-                    </article>
+            <div class="nav-menu">
+                <!-- Blue Shop by Categories Button -->
+                <div class="shop-categories-btn">
+                    <button class="categories-button">
+                        <i class="fas fa-bars"></i>
+                        SHOP BY CATEGORIES
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
+                <a href="index.php" class="nav-item">Home</a>
+                <a href="all_product.php" class="nav-item">All Products</a>
+                <a href="all_product.php?category=phones" class="nav-item">Smartphones</a>
+                <a href="all_product.php?category=laptops" class="nav-item">Laptops</a>
+                <a href="all_product.php?category=ipads" class="nav-item">Tablets</a>
+                <a href="all_product.php?category=cameras" class="nav-item">Cameras</a>
+                <a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
             </div>
         </div>
-    </section>
+    </nav>
 
     <div class="container-fluid mt-4">
 

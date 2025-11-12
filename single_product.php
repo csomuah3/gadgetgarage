@@ -210,6 +210,69 @@ if (!$product) {
             color: #2d3748;
         }
 
+        /* Main Navigation */
+        .main-nav {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+            position: sticky;
+            top: 85px;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 32px;
+        }
+
+        .nav-item {
+            color: #1f2937;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 1rem;
+            padding: 12px 0;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            color: #008060;
+        }
+
+        .shop-categories-btn {
+            position: relative;
+        }
+
+        .categories-button {
+            background: #4f63d2;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .categories-button:hover {
+            background: #3d4fd1;
+        }
+
+        .nav-item.flash-deal {
+            color: #ef4444;
+            font-weight: 600;
+        }
+
+        .nav-item.flash-deal:hover {
+            color: #dc2626;
+        }
+
 
         .side-card {
             display: grid;
@@ -226,8 +289,8 @@ if (!$product) {
             color: #1f2937;
         }
 
-        .side-card.purple {
-            background: #8b5fbf;
+        .side-card.green {
+            background: #22c55e;
             color: white;
         }
 
@@ -530,7 +593,7 @@ if (!$product) {
                     <div class="d-flex align-items-center justify-content-end gap-3">
                         <!-- Cart Icon -->
                         <a href="cart.php" class="cart-icon position-relative">
-                            <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #8b5fbf;"></i>
+                            <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #008060;"></i>
                             <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>">
                                 <?php echo $cart_count; ?>
                             </span>
@@ -550,50 +613,28 @@ if (!$product) {
         </div>
     </header>
 
-    <!-- Hero Banner Section -->
-    <section class="hero-banner-section">
+    <!-- Main Navigation -->
+    <nav class="main-nav">
         <div class="container">
-            <div class="hero-grid">
-                <!-- LEFT: MAIN BANNER -->
-                <article class="main-banner coral">
-                    <div class="banner-copy">
-                        <h1 class="banner-title"><?php echo htmlspecialchars($product['product_title']); ?></h1>
-                        <p class="banner-price">Starting At <span class="price">GHS <?php echo number_format($product['product_price'], 2); ?></span></p>
-                        <a href="#product-details" class="btn-primary">VIEW DETAILS</a>
-                    </div>
-
-                    <div class="banner-media">
-                        <img src="" alt="<?php echo htmlspecialchars($product['product_title']); ?>" class="product-hero-image" data-product-id="<?php echo $product['product_id']; ?>">
-                    </div>
-                </article>
-
-                <!-- RIGHT: TWO SIDE CARDS -->
-                <div class="side-banners">
-                    <!-- Top -->
-                    <article class="side-card yellow">
-                        <div class="side-copy">
-                            <h3 class="side-title">Premium<br>Quality</h3>
-                            <p class="side-price">Tested & <span class="price">Verified</span></p>
-                        </div>
-                        <div class="side-media">
-                            <i class="fas fa-star" style="font-size: 30px; color: #1f2937;"></i>
-                        </div>
-                    </article>
-
-                    <!-- Bottom -->
-                    <article class="side-card purple">
-                        <div class="side-copy">
-                            <h3 class="side-title">Fast<br>Shipping</h3>
-                            <p class="side-price">Free <span class="price">Delivery</span></p>
-                        </div>
-                        <div class="side-media">
-                            <i class="fas fa-shipping-fast" style="font-size: 30px; color: white;"></i>
-                        </div>
-                    </article>
+            <div class="nav-menu">
+                <!-- Blue Shop by Categories Button -->
+                <div class="shop-categories-btn">
+                    <button class="categories-button">
+                        <i class="fas fa-bars"></i>
+                        SHOP BY CATEGORIES
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
                 </div>
+                <a href="index.php" class="nav-item">Home</a>
+                <a href="all_product.php" class="nav-item">All Products</a>
+                <a href="all_product.php?category=phones" class="nav-item">Smartphones</a>
+                <a href="all_product.php?category=laptops" class="nav-item">Laptops</a>
+                <a href="all_product.php?category=ipads" class="nav-item">Tablets</a>
+                <a href="all_product.php?category=cameras" class="nav-item">Cameras</a>
+                <a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
             </div>
         </div>
-    </section>
+    </nav>
 
     <div class="container mt-4" id="product-details">
 
@@ -628,7 +669,7 @@ if (!$product) {
 
                         <!-- Condition Selection -->
                         <div class="condition-selection mb-4">
-                            <h5 style="color: #8b5fbf; margin-bottom: 15px;">Select Condition</h5>
+                            <h5 style="color: #008060; margin-bottom: 15px;">Select Condition</h5>
                             <div class="condition-options">
                                 <div class="condition-option">
                                     <input class="form-check-input" type="radio" name="condition" id="excellent" value="excellent" checked style="display: none;">
@@ -697,14 +738,14 @@ if (!$product) {
 
                         <?php if (!empty($product['product_desc'])): ?>
                             <div class="product-description">
-                                <h5 style="color: #8b5fbf; margin-bottom: 15px;">Description</h5>
+                                <h5 style="color: #008060; margin-bottom: 15px;">Description</h5>
                                 <p><?php echo nl2br(htmlspecialchars($product['product_desc'])); ?></p>
                             </div>
                         <?php endif; ?>
 
                         <?php if (!empty($product['product_keywords'])): ?>
                             <div class="product-keywords">
-                                <h6 style="color: #8b5fbf; margin-bottom: 10px;">Tags</h6>
+                                <h6 style="color: #008060; margin-bottom: 10px;">Tags</h6>
                                 <?php
                                 $keywords = explode(',', $product['product_keywords']);
                                 foreach ($keywords as $keyword):

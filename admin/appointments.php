@@ -22,8 +22,8 @@ if (isset($_POST['update_status'])) {
         $db = new db_connection();
         $db->db_connect();
 
-        $update_query = "UPDATE repair_appointments SET status = ?, updated_at = NOW() WHERE appointment_id = ?";
-        $result = $db->db_query($update_query, [$new_status, $appointment_id]);
+        $update_query = "UPDATE repair_appointments SET status = '$new_status', updated_at = NOW() WHERE appointment_id = $appointment_id";
+        $result = $db->db_query($update_query);
 
         if ($result) {
             $success_message = "Appointment status updated successfully!";

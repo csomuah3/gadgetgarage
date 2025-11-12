@@ -2967,6 +2967,14 @@ try {
 					Gadget<span class="garage">Garage</span>
 				</a>
 
+				<!-- Navigation Menu -->
+				<nav class="navbar-nav">
+					<a href="repair_services.php" class="nav-link">
+						<i class="fas fa-tools"></i>
+						Repair Studio
+					</a>
+				</nav>
+
 				<!-- Search Bar -->
 				<form class="search-container" method="GET" action="product_search_result.php">
 					<i class="fas fa-search search-icon"></i>

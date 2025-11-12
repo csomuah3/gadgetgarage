@@ -16,8 +16,8 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get product ID from URL
-$product_id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+// Get product ID from URL (handle both 'id' and 'pid' parameters)
+$product_id = isset($_GET['pid']) ? intval($_GET['pid']) : (isset($_GET['id']) ? intval($_GET['id']) : 0);
 
 if ($product_id <= 0) {
     header('Location: all_product.php');
@@ -775,6 +775,93 @@ if (!$product) {
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/cart.js"></script>
     <script>
+        // Global variables for condition selection
+        let selectedCondition = 'excellent';
+        let selectedPrice = <?php echo $product['product_price']; ?>;
+        let originalPrice = <?php echo $product['product_price']; ?>;
+
+        // Select condition function for the new design
+        function selectCondition(condition, price) {
+            selectedCondition = condition;
+            selectedPrice = price;
+
+            // Update visual selection
+            document.querySelectorAll('[id$="-option"]').forEach(option => {
+                option.style.background = 'rgba(255,255,255,0.1)';
+            });
+
+            document.getElementById(condition + '-option').style.background = 'rgba(255,255,255,0.25)';
+
+            // Update pricing display
+            document.getElementById('currentPrice').textContent = 'GH₵' + price.toLocaleString();
+            document.getElementById('cartButtonPrice').textContent = price.toLocaleString();
+
+            // Show/hide discount information
+            if (condition !== 'excellent') {
+                document.getElementById('originalPrice').style.display = 'inline';
+                document.getElementById('discountBadge').style.display = 'inline';
+
+                const discountAmount = originalPrice - price;
+                const discountPercent = Math.round((discountAmount / originalPrice) * 100);
+                document.getElementById('discountBadge').textContent = discountPercent + '% off';
+                document.getElementById('originalPrice').textContent = 'GH₵' + originalPrice.toLocaleString();
+            } else {
+                document.getElementById('originalPrice').style.display = 'none';
+                document.getElementById('discountBadge').style.display = 'none';
+            }
+        }
+
+        // Initialize condition selection
+        function initializeConditionSelection() {
+            selectCondition('excellent', originalPrice);
+        }
+
+        // New add to cart function for condition-based pricing
+        function addToCartWithCondition(productId) {
+            const btn = document.getElementById('addToCartBtn');
+            const originalText = btn.innerHTML;
+
+            // Show loading state
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+            btn.disabled = true;
+
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', 1);
+            formData.append('condition', selectedCondition);
+            formData.append('final_price', selectedPrice);
+
+            fetch('actions/add_to_cart_action.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    btn.innerHTML = '<i class="fas fa-check"></i> Added Successfully!';
+                    btn.style.background = '#10b981';
+
+                    setTimeout(() => {
+                        btn.innerHTML = originalText;
+                        btn.style.background = 'white';
+                        btn.disabled = false;
+                    }, 2500);
+
+                    updateCartBadge(data.cart_count);
+                    showNotification(data.message || 'Product added to cart!', 'success');
+                } else {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    showNotification(data.message || 'Failed to add product to cart', 'error');
+                }
+            })
+            .catch(error => {
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+                showNotification('An error occurred. Please try again.', 'error');
+            });
+        }
+
         function addToCart(productId) {
             // Get selected condition
             const selectedCondition = document.querySelector('input[name="condition"]:checked').value;

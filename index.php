@@ -95,7 +95,6 @@ try {
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			margin-right: 40px;
 		}
 
 		.logo .garage {
@@ -110,8 +109,8 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 400px;
-			margin-left: 20px;
+			max-width: 500px;
+			margin: 0 60px;
 		}
 
 		.search-input {
@@ -176,8 +175,9 @@ try {
 		.tech-revival-section {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 12px;
 			text-align: center;
+			margin: 0 80px;
 		}
 
 		.tech-revival-icon {
@@ -841,17 +841,21 @@ try {
 			align-items: center;
 			justify-content: space-between;
 			width: 100%;
-			gap: 20px;
+			padding: 0 20px;
 		}
 
-		.nav-left {
+		.nav-menu > * {
+			flex-grow: 1;
 			display: flex;
-			align-items: center;
-			gap: 20px;
+			justify-content: center;
 		}
 
-		.nav-right {
-			margin-left: auto;
+		.nav-menu > *:first-child {
+			justify-content: flex-start;
+		}
+
+		.nav-menu > *:last-child {
+			justify-content: flex-end;
 		}
 
 		.nav-item {
@@ -3343,7 +3347,7 @@ try {
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container">
-			<div class="d-flex align-items-center header-container">
+			<div class="d-flex align-items-center justify-content-between w-100 header-container">
 				<!-- Logo -->
 				<a href="#" class="logo">
 					Gadget<span class="garage">Garage</span>
@@ -3358,9 +3362,6 @@ try {
 					</button>
 				</form>
 
-				<!-- Vertical Separator -->
-				<div class="vertical-separator"></div>
-
 				<!-- Tech Revival Section -->
 				<div class="tech-revival-section">
 					<i class="fas fa-recycle tech-revival-icon"></i>
@@ -3369,9 +3370,6 @@ try {
 						<p class="contact-number">055-138-7578</p>
 					</div>
 				</div>
-
-				<!-- Vertical Separator -->
-				<div class="vertical-separator"></div>
 
 				<!-- User Actions -->
 				<div class="user-actions">
@@ -3462,114 +3460,104 @@ try {
 	<nav class="main-nav">
 		<div class="container">
 			<div class="nav-menu">
-				<!-- Left Side Navigation -->
-				<div class="nav-left">
-					<!-- Shop by Brands Button -->
-					<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
-						<button class="categories-button">
-							<i class="fas fa-tags"></i>
-							SHOP BY BRANDS
-							<i class="fas fa-chevron-down"></i>
-						</button>
-						<div class="brands-dropdown" id="shopDropdown">
-							<h4>All Brands</h4>
-							<ul>
-								<?php if (!empty($brands)): ?>
-									<?php foreach ($brands as $brand): ?>
-										<li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
-									<?php endforeach; ?>
-								<?php else: ?>
-									<li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
-								<?php endif; ?>
-							</ul>
-						</div>
+				<!-- Shop by Brands Button -->
+				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+					<button class="categories-button">
+						<i class="fas fa-tags"></i>
+						SHOP BY BRANDS
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="brands-dropdown" id="shopDropdown">
+						<h4>All Brands</h4>
+						<ul>
+							<?php if (!empty($brands)): ?>
+								<?php foreach ($brands as $brand): ?>
+									<li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+							<?php endif; ?>
+						</ul>
 					</div>
+				</div>
 
-					<div class="nav-separator">|</div>
-					<a href="index.php" class="nav-item">HOME</a>
-					<div class="nav-separator">|</div>
+				<a href="index.php" class="nav-item">HOME</a>
 
-					<!-- Shop Dropdown -->
-					<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
-						<a href="#" class="nav-item">
-							SHOP
-							<i class="fas fa-chevron-down"></i>
-						</a>
-						<div class="mega-dropdown" id="shopCategoryDropdown">
-							<div class="dropdown-content">
-								<div class="dropdown-column">
-									<h4>
-										<a href="all_product.php?category_type=mobile" style="text-decoration: none; color: inherit;">
-											Mobile Devices
-										</a>
-									</h4>
-									<ul>
-										<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-										<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
-									</ul>
-								</div>
-								<div class="dropdown-column">
-									<h4>
-										<a href="all_product.php?category_type=computing" style="text-decoration: none; color: inherit;">
-											Computing
-										</a>
-									</h4>
-									<ul>
-										<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-										<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
-									</ul>
-								</div>
-								<div class="dropdown-column">
-									<h4>
-										<a href="all_product.php?category_type=photo_video" style="text-decoration: none; color: inherit;">
-											Photography & Video
-										</a>
-									</h4>
-									<ul>
-										<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-										<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
-									</ul>
-								</div>
-								<div class="dropdown-column featured">
-									<h4>Shop All</h4>
-									<div class="featured-item">
-										<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
-										<div class="featured-text">
-											<strong>New Arrivals</strong>
-											<p>Latest tech gadgets</p>
-											<a href="all_product.php" class="shop-now-btn">Shop Now</a>
-										</div>
+				<!-- Shop Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+					<a href="#" class="nav-item">
+						SHOP
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="mega-dropdown" id="shopCategoryDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=mobile" style="text-decoration: none; color: inherit;">
+										Mobile Devices
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=computing" style="text-decoration: none; color: inherit;">
+										Computing
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=photo_video" style="text-decoration: none; color: inherit;">
+										Photography & Video
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column featured">
+								<h4>Shop All</h4>
+								<div class="featured-item">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+									<div class="featured-text">
+										<strong>New Arrivals</strong>
+										<p>Latest tech gadgets</p>
+										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
+				</div>
 
-					<div class="nav-separator">|</div>
-					<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
-					<div class="nav-separator">|</div>
-					<a href="device_drop.php" class="nav-item">DEVICE DROP</a>
-					<div class="nav-separator">|</div>
+				<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
+				<a href="device_drop.php" class="nav-item">DEVICE DROP</a>
 
-					<!-- More Dropdown -->
-					<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
-						<a href="#" class="nav-item">
-							MORE
-							<i class="fas fa-chevron-down"></i>
-						</a>
-						<div class="simple-dropdown" id="moreDropdown">
-							<ul>
-								<li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
-								<li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
-							</ul>
-						</div>
+				<!-- More Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+					<a href="#" class="nav-item">
+						MORE
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="simple-dropdown" id="moreDropdown">
+						<ul>
+							<li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+						</ul>
 					</div>
 				</div>
 
-				<!-- Right Side Navigation -->
-				<div class="nav-right">
-					<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
-				</div>
+				<!-- Flash Deal positioned at far right -->
+				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
 			</div>
 		</div>
 	</nav>

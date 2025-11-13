@@ -311,7 +311,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .filter-actions {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid rgba(139, 95, 191, 0.1);
+            border-top: 2px solid rgba(0, 128, 96, 0.1);
             display: flex;
             flex-direction: column;
             gap: 10px;
@@ -770,7 +770,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .tag-btn:hover {
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(0, 128, 96, 0.1);
             border-color: #8b5fbf;
             color: #8b5fbf;
         }
@@ -802,7 +802,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .size-btn:hover {
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(0, 128, 96, 0.1);
             border-color: #8b5fbf;
             color: #8b5fbf;
         }
@@ -841,7 +841,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .color-btn.active {
             border-color: #8b5fbf;
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(0, 128, 96, 0.1);
         }
 
         .color-circle {
@@ -865,7 +865,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .clear-filters-container {
             margin-top: 20px;
             padding-top: 15px;
-            border-top: 1px solid rgba(139, 95, 191, 0.1);
+            border-top: 1px solid rgba(0, 128, 96, 0.1);
         }
 
         .filter-select,
@@ -885,7 +885,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             outline: none;
             border-color: #8b5fbf;
             background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 4px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 4px rgba(0, 128, 96, 0.1);
             transform: translateY(-2px);
         }
 
@@ -903,7 +903,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             outline: none;
             border-color: #8b5fbf;
             background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .preset-btn {
@@ -950,7 +950,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             padding: 20px 30px;
             border-radius: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 4px 20px rgba(0, 128, 96, 0.1);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1176,7 +1176,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             background: rgba(255, 255, 255, 0.9);
             backdrop-filter: blur(20px);
             border-radius: 25px;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 8px 32px rgba(0, 128, 96, 0.1);
         }
 
         .no-products-icon {
@@ -1338,12 +1338,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .dropdown-toggle:hover {
             border-color: #8b5fbf;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .dropdown-toggle.active {
             border-color: #8b5fbf;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .dropdown-arrow {
@@ -1421,7 +1421,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .bubble {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.1), rgba(240, 147, 251, 0.1));
+            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(240, 147, 251, 0.1));
             animation: float 6s ease-in-out infinite;
         }
 

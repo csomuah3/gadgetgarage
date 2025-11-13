@@ -1528,14 +1528,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         </div>
     </header>
 
-    <!-- Floating Background Elements -->
-    <div class="floating-elements">
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-        <div class="bubble"></div>
-    </div>
-
     <!-- Main Navigation -->
     <nav class="main-nav">
         <div class="container">

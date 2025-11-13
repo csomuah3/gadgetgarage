@@ -840,7 +840,7 @@ try {
 			display: flex;
 			align-items: center;
 			width: 100%;
-			padding-left: 250px;
+			padding-left: 260px;
 		}
 
 		.nav-item {
@@ -866,7 +866,7 @@ try {
 			color: #ef4444;
 			font-weight: 700;
 			margin-left: auto;
-			padding-right: 45px;
+			padding-right: 120px;
 		}
 
 		.nav-item.flash-deal:hover {

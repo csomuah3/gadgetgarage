@@ -17,367 +17,1160 @@ try {
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Device Repair Services - Gadget Garage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <style>
-        /* Import Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Device Repair Services - Gadget Garage</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+	<style>
+		/* Import Google Fonts */
+		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+		/* Reset and Base Styles */
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
 
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
-            color: #065f46;
-            min-height: 100vh;
-        }
+		body {
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+			background-color: #ffffff;
+			color: #1a1a1a;
+			overflow-x: hidden;
+		}
 
-        /* Animated Background */
-        .bg-decoration {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.6;
-        }
+		/* Header Styles */
+		.main-header {
+			background: #ffffff;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			position: sticky;
+			top: 0;
+			z-index: 1000;
+			padding: 16px 0;
+			border-bottom: 1px solid #e5e7eb;
+		}
 
-        .bg-decoration-1 {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
-            top: 10%;
-            right: 15%;
-            animation: float 8s ease-in-out infinite;
-        }
+		.logo {
+			font-size: 2.2rem;
+			font-weight: 700;
+			color: #1f2937;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
 
-        .bg-decoration-2 {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
-            bottom: 20%;
-            left: 10%;
-            animation: float 10s ease-in-out infinite reverse;
-        }
+		.logo .garage {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: white;
+			padding: 4px 8px;
+			border-radius: 6px;
+			font-size: 1rem;
+			font-weight: 600;
+		}
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(90deg); }
-            50% { transform: translateY(-10px) rotate(180deg); }
-            75% { transform: translateY(-15px) rotate(270deg); }
-        }
+		.search-container {
+			position: relative;
+			flex: 1;
+			max-width: 500px;
+			margin: 0 40px;
+		}
 
-        /* Header */
-        .main-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+		.search-input {
+			width: 100%;
+			padding: 12px 20px 12px 50px;
+			border: 2px solid #e2e8f0;
+			border-radius: 25px;
+			font-size: 1rem;
+			transition: all 0.3s ease;
+			background: #f8fafc;
+		}
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #047857;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+		.search-input:focus {
+			outline: none;
+			border-color: #008060;
+			background: white;
+			box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+		}
 
-        .logo .garage {
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
+		.search-icon {
+			position: absolute;
+			left: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #008060;
+			font-size: 1.1rem;
+		}
 
-        .btn-back {
-            background: linear-gradient(135deg, #6b7280, #9ca3af);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
+		.search-btn {
+			position: absolute;
+			right: 6px;
+			top: 50%;
+			transform: translateY(-50%);
+			background: linear-gradient(135deg, #008060, #006b4e);
+			border: none;
+			padding: 8px 16px;
+			border-radius: 20px;
+			color: white;
+			font-weight: 500;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
 
-        .btn-back:hover {
-            background: linear-gradient(135deg, #4b5563, #6b7280);
-            color: white;
-            transform: translateY(-1px);
-        }
+		.search-btn:hover {
+			background: linear-gradient(135deg, #006b4e, #008060);
+			transform: translateY(-50%) scale(1.05);
+		}
 
-        /* Main Content */
-        .hero-section {
-            padding: 4rem 0 2rem;
-            text-align: center;
-            position: relative;
-            z-index: 10;
-        }
+		.tech-revival-section {
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			text-align: center;
+			margin: 0 60px;
+		}
 
-        .hero-title {
-            font-size: 3rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 1rem;
-        }
+		.tech-revival-icon {
+			font-size: 1.5rem;
+			color: #008060;
+		}
 
-        .hero-subtitle {
-            font-size: 1.2rem;
-            color: #065f46;
-            margin-bottom: 0.5rem;
-        }
+		.tech-revival-text {
+			font-size: 0.9rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin: 0;
+		}
 
-        .hero-description {
-            color: #6b7280;
-            font-size: 1.1rem;
-            max-width: 600px;
-            margin: 0 auto;
-        }
+		.contact-number {
+			font-size: 0.8rem;
+			color: #6b7280;
+			margin: 0;
+		}
 
-        .progress-steps {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 2rem;
-            margin: 3rem 0;
-        }
+		.user-actions {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
 
-        .step {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            color: #6b7280;
-            font-weight: 500;
-        }
+		.header-icon {
+			position: relative;
+			padding: 8px;
+			border-radius: 8px;
+			transition: all 0.3s ease;
+			color: #4b5563;
+			cursor: pointer;
+		}
 
-        .step-number {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
+		.header-icon:hover {
+			background: rgba(0, 128, 96, 0.1);
+			color: #008060;
+		}
 
-        .step.active .step-number {
-            background: linear-gradient(135deg, #047857, #059669);
-        }
+		.cart-badge {
+			position: absolute;
+			top: -2px;
+			right: -2px;
+			background: linear-gradient(135deg, #006b4e, #008060);
+			color: white;
+			font-size: 0.75rem;
+			padding: 2px 6px;
+			border-radius: 10px;
+			min-width: 18px;
+			text-align: center;
+		}
 
-        .step-separator {
-            width: 3rem;
-            height: 2px;
-            background: #e5e7eb;
-        }
+		.login-btn {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: white;
+			border: none;
+			padding: 10px 20px;
+			border-radius: 20px;
+			font-weight: 500;
+			text-decoration: none;
+			transition: all 0.3s ease;
+			display: inline-block;
+		}
 
-        /* Issue Types Grid */
-        .issues-section {
-            padding: 2rem 0;
-            position: relative;
-            z-index: 10;
-        }
+		.login-btn:hover {
+			background: linear-gradient(135deg, #006b4e, #008060);
+			transform: translateY(-1px);
+			color: white;
+		}
 
-        .section-title {
-            text-align: center;
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 3rem;
-        }
+		.user-dropdown {
+			position: relative;
+		}
 
-        .issues-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-            gap: 2rem;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
+		.user-avatar {
+			width: 36px;
+			height: 36px;
+			background: linear-gradient(135deg, #008060, #006b4e);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
 
-        .issue-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            padding: 2rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
-            transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
-            overflow: hidden;
-        }
+		.user-avatar:hover {
+			transform: scale(1.1);
+			box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
+		}
 
-        .issue-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
-        }
+		.dropdown-menu-custom {
+			position: absolute;
+			top: 100%;
+			right: 0;
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border: 1px solid rgba(0, 128, 96, 0.2);
+			border-radius: 15px;
+			box-shadow: 0 8px 32px rgba(0, 128, 96, 0.15);
+			padding: 15px 0;
+			min-width: 220px;
+			z-index: 1000;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+		}
 
-        .issue-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
-        }
+		.dropdown-menu-custom.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
 
-        .issue-card:hover::before {
-            transform: scaleX(1);
-        }
+		.dropdown-item-custom {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			padding: 12px 20px;
+			color: #4a5568;
+			text-decoration: none;
+			transition: all 0.3s ease;
+			border: none;
+			background: none;
+			width: 100%;
+			cursor: pointer;
+			font-size: 0.9rem;
+		}
 
-        .issue-icon {
-            width: 80px;
-            height: 80px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 1.5rem;
-            font-size: 2rem;
-            color: white;
-            background: linear-gradient(135deg, #10b981, #34d399);
-        }
+		.dropdown-item-custom:hover {
+			background: rgba(0, 128, 96, 0.1);
+			color: #008060;
+			transform: translateX(3px);
+		}
 
-        .issue-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 1rem;
-            text-align: center;
-        }
+		.dropdown-item-custom i {
+			font-size: 1rem;
+			width: 18px;
+			text-align: center;
+		}
 
-        .issue-description {
-            color: #6b7280;
-            text-align: center;
-            margin-bottom: 1.5rem;
-            line-height: 1.6;
-        }
+		.dropdown-divider-custom {
+			height: 1px;
+			background: linear-gradient(90deg, transparent, rgba(0, 128, 96, 0.2), transparent);
+			margin: 8px 0;
+		}
 
-        .issue-price {
-            text-align: center;
-            margin-top: auto;
-        }
+		.theme-toggle {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
 
-        .price-range {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #059669;
-        }
+		.toggle-switch {
+			position: relative;
+			width: 40px;
+			height: 20px;
+			background: #e2e8f0;
+			border-radius: 10px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
 
-        .price-label {
-            font-size: 0.9rem;
-            color: #6b7280;
-            margin-top: 0.25rem;
-        }
+		.toggle-switch.active {
+			background: linear-gradient(135deg, #008060, #006b4e);
+		}
 
-        .continue-btn {
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s ease;
-            z-index: 1000;
-            display: none;
-        }
+		.toggle-slider {
+			position: absolute;
+			top: 2px;
+			left: 2px;
+			width: 16px;
+			height: 16px;
+			background: white;
+			border-radius: 50%;
+			transition: all 0.3s ease;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
 
-        .continue-btn:hover {
-            background: linear-gradient(135deg, #059669, #10b981);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
-        }
+		.toggle-switch.active .toggle-slider {
+			transform: translateX(20px);
+		}
 
-        .continue-btn.show {
-            display: block;
-            animation: slideUp 0.3s ease;
-        }
+		.language-selector {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
+		/* Main Navigation */
+		.main-nav {
+			background: #ffffff;
+			border-bottom: 1px solid #e5e7eb;
+			padding: 12px 0;
+			position: sticky;
+			top: 85px;
+			z-index: 999;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		}
 
-        @media (max-width: 768px) {
-            .hero-title {
-                font-size: 2rem;
-            }
+		.nav-menu {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			padding-left: 260px;
+		}
 
-            .progress-steps {
-                flex-direction: column;
-                gap: 1rem;
-            }
+		.nav-item {
+			color: #1f2937;
+			text-decoration: none;
+			font-weight: 500;
+			padding: 16px 20px;
+			display: flex;
+			align-items: center;
+			gap: 5px;
+			transition: all 0.3s ease;
+			border-radius: 8px;
+			white-space: nowrap;
+		}
 
-            .step-separator {
-                display: none;
-            }
+		.nav-item:hover {
+			background: rgba(0, 128, 96, 0.1);
+			color: #008060;
+			transform: translateY(-2px);
+		}
 
-            .issues-grid {
-                grid-template-columns: 1fr;
-                padding: 0 1rem;
-            }
+		.nav-item.flash-deal {
+			color: #ef4444;
+			font-weight: 700;
+			margin-left: auto;
+			padding-right: 470px;
+		}
 
-            .continue-btn {
-                bottom: 20px;
-                right: 20px;
-                left: 20px;
-                width: auto;
-            }
-        }
+		.nav-item.flash-deal:hover {
+			color: #dc2626;
+		}
+
+		.shop-categories-btn {
+			position: relative;
+		}
+
+		.categories-button {
+			background: #4f63d2;
+			color: white;
+			border: none;
+			padding: 12px 20px;
+			border-radius: 6px;
+			font-weight: 600;
+			font-size: 0.9rem;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.categories-button:hover {
+			background: #3d4fd1;
+		}
+
+		.categories-button i:last-child {
+			font-size: 0.8rem;
+			transition: transform 0.3s ease;
+		}
+
+		.shop-categories-btn:hover .categories-button i:last-child {
+			transform: rotate(180deg);
+		}
+
+		.brands-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: white;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			padding: 12px;
+			width: 280px;
+			max-height: 350px;
+			overflow-y: auto;
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+			z-index: 1000;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+		}
+
+		.brands-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.brands-dropdown h4 {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 12px;
+			padding-bottom: 8px;
+			border-bottom: 1px solid #e5e7eb;
+		}
+
+		.brands-dropdown ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.brands-dropdown li {
+			padding: 0;
+		}
+
+		.brands-dropdown a {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 12px;
+			color: #4b5563;
+			text-decoration: none;
+			font-size: 0.9rem;
+			border-radius: 6px;
+			transition: all 0.2s ease;
+		}
+
+		.brands-dropdown a:hover {
+			background: #f3f4f6;
+			color: #008060;
+		}
+
+		.brands-dropdown::-webkit-scrollbar {
+			width: 6px;
+		}
+
+		.brands-dropdown::-webkit-scrollbar-track {
+			background: #f1f1f1;
+			border-radius: 3px;
+		}
+
+		.brands-dropdown::-webkit-scrollbar-thumb {
+			background: #c1c1c1;
+			border-radius: 3px;
+		}
+
+		.brands-dropdown::-webkit-scrollbar-thumb:hover {
+			background: #a8a8a8;
+		}
+
+		.nav-dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.mega-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 800px;
+			background: #ffffff;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+			padding: 32px;
+			opacity: 0;
+			visibility: visible;
+			transform: translateY(0px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.mega-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.dropdown-content {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 40px;
+		}
+
+		.dropdown-column h4 {
+			color: #1f2937;
+			font-size: 1.1rem;
+			font-weight: 600;
+			margin-bottom: 16px;
+			border-bottom: 2px solid #f3f4f6;
+			padding-bottom: 8px;
+		}
+
+		.dropdown-column ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.dropdown-column ul li {
+			margin-bottom: 8px;
+		}
+
+		.dropdown-column ul li a {
+			color: #6b7280;
+			text-decoration: none;
+			font-size: 0.95rem;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 0;
+			transition: all 0.3s ease;
+		}
+
+		.dropdown-column ul li a:hover {
+			color: #008060;
+			transform: translateX(4px);
+		}
+
+		.dropdown-column ul li a i {
+			color: #9ca3af;
+			width: 16px;
+		}
+
+		.dropdown-column.featured {
+			border-left: 2px solid #f3f4f6;
+			padding-left: 24px;
+		}
+
+		.featured-item {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+			padding: 16px;
+			border-radius: 12px;
+			background: #f8fafc;
+			border: 1px solid #e5e7eb;
+			transition: all 0.3s ease;
+		}
+
+		.featured-item:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		.featured-item img {
+			width: 60px;
+			height: 40px;
+			object-fit: cover;
+			border-radius: 6px;
+		}
+
+		.featured-text strong {
+			color: #1f2937;
+			font-size: 0.9rem;
+			font-weight: 600;
+		}
+
+		.featured-text p {
+			color: #6b7280;
+			font-size: 0.8rem;
+			margin: 4px 0;
+		}
+
+		.shop-now-btn {
+			background: #008060;
+			color: white;
+			padding: 4px 12px;
+			border-radius: 6px;
+			text-decoration: none;
+			font-size: 0.8rem;
+			font-weight: 500;
+			transition: all 0.3s ease;
+		}
+
+		.shop-now-btn:hover {
+			background: #374151;
+			color: white;
+		}
+
+		.simple-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: white;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			min-width: 160px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+		}
+
+		.simple-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.simple-dropdown ul {
+			list-style: none;
+			padding: 8px 0;
+			margin: 0;
+		}
+
+		.simple-dropdown li {
+			padding: 0;
+		}
+
+		.simple-dropdown a {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 12px 16px;
+			color: #4b5563;
+			text-decoration: none;
+			font-size: 0.9rem;
+			transition: all 0.3s ease;
+		}
+
+		.simple-dropdown a:hover {
+			background: #f3f4f6;
+			color: #008060;
+		}
+
+		/* Page Title */
+		.page-title {
+			text-align: center;
+			padding: 40px 0;
+			font-size: 2.5rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin: 0;
+		}
+
+		/* Floating Bubbles Animation */
+		.floating-bubbles {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			pointer-events: none;
+			z-index: -1;
+			overflow: hidden;
+		}
+
+		.bubble {
+			position: absolute;
+			border-radius: 50%;
+			background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(0, 107, 78, 0.05));
+			animation: floatUp linear infinite;
+			opacity: 0.8;
+		}
+
+		.bubble:nth-child(odd) {
+			background: linear-gradient(135deg, rgba(0, 107, 78, 0.1), rgba(0, 128, 96, 0.05));
+		}
+
+		.bubble:nth-child(3n) {
+			background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0, 128, 96, 0.05));
+		}
+
+		.bubble:nth-child(5n) {
+			background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(0, 107, 78, 0.05));
+		}
+
+		@keyframes floatUp {
+			from {
+				transform: translateY(100vh) rotate(0deg);
+				opacity: 0;
+			}
+
+			10% {
+				opacity: 0.8;
+			}
+
+			90% {
+				opacity: 0.8;
+			}
+
+			to {
+				transform: translateY(-100px) rotate(360deg);
+				opacity: 0;
+			}
+		}
+
+		/* Repair Services Specific Styles */
+		.hero-section {
+			padding: 4rem 0 2rem;
+			text-align: center;
+			position: relative;
+			z-index: 10;
+		}
+
+		.hero-title {
+			font-size: 3rem;
+			font-weight: 700;
+			color: #047857;
+			margin-bottom: 1rem;
+		}
+
+		.hero-subtitle {
+			font-size: 1.2rem;
+			color: #065f46;
+			margin-bottom: 0.5rem;
+		}
+
+		.hero-description {
+			color: #6b7280;
+			font-size: 1.1rem;
+			max-width: 600px;
+			margin: 0 auto;
+		}
+
+		.progress-steps {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			gap: 2rem;
+			margin: 3rem 0;
+		}
+
+		.step {
+			display: flex;
+			align-items: center;
+			gap: 0.5rem;
+			color: #6b7280;
+			font-weight: 500;
+		}
+
+		.step-number {
+			width: 30px;
+			height: 30px;
+			border-radius: 50%;
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-weight: 600;
+		}
+
+		.step.active .step-number {
+			background: linear-gradient(135deg, #047857, #059669);
+		}
+
+		.step-separator {
+			width: 3rem;
+			height: 2px;
+			background: #e5e7eb;
+		}
+
+		.issues-section {
+			padding: 2rem 0;
+			position: relative;
+			z-index: 10;
+		}
+
+		.section-title {
+			text-align: center;
+			font-size: 2.5rem;
+			font-weight: 700;
+			color: #047857;
+			margin-bottom: 3rem;
+		}
+
+		.issues-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+			gap: 2rem;
+			max-width: 1200px;
+			margin: 0 auto;
+		}
+
+		.issue-card {
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			border-radius: 20px;
+			padding: 2rem;
+			border: 1px solid rgba(0, 128, 96, 0.1);
+			box-shadow: 0 4px 20px rgba(0, 128, 96, 0.05);
+			transition: all 0.3s ease;
+			cursor: pointer;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.issue-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			height: 4px;
+			background: linear-gradient(135deg, #008060, #006b4e);
+			transform: scaleX(0);
+			transition: transform 0.3s ease;
+		}
+
+		.issue-card:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 8px 30px rgba(0, 128, 96, 0.15);
+		}
+
+		.issue-card:hover::before {
+			transform: scaleX(1);
+		}
+
+		.issue-icon {
+			width: 80px;
+			height: 80px;
+			border-radius: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 1.5rem;
+			font-size: 2rem;
+			color: white;
+			background: linear-gradient(135deg, #008060, #006b4e);
+		}
+
+		.issue-title {
+			font-size: 1.5rem;
+			font-weight: 700;
+			color: #047857;
+			margin-bottom: 1rem;
+			text-align: center;
+		}
+
+		.issue-description {
+			color: #6b7280;
+			text-align: center;
+			margin-bottom: 1.5rem;
+			line-height: 1.6;
+		}
+
+		.issue-price {
+			text-align: center;
+			margin-top: auto;
+		}
+
+		.price-range {
+			font-size: 1.1rem;
+			font-weight: 600;
+			color: #059669;
+		}
+
+		.price-label {
+			font-size: 0.9rem;
+			color: #6b7280;
+			margin-top: 0.25rem;
+		}
+
+		.continue-btn {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: white;
+			border: none;
+			padding: 15px 40px;
+			border-radius: 50px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			position: fixed;
+			bottom: 30px;
+			right: 30px;
+			box-shadow: 0 4px 20px rgba(0, 128, 96, 0.3);
+			transition: all 0.3s ease;
+			z-index: 1000;
+			display: none;
+		}
+
+		.continue-btn:hover {
+			background: linear-gradient(135deg, #059669, #006b4e);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 25px rgba(0, 128, 96, 0.4);
+		}
+
+		.continue-btn.show {
+			display: block;
+			animation: slideUp 0.3s ease;
+		}
+
+		@keyframes slideUp {
+			from {
+				opacity: 0;
+				transform: translateY(20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
+		}
+
+		@media (max-width: 768px) {
+			.hero-title {
+				font-size: 2rem;
+			}
+
+			.progress-steps {
+				flex-direction: column;
+				gap: 1rem;
+			}
+
+			.step-separator {
+				display: none;
+			}
+
+			.issues-grid {
+				grid-template-columns: 1fr;
+				padding: 0 1rem;
+			}
+
+			.continue-btn {
+				bottom: 20px;
+				right: 20px;
+				left: 20px;
+				width: auto;
+			}
+		}
     </style>
 </head>
 <body>
-    <!-- Background Decorations -->
-    <div class="bg-decoration bg-decoration-1"></div>
-    <div class="bg-decoration bg-decoration-2"></div>
+	<!-- Floating Bubbles Background -->
+	<div class="floating-bubbles" id="floatingBubbles"></div>
 
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
-                </a>
-                <a href="index.php" class="btn-back">
-                    <i class="fas fa-arrow-left"></i>
-                    Back to Home
-                </a>
-            </div>
-        </div>
-    </header>
+	<!-- Main Header -->
+	<header class="main-header animate__animated animate__fadeInDown">
+		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+				<!-- Logo - Far Left -->
+				<a href="index.php" class="logo">
+					Gadget<span class="garage">Garage</span>
+				</a>
+
+				<!-- Center Content -->
+				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+					<!-- Search Bar -->
+					<form class="search-container" method="GET" action="product_search_result.php">
+						<i class="fas fa-search search-icon"></i>
+						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+						<button type="submit" class="search-btn">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+
+					<!-- Tech Revival Section -->
+					<div class="tech-revival-section">
+						<i class="fas fa-recycle tech-revival-icon"></i>
+						<div>
+							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="contact-number">055-138-7578</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- User Actions - Far Right -->
+				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
+					<span style="color: #ddd;">|</span>
+					<?php if (isset($_SESSION['user_id'])): ?>
+						<!-- Wishlist Icon -->
+						<div class="header-icon">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-heart"></i>
+							</a>
+						</div>
+
+						<!-- Cart Icon -->
+						<div class="header-icon">
+							<a href="cart.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-shopping-cart"></i>
+								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+							</a>
+						</div>
+
+						<!-- User Avatar Dropdown -->
+						<div class="user-dropdown">
+							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+							</div>
+							<div class="dropdown-menu-custom" id="userDropdownMenu">
+								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+									<i class="fas fa-camera"></i>
+									<span>Profile Picture</span>
+								</button>
+								<div class="dropdown-divider-custom"></div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-globe"></i>
+									<div class="language-selector">
+										<span>Language</span>
+										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+											<option value="en">🇬🇧 EN</option>
+											<option value="es">🇪🇸 ES</option>
+											<option value="fr">🇫🇷 FR</option>
+											<option value="de">🇩🇪 DE</option>
+										</select>
+									</div>
+								</div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-moon"></i>
+									<div class="theme-toggle">
+										<span>Dark Mode</span>
+										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+											<div class="toggle-slider"></div>
+										</div>
+									</div>
+								</div>
+								<div class="dropdown-divider-custom"></div>
+								<a href="my_orders.php" class="dropdown-item-custom">
+									<i class="fas fa-box"></i>
+									<span>My Orders</span>
+								</a>
+								<div class="dropdown-divider-custom"></div>
+								<a href="wishlist.php" class="dropdown-item-custom">
+									<i class="fas fa-heart"></i>
+									<span>Wishlist</span>
+								</a>
+								<div class="dropdown-divider-custom"></div>
+								<a href="login/logout.php" class="dropdown-item-custom">
+									<i class="fas fa-sign-out-alt"></i>
+									<span>Logout</span>
+								</a>
+							</div>
+						</div>
+					<?php else: ?>
+						<!-- Not logged in: Register | Login -->
+						<a href="login/register.php" class="login-btn me-2">Register</a>
+						<a href="login/login.php" class="login-btn">Login</a>
+					<?php endif; ?>
+
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Main Navigation -->
+	<nav class="main-nav">
+		<div class="container-fluid px-0">
+			<div class="nav-menu">
+				<!-- Shop by Brands Button -->
+				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+					<button class="categories-button">
+						<i class="fas fa-tags"></i>
+						SHOP BY BRANDS
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="brands-dropdown" id="shopDropdown">
+						<h4>All Brands</h4>
+						<ul>
+							<li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<a href="index.php" class="nav-item">HOME</a>
+
+				<!-- Shop Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+					<a href="#" class="nav-item">
+						SHOP
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="mega-dropdown" id="shopCategoryDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=mobile" style="text-decoration: none; color: inherit;">
+										Mobile Devices
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=computing" style="text-decoration: none; color: inherit;">
+										Computing
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=photo_video" style="text-decoration: none; color: inherit;">
+										Photography & Video
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column featured">
+								<h4>Shop All</h4>
+								<div class="featured-item">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+									<div class="featured-text">
+										<strong>New Arrivals</strong>
+										<p>Latest tech gadgets</p>
+										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
+				<a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+
+				<!-- More Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+					<a href="#" class="nav-item">
+						MORE
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="simple-dropdown" id="moreDropdown">
+						<ul>
+							<li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Flash Deal positioned at far right -->
+				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
+			</div>
+		</div>
+	</nav>
+
+	<!-- Page Title -->
+	<h1 class="page-title">Device Repair Services</h1>
 
     <!-- Hero Section -->
     <section class="hero-section">
@@ -450,51 +1243,321 @@ try {
         <i class="fas fa-arrow-right ms-2"></i>
     </button>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        let selectedIssue = null;
-        let selectedIssueName = '';
+	<!-- Scripts -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="js/cart.js"></script>
+	<script>
+		// Search functionality
+		document.querySelector('.search-input').addEventListener('keypress', function(e) {
+			if (e.key === 'Enter') {
+				performSearch();
+			}
+		});
 
-        function selectIssue(issueId, issueName) {
-            // Remove previous selection
-            document.querySelectorAll('.issue-card').forEach(card => {
-                card.classList.remove('selected');
-                card.style.background = '';
-                card.style.border = '';
-            });
+		document.querySelector('.search-btn').addEventListener('click', performSearch);
 
-            // Select current issue
-            event.currentTarget.classList.add('selected');
-            event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
-            event.currentTarget.style.border = '2px solid #10b981';
+		function performSearch() {
+			const query = document.querySelector('.search-input').value.trim();
+			if (query) {
+				// Redirect to search results page
+				window.location.href = 'product_search_result.php?query=' + encodeURIComponent(query);
+			}
+		}
 
-            selectedIssue = issueId;
-            selectedIssueName = issueName;
+		// Dropdown navigation functions
+		let dropdownTimeout;
 
-            // Show continue button
-            document.getElementById('continueBtn').classList.add('show');
-        }
+		function showDropdown() {
+			const dropdown = document.getElementById('shopDropdown');
+			if (dropdown) {
+				clearTimeout(dropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
 
-        function proceedToSpecialist() {
-            if (selectedIssue) {
-                window.location.href = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
-            }
-        }
+		function hideDropdown() {
+			const dropdown = document.getElementById('shopDropdown');
+			if (dropdown) {
+				// Clear any existing timeout
+				clearTimeout(dropdownTimeout);
+				// Set a delay before hiding to allow moving to dropdown
+				dropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
 
-        // Add hover effects
-        document.querySelectorAll('.issue-card').forEach(card => {
-            card.addEventListener('mouseenter', function() {
-                if (!this.classList.contains('selected')) {
-                    this.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
-                }
-            });
+		// Shop Category Dropdown Functions
+		function showShopDropdown() {
+			const dropdown = document.getElementById('shopCategoryDropdown');
+			if (dropdown) {
+				clearTimeout(shopDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
 
-            card.addEventListener('mouseleave', function() {
-                if (!this.classList.contains('selected')) {
-                    this.style.background = '';
-                }
-            });
-        });
-    </script>
+		function hideShopDropdown() {
+			const dropdown = document.getElementById('shopCategoryDropdown');
+			if (dropdown) {
+				clearTimeout(shopDropdownTimeout);
+				shopDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		// More Dropdown Functions
+		function showMoreDropdown() {
+			const dropdown = document.getElementById('moreDropdown');
+			if (dropdown) {
+				clearTimeout(moreDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideMoreDropdown() {
+			const dropdown = document.getElementById('moreDropdown');
+			if (dropdown) {
+				clearTimeout(moreDropdownTimeout);
+				moreDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		// Timeout variables
+		let shopDropdownTimeout;
+		let moreDropdownTimeout;
+
+		// Enhanced dropdown behavior
+		document.addEventListener('DOMContentLoaded', function() {
+			const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+			const dropdown = document.getElementById('shopDropdown');
+
+			if (shopCategoriesBtn && dropdown) {
+				// Show dropdown on button hover
+				shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+
+				// Hide dropdown when leaving button (with delay)
+				shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+
+				// Keep dropdown open when hovering over it
+				dropdown.addEventListener('mouseenter', function() {
+					clearTimeout(dropdownTimeout);
+				});
+
+				// Hide dropdown when leaving dropdown area
+				dropdown.addEventListener('mouseleave', hideDropdown);
+			}
+		});
+
+		// Smooth scrolling for internal links
+		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+			anchor.addEventListener('click', function(e) {
+				e.preventDefault();
+				const target = document.querySelector(this.getAttribute('href'));
+				if (target) {
+					target.scrollIntoView({
+						behavior: 'smooth'
+					});
+				}
+			});
+		});
+
+		// Add animation classes on scroll
+		const observerOptions = {
+			threshold: 0.1,
+			rootMargin: '0px 0px -50px 0px'
+		};
+
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					entry.target.style.opacity = '1';
+					entry.target.style.transform = 'translateY(0)';
+				}
+			});
+		}, observerOptions);
+
+		// Observe elements for animation
+		document.querySelectorAll('.promo-card, .hero-content').forEach(el => {
+			observer.observe(el);
+		});
+
+		// User dropdown functionality
+		function toggleUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			dropdown.classList.toggle('show');
+		}
+
+		// Close dropdown when clicking outside
+		document.addEventListener('click', function(event) {
+			const dropdown = document.getElementById('userDropdownMenu');
+			const avatar = document.querySelector('.user-avatar');
+
+			if (!dropdown.contains(event.target) && !avatar.contains(event.target)) {
+				dropdown.classList.remove('show');
+			}
+		});
+
+		// Profile picture modal functionality
+		function openProfilePictureModal() {
+			// For now, show alert - will be replaced with actual modal
+			alert('Profile picture upload functionality will be implemented');
+		}
+
+		// Language change functionality
+		function changeLanguage(language) {
+			// Store language preference
+			localStorage.setItem('selectedLanguage', language);
+			console.log('Language changed to:', language);
+			// Here you would implement actual language switching
+			// Language change is silent now - no notification
+		}
+
+		// Theme toggle functionality
+		function toggleTheme() {
+			const toggle = document.getElementById('themeToggle');
+			const body = document.body;
+
+			toggle.classList.toggle('active');
+			body.classList.toggle('dark-mode');
+
+			// Store theme preference
+			const isDark = body.classList.contains('dark-mode');
+			localStorage.setItem('darkMode', isDark);
+		}
+
+		// Load saved preferences on page load
+		document.addEventListener('DOMContentLoaded', function() {
+			// Load saved language
+			const savedLanguage = localStorage.getItem('selectedLanguage');
+			if (savedLanguage) {
+				const languageSelect = document.querySelector('.language-selector select');
+				if (languageSelect) {
+					languageSelect.value = savedLanguage;
+				}
+			}
+
+			// Load saved theme
+			const isDarkMode = localStorage.getItem('darkMode') === 'true';
+			if (isDarkMode) {
+				document.body.classList.add('dark-mode');
+				document.getElementById('themeToggle').classList.add('active');
+			}
+
+			// Create floating bubbles
+			createFloatingBubbles();
+		});
+
+		// Create 40+ floating bubbles with different sizes and animations
+		function createFloatingBubbles() {
+			const bubblesContainer = document.getElementById('floatingBubbles');
+			const bubbleCount = 50; // Create 50 bubbles
+
+			for (let i = 0; i < bubbleCount; i++) {
+				const bubble = document.createElement('div');
+				bubble.className = 'bubble';
+
+				// Create distinct size categories: small, medium, large
+				let size;
+				const sizeCategory = Math.random();
+				if (sizeCategory < 0.5) {
+					// 50% small bubbles (15-35px)
+					size = Math.random() * 20 + 15;
+					bubble.classList.add('bubble-small');
+				} else if (sizeCategory < 0.8) {
+					// 30% medium bubbles (35-60px)
+					size = Math.random() * 25 + 35;
+					bubble.classList.add('bubble-medium');
+				} else {
+					// 20% large bubbles (60-90px)
+					size = Math.random() * 30 + 60;
+					bubble.classList.add('bubble-large');
+				}
+
+				bubble.style.width = size + 'px';
+				bubble.style.height = size + 'px';
+
+				// Random horizontal position
+				bubble.style.left = Math.random() * 100 + '%';
+
+				// Animation duration based on size (larger bubbles float slower)
+				let duration;
+				if (size < 35) {
+					duration = Math.random() * 8 + 12; // Small: 12-20s
+				} else if (size < 60) {
+					duration = Math.random() * 6 + 15; // Medium: 15-21s
+				} else {
+					duration = Math.random() * 4 + 18; // Large: 18-22s
+				}
+				bubble.style.animationDuration = duration + 's';
+
+				// Random delay between 0s and 15s
+				const delay = Math.random() * 15;
+				bubble.style.animationDelay = delay + 's';
+
+				// Opacity based on size (larger bubbles slightly more visible)
+				let opacity;
+				if (size < 35) {
+					opacity = Math.random() * 0.3 + 0.4; // Small: 0.4-0.7
+				} else if (size < 60) {
+					opacity = Math.random() * 0.3 + 0.5; // Medium: 0.5-0.8
+				} else {
+					opacity = Math.random() * 0.2 + 0.6; // Large: 0.6-0.8
+				}
+				bubble.style.opacity = opacity;
+
+				bubblesContainer.appendChild(bubble);
+			}
+		}
+
+		// Repair services specific functionality
+		let selectedIssue = null;
+		let selectedIssueName = '';
+
+		function selectIssue(issueId, issueName) {
+			// Remove previous selection
+			document.querySelectorAll('.issue-card').forEach(card => {
+				card.classList.remove('selected');
+				card.style.background = '';
+				card.style.border = '';
+			});
+
+			// Select current issue
+			event.currentTarget.classList.add('selected');
+			event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
+			event.currentTarget.style.border = '2px solid #008060';
+
+			selectedIssue = issueId;
+			selectedIssueName = issueName;
+
+			// Show continue button
+			document.getElementById('continueBtn').classList.add('show');
+		}
+
+		function proceedToSpecialist() {
+			if (selectedIssue) {
+				window.location.href = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
+			}
+		}
+
+		// Add hover effects for repair cards
+		document.addEventListener('DOMContentLoaded', function() {
+			document.querySelectorAll('.issue-card').forEach(card => {
+				card.addEventListener('mouseenter', function() {
+					if (!this.classList.contains('selected')) {
+						this.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
+					}
+				});
+
+				card.addEventListener('mouseleave', function() {
+					if (!this.classList.contains('selected')) {
+						this.style.background = '';
+					}
+				});
+			});
+		});
+	</script>
 </body>
 </html>

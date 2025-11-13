@@ -60,9 +60,12 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="includes/header-styles.css" rel="stylesheet">
     <style>
+        /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
+        /* Reset and Base Styles */
         * {
             margin: 0;
             padding: 0;
@@ -71,34 +74,84 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8fafc;
-            color: #1a202c;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            overflow-x: hidden;
         }
 
+        /* Floating Bubbles Animation */
+        .floating-bubbles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(0, 107, 78, 0.1));
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
+        }
+
+        /* Header Styles */
         .main-header {
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9ff 100%);
-            box-shadow: 0 2px 10px rgba(139, 95, 191, 0.1);
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 0;
             z-index: 1000;
-            padding: 12px 0;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .logo {
-            font-size: 1.8rem;
+            font-size: 2.2rem;
             font-weight: 700;
-            color: #8b5fbf;
+            color: #1f2937;
             text-decoration: none;
             display: flex;
             align-items: center;
             gap: 8px;
         }
 
+        .logo .garage {
+            background: linear-gradient(135deg, #008060, #006b4e);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
         .search-header {
             background: white;
             padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 128, 96, 0.1);
             margin-bottom: 30px;
         }
 
@@ -119,9 +172,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         .search-input:focus {
             outline: none;
-            border-color: #8b5fbf;
+            border-color: #008060;
             background: white;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .search-icon {
@@ -129,7 +182,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             left: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #8b5fbf;
+            color: #008060;
             font-size: 1.2rem;
         }
 
@@ -138,7 +191,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border: none;
             padding: 10px 20px;
             border-radius: 10px;
@@ -149,12 +202,12 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .search-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #006b4e, #008060);
             transform: translateY(-50%) scale(1.05);
         }
 
         .search-results-info {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             padding: 20px;
             border-radius: 15px;
@@ -177,12 +230,12 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             background: white;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 128, 96, 0.1);
             margin-bottom: 30px;
         }
 
         .filter-title {
-            color: #8b5fbf;
+            color: #008060;
             font-weight: 600;
             margin-bottom: 15px;
         }
@@ -199,9 +252,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         .filter-select:focus {
             outline: none;
-            border-color: #8b5fbf;
+            border-color: #008060;
             background: white;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .product-grid {
@@ -215,14 +268,14 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             background: white;
             border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 4px 15px rgba(0, 128, 96, 0.1);
             transition: all 0.3s ease;
             cursor: pointer;
         }
 
         .product-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.2);
+            box-shadow: 0 8px 25px rgba(0, 128, 96, 0.2);
         }
 
         .product-image {
@@ -247,7 +300,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .product-price {
             font-size: 1.3rem;
             font-weight: 700;
-            color: #8b5fbf;
+            color: #008060;
             margin-bottom: 10px;
         }
 
@@ -263,7 +316,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .add-to-cart-btn {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             border: none;
             border-radius: 10px;
@@ -273,7 +326,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .add-to-cart-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #006b4e, #008060);
             transform: scale(1.02);
         }
 
@@ -296,9 +349,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .page-btn:hover, .page-btn.active {
-            background: #8b5fbf;
+            background: #008060;
             color: white;
-            border-color: #8b5fbf;
+            border-color: #008060;
         }
 
         .no-results {
@@ -312,7 +365,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             align-items: center;
             gap: 8px;
             padding: 12px 20px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             text-decoration: none;
             border-radius: 10px;
@@ -322,7 +375,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .back-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #006b4e, #008060);
             color: white;
             transform: scale(1.02);
         }
@@ -333,7 +386,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             border-radius: 20px;
             padding: 25px 30px;
             margin-bottom: 30px;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 8px 32px rgba(0, 128, 96, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.3);
         }
 
@@ -361,7 +414,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         .highlight {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             padding: 2px 4px;
             border-radius: 4px;
@@ -370,40 +423,187 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
     </style>
 </head>
 <body>
+    <!-- Floating Bubbles Background -->
+    <div class="floating-bubbles"></div>
+
+    <!-- Main Header -->
     <header class="main-header">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-2">
-                    <a href="index.php" class="logo">
-                        <i class="fas fa-utensils"></i>
-                        <span>FlavorHub</span>
-                    </a>
-                </div>
-                <div class="col-lg-8 text-center">
-                    <h1 class="mb-0" style="color: #8b5fbf; font-weight: 700;">Search Results</h1>
-                </div>
-                <div class="col-lg-2 text-end">
-                    <div class="d-flex align-items-center justify-content-end gap-3">
-                        <!-- Cart Icon -->
-                        <a href="#" class="cart-icon position-relative" onclick="showCart()">
-                            <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #8b5fbf;"></i>
-                            <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartCount">
-                                0
-                            </span>
-                        </a>
+            <div class="d-flex align-items-center justify-content-between">
+                <a href="index.php" class="logo">
+                    <span>Gadget</span>
+                    <span class="garage">Garage</span>
+                </a>
 
-                        <?php if ($is_logged_in): ?>
-                            <a href="login/logout.php" class="btn btn-outline-danger">Logout</a>
-                        <?php else: ?>
-                            <a href="login/login.php" class="btn btn-outline-primary">Login</a>
-                        <?php endif; ?>
+                <div class="search-container">
+                    <form action="product_search_result.php" method="GET" class="position-relative">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="query" class="search-input" placeholder="Search for refurbished devices, parts, or repair services..." value="<?php echo htmlspecialchars($search_query); ?>">
+                        <button type="submit" class="search-btn">Search</button>
+                    </form>
+                </div>
+
+                <div class="tech-revival-section">
+                    <i class="fas fa-recycle tech-revival-icon"></i>
+                    <div>
+                        <p class="tech-revival-text mb-0">Tech Revival Hub</p>
+                        <p class="contact-number mb-0">Call: (555) 123-TECH</p>
                     </div>
+                </div>
+
+                <div class="user-actions">
+                    <a href="cart.php" class="header-icon" title="Cart">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                        <?php if ($cart_count > 0): ?>
+                            <span class="cart-badge"><?php echo $cart_count; ?></span>
+                        <?php endif; ?>
+                    </a>
+
+                    <a href="#" class="header-icon" title="Wishlist">
+                        <i class="fas fa-heart fa-lg"></i>
+                    </a>
+
+                    <?php if ($is_logged_in): ?>
+                        <div class="user-dropdown">
+                            <div class="user-avatar" onclick="toggleUserDropdown()">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <div class="dropdown-menu-custom" id="userDropdown">
+                                <a href="my_orders.php" class="dropdown-item-custom">
+                                    <i class="fas fa-box"></i>
+                                    My Orders
+                                </a>
+                                <a href="profile.php" class="dropdown-item-custom">
+                                    <i class="fas fa-user-cog"></i>
+                                    Profile Settings
+                                </a>
+                                <div class="dropdown-divider-custom"></div>
+                                <button onclick="confirmLogout()" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    Logout
+                                </button>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <a href="login/login.php" class="login-btn">Sign In</a>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
     </header>
 
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container">
+            <div class="nav-menu">
+                <div class="shop-categories-btn">
+                    <button class="categories-button" onclick="toggleMegaDropdown()">
+                        <i class="fas fa-bars"></i>
+                        Shop Categories
+                    </button>
+                    <div class="mega-dropdown" id="megaDropdown">
+                        <div class="dropdown-content">
+                            <div class="dropdown-column">
+                                <h4>Mobile Devices</h4>
+                                <ul>
+                                    <li><a href="all_product.php?cat=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+                                    <li><a href="all_product.php?cat=tablets"><i class="fas fa-tablet-alt"></i> Tablets</a></li>
+                                    <li><a href="all_product.php?cat=accessories"><i class="fas fa-headphones"></i> Accessories</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>Computing</h4>
+                                <ul>
+                                    <li><a href="all_product.php?cat=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
+                                    <li><a href="all_product.php?cat=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+                                    <li><a href="all_product.php?cat=components"><i class="fas fa-microchip"></i> Components</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>Gaming</h4>
+                                <ul>
+                                    <li><a href="all_product.php?cat=consoles"><i class="fas fa-gamepad"></i> Consoles</a></li>
+                                    <li><a href="all_product.php?cat=controllers"><i class="fas fa-play"></i> Controllers</a></li>
+                                    <li><a href="all_product.php?cat=games"><i class="fas fa-compact-disc"></i> Games</a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>Audio & Video</h4>
+                                <ul>
+                                    <li><a href="all_product.php?cat=headphones"><i class="fas fa-headphones"></i> Headphones</a></li>
+                                    <li><a href="all_product.php?cat=speakers"><i class="fas fa-volume-up"></i> Speakers</a></li>
+                                    <li><a href="all_product.php?cat=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="all_product.php" class="nav-item">
+                        <i class="fas fa-mobile-alt"></i>
+                        All Products
+                    </a>
+                </div>
+
+                <div class="position-relative">
+                    <a href="#" class="nav-item" onclick="toggleBrandsDropdown()">
+                        <i class="fas fa-tags"></i>
+                        Brands
+                        <i class="fas fa-chevron-down ms-1"></i>
+                    </a>
+                    <div class="brands-dropdown" id="brandsDropdown">
+                        <h4>Popular Brands</h4>
+                        <ul>
+                            <?php foreach ($brands as $brand): ?>
+                                <li><a href="all_product.php?brand=<?php echo $brand['brand_id']; ?>"><?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                            <?php endforeach; ?>
+                        </ul>
+                    </div>
+                </div>
+
+                <div>
+                    <a href="repair_services.php" class="nav-item">
+                        <i class="fas fa-tools"></i>
+                        Repair Services
+                    </a>
+                </div>
+
+                <div>
+                    <a href="#" class="nav-item flash-deal">
+                        <i class="fas fa-bolt"></i>
+                        Flash Deals
+                    </a>
+                </div>
+
+                <div>
+                    <a href="about.php" class="nav-item">
+                        <i class="fas fa-info-circle"></i>
+                        About Us
+                    </a>
+                </div>
+
+                <div class="position-relative">
+                    <a href="#" class="nav-item" onclick="toggleHelpDropdown()">
+                        <i class="fas fa-question-circle"></i>
+                        Help
+                        <i class="fas fa-chevron-down ms-1"></i>
+                    </a>
+                    <div class="simple-dropdown" id="helpDropdown">
+                        <ul>
+                            <li><a href="contact.php"><i class="fas fa-envelope"></i> Contact Us</a></li>
+                            <li><a href="faq.php"><i class="fas fa-question"></i> FAQ</a></li>
+                            <li><a href="shipping.php"><i class="fas fa-truck"></i> Shipping Info</a></li>
+                            <li><a href="returns.php"><i class="fas fa-undo"></i> Returns</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
     <div class="container mt-4">
+        <h1 class="page-title">Search Results</h1>
         <!-- Hero Bar -->
         <div class="hero-bar">
             <div class="d-flex align-items-center justify-content-between">
@@ -603,7 +803,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
                     setTimeout(() => {
                         btn.innerHTML = originalText;
-                        btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
+                        btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
                         btn.disabled = false;
                     }, 1500);
 
@@ -619,7 +819,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
                     setTimeout(() => {
                         btn.innerHTML = originalText;
-                        btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
+                        btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
                         btn.disabled = false;
                     }, 2000);
                 }
@@ -631,7 +831,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
                 setTimeout(() => {
                     btn.innerHTML = originalText;
-                    btn.style.background = 'linear-gradient(135deg, #8b5fbf, #f093fb)';
+                    btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
                     btn.disabled = false;
                 }, 2000);
             });
@@ -677,11 +877,109 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         function generatePlaceholderUrl(text, size = '320x240') {
             const encodedText = encodeURIComponent(text);
-            return `https://via.placeholder.com/${size}/8b5fbf/ffffff?text=${encodedText}`;
+            return `https://via.placeholder.com/${size}/008060/ffffff?text=${encodedText}`;
+        }
+
+        // Dropdown Functions
+        function toggleMegaDropdown() {
+            const dropdown = document.getElementById('megaDropdown');
+            dropdown.classList.toggle('show');
+
+            // Close other dropdowns
+            closeAllDropdowns(['megaDropdown']);
+        }
+
+        function toggleBrandsDropdown() {
+            const dropdown = document.getElementById('brandsDropdown');
+            dropdown.classList.toggle('show');
+
+            // Close other dropdowns
+            closeAllDropdowns(['brandsDropdown']);
+        }
+
+        function toggleHelpDropdown() {
+            const dropdown = document.getElementById('helpDropdown');
+            dropdown.classList.toggle('show');
+
+            // Close other dropdowns
+            closeAllDropdowns(['helpDropdown']);
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+
+            // Close other dropdowns
+            closeAllDropdowns(['userDropdown']);
+        }
+
+        function closeAllDropdowns(except = []) {
+            const dropdowns = ['megaDropdown', 'brandsDropdown', 'helpDropdown', 'userDropdown'];
+            dropdowns.forEach(id => {
+                if (!except.includes(id)) {
+                    const dropdown = document.getElementById(id);
+                    if (dropdown) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login/logout.php';
+            }
+        }
+
+        // Floating Bubbles Animation
+        function createFloatingBubbles() {
+            const bubblesContainer = document.querySelector('.floating-bubbles');
+            const colors = [
+                'rgba(0, 128, 96, 0.1)',
+                'rgba(0, 107, 78, 0.1)',
+                'rgba(0, 150, 112, 0.1)'
+            ];
+
+            function createBubble() {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+
+                const size = Math.random() * 60 + 20;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 10 + 10;
+                const delay = Math.random() * 5;
+
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.background = color;
+                bubble.style.left = left + '%';
+                bubble.style.animationDuration = animationDuration + 's';
+                bubble.style.animationDelay = delay + 's';
+
+                bubblesContainer.appendChild(bubble);
+
+                setTimeout(() => {
+                    if (bubblesContainer.contains(bubble)) {
+                        bubblesContainer.removeChild(bubble);
+                    }
+                }, (animationDuration + delay) * 1000);
+            }
+
+            // Create bubbles periodically
+            setInterval(createBubble, 300);
+
+            // Create initial bubbles
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createBubble, i * 200);
+            }
         }
 
         // Filter functionality
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize floating bubbles
+            createFloatingBubbles();
+
             // Load product images
             loadProductImages();
             const categoryFilter = document.getElementById('categoryFilter');
@@ -707,6 +1005,17 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             <?php if (empty($search_query)): ?>
             document.querySelector('.search-input').focus();
             <?php endif; ?>
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                const target = event.target;
+                const isDropdownButton = target.closest('.categories-button, .nav-item, .user-avatar');
+                const isDropdownContent = target.closest('.mega-dropdown, .brands-dropdown, .simple-dropdown, .dropdown-menu-custom');
+
+                if (!isDropdownButton && !isDropdownContent) {
+                    closeAllDropdowns();
+                }
+            });
         });
     </script>
 </body>

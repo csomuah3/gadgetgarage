@@ -3344,6 +3344,7 @@ try {
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
 					Gadget<span class="garage">Garage</span>
+					<h4>Second Life. First Quality</h4>
 				</a>
 
 				<!-- Center Content -->

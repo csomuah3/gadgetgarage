@@ -840,7 +840,7 @@ try {
 			display: flex;
 			align-items: center;
 			width: 100%;
-			padding: 0 20px;
+			padding-left: 20px;
 		}
 
 		.nav-item {
@@ -866,6 +866,7 @@ try {
 			color: #ef4444;
 			font-weight: 700;
 			margin-left: auto;
+			padding-right: 5px;
 		}
 
 		.nav-item.flash-deal:hover {
@@ -3346,7 +3347,7 @@ try {
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 12px;">
+		<div class="container-fluid" style="padding: 0 16px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">

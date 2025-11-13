@@ -841,7 +841,7 @@ try {
 			align-items: center;
 			justify-content: space-between;
 			width: 100%;
-			padding: 0;
+			padding: 0 20px;
 		}
 
 		.nav-menu > * {
@@ -3360,7 +3360,7 @@ try {
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container">
+		<div class="container-fluid px-0">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">

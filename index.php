@@ -880,13 +880,9 @@ try {
 		.nav-item.flash-deal {
 			color: #ef4444;
 			font-weight: 700;
-			background: linear-gradient(135deg, #fef2f2, #fee2e2);
-			border: 2px solid #fecaca;
 		}
 
 		.nav-item.flash-deal:hover {
-			background: linear-gradient(135deg, #fee2e2, #fecaca);
-			border-color: #f87171;
 			color: #dc2626;
 		}
 
@@ -3367,7 +3363,7 @@ try {
 		<div class="container">
 			<div class="d-flex align-items-center justify-content-between w-100 header-container">
 				<!-- Logo -->
-				<a href="#" class="logo">
+				<a href="index.php" class="logo">
 					Gadget<span class="garage">Garage</span>
 				</a>
 
@@ -3389,8 +3385,9 @@ try {
 					</div>
 				</div>
 
-				<!-- User Actions -->
+				<!-- Separator and User Actions -->
 				<div class="user-actions">
+					<span style="color: #ddd; margin-right: 15px;">|</span>
 					<?php if ($is_logged_in): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">

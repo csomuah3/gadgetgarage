@@ -866,7 +866,7 @@ try {
 			color: #ef4444;
 			font-weight: 700;
 			margin-left: auto;
-			padding-right: 5px;
+			padding-right: 20px;
 		}
 
 		.nav-item.flash-deal:hover {
@@ -906,14 +906,6 @@ try {
 			transform: rotate(180deg);
 		}
 
-		.nav-item.flash-deal {
-			color: #ef4444;
-			font-weight: 600;
-		}
-
-		.nav-item.flash-deal:hover {
-			color: #dc2626;
-		}
 
 		.nav-item.dropdown {
 			position: relative;

@@ -866,7 +866,7 @@ try {
 			color: #ef4444;
 			font-weight: 700;
 			margin-left: auto;
-			padding-right: 250px;
+			padding-right: 470px;
 		}
 
 		.nav-item.flash-deal:hover {

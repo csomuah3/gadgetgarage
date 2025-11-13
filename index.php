@@ -88,13 +88,14 @@ try {
 		}
 
 		.logo {
-			font-size: 1.8rem;
+			font-size: 2.2rem;
 			font-weight: 700;
 			color: #1f2937;
 			text-decoration: none;
 			display: flex;
 			align-items: center;
 			gap: 8px;
+			margin-right: 40px;
 		}
 
 		.logo .garage {
@@ -109,7 +110,8 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 500px;
+			max-width: 400px;
+			margin-left: 20px;
 		}
 
 		.search-input {
@@ -161,7 +163,111 @@ try {
 		.header-actions {
 			display: flex;
 			align-items: center;
-			gap: 16px;
+			gap: 20px;
+		}
+
+		.vertical-separator {
+			width: 1px;
+			height: 40px;
+			background: #e5e7eb;
+			margin: 0 15px;
+		}
+
+		.tech-revival-section {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			text-align: center;
+		}
+
+		.tech-revival-icon {
+			font-size: 1.5rem;
+			color: #008060;
+		}
+
+		.tech-revival-text {
+			font-size: 0.9rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin: 0;
+		}
+
+		.contact-number {
+			font-size: 0.8rem;
+			color: #6b7280;
+			margin: 0;
+		}
+
+		.user-actions {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+		}
+
+		/* Navigation Separator Styles */
+		.nav-separator {
+			color: #e5e7eb;
+			font-weight: 300;
+			margin: 0 8px;
+			font-size: 1.2rem;
+		}
+
+		.nav-dropdown {
+			position: relative;
+			display: inline-block;
+		}
+
+		.simple-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: white;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			min-width: 160px;
+			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+			z-index: 1000;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+		}
+
+		.simple-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.simple-dropdown ul {
+			list-style: none;
+			padding: 8px 0;
+			margin: 0;
+		}
+
+		.simple-dropdown li {
+			padding: 0;
+		}
+
+		.simple-dropdown a {
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 12px 16px;
+			color: #4b5563;
+			text-decoration: none;
+			font-size: 0.9rem;
+			transition: all 0.3s ease;
+		}
+
+		.simple-dropdown a:hover {
+			background: #f3f4f6;
+			color: #008060;
+		}
+
+		.flash-deal-spacer {
+			flex: 1;
+			min-width: 100px;
 		}
 
 		.header-icon {
@@ -2461,23 +2567,39 @@ try {
 
 			.header-container {
 				flex-direction: column;
-				gap: 10px;
+				gap: 15px;
+				align-items: stretch;
+			}
+
+			.logo {
+				font-size: 1.4rem;
+				justify-content: center;
+				margin-right: 0;
 			}
 
 			.search-container {
 				order: 2;
 				width: 100%;
 				min-width: auto;
+				margin-left: 0;
 			}
 
-			.header-actions {
-				order: 1;
-				justify-content: space-between;
-				width: 100%;
+			.tech-revival-section {
+				order: 3;
+				justify-content: center;
+				padding: 10px;
+				background: #f8f9fa;
+				border-radius: 8px;
 			}
 
-			.logo {
-				font-size: 1.2rem;
+			.user-actions {
+				order: 4;
+				justify-content: center;
+				gap: 20px;
+			}
+
+			.vertical-separator {
+				display: none;
 			}
 
 			.search-input {
@@ -3128,12 +3250,11 @@ try {
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container">
-			<div class="d-flex align-items-center justify-content-between header-container">
+			<div class="d-flex align-items-center header-container">
 				<!-- Logo -->
 				<a href="#" class="logo">
 					Gadget<span class="garage">Garage</span>
 				</a>
-
 
 				<!-- Search Bar -->
 				<form class="search-container" method="GET" action="product_search_result.php">
@@ -3144,81 +3265,72 @@ try {
 					</button>
 				</form>
 
-				<!-- Header Actions -->
-				<div class="header-actions">
-					<!-- Navigation based on login and admin status -->
-					<?php if (!$is_logged_in): ?>
-						<!-- Not logged in: Register | Login -->
-						<a href="login/register.php" class="login-btn me-2">Register</a>
-						<a href="login/login.php" class="login-btn">Login</a>
-					<?php elseif ($is_admin): ?>
-						<!-- Admin logged in: Category | Brand | Add Product | Logout -->
-						<a href="admin/category.php" class="login-btn me-2">Category</a>
-						<a href="admin/brand.php" class="login-btn me-2">Brand</a>
-						<a href="admin/product.php" class="login-btn me-2">Add Product</a>
-						<a href="login/logout.php" class="logout-btn">Logout</a>
-					<?php else: ?>
-						<!-- Regular user logged in: Cart | Logout -->
-						<div class="header-icon me-2">
+				<!-- Vertical Separator -->
+				<div class="vertical-separator"></div>
+
+				<!-- Tech Revival Section -->
+				<div class="tech-revival-section">
+					<i class="fas fa-recycle tech-revival-icon"></i>
+					<div>
+						<p class="tech-revival-text">Bring Retired Tech</p>
+						<p class="contact-number">055-138-7578</p>
+					</div>
+				</div>
+
+				<!-- Vertical Separator -->
+				<div class="vertical-separator"></div>
+
+				<!-- User Actions -->
+				<div class="user-actions">
+					<?php if ($is_logged_in): ?>
+						<!-- User Icon -->
+						<div class="header-icon">
+							<i class="fas fa-user"></i>
+						</div>
+
+						<!-- Wishlist Icon -->
+						<div class="header-icon">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-heart"></i>
+							</a>
+						</div>
+
+						<!-- Cart Icon -->
+						<div class="header-icon">
 							<a href="cart.php" style="color: inherit; text-decoration: none;">
 								<i class="fas fa-shopping-cart"></i>
 								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
 							</a>
 						</div>
-						<a href="login/logout.php" class="logout-btn">Logout</a>
+
+						<?php if ($is_admin): ?>
+							<!-- Admin Actions -->
+							<div class="dropdown">
+								<button class="btn btn-sm btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+									Admin
+								</button>
+								<ul class="dropdown-menu">
+									<li><a class="dropdown-item" href="admin/category.php">Category</a></li>
+									<li><a class="dropdown-item" href="admin/brand.php">Brand</a></li>
+									<li><a class="dropdown-item" href="admin/product.php">Add Product</a></li>
+									<li><hr class="dropdown-divider"></li>
+									<li><a class="dropdown-item" href="login/logout.php">Logout</a></li>
+								</ul>
+							</div>
+						<?php else: ?>
+							<!-- Regular User Orders -->
+							<div class="header-icon">
+								<a href="my_orders.php" style="color: inherit; text-decoration: none;" title="My Orders">
+									<i class="fas fa-clipboard-list"></i>
+								</a>
+							</div>
+						<?php endif; ?>
+					<?php else: ?>
+						<!-- Not logged in: Register | Login -->
+						<a href="login/register.php" class="login-btn me-2">Register</a>
+						<a href="login/login.php" class="login-btn">Login</a>
 					<?php endif; ?>
 
-					<!-- User Avatar (if logged in) -->
-					<?php if ($is_logged_in): ?>
-						<div class="user-dropdown ms-2">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
-							</div>
-							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
-								</button>
-								<div class="dropdown-divider-custom"></div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-globe"></i>
-									<div class="language-selector">
-										<span>Language</span>
-										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-											<option value="en">🇬🇧 EN</option>
-											<option value="es">🇪🇸 ES</option>
-											<option value="fr">🇫🇷 FR</option>
-											<option value="de">🇩🇪 DE</option>
-										</select>
-									</div>
-								</div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-moon"></i>
-									<div class="theme-toggle">
-										<span>Dark Mode</span>
-										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-											<div class="toggle-slider"></div>
-										</div>
-									</div>
-								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
-								</a>
-								<div class="dropdown-divider-custom"></div>
-								<a href="wishlist.php" class="dropdown-item-custom">
-									<i class="fas fa-heart"></i>
-									<span>Wishlist</span>
-								</a>
-								<div class="dropdown-divider-custom"></div>
-								<a href="login/logout.php" class="dropdown-item-custom">
-									<i class="fas fa-sign-out-alt"></i>
-									<span>Logout</span>
-								</a>
-							</div>
-						</div>
-					<?php endif; ?>
 				</div>
 			</div>
 		</div>
@@ -3231,35 +3343,76 @@ try {
 				<!-- Blue Shop by Categories Button -->
 				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
 					<button class="categories-button">
-						<i class="fas fa-bars"></i>
-						SHOP BY CATEGORIES
+						<i class="fas fa-tags"></i>
+						SHOP BY BRANDS
 						<i class="fas fa-chevron-down"></i>
 					</button>
 					<div class="mega-dropdown" id="shopDropdown">
 						<div class="dropdown-content">
 							<div class="dropdown-column">
-								<h4>Mobile Devices</h4>
+								<h4>All Brands</h4>
 								<ul>
-									<li><a href="all_product.php?category=phones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
+									<?php if (!empty($brands)): ?>
+										<?php foreach ($brands as $brand): ?>
+											<li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+										<?php endforeach; ?>
+									<?php else: ?>
+										<li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+									<?php endif; ?>
+								</ul>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<!-- Main Navigation Items -->
+				<div class="nav-separator">|</div>
+				<a href="index.php" class="nav-item">HOME</a>
+				<div class="nav-separator">|</div>
+
+				<!-- Shop Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+					<a href="#" class="nav-item">
+						SHOP
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="mega-dropdown" id="shopCategoryDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>
+									<a href="all_product.php?category_type=mobile" style="text-decoration: none; color: inherit;">
+										Mobile Devices
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
 									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
-								<h4>Computing</h4>
+								<h4>
+									<a href="all_product.php?category_type=computing" style="text-decoration: none; color: inherit;">
+										Computing
+									</a>
+								</h4>
 								<ul>
 									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
 									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
-								<h4>Photography & Video</h4>
+								<h4>
+									<a href="all_product.php?category_type=photo_video" style="text-decoration: none; color: inherit;">
+										Photography & Video
+									</a>
+								</h4>
 								<ul>
 									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-									<li><a href="all_product.php?category=video"><i class="fas fa-video"></i> Video Equipment</a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
-								<h4>Featured</h4>
+								<h4>Shop All</h4>
 								<div class="featured-item">
 									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
 									<div class="featured-text">
@@ -3273,13 +3426,28 @@ try {
 					</div>
 				</div>
 
-				<!-- Main Navigation Items -->
-				<a href="index.php" class="nav-item">HOME</a>
-				<a href="all_product.php" class="nav-item">SHOP</a>
-				<a href="#" class="nav-item">COLLECTIONS</a>
-				<a href="#" class="nav-item">BLOG</a>
+				<div class="nav-separator">|</div>
 				<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
-				<a href="#" class="nav-item">CONTACT</a>
+				<div class="nav-separator">|</div>
+				<a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+				<div class="nav-separator">|</div>
+
+				<!-- More Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+					<a href="#" class="nav-item">
+						MORE
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="simple-dropdown" id="moreDropdown">
+						<ul>
+							<li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<div class="nav-separator">|</div>
+				<div class="flash-deal-spacer"></div>
 				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
 			</div>
 		</div>
@@ -4036,6 +4204,48 @@ try {
 				}, 300);
 			}
 		}
+
+		// Shop Category Dropdown Functions
+		function showShopDropdown() {
+			const dropdown = document.getElementById('shopCategoryDropdown');
+			if (dropdown) {
+				clearTimeout(shopDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideShopDropdown() {
+			const dropdown = document.getElementById('shopCategoryDropdown');
+			if (dropdown) {
+				clearTimeout(shopDropdownTimeout);
+				shopDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		// More Dropdown Functions
+		function showMoreDropdown() {
+			const dropdown = document.getElementById('moreDropdown');
+			if (dropdown) {
+				clearTimeout(moreDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideMoreDropdown() {
+			const dropdown = document.getElementById('moreDropdown');
+			if (dropdown) {
+				clearTimeout(moreDropdownTimeout);
+				moreDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		// Timeout variables
+		let shopDropdownTimeout;
+		let moreDropdownTimeout;
 
 		// Enhanced dropdown behavior
 		document.addEventListener('DOMContentLoaded', function() {

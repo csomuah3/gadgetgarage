@@ -841,7 +841,7 @@ try {
 			align-items: center;
 			justify-content: space-between;
 			width: 100%;
-			padding: 0 20px;
+			padding: 0;
 		}
 
 		.nav-menu > * {
@@ -3476,7 +3476,7 @@ try {
 
 	<!-- Main Navigation -->
 	<nav class="main-nav">
-		<div class="container">
+		<div class="container-fluid px-0">
 			<div class="nav-menu">
 				<!-- Shop by Brands Button -->
 				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">

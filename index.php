@@ -3361,34 +3361,8 @@ try {
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container">
-			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-				<!-- Logo - Far Left -->
-				<a href="index.php" class="logo">
-					Gadget<span class="garage">Garage</span>
-				</a>
-
-				<!-- Center Content -->
-				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
-						<i class="fas fa-search search-icon"></i>
-						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-						<button type="submit" class="search-btn">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
-
-					<!-- Tech Revival Section -->
-					<div class="tech-revival-section">
-						<i class="fas fa-recycle tech-revival-icon"></i>
-						<div>
-							<p class="tech-revival-text">Bring Retired Tech</p>
-							<p class="contact-number">055-138-7578</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- User Actions - Far Right -->
+			<div class="d-flex align-items-center w-100 header-container" style="padding: 0;">
+				<!-- User Actions - Far Left -->
 				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
 					<span style="color: #ddd;">|</span>
 					<?php if ($is_logged_in): ?>
@@ -3468,8 +3442,33 @@ try {
 						<a href="login/register.php" class="login-btn me-2">Register</a>
 						<a href="login/login.php" class="login-btn">Login</a>
 					<?php endif; ?>
-
 				</div>
+
+				<!-- Center Content -->
+				<div class="d-flex align-items-center justify-content-center" style="flex: 1; gap: 60px;">
+					<!-- Search Bar -->
+					<form class="search-container" method="GET" action="product_search_result.php">
+						<i class="fas fa-search search-icon"></i>
+						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+						<button type="submit" class="search-btn">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+
+					<!-- Tech Revival Section -->
+					<div class="tech-revival-section">
+						<i class="fas fa-recycle tech-revival-icon"></i>
+						<div>
+							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="contact-number">055-138-7578</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- Logo - Far Right -->
+				<a href="index.php" class="logo">
+					Gadget<span class="garage">Garage</span>
+				</a>
 			</div>
 		</div>
 	</header>

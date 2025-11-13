@@ -840,7 +840,7 @@ try {
 			display: flex;
 			align-items: center;
 			width: 100%;
-			padding-left: 50px;
+			padding-left: 200px;
 		}
 
 		.nav-item {

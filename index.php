@@ -109,8 +109,8 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 500px;
-			margin: 0 60px;
+			max-width: 400px;
+			margin-left: 20px;
 		}
 
 		.search-input {
@@ -175,9 +175,8 @@ try {
 		.tech-revival-section {
 			display: flex;
 			align-items: center;
-			gap: 12px;
+			gap: 8px;
 			text-align: center;
-			margin: 0 80px;
 		}
 
 		.tech-revival-icon {
@@ -839,23 +838,7 @@ try {
 		.nav-menu {
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
-			width: 100%;
-			padding: 0 20px;
-		}
-
-		.nav-menu > * {
-			flex-grow: 1;
-			display: flex;
-			justify-content: center;
-		}
-
-		.nav-menu > *:first-child {
-			justify-content: flex-start;
-		}
-
-		.nav-menu > *:last-child {
-			justify-content: flex-end;
+			gap: 32px;
 		}
 
 		.nav-item {
@@ -3347,7 +3330,7 @@ try {
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container">
-			<div class="d-flex align-items-center justify-content-between w-100 header-container">
+			<div class="d-flex align-items-center header-container">
 				<!-- Logo -->
 				<a href="#" class="logo">
 					Gadget<span class="garage">Garage</span>
@@ -3362,6 +3345,9 @@ try {
 					</button>
 				</form>
 
+				<!-- Vertical Separator -->
+				<div class="vertical-separator"></div>
+
 				<!-- Tech Revival Section -->
 				<div class="tech-revival-section">
 					<i class="fas fa-recycle tech-revival-icon"></i>
@@ -3370,6 +3356,9 @@ try {
 						<p class="contact-number">055-138-7578</p>
 					</div>
 				</div>
+
+				<!-- Vertical Separator -->
+				<div class="vertical-separator"></div>
 
 				<!-- User Actions -->
 				<div class="user-actions">

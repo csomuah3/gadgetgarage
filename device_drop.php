@@ -373,10 +373,6 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                                 <option value="laptop">Laptop</option>
                                 <option value="desktop">Desktop Computer</option>
                                 <option value="camera">Camera</option>
-                                <option value="gaming">Gaming Console</option>
-                                <option value="smartwatch">Smartwatch</option>
-                                <option value="headphones">Headphones / Earbuds</option>
-                                <option value="other">Other Electronic Device</option>
                             </select>
                         </div>
 

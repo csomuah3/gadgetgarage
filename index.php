@@ -839,22 +839,8 @@ try {
 		.nav-menu {
 			display: flex;
 			align-items: center;
-			justify-content: space-between;
 			width: 100%;
 			padding: 0 20px;
-		}
-
-		.nav-menu > * {
-			display: flex;
-			justify-content: center;
-		}
-
-		.nav-menu > *:first-child {
-			justify-content: flex-start;
-		}
-
-		.nav-menu > *:last-child {
-			justify-content: flex-end;
 		}
 
 		.nav-item {
@@ -879,6 +865,7 @@ try {
 		.nav-item.flash-deal {
 			color: #ef4444;
 			font-weight: 700;
+			margin-left: auto;
 		}
 
 		.nav-item.flash-deal:hover {
@@ -3359,7 +3346,7 @@ try {
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 4px;">
+		<div class="container-fluid" style="padding: 0 12px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">

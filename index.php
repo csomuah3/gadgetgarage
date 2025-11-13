@@ -109,8 +109,8 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 400px;
-			margin-left: 20px;
+			max-width: 500px;
+			margin: 0 40px;
 		}
 
 		.search-input {
@@ -175,8 +175,9 @@ try {
 		.tech-revival-section {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 10px;
 			text-align: center;
+			margin: 0 60px;
 		}
 
 		.tech-revival-icon {
@@ -838,21 +839,55 @@ try {
 		.nav-menu {
 			display: flex;
 			align-items: center;
-			gap: 32px;
+			justify-content: space-between;
+			width: 100%;
+			padding: 0 20px;
+		}
+
+		.nav-menu > * {
+			flex-grow: 1;
+			display: flex;
+			justify-content: center;
+		}
+
+		.nav-menu > *:first-child {
+			justify-content: flex-start;
+		}
+
+		.nav-menu > *:last-child {
+			justify-content: flex-end;
 		}
 
 		.nav-item {
 			color: #1f2937;
 			text-decoration: none;
 			font-weight: 500;
-			font-size: 1rem;
-			padding: 12px 0;
+			padding: 16px 20px;
+			display: flex;
+			align-items: center;
+			gap: 5px;
 			transition: all 0.3s ease;
-			position: relative;
+			border-radius: 8px;
+			white-space: nowrap;
 		}
 
 		.nav-item:hover {
+			background: rgba(0, 128, 96, 0.1);
 			color: #008060;
+			transform: translateY(-2px);
+		}
+
+		.nav-item.flash-deal {
+			color: #ef4444;
+			font-weight: 700;
+			background: linear-gradient(135deg, #fef2f2, #fee2e2);
+			border: 2px solid #fecaca;
+		}
+
+		.nav-item.flash-deal:hover {
+			background: linear-gradient(135deg, #fee2e2, #fecaca);
+			border-color: #f87171;
+			color: #dc2626;
 		}
 
 		/* Blue Shop by Categories Button */
@@ -3330,7 +3365,7 @@ try {
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container">
-			<div class="d-flex align-items-center header-container">
+			<div class="d-flex align-items-center justify-content-between w-100 header-container">
 				<!-- Logo -->
 				<a href="#" class="logo">
 					Gadget<span class="garage">Garage</span>
@@ -3345,9 +3380,6 @@ try {
 					</button>
 				</form>
 
-				<!-- Vertical Separator -->
-				<div class="vertical-separator"></div>
-
 				<!-- Tech Revival Section -->
 				<div class="tech-revival-section">
 					<i class="fas fa-recycle tech-revival-icon"></i>
@@ -3356,9 +3388,6 @@ try {
 						<p class="contact-number">055-138-7578</p>
 					</div>
 				</div>
-
-				<!-- Vertical Separator -->
-				<div class="vertical-separator"></div>
 
 				<!-- User Actions -->
 				<div class="user-actions">

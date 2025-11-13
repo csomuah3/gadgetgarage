@@ -205,8 +205,20 @@ function incrementQuantity(productId) {
 
     console.log(`Incrementing from ${currentQuantity} to ${newQuantity}`);
 
-    // Update the input field immediately
+    // Update the input field immediately with visual feedback
     quantityInput.value = newQuantity;
+
+    // Force visual update with slight delay to ensure DOM updates
+    setTimeout(() => {
+        quantityInput.value = newQuantity;
+        quantityInput.setAttribute('value', newQuantity);
+
+        // Trigger visual change event
+        quantityInput.dispatchEvent(new Event('input'));
+        quantityInput.dispatchEvent(new Event('change'));
+
+        console.log(`Input field now shows: ${quantityInput.value}`);
+    }, 10);
 
     // Update the price display immediately
     updateItemPriceDisplay(productId, newQuantity);

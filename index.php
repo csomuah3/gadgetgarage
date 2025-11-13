@@ -110,7 +110,7 @@ try {
 			position: relative;
 			flex: 1;
 			max-width: 500px;
-			margin: 0 60px;
+			margin: 0 40px;
 		}
 
 		.search-input {
@@ -175,18 +175,14 @@ try {
 		.tech-revival-section {
 			display: flex;
 			align-items: center;
-			gap: 12px;
+			gap: 10px;
 			text-align: center;
-			margin: 0 80px;
+			margin: 0 60px;
 		}
 
 		.tech-revival-icon {
 			font-size: 1.5rem;
 			color: #008060;
-			align-items: center;
-			justify-content: space-between;
-			width: 100%;
-			padding: 0 20px;
 		}
 
 		.tech-revival-text {

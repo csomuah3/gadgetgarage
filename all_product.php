@@ -1505,66 +1505,117 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <div class="floating-bubbles"></div>
 
     <!-- Main Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between">
+    <header class="main-header animate__animated animate__fadeInDown">
+        <div class="container-fluid" style="padding: 0 120px 0 95px;">
+            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+                <!-- Logo - Far Left -->
                 <a href="index.php" class="logo">
-                    <span>Gadget</span>
-                    <span class="garage">Garage</span>
+                    Gadget<span class="garage">Garage</span>
+
                 </a>
 
-                <div class="search-container">
-                    <form action="product_search_result.php" method="GET" class="position-relative">
+                <!-- Center Content -->
+                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                    <!-- Search Bar -->
+                    <form class="search-container" method="GET" action="product_search_result.php">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="query" class="search-input" placeholder="Search for refurbished devices, parts, or repair services...">
-                        <button type="submit" class="search-btn">Search</button>
+                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </form>
-                </div>
 
-                <div class="tech-revival-section">
-                    <i class="fas fa-recycle tech-revival-icon"></i>
-                    <div>
-                        <p class="tech-revival-text mb-0">Tech Revival Hub</p>
-                        <p class="contact-number mb-0">Call: (555) 123-TECH</p>
+                    <!-- Tech Revival Section -->
+                    <div class="tech-revival-section">
+                        <i class="fas fa-recycle tech-revival-icon"></i>
+                        <div>
+                            <p class="tech-revival-text">Bring Retired Tech</p>
+                            <p class="contact-number">055-138-7578</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="user-actions">
-                    <a href="cart.php" class="header-icon" title="Cart">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <?php if ($cart_count > 0): ?>
-                            <span class="cart-badge"><?php echo $cart_count; ?></span>
-                        <?php endif; ?>
-                    </a>
-
-                    <a href="#" class="header-icon" title="Wishlist">
-                        <i class="fas fa-heart fa-lg"></i>
-                    </a>
-
+                <!-- User Actions - Far Right -->
+                <div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
+                    <span style="color: #ddd;">|</span>
                     <?php if ($is_logged_in): ?>
+                        <!-- Wishlist Icon -->
+                        <div class="header-icon">
+                            <a href="wishlist.php" style="color: inherit; text-decoration: none;">
+                                <i class="fas fa-heart"></i>
+                            </a>
+                        </div>
+
+                        <!-- Cart Icon -->
+                        <div class="header-icon">
+                            <a href="cart.php" style="color: inherit; text-decoration: none;">
+                                <i class="fas fa-shopping-cart"></i>
+                                <span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
+                            </a>
+                        </div>
+
+                        <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" onclick="toggleUserDropdown()">
-                                <i class="fas fa-user"></i>
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
-                            <div class="dropdown-menu-custom" id="userDropdown">
+                            <div class="dropdown-menu-custom" id="userDropdownMenu">
+                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Profile Picture</span>
+                                </button>
+                                <div class="dropdown-divider-custom"></div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-globe"></i>
+                                    <div class="language-selector">
+                                        <span>Language</span>
+                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+                                            <option value="en">🇬🇧 EN</option>
+                                            <option value="es">🇪🇸 ES</option>
+                                            <option value="fr">🇫🇷 FR</option>
+                                            <option value="de">🇩🇪 DE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-moon"></i>
+                                    <div class="theme-toggle">
+                                        <span>Dark Mode</span>
+                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+                                            <div class="toggle-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider-custom"></div>
                                 <a href="my_orders.php" class="dropdown-item-custom">
                                     <i class="fas fa-box"></i>
-                                    My Orders
-                                </a>
-                                <a href="profile.php" class="dropdown-item-custom">
-                                    <i class="fas fa-user-cog"></i>
-                                    Profile Settings
+                                    <span>My Orders</span>
                                 </a>
                                 <div class="dropdown-divider-custom"></div>
-                                <button onclick="confirmLogout()" class="dropdown-item-custom">
+                                <a href="wishlist.php" class="dropdown-item-custom">
+                                    <i class="fas fa-heart"></i>
+                                    <span>Wishlist</span>
+                                </a>
+                                <?php if ($is_admin): ?>
+                                    <div class="dropdown-divider-custom"></div>
+                                    <a href="admin/category.php" class="dropdown-item-custom">
+                                        <i class="fas fa-cog"></i>
+                                        <span>Admin Panel</span>
+                                    </a>
+                                <?php endif; ?>
+                                <div class="dropdown-divider-custom"></div>
+                                <a href="login/logout.php" class="dropdown-item-custom">
                                     <i class="fas fa-sign-out-alt"></i>
-                                    Logout
-                                </button>
+                                    <span>Logout</span>
+                                </a>
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="login/login.php" class="login-btn">Sign In</a>
+                        <!-- Not logged in: Register | Login -->
+                        <a href="login/register.php" class="login-btn me-2">Register</a>
+                        <a href="login/login.php" class="login-btn">Login</a>
                     <?php endif; ?>
+
                 </div>
             </div>
         </div>
@@ -2978,13 +3029,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function toggleUserDropdown() {
-            const dropdown = document.getElementById('userDropdown');
+            const dropdown = document.getElementById('userDropdownMenu');
             dropdown.classList.toggle('show');
-            closeAllDropdowns(['userDropdown']);
+            closeAllDropdowns(['userDropdownMenu']);
+        }
+
+        function openProfilePictureModal() {
+            alert('Profile picture modal not implemented yet');
+        }
+
+        function changeLanguage(lang) {
+            alert('Language change to ' + lang + ' not implemented yet');
+        }
+
+        function toggleTheme() {
+            alert('Theme toggle not implemented yet');
         }
 
         function closeAllDropdowns(except = []) {
-            const dropdowns = ['megaDropdown', 'brandsDropdown', 'helpDropdown', 'userDropdown'];
+            const dropdowns = ['megaDropdown', 'brandsDropdown', 'helpDropdown', 'userDropdownMenu', 'shopDropdown', 'shopCategoryDropdown', 'moreDropdown'];
             dropdowns.forEach(id => {
                 if (!except.includes(id)) {
                     const dropdown = document.getElementById(id);
@@ -3046,6 +3109,37 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingBubbles();
         });
+
+        // Add functions for hover-based dropdowns (matching index.php)
+        function showDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) dropdown.classList.add('show');
+        }
+
+        function hideDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) dropdown.classList.remove('show');
+        }
+
+        function showShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) dropdown.classList.add('show');
+        }
+
+        function hideShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) dropdown.classList.remove('show');
+        }
+
+        function showMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) dropdown.classList.add('show');
+        }
+
+        function hideMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) dropdown.classList.remove('show');
+        }
 
         // Close dropdowns when clicking outside
         document.addEventListener('click', function(event) {

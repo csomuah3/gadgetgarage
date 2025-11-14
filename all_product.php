@@ -85,39 +85,47 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="includes/header-styles.css" rel="stylesheet">
     <style>
 
-        /* Clean background */
-        body::before {
-            display: none;
-        }
-
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
+        /* Floating Bubbles Animation */
+        .floating-bubbles {
+            position: fixed;
             top: 0;
-            z-index: 1000;
-            padding: 16px 0;
-            border-bottom: 1px solid #e5e7eb;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
+            overflow: hidden;
         }
 
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1f2937;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+        .bubble {
+            position: absolute;
+            bottom: -100px;
+            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(0, 107, 78, 0.1));
+            border-radius: 50%;
+            opacity: 0.6;
+            animation: float 15s infinite linear;
         }
 
-        .logo .garage {
-            background: linear-gradient(135deg, #000000, #333333);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) rotate(0deg);
+                opacity: 0;
+            }
+            10% {
+                opacity: 0.6;
+            }
+            90% {
+                opacity: 0.6;
+            }
+            100% {
+                transform: translateY(-100px) rotate(360deg);
+                opacity: 0;
+            }
         }
+
+        /* Main header styles removed - using header-styles.css instead */
+
+        /* Logo styles removed - using header-styles.css instead */
 
         .page-title {
             color: #1f2937;
@@ -256,7 +264,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .checkbox-group::-webkit-scrollbar-thumb {
-            background: #8b5fbf;
+            background: #008060;
             border-radius: 2px;
         }
 
@@ -771,13 +779,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .tag-btn:hover {
             background: rgba(0, 128, 96, 0.1);
-            border-color: #8b5fbf;
-            color: #8b5fbf;
+            border-color: #008060;
+            color: #008060;
         }
 
         .tag-btn.active {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
-            border-color: #8b5fbf;
+            background: linear-gradient(135deg, #008060, #006b4e);
+            border-color: #008060;
             color: white;
         }
 
@@ -803,13 +811,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .size-btn:hover {
             background: rgba(0, 128, 96, 0.1);
-            border-color: #8b5fbf;
-            color: #8b5fbf;
+            border-color: #008060;
+            color: #008060;
         }
 
         .size-btn.active {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
-            border-color: #8b5fbf;
+            background: linear-gradient(135deg, #008060, #006b4e);
+            border-color: #008060;
             color: white;
         }
 
@@ -835,12 +843,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .color-btn:hover {
-            border-color: #8b5fbf;
+            border-color: #008060;
             transform: scale(1.1);
         }
 
         .color-btn.active {
-            border-color: #8b5fbf;
+            border-color: #008060;
             background: rgba(0, 128, 96, 0.1);
         }
 
@@ -883,7 +891,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .filter-select:focus,
         .filter-input:focus {
             outline: none;
-            border-color: #8b5fbf;
+            border-color: #008060;
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 0 0 4px rgba(0, 128, 96, 0.1);
             transform: translateY(-2px);
@@ -901,7 +909,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .price-input:focus {
             outline: none;
-            border-color: #8b5fbf;
+            border-color: #008060;
             background: rgba(255, 255, 255, 0.95);
             box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
@@ -917,9 +925,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .preset-btn:hover,
         .preset-btn.active {
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
-            border-color: #8b5fbf;
+            border-color: #008060;
         }
 
         .clear-filters-btn {
@@ -960,7 +968,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .product-count {
             font-weight: 600;
-            color: #8b5fbf;
+            color: #008060;
             font-size: 1.1rem;
         }
 
@@ -980,9 +988,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .view-btn.active,
         .view-btn:hover {
-            background: #8b5fbf;
+            background: #008060;
             color: white;
-            border-color: #8b5fbf;
+            border-color: #008060;
         }
 
         .product-grid {
@@ -1062,7 +1070,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             padding: 6px 12px;
             border-radius: 20px;
@@ -1190,7 +1198,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             align-items: center;
             gap: 10px;
             padding: 15px 25px;
-            background: linear-gradient(135deg, #8b5fbf, #f093fb);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             text-decoration: none;
             border-radius: 15px;
@@ -1201,7 +1209,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .back-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #8b5fbf);
+            background: linear-gradient(135deg, #006b4e, #008060);
             color: white;
             transform: translateY(-3px);
             box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
@@ -1304,7 +1312,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .suggestion-item:hover {
             background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
-            color: #8b5fbf;
+            color: #008060;
         }
 
         .suggestion-item:last-child {
@@ -1312,7 +1320,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .suggestion-icon {
-            color: #8b5fbf;
+            color: #008060;
             font-size: 0.9rem;
         }
 
@@ -1337,18 +1345,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .dropdown-toggle:hover {
-            border-color: #8b5fbf;
+            border-color: #008060;
             box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .dropdown-toggle.active {
-            border-color: #8b5fbf;
+            border-color: #008060;
             box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
         }
 
         .dropdown-arrow {
             transition: transform 0.3s ease;
-            color: #8b5fbf;
+            color: #008060;
         }
 
         .dropdown-toggle.active .dropdown-arrow {
@@ -1393,7 +1401,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             margin-right: 10px;
             width: 16px;
             height: 16px;
-            accent-color: #8b5fbf;
+            accent-color: #008060;
             cursor: pointer;
         }
 
@@ -1405,7 +1413,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .checkbox-item:hover label {
-            color: #8b5fbf;
+            color: #008060;
         }
 
         .floating-elements {
@@ -1493,117 +1501,70 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 </head>
 
 <body>
+    <!-- Floating Bubbles Background -->
+    <div class="floating-bubbles"></div>
+
     <!-- Main Header -->
-    <header class="main-header animate__animated animate__fadeInDown">
-        <div class="container-fluid" style="padding: 0 120px 0 95px;">
-            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-                <!-- Logo - Far Left -->
+    <header class="main-header">
+        <div class="container">
+            <div class="d-flex align-items-center justify-content-between">
                 <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
+                    <span>Gadget</span>
+                    <span class="garage">Garage</span>
                 </a>
 
-                <!-- Center Content -->
-                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-                    <!-- Search Bar -->
-                    <form class="search-container" method="GET" action="product_search_result.php">
+                <div class="search-container">
+                    <form action="product_search_result.php" method="GET" class="position-relative">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
+                        <input type="text" name="query" class="search-input" placeholder="Search for refurbished devices, parts, or repair services...">
+                        <button type="submit" class="search-btn">Search</button>
                     </form>
+                </div>
 
-                    <!-- Tech Revival Section -->
-                    <div class="tech-revival-section">
-                        <i class="fas fa-recycle tech-revival-icon"></i>
-                        <div>
-                            <p class="tech-revival-text">Bring Retired Tech</p>
-                            <p class="contact-number">055-138-7578</p>
-                        </div>
+                <div class="tech-revival-section">
+                    <i class="fas fa-recycle tech-revival-icon"></i>
+                    <div>
+                        <p class="tech-revival-text mb-0">Tech Revival Hub</p>
+                        <p class="contact-number mb-0">Call: (555) 123-TECH</p>
                     </div>
                 </div>
 
-                <!-- User Actions - Far Right -->
-                <div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-                    <span style="color: #ddd;">|</span>
+                <div class="user-actions">
+                    <a href="cart.php" class="header-icon" title="Cart">
+                        <i class="fas fa-shopping-cart fa-lg"></i>
+                        <?php if ($cart_count > 0): ?>
+                            <span class="cart-badge"><?php echo $cart_count; ?></span>
+                        <?php endif; ?>
+                    </a>
+
+                    <a href="#" class="header-icon" title="Wishlist">
+                        <i class="fas fa-heart fa-lg"></i>
+                    </a>
+
                     <?php if ($is_logged_in): ?>
-                        <!-- Wishlist Icon -->
-                        <div class="header-icon">
-                            <a href="wishlist.php" style="color: inherit; text-decoration: none;">
-                                <i class="fas fa-heart"></i>
-                            </a>
-                        </div>
-
-                        <!-- Cart Icon -->
-                        <div class="header-icon">
-                            <a href="cart.php" style="color: inherit; text-decoration: none;">
-                                <i class="fas fa-shopping-cart"></i>
-                                <span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
-                            </a>
-                        </div>
-
-                        <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+                            <div class="user-avatar" onclick="toggleUserDropdown()">
+                                <i class="fas fa-user"></i>
                             </div>
-                            <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-                                    <i class="fas fa-camera"></i>
-                                    <span>Profile Picture</span>
-                                </button>
-                                <div class="dropdown-divider-custom"></div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-globe"></i>
-                                    <div class="language-selector">
-                                        <span>Language</span>
-                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                            <option value="en">🇬🇧 EN</option>
-                                            <option value="es">🇪🇸 ES</option>
-                                            <option value="fr">🇫🇷 FR</option>
-                                            <option value="de">🇩🇪 DE</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-moon"></i>
-                                    <div class="theme-toggle">
-                                        <span>Dark Mode</span>
-                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-                                            <div class="toggle-slider"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dropdown-divider-custom"></div>
+                            <div class="dropdown-menu-custom" id="userDropdown">
                                 <a href="my_orders.php" class="dropdown-item-custom">
                                     <i class="fas fa-box"></i>
-                                    <span>My Orders</span>
+                                    My Orders
+                                </a>
+                                <a href="profile.php" class="dropdown-item-custom">
+                                    <i class="fas fa-user-cog"></i>
+                                    Profile Settings
                                 </a>
                                 <div class="dropdown-divider-custom"></div>
-                                <a href="wishlist.php" class="dropdown-item-custom">
-                                    <i class="fas fa-heart"></i>
-                                    <span>Wishlist</span>
-                                </a>
-                                <?php if ($is_admin): ?>
-                                    <div class="dropdown-divider-custom"></div>
-                                    <a href="admin/category.php" class="dropdown-item-custom">
-                                        <i class="fas fa-cog"></i>
-                                        <span>Admin Panel</span>
-                                    </a>
-                                <?php endif; ?>
-                                <div class="dropdown-divider-custom"></div>
-                                <a href="login/logout.php" class="dropdown-item-custom">
+                                <button onclick="confirmLogout()" class="dropdown-item-custom">
                                     <i class="fas fa-sign-out-alt"></i>
-                                    <span>Logout</span>
-                                </a>
+                                    Logout
+                                </button>
                             </div>
                         </div>
                     <?php else: ?>
-                        <!-- Not logged in: Register | Login -->
-                        <a href="login/register.php" class="login-btn me-2">Register</a>
-                        <a href="login/login.php" class="login-btn">Login</a>
+                        <a href="login/login.php" class="login-btn">Sign In</a>
                     <?php endif; ?>
-
                 </div>
             </div>
         </div>
@@ -2994,6 +2955,106 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const modal = document.getElementById('conditionModal');
             if (event.target === modal) {
                 closeConditionModal();
+            }
+        });
+
+        // Dropdown Functions
+        function toggleMegaDropdown() {
+            const dropdown = document.getElementById('megaDropdown');
+            dropdown.classList.toggle('show');
+            closeAllDropdowns(['megaDropdown']);
+        }
+
+        function toggleBrandsDropdown() {
+            const dropdown = document.getElementById('brandsDropdown');
+            dropdown.classList.toggle('show');
+            closeAllDropdowns(['brandsDropdown']);
+        }
+
+        function toggleHelpDropdown() {
+            const dropdown = document.getElementById('helpDropdown');
+            dropdown.classList.toggle('show');
+            closeAllDropdowns(['helpDropdown']);
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+            closeAllDropdowns(['userDropdown']);
+        }
+
+        function closeAllDropdowns(except = []) {
+            const dropdowns = ['megaDropdown', 'brandsDropdown', 'helpDropdown', 'userDropdown'];
+            dropdowns.forEach(id => {
+                if (!except.includes(id)) {
+                    const dropdown = document.getElementById(id);
+                    if (dropdown) {
+                        dropdown.classList.remove('show');
+                    }
+                }
+            });
+        }
+
+        function confirmLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                window.location.href = 'login/logout.php';
+            }
+        }
+
+        // Floating Bubbles Animation
+        function createFloatingBubbles() {
+            const bubblesContainer = document.querySelector('.floating-bubbles');
+            const colors = [
+                'rgba(0, 128, 96, 0.1)',
+                'rgba(0, 107, 78, 0.1)',
+                'rgba(0, 150, 112, 0.1)'
+            ];
+
+            function createBubble() {
+                const bubble = document.createElement('div');
+                bubble.className = 'bubble';
+
+                const size = Math.random() * 60 + 20;
+                const color = colors[Math.floor(Math.random() * colors.length)];
+                const left = Math.random() * 100;
+                const animationDuration = Math.random() * 10 + 10;
+                const delay = Math.random() * 5;
+
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.background = color;
+                bubble.style.left = left + '%';
+                bubble.style.animationDuration = animationDuration + 's';
+                bubble.style.animationDelay = delay + 's';
+
+                bubblesContainer.appendChild(bubble);
+
+                setTimeout(() => {
+                    if (bubblesContainer.contains(bubble)) {
+                        bubblesContainer.removeChild(bubble);
+                    }
+                }, (animationDuration + delay) * 1000);
+            }
+
+            setInterval(createBubble, 300);
+            for (let i = 0; i < 5; i++) {
+                setTimeout(createBubble, i * 200);
+            }
+        }
+
+        // Initialize floating bubbles when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingBubbles();
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const target = event.target;
+            const isDropdownButton = target.closest('.categories-button, .nav-item, .user-avatar');
+            const isDropdownContent = target.closest('.mega-dropdown, .brands-dropdown, .simple-dropdown, .dropdown-menu-custom');
+
+            if (!isDropdownButton && !isDropdownContent) {
+                closeAllDropdowns();
             }
         });
     </script>

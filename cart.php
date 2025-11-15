@@ -403,7 +403,7 @@ try {
                         <div class="dropdown-content">
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="all_product.php?category_type=mobile" style="text-decoration: none; color: inherit;">
+                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
                                         Mobile Devices
                                     </a>
                                 </h4>
@@ -414,7 +414,7 @@ try {
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="all_product.php?category_type=computing" style="text-decoration: none; color: inherit;">
+                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
                                         Computing
                                     </a>
                                 </h4>
@@ -425,7 +425,7 @@ try {
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="all_product.php?category_type=photo_video" style="text-decoration: none; color: inherit;">
+                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
                                         Photography & Video
                                     </a>
                                 </h4>

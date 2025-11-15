@@ -99,7 +99,57 @@ function removeFromCart(productId) {
     }
 }
 
-// Update price display immediately
+// Update price display immediately using cart item ID
+function updateItemPriceDisplayByCartId(cartItemId, quantity) {
+    const cartItem = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+    if (!cartItem) {
+        console.log('Cart item not found for cart ID:', cartItemId);
+        return;
+    }
+
+    // Find the unit price (blue text) - more specific selector
+    const unitPriceElement = cartItem.querySelector('.col-md-6 .fw-bold.text-primary.fs-5');
+    // Find the total price (green text above remove button) - more specific selector
+    const totalPriceElement = cartItem.querySelector('.col-md-3.text-end .fw-bold.fs-5.text-success');
+
+    if (unitPriceElement && totalPriceElement) {
+        // Extract unit price number - remove GHS, commas, and any other formatting
+        let unitPriceText = unitPriceElement.textContent;
+        unitPriceText = unitPriceText.replace('GHS', '').replace(/,/g, '').replace(/\s/g, '');
+        const unitPrice = parseFloat(unitPriceText);
+
+        if (!isNaN(unitPrice) && unitPrice > 0) {
+            // Calculate new total: unit price × quantity
+            const newTotal = unitPrice * quantity;
+
+            // Format the price properly with commas for thousands
+            const formattedTotal = newTotal.toLocaleString('en-US', {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2
+            });
+
+            totalPriceElement.textContent = `GHS ${formattedTotal}`;
+
+            console.log(`Updated cart item ${cartItemId}: ${quantity} × GHS ${unitPrice} = GHS ${formattedTotal}`);
+
+            // Update the cart total immediately based on all visible items
+            setTimeout(() => {
+                const clientTotal = calculateCartTotalClientSide();
+                const formattedCartTotal = clientTotal.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                updateCartTotals(formattedCartTotal);
+            }, 10);
+        } else {
+            console.log('Invalid unit price:', unitPriceText);
+        }
+    } else {
+        console.log('Price elements not found for cart item:', cartItemId);
+    }
+}
+
+// Legacy function for backward compatibility
 function updateItemPriceDisplay(productId, quantity) {
     const cartItem = document.querySelector(`[data-product-id="${productId}"]`);
     if (!cartItem) {
@@ -303,6 +353,96 @@ function updateQuantityOnServer(productId, quantity) {
         showNotification('Network error - changes may not be saved', 'warning');
         // Don't reload, keep the user's changes visible
     });
+}
+
+// NEW CART ITEM ID-BASED FUNCTIONS FOR MULTIPLE CONDITIONS
+
+// UPDATE QUANTITY BY CART ID - for form input changes
+function updateQuantityByCartId(cartItemId, productId, quantity) {
+    quantity = parseInt(quantity);
+
+    if (quantity < 1) {
+        quantity = 1;
+        document.getElementById(cartItemId).value = 1;
+    }
+
+    if (quantity > 99) {
+        quantity = 99;
+        document.getElementById(cartItemId).value = 99;
+        showNotification('Maximum quantity is 99', 'warning');
+    }
+
+    // Update display immediately
+    updateItemPriceDisplayByCartId(cartItemId, quantity);
+
+    // Send to server
+    updateQuantityOnServer(productId, quantity);
+}
+
+// INCREMENT QUANTITY BY CART ID - for plus button
+function incrementQuantityByCartId(cartItemId, productId) {
+    console.log('Plus button clicked for cart item:', cartItemId, 'product:', productId);
+
+    const quantityInput = document.getElementById(cartItemId);
+    if (!quantityInput) {
+        console.log('Quantity input not found for cart item:', cartItemId);
+        return;
+    }
+
+    // Get current quantity from input
+    let currentQuantity = parseInt(quantityInput.value) || 1;
+    let newQuantity = currentQuantity + 1;
+
+    // Check maximum limit
+    if (newQuantity > 99) {
+        showNotification('Maximum quantity is 99', 'warning');
+        return;
+    }
+
+    console.log(`Incrementing cart item ${cartItemId} from ${currentQuantity} to ${newQuantity}`);
+
+    // Update the input field immediately
+    quantityInput.value = newQuantity;
+
+    // Update the price display immediately
+    updateItemPriceDisplayByCartId(cartItemId, newQuantity);
+
+    // Update server in background
+    updateQuantityOnServer(productId, newQuantity);
+}
+
+// DECREMENT QUANTITY BY CART ID - for minus button
+function decrementQuantityByCartId(cartItemId, productId) {
+    console.log('Minus button clicked for cart item:', cartItemId, 'product:', productId);
+
+    const quantityInput = document.getElementById(cartItemId);
+    if (!quantityInput) {
+        console.log('Quantity input not found for cart item:', cartItemId);
+        return;
+    }
+
+    // Get current quantity from input
+    let currentQuantity = parseInt(quantityInput.value) || 1;
+    let newQuantity = currentQuantity - 1;
+
+    // Check minimum limit - DON'T GO BELOW 1
+    if (newQuantity < 1) {
+        newQuantity = 1;
+        showNotification('Minimum quantity is 1', 'info');
+        quantityInput.value = 1; // Make sure input shows 1
+        return; // Don't update anything if already at minimum
+    }
+
+    console.log(`Decrementing cart item ${cartItemId} from ${currentQuantity} to ${newQuantity}`);
+
+    // Update the input field immediately
+    quantityInput.value = newQuantity;
+
+    // Update the price display immediately
+    updateItemPriceDisplayByCartId(cartItemId, newQuantity);
+
+    // Update server in background
+    updateQuantityOnServer(productId, newQuantity);
 }
 
 // Empty cart

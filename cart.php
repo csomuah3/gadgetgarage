@@ -529,8 +529,11 @@ try {
                     </div>
 
                     <div id="cartItemsContainer">
-                        <?php foreach ($cart_items as $item): ?>
-                            <div class="cart-item" data-product-id="<?php echo $item['p_id']; ?>">
+                        <?php foreach ($cart_items as $item):
+                            // Create unique cart item ID combining product ID and condition
+                            $cart_item_id = $item['p_id'] . '_' . ($item['condition_type'] ?? 'default') . '_' . ($item['final_price'] ?? $item['product_price']);
+                        ?>
+                            <div class="cart-item" data-product-id="<?php echo $item['p_id']; ?>" data-cart-item-id="<?php echo $cart_item_id; ?>">
                                 <div class="row g-0 align-items-center p-3">
                                     <div class="col-auto">
                                         <img src="<?php echo get_product_image_url($item['product_image']); ?>"
@@ -558,13 +561,13 @@ try {
                                             </div>
                                             <div class="col-md-3 text-center">
                                                 <div class="quantity-control">
-                                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(<?php echo $item['p_id']; ?>)">
+                                                    <button type="button" class="quantity-btn" onclick="decrementQuantityByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
-                                                           min="1" max="99" id="qty-<?php echo $item['p_id']; ?>"
-                                                           onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value)">
-                                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>)">
+                                                           min="1" max="99" id="qty-<?php echo $cart_item_id; ?>"
+                                                           onchange="updateQuantityByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>, this.value)">
+                                                    <button type="button" class="quantity-btn" onclick="incrementQuantityByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>

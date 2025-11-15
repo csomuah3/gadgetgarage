@@ -107,10 +107,10 @@ function updateItemPriceDisplay(productId, quantity) {
         return;
     }
 
-    // Find the unit price (blue text)
-    const unitPriceElement = cartItem.querySelector('.fw-bold.text-primary.fs-5');
-    // Find the total price (green text above remove button)
-    const totalPriceElement = cartItem.querySelector('.fw-bold.fs-5.text-success');
+    // Find the unit price (blue text) - more specific selector
+    const unitPriceElement = cartItem.querySelector('.col-md-6 .fw-bold.text-primary.fs-5');
+    // Find the total price (green text above remove button) - more specific selector
+    const totalPriceElement = cartItem.querySelector('.col-md-3.text-end .fw-bold.fs-5.text-success');
 
     if (unitPriceElement && totalPriceElement) {
         // Extract unit price number - remove GHS, commas, and any other formatting
@@ -131,6 +131,16 @@ function updateItemPriceDisplay(productId, quantity) {
             totalPriceElement.textContent = `GHS ${formattedTotal}`;
 
             console.log(`Updated: ${quantity} × GHS ${unitPrice} = GHS ${formattedTotal}`);
+
+            // Update the cart total immediately based on all visible items
+            setTimeout(() => {
+                const clientTotal = calculateCartTotalClientSide();
+                const formattedCartTotal = clientTotal.toLocaleString('en-US', {
+                    minimumFractionDigits: 2,
+                    maximumFractionDigits: 2
+                });
+                updateCartTotals(formattedCartTotal);
+            }, 10);
         } else {
             console.log('Invalid unit price:', unitPriceText);
         }
@@ -359,6 +369,26 @@ function updateCartTotals(total) {
     if (cartTotal) {
         cartTotal.textContent = `GHS ${total}`;
     }
+}
+
+// Calculate cart total from individual item prices (client-side verification)
+function calculateCartTotalClientSide() {
+    let total = 0;
+    const cartItems = document.querySelectorAll('.cart-item');
+
+    cartItems.forEach(item => {
+        const totalPriceElement = item.querySelector('.col-md-3.text-end .fw-bold.fs-5.text-success');
+        if (totalPriceElement) {
+            let priceText = totalPriceElement.textContent;
+            priceText = priceText.replace('GHS', '').replace(/,/g, '').replace(/\s/g, '');
+            const itemTotal = parseFloat(priceText);
+            if (!isNaN(itemTotal)) {
+                total += itemTotal;
+            }
+        }
+    });
+
+    return total;
 }
 
 // Check if cart is empty and show appropriate content

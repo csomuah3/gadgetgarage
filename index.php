@@ -3427,7 +3427,7 @@ try {
 								<div class="dropdown-divider-custom"></div>
 								<a href="wishlist.php" class="dropdown-item-custom">
 									<i class="fas fa-heart"></i>
-									<span>Wishlist</span>
+									<span> My Wishlist</span>
 								</a>
 								<?php if ($is_admin): ?>
 									<div class="dropdown-divider-custom"></div>

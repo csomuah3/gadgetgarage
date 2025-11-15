@@ -219,9 +219,9 @@ class Cart extends db_connection
     {
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
-            // Use final_price if available, otherwise fall back to product_price
+            // Use final_price if available AND NOT NULL AND > 0, otherwise fall back to product_price
             if ($this->column_exists('cart', 'final_price')) {
-                $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
+                $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price IS NOT NULL AND c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
                         FROM cart c
                         JOIN products p ON c.p_id = p.product_id
                         WHERE c.c_id = $customer_id";
@@ -234,7 +234,7 @@ class Cart extends db_connection
         } else {
             $ip_address = mysqli_real_escape_string($this->db, $ip_address);
             if ($this->column_exists('cart', 'final_price')) {
-                $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
+                $sql = "SELECT SUM(c.qty * CASE WHEN c.final_price IS NOT NULL AND c.final_price > 0 THEN c.final_price ELSE p.product_price END) as total
                         FROM cart c
                         JOIN products p ON c.p_id = p.product_id
                         WHERE c.ip_add = '$ip_address'";

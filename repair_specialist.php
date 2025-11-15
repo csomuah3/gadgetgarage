@@ -46,6 +46,7 @@ try {
     <title>Select Specialist - <?php echo htmlspecialchars($issue_name); ?> - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="includes/header-styles.css" rel="stylesheet">
     <style>
         /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -97,36 +98,7 @@ try {
             75% { transform: translateY(-15px) rotate(270deg); }
         }
 
-        /* Header */
-        .main-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #047857;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo .garage {
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        /* Header styles now imported from header-styles.css */
 
         .btn-back {
             background: linear-gradient(135deg, #6b7280, #9ca3af);

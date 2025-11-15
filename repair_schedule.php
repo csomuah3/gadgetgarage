@@ -91,6 +91,7 @@ try {
     <title>Schedule Appointment - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="includes/header-styles.css" rel="stylesheet">
     <style>
         /* Import Google Fonts */
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -142,36 +143,7 @@ try {
             75% { transform: translateY(-15px) rotate(270deg); }
         }
 
-        /* Header */
-        .main-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            padding: 1rem 0;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.08);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #047857;
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .logo .garage {
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
+        /* Header styles now imported from header-styles.css */
 
         .btn-back {
             background: linear-gradient(135deg, #6b7280, #9ca3af);
@@ -386,6 +358,56 @@ try {
             cursor: not-allowed;
             transform: none;
             box-shadow: none;
+        }
+
+        /* Terms and Conditions Styling */
+        .terms-conditions {
+            background: #f8fafc;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid #e2e8f0;
+        }
+
+        .terms-conditions .form-check {
+            background: white;
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .terms-conditions .form-check:hover {
+            border-color: #10b981;
+            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+        }
+
+        .terms-conditions .form-check-input {
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            margin-top: 0.25rem;
+            transform: scale(1.1);
+        }
+
+        .terms-conditions .form-check-input:checked {
+            background-color: #10b981;
+            border-color: #10b981;
+        }
+
+        .terms-conditions .form-check-input:focus {
+            border-color: #10b981;
+            box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
+        }
+
+        .terms-conditions .form-check-label {
+            font-size: 0.9rem;
+            color: #374151;
+            line-height: 1.5;
+            margin-left: 0.5rem;
+            cursor: pointer;
+        }
+
+        .terms-conditions .form-check-label:hover {
+            color: #047857;
         }
 
         .success-modal {
@@ -606,7 +628,45 @@ try {
                         </div>
                         <?php endif; ?>
 
+                        <!-- Terms and Conditions -->
                         <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e2e8f0;">
+                            <h6 style="color: #047857; font-weight: 600; margin-bottom: 1rem;">
+                                <i class="fas fa-file-contract me-2"></i>
+                                Terms & Conditions
+                            </h6>
+
+                            <div class="terms-conditions">
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input terms-checkbox" type="checkbox" id="terms1" required>
+                                    <label class="form-check-label" for="terms1">
+                                        I understand that I will receive a phone call from the assigned specialist at my scheduled time to discuss my device issue in detail and determine the best repair solution.
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input terms-checkbox" type="checkbox" id="terms2" required>
+                                    <label class="form-check-label" for="terms2">
+                                        I agree that the consultation call may be recorded for quality assurance and training purposes, and that pricing, timeframe, and service details will be discussed during this call.
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-3">
+                                    <input class="form-check-input terms-checkbox" type="checkbox" id="terms3" required>
+                                    <label class="form-check-label" for="terms3">
+                                        I understand that pickup/drop-off arrangements will be discussed during the consultation call, and I am responsible for coordinating device collection and delivery within Accra and surrounding areas.
+                                    </label>
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input class="form-check-input terms-checkbox" type="checkbox" id="terms4" required>
+                                    <label class="form-check-label" for="terms4">
+                                        I acknowledge that final repair costs may vary from the base cost shown above based on the actual diagnosis, and I will be informed of any additional charges before work begins.
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div style="margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid #e2e8f0;">
                             <button type="submit" name="submit_appointment" class="submit-btn" id="submitBtn" disabled>
                                 <i class="fas fa-calendar-check me-2"></i>
                                 Schedule Appointment
@@ -662,7 +722,11 @@ try {
             const submitBtn = document.getElementById('submitBtn');
             const phoneInput = document.getElementById('customer_phone');
 
-            if (selectedDate && selectedTime && phoneInput.value.trim()) {
+            // Check if all terms checkboxes are checked
+            const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
+            const allTermsChecked = Array.from(termsCheckboxes).every(checkbox => checkbox.checked);
+
+            if (selectedDate && selectedTime && phoneInput.value.trim() && allTermsChecked) {
                 submitBtn.disabled = false;
             } else {
                 submitBtn.disabled = true;
@@ -671,6 +735,14 @@ try {
 
         // Phone input validation
         document.getElementById('customer_phone').addEventListener('input', updateSubmitButton);
+
+        // Terms checkbox validation
+        document.addEventListener('DOMContentLoaded', function() {
+            const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
+            termsCheckboxes.forEach(checkbox => {
+                checkbox.addEventListener('change', updateSubmitButton);
+            });
+        });
 
         // Form validation
         document.getElementById('appointmentForm').addEventListener('submit', function(e) {
@@ -684,6 +756,15 @@ try {
             if (!phone) {
                 e.preventDefault();
                 alert('Please enter your phone number.');
+                return false;
+            }
+
+            // Check if all terms are accepted
+            const termsCheckboxes = document.querySelectorAll('.terms-checkbox');
+            const allTermsChecked = Array.from(termsCheckboxes).every(checkbox => checkbox.checked);
+            if (!allTermsChecked) {
+                e.preventDefault();
+                alert('Please accept all terms and conditions before scheduling your appointment.');
                 return false;
             }
         });

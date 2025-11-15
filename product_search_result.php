@@ -716,12 +716,13 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                 <div class="product-grid" id="productGrid">
                     <?php foreach ($products_to_display as $product): ?>
                         <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)">
-                            <img src=""
+                            <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
                                  alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                                  class="product-image"
                                  data-product-id="<?php echo $product['product_id']; ?>"
                                  data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                                 data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+                                 data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                 onerror="<?php echo get_image_onerror($product['product_title'], '400x300'); ?>">
                             <div class="product-content">
                                 <h5 class="product-title">
                                     <?php

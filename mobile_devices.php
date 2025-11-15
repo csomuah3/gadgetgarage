@@ -312,7 +312,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>
+    <div class="floating-bubbles" id="floatingBubbles"></div>
 
     <!-- Main Header -->
     <header class="main-header animate__animated animate__fadeInDown">
@@ -541,11 +541,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         <h1 class="page-title">Mobile Devices</h1>
 
         <!-- Results Info -->
-        <?php if (!empty($filtered_products)): ?>
-            <div class="results-info">
-                <strong><?php echo $total_products; ?> Mobile Device<?php echo $total_products != 1 ? 's' : ''; ?> Found</strong>
-            </div>
-        <?php endif; ?>
 
         <!-- Filters Section -->
         <div class="filters-section">
@@ -595,12 +590,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <div class="product-grid" id="productGrid">
                 <?php foreach ($products_to_display as $product): ?>
                     <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)">
-                        <img src=""
+                        <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
                              alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                              class="product-image"
                              data-product-id="<?php echo $product['product_id']; ?>"
                              data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                             data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+                             data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>"
+                             onerror="<?php echo get_image_onerror($product['product_title'], '400x300'); ?>">
                         <div class="product-content">
                             <h5 class="product-title">
                                 <?php echo htmlspecialchars($product['product_title']); ?>

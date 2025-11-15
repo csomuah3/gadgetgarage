@@ -50,8 +50,8 @@ function get_product_image_url($image_filename, $product_title = 'Product', $siz
         return 'uploads/products/' . htmlspecialchars($image_filename);
     }
 
-    // No image found, return null to let JavaScript handle placeholder
-    return null;
+    // No image found, return placeholder URL directly
+    return generate_placeholder_url($product_title, $size);
 }
 
 /**
@@ -62,7 +62,7 @@ function get_product_image_url($image_filename, $product_title = 'Product', $siz
  */
 function generate_placeholder_url($text, $size = '400x300') {
     $encoded_text = urlencode($text);
-    return "https://via.placeholder.com/{$size}/8b5fbf/ffffff?text={$encoded_text}";
+    return "https://via.placeholder.com/{$size}/008060/ffffff?text={$encoded_text}";
 }
 
 /**

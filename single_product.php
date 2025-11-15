@@ -802,12 +802,13 @@ if (!$product) {
                     <div class="product-gallery">
                         <!-- Main Image Display -->
                         <div class="main-image-container">
-                            <img src="" id="mainProductImage"
+                            <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>" id="mainProductImage"
                                 alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                                 class="main-product-image"
                                 data-product-id="<?php echo $product['product_id']; ?>"
                                 data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                                data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>">
+                                data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                onerror="<?php echo get_image_onerror($product['product_title'], '600x400'); ?>">
 
                             <!-- Navigation Arrows -->
                             <button class="gallery-arrow gallery-arrow-left" onclick="previousImage()" style="display: none;">

@@ -537,44 +537,84 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     </nav>
 
     <!-- Page Title -->
-    <div class="container">
-        <h1 class="page-title">Mobile Devices</h1>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Left Sidebar - Filters -->
+            <div class="col-lg-3 col-md-4" id="filterSidebar">
+                <div class="filters-sidebar">
+                    <div class="filter-header">
+                        <h3 class="filter-title">
+                            <i class="fas fa-mobile-alt"></i>
+                            Filter Mobile Devices
+                        </h3>
+                        <button class="filter-close d-lg-none" id="closeFilters">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
 
-        <!-- Results Info -->
+                    <!-- Search Bar -->
+                    <div class="filter-group">
+                        <div class="search-container">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search mobile devices..." autocomplete="off">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
 
-        <!-- Filters Section -->
-        <div class="filters-section">
-            <h5 class="filter-title">Filter Mobile Devices</h5>
-            <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label">Category</label>
-                    <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
-                        <option value="all">All Mobile Devices</option>
-                        <?php foreach ($mobile_cats as $cat): ?>
-                            <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo $category_filter === $cat ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars(ucfirst($cat)); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Brand</label>
-                    <select class="filter-select" id="brandFilter" onchange="applyFilters()">
-                        <option value="all">All Brands</option>
-                        <?php foreach ($mobile_brands as $brand): ?>
-                            <option value="<?php echo $brand['brand_id']; ?>" <?php echo $brand_filter == $brand['brand_id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($brand['brand_name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <button class="clear-filters-btn w-100" onclick="clearFilters()">
-                        <i class="fas fa-times"></i> Clear Filters
-                    </button>
+                    <!-- Filter by Category -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Mobile Categories</h6>
+                        <div class="tag-filters" id="categoryTags">
+                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
+                            <button class="tag-btn" data-category="smartphones" id="category_smartphones_btn">Smartphones</button>
+                            <button class="tag-btn" data-category="ipads" id="category_ipads_btn">iPads</button>
+                            <button class="tag-btn" data-category="tablets" id="category_tablets_btn">Tablets</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Brand -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Mobile Brands</h6>
+                        <div class="tag-filters" id="brandTags">
+                            <button class="tag-btn active" data-brand="" id="brand_all_btn">All</button>
+                            <?php
+                            // Filter brands to mobile-relevant ones
+                            $mobile_brand_names = ['Apple', 'Samsung', 'Google', 'OnePlus', 'Xiaomi', 'Huawei', 'Nokia', 'Sony', 'LG'];
+                            foreach ($brands as $brand):
+                                if (in_array($brand['brand_name'], $mobile_brand_names)):
+                            ?>
+                                <button class="tag-btn" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
+                                    <?php echo htmlspecialchars($brand['brand_name']); ?>
+                                </button>
+                            <?php
+                                endif;
+                            endforeach;
+                            ?>
+                        </div>
+                    </div>
+
+                    <!-- Apply/Clear Filters Buttons -->
+                    <div class="filter-actions">
+                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
+                        <button class="clear-filters-btn" id="clearFilters">
+                            <i class="fas fa-times"></i>
+                            Clear All Filters
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <!-- Right Content - Products -->
+            <div class="col-lg-9 col-md-8" id="productContent">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title mb-0">Mobile Devices</h1>
+                    <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
+                        <i class="fas fa-filter me-2"></i>
+                        Filters
+                    </button>
+                </div>
 
         <!-- Products Grid -->
         <?php if (empty($products_to_display)): ?>
@@ -638,9 +678,108 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 </div>
             <?php endif; ?>
         <?php endif; ?>
+            </div>
+        </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Filter System JavaScript
+        let filtersChanged = false;
+        let initialState = { search: '', category: '', brand: '' };
+
+        function initMobileFilters() {
+            initCategoryFilter();
+            initBrandFilter();
+            initMobileFilterToggle();
+        }
+
+        function initCategoryFilter() {
+            const categoryBtns = document.querySelectorAll('#categoryTags .tag-btn');
+            categoryBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    categoryBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    showApplyButton();
+                });
+            });
+        }
+
+        function initBrandFilter() {
+            const brandBtns = document.querySelectorAll('#brandTags .tag-btn');
+            brandBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    brandBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    showApplyButton();
+                });
+            });
+        }
+
+        function initMobileFilterToggle() {
+            const mobileToggle = document.getElementById('mobileFilterToggle');
+            const closeFilters = document.getElementById('closeFilters');
+            const filterSidebar = document.getElementById('filterSidebar');
+
+            if (mobileToggle) {
+                mobileToggle.addEventListener('click', function() {
+                    filterSidebar.classList.add('show');
+                });
+            }
+
+            if (closeFilters) {
+                closeFilters.addEventListener('click', function() {
+                    filterSidebar.classList.remove('show');
+                });
+            }
+        }
+
+        function showApplyButton() {
+            if (!filtersChanged) {
+                filtersChanged = true;
+                const applyBtn = document.getElementById('applyFilters');
+                applyBtn.style.display = 'flex';
+            }
+        }
+
+        function hideApplyButton() {
+            filtersChanged = false;
+            const applyBtn = document.getElementById('applyFilters');
+            applyBtn.style.display = 'none';
+        }
+
+        // Apply filters function
+        document.getElementById('applyFilters')?.addEventListener('click', function() {
+            const searchQuery = document.getElementById('searchInput').value;
+            const activeCategory = document.querySelector('#categoryTags .tag-btn.active');
+            const activeBrand = document.querySelector('#brandTags .tag-btn.active');
+
+            const category = activeCategory ? activeCategory.getAttribute('data-category') : '';
+            const brand = activeBrand ? activeBrand.getAttribute('data-brand') : '';
+
+            const params = new URLSearchParams();
+            if (searchQuery) params.append('search', searchQuery);
+            if (category) params.append('category', category);
+            if (brand) params.append('brand', brand);
+
+            window.location.href = 'mobile_devices.php?' + params.toString();
+        });
+
+        // Clear filters function
+        document.getElementById('clearFilters')?.addEventListener('click', function() {
+            window.location.href = 'mobile_devices.php';
+        });
+
+        // Search input functionality
+        document.getElementById('searchInput')?.addEventListener('input', function() {
+            showApplyButton();
+        });
+
+        // Initialize filters on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            initMobileFilters();
+        });
+    </script>
     <script>
         function viewProduct(productId) {
             window.location.href = 'single_product.php?id=' + productId;

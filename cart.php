@@ -531,7 +531,9 @@ try {
                     <div id="cartItemsContainer">
                         <?php foreach ($cart_items as $item):
                             // Create unique cart item ID combining product ID and condition
-                            $cart_item_id = $item['p_id'] . '_' . ($item['condition_type'] ?? 'default') . '_' . ($item['final_price'] ?? $item['product_price']);
+                            $condition = $item['condition_type'] ?? 'default';
+                            $price = isset($item['final_price']) && $item['final_price'] > 0 ? $item['final_price'] : $item['product_price'];
+                            $cart_item_id = 'cart_' . $item['p_id'] . '_' . str_replace(' ', '', strtolower($condition)) . '_' . str_replace('.', '', $price);
                         ?>
                             <div class="cart-item" data-product-id="<?php echo $item['p_id']; ?>" data-cart-item-id="<?php echo $cart_item_id; ?>">
                                 <div class="row g-0 align-items-center p-3">
@@ -565,7 +567,7 @@ try {
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
-                                                           min="1" max="99" id="qty-<?php echo $cart_item_id; ?>"
+                                                           min="1" max="99" id="<?php echo $cart_item_id; ?>"
                                                            onchange="updateQuantityByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>, this.value)">
                                                     <button type="button" class="quantity-btn" onclick="incrementQuantityByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-plus"></i>

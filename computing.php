@@ -540,15 +540,86 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     </nav>
 
     <!-- Page Title -->
-    <div class="container">
-        <h1 class="page-title">Computing</h1>
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Left Sidebar - Filters -->
+            <div class="col-lg-3 col-md-4" id="filterSidebar">
+                <div class="filters-sidebar">
+                    <div class="filter-header">
+                        <h3 class="filter-title">
+                            <i class="fas fa-laptop"></i>
+                            Filter Computing
+                        </h3>
+                        <button class="filter-close d-lg-none" id="closeFilters">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
 
-        <!-- Results Info -->
+                    <!-- Search Bar -->
+                    <div class="filter-group">
+                        <div class="search-container">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search computing..." autocomplete="off">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
 
-        <!-- Filters Section -->
-        <div class="filters-section">
-            <h5 class="filter-title">Filter Computing Products</h5>
-            <div class="row">
+                    <!-- Filter by Category -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Computing Categories</h6>
+                        <div class="tag-filters" id="categoryTags">
+                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
+                            <button class="tag-btn" data-category="laptops" id="category_laptops_btn">Laptops</button>
+                            <button class="tag-btn" data-category="desktops" id="category_desktops_btn">Desktops</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Brand -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Computing Brands</h6>
+                        <div class="tag-filters" id="brandTags">
+                            <button class="tag-btn active" data-brand="" id="brand_all_btn">All</button>
+                            <?php
+                            // Filter brands to computing-relevant ones
+                            $computing_brand_names = ['Apple', 'Dell', 'HP', 'Lenovo', 'ASUS', 'Acer', 'MSI', 'Microsoft', 'Alienware'];
+                            foreach ($brands as $brand):
+                                if (in_array($brand['brand_name'], $computing_brand_names)):
+                            ?>
+                                <button class="tag-btn" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
+                                    <?php echo htmlspecialchars($brand['brand_name']); ?>
+                                </button>
+                            <?php
+                                endif;
+                            endforeach;
+                            ?>
+                        </div>
+                    </div>
+
+                    <!-- Apply/Clear Filters Buttons -->
+                    <div class="filter-actions">
+                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
+                        <button class="clear-filters-btn" id="clearFilters">
+                            <i class="fas fa-times"></i>
+                            Clear All Filters
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right Content - Products -->
+            <div class="col-lg-9 col-md-8" id="productContent">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title mb-0">Computing</h1>
+                    <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
+                        <i class="fas fa-filter me-2"></i>
+                        Filters
+                    </button>
+                </div>
+
+        <!-- Products Grid -->
+        <div class="row">
                 <div class="col-md-4">
                     <label class="form-label">Category</label>
                     <select class="filter-select" id="categoryFilter" onchange="applyFilters()">

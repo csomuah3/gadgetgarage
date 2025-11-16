@@ -362,13 +362,12 @@ if (!check_login() || !check_admin()) {
         @media (max-width: 768px) {
             .admin-navbar {
                 padding: 1rem;
-                flex-direction: column;
-                gap: 1rem;
+                flex-wrap: wrap;
             }
 
             .navbar-nav-container {
-                order: 2;
-                width: 100%;
+                flex: 1;
+                margin: 0 1rem;
             }
 
             .navbar-nav {
@@ -378,24 +377,23 @@ if (!check_login() || !check_admin()) {
             }
 
             .nav-link {
-                font-size: 0.8rem;
-                padding: 0.5rem 1rem;
+                font-size: 0.75rem;
+                padding: 0.4rem 0.8rem;
                 white-space: nowrap;
             }
 
             .nav-link i {
-                margin-right: 0.3rem;
+                margin-right: 0.2rem;
             }
 
             .user-profile {
-                order: 3;
-                font-size: 0.8rem;
-                align-self: center;
+                font-size: 0.75rem;
+                padding: 0.5rem 1rem;
             }
 
             .navbar-brand {
-                order: 1;
-                align-self: center;
+                font-size: 0.9rem;
+                padding: 0.5rem 1rem;
             }
         }
     </style>

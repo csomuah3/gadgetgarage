@@ -374,7 +374,7 @@
 
 .action-button h5 {
     margin: 0;
-    font-size: 13px;
+    font-size: 16px;
     color: #2c3e50;
     white-space: nowrap;
     overflow: visible;
@@ -413,7 +413,7 @@
 .expandable-content p {
     padding: 12px 14px;
     margin: 0;
-    font-size: 12px;
+    font-size: 16px;
     color: #6c757d;
     line-height: 1.4;
     width: 100%;
@@ -535,7 +535,7 @@
     margin-bottom: 5px;
     color: #374151;
     font-weight: 600;
-    font-size: 13px;
+    font-size: 16px;
 }
 
 .form-group select,
@@ -546,7 +546,7 @@
     padding: 12px;
     border: 1px solid #d1d5db;
     border-radius: 8px;
-    font-size: 14px;
+    font-size: 16px;
     font-family: inherit;
     transition: all 0.2s ease;
     background: #fafafa;

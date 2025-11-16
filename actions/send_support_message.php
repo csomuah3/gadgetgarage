@@ -27,24 +27,24 @@ try {
     $is_logged_in = check_login();
     $customer_id = null;
     $name = 'Guest User';
-    $email = 'guest@gadgetgarage.com';
+    $phone = '000-000-0000';
 
     if ($is_logged_in) {
         $customer_id = $_SESSION['user_id'] ?? null;
         $name = $_SESSION['name'] ?? 'Logged User';
-        $email = $_SESSION['email'] ?? 'user@gadgetgarage.com';
+        $phone = $_SESSION['phone'] ?? '000-000-0000';
     } else {
-        // Use guest name and email if provided
+        // Use guest name and phone if provided
         if (!empty($_POST['guest_name'])) {
             $name = trim($_POST['guest_name']);
         }
-        if (!empty($_POST['guest_email'])) {
-            $email = trim($_POST['guest_email']);
+        if (!empty($_POST['guest_phone'])) {
+            $phone = trim($_POST['guest_phone']);
         }
     }
 
     // Create support message
-    $message_id = create_support_message_ctr($customer_id, $name, $email, $subject, $message);
+    $message_id = create_support_message_ctr($customer_id, $name, $phone, $subject, $message);
 
     if ($message_id) {
         ob_clean(); // Clear any buffered output

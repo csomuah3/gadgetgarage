@@ -67,7 +67,7 @@ function send_support_notification_email($message_details) {
                     <span class='label'>Customer:</span> {$message_details['customer_name']}
                 </div>
                 <div class='info-row'>
-                    <span class='label'>Email:</span> {$message_details['customer_email']}
+                    <span class='label'>Phone:</span> {$message_details['customer_phone']}
                 </div>
                 <div class='info-row'>
                     <span class='label'>Submitted:</span> " . date('M j, Y g:i A', strtotime($message_details['created_at'])) . "
@@ -106,7 +106,7 @@ function send_support_notification_email($message_details) {
     $headers = "MIME-Version: 1.0" . "\r\n";
     $headers .= "Content-type:text/html;charset=UTF-8" . "\r\n";
     $headers .= "From: Gadget Garage Support System <noreply@gadgetgarage.com>" . "\r\n";
-    $headers .= "Reply-To: {$message_details['customer_email']}" . "\r\n";
+    $headers .= "Reply-To: support@gadgetgarage.com" . "\r\n";
 
     return mail($admin_email, $subject, $message_body, $headers);
 }
@@ -115,9 +115,12 @@ function send_support_notification_email($message_details) {
  * Send confirmation email to customer when their message is received
  */
 function send_customer_confirmation_email($message_details) {
-    $customer_email = $message_details['customer_email'];
+    $customer_phone = $message_details['customer_phone'];
     $customer_name = $message_details['customer_name'];
     $subject = "Message Received - Gadget Garage Support";
+
+    // For email notifications, we'll use a default email or skip if no email available
+    $customer_email = 'customer@gadgetgarage.com'; // Default email for notifications
 
     $subject_labels = [
         'order' => 'Order Status & Refunds',
@@ -217,9 +220,12 @@ function get_base_url() {
  * Send response notification to customer when admin responds
  */
 function send_response_notification_email($message_details) {
-    $customer_email = $message_details['customer_email'];
+    $customer_phone = $message_details['customer_phone'];
     $customer_name = $message_details['customer_name'];
     $subject = "Response to Your Support Message - Gadget Garage";
+
+    // For email notifications, we'll use a default email or skip if no email available
+    $customer_email = 'customer@gadgetgarage.com'; // Default email for notifications
 
     $message_body = "
     <!DOCTYPE html>

@@ -10,7 +10,7 @@ require_once(__DIR__ . '/../settings/db_class.php');
 /**
  * Create a new support message
  */
-function create_support_message_ctr($customer_id, $name, $email, $subject, $message) {
+function create_support_message_ctr($customer_id, $name, $phone, $subject, $message) {
     $db = new db_connection();
 
     if (!$db->db_connect()) {
@@ -20,12 +20,12 @@ function create_support_message_ctr($customer_id, $name, $email, $subject, $mess
     // Sanitize inputs
     $customer_id = $customer_id ? intval($customer_id) : null;
     $name = mysqli_real_escape_string($db->db_conn(), trim($name));
-    $email = mysqli_real_escape_string($db->db_conn(), trim($email));
+    $phone = mysqli_real_escape_string($db->db_conn(), trim($phone));
     $subject = mysqli_real_escape_string($db->db_conn(), trim($subject));
     $message = mysqli_real_escape_string($db->db_conn(), trim($message));
 
-    // Validate email
-    if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+    // Validate phone (basic validation)
+    if (empty($phone) || strlen($phone) < 10) {
         return false;
     }
 
@@ -39,7 +39,7 @@ function create_support_message_ctr($customer_id, $name, $email, $subject, $mess
 
     // Create the message
     $sql = "INSERT INTO support_messages
-            (customer_id, customer_name, customer_email, subject, message, priority, status)
+            (customer_id, customer_name, customer_phone, subject, message, priority, status)
             VALUES (?, ?, ?, ?, ?, ?, 'new')";
 
     $stmt = mysqli_prepare($db->db_conn(), $sql);
@@ -48,7 +48,7 @@ function create_support_message_ctr($customer_id, $name, $email, $subject, $mess
         return false;
     }
 
-    mysqli_stmt_bind_param($stmt, "isssss", $customer_id, $name, $email, $subject, $message, $priority);
+    mysqli_stmt_bind_param($stmt, "isssss", $customer_id, $name, $phone, $subject, $message, $priority);
 
     $result = mysqli_stmt_execute($stmt);
     $message_id = mysqli_insert_id($db->db_conn());
@@ -62,7 +62,7 @@ function create_support_message_ctr($customer_id, $name, $email, $subject, $mess
             'message_id' => $message_id,
             'customer_id' => $customer_id,
             'customer_name' => $name,
-            'customer_email' => $email,
+            'customer_phone' => $phone,
             'subject' => $subject,
             'message' => $message,
             'priority' => $priority,
@@ -96,7 +96,7 @@ function get_all_support_messages_ctr($status = null, $limit = null) {
         return false;
     }
 
-    $sql = "SELECT message_id, customer_id, customer_name, customer_email, subject,
+    $sql = "SELECT message_id, customer_id, customer_name, customer_phone, subject,
                    LEFT(message, 100) as message_preview, message, status, priority,
                    assigned_to, created_at, updated_at
             FROM support_messages";
@@ -242,7 +242,7 @@ function get_support_statistics_ctr() {
 /**
  * Get customer's support messages
  */
-function get_customer_support_messages_ctr($customer_id, $email = null) {
+function get_customer_support_messages_ctr($customer_id, $phone = null) {
     $db = new db_connection();
 
     if (!$db->db_connect()) {
@@ -257,8 +257,8 @@ function get_customer_support_messages_ctr($customer_id, $email = null) {
         $customer_id = intval($customer_id);
         $sql .= "customer_id = $customer_id";
     } else {
-        $email = mysqli_real_escape_string($db->db_conn(), $email);
-        $sql .= "customer_email = '$email'";
+        $phone = mysqli_real_escape_string($db->db_conn(), $phone);
+        $sql .= "customer_phone = '$phone'";
     }
 
     $sql .= " ORDER BY created_at DESC";

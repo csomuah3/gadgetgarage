@@ -13,7 +13,7 @@
     height: 80px;
     background: linear-gradient(135deg, #008060, #006b4e);
     border-radius: 50%;
-    display: flex;
+    display: none;
     align-items: center;
     justify-content: center;
     cursor: pointer;
@@ -111,15 +111,35 @@
     position: fixed;
     bottom: 120px;
     right: 30px;
-    width: 420px;
+    width: 460px;
     max-width: calc(100vw - 60px);
-    max-height: 600px;
+    max-height: 650px;
     background: white;
     border-radius: 16px;
     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
     z-index: 10000;
-    overflow: hidden;
+    overflow-y: auto;
     animation: slideUp 0.3s ease;
+    scrollbar-width: thin;
+    scrollbar-color: #cbd5e0 #f7fafc;
+}
+
+.support-modal::-webkit-scrollbar {
+    width: 8px;
+}
+
+.support-modal::-webkit-scrollbar-track {
+    background: #f7fafc;
+    border-radius: 4px;
+}
+
+.support-modal::-webkit-scrollbar-thumb {
+    background: #cbd5e0;
+    border-radius: 4px;
+}
+
+.support-modal::-webkit-scrollbar-thumb:hover {
+    background: #a0aec0;
 }
 
 @keyframes slideUp {
@@ -332,12 +352,19 @@
     margin-bottom: 8px;
     cursor: pointer;
     transition: all 0.2s ease;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
+    display: block;
     text-align: left;
     min-height: 42px;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.action-button-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
 }
 
 .action-button:hover {
@@ -371,13 +398,16 @@
     overflow: hidden;
     transition: max-height 0.3s ease;
     background: #f8f9fa;
-    margin: 8px -14px -10px -14px;
+    margin: 6px 0 0 0;
     border-radius: 0 0 12px 12px;
-    width: calc(100% + 28px);
+    width: 100%;
+    position: relative;
+    left: 0;
 }
 
 .expandable-content.expanded {
-    max-height: 100px;
+    max-height: 120px;
+    overflow-y: auto;
 }
 
 .expandable-content p {
@@ -388,6 +418,9 @@
     line-height: 1.4;
     width: 100%;
     box-sizing: border-box;
+    text-align: left;
+    white-space: normal;
+    word-wrap: break-word;
 }
 
 /* Mobile Responsiveness */
@@ -475,7 +508,7 @@
 
 /* Guest fields styling */
 #guestNameField,
-#guestEmailField {
+#guestPhoneField {
     background: #f8f9fb;
     padding: 8px;
     border-radius: 8px;
@@ -484,7 +517,7 @@
 }
 
 #guestNameField label,
-#guestEmailField label {
+#guestPhoneField label {
     color: #4a5568;
     font-weight: 600;
     font-size: 12px;
@@ -492,7 +525,7 @@
 }
 
 #guestNameField input,
-#guestEmailField input {
+#guestPhoneField input {
     background: white !important;
     border: 1px solid #cbd5e0 !important;
 }
@@ -508,7 +541,7 @@
 .form-group select,
 .form-group textarea,
 .form-group input[type="text"],
-.form-group input[type="email"] {
+.form-group input[type="tel"] {
     width: 100%;
     padding: 12px;
     border: 1px solid #d1d5db;
@@ -522,7 +555,7 @@
 .form-group select:focus,
 .form-group textarea:focus,
 .form-group input[type="text"]:focus,
-.form-group input[type="email"]:focus {
+.form-group input[type="tel"]:focus {
     outline: none;
     border-color: #008060;
     box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
@@ -530,13 +563,13 @@
 }
 
 .form-group input[type="text"]::placeholder,
-.form-group input[type="email"]::placeholder {
+.form-group input[type="tel"]::placeholder {
     color: #9ca3af;
     font-style: italic;
 }
 
 .form-group input[type="text"]:hover,
-.form-group input[type="email"]:hover {
+.form-group input[type="tel"]:hover {
     border-color: #9ca3af;
     background: white;
 }

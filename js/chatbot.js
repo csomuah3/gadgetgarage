@@ -18,6 +18,10 @@ class ChatBot {
         this.createChatbotHTML();
         this.bindEvents();
         this.startPeriodicMessages();
+        // Auto-open the modal since we removed the chat icon
+        setTimeout(() => {
+            this.openModal();
+        }, 1000);
     }
 
     createChatbotHTML() {
@@ -87,40 +91,50 @@ class ChatBot {
                     <div class="action-buttons">
 
                         <button class="action-button" data-section="order">
-                            <h5>My order status or refund issues</h5>
-                            <i class="fas fa-chevron-right"></i>
+                            <div class="action-button-header">
+                                <h5>My order status or refund issues</h5>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
                             <div class="expandable-content">
                                 <p>Having trouble tracking your order or need a refund? We can help you check your order status, process returns for refurbished devices, or resolve payment issues. Most order problems can be resolved within 24 hours through our customer service team.</p>
                             </div>
                         </button>
 
                         <button class="action-button" data-section="device">
-                            <h5>Issues with refurbished device quality</h5>
-                            <i class="fas fa-chevron-right"></i>
+                            <div class="action-button-header">
+                                <h5>Issues with refurbished device quality</h5>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
                             <div class="expandable-content">
                                 <p>Received a refurbished device that's not working as expected? All our devices come with quality guarantees. We can arrange a replacement, provide troubleshooting support, or process a return. Contact us with your device details and we'll resolve the issue quickly.</p>
                             </div>
                         </button>
 
                         <button class="action-button" data-section="repair">
-                            <h5>Repair service appointment or pricing questions</h5>
-                            <i class="fas fa-chevron-right"></i>
+                            <div class="action-button-header">
+                                <h5>Repair service appointment or pricing questions</h5>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
                             <div class="expandable-content">
                                 <p>Need help with scheduling a repair, understanding pricing, or checking repair status? Our Repair Studio handles screen repairs, battery replacements, and more. We can help reschedule appointments, provide quotes, or update you on your device's repair progress.</p>
                             </div>
                         </button>
 
                         <button class="action-button" data-section="drop">
-                            <h5>Device Drop service or trade-in value questions</h5>
-                            <i class="fas fa-chevron-right"></i>
+                            <div class="action-button-header">
+                                <h5>Device Drop service or trade-in value questions</h5>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
                             <div class="expandable-content">
                                 <p>Questions about dropping off old devices or trade-in values? Our Device Drop service accepts old tech for recycling or trade-in credit. We can help you understand what devices we accept, current trade-in values, or schedule a drop-off appointment.</p>
                             </div>
                         </button>
 
                         <button class="action-button" data-section="tech">
-                            <h5>Tech Revival service issues (055-138-7578)</h5>
-                            <i class="fas fa-chevron-right"></i>
+                            <div class="action-button-header">
+                                <h5>Tech Revival service issues (055-138-7578)</h5>
+                                <i class="fas fa-chevron-right"></i>
+                            </div>
                             <div class="expandable-content">
                                 <p>Having trouble reaching our Tech Revival hotline or need help with bringing in retired tech? Call 055-138-7578 for immediate assistance with device recycling, trade-ins, or scheduling pickup services. If the line is busy, we can schedule a callback for you.</p>
                             </div>
@@ -210,7 +224,7 @@ class ChatBot {
 
     toggleSection(sectionName, button) {
         const content = button.querySelector('.expandable-content');
-        const icon = button.querySelector('i');
+        const icon = button.querySelector('.action-button-header i');
 
         if (this.expandedSections.has(sectionName)) {
             // Collapse
@@ -294,9 +308,9 @@ class ChatBot {
                         <input type="text" name="guest_name" placeholder="Your name">
                     </div>
 
-                    <div class="form-group" id="guestEmailField" style="display: none;">
-                        <label>Email</label>
-                        <input type="email" name="guest_email" placeholder="your@email.com">
+                    <div class="form-group" id="guestPhoneField" style="display: none;">
+                        <label>Phone Number</label>
+                        <input type="tel" name="guest_phone" placeholder="123-456-7890">
                     </div>
 
                     <div class="form-group">
@@ -357,13 +371,13 @@ class ChatBot {
         // If not logged in, show guest fields and make them required
         if (!isLoggedIn) {
             const nameField = document.getElementById('guestNameField');
-            const emailField = document.getElementById('guestEmailField');
+            const phoneField = document.getElementById('guestPhoneField');
 
-            if (nameField && emailField) {
+            if (nameField && phoneField) {
                 nameField.style.display = 'block';
-                emailField.style.display = 'block';
+                phoneField.style.display = 'block';
                 nameField.querySelector('input').required = true;
-                emailField.querySelector('input').required = true;
+                phoneField.querySelector('input').required = true;
             }
         }
     }
@@ -396,12 +410,12 @@ class ChatBot {
         formData.append('subject', form.subject.value);
         formData.append('message', form.message.value);
 
-        // Add guest name and email if provided
+        // Add guest name and phone if provided
         if (form.guest_name && form.guest_name.value) {
             formData.append('guest_name', form.guest_name.value);
         }
-        if (form.guest_email && form.guest_email.value) {
-            formData.append('guest_email', form.guest_email.value);
+        if (form.guest_phone && form.guest_phone.value) {
+            formData.append('guest_phone', form.guest_phone.value);
         }
 
         formData.append('send_message', '1');

@@ -1507,12 +1507,13 @@ try {
 			max-width: 80px;
 			max-height: 40px;
 			object-fit: contain;
-			filter: grayscale(100%) opacity(0.7);
+			filter: opacity(0.8);
 			transition: all 0.3s ease;
 		}
 
 		.brand-card:hover img {
-			filter: grayscale(0%) opacity(1);
+			filter: opacity(1);
+			transform: scale(1.1);
 		}
 
 		@keyframes scroll {
@@ -1619,19 +1620,27 @@ try {
 			right: 20px;
 			display: flex;
 			flex-direction: column;
-			gap: 8px;
+			gap: 6px;
 		}
 
 		.card-feature {
-			background: rgba(255, 255, 255, 0.2);
-			border: 1px solid rgba(255, 255, 255, 0.3);
-			border-radius: 20px;
-			padding: 8px 16px;
-			font-size: 0.85rem;
+			background: rgba(0, 0, 0, 0.8);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			border-radius: 25px;
+			padding: 12px 20px;
+			font-size: 0.9rem;
 			color: #fff;
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			gap: 10px;
+			font-weight: 500;
+			backdrop-filter: blur(10px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		}
+
+		.card-feature i {
+			font-size: 1rem;
+			opacity: 0.9;
 		}
 
 		.testimonial-content {
@@ -1751,6 +1760,144 @@ try {
 
 			.testimonials .section-sub {
 				font-size: 1.1rem;
+			}
+		}
+
+		/* Language Confirmation Modal */
+		.language-modal-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.7);
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			z-index: 10000;
+			animation: fadeIn 0.3s ease;
+		}
+
+		.language-modal {
+			background: #fff;
+			border-radius: 16px;
+			padding: 0;
+			max-width: 450px;
+			width: 90%;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+			animation: slideUp 0.3s ease;
+			overflow: hidden;
+		}
+
+		.language-modal-header {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: #fff;
+			padding: 20px 25px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.language-modal-header h3 {
+			margin: 0;
+			font-size: 1.4rem;
+			font-weight: 600;
+		}
+
+		.modal-close {
+			background: none;
+			border: none;
+			color: #fff;
+			font-size: 1.8rem;
+			cursor: pointer;
+			padding: 0;
+			width: 30px;
+			height: 30px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			border-radius: 50%;
+			transition: background 0.2s ease;
+		}
+
+		.modal-close:hover {
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		.language-modal-body {
+			padding: 30px 25px;
+			text-align: center;
+		}
+
+		.language-modal-icon {
+			font-size: 3rem;
+			color: #008060;
+			margin-bottom: 20px;
+		}
+
+		.language-modal-body p {
+			margin: 0 0 15px 0;
+			color: #333;
+			font-size: 1.1rem;
+			line-height: 1.5;
+		}
+
+		.language-modal-note {
+			color: #666 !important;
+			font-size: 0.95rem !important;
+			margin-bottom: 0 !important;
+		}
+
+		.language-modal-footer {
+			padding: 20px 25px 25px;
+			display: flex;
+			gap: 15px;
+			justify-content: flex-end;
+		}
+
+		.language-btn-cancel,
+		.language-btn-confirm {
+			padding: 12px 24px;
+			border: none;
+			border-radius: 8px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.language-btn-cancel {
+			background: #f1f5f9;
+			color: #64748b;
+		}
+
+		.language-btn-cancel:hover {
+			background: #e2e8f0;
+		}
+
+		.language-btn-confirm {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: #fff;
+		}
+
+		.language-btn-confirm:hover {
+			background: linear-gradient(135deg, #006b4e, #008060);
+			transform: translateY(-1px);
+		}
+
+		@keyframes fadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
+		}
+
+		@keyframes slideUp {
+			from {
+				transform: translateY(30px);
+				opacity: 0;
+			}
+			to {
+				transform: translateY(0);
+				opacity: 1;
 			}
 		}
 
@@ -2355,94 +2502,7 @@ try {
 
 
 
-		/* Products by Category */
-		.products-by-category {
-			padding: 60px 0;
-			background: #f8f9fa;
-		}
 
-		.products-by-category .section-header {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 40px;
-		}
-
-		.products-by-category h2 {
-			font-size: 2rem;
-			font-weight: 700;
-			color: #1f2937;
-		}
-
-		.category-tabs {
-			display: flex;
-			gap: 10px;
-		}
-
-		.category-tab {
-			padding: 8px 20px;
-			border: 1px solid #e5e7eb;
-			background: white;
-			color: #6b7280;
-			border-radius: 6px;
-			font-weight: 500;
-			cursor: pointer;
-			transition: all 0.3s ease;
-		}
-
-		.category-tab.active {
-			background: #1f2937;
-			color: white;
-			border-color: #1f2937;
-		}
-
-		.product-card {
-			background: white;
-			border-radius: 12px;
-			padding: 20px;
-			text-align: center;
-			border: 1px solid #e5e7eb;
-			margin-bottom: 30px;
-		}
-
-		.product-image img {
-			width: 100%;
-			height: 150px;
-			object-fit: cover;
-			border-radius: 8px;
-			margin-bottom: 15px;
-		}
-
-		.product-card h4 {
-			font-size: 1rem;
-			font-weight: 600;
-			color: #4f63d2;
-			margin-bottom: 8px;
-		}
-
-		.product-card p {
-			font-size: 0.9rem;
-			color: #6b7280;
-			margin-bottom: 10px;
-		}
-
-		.product-card .price {
-			font-size: 1.1rem;
-			font-weight: 700;
-			color: #1f2937;
-			margin-bottom: 15px;
-		}
-
-		.product-btn {
-			background: #e5e7eb;
-			color: #6b7280;
-			border: none;
-			padding: 8px 16px;
-			border-radius: 6px;
-			font-size: 0.8rem;
-			font-weight: 600;
-			cursor: not-allowed;
-		}
 
 		/* Main Semi-Circle Design (like login page) */
 		.hero-circle {
@@ -3680,7 +3740,7 @@ try {
 				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
 					<button class="categories-button">
 						<i class="fas fa-tags"></i>
-						SHOP BY BRANDS
+						<span data-translate="shop_by_brands">SHOP BY BRANDS</span>
 						<i class="fas fa-chevron-down"></i>
 					</button>
 					<div class="brands-dropdown" id="shopDropdown">
@@ -3691,18 +3751,18 @@ try {
 									<li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
 								<?php endforeach; ?>
 							<?php else: ?>
-								<li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+								<li><a href="all_product.php"><i class="fas fa-tag"></i> <span data-translate="all_products">All Products</span></a></li>
 							<?php endif; ?>
 						</ul>
 					</div>
 				</div>
 
-				<a href="index.php" class="nav-item">HOME</a>
+				<a href="index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
 				<!-- Shop Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
 					<a href="#" class="nav-item">
-						SHOP
+						<span data-translate="shop">SHOP</span>
 						<i class="fas fa-chevron-down"></i>
 					</a>
 					<div class="mega-dropdown" id="shopCategoryDropdown">
@@ -3710,34 +3770,34 @@ try {
 							<div class="dropdown-column">
 								<h4>
 									<a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-										Mobile Devices
+										<span data-translate="mobile_devices">Mobile Devices</span>
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
 								<h4>
 									<a href="computing.php" style="text-decoration: none; color: inherit;">
-										Computing
+										<span data-translate="computing">Computing</span>
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
 								<h4>
 									<a href="photography_video.php" style="text-decoration: none; color: inherit;">
-										Photography & Video
+										<span data-translate="photography_video">Photography & Video</span>
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
@@ -3755,13 +3815,13 @@ try {
 					</div>
 				</div>
 
-				<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
-				<a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+				<a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
 				<!-- More Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
 					<a href="#" class="nav-item">
-						MORE
+						<span data-translate="more">MORE</span>
 						<i class="fas fa-chevron-down"></i>
 					</a>
 					<div class="simple-dropdown" id="moreDropdown">
@@ -3773,7 +3833,7 @@ try {
 				</div>
 
 				<!-- Flash Deal positioned at far right -->
-				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
+				<a href="#" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
 	</nav>
@@ -3786,8 +3846,8 @@ try {
 				<article class="main-banner coral">
 					<div class="banner-copy">
 						<h1 class="banner-title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</h1>
-						<p class="banner-price">Starting At <span class="price">GH₵ 236.00</span></p>
-						<a href="#" class="btn-primary">SHOP NOW</a>
+						<p class="banner-price"><span data-translate="starting_at">Starting At</span> <span class="price">GH₵ 236.00</span></p>
+						<a href="#" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 					</div>
 
 					<div class="banner-media">
@@ -3804,7 +3864,7 @@ try {
 						<div class="side-copy">
 							<h3 class="side-title">T900 Ultra<br>Watch</h3>
 							<p class="side-price">Starting <span class="price">GH₵ 19.00</span></p>
-							<a href="#" class="side-link">SHOP NOW</a>
+							<a href="#" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
 						</div>
 						<div class="side-media">
 							<img
@@ -3818,7 +3878,7 @@ try {
 						<div class="side-copy">
 							<h3 class="side-title">Kids Wireless<br>Headphones</h3>
 							<p class="side-price">Starting <span class="price">GH₵ 36.00</span></p>
-							<a href="#" class="side-link">SHOP NOW</a>
+							<a href="#" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
 						</div>
 						<div class="side-media">
 							<img
@@ -3895,7 +3955,7 @@ try {
 						<div class="category-icon">
 							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop&crop=center" alt="Smartphones">
 						</div>
-						<h4>Smartphones</h4>
+						<h4><span data-translate="smartphones">Smartphones</span></h4>
 						<p>From 2500 Cedis</p>
 					</div>
 				</div>
@@ -3904,7 +3964,7 @@ try {
 						<div class="category-icon">
 							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop&crop=center" alt="Laptops">
 						</div>
-						<h4>Laptops</h4>
+						<h4><span data-translate="laptops">Laptops</span></h4>
 						<p>From 4000 Cedis</p>
 					</div>
 				</div>
@@ -3913,7 +3973,7 @@ try {
 						<div class="category-icon">
 							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="iPads">
 						</div>
-						<h4>iPads</h4>
+						<h4><span data-translate="ipads">iPads</span></h4>
 						<p>From 3000 Cedis</p>
 					</div>
 				</div>
@@ -3922,7 +3982,7 @@ try {
 						<div class="category-icon">
 							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Cameras">
 						</div>
-						<h4>Cameras</h4>
+						<h4><span data-translate="cameras">Cameras</span></h4>
 						<p>From 5000 Cedis</p>
 					</div>
 				</div>
@@ -3964,77 +4024,6 @@ try {
 	</section>
 
 
-	<!-- Products By Category -->
-	<section class="products-by-category">
-		<div class="container">
-			<div class="section-header">
-				<h2>Products By Category</h2>
-				<div class="category-tabs">
-					<button class="category-tab active">SMARTPHONES</button>
-					<button class="category-tab">LAPTOPS</button>
-					<button class="category-tab">CAMERAS</button>
-				</div>
-			</div>
-
-			<div class="row g-4">
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=200&h=150&fit=crop&crop=center" alt="iPhone 15">
-						</div>
-						<h4>Apple</h4>
-						<p>iPhone 15 Pro Max 256GB Natural Titanium</p>
-						<div class="price">GHS 8,500.00</div>
-						<button class="product-btn">OPTIONS</button>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=200&h=150&fit=crop&crop=center" alt="MacBook Pro">
-						</div>
-						<h4>Apple</h4>
-						<p>MacBook Pro 16-inch M3 Pro 512GB Space Black</p>
-						<div class="price">GHS 15,200.00</div>
-						<button class="product-btn">OPTIONS</button>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=200&h=150&fit=crop&crop=center" alt="iPad Pro">
-						</div>
-						<h4>Apple</h4>
-						<p>iPad Pro 12.9-inch M2 WiFi + Cellular 256GB</p>
-						<div class="price">GHS 7,800.00</div>
-						<button class="product-btn">OPTIONS</button>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=200&h=150&fit=crop&crop=center" alt="Canon Camera">
-						</div>
-						<h4>Canon</h4>
-						<p>Canon EOS R6 Mark II Mirrorless Camera Body</p>
-						<div class="price">GHS 12,500.00</div>
-						<button class="product-btn">OPTIONS</button>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="product-card">
-						<div class="product-image">
-							<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=200&h=150&fit=crop&crop=center" alt="Video Camera">
-						</div>
-						<h4>Sony</h4>
-						<p>Sony FX3 Full-Frame Cinema Camera Professional</p>
-						<div class="price">GHS 18,900.00</div>
-						<button class="product-btn">OPTIONS</button>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
 
 	<!-- Admin Panel (only visible to admins) -->
 	<?php if ($is_admin): ?>
@@ -4065,7 +4054,7 @@ try {
 			<div class="text-center mt-4">
 				<a href="all_product.php" class="view-all-products-btn">
 					<i class="fas fa-eye me-2"></i>
-					View All Products
+					<span data-translate="view_all_products">View All Products</span>
 				</a>
 			</div>
 		</div>
@@ -4211,26 +4200,26 @@ try {
 	<!-- BRANDS — Infinite scroll + magic bento hover -->
 	<section class="brands-area">
 		<div class="container">
-			<h2 class="section-title text-center">Popular Brands</h2>
-			<p class="section-sub text-center">Trusted makers of phones, cameras, laptops & accessories</p>
+			<h2 class="section-title text-center"><span data-translate="popular_brands">Popular Brands</span></h2>
+			<p class="section-sub text-center"><span data-translate="trusted_partners">GadgetGarage's Trusted Brand Partners</span></p>
 
 			<div class="brands-container">
 				<div class="brand-row">
 					<!-- First Row - duplicate for seamless loop -->
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/apple.com" alt="Apple">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
 					</div>
 					<div class="brand-card">
 						<img src="https://logo.clearbit.com/dell.com" alt="Dell">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/hp.com" alt="HP">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/HP_logo_2012.svg/1200px-HP_logo_2012.svg.png" alt="HP">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lenovo_logo_2015.svg/1200px-Lenovo_logo_2015.svg.png" alt="Lenovo">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/asus.com" alt="ASUS">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/ASUS_Logo.svg/1200px-ASUS_Logo.svg.png" alt="ASUS">
 					</div>
 					<div class="brand-card">
 						<img src="https://logo.clearbit.com/acer.com" alt="Acer">
@@ -4255,19 +4244,19 @@ try {
 					</div>
 					<!-- Duplicate for seamless loop -->
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/apple.com" alt="Apple">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
 					</div>
 					<div class="brand-card">
 						<img src="https://logo.clearbit.com/dell.com" alt="Dell">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/hp.com" alt="HP">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ad/HP_logo_2012.svg/1200px-HP_logo_2012.svg.png" alt="HP">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/lenovo.com" alt="Lenovo">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/b/b8/Lenovo_logo_2015.svg/1200px-Lenovo_logo_2015.svg.png" alt="Lenovo">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/asus.com" alt="ASUS">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/ASUS_Logo.svg/1200px-ASUS_Logo.svg.png" alt="ASUS">
 					</div>
 					<div class="brand-card">
 						<img src="https://logo.clearbit.com/acer.com" alt="Acer">
@@ -4279,7 +4268,7 @@ try {
 						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/DJI_logo.svg/2560px-DJI_logo.svg.png" alt="DJI">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/samsung.com" alt="Samsung">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/1280px-Samsung_Logo.svg.png" alt="Samsung">
 					</div>
 					<div class="brand-card">
 						<img src="https://logo.clearbit.com/google.com" alt="Google">
@@ -4307,7 +4296,7 @@ try {
 						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/83/DJI_logo.svg/2560px-DJI_logo.svg.png" alt="DJI">
 					</div>
 					<div class="brand-card">
-						<img src="https://logo.clearbit.com/samsung.com" alt="Samsung">
+						<img src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/Samsung_Logo.svg/1280px-Samsung_Logo.svg.png" alt="Samsung">
 					</div>
 					<div class="brand-card">
 						<img src="https://logo.clearbit.com/google.com" alt="Google">
@@ -4330,18 +4319,18 @@ try {
 	<section class="testimonials">
 		<div class="container">
 			<div class="testimonials-text-section">
-				<h2 class="section-title">What Customers Say</h2>
-				<p class="section-sub">Just look at these amazing reviews!</p>
+				<h2 class="section-title" data-translate="what_customers_say">What Customers Say</h2>
+				<p class="section-sub" data-translate="amazing_reviews">Stories from satisfied GadgetGarage customers</p>
 			</div>
 
 			<div class="card-swap-container" id="cardSwapContainer">
 				<div class="testimonial-card">
 					<div class="card-features">
 						<div class="card-feature">
-							<i class="fas fa-bolt"></i> Fast
+							<i class="fas fa-bolt"></i> <span data-translate="fast">Fast</span>
 						</div>
 						<div class="card-feature">
-							<i class="fas fa-shield-alt"></i> Reliable
+							<i class="fas fa-shield-alt"></i> <span data-translate="reliable">Reliable</span>
 						</div>
 					</div>
 					<div class="testimonial-content">
@@ -4367,10 +4356,10 @@ try {
 				<div class="testimonial-card">
 					<div class="card-features">
 						<div class="card-feature">
-							<i class="fas fa-dollar-sign"></i> Affordable
+							<i class="fas fa-dollar-sign"></i> <span data-translate="affordable">Affordable</span>
 						</div>
 						<div class="card-feature">
-							<i class="fas fa-star"></i> Quality
+							<i class="fas fa-star"></i> <span data-translate="quality">Quality</span>
 						</div>
 					</div>
 					<div class="testimonial-content">
@@ -4543,11 +4532,11 @@ try {
 				<div class="newsletter-icon">
 					<i class="fas fa-envelope"></i>
 				</div>
-				<h3>Stay Updated!</h3>
-				<p>Get the latest tech deals, new arrivals, and exclusive offers delivered to your inbox.</p>
+				<h3><span data-translate="stay_updated">Stay Updated!</span></h3>
+				<p><span data-translate="newsletter_description">Get the latest tech deals, new arrivals, and exclusive offers delivered to your inbox.</span></p>
 				<form class="newsletter-form" onsubmit="subscribeNewsletter(event)">
-					<input type="email" placeholder="Enter your email address" required class="newsletter-input">
-					<button type="submit" class="newsletter-btn">Subscribe Now</button>
+					<input type="email" placeholder="Enter your email address" required class="newsletter-input" data-translate-placeholder="email_placeholder">
+					<button type="submit" class="newsletter-btn"><span data-translate="subscribe_now">Subscribe Now</span></button>
 				</form>
 				<p class="newsletter-disclaimer">We respect your privacy. Unsubscribe at any time.</p>
 			</div>
@@ -4744,14 +4733,667 @@ try {
 			alert('Profile picture upload functionality will be implemented');
 		}
 
-		// Language change functionality
+		// Language change functionality - instant translation
 		function changeLanguage(language) {
-			// Store language preference
+			// Get current language
+			const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+			// If same language, do nothing
+			if (currentLang === language) return;
+
+			// Store language preference immediately
 			localStorage.setItem('selectedLanguage', language);
-			console.log('Language changed to:', language);
-			// Here you would implement actual language switching
-			// Language change is silent now - no notification
+
+			// Apply translations instantly
+			applyTranslations();
+
+			// Update language selector to show current selection
+			const languageSelect = document.querySelector('select[onchange="changeLanguage(this.value)"]');
+			if (languageSelect) {
+				languageSelect.value = language;
+			}
 		}
+
+		// Enhanced translation application with better element detection
+		function applyTranslationsEnhanced() {
+			const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+			// Update language dropdown to show current selection
+			const languageSelectors = document.querySelectorAll('select[onchange="changeLanguage(this.value)"]');
+			languageSelectors.forEach(selector => {
+				if (selector) {
+					selector.value = currentLang;
+				}
+			});
+
+			// Find and translate all elements with data-translate attribute
+			document.querySelectorAll('[data-translate]').forEach(element => {
+				const key = element.getAttribute('data-translate');
+				const translation = translate(key, currentLang);
+
+				// Handle different element types
+				if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'search')) {
+					element.placeholder = translation;
+				} else {
+					element.textContent = translation;
+				}
+			});
+
+			// Handle elements with data-translate-placeholder for placeholder translations
+			document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+				const key = element.getAttribute('data-translate-placeholder');
+				const translation = translate(key, currentLang);
+				if (element.tagName === 'INPUT' || element.tagName === 'TEXTAREA') {
+					element.placeholder = translation;
+				}
+			});
+
+			// Also update modal text if it appears
+			updateModalTranslations(currentLang);
+		}
+
+		// Update modal translations dynamically
+		function updateModalTranslations(lang) {
+			const modalTexts = {
+				'change_language': '.language-modal-header h3',
+				'are_you_sure_change': '.language-modal-body p:first-of-type',
+				'page_will_reload': '.language-modal-note',
+				'cancel': '.language-btn-cancel',
+				'change_language_btn': '.language-btn-confirm'
+			};
+
+			Object.keys(modalTexts).forEach(key => {
+				const element = document.querySelector(modalTexts[key]);
+				if (element) {
+					element.textContent = translate(key, lang);
+				}
+			});
+		}
+
+		// Comprehensive Translation System
+		const translations = {
+			en: {
+				// Header & Navigation
+				"shop_by_brands": "SHOP BY BRANDS",
+				"all_brands": "All Brands",
+				"home": "HOME",
+				"shop": "SHOP",
+				"all_products": "All Products",
+				"mobile_devices": "Mobile Devices",
+				"computing": "Computing",
+				"photography_video": "Photography & Video",
+				"more": "MORE",
+				"device_drop": "Device Drop",
+				"repair_studio": "Repair Studio",
+				"flash_deal": "Flash Deal",
+				"stay_updated": "Stay Updated!",
+				"subscribe_now": "Subscribe Now",
+				"email_placeholder": "Enter your email address",
+				"newsletter_description": "Get the latest tech deals, new arrivals, and exclusive offers delivered to your inbox.",
+				"view_all_products": "View All Products",
+				"ipads": "iPads",
+				"desktops": "Desktops",
+				"video_equipment": "Video Equipment",
+				"popular_brands": "Popular Brands",
+				"trusted_partners": "GadgetGarage's Trusted Brand Partners",
+				"repair_services": "Repair Services",
+				"support": "Support",
+				"help": "Help",
+				"contact_us": "Contact Us",
+				"faq": "FAQ",
+				"search_placeholder": "Search for products...",
+				"cart": "Cart",
+				"login": "Login",
+				"register": "Register",
+				"logout": "Logout",
+				"profile": "Profile",
+				"my_orders": "My Orders",
+				"language": "Language",
+				"dark_mode": "Dark Mode",
+
+				// Hero Section
+				"hero_title": "Premium Refurbished Tech at Unbeatable Prices",
+				"hero_subtitle": "Discover quality refurbished smartphones, laptops, and gadgets with warranty",
+				"shop_now": "Shop Now",
+				"learn_more": "Learn More",
+				"starting_at": "Starting At",
+				"free_shipping": "Free shipping all order over",
+				"every_order_over": "On every order over",
+
+				// Deals Section
+				"limited_time_deals": "Limited Time Deals",
+				"dont_miss_out": "Don't miss out on these amazing offers!",
+				"days": "Days",
+				"hours": "Hours",
+				"minutes": "Minutes",
+				"seconds": "Seconds",
+				"ends_in": "Ends in",
+				"view_options": "VIEW OPTIONS",
+				"add_to_cart": "Add to Cart",
+
+				// Testimonials
+				"what_customers_say": "What Customers Say",
+				"amazing_reviews": "Stories from satisfied GadgetGarage customers",
+				"fast": "Fast",
+				"reliable": "Reliable",
+				"affordable": "Affordable",
+				"quality": "Quality",
+				"support": "Support",
+				"expert": "Expert",
+				"authentic": "Authentic",
+				"warranty": "Warranty",
+				"customizable": "Customizable",
+				"smooth": "Smooth",
+
+				// Features
+				"why_choose_us": "Why Choose Gadget Garage",
+				"free_delivery": "Free Delivery",
+				"free_delivery_desc": "Free shipping on orders over GH₵ 99",
+				"warranty_protection": "Warranty Protection",
+				"warranty_protection_desc": "12-month warranty on all products",
+				"expert_support": "Expert Support",
+				"expert_support_desc": "24/7 customer support available",
+				"secure_payment": "Secure Payment",
+				"secure_payment_desc": "Safe and secure payment methods",
+
+				// Newsletter
+				"newsletter_title": "Stay Updated with Latest Deals",
+				"newsletter_desc": "Subscribe to get notifications about new arrivals and exclusive offers",
+				"email_placeholder": "Enter your email address",
+				"subscribe": "Subscribe",
+
+				// Footer
+				"footer_description": "Your trusted partner for premium tech devices, expert repairs, and innovative solutions.",
+				"quick_links": "Quick Links",
+				"smartphones": "Smartphones",
+				"laptops": "Laptops",
+				"tablets": "Tablets",
+				"cameras": "Cameras",
+				"accessories": "Accessories",
+				"services": "Services",
+				"device_repairs": "Device Repairs",
+				"data_recovery": "Data Recovery",
+				"tech_consultation": "Tech Consultation",
+				"customer_care": "Customer Care",
+				"about_us": "About Us",
+				"privacy_policy": "Privacy Policy",
+				"terms_service": "Terms of Service",
+				"return_policy": "Return Policy",
+				"all_rights_reserved": "All rights reserved",
+
+				// Modal texts
+				"change_language": "Change Language",
+				"are_you_sure_change": "Are you sure you want to change the language to",
+				"page_will_reload": "The page will reload to apply the new language.",
+				"cancel": "Cancel",
+				"change_language_btn": "Change Language",
+
+				// Common buttons
+				"view_all": "View All",
+				"see_more": "See More",
+				"back": "Back",
+				"next": "Next",
+				"close": "Close",
+				"save": "Save",
+				"edit": "Edit",
+				"delete": "Delete",
+				"confirm": "Confirm",
+				"submit": "Submit",
+
+				// Product related
+				"price": "Price",
+				"description": "Description",
+				"specifications": "Specifications",
+				"reviews": "Reviews",
+				"in_stock": "In Stock",
+				"out_of_stock": "Out of Stock",
+				"quantity": "Quantity",
+				"total": "Total",
+				"subtotal": "Subtotal",
+				"checkout": "Checkout",
+				"continue_shopping": "Continue Shopping"
+			},
+
+			es: {
+				// Header & Navigation
+				"shop_by_brands": "COMPRAR POR MARCAS",
+				"all_brands": "Todas las Marcas",
+				"home": "INICIO",
+				"shop": "TIENDA",
+				"all_products": "Todos los Productos",
+				"mobile_devices": "Dispositivos Móviles",
+				"computing": "Informática",
+				"photography_video": "Fotografía y Video",
+				"more": "MÁS",
+				"device_drop": "Entrega de Dispositivo",
+				"repair_studio": "Estudio de Reparación",
+				"flash_deal": "Oferta Flash",
+				"stay_updated": "¡Mantente Actualizado!",
+				"subscribe_now": "Suscríbete Ahora",
+				"email_placeholder": "Ingresa tu dirección de correo",
+				"newsletter_description": "Recibe las últimas ofertas tecnológicas, nuevos productos y promociones exclusivas en tu bandeja de entrada.",
+				"view_all_products": "Ver Todos los Productos",
+				"ipads": "iPads",
+				"desktops": "Escritorios",
+				"video_equipment": "Equipo de Video",
+				"popular_brands": "Marcas Populares",
+				"trusted_partners": "Socios de Marca de Confianza de GadgetGarage",
+				"repair_services": "Servicios de Reparación",
+				"support": "Soporte",
+				"help": "Ayuda",
+				"contact_us": "Contáctanos",
+				"faq": "Preguntas Frecuentes",
+				"search_placeholder": "Buscar productos...",
+				"cart": "Carrito",
+				"login": "Iniciar Sesión",
+				"register": "Registrarse",
+				"logout": "Cerrar Sesión",
+				"profile": "Perfil",
+				"my_orders": "Mis Pedidos",
+				"language": "Idioma",
+				"dark_mode": "Modo Oscuro",
+
+				// Hero Section
+				"hero_title": "Tecnología Reacondicionada Premium a Precios Inmejorables",
+				"hero_subtitle": "Descubre smartphones, laptops y gadgets reacondicionados de calidad con garantía",
+				"shop_now": "Comprar Ahora",
+				"learn_more": "Saber Más",
+				"starting_at": "Desde",
+				"free_shipping": "Envío gratis en pedidos superiores a",
+				"every_order_over": "En cada pedido superior a",
+
+				// Deals Section
+				"limited_time_deals": "Ofertas por Tiempo Limitado",
+				"dont_miss_out": "¡No te pierdas estas increíbles ofertas!",
+				"days": "Días",
+				"hours": "Horas",
+				"minutes": "Minutos",
+				"seconds": "Segundos",
+				"ends_in": "Termina en",
+				"view_options": "VER OPCIONES",
+				"add_to_cart": "Añadir al Carrito",
+
+				// Testimonials
+				"what_customers_say": "Lo que Dicen los Clientes",
+				"amazing_reviews": "Historias de clientes satisfechos de GadgetGarage",
+				"fast": "Rápido",
+				"reliable": "Confiable",
+				"affordable": "Asequible",
+				"quality": "Calidad",
+				"support": "Soporte",
+				"expert": "Experto",
+				"authentic": "Auténtico",
+				"warranty": "Garantía",
+				"customizable": "Personalizable",
+				"smooth": "Suave",
+
+				// Features
+				"why_choose_us": "Por Qué Elegir Gadget Garage",
+				"free_delivery": "Entrega Gratis",
+				"free_delivery_desc": "Envío gratis en pedidos superiores a GH₵ 99",
+				"warranty_protection": "Protección de Garantía",
+				"warranty_protection_desc": "Garantía de 12 meses en todos los productos",
+				"expert_support": "Soporte Experto",
+				"expert_support_desc": "Atención al cliente 24/7 disponible",
+				"secure_payment": "Pago Seguro",
+				"secure_payment_desc": "Métodos de pago seguros y protegidos",
+
+				// Newsletter
+				"newsletter_title": "Mantente Actualizado con las Últimas Ofertas",
+				"newsletter_desc": "Suscríbete para recibir notificaciones sobre nuevas llegadas y ofertas exclusivas",
+				"email_placeholder": "Ingresa tu dirección de correo",
+				"subscribe": "Suscribirse",
+
+				// Footer
+				"footer_description": "Tu socio de confianza para dispositivos tecnológicos premium, reparaciones expertas y soluciones innovadoras.",
+				"quick_links": "Enlaces Rápidos",
+				"smartphones": "Smartphones",
+				"laptops": "Laptops",
+				"tablets": "Tabletas",
+				"cameras": "Cámaras",
+				"accessories": "Accesorios",
+				"services": "Servicios",
+				"device_repairs": "Reparación de Dispositivos",
+				"data_recovery": "Recuperación de Datos",
+				"tech_consultation": "Consultoría Técnica",
+				"customer_care": "Atención al Cliente",
+				"about_us": "Acerca de Nosotros",
+				"privacy_policy": "Política de Privacidad",
+				"terms_service": "Términos de Servicio",
+				"return_policy": "Política de Devoluciones",
+				"all_rights_reserved": "Todos los derechos reservados",
+
+				// Modal texts
+				"change_language": "Cambiar Idioma",
+				"are_you_sure_change": "¿Estás seguro de que quieres cambiar el idioma a",
+				"page_will_reload": "La página se recargará para aplicar el nuevo idioma.",
+				"cancel": "Cancelar",
+				"change_language_btn": "Cambiar Idioma",
+
+				// Common buttons
+				"view_all": "Ver Todo",
+				"see_more": "Ver Más",
+				"back": "Atrás",
+				"next": "Siguiente",
+				"close": "Cerrar",
+				"save": "Guardar",
+				"edit": "Editar",
+				"delete": "Eliminar",
+				"confirm": "Confirmar",
+				"submit": "Enviar",
+
+				// Product related
+				"price": "Precio",
+				"description": "Descripción",
+				"specifications": "Especificaciones",
+				"reviews": "Reseñas",
+				"in_stock": "En Stock",
+				"out_of_stock": "Agotado",
+				"quantity": "Cantidad",
+				"total": "Total",
+				"subtotal": "Subtotal",
+				"checkout": "Finalizar Compra",
+				"continue_shopping": "Continuar Comprando"
+			},
+
+			fr: {
+				// Header & Navigation
+				"shop_by_brands": "ACHETER PAR MARQUES",
+				"all_brands": "Toutes les Marques",
+				"home": "ACCUEIL",
+				"shop": "BOUTIQUE",
+				"all_products": "Tous les Produits",
+				"mobile_devices": "Appareils Mobiles",
+				"computing": "Informatique",
+				"photography_video": "Photo et Vidéo",
+				"more": "PLUS",
+				"device_drop": "Dépôt d'Appareil",
+				"repair_studio": "Studio de Réparation",
+				"flash_deal": "Vente Flash",
+				"stay_updated": "Restez Informé!",
+				"subscribe_now": "S'abonner Maintenant",
+				"email_placeholder": "Entrez votre adresse email",
+				"newsletter_description": "Recevez les dernières offres technologiques, nouveaux produits et promotions exclusives dans votre boîte de réception.",
+				"view_all_products": "Voir Tous les Produits",
+				"ipads": "iPads",
+				"desktops": "Ordinateurs de Bureau",
+				"video_equipment": "Équipement Vidéo",
+				"popular_brands": "Marques Populaires",
+				"trusted_partners": "Partenaires de Marques de Confiance de GadgetGarage",
+				"repair_services": "Services de Réparation",
+				"support": "Support",
+				"help": "Aide",
+				"contact_us": "Nous Contacter",
+				"faq": "FAQ",
+				"search_placeholder": "Rechercher des produits...",
+				"cart": "Panier",
+				"login": "Connexion",
+				"register": "S'inscrire",
+				"logout": "Déconnexion",
+				"profile": "Profil",
+				"my_orders": "Mes Commandes",
+				"language": "Langue",
+				"dark_mode": "Mode Sombre",
+
+				// Hero Section
+				"hero_title": "Technologie Reconditionnée Premium à Prix Imbattables",
+				"hero_subtitle": "Découvrez des smartphones, ordinateurs portables et gadgets reconditionnés de qualité avec garantie",
+				"shop_now": "Acheter Maintenant",
+				"learn_more": "En Savoir Plus",
+				"starting_at": "À partir de",
+				"free_shipping": "Livraison gratuite sur les commandes de plus de",
+				"every_order_over": "Sur chaque commande de plus de",
+
+				// Deals Section
+				"limited_time_deals": "Offres à Durée Limitée",
+				"dont_miss_out": "Ne manquez pas ces offres incroyables !",
+				"days": "Jours",
+				"hours": "Heures",
+				"minutes": "Minutes",
+				"seconds": "Secondes",
+				"ends_in": "Se termine dans",
+				"view_options": "VOIR OPTIONS",
+				"add_to_cart": "Ajouter au Panier",
+
+				// Testimonials
+				"what_customers_say": "Ce que Disent les Clients",
+				"amazing_reviews": "Histoires de clients satisfaits de GadgetGarage",
+				"fast": "Rapide",
+				"reliable": "Fiable",
+				"affordable": "Abordable",
+				"quality": "Qualité",
+				"support": "Support",
+				"expert": "Expert",
+				"authentic": "Authentique",
+				"warranty": "Garantie",
+				"customizable": "Personnalisable",
+				"smooth": "Fluide",
+
+				// Features
+				"why_choose_us": "Pourquoi Choisir Gadget Garage",
+				"free_delivery": "Livraison Gratuite",
+				"free_delivery_desc": "Livraison gratuite sur les commandes de plus de GH₵ 99",
+				"warranty_protection": "Protection Garantie",
+				"warranty_protection_desc": "Garantie de 12 mois sur tous les produits",
+				"expert_support": "Support Expert",
+				"expert_support_desc": "Support client 24/7 disponible",
+				"secure_payment": "Paiement Sécurisé",
+				"secure_payment_desc": "Méthodes de paiement sûres et sécurisées",
+
+				// Newsletter
+				"newsletter_title": "Restez Informé des Dernières Offres",
+				"newsletter_desc": "Abonnez-vous pour recevoir des notifications sur les nouvelles arrivées et offres exclusives",
+				"email_placeholder": "Entrez votre adresse e-mail",
+				"subscribe": "S'abonner",
+
+				// Footer
+				"footer_description": "Votre partenaire de confiance pour les appareils technologiques premium, les réparations expertes et les solutions innovantes.",
+				"quick_links": "Liens Rapides",
+				"smartphones": "Smartphones",
+				"laptops": "Ordinateurs Portables",
+				"tablets": "Tablettes",
+				"cameras": "Appareils Photo",
+				"accessories": "Accessoires",
+				"services": "Services",
+				"device_repairs": "Réparations d'Appareils",
+				"data_recovery": "Récupération de Données",
+				"tech_consultation": "Consultation Technique",
+				"customer_care": "Service Client",
+				"about_us": "À Propos",
+				"privacy_policy": "Politique de Confidentialité",
+				"terms_service": "Conditions de Service",
+				"return_policy": "Politique de Retour",
+				"all_rights_reserved": "Tous droits réservés",
+
+				// Modal texts
+				"change_language": "Changer de Langue",
+				"are_you_sure_change": "Êtes-vous sûr de vouloir changer la langue vers",
+				"page_will_reload": "La page se rechargera pour appliquer la nouvelle langue.",
+				"cancel": "Annuler",
+				"change_language_btn": "Changer de Langue",
+
+				// Common buttons
+				"view_all": "Voir Tout",
+				"see_more": "Voir Plus",
+				"back": "Retour",
+				"next": "Suivant",
+				"close": "Fermer",
+				"save": "Enregistrer",
+				"edit": "Modifier",
+				"delete": "Supprimer",
+				"confirm": "Confirmer",
+				"submit": "Soumettre",
+
+				// Product related
+				"price": "Prix",
+				"description": "Description",
+				"specifications": "Spécifications",
+				"reviews": "Avis",
+				"in_stock": "En Stock",
+				"out_of_stock": "Rupture de Stock",
+				"quantity": "Quantité",
+				"total": "Total",
+				"subtotal": "Sous-total",
+				"checkout": "Commande",
+				"continue_shopping": "Continuer les Achats"
+			},
+
+			de: {
+				// Header & Navigation
+				"shop_by_brands": "NACH MARKEN EINKAUFEN",
+				"all_brands": "Alle Marken",
+				"home": "STARTSEITE",
+				"shop": "SHOP",
+				"all_products": "Alle Produkte",
+				"mobile_devices": "Mobile Geräte",
+				"computing": "Computer",
+				"photography_video": "Foto & Video",
+				"more": "MEHR",
+				"device_drop": "Gerät Abgeben",
+				"repair_studio": "Reparatur Studio",
+				"flash_deal": "Blitz Angebot",
+				"stay_updated": "Bleiben Sie Informiert!",
+				"subscribe_now": "Jetzt Abonnieren",
+				"email_placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+				"newsletter_description": "Erhalten Sie die neuesten Tech-Angebote, neue Produkte und exklusive Aktionen in Ihrem Posteingang.",
+				"view_all_products": "Alle Produkte Anzeigen",
+				"ipads": "iPads",
+				"desktops": "Desktop-Computer",
+				"video_equipment": "Video-Ausrüstung",
+				"popular_brands": "Beliebte Marken",
+				"trusted_partners": "GadgetGarages Vertrauensvolle Markenpartner",
+				"repair_services": "Reparaturdienste",
+				"support": "Support",
+				"help": "Hilfe",
+				"contact_us": "Kontakt",
+				"faq": "FAQ",
+				"search_placeholder": "Nach Produkten suchen...",
+				"cart": "Warenkorb",
+				"login": "Anmelden",
+				"register": "Registrieren",
+				"logout": "Abmelden",
+				"profile": "Profil",
+				"my_orders": "Meine Bestellungen",
+				"language": "Sprache",
+				"dark_mode": "Dunkler Modus",
+
+				// Hero Section
+				"hero_title": "Premium Refurbished Technik zu Unschlagbaren Preisen",
+				"hero_subtitle": "Entdecken Sie hochwertige refurbished Smartphones, Laptops und Gadgets mit Garantie",
+				"shop_now": "Jetzt Einkaufen",
+				"learn_more": "Mehr Erfahren",
+				"starting_at": "Ab",
+				"free_shipping": "Kostenloser Versand bei Bestellungen über",
+				"every_order_over": "Bei jeder Bestellung über",
+
+				// Deals Section
+				"limited_time_deals": "Zeitlich Begrenzte Angebote",
+				"dont_miss_out": "Verpassen Sie nicht diese fantastischen Angebote!",
+				"days": "Tage",
+				"hours": "Stunden",
+				"minutes": "Minuten",
+				"seconds": "Sekunden",
+				"ends_in": "Endet in",
+				"view_options": "OPTIONEN ANSEHEN",
+				"add_to_cart": "In den Warenkorb",
+
+				// Testimonials
+				"what_customers_say": "Was Kunden Sagen",
+				"amazing_reviews": "Geschichten von zufriedenen GadgetGarage-Kunden",
+				"fast": "Schnell",
+				"reliable": "Zuverlässig",
+				"affordable": "Erschwinglich",
+				"quality": "Qualität",
+				"support": "Support",
+				"expert": "Experte",
+				"authentic": "Authentisch",
+				"warranty": "Garantie",
+				"customizable": "Anpassbar",
+				"smooth": "Reibungslos",
+
+				// Features
+				"why_choose_us": "Warum Gadget Garage Wählen",
+				"free_delivery": "Kostenlose Lieferung",
+				"free_delivery_desc": "Kostenloser Versand bei Bestellungen über GH₵ 99",
+				"warranty_protection": "Garantieschutz",
+				"warranty_protection_desc": "12-monatige Garantie auf alle Produkte",
+				"expert_support": "Expertenunterstützung",
+				"expert_support_desc": "24/7 Kundensupport verfügbar",
+				"secure_payment": "Sichere Bezahlung",
+				"secure_payment_desc": "Sichere und geschützte Zahlungsmethoden",
+
+				// Newsletter
+				"newsletter_title": "Bleiben Sie über die Neuesten Angebote Informiert",
+				"newsletter_desc": "Abonnieren Sie, um Benachrichtigungen über Neuankömmlinge und exklusive Angebote zu erhalten",
+				"email_placeholder": "Geben Sie Ihre E-Mail-Adresse ein",
+				"subscribe": "Abonnieren",
+
+				// Footer
+				"footer_description": "Ihr vertrauensvoller Partner für Premium-Technikgeräte, Expertenreparaturen und innovative Lösungen.",
+				"quick_links": "Schnelle Links",
+				"smartphones": "Smartphones",
+				"laptops": "Laptops",
+				"tablets": "Tablets",
+				"cameras": "Kameras",
+				"accessories": "Zubehör",
+				"services": "Dienstleistungen",
+				"device_repairs": "Gerätereparaturen",
+				"data_recovery": "Datenwiederherstellung",
+				"tech_consultation": "Technische Beratung",
+				"customer_care": "Kundendienst",
+				"about_us": "Über Uns",
+				"privacy_policy": "Datenschutzrichtlinie",
+				"terms_service": "Nutzungsbedingungen",
+				"return_policy": "Rückgaberichtlinie",
+				"all_rights_reserved": "Alle Rechte vorbehalten",
+
+				// Modal texts
+				"change_language": "Sprache Ändern",
+				"are_you_sure_change": "Sind Sie sicher, dass Sie die Sprache ändern möchten zu",
+				"page_will_reload": "Die Seite wird neu geladen, um die neue Sprache anzuwenden.",
+				"cancel": "Abbrechen",
+				"change_language_btn": "Sprache Ändern",
+
+				// Common buttons
+				"view_all": "Alle Anzeigen",
+				"see_more": "Mehr Sehen",
+				"back": "Zurück",
+				"next": "Weiter",
+				"close": "Schließen",
+				"save": "Speichern",
+				"edit": "Bearbeiten",
+				"delete": "Löschen",
+				"confirm": "Bestätigen",
+				"submit": "Senden",
+
+				// Product related
+				"price": "Preis",
+				"description": "Beschreibung",
+				"specifications": "Spezifikationen",
+				"reviews": "Bewertungen",
+				"in_stock": "Auf Lager",
+				"out_of_stock": "Nicht Verfügbar",
+				"quantity": "Menge",
+				"total": "Gesamt",
+				"subtotal": "Zwischensumme",
+				"checkout": "Kasse",
+				"continue_shopping": "Weiter Einkaufen"
+			}
+		};
+
+		// Translation function
+		function translate(key, language = null) {
+			const lang = language || localStorage.getItem('selectedLanguage') || 'en';
+			return translations[lang] && translations[lang][key] ? translations[lang][key] : translations.en[key] || key;
+		}
+
+		// Apply translations to all elements on page load
+		function applyTranslations() {
+			applyTranslationsEnhanced();
+		}
+
+		// Initialize translations on page load
+		document.addEventListener('DOMContentLoaded', applyTranslations);
 
 		// Theme toggle functionality
 		function toggleTheme() {

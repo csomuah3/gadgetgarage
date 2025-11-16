@@ -4757,6 +4757,7 @@ try {
 		// Enhanced translation application with better element detection
 		function applyTranslationsEnhanced() {
 			const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+			console.log('Current language:', currentLang); // Debug log
 
 			// Update language dropdown to show current selection
 			const languageSelectors = document.querySelectorAll('select[onchange="changeLanguage(this.value)"]');
@@ -5393,7 +5394,16 @@ try {
 		}
 
 		// Initialize translations on page load
-		document.addEventListener('DOMContentLoaded', applyTranslations);
+		document.addEventListener('DOMContentLoaded', function() {
+			// Force English as default if no language is set or if you want to reset
+			// Uncomment the next line if you want to reset to English
+			// localStorage.removeItem('selectedLanguage');
+
+			// Uncomment the next line to reset newsletter popup (for testing)
+			localStorage.removeItem('newsletterShown');
+
+			applyTranslations();
+		});
 
 		// Theme toggle functionality
 		function toggleTheme() {
@@ -5632,12 +5642,12 @@ try {
 
 		// Hero banner functionality (no slideshow needed)
 
-		// Show newsletter popup after 15 seconds if not shown before
+		// Show newsletter popup after 5 seconds if not shown before
 		setTimeout(function() {
 			if (!localStorage.getItem('newsletterShown')) {
 				document.getElementById('newsletterPopup').style.display = 'flex';
 			}
-		}, 15000);
+		}, 5000);
 
 		// Card Stack Animation - Based on React CardSwap component
 		class CardStack {

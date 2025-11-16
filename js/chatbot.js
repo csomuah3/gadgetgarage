@@ -4,11 +4,11 @@ class ChatBot {
         this.isModalOpen = false;
         this.expandedSections = new Set();
         this.popupMessages = [
-            "Need help with your tech? Chat with us!",
-            "We are available 24/7 for all your device needs!",
-            "Questions about repairs or refurbished devices?",
-            "Get instant support for your gadgets now!",
-            "Need assistance with your order or repair?"
+            "Need help? Chat with us!",
+            "We are available 24/7!",
+            "Questions about your order?",
+            "Device issues? We can help!",
+            "Need repair assistance?"
         ];
         this.currentMessageIndex = 0;
         this.init();
@@ -30,9 +30,7 @@ class ChatBot {
 
                 <!-- Popup Message -->
                 <div class="chatbot-popup" id="chatbotPopup">
-                    <button class="close-popup" id="closePopup">&times;</button>
-                    <h4>Need support?</h4>
-                    <p>How can we help?</p>
+                    <p>Need help? Chat with us!</p>
                 </div>
 
                 <!-- Support Modal -->
@@ -246,20 +244,142 @@ class ChatBot {
     }
 
     startPeriodicMessages() {
-        // Show first popup after 10 seconds
+        // Show first popup after 5 seconds
         setTimeout(() => {
             this.showPopup();
-        }, 10000);
+        }, 5000);
 
-        // Then show popup every 60 seconds
+        // Then show popup every 15 seconds
         setInterval(() => {
             this.showPopup();
-        }, 60000);
+        }, 15000);
     }
 
     openMessageForm() {
-        // Redirect to message form page
-        window.location.href = 'support_message.php';
+        // Open message form within the modal instead of redirecting
+        this.showMessageForm();
+    }
+
+    showMessageForm() {
+        const modalContent = document.querySelector('#supportModal .action-buttons').parentElement;
+
+        // Hide action buttons and show message form
+        document.querySelector('#supportModal .action-buttons').style.display = 'none';
+        document.querySelector('#supportModal .recent-message').style.display = 'none';
+        document.querySelector('#supportModal .status-section').style.display = 'none';
+
+        // Create message form HTML
+        const messageFormHTML = `
+            <div id="messageForm" class="message-form-container">
+                <div class="form-header">
+                    <button type="button" class="back-btn" id="backToMenu">
+                        <i class="fas fa-arrow-left"></i>
+                    </button>
+                    <h4>Send us a message</h4>
+                </div>
+
+                <form id="supportMessageForm">
+                    <div class="form-group">
+                        <label>Subject</label>
+                        <select name="subject" required>
+                            <option value="">Select a topic</option>
+                            <option value="order">Order Status & Refunds</option>
+                            <option value="device_quality">Refurbished Device Issues</option>
+                            <option value="repair">Repair Service Questions</option>
+                            <option value="device_drop">Device Drop & Trade-ins</option>
+                            <option value="tech_revival">Tech Revival Service</option>
+                            <option value="billing">Billing & Payment</option>
+                            <option value="account">Account Issues</option>
+                            <option value="general">General Question</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Message</label>
+                        <textarea name="message" rows="4" placeholder="Describe your issue..." required></textarea>
+                    </div>
+
+                    <button type="submit" class="submit-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        Send Message
+                    </button>
+                </form>
+
+                <div id="messageSuccess" class="success-message" style="display: none;">
+                    <i class="fas fa-check-circle"></i>
+                    <h4>Message Sent!</h4>
+                    <p>We will respond as soon as we receive your message.</p>
+                </div>
+            </div>
+        `;
+
+        // Insert message form
+        modalContent.insertAdjacentHTML('beforeend', messageFormHTML);
+
+        // Bind events
+        document.getElementById('backToMenu').addEventListener('click', () => {
+            this.hideMessageForm();
+        });
+
+        document.getElementById('supportMessageForm').addEventListener('submit', (e) => {
+            this.handleMessageSubmit(e);
+        });
+    }
+
+    hideMessageForm() {
+        // Remove message form and show original content
+        const messageForm = document.getElementById('messageForm');
+        if (messageForm) {
+            messageForm.remove();
+        }
+
+        // Show original content
+        document.querySelector('#supportModal .action-buttons').style.display = 'block';
+        document.querySelector('#supportModal .recent-message').style.display = 'block';
+        document.querySelector('#supportModal .status-section').style.display = 'block';
+    }
+
+    async handleMessageSubmit(e) {
+        e.preventDefault();
+
+        const form = e.target;
+        const submitBtn = form.querySelector('.submit-btn');
+        const originalText = submitBtn.innerHTML;
+
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+        submitBtn.disabled = true;
+
+        const formData = new FormData();
+        formData.append('subject', form.subject.value);
+        formData.append('message', form.message.value);
+        formData.append('send_message', '1');
+
+        try {
+            const response = await fetch('actions/send_support_message.php', {
+                method: 'POST',
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (result.success) {
+                // Show success message
+                form.style.display = 'none';
+                document.getElementById('messageSuccess').style.display = 'block';
+
+                // Hide success message and return to menu after 3 seconds
+                setTimeout(() => {
+                    this.hideMessageForm();
+                }, 3000);
+            } else {
+                throw new Error(result.message || 'Failed to send message');
+            }
+        } catch (error) {
+            alert('Error sending message: ' + error.message);
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
     }
 }
 

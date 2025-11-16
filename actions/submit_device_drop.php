@@ -7,6 +7,11 @@ ini_set('display_errors', 1);
 header('Content-Type: application/json');
 
 try {
+    // Log incoming request for debugging
+    error_log('Device Drop Request received');
+    error_log('POST data: ' . print_r($_POST, true));
+    error_log('FILES data: ' . print_r(array_keys($_FILES), true));
+
     // Include database connection
     require_once('../settings/db_class.php');
 
@@ -32,7 +37,14 @@ try {
     $device_brand = trim($_POST['device_brand']);
     $device_model = trim($_POST['device_model']);
     $condition = trim($_POST['condition']);
-    $description = isset($_POST['description']) ? trim($_POST['description']) : null;
+
+    // Handle reasons checkbox array
+    $reasons = [];
+    if (isset($_POST['reasons']) && is_array($_POST['reasons'])) {
+        $reasons = $_POST['reasons'];
+    }
+    $description = !empty($reasons) ? implode(', ', $reasons) : null;
+
     $asking_price = isset($_POST['asking_price']) && !empty($_POST['asking_price']) ?
                    floatval($_POST['asking_price']) : null;
     $first_name = trim($_POST['first_name']);
@@ -76,10 +88,14 @@ try {
 
     $request_id = $db->db_conn()->insert_id;
 
-    // Handle image URLs if provided
-    if (isset($_POST['image_urls']) && is_array($_POST['image_urls'])) {
-        $image_urls = $_POST['image_urls'];
-        $image_filenames = $_POST['image_filenames'] ?? [];
+    // Handle uploaded images
+    if (!empty($_FILES)) {
+        $upload_dir = '../uploads/device_drop/';
+
+        // Create directory if it doesn't exist
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
 
         $image_sql = "INSERT INTO device_drop_images (request_id, image_url, original_filename) VALUES (?, ?, ?)";
         $image_stmt = $db->db_conn()->prepare($image_sql);
@@ -88,14 +104,42 @@ try {
             throw new Exception('Image database prepare failed: ' . $db->db_conn()->error);
         }
 
-        foreach ($image_urls as $index => $image_url) {
-            $filename = isset($image_filenames[$index]) ? $image_filenames[$index] : "image_$index";
+        foreach ($_FILES as $key => $file) {
+            if ($file['error'] === UPLOAD_ERR_OK) {
+                // Validate file type
+                $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                $file_type = mime_content_type($file['tmp_name']);
 
-            $image_stmt->bind_param('iss', $request_id, $image_url, $filename);
+                if (!in_array($file_type, $allowed_types)) {
+                    continue; // Skip invalid files
+                }
 
-            if (!$image_stmt->execute()) {
-                error_log('Image insert failed: ' . $image_stmt->error);
-                // Continue with other images instead of failing completely
+                // Validate file size (max 5MB)
+                if ($file['size'] > 5 * 1024 * 1024) {
+                    continue; // Skip large files
+                }
+
+                // Generate unique filename
+                $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                $new_filename = 'device_drop_' . $request_id . '_' . uniqid() . '.' . $extension;
+                $filepath = $upload_dir . $new_filename;
+
+                // Move uploaded file
+                if (move_uploaded_file($file['tmp_name'], $filepath)) {
+                    chmod($filepath, 0644);
+
+                    // Save to database
+                    $relative_path = 'uploads/device_drop/' . $new_filename;
+                    $image_stmt->bind_param('iss', $request_id, $relative_path, $file['name']);
+
+                    if (!$image_stmt->execute()) {
+                        error_log('Image insert failed: ' . $image_stmt->error);
+                        // Delete uploaded file if database insert failed
+                        unlink($filepath);
+                    }
+                } else {
+                    error_log('Failed to move uploaded file: ' . $file['name']);
+                }
             }
         }
 
@@ -114,7 +158,7 @@ try {
     $message .= "Email: $email\n";
     $message .= "Phone: $phone\n";
     if ($asking_price) {
-        $message .= "Asking Price: $" . number_format($asking_price, 2) . "\n";
+        $message .= "Asking Price: GH₵ " . number_format($asking_price, 2) . "\n";
     }
     if ($description) {
         $message .= "Description: $description\n";
@@ -131,14 +175,17 @@ try {
     ]);
 
 } catch (Exception $e) {
-    // Log error
+    // Log detailed error for debugging
     error_log('Device Drop Error: ' . $e->getMessage());
+    error_log('POST data: ' . print_r($_POST, true));
+    error_log('Stack trace: ' . $e->getTraceAsString());
 
-    // Return error response
+    // Return user-friendly error response
     http_response_code(400);
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => 'There was an error processing your request. Please try again.',
+        'debug' => $e->getMessage() // Remove this in production
     ]);
 }
 ?>

@@ -703,58 +703,28 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             // Show loading state
             const submitBtn = document.querySelector('.submit-btn');
             const originalText = submitBtn.innerHTML;
-            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading Images...';
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Request...';
             submitBtn.disabled = true;
 
             try {
-                // Upload images first
-                const imageUrls = [];
-
-                if (selectedFiles.length > 0) {
-                    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Uploading Images...';
-
-                    for (let i = 0; i < selectedFiles.length; i++) {
-                        const file = selectedFiles[i];
-                        const imageFormData = new FormData();
-                        imageFormData.append('image', file);
-
-                        const uploadResponse = await fetch('http://169.239.251.102:442/~chelsea.somuah/upload.php', {
-                            method: 'POST',
-                            body: imageFormData
-                        });
-
-                        const result = await uploadResponse.json();
-
-                        if (result.success) {
-                            imageUrls.push({
-                                url: result.url,
-                                filename: file.name
-                            });
-                        } else {
-                            console.error('Image upload failed:', result.message);
-                        }
-                    }
-                }
-
-                // Now submit the form data
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting Request...';
-
+                // Create form data with all fields including images
                 const formData = new FormData(this);
 
-                // Add image URLs to form data
-                imageUrls.forEach((image, index) => {
-                    formData.append(`image_urls[${index}]`, image.url);
-                    formData.append(`image_filenames[${index}]`, image.filename);
+                // Add selected images to form data
+                selectedFiles.forEach((file, index) => {
+                    formData.append(`images[${index}]`, file);
                 });
 
-                // Submit to your backend (you'll need to create this endpoint)
+                // Submit to backend
                 const response = await fetch('actions/submit_device_drop.php', {
                     method: 'POST',
                     body: formData
                 });
 
-                if (response.ok) {
-                    alert('Thank you! Your device drop request has been submitted. We will review your submission and get back to you within 3-7 business days.');
+                const result = await response.json();
+
+                if (result.success) {
+                    alert('Thank you! Your device drop request has been submitted successfully. We will review your submission and get back to you within 3-7 business days.');
 
                     // Reset form
                     this.reset();
@@ -764,12 +734,13 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                         option.classList.remove('selected');
                     });
                 } else {
-                    throw new Error('Submission failed');
+                    console.error('Server error:', result);
+                    alert('Error: ' + (result.message || 'There was an error submitting your request.'));
                 }
 
             } catch (error) {
-                console.error('Error:', error);
-                alert('There was an error submitting your request. Please try again or contact us directly.');
+                console.error('Network error:', error);
+                alert('There was a network error submitting your request. Please try again or contact us directly.');
             } finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;

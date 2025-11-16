@@ -1,5 +1,8 @@
 <?php
 // Handle AJAX support message submissions from chatbot
+error_reporting(0); // Suppress any PHP warnings/errors that could break JSON
+ob_start(); // Start output buffering to catch any stray output
+
 header('Content-Type: application/json');
 
 require_once(__DIR__ . '/../settings/core.php');
@@ -36,6 +39,7 @@ try {
     $message_id = create_support_message_ctr($customer_id, $name, $email, $subject, $message);
 
     if ($message_id) {
+        ob_clean(); // Clear any buffered output
         echo json_encode([
             'success' => true,
             'message' => 'Message sent successfully',
@@ -46,10 +50,12 @@ try {
     }
 
 } catch (Exception $e) {
+    ob_clean(); // Clear any buffered output
     http_response_code(400);
     echo json_encode([
         'success' => false,
         'message' => $e->getMessage()
     ]);
 }
+exit(); // Ensure clean exit
 ?>

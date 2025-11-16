@@ -79,8 +79,8 @@ class ChatBot {
                     </div>
 
                     <!-- Questions Title -->
-                    <div style="padding: 15px 20px 10px 20px; border-bottom: 1px solid #e9ecef;">
-                        <h4 style="margin: 0; color: #2c3e50; font-size: 14px; font-weight: 600;">Common Questions</h4>
+                    <div style="padding: 12px 16px 8px 16px; border-bottom: 1px solid #e9ecef;">
+                        <h4 style="margin: 0; color: #2c3e50; font-size: 13px; font-weight: 600;">Search for help</h4>
                     </div>
 
                     <!-- Action Buttons -->

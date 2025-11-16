@@ -23,7 +23,7 @@ try {
         throw new Exception('Please fill in all required fields');
     }
 
-    // Get user info if logged in
+    // Get user info if logged in, otherwise use guest info
     $is_logged_in = check_login();
     $customer_id = null;
     $name = 'Guest User';
@@ -33,6 +33,14 @@ try {
         $customer_id = $_SESSION['user_id'] ?? null;
         $name = $_SESSION['name'] ?? 'Logged User';
         $email = $_SESSION['email'] ?? 'user@gadgetgarage.com';
+    } else {
+        // Use guest name and email if provided
+        if (!empty($_POST['guest_name'])) {
+            $name = trim($_POST['guest_name']);
+        }
+        if (!empty($_POST['guest_email'])) {
+            $email = trim($_POST['guest_email']);
+        }
     }
 
     // Create support message

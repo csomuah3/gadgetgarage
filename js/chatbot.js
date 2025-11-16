@@ -79,7 +79,7 @@ class ChatBot {
                     </div>
 
                     <!-- Questions Title -->
-                    <div style="padding: 12px 16px 8px 16px; border-bottom: 1px solid #e9ecef;">
+                    <div style="padding: 8px 16px 6px 16px; border-bottom: 1px solid #e9ecef;">
                         <h4 style="margin: 0; color: #2c3e50; font-size: 13px; font-weight: 600;">Search for help</h4>
                     </div>
 
@@ -289,6 +289,16 @@ class ChatBot {
                 </div>
 
                 <form id="supportMessageForm">
+                    <div class="form-group" id="guestNameField" style="display: none;">
+                        <label>Name</label>
+                        <input type="text" name="guest_name" placeholder="Your name">
+                    </div>
+
+                    <div class="form-group" id="guestEmailField" style="display: none;">
+                        <label>Email</label>
+                        <input type="email" name="guest_email" placeholder="your@email.com">
+                    </div>
+
                     <div class="form-group">
                         <label>Subject</label>
                         <select name="subject" required>
@@ -326,6 +336,9 @@ class ChatBot {
         // Insert message form
         modalContent.insertAdjacentHTML('beforeend', messageFormHTML);
 
+        // Check if user is logged in and show/hide guest fields accordingly
+        this.checkUserLoginStatus();
+
         // Bind events
         document.getElementById('backToMenu').addEventListener('click', () => {
             this.hideMessageForm();
@@ -334,6 +347,25 @@ class ChatBot {
         document.getElementById('supportMessageForm').addEventListener('submit', (e) => {
             this.handleMessageSubmit(e);
         });
+    }
+
+    checkUserLoginStatus() {
+        // Simple check - look for login button or user info
+        const loginBtn = document.querySelector('a[href*="login"]');
+        const isLoggedIn = !loginBtn || loginBtn.style.display === 'none';
+
+        // If not logged in, show guest fields and make them required
+        if (!isLoggedIn) {
+            const nameField = document.getElementById('guestNameField');
+            const emailField = document.getElementById('guestEmailField');
+
+            if (nameField && emailField) {
+                nameField.style.display = 'block';
+                emailField.style.display = 'block';
+                nameField.querySelector('input').required = true;
+                emailField.querySelector('input').required = true;
+            }
+        }
     }
 
     hideMessageForm() {
@@ -363,6 +395,15 @@ class ChatBot {
         const formData = new FormData();
         formData.append('subject', form.subject.value);
         formData.append('message', form.message.value);
+
+        // Add guest name and email if provided
+        if (form.guest_name && form.guest_name.value) {
+            formData.append('guest_name', form.guest_name.value);
+        }
+        if (form.guest_email && form.guest_email.value) {
+            formData.append('guest_email', form.guest_email.value);
+        }
+
         formData.append('send_message', '1');
 
         try {

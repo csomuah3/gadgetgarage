@@ -15,6 +15,12 @@ try {
 
 	if ($is_logged_in) {
 		$is_admin = check_admin();
+
+		// Redirect admins to admin dashboard
+		if ($is_admin) {
+			header("Location: admin/index.php");
+			exit();
+		}
 	}
 
 	// Get cart count
@@ -4756,7 +4762,9 @@ try {
 
 		// Enhanced translation application with better element detection
 		function applyTranslationsEnhanced() {
-			const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+			// Force English as default - always reset on page load
+			localStorage.setItem('selectedLanguage', 'en');
+			const currentLang = 'en';
 			console.log('Current language:', currentLang); // Debug log
 
 			// Update language dropdown to show current selection
@@ -5396,8 +5404,8 @@ try {
 		// Initialize translations on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			// Force English as default if no language is set or if you want to reset
-			// Uncomment the next line if you want to reset to English
-			// localStorage.removeItem('selectedLanguage');
+			// Reset to English to fix Spanish display issue
+			localStorage.removeItem('selectedLanguage');
 
 			// Uncomment the next line to reset newsletter popup (for testing)
 			// localStorage.removeItem('newsletterShown');

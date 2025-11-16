@@ -50,7 +50,7 @@ if ($isLogin) {
             $result['role'] = $role;
 
             // Optional: compute redirect server-side (keeps client super simple)
-            $result['redirect'] = ($role === 2) ? '../admin/category.php' : '../index.php';
+            $result['redirect'] = ($role === 2) ? '../admin/index.php' : '../index.php';
 
             // Never return the raw user_data to the client
             unset($result['user_data']);

@@ -104,6 +104,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="includes/header-styles.css" rel="stylesheet">
+    <link href="includes/chatbot-styles.css" rel="stylesheet">
     <style>
         /* Floating Bubbles Animation */
         .floating-bubbles {
@@ -153,35 +154,241 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             margin: 0;
         }
 
-        .filters-section {
+        .filters-sidebar {
             background: white;
-            padding: 25px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 128, 96, 0.1);
-            margin-bottom: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .filter-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #e2e8f0;
+            padding-bottom: 15px;
         }
 
         .filter-title {
-            color: #008060;
+            color: #1f2937;
+            font-weight: 700;
+            font-size: 1.1rem;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .filter-close {
+            background: none;
+            border: none;
+            color: #6b7280;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+
+        .filter-group {
+            margin-bottom: 25px;
+        }
+
+        .filter-subtitle {
+            color: #374151;
             font-weight: 600;
+            font-size: 0.95rem;
+            margin-bottom: 12px;
+        }
+
+        .search-container {
+            position: relative;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 40px 12px 15px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            background: #f9fafb;
+            transition: all 0.3s ease;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #059669;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(5, 150, 105, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            pointer-events: none;
+        }
+
+        .rating-filters {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .rating-option:hover {
+            background: #f3f4f6;
+        }
+
+        .rating-option.active {
+            background: #dcfce7;
+            color: #059669;
+        }
+
+        .stars {
+            color: #fbbf24;
+            font-size: 0.85rem;
+        }
+
+        .stars .far {
+            color: #d1d5db;
+        }
+
+        .rating-option span {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .price-range-container {
+            padding: 10px 0;
+        }
+
+        .price-slider {
+            width: 100%;
+            height: 6px;
+            border-radius: 3px;
+            background: #e5e7eb;
+            outline: none;
+            -webkit-appearance: none;
             margin-bottom: 15px;
         }
 
-        .filter-select {
-            width: 100%;
-            padding: 10px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 10px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: #f8fafc;
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
-        .filter-select:focus {
-            outline: none;
-            border-color: #008060;
-            background: white;
-            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+        .price-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #059669;
+            cursor: pointer;
+            border: none;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.9rem;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        .tag-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .tag-btn {
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            border-radius: 20px;
+            padding: 6px 12px;
+            font-size: 0.8rem;
+            color: #6b7280;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-weight: 500;
+        }
+
+        .tag-btn:hover {
+            background: #e5e7eb;
+            border-color: #9ca3af;
+        }
+
+        .tag-btn.active {
+            background: #059669;
+            color: white;
+            border-color: #059669;
+        }
+
+        .color-filters {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .color-option {
+            cursor: pointer;
+            padding: 3px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+        }
+
+        .color-option.active {
+            border-color: #059669;
+            box-shadow: 0 0 0 2px rgba(5, 150, 105, 0.2);
+        }
+
+        .color-circle {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            border: 2px solid #e5e7eb;
+        }
+
+        .clear-all-filters-btn {
+            width: 100%;
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .clear-all-filters-btn:hover {
+            background: #dc2626;
         }
 
         .product-grid {
@@ -548,8 +755,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <div class="filters-sidebar">
                     <div class="filter-header">
                         <h3 class="filter-title">
-                            <i class="fas fa-camera"></i>
-                            Filter Photo & Video
+                            <i class="fas fa-filter"></i>
+                            Filter Products
                         </h3>
                         <button class="filter-close d-lg-none" id="closeFilters">
                             <i class="fas fa-times"></i>
@@ -559,49 +766,128 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Search Bar -->
                     <div class="filter-group">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search cameras & video..." autocomplete="off">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Rating</h6>
+                        <div class="rating-filters">
+                            <div class="rating-option" data-rating="5">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <span>5 Star</span>
+                            </div>
+                            <div class="rating-option" data-rating="4">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                </div>
+                                <span>4 Star</span>
+                            </div>
+                            <div class="rating-option" data-rating="3">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                </div>
+                                <span>3 Star</span>
+                            </div>
+                            <div class="rating-option" data-rating="2">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                </div>
+                                <span>2 Star</span>
+                            </div>
+                            <div class="rating-option" data-rating="1">
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                </div>
+                                <span>1 Star</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Range Filter -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Price Range</h6>
+                        <div class="price-range-container">
+                            <input type="range" class="price-slider" id="priceRange" min="0" max="5000" value="2500" step="10">
+                            <div class="price-display">
+                                <span>$0</span>
+                                <span>-</span>
+                                <span>$500</span>
+                            </div>
                         </div>
                     </div>
 
                     <!-- Filter by Category -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Photo & Video Categories</h6>
+                        <h6 class="filter-subtitle">Filter By Category</h6>
                         <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
-                            <button class="tag-btn" data-category="cameras" id="category_cameras_btn">Cameras</button>
-                            <button class="tag-btn" data-category="video_equipment" id="category_video_btn">Video Equipment</button>
+                            <button class="tag-btn active" data-category="">All</button>
+                            <button class="tag-btn" data-category="cameras">Cameras and Video Devices</button>
                         </div>
                     </div>
 
                     <!-- Filter by Brand -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Photo & Video Brands</h6>
+                        <h6 class="filter-subtitle">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
-                            <button class="tag-btn active" data-brand="" id="brand_all_btn">All</button>
-                            <?php
-                            // Filter brands to photography/video-relevant ones
-                            $photo_brand_names = ['Canon', 'Sony', 'Nikon', 'Panasonic', 'Fujifilm', 'GoPro', 'DJI', 'Olympus', 'Leica', 'BlackMagic'];
-                            foreach ($brands as $brand):
-                                if (in_array($brand['brand_name'], $photo_brand_names)):
-                            ?>
-                                <button class="tag-btn" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
-                                    <?php echo htmlspecialchars($brand['brand_name']); ?>
-                                </button>
-                            <?php
-                                endif;
-                            endforeach;
-                            ?>
+                            <button class="tag-btn active" data-brand="">All</button>
+                            <button class="tag-btn" data-brand="canon_cameras">Canon Cameras</button>
+                            <button class="tag-btn" data-brand="canon_video_equipment">Canon Video Equipment</button>
+                            <button class="tag-btn" data-brand="dji_cameras">DJI Cameras</button>
+                            <button class="tag-btn" data-brand="dji_video_equipment">DJI Video Equipment</button>
+                            <button class="tag-btn" data-brand="fujifilm_cameras">FujiFilm Cameras</button>
+                            <button class="tag-btn" data-brand="gopro_cameras">GoPro Cameras</button>
+                            <button class="tag-btn" data-brand="nikon_cameras">Nikon Cameras</button>
+                            <button class="tag-btn" data-brand="nikon_video_equipment">Nikon Video Equipment</button>
+                            <button class="tag-btn" data-brand="panasonic_cameras">Panasonic Cameras</button>
+                            <button class="tag-btn" data-brand="sony_cameras">Sony Cameras</button>
+                            <button class="tag-btn" data-brand="sony_video_equipment">Sony Video Equipment</button>
                         </div>
                     </div>
 
-                    <!-- Apply/Clear Filters Buttons -->
+                    <!-- Filter by Size -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Filter By Size</h6>
+                        <div class="tag-filters" id="sizeTags">
+                            <button class="tag-btn active" data-size="">All</button>
+                            <button class="tag-btn" data-size="large">Large</button>
+                            <button class="tag-btn" data-size="medium">Medium</button>
+                            <button class="tag-btn" data-size="small">Small</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Color -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Filter By Color</h6>
+                        <div class="color-filters" id="colorTags">
+                            <div class="color-option active" data-color="">
+                                <div class="color-circle" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);"></div>
+                            </div>
+                            <div class="color-option" data-color="blue">
+                                <div class="color-circle" style="background: #3b82f6;"></div>
+                            </div>
+                            <div class="color-option" data-color="gray">
+                                <div class="color-circle" style="background: #6b7280;"></div>
+                            </div>
+                            <div class="color-option" data-color="green">
+                                <div class="color-circle" style="background: #10b981;"></div>
+                            </div>
+                            <div class="color-option" data-color="red">
+                                <div class="color-circle" style="background: #ef4444;"></div>
+                            </div>
+                            <div class="color-option" data-color="yellow">
+                                <div class="color-circle" style="background: #f59e0b;"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Clear All Filters Button -->
                     <div class="filter-actions">
-                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
-                            <i class="fas fa-check"></i>
-                            Apply Filters
-                        </button>
-                        <button class="clear-filters-btn" id="clearFilters">
+                        <button class="clear-all-filters-btn" id="clearAllFilters">
                             <i class="fas fa-times"></i>
                             Clear All Filters
                         </button>
@@ -718,8 +1004,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/chatbot.js"></script>
     <script>
-        // Filter System JavaScript for Photography & Video
+        // Filter System JavaScript
         let filtersChanged = false;
 
         function initPhotoFilters() {
@@ -772,29 +1059,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (!filtersChanged) {
                 filtersChanged = true;
                 const applyBtn = document.getElementById('applyFilters');
-                applyBtn.style.display = 'flex';
+                if (applyBtn) applyBtn.style.display = 'flex';
             }
         }
 
-        // Apply filters function
-        document.getElementById('applyFilters')?.addEventListener('click', function() {
-            const searchQuery = document.getElementById('searchInput').value;
-            const activeCategory = document.querySelector('#categoryTags .tag-btn.active');
-            const activeBrand = document.querySelector('#brandTags .tag-btn.active');
-
-            const category = activeCategory ? activeCategory.getAttribute('data-category') : '';
-            const brand = activeBrand ? activeBrand.getAttribute('data-brand') : '';
-
-            const params = new URLSearchParams();
-            if (searchQuery) params.append('search', searchQuery);
-            if (category) params.append('category', category);
-            if (brand) params.append('brand', brand);
-
-            window.location.href = 'photography_video.php?' + params.toString();
-        });
-
         // Clear filters function
-        document.getElementById('clearFilters')?.addEventListener('click', function() {
+        document.getElementById('clearAllFilters')?.addEventListener('click', function() {
             window.location.href = 'photography_video.php';
         });
 

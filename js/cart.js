@@ -107,10 +107,9 @@ function updateItemPriceDisplayByCartId(cartItemId, quantity) {
         return;
     }
 
-    // Find the unit price (blue text) - more specific selector
-    const unitPriceElement = cartItem.querySelector('.col-md-6 .fw-bold.text-primary.fs-5');
-    // Find the total price (green text above remove button) - more specific selector
-    const totalPriceElement = cartItem.querySelector('.col-md-3.text-end .fw-bold.fs-5.text-success');
+    // Find the unit price and total price using unique IDs - no more generic selectors!
+    const unitPriceElement = document.getElementById('unit-price-' + cartItemId);
+    const totalPriceElement = document.getElementById('total-price-' + cartItemId);
 
     if (unitPriceElement && totalPriceElement) {
         // Extract unit price number - remove GHS, commas, and any other formatting
@@ -381,7 +380,7 @@ function updateQuantityByCartId(cartItemId, productId, quantity) {
 
 // INCREMENT QUANTITY BY CART ID - for plus button
 function incrementQuantityByCartId(cartItemId, productId) {
-    console.log('Plus button clicked for cart item:', cartItemId, 'product:', productId);
+    console.log('CART DEBUG: Plus button clicked for cart item:', cartItemId, 'product:', productId);
 
     const quantityInput = document.getElementById(cartItemId);
     if (!quantityInput) {
@@ -413,7 +412,7 @@ function incrementQuantityByCartId(cartItemId, productId) {
 
 // DECREMENT QUANTITY BY CART ID - for minus button
 function decrementQuantityByCartId(cartItemId, productId) {
-    console.log('Minus button clicked for cart item:', cartItemId, 'product:', productId);
+    console.log('CART DEBUG: Minus button clicked for cart item:', cartItemId, 'product:', productId);
 
     const quantityInput = document.getElementById(cartItemId);
     if (!quantityInput) {
@@ -443,6 +442,51 @@ function decrementQuantityByCartId(cartItemId, productId) {
 
     // Update server in background
     updateQuantityOnServer(productId, newQuantity);
+}
+
+// REMOVE FROM CART BY CART ID - for delete button
+function removeFromCartByCartId(cartItemId, productId) {
+    console.log('CART DEBUG: Delete button clicked for cart item:', cartItemId, 'product:', productId);
+
+    if (confirm('Are you sure you want to remove this item from your cart?')) {
+        const formData = new FormData();
+        formData.append('product_id', productId);
+
+        fetch('actions/remove_from_cart_action.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showNotification('Item removed from cart', 'success');
+
+                // Remove the specific cart item from the DOM using the unique cart item ID
+                const cartItem = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+                if (cartItem) {
+                    cartItem.style.transition = 'all 0.3s ease';
+                    cartItem.style.transform = 'translateX(-100%)';
+                    cartItem.style.opacity = '0';
+
+                    setTimeout(() => {
+                        cartItem.remove();
+                        checkEmptyCart();
+                    }, 300);
+                } else {
+                    console.log('Cart item not found in DOM for cart ID:', cartItemId);
+                }
+
+                updateCartBadge(data.cart_count);
+                updateCartTotals(data.cart_total);
+            } else {
+                showNotification(data.message || 'Failed to remove item from cart', 'error');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showNotification('An error occurred. Please try again.', 'error');
+        });
+    }
 }
 
 // Empty cart

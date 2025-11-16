@@ -533,8 +533,12 @@ try {
                             // Create unique cart item ID combining product ID and condition
                             $condition = $item['condition_type'] ?? 'default';
                             $price = isset($item['final_price']) && $item['final_price'] > 0 ? $item['final_price'] : $item['product_price'];
-                            $cart_item_id = 'cart_' . $item['p_id'] . '_' . str_replace(' ', '', strtolower($condition)) . '_' . str_replace('.', '', $price);
+                            // Clean the ID: remove spaces, dots, and any special characters
+                            $clean_condition = preg_replace('/[^a-z0-9]/', '', strtolower($condition));
+                            $clean_price = preg_replace('/[^0-9]/', '', $price);
+                            $cart_item_id = 'cart_' . $item['p_id'] . '_' . $clean_condition . '_' . $clean_price;
                         ?>
+                            <!-- Debug: Cart Item ID is <?php echo $cart_item_id; ?> -->
                             <div class="cart-item" data-product-id="<?php echo $item['p_id']; ?>" data-cart-item-id="<?php echo $cart_item_id; ?>">
                                 <div class="row g-0 align-items-center p-3">
                                     <div class="col-auto">
@@ -552,7 +556,7 @@ try {
                                                     <span class="badge bg-secondary">Condition: <?php echo ucfirst($item['condition_type']); ?></span>
                                                 </div>
                                                 <?php endif; ?>
-                                                <div class="fw-bold text-primary fs-5">
+                                                <div class="fw-bold text-primary fs-5" id="unit-price-<?php echo $cart_item_id; ?>">
                                                     <?php
                                                     $price = (isset($item['final_price']) && $item['final_price'] > 0)
                                                         ? $item['final_price']
@@ -575,7 +579,7 @@ try {
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-end">
-                                                <div class="fw-bold fs-5 text-success mb-2">
+                                                <div class="fw-bold fs-5 text-success mb-2" id="total-price-<?php echo $cart_item_id; ?>">
                                                     <?php
                                                     $price = (isset($item['final_price']) && $item['final_price'] > 0)
                                                         ? $item['final_price']
@@ -584,7 +588,7 @@ try {
                                                     ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="removeFromCart(<?php echo $item['p_id']; ?>)">
+                                                        onclick="removeFromCartByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                     <i class="fas fa-times"></i> Remove
                                                 </button>
                                             </div>

@@ -1822,9 +1822,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="500" value="500" step="1">
                             </div>
                             <div class="price-display">
-                                <span class="price-min" id="priceMinDisplay">$0</span>
+                                <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
                                 <span class="price-separator">-</span>
-                                <span class="price-max" id="priceMaxDisplay">$500</span>
+                                <span class="price-max" id="priceMaxDisplay">GH₵ 500</span>
                             </div>
                         </div>
                     </div>
@@ -2435,8 +2435,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 const finalMax = parseInt(maxSlider.value);
 
                 // Always update the display in real-time
-                minDisplay.textContent = `$${finalMin}`;
-                maxDisplay.textContent = `$${finalMax}`;
+                minDisplay.textContent = `GH₵ ${finalMin}`;
+                maxDisplay.textContent = `GH₵ ${finalMax}`;
 
                 // Update range display
                 const minPercent = (finalMin / parseInt(minSlider.max)) * 100;
@@ -2790,8 +2790,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 // Reset price sliders
                 document.getElementById('minPriceSlider').value = 0;
                 document.getElementById('maxPriceSlider').value = 500;
-                document.getElementById('priceMinDisplay').textContent = '$0';
-                document.getElementById('priceMaxDisplay').textContent = '$500';
+                document.getElementById('priceMinDisplay').textContent = 'GH₵ 0';
+                document.getElementById('priceMaxDisplay').textContent = 'GH₵ 500';
                 document.getElementById('priceRange').style.left = '0%';
                 document.getElementById('priceRange').style.right = '0%';
 

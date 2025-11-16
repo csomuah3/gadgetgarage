@@ -3570,7 +3570,7 @@ try {
 				<article class="main-banner coral">
 					<div class="banner-copy">
 						<h1 class="banner-title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</h1>
-						<p class="banner-price">Starting At <span class="price">$236.00</span></p>
+						<p class="banner-price">Starting At <span class="price">GH₵ 236.00</span></p>
 						<a href="#" class="btn-primary">SHOP NOW</a>
 					</div>
 
@@ -3587,7 +3587,7 @@ try {
 					<article class="side-card yellow">
 						<div class="side-copy">
 							<h3 class="side-title">T900 Ultra<br>Watch</h3>
-							<p class="side-price">Starting <span class="price">$19.00</span></p>
+							<p class="side-price">Starting <span class="price">GH₵ 19.00</span></p>
 							<a href="#" class="side-link">SHOP NOW</a>
 						</div>
 						<div class="side-media">
@@ -3601,7 +3601,7 @@ try {
 					<article class="side-card purple">
 						<div class="side-copy">
 							<h3 class="side-title">Kids Wireless<br>Headphones</h3>
-							<p class="side-price">Starting <span class="price">$36.00</span></p>
+							<p class="side-price">Starting <span class="price">GH₵ 36.00</span></p>
 							<a href="#" class="side-link">SHOP NOW</a>
 						</div>
 						<div class="side-media">
@@ -3627,7 +3627,7 @@ try {
 						</div>
 						<div class="feature-content">
 							<h5>Free Shipping</h5>
-							<p>Free shipping all order over $99</p>
+							<p>Free shipping all order over GH₵ 99</p>
 						</div>
 					</div>
 				</div>
@@ -3649,7 +3649,7 @@ try {
 						</div>
 						<div class="feature-content">
 							<h5>Member Discount</h5>
-							<p>Onevery order over $140.00</p>
+							<p>Onevery order over GH₵ 140.00</p>
 						</div>
 					</div>
 				</div>
@@ -3877,8 +3877,8 @@ try {
 						</div>
 					</div>
 					<div class="deal-pricing">
-						<span class="deal-original-price">$130.00</span>
-						<span class="deal-current-price">$100.00</span>
+						<span class="deal-original-price">GH₵ 130.00</span>
+						<span class="deal-current-price">GH₵ 100.00</span>
 					</div>
 					<div class="countdown-timer">
 						<div class="countdown-grid">

@@ -813,9 +813,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-range-container">
                             <input type="range" class="price-slider" id="priceRange" min="0" max="5000" value="2500" step="10">
                             <div class="price-display">
-                                <span>$0</span>
+                                <span>GH₵ 0</span>
                                 <span>-</span>
-                                <span>$500</span>
+                                <span>GH₵ 500</span>
                             </div>
                         </div>
                     </div>

@@ -1549,7 +1549,7 @@ try {
 
                     <div class="summary-row">
                         <span>Tax:</span>
-                        <span class="ms-auto">$0.00</span>
+                        <span class="ms-auto">GH₵ 0.00</span>
                     </div>
 
                     <div class="summary-row total">

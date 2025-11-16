@@ -1492,12 +1492,12 @@ if (!$product) {
             const originalPriceSpan = document.getElementById('originalPrice');
             const discountAmount = document.getElementById('discountAmount');
 
-            displayPrice.textContent = `GHS ${priceData.finalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            displayPrice.textContent = `GH₵ ${priceData.finalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
 
             if (priceData.discount > 0) {
                 priceBreakdown.style.display = 'block';
-                originalPriceSpan.textContent = `GHS ${originalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-                discountAmount.textContent = `Discount: -GHS ${priceData.discount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                originalPriceSpan.textContent = `GH₵ ${originalPrice.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                discountAmount.textContent = `Discount: -GH₵ ${priceData.discount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
             } else {
                 priceBreakdown.style.display = 'none';
             }

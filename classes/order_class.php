@@ -198,7 +198,7 @@ class Order extends db_connection
                        COUNT(DISTINCT od.product_id) as item_count,
                        SUM(od.qty) as total_items,
                        COALESCE(MAX(p.amt), 0) as total_amount,
-                       COALESCE(MAX(p.currency), 'GHS') as currency,
+                       COALESCE(MAX(p.currency), 'GH₵') as currency,
                        MAX(p.payment_date) as payment_date
                 FROM orders o
                 JOIN customer c ON o.customer_id = c.customer_id

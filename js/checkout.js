@@ -113,7 +113,7 @@ function showSuccessModal(orderData) {
                 <strong>Tracking Number:</strong> <span class="text-primary">${trackingNumber}</span>
             </div>
             <div class="fw-bold fs-5 text-primary">
-                Total Paid: GHS ${orderData.total_amount}
+                Total Paid: GH₵ ${orderData.total_amount}
             </div>
         </div>
 
@@ -351,7 +351,7 @@ Thank you for your order with FlavorHub!
 Order Details:
 - Order ID: ${orderData.order_id}
 - Tracking Number: ${trackingNumber}
-- Total Amount: GHS ${orderData.total_amount}
+- Total Amount: GH₵ ${orderData.total_amount}
 - Estimated Delivery: 3-5 business days
 
 Track your order: Use tracking number ${trackingNumber} on our website.
@@ -360,7 +360,7 @@ Best regards,
 FlavorHub Team`);
 
     console.log('\nSMS Content:');
-    console.log(`FlavorHub: Your order #${orderData.order_id} is confirmed! Tracking: ${trackingNumber}. Total: GHS ${orderData.total_amount}. Delivery: 3-5 days. Track at flavorhub.com`);
+    console.log(`FlavorHub: Your order #${orderData.order_id} is confirmed! Tracking: ${trackingNumber}. Total: GH₵ ${orderData.total_amount}. Delivery: 3-5 days. Track at flavorhub.com`);
 }
 
 // Handle payment modal events

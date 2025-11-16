@@ -733,7 +733,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                                     echo $title;
                                     ?>
                                 </h5>
-                                <div class="product-price">$<?php echo number_format($product['product_price'], 2); ?></div>
+                                <div class="product-price">GH₵ <?php echo number_format($product['product_price'], 2); ?></div>
                                 <div class="product-meta">
                                     <span><i class="fas fa-tag"></i> <?php echo htmlspecialchars($product['cat_name'] ?? 'N/A'); ?></span>
                                     <span><i class="fas fa-store"></i> <?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?></span>

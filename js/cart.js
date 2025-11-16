@@ -112,9 +112,9 @@ function updateItemPriceDisplayByCartId(cartItemId, quantity) {
     const totalPriceElement = document.getElementById('total-price-' + cartItemId);
 
     if (unitPriceElement && totalPriceElement) {
-        // Extract unit price number - remove GHS, commas, and any other formatting
+        // Extract unit price number - remove GH₵, commas, and any other formatting
         let unitPriceText = unitPriceElement.textContent;
-        unitPriceText = unitPriceText.replace('GHS', '').replace(/,/g, '').replace(/\s/g, '');
+        unitPriceText = unitPriceText.replace('GH₵', '').replace(/,/g, '').replace(/\s/g, '');
         const unitPrice = parseFloat(unitPriceText);
 
         if (!isNaN(unitPrice) && unitPrice > 0) {
@@ -127,9 +127,9 @@ function updateItemPriceDisplayByCartId(cartItemId, quantity) {
                 maximumFractionDigits: 2
             });
 
-            totalPriceElement.textContent = `GHS ${formattedTotal}`;
+            totalPriceElement.textContent = `GH₵ ${formattedTotal}`;
 
-            console.log(`Updated cart item ${cartItemId}: ${quantity} × GHS ${unitPrice} = GHS ${formattedTotal}`);
+            console.log(`Updated cart item ${cartItemId}: ${quantity} × GH₵ ${unitPrice} = GH₵ ${formattedTotal}`);
 
             // Update the cart total immediately based on all visible items
             setTimeout(() => {
@@ -162,9 +162,9 @@ function updateItemPriceDisplay(productId, quantity) {
     const totalPriceElement = cartItem.querySelector('.col-md-3.text-end .fw-bold.fs-5.text-success');
 
     if (unitPriceElement && totalPriceElement) {
-        // Extract unit price number - remove GHS, commas, and any other formatting
+        // Extract unit price number - remove GH₵, commas, and any other formatting
         let unitPriceText = unitPriceElement.textContent;
-        unitPriceText = unitPriceText.replace('GHS', '').replace(/,/g, '').replace(/\s/g, '');
+        unitPriceText = unitPriceText.replace('GH₵', '').replace(/,/g, '').replace(/\s/g, '');
         const unitPrice = parseFloat(unitPriceText);
 
         if (!isNaN(unitPrice) && unitPrice > 0) {
@@ -177,9 +177,9 @@ function updateItemPriceDisplay(productId, quantity) {
                 maximumFractionDigits: 2
             });
 
-            totalPriceElement.textContent = `GHS ${formattedTotal}`;
+            totalPriceElement.textContent = `GH₵ ${formattedTotal}`;
 
-            console.log(`Updated: ${quantity} × GHS ${unitPrice} = GHS ${formattedTotal}`);
+            console.log(`Updated: ${quantity} × GH₵ ${unitPrice} = GH₵ ${formattedTotal}`);
 
             // Update the cart total immediately based on all visible items
             setTimeout(() => {
@@ -547,11 +547,11 @@ function updateCartTotals(total) {
     const cartTotal = document.getElementById('cartTotal');
 
     if (cartSubtotal) {
-        cartSubtotal.textContent = `GHS ${total}`;
+        cartSubtotal.textContent = `GH₵ ${total}`;
     }
 
     if (cartTotal) {
-        cartTotal.textContent = `GHS ${total}`;
+        cartTotal.textContent = `GH₵ ${total}`;
     }
 }
 
@@ -564,7 +564,7 @@ function calculateCartTotalClientSide() {
         const totalPriceElement = item.querySelector('.col-md-3.text-end .fw-bold.fs-5.text-success');
         if (totalPriceElement) {
             let priceText = totalPriceElement.textContent;
-            priceText = priceText.replace('GHS', '').replace(/,/g, '').replace(/\s/g, '');
+            priceText = priceText.replace('GH₵', '').replace(/,/g, '').replace(/\s/g, '');
             const itemTotal = parseFloat(priceText);
             if (!isNaN(itemTotal)) {
                 total += itemTotal;
@@ -608,7 +608,7 @@ function showAddToCartModal(productId, productName, productPrice, productImage) 
                     <div class="product-info">
                         <h4>${productName}</h4>
                         <div class="price-display">
-                            <span class="current-price">GHS <span id="modalPrice">${parseFloat(productPrice).toFixed(2)}</span></span>
+                            <span class="current-price">GH₵ <span id="modalPrice">${parseFloat(productPrice).toFixed(2)}</span></span>
                         </div>
                     </div>
                 </div>
@@ -625,7 +625,7 @@ function showAddToCartModal(productId, productName, productPrice, productImage) 
                     </div>
                 </div>
                 <div class="total-price">
-                    <strong>Total: GHS <span id="modalTotal">${parseFloat(productPrice).toFixed(2)}</span></strong>
+                    <strong>Total: GH₵ <span id="modalTotal">${parseFloat(productPrice).toFixed(2)}</span></strong>
                 </div>
             </div>
             <div class="cart-modal-footer">

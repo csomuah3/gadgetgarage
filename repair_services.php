@@ -1226,7 +1226,7 @@ try {
                         <p class="issue-description"><?php echo htmlspecialchars($issue['issue_description']); ?></p>
                         <div class="issue-price">
                             <div class="price-range">
-                                GHS <?php echo number_format($issue['estimated_cost_min'], 0); ?> -
+                                GH₵ <?php echo number_format($issue['estimated_cost_min'], 0); ?> -
                                 <?php echo number_format($issue['estimated_cost_max'], 0); ?>
                             </div>
                             <div class="price-label">Estimated Cost</div>

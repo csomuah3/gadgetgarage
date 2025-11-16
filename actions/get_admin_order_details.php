@@ -195,10 +195,10 @@ try {
                                         <span class="badge bg-secondary fs-6 px-3 py-2"><?php echo $item['qty']; ?></span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <span class="text-muted">GHS <?php echo number_format($item['product_price'], 2); ?></span>
+                                        <span class="text-muted">GH₵ <?php echo number_format($item['product_price'], 2); ?></span>
                                     </td>
                                     <td class="align-middle text-end">
-                                        <span class="fw-bold text-success">GHS <?php echo number_format($subtotal, 2); ?></span>
+                                        <span class="fw-bold text-success">GH₵ <?php echo number_format($subtotal, 2); ?></span>
                                     </td>
                                 </tr>
                             <?php endforeach; ?>
@@ -209,7 +209,7 @@ try {
                                     <span class="h6 text-dark">Total Amount:</span>
                                 </th>
                                 <th class="text-end border-0 py-3">
-                                    <span class="h5 text-success fw-bold">GHS <?php echo number_format($total_amount, 2); ?></span>
+                                    <span class="h5 text-success fw-bold">GH₵ <?php echo number_format($total_amount, 2); ?></span>
                                 </th>
                             </tr>
                         </tfoot>

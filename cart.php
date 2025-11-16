@@ -497,7 +497,7 @@ try {
                 </div>
                 <div class="col-md-4 text-md-end">
                     <div class="fs-3 fw-bold">
-                        GHS <?php echo number_format($cart_total, 2); ?>
+                        GH₵ <?php echo number_format($cart_total, 2); ?>
                     </div>
                 </div>
             </div>
@@ -561,7 +561,7 @@ try {
                                                     $price = (isset($item['final_price']) && $item['final_price'] > 0)
                                                         ? $item['final_price']
                                                         : $item['product_price'];
-                                                    echo 'GHS ' . number_format($price, 2);
+                                                    echo 'GH₵ ' . number_format($price, 2);
                                                     ?>
                                                 </div>
                                             </div>
@@ -584,7 +584,7 @@ try {
                                                     $price = (isset($item['final_price']) && $item['final_price'] > 0)
                                                         ? $item['final_price']
                                                         : $item['product_price'];
-                                                    echo 'GHS ' . number_format($price * $item['qty'], 2);
+                                                    echo 'GH₵ ' . number_format($price * $item['qty'], 2);
                                                     ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
@@ -613,7 +613,7 @@ try {
 
                         <div class="d-flex justify-content-between mb-3">
                             <span>Subtotal (<?php echo $cart_count; ?> items):</span>
-                            <span class="fw-bold" id="cartSubtotal">GHS <?php echo number_format($cart_total, 2); ?></span>
+                            <span class="fw-bold" id="cartSubtotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
                         </div>
 
                         <div class="d-flex justify-content-between mb-3">
@@ -625,7 +625,7 @@ try {
 
                         <div class="d-flex justify-content-between mb-4">
                             <span class="fs-5 fw-bold">Total:</span>
-                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GHS <?php echo number_format($cart_total, 2); ?></span>
+                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
                         </div>
 
                         <?php if ($is_logged_in): ?>

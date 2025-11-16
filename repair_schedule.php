@@ -624,7 +624,7 @@ try {
                         <?php if ($issue && isset($issue['base_cost'])): ?>
                         <div class="summary-item">
                             <span class="summary-label">Base Cost:</span>
-                            <span class="summary-value">GHS <?php echo number_format($issue['base_cost'], 0); ?></span>
+                            <span class="summary-value">GH₵ <?php echo number_format($issue['base_cost'], 0); ?></span>
                         </div>
                         <?php endif; ?>
 

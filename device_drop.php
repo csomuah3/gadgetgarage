@@ -312,6 +312,61 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             line-height: 1.5;
         }
 
+        /* Checkbox Styles */
+        .checkbox-option {
+            display: flex;
+            align-items: center;
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #f9fafb;
+            position: relative;
+        }
+
+        .checkbox-option:hover {
+            border-color: #008060;
+            background: #f0fdf4;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            display: none;
+        }
+
+        .checkmark {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #d1d5db;
+            border-radius: 4px;
+            margin-right: 12px;
+            position: relative;
+            transition: all 0.3s ease;
+            background: white;
+            flex-shrink: 0;
+        }
+
+        .checkbox-option input[type="checkbox"]:checked + .checkmark {
+            background: #008060;
+            border-color: #008060;
+        }
+
+        .checkbox-option input[type="checkbox"]:checked + .checkmark::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        .checkbox-option input[type="checkbox"]:checked ~ span:not(.checkmark) {
+            color: #008060;
+            font-weight: 500;
+        }
+
         @media (max-width: 768px) {
             .form-container {
                 padding: 20px;
@@ -424,13 +479,62 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                         <h3 class="section-title">Additional Details</h3>
 
                         <div class="form-group">
-                            <label for="description" class="form-label">Why are you giving up this device?</label>
-                            <textarea id="description" name="description" class="form-textarea" placeholder="e.g., Upgraded to newer model, screen cracked, battery issues, no longer needed..."></textarea>
+                            <label class="form-label">Why are you giving up this device? (Select all that apply)</label>
+                            <div class="checkbox-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 10px;">
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="upgraded_to_newer_model">
+                                    <span class="checkmark"></span>
+                                    Upgraded to newer model
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="screen_damaged">
+                                    <span class="checkmark"></span>
+                                    Screen is cracked/damaged
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="battery_issues">
+                                    <span class="checkmark"></span>
+                                    Battery issues/poor life
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="performance_issues">
+                                    <span class="checkmark"></span>
+                                    Slow performance/lagging
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="no_longer_needed">
+                                    <span class="checkmark"></span>
+                                    No longer needed/used
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="hardware_failure">
+                                    <span class="checkmark"></span>
+                                    Hardware malfunction/failure
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="too_old">
+                                    <span class="checkmark"></span>
+                                    Device is too old/outdated
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="switching_platforms">
+                                    <span class="checkmark"></span>
+                                    Switching platforms (iOS to Android, etc.)
+                                </label>
+                                <label class="checkbox-option">
+                                    <input type="checkbox" name="reasons[]" value="need_cash">
+                                    <span class="checkmark"></span>
+                                    Need cash/emergency sale
+                                </label>
+                            </div>
                         </div>
 
                         <div class="form-group">
                             <label for="askingPrice" class="form-label">Asking Price (Optional)</label>
-                            <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in USD" min="0" step="0.01">
+                            <div style="position: relative;">
+                                <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6b7280; font-weight: 500;">GH₵</span>
+                                <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in Ghana Cedis" min="0" step="0.01" style="padding-left: 50px;">
+                            </div>
                             <small style="color: #6b7280; font-size: 0.9rem;">Leave blank if you prefer our evaluation</small>
                         </div>
                     </div>

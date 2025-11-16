@@ -43,6 +43,9 @@ try {
         }
     }
 
+    // Debug: Log the data being sent
+    error_log("Support message data: name=$name, phone=$phone, subject=$subject");
+
     // Create support message
     $message_id = create_support_message_ctr($customer_id, $name, $phone, $subject, $message);
 
@@ -54,7 +57,7 @@ try {
             'message_id' => $message_id
         ]);
     } else {
-        throw new Exception('Failed to save message to database');
+        throw new Exception('Failed to save message to database - check phone validation or database connection');
     }
 
 } catch (Exception $e) {

@@ -25,7 +25,7 @@ function create_support_message_ctr($customer_id, $name, $phone, $subject, $mess
     $message = mysqli_real_escape_string($db->db_conn(), trim($message));
 
     // Validate phone (basic validation)
-    if (empty($phone) || strlen($phone) < 10) {
+    if (empty($phone) || strlen($phone) < 8) {
         return false;
     }
 
@@ -69,16 +69,16 @@ function create_support_message_ctr($customer_id, $name, $phone, $subject, $mess
             'created_at' => date('Y-m-d H:i:s')
         ];
 
-        // Send email notifications (include helper file here to avoid circular dependencies)
-        if (file_exists(__DIR__ . '/../helpers/email_helper.php')) {
-            require_once(__DIR__ . '/../helpers/email_helper.php');
+        // Send email notifications (temporarily disabled to debug)
+        // if (file_exists(__DIR__ . '/../helpers/email_helper.php')) {
+        //     require_once(__DIR__ . '/../helpers/email_helper.php');
 
-            // Send notification to admin
-            send_support_notification_email($message_details);
+        //     // Send notification to admin
+        //     send_support_notification_email($message_details);
 
-            // Send confirmation to customer
-            send_customer_confirmation_email($message_details);
-        }
+        //     // Send confirmation to customer
+        //     send_customer_confirmation_email($message_details);
+        // }
     }
 
     $db->db_disconnect();

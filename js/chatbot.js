@@ -70,14 +70,21 @@ class ChatBot {
                                 <p>Updated Nov 16, 09:21 UTC</p>
                             </div>
                         </div>
+
+                        <!-- Send Message Button -->
+                        <button class="action-button send-message-btn" id="sendMessageBtn" style="margin-top: 15px;">
+                            <h5>Send us a message</h5>
+                            <i class="fas fa-chevron-right"></i>
+                        </button>
+                    </div>
+
+                    <!-- Questions Title -->
+                    <div style="padding: 15px 20px 10px 20px; border-bottom: 1px solid #e9ecef;">
+                        <h4 style="margin: 0; color: #2c3e50; font-size: 14px; font-weight: 600;">Common Questions</h4>
                     </div>
 
                     <!-- Action Buttons -->
                     <div class="action-buttons">
-                        <button class="action-button send-message-btn" id="sendMessageBtn">
-                            <h5>Send us a message</h5>
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
 
                         <button class="action-button" data-section="order">
                             <h5>My order status or refund issues</h5>
@@ -133,10 +140,13 @@ class ChatBot {
             this.toggleModal();
         });
 
-        // Close popup
-        document.getElementById('closePopup').addEventListener('click', () => {
-            this.hidePopup();
-        });
+        // Close popup (if exists)
+        const closePopup = document.getElementById('closePopup');
+        if (closePopup) {
+            closePopup.addEventListener('click', () => {
+                this.hidePopup();
+            });
+        }
 
         // Close modal
         document.getElementById('closeModal').addEventListener('click', () => {

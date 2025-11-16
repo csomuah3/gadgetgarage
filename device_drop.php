@@ -367,6 +367,96 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             font-weight: 500;
         }
 
+        /* Success Modal Styles */
+        .success-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .success-modal-overlay.show {
+            display: flex;
+        }
+
+        .success-modal {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            max-width: 500px;
+            width: 90%;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: slideUp 0.4s ease;
+        }
+
+        .success-icon {
+            width: 80px;
+            height: 80px;
+            background: #10b981;
+            border-radius: 50%;
+            margin: 0 auto 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+        }
+
+        .success-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 20px;
+        }
+
+        .success-message {
+            color: #6b7280;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .success-button {
+            background: #3b82f6;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .success-button:hover {
+            background: #2563eb;
+            transform: translateY(-2px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         @media (max-width: 768px) {
             .form-container {
                 padding: 20px;
@@ -374,6 +464,18 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
             .condition-grid {
                 grid-template-columns: 1fr;
+            }
+
+            .success-modal {
+                padding: 30px 20px;
+            }
+
+            .success-title {
+                font-size: 1.5rem;
+            }
+
+            .success-message {
+                font-size: 1rem;
             }
         }
     </style>
@@ -607,6 +709,22 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         </div>
     </div>
 
+    <!-- Success Modal -->
+    <div class="success-modal-overlay" id="successModal">
+        <div class="success-modal">
+            <div class="success-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2 class="success-title">Request Submitted!</h2>
+            <p class="success-message">
+                Your device drop request has been submitted successfully. We will review your submission and get back to you within 3-7 business days to schedule a pickup appointment.
+            </p>
+            <button class="success-button" onclick="returnToHome()">
+                Return to Home
+            </button>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -724,7 +842,8 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                 const result = await response.json();
 
                 if (result.success) {
-                    alert('Thank you! Your device drop request has been submitted successfully. We will review your submission and get back to you within 3-7 business days.');
+                    // Show success modal
+                    showSuccessModal();
 
                     // Reset form
                     this.reset();
@@ -757,6 +876,28 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                 value = `(${value.slice(0,3)}) ${value.slice(3)}`;
             }
             e.target.value = value;
+        });
+
+        // Success modal functions
+        function showSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.add('show');
+        }
+
+        function hideSuccessModal() {
+            const modal = document.getElementById('successModal');
+            modal.classList.remove('show');
+        }
+
+        function returnToHome() {
+            window.location.href = 'index.php';
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                hideSuccessModal();
+            }
         });
     </script>
 </body>

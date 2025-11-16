@@ -21,8 +21,8 @@ try {
     $total_orders_result = $db->db_fetch_one($total_orders_query);
     $total_orders = $total_orders_result ? $total_orders_result['total_orders'] : 0;
 
-    // Total Customers
-    $total_customers_query = "SELECT COUNT(*) as total_customers FROM customer WHERE role = 1";
+    // Total Customers (customer table has no role column)
+    $total_customers_query = "SELECT COUNT(*) as total_customers FROM customer";
     $total_customers_result = $db->db_fetch_one($total_customers_query);
     $total_customers = $total_customers_result ? $total_customers_result['total_customers'] : 0;
 
@@ -43,20 +43,36 @@ try {
     ";
     $revenue_chart_data = $db->db_fetch_all($revenue_chart_query);
 
-    // Top selling categories
-    $top_categories_query = "
-        SELECT
-            c.cat_name,
-            SUM(od.qty) as total_sold,
-            SUM(od.qty * p.product_price) as revenue
-        FROM order_details od
-        JOIN products p ON od.product_id = p.product_id
-        JOIN categories c ON p.product_cat = c.cat_id
-        GROUP BY c.cat_id
-        ORDER BY revenue DESC
-        LIMIT 5
-    ";
-    $top_categories = $db->db_fetch_all($top_categories_query);
+    // Top selling categories - check if data exists first
+    $categories_count_query = "SELECT COUNT(*) as count FROM categories";
+    $categories_count_result = $db->db_fetch_one($categories_count_query);
+    $has_categories = $categories_count_result && $categories_count_result['count'] > 0;
+
+    $products_count_query = "SELECT COUNT(*) as count FROM products";
+    $products_count_result = $db->db_fetch_one($products_count_query);
+    $has_products = $products_count_result && $products_count_result['count'] > 0;
+
+    if ($has_categories && $has_products) {
+        $top_categories_query = "
+            SELECT
+                c.cat_name,
+                SUM(od.qty) as total_sold,
+                SUM(od.qty * p.product_price) as revenue
+            FROM orderdetails od
+            JOIN products p ON od.product_id = p.product_id
+            JOIN categories c ON p.product_cat = c.cat_id
+            GROUP BY c.cat_id
+            ORDER BY revenue DESC
+            LIMIT 5
+        ";
+        $top_categories = $db->db_fetch_all($top_categories_query);
+    } else {
+        // Show placeholder data when no products/categories exist
+        $top_categories = [
+            ['cat_name' => 'No categories yet', 'total_sold' => 0, 'revenue' => 0],
+            ['cat_name' => 'Add products to see data', 'total_sold' => 0, 'revenue' => 0]
+        ];
+    }
 
     // Order status breakdown
     $order_status_query = "

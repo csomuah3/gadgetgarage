@@ -1532,10 +1532,194 @@ try {
 
 
 
-		/* TESTIMONIALS — circular orbit */
+		/* TESTIMONIALS — Card Stack */
 		.testimonials {
-			background: #fff;
-			padding: 72px 0
+			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+			padding: 80px 0;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.testimonials::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.05)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+			opacity: 0.3;
+		}
+
+		.testimonials .section-title {
+			color: #fff;
+			font-size: 3rem;
+			margin-bottom: 15px;
+			text-align: left;
+		}
+
+		.testimonials .section-sub {
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 1.2rem;
+			margin-bottom: 60px;
+			text-align: left;
+		}
+
+		.card-swap-container {
+			position: absolute;
+			bottom: 0;
+			right: 0;
+			transform: translate(5%, 20%);
+			transform-origin: bottom right;
+			perspective: 900px;
+			overflow: visible;
+			width: 500px;
+			height: 400px;
+		}
+
+		.testimonial-card {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			border-radius: 20px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+			backdrop-filter: blur(20px);
+			transform-style: preserve-3d;
+			will-change: transform;
+			backface-visibility: hidden;
+			-webkit-backface-visibility: hidden;
+			width: 500px;
+			height: 400px;
+			padding: 40px;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+			color: #fff;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+			cursor: pointer;
+			transition: transform 0.3s ease;
+		}
+
+		.testimonial-card:hover {
+			transform: translateZ(20px);
+		}
+
+		.card-features {
+			position: absolute;
+			top: 20px;
+			right: 20px;
+			display: flex;
+			flex-direction: column;
+			gap: 8px;
+		}
+
+		.card-feature {
+			background: rgba(255, 255, 255, 0.2);
+			border: 1px solid rgba(255, 255, 255, 0.3);
+			border-radius: 20px;
+			padding: 8px 16px;
+			font-size: 0.85rem;
+			color: #fff;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
+		.testimonial-content {
+			flex: 1;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+		}
+
+		.testimonial-quote {
+			font-size: 1.4rem;
+			line-height: 1.6;
+			margin-bottom: 30px;
+			font-style: italic;
+			color: #fff;
+		}
+
+		.testimonial-author {
+			display: flex;
+			align-items: center;
+			gap: 20px;
+		}
+
+		.author-avatar {
+			width: 60px;
+			height: 60px;
+			border-radius: 50%;
+			overflow: hidden;
+			border: 3px solid rgba(255, 255, 255, 0.3);
+		}
+
+		.author-avatar img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.author-info h4 {
+			margin: 0;
+			font-size: 1.2rem;
+			color: #fff;
+		}
+
+		.author-info p {
+			margin: 5px 0 0 0;
+			color: rgba(255, 255, 255, 0.7);
+			font-size: 0.95rem;
+		}
+
+		.testimonials-text-section {
+			max-width: 50%;
+			z-index: 2;
+			position: relative;
+		}
+
+		@media (max-width: 1200px) {
+			.card-swap-container {
+				transform: scale(0.8) translate(15%, 25%);
+			}
+
+			.testimonials-text-section {
+				max-width: 60%;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.card-swap-container {
+				transform: scale(0.6) translate(35%, 35%);
+				position: relative;
+				margin: 40px auto 0;
+			}
+
+			.testimonials-text-section {
+				max-width: 100%;
+				text-align: center;
+				margin-bottom: 40px;
+			}
+
+			.testimonials .section-title {
+				text-align: center;
+				font-size: 2.5rem;
+			}
+
+			.testimonials .section-sub {
+				text-align: center;
+			}
+		}
+
+		@media (max-width: 480px) {
+			.card-swap-container {
+				transform: scale(0.45) translate(45%, 45%);
+			}
+
+			.testimonial-card {
+				padding: 30px;
+			}
 		}
 
 		.orbit-wrap {
@@ -4110,34 +4294,112 @@ try {
 		</div>
 	</section>
 
-	<!-- TESTIMONIALS — circular orbit -->
+	<!-- TESTIMONIALS — Card Stack -->
 	<section class="testimonials">
 		<div class="container">
-			<h2 class="section-title text-center">What Customers Say</h2>
-			<p class="section-sub text-center">Real voices from Gadget Garage shoppers</p>
+			<div class="testimonials-text-section">
+				<h2 class="section-title">What Customers Say</h2>
+				<p class="section-sub">Just look at these amazing reviews!</p>
+			</div>
 
-			<div class="orbit-wrap">
-				<div class="orbit-center">
-					<p id="quote">"Fantastic service and fast delivery. My laptop arrived in two days!" — <strong>Yaw</strong></p>
+			<div class="card-swap-container" id="cardSwapContainer">
+				<div class="testimonial-card">
+					<div class="card-features">
+						<div class="card-feature">
+							<i class="fas fa-bolt"></i> Fast
+						</div>
+						<div class="card-feature">
+							<i class="fas fa-shield-alt"></i> Reliable
+						</div>
+					</div>
+					<div class="testimonial-content">
+						<div class="testimonial-quote">
+							"Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!"
+						</div>
+						<div class="testimonial-author">
+							<div class="author-avatar">
+								<img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=200&auto=format" alt="Yaw">
+							</div>
+							<div class="author-info">
+								<h4>Yaw Mensah</h4>
+								<p>Software Developer, Accra</p>
+							</div>
+						</div>
+					</div>
 				</div>
-				<div class="orbit" id="orbit">
-					<div class="avatar a1" data-quote="" Fantastic service and fast delivery. My laptop arrived in two days!" — Yaw">
-						<img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=200&auto=format" alt="Yaw">
+
+				<div class="testimonial-card">
+					<div class="card-features">
+						<div class="card-feature">
+							<i class="fas fa-dollar-sign"></i> Affordable
+						</div>
+						<div class="card-feature">
+							<i class="fas fa-star"></i> Quality
+						</div>
 					</div>
-					<div class="avatar a2" data-quote="" The prices in GHS are great and checkout was smooth." — Akua">
-						<img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format" alt="Akua">
+					<div class="testimonial-content">
+						<div class="testimonial-quote">
+							"The prices in Ghana Cedis are great and the checkout process was incredibly smooth. No hidden fees!"
+						</div>
+						<div class="testimonial-author">
+							<div class="author-avatar">
+								<img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format" alt="Akua">
+							</div>
+							<div class="author-info">
+								<h4>Akua Asante</h4>
+								<p>Marketing Manager, Kumasi</p>
+							</div>
+						</div>
 					</div>
-					<div class="avatar a3" data-quote="" Customer support helped me pick the right camera." — Kofi">
-						<img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format" alt="Kofi">
+				</div>
+
+				<div class="testimonial-card">
+					<div class="card-features">
+						<div class="card-feature">
+							<i class="fas fa-headset"></i> Support
+						</div>
+						<div class="card-feature">
+							<i class="fas fa-wrench"></i> Expert
+						</div>
 					</div>
-					<div class="avatar a4" data-quote="" Authentic brands and solid warranty—highly recommend." — Ama">
-						<img src="https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=200&auto=format" alt="Ama">
+					<div class="testimonial-content">
+						<div class="testimonial-quote">
+							"Customer support was amazing! They helped me pick the right camera for my photography business."
+						</div>
+						<div class="testimonial-author">
+							<div class="author-avatar">
+								<img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format" alt="Kofi">
+							</div>
+							<div class="author-info">
+								<h4>Kofi Boateng</h4>
+								<p>Photographer, Tema</p>
+							</div>
+						</div>
 					</div>
-					<div class="avatar a5" data-quote="" Got my headphones the same day in Accra. Great!" — Nii">
-						<img src="https://images.unsplash.com/photo-1541534401786-2077eed87a72?q=80&w=200&auto=format" alt="Nii">
+				</div>
+
+				<div class="testimonial-card">
+					<div class="card-features">
+						<div class="card-feature">
+							<i class="fas fa-certificate"></i> Authentic
+						</div>
+						<div class="card-feature">
+							<i class="fas fa-tools"></i> Warranty
+						</div>
 					</div>
-					<div class="avatar a6" data-quote="" Their deals of the week are unbeatable." — Abena">
-						<img src="https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?q=80&w=200&auto=format" alt="Abena">
+					<div class="testimonial-content">
+						<div class="testimonial-quote">
+							"Authentic brands with solid warranties. My iPhone has been working perfectly for months!"
+						</div>
+						<div class="testimonial-author">
+							<div class="author-avatar">
+								<img src="https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=200&auto=format" alt="Ama">
+							</div>
+							<div class="author-info">
+								<h4>Ama Adjei</h4>
+								<p>Student, Cape Coast</p>
+							</div>
+						</div>
 					</div>
 				</div>
 			</div>
@@ -4687,20 +4949,161 @@ try {
 			}
 		}, 15000);
 
-		// Testimonials: hover to change quote + pause orbit when hovering any avatar
-		const quoteEl = document.getElementById('quote');
-		const orbit = document.getElementById('orbit');
-		if (quoteEl && orbit) {
-			document.querySelectorAll('.avatar').forEach(a => {
-				a.addEventListener('mouseenter', () => {
-					quoteEl.textContent = a.dataset.quote;
-					orbit.style.animationPlayState = 'paused';
+		// Card Stack Animation - Based on React CardSwap component
+		class CardStack {
+			constructor(containerSelector, options = {}) {
+				this.container = document.querySelector(containerSelector);
+				if (!this.container) return;
+
+				// Configuration based on your React component props
+				this.config = {
+					cardDistance: options.cardDistance || 60,
+					verticalDistance: options.verticalDistance || 70,
+					delay: options.delay || 5000,
+					pauseOnHover: options.pauseOnHover !== undefined ? options.pauseOnHover : true,
+					skewAmount: options.skewAmount || 6,
+					easing: options.easing || 'elastic'
+				};
+
+				// Animation settings based on easing type
+				this.animConfig = this.config.easing === 'elastic' ? {
+					ease: 'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+					durDrop: 2000,
+					durMove: 2000,
+					durReturn: 2000,
+					promoteOverlap: 0.9,
+					returnDelay: 0.05
+				} : {
+					ease: 'cubic-bezier(0.25, 0.46, 0.45, 0.94)',
+					durDrop: 800,
+					durMove: 800,
+					durReturn: 800,
+					promoteOverlap: 0.45,
+					returnDelay: 0.2
+				};
+
+				this.cards = Array.from(this.container.querySelectorAll('.testimonial-card'));
+				this.order = Array.from({ length: this.cards.length }, (_, i) => i);
+				this.intervalRef = null;
+				this.isAnimating = false;
+
+				this.init();
+			}
+
+			// Create slot positions based on your React makeSlot function
+			makeSlot(i, total) {
+				return {
+					x: i * this.config.cardDistance,
+					y: -i * this.config.verticalDistance,
+					z: -i * this.config.cardDistance * 1.5,
+					zIndex: total - i
+				};
+			}
+
+			// Place card now - equivalent to React placeNow function
+			placeNow(element, slot) {
+				element.style.transform = `
+					translate(-50%, -50%)
+					translate3d(${slot.x}px, ${slot.y}px, ${slot.z}px)
+					skewY(${this.config.skewAmount}deg)
+				`;
+				element.style.transformOrigin = 'center center';
+				element.style.zIndex = slot.zIndex;
+			}
+
+			// Main swap function - equivalent to React swap function
+			swap() {
+				if (this.order.length < 2 || this.isAnimating) return;
+				this.isAnimating = true;
+
+				const [front, ...rest] = this.order;
+				const frontCard = this.cards[front];
+
+				// Step 1: Drop front card
+				frontCard.style.transition = `transform ${this.animConfig.durDrop}ms ${this.animConfig.ease}`;
+				frontCard.style.transform = `
+					translate(-50%, -50%)
+					translate3d(0px, 500px, 0px)
+					skewY(${this.config.skewAmount}deg)
+				`;
+
+				// Step 2: Promote other cards with delay
+				setTimeout(() => {
+					rest.forEach((idx, i) => {
+						const card = this.cards[idx];
+						const slot = this.makeSlot(i, this.cards.length);
+
+						card.style.transition = `transform ${this.animConfig.durMove}ms ${this.animConfig.ease}`;
+						card.style.zIndex = slot.zIndex;
+
+						setTimeout(() => {
+							this.placeNow(card, slot);
+						}, i * 150);
+					});
+				}, this.animConfig.durDrop * this.animConfig.promoteOverlap);
+
+				// Step 3: Return front card to back
+				setTimeout(() => {
+					const backSlot = this.makeSlot(this.cards.length - 1, this.cards.length);
+					frontCard.style.zIndex = backSlot.zIndex;
+					frontCard.style.transition = `transform ${this.animConfig.durReturn}ms ${this.animConfig.ease}`;
+					this.placeNow(frontCard, backSlot);
+
+					// Update order
+					setTimeout(() => {
+						this.order = [...rest, front];
+						this.isAnimating = false;
+					}, this.animConfig.durReturn);
+				}, this.animConfig.durDrop * this.animConfig.promoteOverlap + this.animConfig.durMove * this.animConfig.returnDelay);
+			}
+
+			init() {
+				// Initial positioning
+				this.cards.forEach((card, i) => {
+					const slot = this.makeSlot(i, this.cards.length);
+					this.placeNow(card, slot);
 				});
-				a.addEventListener('mouseleave', () => {
-					orbit.style.animationPlayState = 'running';
+
+				// Start animation cycle
+				this.swap();
+				this.intervalRef = setInterval(() => this.swap(), this.config.delay);
+
+				// Pause on hover functionality
+				if (this.config.pauseOnHover) {
+					this.container.addEventListener('mouseenter', () => {
+						clearInterval(this.intervalRef);
+					});
+
+					this.container.addEventListener('mouseleave', () => {
+						this.intervalRef = setInterval(() => this.swap(), this.config.delay);
+					});
+				}
+
+				// Add click handlers for cards
+				this.cards.forEach((card, index) => {
+					card.addEventListener('click', () => {
+						// Optional: handle card click
+						console.log(`Card ${index} clicked`);
+					});
 				});
-			});
+			}
+
+			destroy() {
+				if (this.intervalRef) {
+					clearInterval(this.intervalRef);
+				}
+			}
 		}
+
+		// Initialize the card stack animation
+		const cardStack = new CardStack('#cardSwapContainer', {
+			cardDistance: 60,
+			verticalDistance: 70,
+			delay: 5000,
+			pauseOnHover: true,
+			skewAmount: 6,
+			easing: 'elastic'
+		});
 
 		// Countdown timer functionality for deals
 		function updateCountdown() {

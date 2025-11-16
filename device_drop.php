@@ -635,7 +635,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                             <label for="askingPrice" class="form-label">Asking Price (Optional)</label>
                             <div style="position: relative;">
                                 <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6b7280; font-weight: 500;">GH₵</span>
-                                <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in Ghana Cedis" min="0" step="0.01" style="padding-left: 50px;">
+                                <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in GH₵" min="0" step="0.01" style="padding-left: 50px;">
                             </div>
                             <small style="color: #6b7280; font-size: 0.9rem;">Leave blank if you prefer our evaluation</small>
                         </div>

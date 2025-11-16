@@ -3709,9 +3709,9 @@ try {
 								</a>
 								<?php if ($is_admin): ?>
 									<div class="dropdown-divider-custom"></div>
-									<a href="admin/category.php" class="dropdown-item-custom">
-										<i class="fas fa-cog"></i>
-										<span>Admin Panel</span>
+									<a href="admin/index.php" class="dropdown-item-custom">
+										<i class="fas fa-chart-bar"></i>
+										<span>Admin Dashboard</span>
 									</a>
 								<?php endif; ?>
 								<div class="dropdown-divider-custom"></div>
@@ -3956,7 +3956,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop&crop=center" alt="Smartphones">
 						</div>
 						<h4><span data-translate="smartphones">Smartphones</span></h4>
-						<p>From 2500 Cedis</p>
+						<p>From GH₵ 2500</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3965,7 +3965,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop&crop=center" alt="Laptops">
 						</div>
 						<h4><span data-translate="laptops">Laptops</span></h4>
-						<p>From 4000 Cedis</p>
+						<p>From GH₵ 4000</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3974,7 +3974,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="iPads">
 						</div>
 						<h4><span data-translate="ipads">iPads</span></h4>
-						<p>From 3000 Cedis</p>
+						<p>From GH₵ 3000</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3983,7 +3983,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Cameras">
 						</div>
 						<h4><span data-translate="cameras">Cameras</span></h4>
-						<p>From 5000 Cedis</p>
+						<p>From GH₵ 5000</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
@@ -3992,7 +3992,7 @@ try {
 							<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=150&h=150&fit=crop&crop=center" alt="Video Equipment">
 						</div>
 						<h4>Video Equipment</h4>
-						<p>From 1200 Cedis</p>
+						<p>From GH₵ 1200</p>
 					</div>
 				</div>
 			</div>
@@ -4371,7 +4371,7 @@ try {
 							<span class="star">★</span>
 						</div>
 						<div class="testimonial-quote">
-							"The prices in Ghana Cedis are great and the checkout process was incredibly smooth. No hidden fees!"
+							"The prices are great and the checkout process was incredibly smooth. No hidden fees!"
 						</div>
 						<div class="testimonial-author">
 							<div class="author-info">
@@ -5400,7 +5400,7 @@ try {
 			// localStorage.removeItem('selectedLanguage');
 
 			// Uncomment the next line to reset newsletter popup (for testing)
-			localStorage.removeItem('newsletterShown');
+			// localStorage.removeItem('newsletterShown');
 
 			applyTranslations();
 		});

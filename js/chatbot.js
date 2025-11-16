@@ -18,10 +18,6 @@ class ChatBot {
         this.createChatbotHTML();
         this.bindEvents();
         this.startPeriodicMessages();
-        // Auto-open the modal since we removed the chat icon
-        setTimeout(() => {
-            this.openModal();
-        }, 1000);
     }
 
     createChatbotHTML() {

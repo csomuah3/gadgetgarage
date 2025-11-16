@@ -1535,7 +1535,8 @@ try {
 		/* TESTIMONIALS — Card Stack */
 		.testimonials {
 			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-			padding: 80px 0;
+			padding: 120px 0;
+			min-height: 80vh;
 			position: relative;
 			overflow: hidden;
 		}
@@ -1553,28 +1554,35 @@ try {
 
 		.testimonials .section-title {
 			color: #fff;
-			font-size: 3rem;
-			margin-bottom: 15px;
+			font-size: 4.5rem;
+			font-weight: 900;
+			margin-bottom: 20px;
 			text-align: left;
+			font-family: 'Inter', sans-serif;
+			letter-spacing: -0.02em;
+			line-height: 1.1;
 		}
 
 		.testimonials .section-sub {
-			color: rgba(255, 255, 255, 0.8);
-			font-size: 1.2rem;
-			margin-bottom: 60px;
+			color: rgba(255, 255, 255, 0.9);
+			font-size: 1.8rem;
+			font-weight: 400;
+			margin-bottom: 80px;
 			text-align: left;
+			font-family: 'Inter', sans-serif;
+			letter-spacing: -0.01em;
 		}
 
 		.card-swap-container {
 			position: absolute;
-			bottom: 0;
-			right: 0;
-			transform: translate(5%, 20%);
-			transform-origin: bottom right;
+			top: 50%;
+			right: 10%;
+			transform: translateY(-50%);
+			transform-origin: center;
 			perspective: 900px;
 			overflow: visible;
-			width: 500px;
-			height: 400px;
+			width: 550px;
+			height: 450px;
 		}
 
 		.testimonial-card {
@@ -1583,20 +1591,20 @@ try {
 			left: 50%;
 			border-radius: 20px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
-			background: linear-gradient(135deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+			background: linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.08));
 			backdrop-filter: blur(20px);
 			transform-style: preserve-3d;
 			will-change: transform;
 			backface-visibility: hidden;
 			-webkit-backface-visibility: hidden;
-			width: 500px;
-			height: 400px;
-			padding: 40px;
+			width: 550px;
+			height: 450px;
+			padding: 50px;
 			display: flex;
 			flex-direction: column;
-			justify-content: space-between;
+			justify-content: center;
 			color: #fff;
-			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+			box-shadow: 0 25px 50px rgba(0, 0, 0, 0.4);
 			cursor: pointer;
 			transition: transform 0.3s ease;
 		}
@@ -1634,43 +1642,43 @@ try {
 		}
 
 		.testimonial-quote {
-			font-size: 1.4rem;
-			line-height: 1.6;
-			margin-bottom: 30px;
+			font-size: 1.6rem;
+			line-height: 1.5;
+			margin-bottom: 40px;
 			font-style: italic;
 			color: #fff;
+			font-weight: 400;
+		}
+
+		.star-rating {
+			display: flex;
+			gap: 4px;
+			margin-bottom: 30px;
+		}
+
+		.star {
+			color: #ffd700;
+			font-size: 1.5rem;
 		}
 
 		.testimonial-author {
 			display: flex;
-			align-items: center;
-			gap: 20px;
-		}
-
-		.author-avatar {
-			width: 60px;
-			height: 60px;
-			border-radius: 50%;
-			overflow: hidden;
-			border: 3px solid rgba(255, 255, 255, 0.3);
-		}
-
-		.author-avatar img {
-			width: 100%;
-			height: 100%;
-			object-fit: cover;
+			flex-direction: column;
+			gap: 8px;
 		}
 
 		.author-info h4 {
 			margin: 0;
-			font-size: 1.2rem;
+			font-size: 1.4rem;
 			color: #fff;
+			font-weight: 600;
 		}
 
 		.author-info p {
-			margin: 5px 0 0 0;
-			color: rgba(255, 255, 255, 0.7);
-			font-size: 0.95rem;
+			margin: 0;
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 1.1rem;
+			font-weight: 400;
 		}
 
 		.testimonials-text-section {
@@ -1681,18 +1689,33 @@ try {
 
 		@media (max-width: 1200px) {
 			.card-swap-container {
-				transform: scale(0.8) translate(15%, 25%);
+				right: 5%;
+				transform: translateY(-50%) scale(0.85);
 			}
 
 			.testimonials-text-section {
-				max-width: 60%;
+				max-width: 55%;
+			}
+
+			.testimonials .section-title {
+				font-size: 3.8rem;
+			}
+
+			.testimonials .section-sub {
+				font-size: 1.5rem;
 			}
 		}
 
 		@media (max-width: 768px) {
+			.testimonials {
+				padding: 80px 0;
+			}
+
 			.card-swap-container {
-				transform: scale(0.6) translate(35%, 35%);
 				position: relative;
+				right: auto;
+				top: auto;
+				transform: scale(0.7);
 				margin: 40px auto 0;
 			}
 
@@ -1704,21 +1727,30 @@ try {
 
 			.testimonials .section-title {
 				text-align: center;
-				font-size: 2.5rem;
+				font-size: 3rem;
 			}
 
 			.testimonials .section-sub {
 				text-align: center;
+				font-size: 1.3rem;
 			}
 		}
 
 		@media (max-width: 480px) {
 			.card-swap-container {
-				transform: scale(0.45) translate(45%, 45%);
+				transform: scale(0.5);
 			}
 
 			.testimonial-card {
-				padding: 30px;
+				padding: 40px;
+			}
+
+			.testimonials .section-title {
+				font-size: 2.5rem;
+			}
+
+			.testimonials .section-sub {
+				font-size: 1.1rem;
 			}
 		}
 
@@ -4313,13 +4345,17 @@ try {
 						</div>
 					</div>
 					<div class="testimonial-content">
+						<div class="star-rating">
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+						</div>
 						<div class="testimonial-quote">
 							"Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!"
 						</div>
 						<div class="testimonial-author">
-							<div class="author-avatar">
-								<img src="https://images.unsplash.com/photo-1544723795-3fb6469f5b39?q=80&w=200&auto=format" alt="Yaw">
-							</div>
 							<div class="author-info">
 								<h4>Yaw Mensah</h4>
 								<p>Software Developer, Accra</p>
@@ -4338,13 +4374,17 @@ try {
 						</div>
 					</div>
 					<div class="testimonial-content">
+						<div class="star-rating">
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+						</div>
 						<div class="testimonial-quote">
 							"The prices in Ghana Cedis are great and the checkout process was incredibly smooth. No hidden fees!"
 						</div>
 						<div class="testimonial-author">
-							<div class="author-avatar">
-								<img src="https://images.unsplash.com/photo-1544005313-94ddf0286df2?q=80&w=200&auto=format" alt="Akua">
-							</div>
 							<div class="author-info">
 								<h4>Akua Asante</h4>
 								<p>Marketing Manager, Kumasi</p>
@@ -4363,13 +4403,17 @@ try {
 						</div>
 					</div>
 					<div class="testimonial-content">
+						<div class="star-rating">
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+						</div>
 						<div class="testimonial-quote">
 							"Customer support was amazing! They helped me pick the right camera for my photography business."
 						</div>
 						<div class="testimonial-author">
-							<div class="author-avatar">
-								<img src="https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=200&auto=format" alt="Kofi">
-							</div>
 							<div class="author-info">
 								<h4>Kofi Boateng</h4>
 								<p>Photographer, Tema</p>
@@ -4388,13 +4432,17 @@ try {
 						</div>
 					</div>
 					<div class="testimonial-content">
+						<div class="star-rating">
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+							<span class="star">★</span>
+						</div>
 						<div class="testimonial-quote">
 							"Authentic brands with solid warranties. My iPhone has been working perfectly for months!"
 						</div>
 						<div class="testimonial-author">
-							<div class="author-avatar">
-								<img src="https://images.unsplash.com/photo-1545996124-0501ebae84d0?q=80&w=200&auto=format" alt="Ama">
-							</div>
 							<div class="author-info">
 								<h4>Ama Adjei</h4>
 								<p>Student, Cape Coast</p>

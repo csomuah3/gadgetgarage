@@ -36,6 +36,9 @@ switch ($action) {
     case 'get_image_url':
         handleGetImageUrl();
         break;
+    case 'get_product_gallery':
+        handleGetProductGallery();
+        break;
     default:
         echo json_encode([
             'success' => false,
@@ -313,6 +316,79 @@ function updateProductImage($product_id, $filename) {
     } catch (Exception $e) {
         error_log("Failed to update product image: " . $e->getMessage());
         return false;
+    }
+}
+
+/**
+ * Get all gallery images for a product
+ */
+function handleGetProductGallery() {
+    try {
+        if (!isset($_GET['product_id'])) {
+            throw new Exception('Product ID required');
+        }
+
+        $product_id = (int)$_GET['product_id'];
+
+        // Get all product images from the database
+        $pdo = new PDO("mysql:host=localhost;dbname=ecommerce_2025A_chelsea_somuah", "root", "");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $pdo->prepare("
+            SELECT image_id, image_filename, image_alt_text, is_primary, image_order
+            FROM product_images
+            WHERE product_id = ?
+            ORDER BY is_primary DESC, image_order ASC, image_id ASC
+        ");
+        $stmt->execute([$product_id]);
+        $images = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // If no images found in gallery, try to get the main product image
+        if (empty($images)) {
+            require_once(__DIR__ . '/../controllers/product_controller.php');
+            $product = view_single_product_ctr($product_id);
+
+            if ($product && !empty($product['product_image'])) {
+                $images = [[
+                    'image_id' => 0,
+                    'image_filename' => $product['product_image'],
+                    'image_alt_text' => $product['product_title'],
+                    'is_primary' => true,
+                    'image_order' => 0
+                ]];
+            }
+        }
+
+        // Convert to full URLs
+        $gallery_images = [];
+        foreach ($images as $image) {
+            $image_url = get_product_image_url(
+                $image['image_filename'],
+                $image['image_alt_text'] ?: 'Product Image',
+                '600x400'
+            );
+
+            $gallery_images[] = [
+                'id' => $image['image_id'],
+                'filename' => $image['image_filename'],
+                'url' => $image_url,
+                'alt_text' => $image['image_alt_text'],
+                'is_primary' => (bool)$image['is_primary'],
+                'order' => (int)$image['image_order']
+            ];
+        }
+
+        echo json_encode([
+            'success' => true,
+            'images' => $gallery_images,
+            'count' => count($gallery_images)
+        ]);
+
+    } catch (Exception $e) {
+        echo json_encode([
+            'success' => false,
+            'message' => $e->getMessage()
+        ]);
     }
 }
 

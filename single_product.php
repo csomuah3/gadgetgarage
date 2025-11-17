@@ -1323,37 +1323,48 @@ if (!$product) {
             const productId = img.getAttribute('data-product-id');
             const productTitle = img.getAttribute('data-product-title');
 
-            // Load main product image from upload system (this was working before)
-            fetch(`actions/upload_product_image_action.php?action=get_image_url&product_id=${productId}`)
+            // Load all product images from new gallery system
+            fetch(`actions/upload_product_image_action.php?action=get_product_gallery&product_id=${productId}`)
                 .then(response => response.json())
                 .then(data => {
-                    if (data.success && data.url) {
-                        productImages = [{
-                            url: data.url,
-                            filename: data.filename || 'main-image',
-                            isMain: true
-                        }];
+                    if (data.success && data.images && data.images.length > 0) {
+                        productImages = data.images.map(image => ({
+                            url: image.url,
+                            filename: image.filename,
+                            alt_text: image.alt_text,
+                            is_primary: image.is_primary,
+                            order: image.order
+                        }));
                     } else {
-                        // Use placeholder for main image
+                        // Fallback to single image or placeholder
                         const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
                         productImages = [{
                             url: placeholderUrl,
                             filename: 'placeholder',
-                            isMain: true
+                            alt_text: productTitle,
+                            is_primary: true,
+                            order: 0
                         }];
                     }
 
-                    // For now, just display the main image in gallery format
-                    // Future: Add logic to load additional images from bulk uploads
+                    // Sort images: primary first, then by order
+                    productImages.sort((a, b) => {
+                        if (a.is_primary && !b.is_primary) return -1;
+                        if (!a.is_primary && b.is_primary) return 1;
+                        return (a.order || 0) - (b.order || 0);
+                    });
+
                     updateGalleryDisplay();
                 })
                 .catch(error => {
-                    console.log('Image load error - using placeholder');
+                    console.log('Gallery load error - using placeholder:', error);
                     const placeholderUrl = generatePlaceholderUrl(productTitle, '600x400');
                     productImages = [{
                         url: placeholderUrl,
                         filename: 'placeholder',
-                        isMain: true
+                        alt_text: productTitle,
+                        is_primary: true,
+                        order: 0
                     }];
                     updateGalleryDisplay();
                 });
@@ -1386,27 +1397,66 @@ if (!$product) {
             if (!mainImg || !thumbnailList || productImages.length === 0) return;
 
             // Set main image
-            mainImg.src = productImages[currentImageIndex].url;
+            const currentImage = productImages[currentImageIndex];
+            mainImg.src = currentImage.url;
+            mainImg.alt = currentImage.alt_text || 'Product Image';
 
-            // Update thumbnails (only show if more than 1 image)
+            // Update thumbnails (always show thumbnails, even for single image for consistency)
+            let thumbnailsHtml = '';
+            productImages.forEach((image, index) => {
+                const activeClass = index === currentImageIndex ? 'active' : '';
+                thumbnailsHtml += `
+                    <div class="thumbnail-item ${activeClass}" onclick="selectImage(${index})" title="${image.alt_text || 'Product Image'}">
+                        <img src="${image.url}" alt="${image.alt_text || 'Product Image'}" loading="lazy">
+                    </div>
+                `;
+            });
+            thumbnailList.innerHTML = thumbnailsHtml;
+
+            // Show/hide navigation arrows based on number of images
+            const leftArrow = document.querySelector('.gallery-arrow-left');
+            const rightArrow = document.querySelector('.gallery-arrow-right');
+
             if (productImages.length > 1) {
-                let thumbnailsHtml = '';
-                productImages.forEach((image, index) => {
-                    const activeClass = index === currentImageIndex ? 'active' : '';
-                    thumbnailsHtml += `
-                        <div class="thumbnail-item ${activeClass}" onclick="selectImage(${index})">
-                            <img src="${image.url}" alt="Product image ${index + 1}">
-                        </div>
-                    `;
-                });
-                thumbnailList.innerHTML = thumbnailsHtml;
-
-                // Show navigation arrows
-                const leftArrow = document.querySelector('.gallery-arrow-left');
-                const rightArrow = document.querySelector('.gallery-arrow-right');
                 if (leftArrow) leftArrow.style.display = 'flex';
                 if (rightArrow) rightArrow.style.display = 'flex';
+
+                // Update arrow icons for better UX
+                if (leftArrow) leftArrow.querySelector('i').className = 'fas fa-chevron-left';
+                if (rightArrow) rightArrow.querySelector('i').className = 'fas fa-chevron-right';
+            } else {
+                if (leftArrow) leftArrow.style.display = 'none';
+                if (rightArrow) rightArrow.style.display = 'none';
             }
+
+            // Add image counter indicator if multiple images
+            updateImageCounter();
+        }
+
+        function updateImageCounter() {
+            if (productImages.length <= 1) return;
+
+            // Add or update image counter
+            let counter = document.querySelector('.image-counter');
+            if (!counter) {
+                counter = document.createElement('div');
+                counter.className = 'image-counter';
+                counter.style.cssText = `
+                    position: absolute;
+                    top: 15px;
+                    right: 15px;
+                    background: rgba(0, 0, 0, 0.7);
+                    color: white;
+                    padding: 6px 12px;
+                    border-radius: 15px;
+                    font-size: 0.8rem;
+                    font-weight: 600;
+                    z-index: 20;
+                `;
+                document.querySelector('.main-image-container').appendChild(counter);
+            }
+
+            counter.textContent = `${currentImageIndex + 1} / ${productImages.length}`;
         }
 
         function selectImage(index) {

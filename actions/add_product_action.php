@@ -14,45 +14,56 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_title = trim($_POST['product_title'] ?? '');
     $product_price = (float)($_POST['product_price'] ?? 0);
     $product_desc = trim($_POST['product_desc'] ?? '');
-    // Handle file upload
+
+    // Handle primary image upload (backward compatibility)
     $product_image = '';
+    $uploaded_images = [];
+
+    // Handle single image upload (for backward compatibility)
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../uploads/products/';
-
-        // Create uploads directory if it doesn't exist
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
-        }
-
-        // Generate proper filename with product prefix
-        $file_extension = strtolower(pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION));
-        $file_name = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
-        $upload_path = $upload_dir . $file_name;
-
-        // Check if file is an image with more thorough validation
-        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-        $file_type = mime_content_type($_FILES['product_image']['tmp_name']);
-
-        if (in_array($file_type, $allowed_types)) {
-            // Check file size (5MB max)
-            if ($_FILES['product_image']['size'] <= 5 * 1024 * 1024) {
-                if (move_uploaded_file($_FILES['product_image']['tmp_name'], $upload_path)) {
-                    $product_image = $file_name; // Store just the filename, not the path
-                    // Debug: Log successful upload
-                    error_log("Image uploaded successfully: " . $upload_path);
-                } else {
-                    // Debug: Log upload failure
-                    error_log("Failed to move uploaded file from " . $_FILES['product_image']['tmp_name'] . " to " . $upload_path);
-                    echo json_encode(['status' => 'error', 'message' => 'Failed to save uploaded image']);
-                    exit;
-                }
-            } else {
-                echo json_encode(['status' => 'error', 'message' => 'Image file too large. Maximum 5MB allowed.']);
-                exit;
-            }
+        $upload_result = uploadSingleImage($_FILES['product_image'], 'primary');
+        if ($upload_result['success']) {
+            $product_image = $upload_result['filename'];
+            $uploaded_images[] = [
+                'filename' => $upload_result['filename'],
+                'is_primary' => true,
+                'order' => 0
+            ];
         } else {
-            echo json_encode(['status' => 'error', 'message' => 'Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.']);
+            echo json_encode(['status' => 'error', 'message' => $upload_result['message']]);
             exit;
+        }
+    }
+
+    // Handle multiple images upload (new functionality)
+    if (isset($_FILES['product_images']) && is_array($_FILES['product_images']['name'])) {
+        $multiple_files = $_FILES['product_images'];
+
+        for ($i = 0; $i < count($multiple_files['name']); $i++) {
+            if ($multiple_files['error'][$i] === UPLOAD_ERR_OK) {
+                $file = [
+                    'name' => $multiple_files['name'][$i],
+                    'type' => $multiple_files['type'][$i],
+                    'tmp_name' => $multiple_files['tmp_name'][$i],
+                    'error' => $multiple_files['error'][$i],
+                    'size' => $multiple_files['size'][$i]
+                ];
+
+                $is_primary = empty($uploaded_images); // First image becomes primary if no single image
+                $upload_result = uploadSingleImage($file, $is_primary ? 'primary' : 'gallery');
+
+                if ($upload_result['success']) {
+                    if ($is_primary && empty($product_image)) {
+                        $product_image = $upload_result['filename'];
+                    }
+
+                    $uploaded_images[] = [
+                        'filename' => $upload_result['filename'],
+                        'is_primary' => $is_primary,
+                        'order' => count($uploaded_images)
+                    ];
+                }
+            }
         }
     }
     $product_keywords = trim($_POST['product_keywords'] ?? '');
@@ -82,12 +93,113 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
+        // Add the product first
         $result = add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity);
+
+        if ($result['status'] === 'success' && !empty($uploaded_images)) {
+            // Get the new product ID
+            $product_id = $result['product_id'];
+
+            // Save all images to the product_images table
+            $image_save_errors = [];
+            foreach ($uploaded_images as $image) {
+                $image_result = saveProductImageToDatabase($product_id, $image['filename'], $image['is_primary'], $image['order']);
+                if (!$image_result) {
+                    $image_save_errors[] = "Failed to save image: " . $image['filename'];
+                }
+            }
+
+            if (!empty($image_save_errors)) {
+                $result['warnings'] = $image_save_errors;
+            }
+
+            $result['uploaded_images_count'] = count($uploaded_images);
+        }
+
         echo json_encode($result);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to add product: ' . $e->getMessage()]);
     }
 } else {
     echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+}
+
+/**
+ * Upload a single image file
+ */
+function uploadSingleImage($file, $type = 'gallery') {
+    try {
+        // Check for upload errors
+        if ($file['error'] !== UPLOAD_ERR_OK) {
+            throw new Exception('Upload error: ' . $file['error']);
+        }
+
+        // Validate file size (max 5MB)
+        $max_size = 5 * 1024 * 1024; // 5MB
+        if ($file['size'] > $max_size) {
+            throw new Exception('File size too large. Maximum 5MB allowed.');
+        }
+
+        // Validate file type
+        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+        $file_type = mime_content_type($file['tmp_name']);
+
+        if (!in_array($file_type, $allowed_types)) {
+            throw new Exception('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.');
+        }
+
+        $upload_dir = __DIR__ . '/../uploads/products/';
+
+        // Create uploads directory if it doesn't exist
+        if (!is_dir($upload_dir)) {
+            mkdir($upload_dir, 0755, true);
+        }
+
+        // Generate proper filename with product prefix
+        $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+        $file_name = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
+        $upload_path = $upload_dir . $file_name;
+
+        if (move_uploaded_file($file['tmp_name'], $upload_path)) {
+            // Set proper file permissions
+            chmod($upload_path, 0644);
+
+            return [
+                'success' => true,
+                'filename' => $file_name,
+                'path' => $upload_path
+            ];
+        } else {
+            throw new Exception('Failed to move uploaded file');
+        }
+
+    } catch (Exception $e) {
+        return [
+            'success' => false,
+            'message' => $e->getMessage()
+        ];
+    }
+}
+
+/**
+ * Save product image to database
+ */
+function saveProductImageToDatabase($product_id, $filename, $is_primary = false, $image_order = 0) {
+    require_once __DIR__ . '/../settings/connection.php';
+
+    try {
+        $pdo = new PDO("mysql:host=localhost;dbname=ecommerce_2025A_chelsea_somuah", "root", "");
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+        $stmt = $pdo->prepare("
+            INSERT INTO product_images (product_id, image_filename, is_primary, image_order)
+            VALUES (?, ?, ?, ?)
+        ");
+
+        return $stmt->execute([$product_id, $filename, $is_primary, $image_order]);
+    } catch (Exception $e) {
+        error_log("Failed to save product image to database: " . $e->getMessage());
+        return false;
+    }
 }
 ?>

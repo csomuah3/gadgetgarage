@@ -216,22 +216,88 @@ try {
 
                     <div class="form-group mb-3">
                         <label for="product_cat" class="form-label-modern">Category</label>
-                        <select class="form-control-modern" id="product_cat" name="product_cat" required>
-                            <option value="">Select Category</option>
-                            <?php foreach ($categories as $category): ?>
-                                <option value="<?= $category['cat_id'] ?>"><?= htmlspecialchars($category['cat_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="custom-dropdown">
+                            <div class="dropdown-selected" id="category-selected">
+                                <span class="dropdown-text">Select Category</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="dropdown-options" id="category-options">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search categories..." class="dropdown-search-input">
+                                </div>
+                                <?php foreach ($categories as $category): ?>
+                                    <div class="dropdown-option" data-value="<?= $category['cat_id'] ?>">
+                                        <i class="fas fa-tags me-2"></i>
+                                        <?= htmlspecialchars($category['cat_name']) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <input type="hidden" id="product_cat" name="product_cat" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="product_brand" class="form-label-modern">Brand</label>
+                        <div class="custom-dropdown">
+                            <div class="dropdown-selected" id="brand-selected">
+                                <span class="dropdown-text">Select Brand</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="dropdown-options" id="brand-options">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search brands..." class="dropdown-search-input">
+                                </div>
+                                <?php foreach ($brands as $brand): ?>
+                                    <div class="dropdown-option" data-value="<?= $brand['brand_id'] ?>">
+                                        <i class="fas fa-trademark me-2"></i>
+                                        <?= htmlspecialchars($brand['brand_name']) ?>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                            <input type="hidden" id="product_brand" name="product_brand" required>
+                        </div>
                     </div>
 
                     <div class="form-group mb-4">
-                        <label for="product_brand" class="form-label-modern">Brand</label>
-                        <select class="form-control-modern" id="product_brand" name="product_brand" required>
-                            <option value="">Select Brand</option>
-                            <?php foreach ($brands as $brand): ?>
-                                <option value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <label class="form-label-modern">Product Images</label>
+                        <div class="image-upload-container">
+                            <!-- Single Image Upload -->
+                            <div class="upload-section">
+                                <div class="upload-area" id="single-upload-area">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-cloud-upload-alt"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <h6>Upload Main Image</h6>
+                                        <p>Drag & drop or click to select</p>
+                                    </div>
+                                    <input type="file" id="single-image-input" accept="image/*" hidden>
+                                </div>
+                                <div class="image-preview" id="single-image-preview" style="display: none;">
+                                    <img src="" alt="Preview" class="preview-image">
+                                    <div class="image-overlay">
+                                        <button type="button" class="btn btn-danger btn-sm remove-image">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Multiple Images Upload -->
+                            <div class="upload-section mt-3">
+                                <div class="upload-area" id="multiple-upload-area">
+                                    <div class="upload-icon">
+                                        <i class="fas fa-images"></i>
+                                    </div>
+                                    <div class="upload-text">
+                                        <h6>Upload Additional Images</h6>
+                                        <p>Multiple images for gallery</p>
+                                    </div>
+                                    <input type="file" id="multiple-images-input" accept="image/*" multiple hidden>
+                                </div>
+                                <div class="images-preview-grid" id="multiple-images-preview"></div>
+                            </div>
+                        </div>
                     </div>
 
                     <button type="submit" name="add_product" class="btn-primary-custom w-100">
@@ -422,6 +488,206 @@ try {
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 }
 
+/* Custom Dropdown Styles */
+.custom-dropdown {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-selected {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    transition: all 0.3s ease;
+}
+
+.dropdown-selected:hover {
+    border-color: #cbd5e1;
+}
+
+.dropdown-selected.open {
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.dropdown-text {
+    color: #1a202c;
+    font-weight: 500;
+}
+
+.dropdown-arrow {
+    color: #64748b;
+    transition: transform 0.3s ease;
+}
+
+.dropdown-selected.open .dropdown-arrow {
+    transform: rotate(180deg);
+}
+
+.dropdown-options {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    right: 0;
+    background: white;
+    border: 2px solid #e2e8f0;
+    border-top: none;
+    border-radius: 0 0 12px 12px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    max-height: 300px;
+    overflow-y: auto;
+    display: none;
+}
+
+.dropdown-options.show {
+    display: block;
+}
+
+.dropdown-search {
+    padding: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+}
+
+.dropdown-search-input {
+    width: 100%;
+    padding: 0.5rem;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    outline: none;
+    font-size: 0.9rem;
+}
+
+.dropdown-option {
+    padding: 0.75rem 1rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    transition: all 0.2s ease;
+    color: #1a202c;
+}
+
+.dropdown-option:hover {
+    background: #f1f5f9;
+    color: var(--electric-blue);
+}
+
+.dropdown-option.selected {
+    background: var(--electric-blue);
+    color: white;
+}
+
+/* Image Upload Styles */
+.image-upload-container {
+    border: 2px dashed #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: rgba(248, 250, 252, 0.5);
+}
+
+.upload-section {
+    margin-bottom: 1rem;
+}
+
+.upload-area {
+    border: 2px dashed #cbd5e1;
+    border-radius: 8px;
+    padding: 2rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: white;
+}
+
+.upload-area:hover {
+    border-color: var(--electric-blue);
+    background: rgba(59, 130, 246, 0.05);
+}
+
+.upload-area.dragover {
+    border-color: var(--electric-blue);
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.upload-icon {
+    font-size: 3rem;
+    color: #cbd5e1;
+    margin-bottom: 1rem;
+}
+
+.upload-area:hover .upload-icon {
+    color: var(--electric-blue);
+}
+
+.upload-text h6 {
+    margin: 0;
+    color: #1a202c;
+    font-weight: 600;
+}
+
+.upload-text p {
+    margin: 0;
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.image-preview {
+    position: relative;
+    width: 100%;
+    max-width: 200px;
+    margin: 1rem auto;
+}
+
+.preview-image {
+    width: 100%;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+}
+
+.image-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.5rem;
+}
+
+.images-preview-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.multiple-image-preview {
+    position: relative;
+    width: 100%;
+    height: 100px;
+}
+
+.multiple-image-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 8px;
+    border: 2px solid #e2e8f0;
+}
+
+.multiple-image-preview .image-overlay {
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0.25rem;
+}
+
 .product-avatar {
     width: 50px;
     height: 50px;
@@ -598,6 +864,205 @@ function refreshProducts() {
     window.location.reload();
 }
 
+// Custom Dropdown Functionality
+function initializeDropdowns() {
+    // Category Dropdown
+    const categorySelected = document.getElementById('category-selected');
+    const categoryOptions = document.getElementById('category-options');
+    const categoryInput = document.getElementById('product_cat');
+    const categorySearchInput = categoryOptions.querySelector('.dropdown-search-input');
+
+    categorySelected.addEventListener('click', function() {
+        categoryOptions.classList.toggle('show');
+        categorySelected.classList.toggle('open');
+    });
+
+    categoryOptions.querySelectorAll('.dropdown-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent.trim();
+
+            categorySelected.querySelector('.dropdown-text').textContent = text;
+            categoryInput.value = value;
+            categoryOptions.classList.remove('show');
+            categorySelected.classList.remove('open');
+
+            // Remove previous selection
+            categoryOptions.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Search functionality for categories
+    categorySearchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        categoryOptions.querySelectorAll('.dropdown-option').forEach(option => {
+            const text = option.textContent.toLowerCase();
+            option.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+        });
+    });
+
+    // Brand Dropdown
+    const brandSelected = document.getElementById('brand-selected');
+    const brandOptions = document.getElementById('brand-options');
+    const brandInput = document.getElementById('product_brand');
+    const brandSearchInput = brandOptions.querySelector('.dropdown-search-input');
+
+    brandSelected.addEventListener('click', function() {
+        brandOptions.classList.toggle('show');
+        brandSelected.classList.toggle('open');
+    });
+
+    brandOptions.querySelectorAll('.dropdown-option').forEach(option => {
+        option.addEventListener('click', function() {
+            const value = this.getAttribute('data-value');
+            const text = this.textContent.trim();
+
+            brandSelected.querySelector('.dropdown-text').textContent = text;
+            brandInput.value = value;
+            brandOptions.classList.remove('show');
+            brandSelected.classList.remove('open');
+
+            // Remove previous selection
+            brandOptions.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            this.classList.add('selected');
+        });
+    });
+
+    // Search functionality for brands
+    brandSearchInput.addEventListener('input', function() {
+        const searchTerm = this.value.toLowerCase();
+        brandOptions.querySelectorAll('.dropdown-option').forEach(option => {
+            const text = option.textContent.toLowerCase();
+            option.style.display = text.includes(searchTerm) ? 'flex' : 'none';
+        });
+    });
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.custom-dropdown')) {
+            categoryOptions.classList.remove('show');
+            categorySelected.classList.remove('open');
+            brandOptions.classList.remove('show');
+            brandSelected.classList.remove('open');
+        }
+    });
+}
+
+// Image Upload Functionality
+function initializeImageUpload() {
+    const singleUploadArea = document.getElementById('single-upload-area');
+    const singleImageInput = document.getElementById('single-image-input');
+    const singleImagePreview = document.getElementById('single-image-preview');
+
+    const multipleUploadArea = document.getElementById('multiple-upload-area');
+    const multipleImagesInput = document.getElementById('multiple-images-input');
+    const multipleImagesPreview = document.getElementById('multiple-images-preview');
+
+    let selectedImages = [];
+
+    // Single image upload
+    singleUploadArea.addEventListener('click', () => {
+        singleImageInput.click();
+    });
+
+    singleImageInput.addEventListener('change', function() {
+        if (this.files.length > 0) {
+            const file = this.files[0];
+            displaySingleImagePreview(file);
+        }
+    });
+
+    // Multiple images upload
+    multipleUploadArea.addEventListener('click', () => {
+        multipleImagesInput.click();
+    });
+
+    multipleImagesInput.addEventListener('change', function() {
+        Array.from(this.files).forEach(file => {
+            selectedImages.push(file);
+        });
+        displayMultipleImagesPreview();
+    });
+
+    // Drag and drop functionality
+    [singleUploadArea, multipleUploadArea].forEach(area => {
+        area.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        area.addEventListener('dragleave', function() {
+            this.classList.remove('dragover');
+        });
+
+        area.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+
+            const files = Array.from(e.dataTransfer.files).filter(file =>
+                file.type.startsWith('image/')
+            );
+
+            if (this === singleUploadArea && files.length > 0) {
+                displaySingleImagePreview(files[0]);
+            } else if (this === multipleUploadArea) {
+                files.forEach(file => selectedImages.push(file));
+                displayMultipleImagesPreview();
+            }
+        });
+    });
+
+    function displaySingleImagePreview(file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            singleImagePreview.querySelector('.preview-image').src = e.target.result;
+            singleImagePreview.style.display = 'block';
+            singleUploadArea.style.display = 'none';
+        };
+        reader.readAsDataURL(file);
+
+        // Add remove functionality
+        singleImagePreview.querySelector('.remove-image').onclick = function() {
+            singleImagePreview.style.display = 'none';
+            singleUploadArea.style.display = 'block';
+            singleImageInput.value = '';
+        };
+    }
+
+    function displayMultipleImagesPreview() {
+        multipleImagesPreview.innerHTML = '';
+        selectedImages.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const previewDiv = document.createElement('div');
+                previewDiv.className = 'multiple-image-preview';
+                previewDiv.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview">
+                    <div class="image-overlay">
+                        <button type="button" class="btn btn-danger btn-sm remove-multiple-image" data-index="${index}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                `;
+                multipleImagesPreview.appendChild(previewDiv);
+            };
+            reader.readAsDataURL(file);
+        });
+
+        // Add remove functionality for multiple images
+        setTimeout(() => {
+            document.querySelectorAll('.remove-multiple-image').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const index = parseInt(this.getAttribute('data-index'));
+                    selectedImages.splice(index, 1);
+                    displayMultipleImagesPreview();
+                });
+            });
+        }, 100);
+    }
+}
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize chart
@@ -605,6 +1070,12 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Start counter animations
     setTimeout(animateCounters, 300);
+
+    // Initialize custom dropdowns
+    initializeDropdowns();
+
+    // Initialize image upload
+    initializeImageUpload();
 
     // Animate cards
     const cards = document.querySelectorAll('.admin-card, .analytics-card');

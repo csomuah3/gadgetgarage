@@ -5,1124 +5,626 @@ error_reporting(E_ALL);
 
 require_once __DIR__ . '/../settings/core.php';
 require_admin(); // only admins
+
+$page_title = "Product Management";
+
+// Include controllers
+require_once __DIR__ . '/../controllers/product_controller.php';
+require_once __DIR__ . '/../controllers/category_controller.php';
+require_once __DIR__ . '/../controllers/brand_controller.php';
+
+// Handle form submissions
+$success_message = '';
+$error_message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add_product'])) {
+        $product_title = trim($_POST['product_title']);
+        $product_price = floatval($_POST['product_price']);
+        $product_desc = trim($_POST['product_desc']);
+        $product_cat = intval($_POST['product_cat']);
+        $product_brand = intval($_POST['product_brand']);
+        $stock_quantity = intval($_POST['stock_quantity']);
+
+        if (!empty($product_title) && $product_price > 0) {
+            if (add_product_ctr($product_title, $product_price, $product_desc, $product_cat, $product_brand, '', $stock_quantity)) {
+                $success_message = "Product added successfully!";
+            } else {
+                $error_message = "Failed to add product.";
+            }
+        } else {
+            $error_message = "Please fill in all required fields.";
+        }
+    }
+
+    if (isset($_POST['delete_product'])) {
+        $product_id = intval($_POST['product_id']);
+        if (delete_product_ctr($product_id)) {
+            $success_message = "Product deleted successfully!";
+        } else {
+            $error_message = "Failed to delete product.";
+        }
+    }
+}
+
+// Get data for analytics and display
+try {
+    $products = get_all_products_ctr();
+    $categories = get_all_categories_ctr();
+    $brands = get_all_brands_ctr();
+
+    if (!$products) $products = [];
+    if (!$categories) $categories = [];
+    if (!$brands) $brands = [];
+
+    // Product analytics
+    $total_products = count($products);
+    $total_inventory_value = array_sum(array_map(function($p) {
+        return ($p['product_price'] ?? 0) * ($p['stock_quantity'] ?? 0);
+    }, $products));
+    $low_stock_products = array_filter($products, function($p) {
+        return ($p['stock_quantity'] ?? 0) < 10;
+    });
+    $out_of_stock = array_filter($products, function($p) {
+        return ($p['stock_quantity'] ?? 0) == 0;
+    });
+
+    // Category distribution
+    $category_distribution = [];
+    foreach ($products as $product) {
+        $cat_id = $product['product_cat'];
+        $category_distribution[$cat_id] = ($category_distribution[$cat_id] ?? 0) + 1;
+    }
+
+} catch (Exception $e) {
+    $products = [];
+    $categories = [];
+    $brands = [];
+    $total_products = 0;
+    $total_inventory_value = 0;
+    $low_stock_products = [];
+    $out_of_stock = [];
+    $category_distribution = [];
+    $error_message = "Unable to load products: " . $e->getMessage();
+}
 ?>
-<!doctype html>
-<html lang="en">
 
-<head>
-    <meta charset="utf-8">
-    <title>Manage Products</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        /* Import Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
-            color: #047857;
-            padding: 0 !important;
-            position: relative;
-            overflow-x: hidden;
-            min-height: 100vh;
-        }
-
-        /* Animated Background Circles */
-        .bg-circle {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-        }
-
-        .bg-circle-1 {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
-            top: 10%;
-            right: 15%;
-            animation: float1 8s ease-in-out infinite;
-        }
-
-        .bg-circle-2 {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
-            bottom: 20%;
-            left: 10%;
-            animation: float2 10s ease-in-out infinite reverse;
-        }
-
-        .bg-circle-3 {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(52, 211, 153, 0.06));
-            top: 60%;
-            left: 70%;
-            animation: float3 12s ease-in-out infinite;
-        }
-
-        .bg-circle-4 {
-            width: 180px;
-            height: 180px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(52, 211, 153, 0.09));
-            top: 30%;
-            left: 50%;
-            animation: float1 14s ease-in-out infinite reverse;
-        }
-
-        .bg-circle-5 {
-            width: 100px;
-            height: 100px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.07), rgba(16, 185, 129, 0.07));
-            bottom: 40%;
-            right: 25%;
-            animation: float2 9s ease-in-out infinite;
-        }
-
-        .bg-circle-6 {
-            width: 90px;
-            height: 90px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.05), rgba(52, 211, 153, 0.05));
-            top: 80%;
-            left: 80%;
-            animation: float3 11s ease-in-out infinite reverse;
-        }
-
-        .bg-circle-7 {
-            width: 160px;
-            height: 160px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
-            top: 5%;
-            left: 30%;
-            animation: float1 13s ease-in-out infinite;
-        }
-
-        .bg-circle-8 {
-            width: 110px;
-            height: 110px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.06), rgba(52, 211, 153, 0.06));
-            bottom: 60%;
-            right: 40%;
-            animation: float2 15s ease-in-out infinite reverse;
-        }
-
-        .bg-circle-9 {
-            width: 130px;
-            height: 130px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.07), rgba(16, 185, 129, 0.07));
-            top: 45%;
-            right: 5%;
-            animation: float3 10s ease-in-out infinite;
-        }
-
-        .bg-circle-10 {
-            width: 80px;
-            height: 80px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.04), rgba(52, 211, 153, 0.04));
-            bottom: 10%;
-            left: 40%;
-            animation: float1 16s ease-in-out infinite reverse;
-        }
-
-        .bg-circle-11 {
-            width: 140px;
-            height: 140px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.09), rgba(16, 185, 129, 0.09));
-            top: 70%;
-            left: 25%;
-            animation: float2 12s ease-in-out infinite;
-        }
-
-        /* Big Animated Bubbles */
-        .big-bubble-1 {
-            width: 300px;
-            height: 300px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.12), rgba(52, 211, 153, 0.12));
-            top: 5%;
-            right: 5%;
-            animation: bigFloat1 18s ease-in-out infinite;
-        }
-
-        .big-bubble-2 {
-            width: 250px;
-            height: 250px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.10), rgba(16, 185, 129, 0.10));
-            bottom: 15%;
-            left: 5%;
-            animation: bigFloat2 20s ease-in-out infinite reverse;
-        }
-
-        .big-bubble-3 {
-            width: 280px;
-            height: 280px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.11), rgba(52, 211, 153, 0.11));
-            top: 25%;
-            left: 75%;
-            animation: bigFloat3 16s ease-in-out infinite;
-        }
-
-        .big-bubble-4 {
-            width: 220px;
-            height: 220px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.09), rgba(16, 185, 129, 0.09));
-            top: 55%;
-            right: 10%;
-            animation: bigFloat1 22s ease-in-out infinite reverse;
-        }
-
-        .big-bubble-5 {
-            width: 260px;
-            height: 260px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.08), rgba(52, 211, 153, 0.08));
-            bottom: 45%;
-            left: 60%;
-            animation: bigFloat2 19s ease-in-out infinite;
-        }
-
-        .big-bubble-6 {
-            width: 240px;
-            height: 240px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.07), rgba(16, 185, 129, 0.07));
-            top: 40%;
-            left: 40%;
-            animation: bigFloat3 17s ease-in-out infinite reverse;
-        }
-
-        .big-bubble-7 {
-            width: 290px;
-            height: 290px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.10), rgba(52, 211, 153, 0.10));
-            top: 75%;
-            right: 30%;
-            animation: bigFloat1 21s ease-in-out infinite;
-        }
-
-        .big-bubble-8 {
-            width: 230px;
-            height: 230px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
-            bottom: 70%;
-            left: 20%;
-            animation: bigFloat2 15s ease-in-out infinite reverse;
-        }
-
-        .big-bubble-9 {
-            width: 270px;
-            height: 270px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.09), rgba(52, 211, 153, 0.09));
-            top: 10%;
-            left: 50%;
-            animation: bigFloat3 23s ease-in-out infinite;
-        }
-
-        .big-bubble-10 {
-            width: 210px;
-            height: 210px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.06), rgba(16, 185, 129, 0.06));
-            bottom: 25%;
-            right: 50%;
-            animation: bigFloat1 14s ease-in-out infinite reverse;
-        }
-
-        @keyframes bigFloat1 {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px) rotate(0deg) scale(1);
-            }
-            25% {
-                transform: translateY(-40px) translateX(30px) rotate(90deg) scale(1.1);
-            }
-            50% {
-                transform: translateY(-20px) translateX(-25px) rotate(180deg) scale(0.9);
-            }
-            75% {
-                transform: translateY(35px) translateX(20px) rotate(270deg) scale(1.05);
-            }
-        }
-
-        @keyframes bigFloat2 {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px) scale(1);
-            }
-            33% {
-                transform: translateY(-50px) translateX(40px) scale(1.15);
-            }
-            66% {
-                transform: translateY(30px) translateX(-30px) scale(0.85);
-            }
-        }
-
-        @keyframes bigFloat3 {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px) rotate(0deg);
-            }
-            20% {
-                transform: translateY(25px) translateX(-35px) rotate(72deg);
-            }
-            40% {
-                transform: translateY(-35px) translateX(15px) rotate(144deg);
-            }
-            60% {
-                transform: translateY(20px) translateX(40px) rotate(216deg);
-            }
-            80% {
-                transform: translateY(-15px) translateX(-20px) rotate(288deg);
-            }
-        }
-
-        @keyframes float1 {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px) rotate(0deg);
-            }
-            33% {
-                transform: translateY(-30px) translateX(20px) rotate(120deg);
-            }
-            66% {
-                transform: translateY(20px) translateX(-15px) rotate(240deg);
-            }
-        }
-
-        @keyframes float2 {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px) rotate(0deg);
-            }
-            50% {
-                transform: translateY(-25px) translateX(25px) rotate(180deg);
-            }
-        }
-
-        @keyframes float3 {
-            0%, 100% {
-                transform: translateY(0px) translateX(0px) scale(1);
-            }
-            33% {
-                transform: translateY(15px) translateX(-20px) scale(1.1);
-            }
-            66% {
-                transform: translateY(-20px) translateX(10px) scale(0.9);
-            }
-        }
-
-        /* Layout */
-
-        /* Sidebar */
-        .sidebar {
-            position: fixed;
-            left: 0;
-            top: 80px;
-            width: 320px;
-            height: calc(100vh - 80px);
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            padding: 30px 20px;
-            z-index: 999;
-            transition: transform 0.3s ease;
-            overflow-y: auto;
-        }
-
-        .sidebar.sidebar-hidden {
-            transform: translateX(-100%);
-        }
-
-
-        .sidebar-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-        }
-
-        .sidebar-header h3 {
-            font-size: 1.8rem;
-            font-weight: 600;
-            margin-bottom: 5px;
-        }
-
-        .sidebar-header p {
-            font-size: 1.1rem;
-            opacity: 0.8;
-        }
-
-        .sidebar-menu {
-            list-style: none;
-        }
-
-        .sidebar-menu li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar-menu a {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            padding: 14px 18px;
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
-            font-weight: 500;
-        }
-
-        .sidebar-menu a:hover {
-            background: rgba(255, 255, 255, 0.2);
-            transform: translateX(5px);
-        }
-
-        .sidebar-menu a.active {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Main Content - Adjusted for wider sidebar */
-        .main-content {
-            margin-left: 320px;
-            position: relative;
-            z-index: 10;
-            transition: margin-left 0.3s ease;
-        }
-
-        .main-content.sidebar-hidden {
-            margin-left: 0;
-        }
-
-        /* Sidebar Toggle Button */
-        .sidebar-toggle {
-            position: fixed;
-            top: 90px;
-            left: 10px;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 1001;
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
-        }
-
-        .sidebar-toggle:hover {
-            background: linear-gradient(135deg, #059669, #10b981);
-            transform: scale(1.05);
-        }
-
-        .sidebar-toggle.sidebar-hidden {
-            left: 10px;
-        }
-
-        /* Header */
-        .main-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-bottom: 1px solid rgba(16, 185, 129, 0.1);
-            padding: 1rem 0;
-            position: sticky;
-            top: 0;
-            z-index: 999;
-            box-shadow: 0 2px 20px rgba(16, 185, 129, 0.08);
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #10b981;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-
-        .logo:hover {
-            color: #6366f1;
-            transform: scale(1.05);
-        }
-
-        .co {
-            background: linear-gradient(135deg, #10b981, #a855f7);
-            color: white;
-            padding: 0.25rem 0.5rem;
-            border-radius: 0.375rem;
-            font-size: 0.875rem;
-            margin-left: 0.5rem;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
-        }
-
-        /* Content Area */
-        .content-area {
-            padding: 2rem;
-            max-width: 1400px;
-            margin: 0 auto;
-        }
-
-        .page-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #047857;
-            margin-bottom: 2rem;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        /* Cards */
-        .admin-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 1rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 8px 32px rgba(16, 185, 129, 0.1);
-            margin-bottom: 2rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .admin-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 12px 40px rgba(16, 185, 129, 0.15);
-        }
-
-        .card-header {
-            background: linear-gradient(135deg, #10b981, #6366f1);
-            color: white;
-            padding: 1.25rem 1.5rem;
-            font-weight: 600;
-            font-size: 1.1rem;
-            border: none;
-        }
-
-        .card-body {
-            padding: 1.5rem;
-        }
-
-        /* Form Elements */
-        .form-label {
-            font-weight: 600;
-            color: #047857;
-            margin-bottom: 0.5rem;
-        }
-
-        .form-control, .form-select {
-            border: 2px solid #e5e7eb;
-            border-radius: 0.5rem;
-            padding: 0.75rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-            background: #ffffff;
-        }
-
-        .form-control::placeholder {
-            color: #9ca3af;
-        }
-
-        /* Buttons */
-        .btn {
-            font-weight: 600;
-            padding: 0.75rem 1.5rem;
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 0.5rem;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, #10b981, #6366f1);
-            color: white;
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-            background: linear-gradient(135deg, #7c3aed, #5b21b6);
-        }
-
-        .btn-edit {
-            background: linear-gradient(135deg, #06b6d4, #0891b2);
-            color: white;
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem;
-        }
-
-        .btn-edit:hover {
-            background: linear-gradient(135deg, #0891b2, #0e7490);
-            transform: translateY(-1px);
-        }
-
-        .btn-delete {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            font-size: 0.875rem;
-            padding: 0.5rem 1rem;
-        }
-
-        .btn-delete:hover {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            transform: translateY(-1px);
-        }
-
-        .btn-secondary {
-            background: #6b7280;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #4b5563;
-            transform: translateY(-1px);
-        }
-
-        /* Table */
-        .table-container {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 0.75rem;
-            overflow: hidden;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.1);
-        }
-
-        .table {
-            margin: 0;
-            background: transparent;
-        }
-
-        .table thead th {
-            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
-            color: #047857;
-            font-weight: 600;
-            border: none;
-            padding: 1rem;
-            text-transform: uppercase;
-            font-size: 0.875rem;
-            letter-spacing: 0.05em;
-        }
-
-        .table tbody td {
-            padding: 1rem;
-            border-top: 1px solid #e5e7eb;
-            vertical-align: middle;
-        }
-
-        .table tbody tr:hover {
-            background: rgba(16, 185, 129, 0.05);
-        }
-
-        .product-image {
-            width: 50px;
-            height: 50px;
-            object-fit: cover;
-            border-radius: 0.375rem;
-            border: 2px solid #e5e7eb;
-        }
-
-        /* Upload Features */
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            object-fit: cover;
-            border: 4px solid #10b981;
-            transition: all 0.3s ease;
-        }
-
-        .profile-img:hover {
-            transform: scale(1.05);
-            border-color: #6366f1;
-        }
-
-        .uploaded-image-item {
-            position: relative;
-            margin-bottom: 1rem;
-        }
-
-        .uploaded-image {
-            width: 100%;
-            height: 120px;
-            object-fit: cover;
-            border-radius: 0.5rem;
-            border: 2px solid #e5e7eb;
-            transition: all 0.3s ease;
-        }
-
-        .uploaded-image:hover {
-            border-color: #10b981;
-            transform: scale(1.02);
-        }
-
-        .image-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(16, 185, 129, 0.8);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            border-radius: 0.5rem;
-            cursor: pointer;
-        }
-
-        .uploaded-image-item:hover .image-overlay {
-            opacity: 1;
-        }
-
-        .copy-url-btn {
-            background: rgba(255, 255, 255, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            color: white;
-            border-radius: 0.25rem;
-            padding: 0.25rem 0.5rem;
-            font-size: 0.75rem;
-        }
-
-        .copy-url-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            color: white;
-        }
-
-        .progress {
-            height: 10px;
-            border-radius: 5px;
-            background: #f3f4f6;
-        }
-
-        .progress-bar {
-            background: linear-gradient(135deg, #10b981, #6366f1);
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .sidebar {
-                width: 280px;
-                transform: translateX(-100%);
-            }
-
-            .sidebar.sidebar-visible {
-                transform: translateX(0);
-            }
-
-            .main-content {
-                margin-left: 0;
-            }
-
-            .content-area {
-                padding: 1rem;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-
-            .sidebar-toggle {
-                display: flex;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .sidebar {
-                width: 250px;
-            }
-
-            .sidebar-header h3 {
-                font-size: 1.4rem;
-            }
-
-            .sidebar-header p {
-                font-size: 0.9rem;
-            }
-
-            .sidebar-menu a {
-                font-size: 1rem;
-                padding: 12px 14px;
-            }
-        }
-
-        @media (min-width: 769px) {
-            .sidebar-toggle {
-                display: none;
-            }
-        }
-    </style>
-</head>
-
-<body>
-    <!-- Background Circles -->
-    <div class="bg-circle bg-circle-1"></div>
-    <div class="bg-circle bg-circle-2"></div>
-    <div class="bg-circle bg-circle-3"></div>
-    <div class="bg-circle bg-circle-4"></div>
-    <div class="bg-circle bg-circle-5"></div>
-    <div class="bg-circle bg-circle-6"></div>
-    <div class="bg-circle bg-circle-7"></div>
-    <div class="bg-circle bg-circle-8"></div>
-    <div class="bg-circle bg-circle-9"></div>
-    <div class="bg-circle bg-circle-10"></div>
-    <div class="bg-circle bg-circle-11"></div>
-
-    <!-- Big Animated Bubbles -->
-    <div class="bg-circle big-bubble-1"></div>
-    <div class="bg-circle big-bubble-2"></div>
-    <div class="bg-circle big-bubble-3"></div>
-    <div class="bg-circle big-bubble-4"></div>
-    <div class="bg-circle big-bubble-5"></div>
-    <div class="bg-circle big-bubble-6"></div>
-    <div class="bg-circle big-bubble-7"></div>
-    <div class="bg-circle big-bubble-8"></div>
-    <div class="bg-circle big-bubble-9"></div>
-    <div class="bg-circle big-bubble-10"></div>
-
-    <!-- Sidebar Toggle Button -->
-    <button class="sidebar-toggle" onclick="toggleSidebar()">
-        <i class="fas fa-bars"></i>
-    </button>
-
-    <!-- Sidebar - Always Visible -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <h3>Admin Panel</h3>
-            <p>Manage your products</p>
-        </div>
-        <ul class="sidebar-menu">
-            <li><a href="../index.php"><i class="fas fa-home"></i> Dashboard</a></li>
-            <li><a href="category.php"><i class="fas fa-list"></i> Categories</a></li>
-            <li><a href="brand.php"><i class="fas fa-tags"></i> Brands</a></li>
-            <li><a href="#" class="active"><i class="fas fa-box"></i> Products</a></li>
-            <li><a href="orders.php"><i class="fas fa-shopping-cart"></i> Orders</a></li>
-            <li><a href="appointments.php"><i class="fas fa-calendar-check"></i> Appointments</a></li>
-            <li><a href="#"><i class="fas fa-users"></i> Customers</a></li>
-            <li><a href="#"><i class="fas fa-chart-bar"></i> Analytics</a></li>
-            <li><a href="#"><i class="fas fa-cog"></i> Settings</a></li>
-        </ul>
+<?php include 'includes/admin_header.php'; ?>
+
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Product Management</h1>
+    <p class="page-subtitle">Manage inventory, track stock levels, and analyze product performance</p>
+    <nav class="breadcrumb-custom">
+        <span>Home > Products</span>
+    </nav>
+</div>
+
+<?php if ($success_message): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <?= htmlspecialchars($success_message) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
+<?php endif; ?>
 
-    <!-- Main Content -->
-    <div class="main-content">
-            <!-- Header -->
-            <header class="main-header">
-                <div class="container-fluid px-4">
-                    <div class="d-flex align-items-center justify-content-between">
-                        <!-- Logo -->
-                        <a href="../index.php" class="logo">
-                            FlavourHub<span class="co">co</span>
-                        </a>
+<?php if ($error_message): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <?= htmlspecialchars($error_message) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
 
-                        <!-- Header Actions -->
-                        <div>
-                            <span class="me-3">Welcome, <?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?>!</span>
-                            <a href="../index.php" class="btn btn-secondary btn-sm me-2">Back to Home</a>
-                            <a href="../login/logout.php" class="btn btn-outline-secondary btn-sm">Logout</a>
-                        </div>
-                    </div>
+<!-- Analytics Dashboard -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.1s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-primary mb-3">
+                    <i class="fas fa-cubes fa-3x"></i>
                 </div>
-            </header>
-
-            <!-- Content Area -->
-            <div class="content-area">
-                <h1 class="page-title">Product Management</h1>
-
-
-                <!-- Add Product Form -->
-                <div class="admin-card">
-                    <div class="card-header">
-                        Add New Product
-                    </div>
-                    <div class="card-body">
-                        <form id="addProductForm" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="product_title" class="form-label">Product Title</label>
-                                    <input type="text" class="form-control" id="product_title" name="product_title" required>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="product_price" class="form-label">Price (GH₵)</label>
-                                    <input type="number" step="0.01" min="0" class="form-control" id="product_price" name="product_price" required>
-                                </div>
-                                <div class="col-md-3 mb-3">
-                                    <label for="stock_quantity" class="form-label">Stock Quantity</label>
-                                    <input type="number" min="0" class="form-control" id="stock_quantity" name="stock_quantity" value="10" required>
-                                    <div class="form-text">Number of items in stock</div>
-                                </div>
-                            </div>
-
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="category_id" class="form-label">Category</label>
-                                    <select class="form-select" id="category_id" name="category_id" required>
-                                        <option value="">Select Category</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="brand_id" class="form-label">Brand</label>
-                                    <select class="form-select" id="brand_id" name="brand_id" required>
-                                        <option value="">Select Brand</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="product_desc" class="form-label">Description</label>
-                                <textarea class="form-control" id="product_desc" name="product_desc" rows="3"></textarea>
-                            </div>
-
-                            <div class="mb-3">
-                                <label for="product_keywords" class="form-label">Keywords</label>
-                                <input type="text" class="form-control" id="product_keywords" name="product_keywords" placeholder="Separate with commas">
-                            </div>
-
-                            <!-- Image Upload Section -->
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="product_image" class="form-label">Main Product Image</label>
-                                    <input type="file" class="form-control" id="product_image" name="product_image" accept="image/*">
-                                    <div class="form-text">Upload the main product image</div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="additional_images" class="form-label">Additional Images</label>
-                                    <input type="file" class="form-control" id="additional_images" name="additional_images[]" multiple accept="image/*">
-                                    <div class="form-text">Upload additional product images (optional)</div>
-                                </div>
-                            </div>
-
-                            <button type="submit" class="btn btn-primary">
-                                <i class="fas fa-plus"></i>
-                                Add Product
-                            </button>
-                        </form>
-                    </div>
-                </div>
-
-                <!-- Products Table -->
-                <div class="admin-card">
-                    <div class="card-header">
-                        Your Products
-                    </div>
-                    <div class="card-body p-0">
-                        <div class="table-container">
-                            <table class="table" id="productTable">
-                                <thead>
-                                    <tr>
-                                        <th>Image</th>
-                                        <th>Product Title</th>
-                                        <th>Price</th>
-                                        <th>Stock</th>
-                                        <th>Category</th>
-                                        <th>Brand</th>
-                                        <th>Actions</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td colspan="6" class="text-center">No products found</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Bulk Image Upload for Existing Products -->
-                <div class="admin-card mb-4">
-                    <div class="card-header">
-                        <i class="fas fa-images me-2"></i>Bulk Image Upload for Existing Products
-                    </div>
-                    <div class="card-body">
-                        <form id="bulkUploadForm" enctype="multipart/form-data">
-                            <div class="row">
-                                <div class="col-md-4">
-                                    <label for="bulk_product_id" class="form-label">Select Product</label>
-                                    <select class="form-select" id="bulk_product_id" name="product_id" required>
-                                        <option value="">Choose a product...</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-6">
-                                    <label for="bulk_images" class="form-label">Select Product Images</label>
-                                    <input type="file" class="form-control" id="bulk_images" name="images[]" multiple accept="image/*" required>
-                                    <div class="form-text">Select multiple images (JPG, PNG, GIF, WEBP). Max 5MB per file.</div>
-                                </div>
-                                <div class="col-md-2">
-                                    <label class="form-label">&nbsp;</label>
-                                    <button type="submit" class="btn btn-primary d-block w-100">
-                                        <i class="fas fa-upload me-2"></i>Upload Images
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                        <div id="upload-progress" class="mt-3" style="display: none;">
-                            <div class="progress">
-                                <div class="progress-bar progress-bar-striped progress-bar-animated" role="progressbar" style="width: 0%"></div>
-                            </div>
-                        </div>
-                        <div id="uploaded-images" class="mt-3"></div>
-                    </div>
-                </div>
+                <h3 class="counter text-primary" data-target="<?= $total_products ?>">0</h3>
+                <p class="text-muted mb-0">Total Products</p>
+                <small class="text-info">
+                    <i class="fas fa-box me-1"></i>
+                    In inventory
+                </small>
             </div>
         </div>
     </div>
 
-    <!-- Edit Product Modal -->
-    <div class="modal fade" id="editProductModal" tabindex="-1">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Edit Product</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.2s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-success mb-3">
+                    <i class="fas fa-dollar-sign fa-3x"></i>
                 </div>
-                <div class="modal-body">
-                    <form id="updateProductForm">
-                        <input type="hidden" id="edit_product_id" name="product_id">
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="edit_product_title" class="form-label">Product Title</label>
-                                <input type="text" class="form-control" id="edit_product_title" name="product_title" required>
-                            </div>
-                            <div class="col-md-4 mb-3">
-                                <label for="edit_product_price" class="form-label">Price (GH₵)</label>
-                                <input type="number" step="0.01" min="0" class="form-control" id="edit_product_price" name="product_price" required>
-                            </div>
-                            <div class="col-md-2 mb-3">
-                                <label for="edit_stock_quantity" class="form-label">Stock</label>
-                                <input type="number" min="0" class="form-control" id="edit_stock_quantity" name="stock_quantity" required>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="edit_category_id" class="form-label">Category</label>
-                                <select class="form-select" id="edit_category_id" name="category_id" required>
-                                    <option value="">Select Category</option>
-                                </select>
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="edit_brand_id" class="form-label">Brand</label>
-                                <select class="form-select" id="edit_brand_id" name="brand_id" required>
-                                    <option value="">Select Brand</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="mb-3">
-                            <label for="edit_product_desc" class="form-label">Description</label>
-                            <textarea class="form-control" id="edit_product_desc" name="product_desc" rows="3"></textarea>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6 mb-3">
-                                <label for="edit_product_image" class="form-label">Product Image</label>
-                                <input type="file" class="form-control" id="edit_product_image" name="product_image" accept="image/*">
-                            </div>
-                            <div class="col-md-6 mb-3">
-                                <label for="edit_product_keywords" class="form-label">Keywords</label>
-                                <input type="text" class="form-control" id="edit_product_keywords" name="product_keywords">
-                            </div>
-                        </div>
-
-                        <button type="submit" class="btn btn-primary">
-                            <i class="fas fa-save"></i>
-                            Update Product
-                        </button>
-                    </form>
-                </div>
+                <h3 class="counter text-success" data-target="<?= round($total_inventory_value) ?>">0</h3>
+                <p class="text-muted mb-0">Inventory Value (GH₵)</p>
+                <small class="text-success">
+                    <i class="fas fa-chart-line me-1"></i>
+                    Total worth
+                </small>
             </div>
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-    <script src="../js/product.js"></script>
-    <script>
-        let sidebarHidden = false;
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.3s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-warning mb-3">
+                    <i class="fas fa-exclamation-triangle fa-3x"></i>
+                </div>
+                <h3 class="counter text-warning" data-target="<?= count($low_stock_products) ?>">0</h3>
+                <p class="text-muted mb-0">Low Stock Items</p>
+                <small class="text-warning">
+                    <i class="fas fa-arrow-down me-1"></i>
+                    Below 10 units
+                </small>
+            </div>
+        </div>
+    </div>
 
-        function toggleSidebar() {
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const toggleBtn = document.querySelector('.sidebar-toggle');
-            const toggleIcon = toggleBtn.querySelector('i');
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.4s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-danger mb-3">
+                    <i class="fas fa-times-circle fa-3x"></i>
+                </div>
+                <h3 class="counter text-danger" data-target="<?= count($out_of_stock) ?>">0</h3>
+                <p class="text-muted mb-0">Out of Stock</p>
+                <small class="text-danger">
+                    <i class="fas fa-ban me-1"></i>
+                    Zero inventory
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
 
-            if (window.innerWidth <= 768) {
-                // Mobile behavior: show/hide sidebar
-                sidebar.classList.toggle('sidebar-visible');
-                if (sidebar.classList.contains('sidebar-visible')) {
-                    toggleIcon.classList.remove('fa-bars');
-                    toggleIcon.classList.add('fa-times');
-                } else {
-                    toggleIcon.classList.remove('fa-times');
-                    toggleIcon.classList.add('fa-bars');
+<!-- Product Management -->
+<div class="row g-4 mb-4">
+    <!-- Add Product Form -->
+    <div class="col-lg-4">
+        <div class="admin-card" style="animation-delay: 0.5s;">
+            <div class="card-header-custom">
+                <h5><i class="fas fa-plus me-2"></i>Add New Product</h5>
+            </div>
+            <div class="card-body-custom">
+                <form method="POST" class="modern-form">
+                    <div class="form-group mb-3">
+                        <label for="product_title" class="form-label-modern">Product Title</label>
+                        <input type="text" class="form-control-modern" id="product_title" name="product_title" required>
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="product_price" class="form-label-modern">Price (GH₵)</label>
+                            <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="stock_quantity" class="form-label-modern">Stock</label>
+                            <input type="number" class="form-control-modern" id="stock_quantity" name="stock_quantity" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="product_desc" class="form-label-modern">Description</label>
+                        <textarea class="form-control-modern" id="product_desc" name="product_desc" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="product_cat" class="form-label-modern">Category</label>
+                        <select class="form-control-modern" id="product_cat" name="product_cat" required>
+                            <option value="">Select Category</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?= $category['cat_id'] ?>"><?= htmlspecialchars($category['cat_name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="product_brand" class="form-label-modern">Brand</label>
+                        <select class="form-control-modern" id="product_brand" name="product_brand" required>
+                            <option value="">Select Brand</option>
+                            <?php foreach ($brands as $brand): ?>
+                                <option value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+
+                    <button type="submit" name="add_product" class="btn-primary-custom w-100">
+                        <i class="fas fa-plus me-2"></i>
+                        Add Product
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Inventory Chart -->
+    <div class="col-lg-8">
+        <div class="admin-card">
+            <div class="card-header-custom">
+                <h5><i class="fas fa-chart-bar me-2"></i>Category Distribution</h5>
+            </div>
+            <div class="card-body-custom">
+                <canvas id="categoryChart" height="300"></canvas>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Products Table -->
+<div class="admin-card" style="animation-delay: 0.7s;">
+    <div class="card-header-custom">
+        <h5><i class="fas fa-list me-2"></i>Product Inventory</h5>
+        <div class="ms-auto">
+            <button class="btn btn-light btn-sm" onclick="filterLowStock()">
+                <i class="fas fa-filter me-1"></i> Low Stock
+            </button>
+            <button class="btn btn-light btn-sm" onclick="refreshProducts()">
+                <i class="fas fa-sync-alt me-1"></i> Refresh
+            </button>
+        </div>
+    </div>
+    <div class="card-body-custom p-0">
+        <?php if (!empty($products)): ?>
+            <div class="table-responsive">
+                <table class="table table-custom mb-0">
+                    <thead>
+                        <tr>
+                            <th>Product</th>
+                            <th>Category</th>
+                            <th>Brand</th>
+                            <th>Price</th>
+                            <th>Stock</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach (array_slice($products, 0, 15) as $index => $product): ?>
+                            <?php
+                            $stock = $product['stock_quantity'] ?? 0;
+                            $status_class = $stock == 0 ? 'danger' : ($stock < 10 ? 'warning' : 'success');
+                            $status_text = $stock == 0 ? 'Out of Stock' : ($stock < 10 ? 'Low Stock' : 'In Stock');
+                            ?>
+                            <tr class="product-row" style="animation-delay: <?= 0.8 + ($index * 0.05) ?>s;">
+                                <td>
+                                    <div class="d-flex align-items-center">
+                                        <div class="product-avatar me-3">
+                                            <i class="fas fa-box"></i>
+                                        </div>
+                                        <div>
+                                            <strong><?= htmlspecialchars($product['product_title']) ?></strong><br>
+                                            <small class="text-muted">ID: #<?= $product['product_id'] ?></small>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <?php
+                                    $category_name = 'Unknown';
+                                    foreach ($categories as $cat) {
+                                        if ($cat['cat_id'] == $product['product_cat']) {
+                                            $category_name = $cat['cat_name'];
+                                            break;
+                                        }
+                                    }
+                                    ?>
+                                    <span class="badge bg-secondary"><?= htmlspecialchars($category_name) ?></span>
+                                </td>
+                                <td>
+                                    <?php
+                                    $brand_name = 'Unknown';
+                                    foreach ($brands as $brand) {
+                                        if ($brand['brand_id'] == $product['product_brand']) {
+                                            $brand_name = $brand['brand_name'];
+                                            break;
+                                        }
+                                    }
+                                    ?>
+                                    <span class="badge bg-info"><?= htmlspecialchars($brand_name) ?></span>
+                                </td>
+                                <td><strong class="text-success">GH₵<?= number_format($product['product_price'], 2) ?></strong></td>
+                                <td>
+                                    <span class="badge bg-<?= $status_class ?> rounded-pill">
+                                        <?= $stock ?> units
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="status-badge status-<?= strtolower(str_replace(' ', '-', $status_text)) ?>">
+                                        <?= $status_text ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <div class="btn-group" role="group">
+                                        <button class="btn btn-sm btn-outline-primary"
+                                                onclick="editProduct(<?= $product['product_id'] ?>)"
+                                                title="Edit Product">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="deleteProduct(<?= $product['product_id'] ?>, '<?= htmlspecialchars($product['product_title']) ?>')"
+                                                title="Delete Product">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+            <?php if (count($products) > 15): ?>
+                <div class="text-center p-3 border-top">
+                    <small class="text-muted">Showing latest 15 products of <?= count($products) ?> total</small>
+                </div>
+            <?php endif; ?>
+        <?php else: ?>
+            <div class="text-center py-5">
+                <i class="fas fa-cubes fa-4x text-muted mb-3"></i>
+                <h3>No Products Found</h3>
+                <p class="text-muted">Start by adding your first product.</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</div>
+
+<!-- Enhanced Styles -->
+<style>
+.analytics-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.analytics-card:hover {
+    transform: translateY(-10px);
+}
+
+.analytics-icon {
+    transition: all 0.3s ease;
+}
+
+.analytics-card:hover .analytics-icon {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.counter {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.form-label-modern {
+    font-weight: 600;
+    color: var(--primary-navy);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control-modern {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+}
+
+.form-control-modern:focus {
+    outline: none;
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.product-avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 12px;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.product-row {
+    animation: slideInFromLeft 0.6s ease forwards;
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+@keyframes slideInFromLeft {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.product-row:hover {
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateX(5px);
+}
+
+.status-in-stock {
+    background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+    color: #065f46;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-low-stock {
+    background: linear-gradient(135deg, #fef3c7, #fed7aa);
+    color: #92400e;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-out-of-stock {
+    background: linear-gradient(135deg, #fee2e2, #fecaca);
+    color: #991b1b;
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+</style>
+
+<script>
+// Initialize category chart
+function initializeCategoryChart() {
+    const ctx = document.getElementById('categoryChart').getContext('2d');
+    const categoryData = <?= json_encode($category_distribution) ?>;
+    const categories = <?= json_encode(array_column($categories, 'cat_name', 'cat_id')) ?>;
+
+    const labels = Object.keys(categoryData).map(id => categories[id] || 'Unknown');
+    const data = Object.values(categoryData);
+    const colors = [
+        'rgb(59, 130, 246)',
+        'rgb(245, 158, 11)',
+        'rgb(16, 185, 129)',
+        'rgb(239, 68, 68)',
+        'rgb(139, 92, 246)',
+        'rgb(236, 72, 153)'
+    ];
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: colors,
+                borderWidth: 0,
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: { usePointStyle: true }
                 }
-            } else {
-                // Desktop behavior: slide sidebar and adjust content
-                sidebarHidden = !sidebarHidden;
-
-                if (sidebarHidden) {
-                    sidebar.classList.add('sidebar-hidden');
-                    mainContent.classList.add('sidebar-hidden');
-                    toggleBtn.classList.add('sidebar-hidden');
-                    toggleIcon.classList.remove('fa-bars');
-                    toggleIcon.classList.add('fa-chevron-right');
-                } else {
-                    sidebar.classList.remove('sidebar-hidden');
-                    mainContent.classList.remove('sidebar-hidden');
-                    toggleBtn.classList.remove('sidebar-hidden');
-                    toggleIcon.classList.remove('fa-chevron-right');
-                    toggleIcon.classList.add('fa-bars');
-                }
+            },
+            animation: {
+                animateRotate: true,
+                duration: 2000
             }
         }
+    });
+}
 
-        // Handle window resize to ensure proper behavior across different screen sizes
-        window.addEventListener('resize', function() {
-            const sidebar = document.querySelector('.sidebar');
-            const mainContent = document.querySelector('.main-content');
-            const toggleBtn = document.querySelector('.sidebar-toggle');
-            const toggleIcon = toggleBtn.querySelector('i');
+// Counter Animation
+function animateCounters() {
+    const counters = document.querySelectorAll('.counter');
 
-            if (window.innerWidth > 768) {
-                // Desktop: restore sidebar based on sidebarHidden state
-                sidebar.classList.remove('sidebar-visible');
-                if (sidebarHidden) {
-                    sidebar.classList.add('sidebar-hidden');
-                    mainContent.classList.add('sidebar-hidden');
-                    toggleIcon.classList.remove('fa-bars', 'fa-times');
-                    toggleIcon.classList.add('fa-chevron-right');
-                } else {
-                    sidebar.classList.remove('sidebar-hidden');
-                    mainContent.classList.remove('sidebar-hidden');
-                    toggleIcon.classList.remove('fa-chevron-right', 'fa-times');
-                    toggleIcon.classList.add('fa-bars');
-                }
-            } else {
-                // Mobile: reset desktop states and use mobile behavior
-                sidebar.classList.remove('sidebar-hidden');
-                mainContent.classList.remove('sidebar-hidden');
-                toggleBtn.classList.remove('sidebar-hidden');
-                if (!sidebar.classList.contains('sidebar-visible')) {
-                    toggleIcon.classList.remove('fa-chevron-right', 'fa-times');
-                    toggleIcon.classList.add('fa-bars');
-                }
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-target'));
+                const increment = target / 50;
+                let count = 0;
+
+                const updateCounter = () => {
+                    if (count < target) {
+                        count += increment;
+                        counter.textContent = Math.ceil(count);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+
+                updateCounter();
+                observer.unobserve(counter);
             }
         });
-    </script>
-</body>
+    });
 
-</html>
+    counters.forEach(counter => observer.observe(counter));
+}
+
+// Product management functions
+function editProduct(productId) {
+    alert(`Edit product #${productId} - Advanced edit form coming soon!`);
+}
+
+function deleteProduct(productId, productName) {
+    if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.innerHTML = `
+            <input type="hidden" name="delete_product" value="1">
+            <input type="hidden" name="product_id" value="${productId}">
+        `;
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+
+function filterLowStock() {
+    const rows = document.querySelectorAll('.product-row');
+    rows.forEach(row => {
+        const stockBadge = row.querySelector('.badge');
+        const stockText = stockBadge ? stockBadge.textContent : '';
+        const stockNumber = parseInt(stockText.match(/\d+/));
+
+        if (stockNumber < 10) {
+            row.style.display = '';
+            row.style.background = 'rgba(245, 158, 11, 0.1)';
+        } else {
+            row.style.display = 'none';
+        }
+    });
+}
+
+function refreshProducts() {
+    window.location.reload();
+}
+
+// Initialize everything
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize chart
+    setTimeout(initializeCategoryChart, 500);
+
+    // Start counter animations
+    setTimeout(animateCounters, 300);
+
+    // Animate cards
+    const cards = document.querySelectorAll('.admin-card, .analytics-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    // Animate table rows
+    setTimeout(() => {
+        document.querySelectorAll('.product-row').forEach((row, index) => {
+            setTimeout(() => {
+                row.style.opacity = '1';
+                row.style.transform = 'translateX(0)';
+            }, index * 50);
+        });
+    }, 800);
+});
+</script>
+
+<?php include 'includes/admin_footer.php'; ?>

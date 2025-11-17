@@ -1,17 +1,21 @@
 <?php
-// Start session and include required files
-session_start();
-require_once(__DIR__ . '/../settings/core.php');
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
+require_once __DIR__ . '/../settings/core.php';
+require_admin(); // only admins
+
+$page_title = "Support Messages";
+
+// Include controllers
 require_once(__DIR__ . '/../controllers/support_controller.php');
 
-// Check if user is logged in and is admin
-if (!check_login() || !check_admin()) {
-    header("Location: ../login/login.php");
-    exit();
-}
-
 // Handle form submissions
-if ($_POST) {
+$success_message = '';
+$error_message = '';
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_status'])) {
         $message_id = intval($_POST['message_id']);
         $new_status = $_POST['status'];
@@ -41,427 +45,733 @@ if ($_POST) {
 $status_filter = $_GET['status'] ?? '';
 $limit = $_GET['limit'] ?? 50;
 
-// Get all support messages
-$messages = get_all_support_messages_ctr($status_filter ?: null, $limit);
-$stats = get_support_statistics_ctr();
+// Get all support messages with enhanced analytics
+try {
+    // Check if functions exist and are working
+    if (function_exists('get_all_support_messages_ctr')) {
+        $messages = get_all_support_messages_ctr($status_filter ?: null, $limit);
+    } else {
+        $messages = [];
+        $error_message = "Support controller function not found.";
+    }
+
+    if (function_exists('get_support_statistics_ctr')) {
+        $stats = get_support_statistics_ctr();
+    } else {
+        $stats = ['total' => 0, 'new' => 0, 'in_progress' => 0, 'resolved' => 0, 'closed' => 0];
+        if (empty($error_message)) {
+            $error_message = "Support statistics function not found.";
+        }
+    }
+
+    // Initialize with defaults if functions returned false
+    if (!$messages || $messages === false) $messages = [];
+    if (!$stats || $stats === false) $stats = ['total' => 0, 'new' => 0, 'in_progress' => 0, 'resolved' => 0, 'closed' => 0];
+
+    // Calculate additional analytics
+    $total_messages = $stats['total'] ?? 0;
+    $new_messages = $stats['new'] ?? 0;
+    $in_progress_messages = $stats['in_progress'] ?? 0;
+    $resolved_messages = $stats['resolved'] ?? 0;
+    $closed_messages = $stats['closed'] ?? 0;
+
+    // Calculate response rate
+    $response_rate = $total_messages > 0 ? round((($resolved_messages + $closed_messages) / $total_messages) * 100) : 0;
+
+    // Calculate urgent messages - with safety checks
+    $urgent_count = 0;
+    if (is_array($messages)) {
+        $urgent_messages = array_filter($messages, function($msg) {
+            return isset($msg['priority']) && $msg['priority'] === 'urgent';
+        });
+        $urgent_count = count($urgent_messages);
+    }
+
+    // Today's messages - with safety checks
+    $today_count = 0;
+    if (is_array($messages)) {
+        $today = date('Y-m-d');
+        $today_messages = array_filter($messages, function($msg) use ($today) {
+            return isset($msg['created_at']) && date('Y-m-d', strtotime($msg['created_at'])) === $today;
+        });
+        $today_count = count($today_messages);
+    }
+
+} catch (Exception $e) {
+    $messages = [];
+    $stats = ['total' => 0, 'new' => 0, 'in_progress' => 0, 'resolved' => 0, 'closed' => 0];
+    $total_messages = 0;
+    $new_messages = 0;
+    $in_progress_messages = 0;
+    $resolved_messages = 0;
+    $closed_messages = 0;
+    $response_rate = 0;
+    $urgent_count = 0;
+    $today_count = 0;
+    $error_message = "Unable to load support messages: " . $e->getMessage();
+}
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Support Messages - Admin Panel</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        .sidebar {
-            background: #2c3e50;
-            min-height: 100vh;
-            color: white;
-        }
+<?php include 'includes/admin_header.php'; ?>
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Support Center</h1>
+    <p class="page-subtitle">Manage customer support tickets with advanced analytics and response tracking</p>
+    <nav class="breadcrumb-custom">
+        <span>Home > Support</span>
+    </nav>
+</div>
 
-        .sidebar .nav-link {
-            color: #bdc3c7;
-            transition: all 0.3s ease;
-        }
+<?php if ($success_message): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle me-2"></i>
+        <?= htmlspecialchars($success_message) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
 
-        .sidebar .nav-link:hover,
-        .sidebar .nav-link.active {
-            color: white;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 5px;
-        }
+<?php if ($error_message): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-exclamation-circle me-2"></i>
+        <?= htmlspecialchars($error_message) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+<?php endif; ?>
 
-        .stats-card {
-            border: none;
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            transition: transform 0.2s ease;
-        }
-
-        .stats-card:hover {
-            transform: translateY(-2px);
-        }
-
-        .message-card {
-            border: none;
-            border-radius: 10px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-        }
-
-        .priority-urgent {
-            border-left: 4px solid #e74c3c;
-        }
-
-        .priority-high {
-            border-left: 4px solid #f39c12;
-        }
-
-        .priority-normal {
-            border-left: 4px solid #3498db;
-        }
-
-        .priority-low {
-            border-left: 4px solid #95a5a6;
-        }
-
-        .status-badge {
-            font-size: 0.75rem;
-            padding: 4px 8px;
-        }
-
-        .status-new {
-            background: #e74c3c;
-        }
-
-        .status-in_progress {
-            background: #f39c12;
-        }
-
-        .status-resolved {
-            background: #27ae60;
-        }
-
-        .status-closed {
-            background: #95a5a6;
-        }
-
-        .subject-tag {
-            font-size: 0.7rem;
-            padding: 2px 6px;
-            border-radius: 10px;
-            margin-right: 5px;
-        }
-
-        .subject-order {
-            background: #3498db;
-            color: white;
-        }
-
-        .subject-device_quality {
-            background: #e74c3c;
-            color: white;
-        }
-
-        .subject-repair {
-            background: #f39c12;
-            color: white;
-        }
-
-        .subject-device_drop {
-            background: #27ae60;
-            color: white;
-        }
-
-        .subject-tech_revival {
-            background: #9b59b6;
-            color: white;
-        }
-
-        .main-content {
-            background: #f8f9fa;
-            min-height: 100vh;
-        }
-
-        .page-header {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-    </style>
-</head>
-<body>
-    <div class="container-fluid">
-        <div class="row">
-            <!-- Sidebar -->
-            <div class="col-md-3 col-lg-2 sidebar p-3">
-                <div class="d-flex align-items-center mb-4">
-                    <h4 class="mb-0">Gadget<span style="background: #008060; padding: 2px 6px; border-radius: 4px; margin-left: 5px;">Garage</span></h4>
+<!-- Analytics Cards -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.1s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-primary mb-3">
+                    <i class="fas fa-ticket-alt fa-3x"></i>
                 </div>
-
-                <ul class="nav nav-pills flex-column mb-auto">
-                    <li class="nav-item">
-                        <a href="../admin/category.php" class="nav-link">
-                            <i class="fas fa-tachometer-alt me-2"></i>
-                            Dashboard
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="#" class="nav-link active">
-                            <i class="fas fa-headset me-2"></i>
-                            Support Messages
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../admin/products.php" class="nav-link">
-                            <i class="fas fa-box me-2"></i>
-                            Products
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../admin/category.php" class="nav-link">
-                            <i class="fas fa-tags me-2"></i>
-                            Categories
-                        </a>
-                    </li>
-                </ul>
-
-                <hr>
-                <div class="dropdown">
-                    <a href="#" class="d-flex align-items-center text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown">
-                        <strong><?php echo htmlspecialchars($_SESSION['name'] ?? 'Admin'); ?></strong>
-                    </a>
-                    <ul class="dropdown-menu dropdown-menu-dark text-small shadow">
-                        <li><a class="dropdown-item" href="../login/logout.php">Sign out</a></li>
-                    </ul>
-                </div>
+                <h3 class="counter text-primary" data-target="<?= $total_messages ?>">0</h3>
+                <p class="text-muted mb-0">Total Tickets</p>
             </div>
+        </div>
+    </div>
 
-            <!-- Main Content -->
-            <div class="col-md-9 col-lg-10 main-content p-4">
-                <!-- Page Header -->
-                <div class="page-header">
-                    <div class="row align-items-center">
-                        <div class="col">
-                            <h2 class="mb-0"><i class="fas fa-headset text-primary me-2"></i>Customer Support Messages</h2>
-                            <small class="text-muted">Manage and respond to customer inquiries</small>
-                        </div>
-                        <div class="col-auto">
-                            <div class="d-flex gap-2">
-                                <select class="form-select" id="statusFilter" onchange="filterByStatus(this.value)">
-                                    <option value="">All Messages</option>
-                                    <option value="new" <?php echo $status_filter === 'new' ? 'selected' : ''; ?>>New</option>
-                                    <option value="in_progress" <?php echo $status_filter === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
-                                    <option value="resolved" <?php echo $status_filter === 'resolved' ? 'selected' : ''; ?>>Resolved</option>
-                                    <option value="closed" <?php echo $status_filter === 'closed' ? 'selected' : ''; ?>>Closed</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.2s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-danger mb-3">
+                    <i class="fas fa-exclamation-triangle fa-3x"></i>
                 </div>
+                <h3 class="counter text-danger" data-target="<?= $urgent_count ?>">0</h3>
+                <p class="text-muted mb-0">Urgent Tickets</p>
+            </div>
+        </div>
+    </div>
 
-                <!-- Success/Error Messages -->
-                <?php if (isset($success_message)): ?>
-                    <div class="alert alert-success alert-dismissible fade show" role="alert">
-                        <i class="fas fa-check-circle me-2"></i><?php echo $success_message; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <?php if (isset($error_message)): ?>
-                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                        <i class="fas fa-exclamation-circle me-2"></i><?php echo $error_message; ?>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                <?php endif; ?>
-
-                <!-- Statistics Cards -->
-                <div class="row mb-4">
-                    <div class="col-md-3">
-                        <div class="card stats-card border-primary">
-                            <div class="card-body text-center">
-                                <div class="text-primary">
-                                    <i class="fas fa-envelope fa-2x mb-2"></i>
-                                </div>
-                                <h3 class="mb-1"><?php echo $stats['total'] ?? 0; ?></h3>
-                                <p class="text-muted mb-0">Total Messages</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card stats-card border-danger">
-                            <div class="card-body text-center">
-                                <div class="text-danger">
-                                    <i class="fas fa-exclamation-circle fa-2x mb-2"></i>
-                                </div>
-                                <h3 class="mb-1"><?php echo $stats['new'] ?? 0; ?></h3>
-                                <p class="text-muted mb-0">New Messages</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card stats-card border-warning">
-                            <div class="card-body text-center">
-                                <div class="text-warning">
-                                    <i class="fas fa-clock fa-2x mb-2"></i>
-                                </div>
-                                <h3 class="mb-1"><?php echo $stats['in_progress'] ?? 0; ?></h3>
-                                <p class="text-muted mb-0">In Progress</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div class="card stats-card border-success">
-                            <div class="card-body text-center">
-                                <div class="text-success">
-                                    <i class="fas fa-check-circle fa-2x mb-2"></i>
-                                </div>
-                                <h3 class="mb-1"><?php echo $stats['resolved'] ?? 0; ?></h3>
-                                <p class="text-muted mb-0">Resolved</p>
-                            </div>
-                        </div>
-                    </div>
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.3s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-success mb-3">
+                    <i class="fas fa-chart-line fa-3x"></i>
                 </div>
+                <h3 class="counter text-success" data-target="<?= $response_rate ?>">0</h3>
+                <p class="text-muted mb-0">Response Rate (%)</p>
+            </div>
+        </div>
+    </div>
 
-                <!-- Support Messages -->
-                <div class="row">
-                    <?php if (empty($messages)): ?>
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="card-body text-center py-5">
-                                    <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
-                                    <h5 class="text-muted">No messages found</h5>
-                                    <p class="text-muted">There are no support messages matching your criteria.</p>
-                                </div>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <?php foreach ($messages as $message): ?>
-                            <div class="col-12">
-                                <div class="card message-card priority-<?php echo $message['priority']; ?>">
-                                    <div class="card-header d-flex justify-content-between align-items-center">
-                                        <div class="d-flex align-items-center">
-                                            <span class="subject-tag subject-<?php echo $message['subject']; ?>">
-                                                <?php
-                                                $subject_labels = [
-                                                    'order' => 'Order',
-                                                    'device_quality' => 'Device Issue',
-                                                    'repair' => 'Repair',
-                                                    'device_drop' => 'Device Drop',
-                                                    'tech_revival' => 'Tech Revival',
-                                                    'billing' => 'Billing',
-                                                    'account' => 'Account',
-                                                    'general' => 'General'
-                                                ];
-                                                echo $subject_labels[$message['subject']] ?? $message['subject'];
-                                                ?>
-                                            </span>
-                                            <strong><?php echo htmlspecialchars($message['customer_name']); ?></strong>
-                                            <small class="text-muted ms-2"><?php echo htmlspecialchars($message['customer_email']); ?></small>
-                                        </div>
-                                        <div class="d-flex align-items-center gap-2">
-                                            <span class="badge status-badge status-<?php echo $message['status']; ?>">
-                                                <?php echo ucfirst(str_replace('_', ' ', $message['status'])); ?>
-                                            </span>
-                                            <small class="text-muted"><?php echo date('M j, Y g:i A', strtotime($message['created_at'])); ?></small>
-                                        </div>
-                                    </div>
-                                    <div class="card-body">
-                                        <p class="card-text"><?php echo nl2br(htmlspecialchars($message['message'])); ?></p>
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card analytics-card" style="animation-delay: 0.4s;">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-info mb-3">
+                    <i class="fas fa-calendar-day fa-3x"></i>
+                </div>
+                <h3 class="counter text-info" data-target="<?= $today_count ?>">0</h3>
+                <p class="text-muted mb-0">Today's Tickets</p>
+            </div>
+        </div>
+    </div>
+</div>
 
-                                        <!-- Admin Response -->
-                                        <?php if ($message['admin_response']): ?>
-                                            <div class="alert alert-light">
-                                                <strong><i class="fas fa-reply me-1"></i>Admin Response:</strong>
-                                                <p class="mb-1 mt-2"><?php echo nl2br(htmlspecialchars($message['admin_response'])); ?></p>
-                                                <small class="text-muted">
-                                                    Responded on <?php echo date('M j, Y g:i A', strtotime($message['response_date'])); ?>
-                                                </small>
-                                            </div>
-                                        <?php endif; ?>
-
-                                        <!-- Action Buttons -->
-                                        <div class="row g-2 mt-2">
-                                            <div class="col-md-6">
-                                                <button class="btn btn-outline-primary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#responseModal<?php echo $message['message_id']; ?>">
-                                                    <i class="fas fa-reply me-1"></i>Add Response
-                                                </button>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <button class="btn btn-outline-secondary btn-sm w-100" data-bs-toggle="modal" data-bs-target="#statusModal<?php echo $message['message_id']; ?>">
-                                                    <i class="fas fa-edit me-1"></i>Update Status
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Response Modal -->
-                                <div class="modal fade" id="responseModal<?php echo $message['message_id']; ?>" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form method="POST">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Add Response</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="message_id" value="<?php echo $message['message_id']; ?>">
-                                                    <div class="mb-3">
-                                                        <label for="response" class="form-label">Your Response:</label>
-                                                        <textarea class="form-control" name="response" rows="5" required placeholder="Type your response to the customer..."></textarea>
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="add_response" class="btn btn-primary">Send Response</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Status Update Modal -->
-                                <div class="modal fade" id="statusModal<?php echo $message['message_id']; ?>" tabindex="-1">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <form method="POST">
-                                                <div class="modal-header">
-                                                    <h5 class="modal-title">Update Status</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                                </div>
-                                                <div class="modal-body">
-                                                    <input type="hidden" name="message_id" value="<?php echo $message['message_id']; ?>">
-                                                    <div class="mb-3">
-                                                        <label for="status" class="form-label">Status:</label>
-                                                        <select class="form-select" name="status" required>
-                                                            <option value="new" <?php echo $message['status'] === 'new' ? 'selected' : ''; ?>>New</option>
-                                                            <option value="in_progress" <?php echo $message['status'] === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
-                                                            <option value="resolved" <?php echo $message['status'] === 'resolved' ? 'selected' : ''; ?>>Resolved</option>
-                                                            <option value="closed" <?php echo $message['status'] === 'closed' ? 'selected' : ''; ?>>Closed</option>
-                                                        </select>
-                                                    </div>
-                                                    <div class="mb-3">
-                                                        <label for="assigned_to" class="form-label">Assign To (Optional):</label>
-                                                        <input type="number" class="form-control" name="assigned_to" placeholder="Admin ID" value="<?php echo $message['assigned_to'] ?? ''; ?>">
-                                                    </div>
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                    <button type="submit" name="update_status" class="btn btn-primary">Update Status</button>
-                                                </div>
-                                            </form>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        <?php endforeach; ?>
-                    <?php endif; ?>
+<!-- Status Overview Chart -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-8">
+        <div class="admin-card" style="animation-delay: 0.5s;">
+            <div class="card-header-custom">
+                <h5><i class="fas fa-chart-doughnut me-2"></i>Ticket Status Distribution</h5>
+            </div>
+            <div class="card-body-custom">
+                <div class="chart-container" style="height: 300px;">
+                    <canvas id="ticketStatusChart"></canvas>
                 </div>
             </div>
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        function filterByStatus(status) {
-            const url = new URL(window.location.href);
-            if (status) {
-                url.searchParams.set('status', status);
-            } else {
-                url.searchParams.delete('status');
-            }
-            window.location.href = url.toString();
-        }
+    <div class="col-lg-4">
+        <div class="admin-card" style="animation-delay: 0.6s;">
+            <div class="card-header-custom">
+                <h5><i class="fas fa-filter me-2"></i>Quick Filters</h5>
+            </div>
+            <div class="card-body-custom">
+                <div class="d-grid gap-2">
+                    <select class="form-control-modern" id="statusFilter" onchange="filterByStatus(this.value)">
+                        <option value="">All Messages</option>
+                        <option value="new" <?= $status_filter === 'new' ? 'selected' : ''; ?>>New Tickets</option>
+                        <option value="in_progress" <?= $status_filter === 'in_progress' ? 'selected' : ''; ?>>In Progress</option>
+                        <option value="resolved" <?= $status_filter === 'resolved' ? 'selected' : ''; ?>>Resolved</option>
+                        <option value="closed" <?= $status_filter === 'closed' ? 'selected' : ''; ?>>Closed</option>
+                    </select>
 
-        // Auto-refresh every 30 seconds
-        setTimeout(function() {
-            location.reload();
-        }, 30000);
-    </script>
-</body>
-</html>
+                    <div class="quick-stats mt-3">
+                        <div class="stat-item d-flex justify-content-between">
+                            <span class="text-muted">New</span>
+                            <span class="badge bg-danger"><?= $new_messages ?></span>
+                        </div>
+                        <div class="stat-item d-flex justify-content-between mt-2">
+                            <span class="text-muted">In Progress</span>
+                            <span class="badge bg-warning"><?= $in_progress_messages ?></span>
+                        </div>
+                        <div class="stat-item d-flex justify-content-between mt-2">
+                            <span class="text-muted">Resolved</span>
+                            <span class="badge bg-success"><?= $resolved_messages ?></span>
+                        </div>
+                        <div class="stat-item d-flex justify-content-between mt-2">
+                            <span class="text-muted">Closed</span>
+                            <span class="badge bg-secondary"><?= $closed_messages ?></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Support Messages -->
+<div class="row g-4">
+    <div class="col-12">
+        <div class="admin-card" style="animation-delay: 0.7s;">
+            <div class="card-header-custom">
+                <h5><i class="fas fa-list me-2"></i>Support Tickets</h5>
+            </div>
+            <div class="card-body-custom p-0">
+                <?php if (empty($messages)): ?>
+                    <div class="text-center py-5">
+                        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
+                        <h3>No Support Tickets Found</h3>
+                        <p class="text-muted">There are no support messages matching your criteria.</p>
+                    </div>
+                <?php else: ?>
+                    <div class="support-messages">
+                        <?php foreach ($messages as $index => $message): ?>
+                            <div class="support-message-item priority-<?= $message['priority'] ?? 'normal' ?>" style="animation-delay: <?= 0.8 + ($index * 0.1) ?>s;">
+                                <div class="message-header">
+                                    <div class="d-flex align-items-center justify-content-between">
+                                        <div class="d-flex align-items-center">
+                                            <div class="customer-avatar me-3">
+                                                <i class="fas fa-user"></i>
+                                            </div>
+                                            <div>
+                                                <div class="d-flex align-items-center mb-1">
+                                                    <span class="subject-tag subject-<?= $message['subject'] ?? 'general' ?>">
+                                                        <?php
+                                                        $subject_labels = [
+                                                            'order' => 'Order',
+                                                            'device_quality' => 'Device Issue',
+                                                            'repair' => 'Repair',
+                                                            'device_drop' => 'Device Drop',
+                                                            'tech_revival' => 'Tech Revival',
+                                                            'billing' => 'Billing',
+                                                            'account' => 'Account',
+                                                            'general' => 'General'
+                                                        ];
+                                                        echo $subject_labels[$message['subject'] ?? 'general'] ?? ($message['subject'] ?? 'General');
+                                                        ?>
+                                                    </span>
+                                                    <strong><?= htmlspecialchars($message['customer_name'] ?? 'Unknown Customer') ?></strong>
+                                                </div>
+                                                <?php if (!empty($message['customer_email'])): ?>
+                                                    <small class="text-muted"><?= htmlspecialchars($message['customer_email']) ?></small>
+                                                <?php elseif (!empty($message['customer_phone'])): ?>
+                                                    <small class="text-muted"><i class="fas fa-phone me-1"></i><?= htmlspecialchars($message['customer_phone']) ?></small>
+                                                <?php endif; ?>
+                                            </div>
+                                        </div>
+                                        <div class="d-flex align-items-center gap-3">
+                                            <span class="status-badge status-<?= $message['status'] ?? 'new' ?>">
+                                                <?= ucfirst(str_replace('_', ' ', $message['status'] ?? 'new')) ?>
+                                            </span>
+                                            <small class="text-muted"><?= date('M j, Y g:i A', strtotime($message['created_at'])) ?></small>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="message-body mt-3">
+                                    <p class="message-text"><?= nl2br(htmlspecialchars($message['message'])) ?></p>
+
+                                    <?php if (isset($message['admin_response']) && $message['admin_response']): ?>
+                                        <div class="admin-response">
+                                            <div class="response-header">
+                                                <i class="fas fa-reply me-2"></i>
+                                                <strong>Admin Response</strong>
+                                            </div>
+                                            <div class="response-content">
+                                                <?= nl2br(htmlspecialchars($message['admin_response'])) ?>
+                                            </div>
+                                            <small class="text-muted">
+                                                Responded on <?= date('M j, Y g:i A', strtotime($message['response_date'])) ?>
+                                            </small>
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <div class="message-actions mt-3">
+                                        <div class="btn-group" role="group">
+                                            <button class="btn btn-sm btn-outline-primary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#responseModal<?= $message['message_id'] ?>">
+                                                <i class="fas fa-reply me-1"></i>Response
+                                            </button>
+                                            <button class="btn btn-sm btn-outline-secondary"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#statusModal<?= $message['message_id'] ?>">
+                                                <i class="fas fa-edit me-1"></i>Update
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Response Modal -->
+                            <div class="modal fade" id="responseModal<?= $message['message_id'] ?>" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content modern-modal">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><i class="fas fa-reply me-2"></i>Add Response</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="POST">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
+                                                <div class="form-group">
+                                                    <label for="response" class="form-label-modern">Your Response</label>
+                                                    <textarea class="form-control-modern" name="response" rows="5"
+                                                              placeholder="Type your response to the customer..." required></textarea>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" name="add_response" class="btn-primary-custom">
+                                                    <i class="fas fa-paper-plane me-2"></i>Send Response
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Status Update Modal -->
+                            <div class="modal fade" id="statusModal<?= $message['message_id'] ?>" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="modal-content modern-modal">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Update Status</h5>
+                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                                        </div>
+                                        <form method="POST">
+                                            <div class="modal-body">
+                                                <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
+                                                <div class="form-group mb-3">
+                                                    <label for="status" class="form-label-modern">Status</label>
+                                                    <select class="form-control-modern" name="status" required>
+                                                        <option value="new" <?= ($message['status'] ?? 'new') === 'new' ? 'selected' : '' ?>>New</option>
+                                                        <option value="in_progress" <?= ($message['status'] ?? '') === 'in_progress' ? 'selected' : '' ?>>In Progress</option>
+                                                        <option value="resolved" <?= ($message['status'] ?? '') === 'resolved' ? 'selected' : '' ?>>Resolved</option>
+                                                        <option value="closed" <?= ($message['status'] ?? '') === 'closed' ? 'selected' : '' ?>>Closed</option>
+                                                    </select>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label for="assigned_to" class="form-label-modern">Assign To (Optional)</label>
+                                                    <input type="number" class="form-control-modern" name="assigned_to"
+                                                           placeholder="Admin ID" value="<?= $message['assigned_to'] ?? '' ?>">
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                                                <button type="submit" name="update_status" class="btn-primary-custom">
+                                                    <i class="fas fa-save me-2"></i>Update Status
+                                                </button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+/* Additional styles for support messages */
+.analytics-card {
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.analytics-card:hover {
+    transform: translateY(-10px);
+}
+
+.analytics-icon {
+    transition: all 0.3s ease;
+}
+
+.analytics-card:hover .analytics-icon {
+    transform: scale(1.1);
+}
+
+.counter {
+    font-size: 2.5rem;
+    font-weight: 800;
+    margin: 0;
+}
+
+.support-messages {
+    max-height: 600px;
+    overflow-y: auto;
+}
+
+.support-message-item {
+    padding: 20px;
+    border-bottom: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+    animation: fadeInUp 0.6s ease forwards;
+    opacity: 0;
+}
+
+.support-message-item:last-child {
+    border-bottom: none;
+}
+
+.support-message-item:hover {
+    background: rgba(59, 130, 246, 0.05);
+    border-radius: 8px;
+    margin: 2px;
+    padding: 18px;
+}
+
+.priority-urgent {
+    border-left: 4px solid #ef4444;
+}
+
+.priority-high {
+    border-left: 4px solid #f59e0b;
+}
+
+.priority-normal {
+    border-left: 4px solid #3b82f6;
+}
+
+.priority-low {
+    border-left: 4px solid #6b7280;
+}
+
+.customer-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 10px;
+    background: var(--gradient-primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+}
+
+.subject-tag {
+    font-size: 0.7rem;
+    padding: 4px 8px;
+    border-radius: 12px;
+    margin-right: 8px;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.subject-order {
+    background: #3b82f6;
+    color: white;
+}
+
+.subject-device_quality {
+    background: #ef4444;
+    color: white;
+}
+
+.subject-repair {
+    background: #f59e0b;
+    color: white;
+}
+
+.subject-device_drop {
+    background: #10b981;
+    color: white;
+}
+
+.subject-tech_revival {
+    background: #8b5cf6;
+    color: white;
+}
+
+.subject-billing {
+    background: #06b6d4;
+    color: white;
+}
+
+.subject-account {
+    background: #84cc16;
+    color: white;
+}
+
+.subject-general {
+    background: #6b7280;
+    color: white;
+}
+
+.status-badge {
+    padding: 0.25rem 0.75rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.status-new {
+    background: #fee2e2;
+    color: #991b1b;
+}
+
+.status-in_progress {
+    background: #fef3c7;
+    color: #92400e;
+}
+
+.status-resolved {
+    background: #d1fae5;
+    color: #065f46;
+}
+
+.status-closed {
+    background: #f3f4f6;
+    color: #374151;
+}
+
+.message-text {
+    color: #374151;
+    line-height: 1.6;
+}
+
+.admin-response {
+    background: rgba(59, 130, 246, 0.1);
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 15px;
+    border-left: 3px solid #3b82f6;
+}
+
+.response-header {
+    color: #3b82f6;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.response-content {
+    color: #374151;
+    margin-bottom: 8px;
+}
+
+.quick-stats .stat-item {
+    padding: 8px 0;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.quick-stats .stat-item:last-child {
+    border-bottom: none;
+}
+
+.chart-container {
+    position: relative;
+    width: 100%;
+    height: 300px;
+}
+
+.modern-modal .modal-content {
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--shadow-lg);
+    backdrop-filter: blur(20px);
+}
+
+.modern-modal .modal-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 20px 20px 0 0;
+}
+
+.form-label-modern {
+    font-weight: 600;
+    color: var(--primary-navy);
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control-modern {
+    width: 100%;
+    padding: 0.875rem 1rem;
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(10px);
+    resize: vertical;
+}
+
+.form-control-modern:focus {
+    outline: none;
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Counter Animation */
+@keyframes countUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.counter-animate {
+    animation: countUp 0.6s ease forwards;
+}
+</style>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+// Counter animation
+function animateCounters() {
+    const counters = document.querySelectorAll('.counter');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-target'));
+                const increment = target / 50;
+                let count = 0;
+
+                const updateCounter = () => {
+                    if (count < target) {
+                        count += increment;
+                        counter.textContent = Math.ceil(count);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+
+                updateCounter();
+                observer.unobserve(counter);
+            }
+        });
+    });
+
+    counters.forEach(counter => observer.observe(counter));
+}
+
+// Ticket Status Chart
+function initTicketStatusChart() {
+    const ctx = document.getElementById('ticketStatusChart').getContext('2d');
+
+    const chartData = {
+        labels: ['New', 'In Progress', 'Resolved', 'Closed'],
+        datasets: [{
+            data: [<?= $new_messages ?>, <?= $in_progress_messages ?>, <?= $resolved_messages ?>, <?= $closed_messages ?>],
+            backgroundColor: [
+                '#ef4444',
+                '#f59e0b',
+                '#10b981',
+                '#6b7280'
+            ],
+            borderWidth: 0,
+            borderRadius: 5,
+        }]
+    };
+
+    new Chart(ctx, {
+        type: 'doughnut',
+        data: chartData,
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        padding: 20,
+                        font: {
+                            size: 14,
+                            weight: '600'
+                        }
+                    }
+                }
+            },
+            animation: {
+                animateRotate: true,
+                duration: 2000,
+                easing: 'easeOutQuart'
+            }
+        }
+    });
+}
+
+// Filter functionality
+function filterByStatus(status) {
+    const url = new URL(window.location.href);
+    if (status) {
+        url.searchParams.set('status', status);
+    } else {
+        url.searchParams.delete('status');
+    }
+    window.location.href = url.toString();
+}
+
+// Initialize animations and charts when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Start counter animations
+    setTimeout(animateCounters, 500);
+
+    // Initialize ticket status chart
+    setTimeout(initTicketStatusChart, 800);
+
+    // Add stagger animation to cards
+    const cards = document.querySelectorAll('.admin-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, index * 100);
+    });
+
+    // Animate support message items
+    const items = document.querySelectorAll('.support-message-item');
+    items.forEach((item, index) => {
+        setTimeout(() => {
+            item.style.opacity = '1';
+            item.style.transform = 'translateY(0)';
+        }, 1000 + (index * 100));
+    });
+});
+
+// Auto-refresh every 30 seconds
+setTimeout(function() {
+    location.reload();
+}, 30000);
+</script>
+
+<?php include 'includes/admin_footer.php'; ?>

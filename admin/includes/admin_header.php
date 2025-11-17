@@ -539,56 +539,107 @@ if (!check_login() || !check_admin()) {
             }
 
             .nav-link {
-                font-size: 0.875rem;
-                padding: 0.6rem 1rem;
+                font-size: 0.8rem;
+                padding: 0.7rem 1rem;
             }
 
             .navbar-brand {
                 font-size: 1rem;
                 padding: 0.6rem 1.2rem;
+                margin-right: 1rem;
             }
 
             .user-profile {
-                font-size: 0.875rem;
-                padding: 0.6rem 1.2rem;
+                font-size: 0.8rem;
+                padding: 0.7rem 1.2rem;
+                margin-left: 1rem;
+            }
+
+            .navbar-nav-container {
+                flex: 1;
+                margin: 0 0.5rem;
             }
         }
 
         @media (max-width: 768px) {
             .admin-navbar {
-                padding: 1rem;
-                flex-wrap: wrap;
+                padding: 0.75rem 1rem;
+                min-height: auto;
+            }
+
+            .admin-navbar > .d-flex {
+                flex-wrap: nowrap !important;
+                align-items: center;
             }
 
             .navbar-nav-container {
                 flex: 1;
-                margin: 0 1rem;
+                margin: 0 0.5rem;
+                min-width: 0;
             }
 
             .navbar-nav {
                 overflow-x: auto;
                 flex-wrap: nowrap;
-                padding: 0.2rem;
+                padding: 0.3rem;
+                gap: 0.1rem;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+                -ms-overflow-style: none;
+            }
+
+            .navbar-nav::-webkit-scrollbar {
+                display: none;
             }
 
             .nav-link {
                 font-size: 0.75rem;
-                padding: 0.4rem 0.8rem;
+                padding: 0.6rem 0.8rem;
                 white-space: nowrap;
+                flex-shrink: 0;
+                min-width: auto;
             }
 
             .nav-link i {
-                margin-right: 0.2rem;
+                margin-right: 0.3rem;
+                font-size: 0.8rem;
             }
 
             .user-profile {
-                font-size: 0.75rem;
-                padding: 0.5rem 1rem;
+                font-size: 0.7rem;
+                padding: 0.6rem 0.8rem;
+                margin-left: 0.5rem;
+                flex-shrink: 0;
             }
 
             .navbar-brand {
-                font-size: 0.9rem;
-                padding: 0.5rem 1rem;
+                font-size: 0.85rem;
+                padding: 0.6rem 1rem;
+                margin-right: 0.5rem;
+                flex-shrink: 0;
+            }
+
+            .garage-accent {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .navbar-brand span {
+                display: none;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .nav-link {
+                padding: 0.6rem;
+            }
+
+            .nav-link i {
+                margin: 0;
+                font-size: 1rem;
             }
         }
     </style>
@@ -606,31 +657,31 @@ if (!check_login() || !check_admin()) {
                 <div class="navbar-nav">
                     <a href="index.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'index.php' ? 'active' : ''; ?>">
                         <i class="fas fa-home"></i>
-                        Dashboard
+                        <span>Dashboard</span>
                     </a>
                     <a href="orders.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'orders.php' ? 'active' : ''; ?>">
                         <i class="fas fa-shopping-bag"></i>
-                        Orders
+                        <span>Orders</span>
                     </a>
                     <a href="product.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'product.php' ? 'active' : ''; ?>">
                         <i class="fas fa-box"></i>
-                        Products
+                        <span>Products</span>
                     </a>
                     <a href="category.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'category.php' ? 'active' : ''; ?>">
                         <i class="fas fa-tags"></i>
-                        Categories
+                        <span>Categories</span>
                     </a>
                     <a href="brand.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'brand.php' ? 'active' : ''; ?>">
                         <i class="fas fa-trademark"></i>
-                        Brands
+                        <span>Brands</span>
                     </a>
                     <a href="support_messages.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'support_messages.php' ? 'active' : ''; ?>">
                         <i class="fas fa-headset"></i>
-                        Support
+                        <span>Support</span>
                     </a>
                     <a href="appointments.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'appointments.php' ? 'active' : ''; ?>">
                         <i class="fas fa-calendar"></i>
-                        Appointments
+                        <span>Appointments</span>
                     </a>
                 </div>
             </div>

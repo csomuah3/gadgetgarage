@@ -81,8 +81,6 @@ function create_support_message_ctr($customer_id, $name, $phone, $subject, $mess
         // }
     }
 
-    $db->db_disconnect();
-
     return $result ? $message_id : false;
 }
 
@@ -119,7 +117,6 @@ function get_all_support_messages_ctr($status = null, $limit = null) {
     }
 
     $result = $db->db_fetch_all($sql);
-    $db->db_disconnect();
 
     return $result;
 }
@@ -138,7 +135,6 @@ function get_support_message_by_id_ctr($message_id) {
     $sql = "SELECT * FROM support_messages WHERE message_id = $message_id";
 
     $result = $db->db_fetch_one($sql);
-    $db->db_disconnect();
 
     return $result;
 }
@@ -166,7 +162,6 @@ function update_support_message_status_ctr($message_id, $status, $assigned_to = 
     $sql .= " WHERE message_id = $message_id";
 
     $result = $db->db_query($sql);
-    $db->db_disconnect();
 
     return $result;
 }
@@ -197,7 +192,6 @@ function add_admin_response_ctr($message_id, $response, $admin_id = null) {
     $sql .= " WHERE message_id = $message_id";
 
     $result = $db->db_query($sql);
-    $db->db_disconnect();
 
     return $result;
 }
@@ -234,7 +228,6 @@ function get_support_statistics_ctr() {
     $result = $db->db_fetch_one("SELECT COUNT(*) as count FROM support_messages WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
     $stats['recent_24h'] = $result['count'];
 
-    $db->db_disconnect();
 
     return $stats;
 }
@@ -264,7 +257,6 @@ function get_customer_support_messages_ctr($customer_id, $phone = null) {
     $sql .= " ORDER BY created_at DESC";
 
     $result = $db->db_fetch_all($sql);
-    $db->db_disconnect();
 
     return $result;
 }

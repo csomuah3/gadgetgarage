@@ -269,7 +269,7 @@ try {
                                         <td>
                                             <div class="btn-group" role="group">
                                                 <button class="btn btn-sm btn-outline-primary"
-                                                        onclick="editBrand(<?= $brand['brand_id'] ?>, '<?= htmlspecialchars($brand['brand_name']) ?>', <?= $brand['cat_id'] ?>)">
+                                                        onclick="editBrand(<?= $brand['brand_id'] ?>, '<?= htmlspecialchars($brand['brand_name']) ?>', <?= isset($brand['cat_id']) ? $brand['cat_id'] : 0 ?>)">
                                                     <i class="fas fa-edit"></i>
                                                 </button>
                                                 <button class="btn btn-sm btn-outline-danger"

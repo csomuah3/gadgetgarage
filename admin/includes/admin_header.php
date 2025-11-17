@@ -12,6 +12,8 @@ if (!check_login() || !check_admin()) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title><?php echo $page_title ?? 'Admin Dashboard'; ?> - GadgetGarage</title>
+    <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
+    <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -79,19 +81,29 @@ if (!check_login() || !check_admin()) {
             transition: all 0.3s ease;
         }
 
+        .admin-navbar .d-flex {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+        }
+
         .navbar-brand {
-            background: var(--gradient-primary);
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
             color: white !important;
-            font-size: 1.2rem;
-            font-weight: 800;
             text-decoration: none;
-            padding: 0.5rem 1.5rem;
+            padding: 0.5rem 1rem;
             border-radius: 12px;
             margin-right: 2rem;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
             box-shadow: var(--shadow-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .navbar-brand::before {
@@ -130,13 +142,19 @@ if (!check_login() || !check_admin()) {
             border: 1px solid rgba(226, 232, 240, 0.8);
             position: relative;
             overflow: hidden;
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
         }
 
         .navbar-nav {
-            display: flex;
+            display: flex !important;
+            flex-direction: row !important;
             gap: 0.25rem;
             align-items: center;
             margin: 0;
+            flex-wrap: nowrap !important;
+            width: 100% !important;
         }
 
         .nav-link {
@@ -642,6 +660,28 @@ if (!check_login() || !check_admin()) {
                 font-size: 1rem;
             }
         }
+
+        /* Force horizontal navigation - override any conflicting CSS */
+        .admin-navbar,
+        .admin-navbar .d-flex,
+        .admin-navbar .navbar-nav-container,
+        .admin-navbar .navbar-nav {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: nowrap !important;
+        }
+
+        .admin-navbar .navbar-nav .nav-link {
+            white-space: nowrap !important;
+            flex-shrink: 0 !important;
+        }
+
+        /* Prevent Bootstrap from overriding */
+        .navbar-nav .nav-link {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center !important;
+        }
     </style>
 </head>
 <body>
@@ -649,8 +689,9 @@ if (!check_login() || !check_admin()) {
     <nav class="admin-navbar">
         <div class="d-flex justify-content-between align-items-center">
             <a href="index.php" class="navbar-brand">
-                <i class="fas fa-cog me-2"></i>
-                Gadget<span class="garage-accent">Garage</span>
+                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png"
+                     alt="GadgetGarage"
+                     style="height: 35px; width: auto; object-fit: contain;">
             </a>
 
             <div class="navbar-nav-container">

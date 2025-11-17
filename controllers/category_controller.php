@@ -43,3 +43,9 @@ function get_all_categories_ctr(): array
     $c = new Category();
     return $c->get_categories();
 }
+
+function count_products_by_category_ctr(int $cat_id): int
+{
+    $c = new Category();
+    return $c->count_products_by_category($cat_id);
+}

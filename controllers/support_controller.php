@@ -96,7 +96,7 @@ function get_all_support_messages_ctr($status = null, $limit = null) {
         return false;
     }
 
-    $sql = "SELECT message_id, customer_id, customer_name, customer_email, customer_phone, subject,
+    $sql = "SELECT message_id, customer_id, customer_name, customer_phone, subject,
                    LEFT(message, 100) as message_preview, message, status, priority,
                    assigned_to, admin_response, response_date, created_at, updated_at
             FROM support_messages";

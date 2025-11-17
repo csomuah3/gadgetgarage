@@ -162,4 +162,14 @@ class Category extends db_connection
         if ($ok) return ['success' => true];
         return ['success' => false, 'code' => 'DB'];
     }
+
+    // Count products in a specific category
+    public function count_products_by_category(int $cat_id): int
+    {
+        $cat_id = (int)$cat_id;
+        $sql = "SELECT COUNT(*) as product_count FROM products WHERE product_cat = $cat_id";
+        $result = $this->db_fetch_one($sql);
+
+        return $result ? (int)$result['product_count'] : 0;
+    }
 }

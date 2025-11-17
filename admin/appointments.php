@@ -39,8 +39,8 @@ try {
     // Main appointments query
     $appointments_query = "SELECT
                             ra.appointment_id,
-                            COALESCE(c.customer_name COLLATE utf8mb4_general_ci, 'Walk-in Customer') as customer_name,
-                            COALESCE(c.customer_email COLLATE utf8mb4_general_ci, '') as customer_email,
+                            COALESCE(c.customer_name, 'Walk-in Customer') as customer_name,
+                            COALESCE(c.customer_email, '') as customer_email,
                             ra.customer_phone,
                             ra.device_info as device_type,
                             ra.issue_description,
@@ -48,8 +48,8 @@ try {
                             ra.appointment_time as preferred_time,
                             ra.status,
                             ra.created_at,
-                            COALESCE(s.specialist_name COLLATE utf8mb4_general_ci, 'Unassigned') as specialist_name,
-                            COALESCE(rit.issue_name COLLATE utf8mb4_general_ci, 'General Issue') as issue_name,
+                            COALESCE(s.specialist_name, 'Unassigned') as specialist_name,
+                            COALESCE(rit.issue_name, 'General Issue') as issue_name,
                             COALESCE(ra.estimated_cost, 0) as base_price
                           FROM repair_appointments ra
                           LEFT JOIN customer c ON ra.customer_id = c.customer_id

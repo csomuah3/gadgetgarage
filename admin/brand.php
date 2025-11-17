@@ -73,18 +73,22 @@ try {
     // Count brands per category
     $category_brand_count = [];
     foreach ($brands as $brand) {
-        $cat_id = $brand['cat_id'];
-        $category_brand_count[$cat_id] = ($category_brand_count[$cat_id] ?? 0) + 1;
+        if (isset($brand['cat_id'])) {
+            $cat_id = $brand['cat_id'];
+            $category_brand_count[$cat_id] = ($category_brand_count[$cat_id] ?? 0) + 1;
+        }
     }
 
     // Most popular category (by brand count)
     $popular_category = '';
     $max_brands = 0;
     foreach ($categories as $category) {
-        $brand_count = $category_brand_count[$category['cat_id']] ?? 0;
-        if ($brand_count > $max_brands) {
-            $max_brands = $brand_count;
-            $popular_category = $category['cat_name'];
+        if (isset($category['cat_id']) && isset($category['cat_name'])) {
+            $brand_count = $category_brand_count[$category['cat_id']] ?? 0;
+            if ($brand_count > $max_brands) {
+                $max_brands = $brand_count;
+                $popular_category = $category['cat_name'];
+            }
         }
     }
 

@@ -72,7 +72,7 @@ if (!check_login() || !check_admin()) {
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
             border-bottom: 1px solid rgba(226, 232, 240, 0.8);
-            padding: 1rem 2rem;
+            padding: 0.5rem 2rem;
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -82,12 +82,12 @@ if (!check_login() || !check_admin()) {
         .navbar-brand {
             background: var(--gradient-primary);
             color: white !important;
-            font-size: 1.4rem;
+            font-size: 1.2rem;
             font-weight: 800;
             text-decoration: none;
-            padding: 0.875rem 2rem;
-            border-radius: 16px;
-            margin-right: 2.5rem;
+            padding: 0.5rem 1.5rem;
+            border-radius: 12px;
+            margin-right: 2rem;
             position: relative;
             overflow: hidden;
             transition: all 0.3s ease;
@@ -112,6 +112,13 @@ if (!check_login() || !check_admin()) {
         .navbar-brand:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .garage-accent {
+            background: rgba(245, 158, 11, 0.2);
+            padding: 0.1rem 0.3rem;
+            border-radius: 4px;
+            margin-left: 2px;
         }
 
         .navbar-nav-container {
@@ -591,8 +598,8 @@ if (!check_login() || !check_admin()) {
     <nav class="admin-navbar">
         <div class="d-flex justify-content-between align-items-center">
             <a href="index.php" class="navbar-brand">
-                <i class="fas fa-microchip me-2"></i>
-                TechHub Pro
+                <i class="fas fa-cog me-2"></i>
+                Gadget<span class="garage-accent">Garage</span>
             </a>
 
             <div class="navbar-nav-container">

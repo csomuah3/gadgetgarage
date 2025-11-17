@@ -26,6 +26,71 @@ try {
     $total_customers_result = $db->db_fetch_one($total_customers_query);
     $total_customers = $total_customers_result ? $total_customers_result['total_customers'] : 0;
 
+    // Scheduled Appointments
+    $scheduled_appointments_query = "SELECT COUNT(*) as scheduled_appointments FROM repair_appointments WHERE status = 'scheduled'";
+    $scheduled_appointments_result = $db->db_fetch_one($scheduled_appointments_query);
+    $scheduled_appointments = $scheduled_appointments_result ? $scheduled_appointments_result['scheduled_appointments'] : 0;
+
+    // Calculate appointment growth (this month vs last month)
+    $current_month_appointments_query = "SELECT COUNT(*) as current_appointments FROM repair_appointments WHERE MONTH(created_at) = MONTH(NOW()) AND YEAR(created_at) = YEAR(NOW())";
+    $current_month_result = $db->db_fetch_one($current_month_appointments_query);
+    $current_month_appointments = $current_month_result ? $current_month_result['current_appointments'] : 0;
+
+    $last_month_appointments_query = "SELECT COUNT(*) as last_appointments FROM repair_appointments WHERE MONTH(created_at) = MONTH(NOW() - INTERVAL 1 MONTH) AND YEAR(created_at) = YEAR(NOW() - INTERVAL 1 MONTH)";
+    $last_month_result = $db->db_fetch_one($last_month_appointments_query);
+    $last_month_appointments = $last_month_result ? $last_month_result['last_appointments'] : 1;
+
+    $appointment_growth = $last_month_appointments > 0 ? (($current_month_appointments - $last_month_appointments) / $last_month_appointments) * 100 : 0;
+
+    // Additional analytics for bottom cards
+    // Total Products
+    $total_products_query = "SELECT COUNT(*) as total_products FROM products";
+    $total_products_result = $db->db_fetch_one($total_products_query);
+    $total_products = $total_products_result ? $total_products_result['total_products'] : 0;
+
+    // Pending Orders
+    $pending_orders_query = "SELECT COUNT(*) as pending_orders FROM orders WHERE order_status = 'pending'";
+    $pending_orders_result = $db->db_fetch_one($pending_orders_query);
+    $pending_orders = $pending_orders_result ? $pending_orders_result['pending_orders'] : 0;
+
+    // Completed Appointments
+    $completed_appointments_query = "SELECT COUNT(*) as completed_appointments FROM repair_appointments WHERE status = 'completed'";
+    $completed_appointments_result = $db->db_fetch_one($completed_appointments_query);
+    $completed_appointments = $completed_appointments_result ? $completed_appointments_result['completed_appointments'] : 0;
+
+    // Total Categories
+    $total_categories_query = "SELECT COUNT(*) as total_categories FROM categories";
+    $total_categories_result = $db->db_fetch_one($total_categories_query);
+    $total_categories = $total_categories_result ? $total_categories_result['total_categories'] : 0;
+
+    // Support Messages
+    $support_messages_query = "SELECT COUNT(*) as support_messages FROM support_messages WHERE status = 'open'";
+    $support_messages_result = $db->db_fetch_one($support_messages_query);
+    $support_messages = $support_messages_result ? $support_messages_result['support_messages'] : 0;
+
+    // Revenue this month
+    $current_month_revenue_query = "SELECT COALESCE(SUM(amt), 0) as current_month_revenue FROM payment WHERE MONTH(payment_date) = MONTH(NOW()) AND YEAR(payment_date) = YEAR(NOW())";
+    $current_month_revenue_result = $db->db_fetch_one($current_month_revenue_query);
+    $current_month_revenue = $current_month_revenue_result ? $current_month_revenue_result['current_month_revenue'] : 0;
+
+    // Calendar appointments for upcoming week
+    $calendar_appointments_query = "
+        SELECT
+            ra.appointment_date,
+            ra.appointment_time,
+            ra.issue_description,
+            c.customer_name,
+            COALESCE(s.specialist_name, 'Unassigned') as specialist_name
+        FROM repair_appointments ra
+        LEFT JOIN customer c ON ra.customer_id = c.customer_id
+        LEFT JOIN specialists s ON ra.specialist_id = s.specialist_id
+        WHERE ra.appointment_date BETWEEN CURDATE() AND DATE_ADD(CURDATE(), INTERVAL 7 DAY)
+        AND ra.status IN ('scheduled', 'confirmed')
+        ORDER BY ra.appointment_date ASC, ra.appointment_time ASC
+    ";
+    $calendar_appointments = $db->db_fetch_all($calendar_appointments_query);
+    if (!$calendar_appointments) $calendar_appointments = [];
+
     // Recent Orders (last 7 days)
     $recent_orders_query = "SELECT COUNT(*) as recent_orders FROM orders WHERE order_date >= DATE_SUB(NOW(), INTERVAL 7 DAY)";
     $recent_orders_result = $db->db_fetch_one($recent_orders_query);
@@ -94,8 +159,17 @@ try {
     $total_sales = 0;
     $total_orders = 0;
     $total_customers = 0;
+    $scheduled_appointments = 0;
+    $appointment_growth = 0;
     $recent_orders = 0;
     $sales_growth = 0;
+    $total_products = 0;
+    $pending_orders = 0;
+    $completed_appointments = 0;
+    $total_categories = 0;
+    $support_messages = 0;
+    $current_month_revenue = 0;
+    $calendar_appointments = [];
     $revenue_chart_data = [];
     $top_categories = [];
     $order_status_data = [];
@@ -173,15 +247,15 @@ try {
         <div class="admin-card">
             <div class="card-body-custom d-flex justify-content-between align-items-center">
                 <div>
-                    <h6 class="text-muted mb-2">Active Users</h6>
-                    <h3 class="mb-0 text-warning"><?php echo number_format($total_customers * 0.4); ?></h3>
-                    <small class="text-success">
-                        <i class="fas fa-arrow-up"></i>
-                        +6.02% vs last month
+                    <h6 class="text-muted mb-2">Scheduled Appointments</h6>
+                    <h3 class="mb-0 text-warning"><?php echo number_format($scheduled_appointments); ?></h3>
+                    <small class="text-<?php echo $appointment_growth >= 0 ? 'success' : 'danger'; ?>">
+                        <i class="fas fa-arrow-<?php echo $appointment_growth >= 0 ? 'up' : 'down'; ?>"></i>
+                        <?php echo $appointment_growth >= 0 ? '+' : ''; ?><?php echo number_format($appointment_growth, 2); ?>% vs last month
                     </small>
                 </div>
                 <div class="text-warning">
-                    <i class="fas fa-eye fa-2x"></i>
+                    <i class="fas fa-calendar-check fa-2x"></i>
                 </div>
             </div>
         </div>
@@ -203,43 +277,85 @@ try {
         </div>
     </div>
 
-    <!-- Monthly Target -->
+    <!-- Appointments Calendar -->
     <div class="col-lg-4">
         <div class="admin-card">
             <div class="card-header-custom">
-                <h5><i class="fas fa-bullseye me-2"></i>Monthly Target</h5>
+                <h5><i class="fas fa-calendar-alt me-2"></i>Upcoming Appointments</h5>
             </div>
-            <div class="card-body-custom text-center">
-                <div class="mb-4">
-                    <div style="position: relative; width: 200px; height: 200px; margin: 0 auto;">
-                        <svg width="200" height="200" style="transform: rotate(-90deg);">
-                            <circle cx="100" cy="100" r="80" fill="none" stroke="#e5f3f0" stroke-width="12"></circle>
-                            <circle cx="100" cy="100" r="80" fill="none" stroke="#008060" stroke-width="12"
-                                stroke-dasharray="<?php echo 2 * 3.14159 * 80; ?>"
-                                stroke-dashoffset="<?php echo 2 * 3.14159 * 80 * (1 - 0.85); ?>"
-                                stroke-linecap="round"></circle>
-                        </svg>
-                        <div style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
-                            <h2 class="text-success mb-0">85%</h2>
-                            <small class="text-muted">Complete</small>
+            <div class="card-body-custom">
+                <div class="calendar-header mb-3">
+                    <h6 class="text-center mb-3" id="currentWeek"></h6>
+                    <div class="row text-center calendar-days">
+                        <div class="col calendar-day" data-day="0"><small class="text-muted">Mon</small></div>
+                        <div class="col calendar-day" data-day="1"><small class="text-muted">Tue</small></div>
+                        <div class="col calendar-day" data-day="2"><small class="text-muted">Wed</small></div>
+                        <div class="col calendar-day" data-day="3"><small class="text-muted">Thu</small></div>
+                        <div class="col calendar-day" data-day="4"><small class="text-muted">Fri</small></div>
+                        <div class="col calendar-day" data-day="5"><small class="text-muted">Sat</small></div>
+                        <div class="col calendar-day" data-day="6"><small class="text-muted">Sun</small></div>
+                    </div>
+                </div>
+
+                <div class="appointments-list" style="max-height: 300px; overflow-y: auto;">
+                    <?php if (!empty($calendar_appointments)): ?>
+                        <?php
+                        $current_date = '';
+                        foreach ($calendar_appointments as $index => $appointment):
+                            $appointment_date = date('Y-m-d', strtotime($appointment['appointment_date']));
+                            if ($appointment_date != $current_date):
+                                $current_date = $appointment_date;
+                        ?>
+                            <div class="date-separator">
+                                <small class="text-muted fw-bold">
+                                    <?= date('M j, Y', strtotime($appointment['appointment_date'])) ?>
+                                </small>
+                            </div>
+                        <?php endif; ?>
+
+                        <div class="appointment-item" style="animation-delay: <?= $index * 0.1 ?>s;">
+                            <div class="d-flex align-items-center">
+                                <div class="time-badge me-3">
+                                    <?= date('g:i A', strtotime($appointment['appointment_time'])) ?>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="appointment-client fw-bold">
+                                        <?= htmlspecialchars($appointment['customer_name']) ?>
+                                    </div>
+                                    <div class="appointment-specialist text-muted small">
+                                        with <?= htmlspecialchars($appointment['specialist_name']) ?>
+                                    </div>
+                                    <div class="appointment-issue text-muted small">
+                                        <?= htmlspecialchars(substr($appointment['issue_description'], 0, 40)) ?>...
+                                    </div>
+                                </div>
+                                <div class="appointment-status">
+                                    <i class="fas fa-clock text-warning"></i>
+                                </div>
+                            </div>
                         </div>
-                    </div>
+                        <?php endforeach; ?>
+                    <?php else: ?>
+                        <div class="text-center py-4">
+                            <i class="fas fa-calendar-plus fa-3x text-muted mb-3"></i>
+                            <p class="text-muted mb-0">No appointments scheduled</p>
+                            <small class="text-muted">for the next 7 days</small>
+                        </div>
+                    <?php endif; ?>
                 </div>
-                <div class="text-success mb-3">
-                    <strong>Great Progress! 🎉</strong>
-                </div>
-                <p class="text-muted small mb-3">
-                    Our achievement increased by GH₵ <?php echo number_format($total_sales * 0.1); ?>;
-                    let's reach 100% next month.
-                </p>
-                <div class="row text-center">
-                    <div class="col-6">
-                        <small class="text-muted d-block">Target</small>
-                        <strong>GH₵ <?php echo number_format($total_sales * 1.2); ?></strong>
-                    </div>
-                    <div class="col-6">
-                        <small class="text-muted d-block">Revenue</small>
-                        <strong>GH₵ <?php echo number_format($total_sales); ?></strong>
+
+                <div class="calendar-footer mt-3 pt-3 border-top">
+                    <div class="row text-center">
+                        <div class="col-6">
+                            <small class="text-muted d-block">This Week</small>
+                            <strong class="text-primary"><?= count($calendar_appointments) ?> appointments</strong>
+                        </div>
+                        <div class="col-6">
+                            <small class="text-muted d-block">Specialists</small>
+                            <strong class="text-success">
+                                <?= count(array_unique(array_column($calendar_appointments, 'specialist_name'))) ?> active
+                            </strong>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -375,7 +491,318 @@ try {
     </div>
 </div>
 
+<!-- Additional Analytics Cards -->
+<div class="row g-4 mt-4">
+    <div class="col-12">
+        <div class="admin-card">
+            <div class="card-header-custom">
+                <h5><i class="fas fa-chart-bar me-2"></i>Additional Analytics</h5>
+            </div>
+            <div class="card-body-custom">
+                <div class="row g-4">
+                    <!-- Total Products -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="text-primary mb-2">
+                                <i class="fas fa-box fa-2x"></i>
+                            </div>
+                            <h4 class="text-primary mb-1"><?php echo number_format($total_products); ?></h4>
+                            <small class="text-muted">Total Products</small>
+                        </div>
+                    </div>
+
+                    <!-- Pending Orders -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="text-warning mb-2">
+                                <i class="fas fa-clock fa-2x"></i>
+                            </div>
+                            <h4 class="text-warning mb-1"><?php echo number_format($pending_orders); ?></h4>
+                            <small class="text-muted">Pending Orders</small>
+                        </div>
+                    </div>
+
+                    <!-- Completed Repairs -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="text-success mb-2">
+                                <i class="fas fa-tools fa-2x"></i>
+                            </div>
+                            <h4 class="text-success mb-1"><?php echo number_format($completed_appointments); ?></h4>
+                            <small class="text-muted">Completed Repairs</small>
+                        </div>
+                    </div>
+
+                    <!-- Total Categories -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="text-info mb-2">
+                                <i class="fas fa-tags fa-2x"></i>
+                            </div>
+                            <h4 class="text-info mb-1"><?php echo number_format($total_categories); ?></h4>
+                            <small class="text-muted">Categories</small>
+                        </div>
+                    </div>
+
+                    <!-- Support Messages -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="text-danger mb-2">
+                                <i class="fas fa-headset fa-2x"></i>
+                            </div>
+                            <h4 class="text-danger mb-1"><?php echo number_format($support_messages); ?></h4>
+                            <small class="text-muted">Open Tickets</small>
+                        </div>
+                    </div>
+
+                    <!-- Monthly Revenue -->
+                    <div class="col-lg-2 col-md-4 col-6">
+                        <div class="text-center p-3 bg-light rounded">
+                            <div class="text-success mb-2">
+                                <i class="fas fa-chart-line fa-2x"></i>
+                            </div>
+                            <h4 class="text-success mb-1">GH₵<?php echo number_format($current_month_revenue, 0); ?></h4>
+                            <small class="text-muted">This Month</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calendar and Animation Styles -->
+<style>
+/* Calendar Styles */
+.calendar-days {
+    margin-bottom: 1rem;
+}
+
+.calendar-day {
+    padding: 0.5rem 0.25rem;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    position: relative;
+}
+
+.calendar-day:hover {
+    background: rgba(59, 130, 246, 0.1);
+}
+
+.calendar-day.today {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.calendar-day.has-appointments::after {
+    content: '';
+    position: absolute;
+    bottom: 2px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 4px;
+    height: 4px;
+    background: var(--accent-orange);
+    border-radius: 50%;
+}
+
+.appointment-item {
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    padding: 0.75rem;
+    margin-bottom: 0.5rem;
+    border-left: 3px solid var(--electric-blue);
+    transition: all 0.3s ease;
+    animation: slideInRight 0.6s ease forwards;
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.appointment-item:hover {
+    background: rgba(255, 255, 255, 1);
+    transform: translateX(5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes slideInRight {
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+.time-badge {
+    background: var(--gradient-accent);
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 8px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    min-width: 60px;
+    text-align: center;
+}
+
+.appointment-client {
+    font-size: 0.9rem;
+    color: var(--primary-navy);
+}
+
+.appointment-specialist {
+    font-size: 0.8rem;
+}
+
+.appointment-issue {
+    font-size: 0.8rem;
+    margin-top: 0.25rem;
+}
+
+.date-separator {
+    text-align: center;
+    margin: 1rem 0 0.5rem;
+    position: relative;
+}
+
+.date-separator::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e2e8f0, transparent);
+    z-index: 0;
+}
+
+.date-separator small {
+    background: white;
+    padding: 0 1rem;
+    position: relative;
+    z-index: 1;
+}
+
+/* Animated Charts */
+.chart-container {
+    position: relative;
+    animation: chartSlideIn 0.8s ease forwards;
+    opacity: 0;
+}
+
+@keyframes chartSlideIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Counter animations for stats */
+.stats-counter {
+    transition: all 0.3s ease;
+}
+
+.stats-counter:hover {
+    transform: scale(1.05);
+}
+
+/* Pulse animation for important metrics */
+@keyframes pulse {
+    0% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+    70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+}
+
+.pulse-animation {
+    animation: pulse 2s infinite;
+}
+</style>
+
 <script>
+// Calendar initialization and animations
+function initializeCalendar() {
+    const now = new Date();
+    const startOfWeek = new Date(now.setDate(now.getDate() - now.getDay() + 1));
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+
+    // Set current week display
+    const currentWeekEl = document.getElementById('currentWeek');
+    if (currentWeekEl) {
+        currentWeekEl.textContent = `${startOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })} - ${endOfWeek.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}`;
+    }
+
+    // Highlight today and days with appointments
+    const calendarDays = document.querySelectorAll('.calendar-day');
+    const today = new Date();
+
+    calendarDays.forEach((day, index) => {
+        const dayDate = new Date(startOfWeek);
+        dayDate.setDate(startOfWeek.getDate() + index);
+
+        // Add day number
+        const dayNumber = document.createElement('div');
+        dayNumber.className = 'fw-bold';
+        dayNumber.textContent = dayDate.getDate();
+        day.appendChild(dayNumber);
+
+        // Highlight today
+        if (dayDate.toDateString() === today.toDateString()) {
+            day.classList.add('today');
+        }
+
+        // Check for appointments
+        const hasAppointments = <?= json_encode(array_map(function($apt) { return date('Y-m-d', strtotime($apt['appointment_date'])); }, $calendar_appointments)) ?>;
+        const dayStr = dayDate.toISOString().split('T')[0];
+        if (hasAppointments.includes(dayStr)) {
+            day.classList.add('has-appointments');
+        }
+    });
+
+    // Animate appointment items
+    setTimeout(() => {
+        document.querySelectorAll('.appointment-item').forEach((item, index) => {
+            setTimeout(() => {
+                item.style.opacity = '1';
+                item.style.transform = 'translateX(0)';
+            }, index * 100);
+        });
+    }, 500);
+}
+
+// Counter animation for stats
+function animateCounters() {
+    const counters = document.querySelectorAll('[data-counter]');
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                const counter = entry.target;
+                const target = parseInt(counter.getAttribute('data-counter'));
+                const increment = target / 50;
+                let count = 0;
+
+                const updateCounter = () => {
+                    if (count < target) {
+                        count += increment;
+                        counter.textContent = Math.ceil(count);
+                        requestAnimationFrame(updateCounter);
+                    } else {
+                        counter.textContent = target;
+                    }
+                };
+
+                updateCounter();
+                observer.unobserve(counter);
+            }
+        });
+    });
+
+    counters.forEach(counter => observer.observe(counter));
+}
+
 // Revenue Chart
 const ctx = document.getElementById('revenueChart').getContext('2d');
 
@@ -461,6 +888,29 @@ new Chart(ctx, {
             }
         }
     }
+});
+
+// Initialize everything when page loads
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialize calendar
+    initializeCalendar();
+
+    // Start counter animations
+    setTimeout(animateCounters, 300);
+
+    // Add chart animation
+    const chartContainer = document.querySelector('#revenueChart').parentElement;
+    if (chartContainer) {
+        chartContainer.classList.add('chart-container');
+    }
+
+    // Add pulse animation to important metrics
+    setTimeout(() => {
+        const salesCard = document.querySelector('.admin-card');
+        if (salesCard) {
+            salesCard.classList.add('pulse-animation');
+        }
+    }, 2000);
 });
 </script>
 

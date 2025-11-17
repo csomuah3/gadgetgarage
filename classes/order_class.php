@@ -194,11 +194,13 @@ class Order extends db_connection
     public function get_all_orders()
     {
         $sql = "SELECT o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status,
-                       c.customer_name, c.customer_email, c.customer_contact,
+                       c.customer_name COLLATE utf8mb4_general_ci as customer_name,
+                       c.customer_email COLLATE utf8mb4_general_ci as customer_email,
+                       c.customer_contact COLLATE utf8mb4_general_ci as customer_contact,
                        COUNT(DISTINCT od.product_id) as item_count,
                        SUM(od.qty) as total_items,
                        COALESCE(MAX(p.amt), 0) as total_amount,
-                       COALESCE(MAX(p.currency), 'GH₵') as currency,
+                       COALESCE(MAX(p.currency) COLLATE utf8mb4_general_ci, 'GHS') as currency,
                        MAX(p.payment_date) as payment_date
                 FROM orders o
                 JOIN customer c ON o.customer_id = c.customer_id

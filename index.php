@@ -4055,9 +4055,9 @@ try {
 				<!-- Grid of Smaller Categories on Right -->
 				<div class="category-grid-right">
 					<div class="category-small">
-						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads and Tablets">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads">
 						<div class="category-small-overlay">
-							<h4><span data-translate="ipads">iPads and Tablets</span></h4>
+							<h4><span data-translate="ipads">iPads</span></h4>
 							<p>From GH₵ 3000</p>
 						</div>
 					</div>
@@ -4069,16 +4069,16 @@ try {
 						</div>
 					</div>
 					<div class="category-small">
-						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops and Desktop">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops">
 						<div class="category-small-overlay">
-							<h4><span data-translate="laptops">Laptops and Desktop</span></h4>
+							<h4><span data-translate="laptops">Laptops</span></h4>
 							<p>From GH₵ 4000</p>
 						</div>
 					</div>
 					<div class="category-small">
-						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography and Video Devices">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography">
 						<div class="category-small-overlay">
-							<h4><span data-translate="photography">Photography and Video Devices</span></h4>
+							<h4><span data-translate="photography">Photography</span></h4>
 							<p>From GH₵ 5000</p>
 						</div>
 					</div>

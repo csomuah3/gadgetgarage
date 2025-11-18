@@ -9,7 +9,9 @@
         <div class="d-flex align-items-center justify-content-between w-100 header-container">
             <!-- Logo -->
             <a href="index.php" class="logo">
-                Gadget<span class="garage">Garage</span>
+                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                     alt="Gadget Garage"
+                     style="height: 40px; width: auto; object-fit: contain;">
             </a>
 
             <!-- Search Bar -->
@@ -208,7 +210,8 @@
                 </a>
                 <div class="simple-dropdown" id="moreDropdown">
                     <ul>
-                        <li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
+                        <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                        <li><a href="legal.php"><i class="fas fa-gavel"></i> Legal</a></li>
                         <li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
                     </ul>
                 </div>

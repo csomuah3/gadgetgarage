@@ -75,8 +75,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
             $size = $_REQUEST['size'] ?? '';
             $color = $_REQUEST['color'] ?? '';
 
+            // Debug logging
+            error_log("Filter request: " . json_encode($_REQUEST));
+            error_log("Parsed values: search=$search_query, cat_ids=" . json_encode($cat_ids) . ", brand_ids=" . json_encode($brand_ids) . ", min_price=$min_price, max_price=$max_price");
+
             // Start with all products
             $products = view_all_products_ctr();
+            error_log("Initial product count: " . count($products));
 
             // Apply search filter if provided
             if (!empty($search_query)) {
@@ -90,9 +95,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
             // Apply category filter (single category like brand)
             if (!empty($cat_ids) && is_array($cat_ids) && !empty($cat_ids[0])) {
                 $cat_id = $cat_ids[0];
+                error_log("Filtering by category ID: $cat_id");
                 $products = array_filter($products, function ($product) use ($cat_id) {
                     return $product['product_cat'] == $cat_id;
                 });
+                error_log("After category filter: " . count($products) . " products");
             }
 
             // Apply brand filter (single brand for new design)

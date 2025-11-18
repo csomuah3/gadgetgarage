@@ -186,7 +186,7 @@ try {
 <!-- Product Management -->
 <div class="row g-4 mb-4">
     <!-- Add Product Form -->
-    <div class="col-lg-4">
+    <div class="col-lg-6">
         <div class="admin-card" style="animation-delay: 0.5s;">
             <div class="card-header-custom">
                 <h5><i class="fas fa-plus me-2"></i>Add New Product</h5>
@@ -200,7 +200,7 @@ try {
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <label for="product_price" class="form-label-modern">Price (GH₵)</label>
+                            <label for="product_price" class="form-label-modern">Excellent Condition Price (GH₵)</label>
                             <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
                         </div>
                         <div class="col-md-6">
@@ -300,6 +300,63 @@ try {
                         </div>
                     </div>
 
+                    <div class="form-group mb-4">
+                        <label for="product_color" class="form-label-modern">Product Color</label>
+                        <div class="color-selection-container">
+                            <div class="color-options">
+                                <div class="color-option" data-color="black">
+                                    <div class="color-circle" style="background-color: #000000;"></div>
+                                    <span class="color-name">Black</span>
+                                </div>
+                                <div class="color-option" data-color="white">
+                                    <div class="color-circle" style="background-color: #ffffff; border: 1px solid #e2e8f0;"></div>
+                                    <span class="color-name">White</span>
+                                </div>
+                                <div class="color-option" data-color="silver">
+                                    <div class="color-circle" style="background-color: #c0c0c0;"></div>
+                                    <span class="color-name">Silver</span>
+                                </div>
+                                <div class="color-option" data-color="gray">
+                                    <div class="color-circle" style="background-color: #808080;"></div>
+                                    <span class="color-name">Gray</span>
+                                </div>
+                                <div class="color-option" data-color="gold">
+                                    <div class="color-circle" style="background-color: #ffd700;"></div>
+                                    <span class="color-name">Gold</span>
+                                </div>
+                                <div class="color-option" data-color="rose-gold">
+                                    <div class="color-circle" style="background-color: #e8b4a0;"></div>
+                                    <span class="color-name">Rose Gold</span>
+                                </div>
+                                <div class="color-option" data-color="blue">
+                                    <div class="color-circle" style="background-color: #007aff;"></div>
+                                    <span class="color-name">Blue</span>
+                                </div>
+                                <div class="color-option" data-color="red">
+                                    <div class="color-circle" style="background-color: #ff3b30;"></div>
+                                    <span class="color-name">Red</span>
+                                </div>
+                                <div class="color-option" data-color="green">
+                                    <div class="color-circle" style="background-color: #34c759;"></div>
+                                    <span class="color-name">Green</span>
+                                </div>
+                                <div class="color-option" data-color="purple">
+                                    <div class="color-circle" style="background-color: #af52de;"></div>
+                                    <span class="color-name">Purple</span>
+                                </div>
+                                <div class="color-option" data-color="pink">
+                                    <div class="color-circle" style="background-color: #ff2d92;"></div>
+                                    <span class="color-name">Pink</span>
+                                </div>
+                                <div class="color-option" data-color="yellow">
+                                    <div class="color-circle" style="background-color: #ffcc00;"></div>
+                                    <span class="color-name">Yellow</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="product_color" name="product_color" required>
+                        </div>
+                    </div>
+
                     <button type="submit" name="add_product" class="btn-primary-custom w-100">
                         <i class="fas fa-plus me-2"></i>
                         Add Product
@@ -310,7 +367,7 @@ try {
     </div>
 
     <!-- Inventory Chart -->
-    <div class="col-lg-8">
+    <div class="col-lg-6">
         <div class="admin-card">
             <div class="card-header-custom">
                 <h5><i class="fas fa-chart-bar me-2"></i>Category Distribution</h5>
@@ -747,6 +804,115 @@ try {
     font-weight: 600;
     text-transform: uppercase;
 }
+
+/* Color Selection Styles */
+.color-selection-container {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: rgba(248, 250, 252, 0.5);
+}
+
+.color-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 1rem;
+}
+
+.color-option {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1rem 0.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+    background: white;
+}
+
+.color-option:hover {
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.color-option.selected {
+    border-color: var(--electric-blue);
+    background: rgba(59, 130, 246, 0.1);
+    transform: translateY(-3px);
+    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.3);
+}
+
+.color-circle {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-bottom: 0.5rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.color-option:hover .color-circle {
+    transform: scale(1.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.color-option.selected .color-circle {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+.color-name {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #374151;
+    text-align: center;
+    text-transform: capitalize;
+}
+
+.color-option.selected .color-name {
+    color: var(--electric-blue);
+    font-weight: 700;
+}
+
+/* Animation for color selection */
+@keyframes selectColor {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.color-option.selected {
+    animation: selectColor 0.3s ease;
+}
+
+/* Responsive design for colors */
+@media (max-width: 768px) {
+    .color-options {
+        grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+        gap: 0.75rem;
+    }
+
+    .color-option {
+        padding: 0.75rem 0.25rem;
+    }
+
+    .color-circle {
+        width: 25px;
+        height: 25px;
+    }
+
+    .color-name {
+        font-size: 0.7rem;
+    }
+}
 </style>
 
 <script>
@@ -1063,6 +1229,35 @@ function initializeImageUpload() {
     }
 }
 
+// Color Selection Functionality
+function initializeColorSelection() {
+    const colorOptions = document.querySelectorAll('.color-option');
+    const colorInput = document.getElementById('product_color');
+
+    colorOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            colorOptions.forEach(opt => opt.classList.remove('selected'));
+
+            // Add selected class to clicked option
+            this.classList.add('selected');
+
+            // Set the hidden input value
+            const selectedColor = this.getAttribute('data-color');
+            colorInput.value = selectedColor;
+
+            // Optional: Show confirmation
+            console.log('Selected color:', selectedColor);
+        });
+    });
+
+    // Set default selection (first color - black)
+    if (colorOptions.length > 0) {
+        colorOptions[0].classList.add('selected');
+        colorInput.value = colorOptions[0].getAttribute('data-color');
+    }
+}
+
 // Initialize everything
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize chart
@@ -1076,6 +1271,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Initialize image upload
     initializeImageUpload();
+
+    // Initialize color selection
+    initializeColorSelection();
 
     // Animate cards
     const cards = document.querySelectorAll('.admin-card, .analytics-card');

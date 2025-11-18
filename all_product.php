@@ -1511,8 +1511,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->
                 <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
-
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                         alt="Gadget Garage"
+                         style="height: 40px; width: auto; object-fit: contain;">
                 </a>
 
                 <!-- Center Content -->
@@ -1818,13 +1819,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-slider-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="500" value="0" step="1">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="500" value="500" step="1">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
                             </div>
                             <div class="price-display">
                                 <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
                                 <span class="price-separator">-</span>
-                                <span class="price-max" id="priceMaxDisplay">GH₵ 500</span>
+                                <span class="price-max" id="priceMaxDisplay">GH₵ 50,000</span>
                             </div>
                         </div>
                     </div>
@@ -2388,7 +2389,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 search: '',
                 rating: '',
                 minPrice: 0,
-                maxPrice: 500,
+                maxPrice: 50000,
                 categories: [''],
                 brand: '',
                 size: '',
@@ -2423,20 +2424,20 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 const maxVal = parseInt(maxSlider.value);
 
                 // Ensure min is not greater than max
-                if (minVal > maxVal - 10) {
-                    minSlider.value = maxVal - 10;
+                if (minVal > maxVal - 100) {
+                    minSlider.value = maxVal - 100;
                 }
 
-                if (maxVal < minVal + 10) {
-                    maxSlider.value = minVal + 10;
+                if (maxVal < minVal + 100) {
+                    maxSlider.value = minVal + 100;
                 }
 
                 const finalMin = parseInt(minSlider.value);
                 const finalMax = parseInt(maxSlider.value);
 
                 // Always update the display in real-time
-                minDisplay.textContent = `GH₵ ${finalMin}`;
-                maxDisplay.textContent = `GH₵ ${finalMax}`;
+                minDisplay.textContent = `GH₵ ${finalMin.toLocaleString()}`;
+                maxDisplay.textContent = `GH₵ ${finalMax.toLocaleString()}`;
 
                 // Update range display
                 const minPercent = (finalMin / parseInt(minSlider.max)) * 100;
@@ -2619,7 +2620,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             if (brandId) params.append('brand_ids[]', brandId);
             if (minPrice > 0) params.append('min_price', minPrice);
-            if (maxPrice < 500) params.append('max_price', maxPrice);
+            if (maxPrice < 50000) params.append('max_price', maxPrice);
             if (rating) params.append('rating', rating);
             if (size) params.append('size', size);
             if (color) params.append('color', color);
@@ -2627,6 +2628,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             params.append('action', 'combined_filter');
 
             console.log('Sending filter params:', params.toString());
+            console.log('Filter values:', {
+                searchQuery: searchQuery,
+                categoryId: categoryId,
+                brandId: brandId,
+                minPrice: minPrice,
+                maxPrice: maxPrice,
+                rating: rating
+            });
 
             // Show loading state
             const applyBtn = document.getElementById('applyFilters');
@@ -2637,19 +2646,30 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             fetch('actions/product_actions.php?' + params.toString())
                 .then(response => {
                     if (!response.ok) {
-                        throw new Error('Network response was not ok');
+                        throw new Error('Network response was not ok: ' + response.status);
                     }
-                    return response.json();
+                    return response.text();
                 })
-                .then(data => {
-                    console.log('Filter response:', data);
-                    updateProductGrid(data);
-                    // Reload images for filtered products
-                    setTimeout(loadProductImages, 100);
-                    // Hide apply button after successful application
-                    hideApplyButton();
-                    // Update initial state
-                    updateInitialState();
+                .then(text => {
+                    console.log('Raw filter response:', text);
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('Filter response:', data);
+                        if (data.error) {
+                            throw new Error('Server error: ' + data.error);
+                        }
+                        updateProductGrid(data);
+                        // Reload images for filtered products
+                        setTimeout(loadProductImages, 100);
+                        // Hide apply button after successful application
+                        hideApplyButton();
+                        // Update initial state
+                        updateInitialState();
+                    } catch (jsonError) {
+                        console.error('JSON parse error:', jsonError);
+                        console.error('Response text:', text);
+                        throw new Error('Invalid JSON response');
+                    }
                 })
                 .catch(error => {
                     console.error('Filter Error:', error);
@@ -2789,9 +2809,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                 // Reset price sliders
                 document.getElementById('minPriceSlider').value = 0;
-                document.getElementById('maxPriceSlider').value = 500;
+                document.getElementById('maxPriceSlider').value = 50000;
                 document.getElementById('priceMinDisplay').textContent = 'GH₵ 0';
-                document.getElementById('priceMaxDisplay').textContent = 'GH₵ 500';
+                document.getElementById('priceMaxDisplay').textContent = 'GH₵ 50,000';
                 document.getElementById('priceRange').style.left = '0%';
                 document.getElementById('priceRange').style.right = '0%';
 
@@ -3162,7 +3182,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <div class="row">
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="footer-brand">
-                            <h3 class="footer-logo">Gadget<span class="garage">Garage</span></h3>
+                            <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                                 alt="Gadget Garage"
+                                 style="height: 35px; width: auto; object-fit: contain;"
+                                 class="footer-logo">
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">
                                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>

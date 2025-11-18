@@ -45,6 +45,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="css/dark-mode.css" rel="stylesheet">
     <link href="includes/header-styles.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -265,7 +266,9 @@ try {
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->
                 <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                         alt="Gadget Garage"
+                         style="height: 40px; width: auto; object-fit: contain;">
                 </a>
 
                 <!-- Center Content -->
@@ -649,6 +652,7 @@ try {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dark-mode.js"></script>
     <script src="js/cart.js"></script>
 
     <style>
@@ -967,7 +971,11 @@ try {
                 <div class="row">
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="footer-brand">
-                            <h3 class="footer-logo">Gadget<span class="garage">Garage</span></h3>
+                            <div class="footer-logo" style="margin-bottom: 16px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                                     alt="Gadget Garage"
+                                     style="height: 35px; width: auto; object-fit: contain;">
+                            </div>
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">
                                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>

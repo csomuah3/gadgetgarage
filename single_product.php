@@ -31,6 +31,41 @@ if (!$product) {
     header('Location: all_product.php');
     exit();
 }
+
+// Category-based pricing configuration
+$categoryPricing = [
+    'Smartphones' => ['excellent' => 0, 'good' => 2000, 'fair' => 3500],
+    'Mobile Devices' => ['excellent' => 0, 'good' => 2000, 'fair' => 3500],
+    'Tablets' => ['excellent' => 0, 'good' => 1800, 'fair' => 2500],
+    'iPads' => ['excellent' => 0, 'good' => 1800, 'fair' => 2500],
+    'Laptops' => ['excellent' => 0, 'good' => 3000, 'fair' => 3400],
+    'Computing' => ['excellent' => 0, 'good' => 3000, 'fair' => 3400],
+    'Desktops' => ['excellent' => 0, 'good' => 2000, 'fair' => 2300],
+    'Cameras' => ['excellent' => 0, 'good' => 1000, 'fair' => 2000],
+    'Photography & Video' => ['excellent' => 0, 'good' => 1000, 'fair' => 2000],
+    'Video Equipment' => ['excellent' => 0, 'good' => 1500, 'fair' => 3000],
+    'default' => ['excellent' => 0, 'good' => 1000, 'fair' => 2000]
+];
+
+// Function to calculate price based on category and condition
+function calculateConditionPrice($basePrice, $category, $condition, $categoryPricing) {
+    $categoryKey = isset($categoryPricing[$category]) ? $category : 'default';
+    $discount = $categoryPricing[$categoryKey][$condition];
+    return max(0, $basePrice - $discount);
+}
+
+// Get category and base price
+$productCategory = $product['cat_name'] ?? 'default';
+$basePrice = floatval($product['product_price']);
+
+// Calculate prices for all conditions
+$excellentPrice = calculateConditionPrice($basePrice, $productCategory, 'excellent', $categoryPricing);
+$goodPrice = calculateConditionPrice($basePrice, $productCategory, 'good', $categoryPricing);
+$fairPrice = calculateConditionPrice($basePrice, $productCategory, 'fair', $categoryPricing);
+
+// Calculate discounts
+$goodDiscount = $basePrice - $goodPrice;
+$fairDiscount = $basePrice - $fairPrice;
 ?>
 
 <!DOCTYPE html>
@@ -43,6 +78,7 @@ if (!$product) {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="css/dark-mode.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
@@ -872,7 +908,7 @@ if (!$product) {
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
                             <!-- Excellent Condition -->
-                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo floatval($product['product_price']); ?>" onclick="selectCondition('excellent', <?php echo floatval($product['product_price']); ?>)">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo $excellentPrice; ?>" onclick="selectCondition('excellent', <?php echo $excellentPrice; ?>)">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
@@ -885,29 +921,33 @@ if (!$product) {
                             </div>
 
                             <!-- Good Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo floatval($product['product_price']) - 100; ?>" onclick="selectCondition('good', <?php echo floatval($product['product_price']) - 100; ?>)">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo $goodPrice; ?>" onclick="selectCondition('good', <?php echo $goodPrice; ?>)">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Good Condition</div>
                                         <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Minor scratches, fully functional</div>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($product['product_price'] - 100, 0); ?></div>
-                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵100</div>
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($goodPrice, 0); ?></div>
+                                        <?php if ($goodDiscount > 0): ?>
+                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵<?php echo number_format($goodDiscount, 0); ?></div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Fair Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo floatval($product['product_price']) - 200; ?>" onclick="selectCondition('fair', <?php echo floatval($product['product_price']) - 200; ?>)">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo $fairPrice; ?>" onclick="selectCondition('fair', <?php echo $fairPrice; ?>)">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Fair Condition</div>
                                         <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Visible wear, works perfectly</div>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($product['product_price'] - 200, 0); ?></div>
-                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵200</div>
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($fairPrice, 0); ?></div>
+                                        <?php if ($fairDiscount > 0): ?>
+                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵<?php echo number_format($fairDiscount, 0); ?></div>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             </div>
@@ -952,6 +992,7 @@ if (!$product) {
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/dark-mode.js"></script>
     <script src="js/cart.js"></script>
     <script>
         // Global variables for condition selection
@@ -1487,35 +1528,60 @@ if (!$product) {
 
         // Condition-based pricing configuration
         const categoryPricing = {
-            'Tablets': { // iPads
+            'Smartphones': { // Mobile Devices/Smartphones
                 'excellent': 0,
-                'good': 300,
-                'fair': 400
+                'good': 2000,
+                'fair': 3500
+            },
+            'Mobile Devices': { // Alternative name for smartphones
+                'excellent': 0,
+                'good': 2000,
+                'fair': 3500
+            },
+            'Tablets': { // iPads/Tablets
+                'excellent': 0,
+                'good': 1800,
+                'fair': 2500
+            },
+            'iPads': { // Alternative name for tablets
+                'excellent': 0,
+                'good': 1800,
+                'fair': 2500
             },
             'Laptops': {
                 'excellent': 0,
-                'good': 500,
-                'fair': 700
+                'good': 3000,
+                'fair': 3400
+            },
+            'Computing': { // Alternative name for laptops
+                'excellent': 0,
+                'good': 3000,
+                'fair': 3400
             },
             'Desktops': {
                 'excellent': 0,
-                'good': 700,
-                'fair': 1000
+                'good': 2000,
+                'fair': 2300
             },
-            'Cameras': { // Camera and Camera Equipment
+            'Cameras': { // Photography & Video/Cameras
                 'excellent': 0,
-                'good': 500,
-                'fair': 750
+                'good': 1000,
+                'fair': 2000
             },
-            'Camera Equipment': {
+            'Photography & Video': { // Alternative name for cameras
                 'excellent': 0,
-                'good': 500,
-                'fair': 750
+                'good': 1000,
+                'fair': 2000
+            },
+            'Video Equipment': {
+                'excellent': 0,
+                'good': 1500,
+                'fair': 3000
             },
             'default': { // Default for any other category
                 'excellent': 0,
-                'good': 300,
-                'fair': 400
+                'good': 1000,
+                'fair': 2000
             }
         };
 

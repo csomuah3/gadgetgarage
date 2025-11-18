@@ -393,7 +393,9 @@ try {
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                         alt="Gadget Garage"
+                         style="height: 40px; width: auto; object-fit: contain;">
                 </a>
                 <a href="repair_services.php" class="btn-back">
                     <i class="fas fa-arrow-left"></i>

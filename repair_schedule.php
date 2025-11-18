@@ -471,7 +471,9 @@ try {
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                         alt="Gadget Garage"
+                         style="height: 40px; width: auto; object-fit: contain;">
                 </a>
                 <a href="repair_specialist.php?issue_id=<?php echo $issue_id; ?>&issue_name=<?php echo urlencode($issue_name); ?>" class="btn-back">
                     <i class="fas fa-arrow-left"></i>

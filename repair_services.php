@@ -966,7 +966,9 @@ try {
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
-					Gadget<span class="garage">Garage</span>
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+					     alt="Gadget Garage"
+					     style="height: 40px; width: auto; object-fit: contain;">
 				</a>
 
 				<!-- Center Content -->

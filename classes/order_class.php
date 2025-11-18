@@ -38,7 +38,7 @@ class Order extends db_connection
         return $this->db_write_query($sql);
     }
 
-    public function record_payment($customer_id, $order_id, $amount, $currency = 'USD')
+    public function record_payment($customer_id, $order_id, $amount, $currency = 'GHS')
     {
         $payment_date = date('Y-m-d');
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);

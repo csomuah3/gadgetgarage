@@ -488,7 +488,9 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             <div class="d-flex align-items-center justify-content-between">
                 <!-- Logo -->
                 <a href="index.php" class="logo">
-                    Gadget<span class="garage">Garage</span>
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                         alt="Gadget Garage"
+                         style="height: 40px; width: auto; object-fit: contain;">
                 </a>
 
                 <!-- Navigation -->

@@ -13,7 +13,7 @@ function add_order_details_ctr($order_id, $product_id, $quantity)
     return $order->add_order_details($order_id, $product_id, $quantity);
 }
 
-function record_payment_ctr($customer_id, $order_id, $amount, $currency = 'USD')
+function record_payment_ctr($customer_id, $order_id, $amount, $currency = 'GHS')
 {
     $order = new Order();
     return $order->record_payment($customer_id, $order_id, $amount, $currency);

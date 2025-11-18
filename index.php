@@ -177,6 +177,12 @@ try {
 			gap: 8px;
 		}
 
+		.logo img {
+			height: 65px !important;
+			width: auto !important;
+			object-fit: contain;
+		}
+
 		.logo .garage {
 			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
@@ -261,15 +267,23 @@ try {
 		}
 
 		.tech-revival-icon {
-			font-size: 1.5rem;
+			font-size: 2rem;
 			color: #008060;
 		}
 
 		.tech-revival-text {
-			font-size: 0.9rem;
-			font-weight: 600;
+			font-size: 1.3rem;
+			font-weight: 700;
 			color: #1f2937;
 			margin: 0;
+			letter-spacing: 0.3px;
+		}
+
+		.ghana-flag {
+			font-size: 1.8rem;
+			margin-left: 8px;
+			margin-right: 4px;
+			vertical-align: middle;
 		}
 
 		.contact-number {
@@ -433,29 +447,38 @@ try {
 
 		.header-icon {
 			position: relative;
-			padding: 8px;
-			border-radius: 8px;
+			padding: 10px;
+			border-radius: 10px;
 			transition: all 0.3s ease;
-			color: #4b5563;
+			color: #1f2937;
 			cursor: pointer;
 		}
 
+		.header-icon i {
+			font-size: 1.6rem;
+			font-weight: 600;
+		}
+
 		.header-icon:hover {
-			background: rgba(139, 95, 191, 0.1);
+			background: rgba(0, 128, 96, 0.1);
 			color: #008060;
+			transform: scale(1.1);
 		}
 
 		.cart-badge {
 			position: absolute;
-			top: -2px;
-			right: -2px;
+			top: 2px;
+			right: 2px;
 			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
-			font-size: 0.75rem;
-			padding: 2px 6px;
-			border-radius: 10px;
-			min-width: 18px;
+			font-size: 0.85rem;
+			font-weight: 700;
+			padding: 4px 7px;
+			border-radius: 12px;
+			min-width: 22px;
 			text-align: center;
+			border: 2px solid white;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 		}
 
 		.user-menu {
@@ -504,17 +527,19 @@ try {
 		}
 
 		.user-avatar {
-			width: 36px;
-			height: 36px;
+			width: 48px;
+			height: 48px;
 			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			color: white;
-			font-weight: 600;
+			font-weight: 700;
+			font-size: 1.3rem;
 			cursor: pointer;
 			transition: all 0.3s ease;
+			box-shadow: 0 2px 8px rgba(0, 128, 96, 0.3);
 		}
 
 		.user-avatar:hover {
@@ -3036,6 +3061,28 @@ try {
 				margin-right: 0;
 			}
 
+			.logo img {
+				height: 50px !important;
+			}
+
+			.tech-revival-text {
+				font-size: 1.1rem;
+			}
+
+			.tech-revival-icon {
+				font-size: 1.6rem;
+			}
+
+			.header-icon i {
+				font-size: 1.3rem;
+			}
+
+			.user-avatar {
+				width: 42px;
+				height: 42px;
+				font-size: 1.1rem;
+			}
+
 			.search-container {
 				order: 2;
 				width: 100%;
@@ -3724,8 +3771,7 @@ try {
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage"
-					     style="height: 40px; width: auto; object-fit: contain;">
+					     alt="Gadget Garage">
 				</a>
 
 				<!-- Center Content -->
@@ -3743,7 +3789,7 @@ try {
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="tech-revival-text">Bring Retired Tech <span class="ghana-flag">🇬🇭</span></p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>

@@ -89,34 +89,54 @@ try {
 
 		/* Promotional Banner Styles */
 		.promo-banner {
-			background: linear-gradient(135deg, #008060, #00a077);
+			background: #001f3f;
 			color: white;
-			padding: 4px 0;
+			padding: 12px 20px;
 			text-align: center;
-			font-size: 0.8rem;
-			font-weight: 500;
+			font-size: 1.1rem;
+			font-weight: 700;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
-			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-			height: 32px;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			min-height: 50px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 8px;
+			gap: 15px;
 		}
 
 		.promo-banner i {
-			font-size: 0.8rem;
+			font-size: 1.3rem;
+		}
+
+		.promo-banner span {
+			font-size: 1.1rem;
+			font-weight: 700;
+			letter-spacing: 0.5px;
 		}
 
 		.promo-timer {
-			background: rgba(255, 255, 255, 0.2);
-			padding: 2px 6px;
-			border-radius: 12px;
-			font-size: 0.7rem;
-			font-weight: 600;
-			margin-left: 8px;
+			background: rgba(255, 255, 255, 0.25);
+			padding: 6px 12px;
+			border-radius: 20px;
+			font-size: 1rem;
+			font-weight: 700;
+			margin-left: 15px;
+			border: 1px solid rgba(255, 255, 255, 0.3);
+		}
+
+		.promo-shop-link {
+			color: white;
+			text-decoration: underline;
+			font-weight: 700;
+			margin-left: 10px;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+		}
+
+		.promo-shop-link:hover {
+			opacity: 0.8;
 		}
 
 		/* Header Styles */
@@ -3671,8 +3691,9 @@ try {
 	<!-- Promotional Banner -->
 	<div class="promo-banner">
 		<i class="fas fa-truck"></i>
-		<span>Free Next Day Delivery on Orders Above GH₵2,000!</span>
-		<span class="promo-timer" id="promoTimer">23:59:45</span>
+		<span>BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
+		<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+		<a href="#flash-deals" class="promo-shop-link">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
@@ -5993,32 +6014,43 @@ try {
 	<?php endif; ?>
 
 	<script>
-		// Countdown timer for promotional banner
+		// Countdown timer for promotional banner - Black Friday deals (12 days)
 		function startPromoTimer() {
 			const timer = document.getElementById('promoTimer');
 			if (!timer) return;
 
-			// Set timer to end at midnight today
+			// Set timer to end in 12 days from now
 			const now = new Date();
-			const midnight = new Date();
-			midnight.setHours(24, 0, 0, 0);
+			const endDate = new Date();
+			endDate.setDate(now.getDate() + 12);
+			endDate.setHours(23, 59, 59, 999);
 
-			let timeLeft = midnight.getTime() - now.getTime();
+			const updateTimer = () => {
+				const now = new Date();
+				let timeLeft = endDate.getTime() - now.getTime();
 
-			const countdown = setInterval(() => {
-				const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+				if (timeLeft < 0) {
+					timer.textContent = "00d:00h:00m:00s";
+					return;
+				}
+
+				const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
+				const hours = Math.floor((timeLeft % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
 				const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
 				const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
 
-				timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+				timer.textContent = `${days.toString().padStart(2, '0')}d:${hours.toString().padStart(2, '0')}h:${minutes.toString().padStart(2, '0')}m:${seconds.toString().padStart(2, '0')}s`;
+			};
 
-				timeLeft -= 1000;
+			// Update immediately
+			updateTimer();
 
-				if (timeLeft < 0) {
+			// Update every second
+			const countdown = setInterval(() => {
+				updateTimer();
+				const now = new Date();
+				if (now.getTime() >= endDate.getTime()) {
 					clearInterval(countdown);
-					timer.textContent = "23:59:59";
-					// Restart timer for next day
-					setTimeout(startPromoTimer, 1000);
 				}
 			}, 1000);
 		}

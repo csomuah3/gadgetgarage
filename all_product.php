@@ -2104,6 +2104,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/cart.js"></script>
+    <script src="js/header.js"></script>
     <script src="js/chatbot.js"></script>
     <script>
         function viewProduct(productId) {

@@ -1248,6 +1248,7 @@ try {
 	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="js/cart.js"></script>
+	<script src="js/header.js"></script>
 	<script>
 		// Search functionality
 		document.querySelector('.search-input').addEventListener('keypress', function(e) {

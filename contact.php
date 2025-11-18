@@ -931,6 +931,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="js/dark-mode.js"></script>
+    <script src="js/header.js"></script>
     <script>
         // Animate elements on scroll
         function animateOnScroll() {

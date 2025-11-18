@@ -22,12 +22,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product_title = trim($_POST['product_title']);
         $product_price = floatval($_POST['product_price']);
         $product_desc = trim($_POST['product_desc']);
+        $product_keywords = trim($_POST['product_keywords']);
         $product_cat = intval($_POST['product_cat']);
         $product_brand = intval($_POST['product_brand']);
         $stock_quantity = intval($_POST['stock_quantity']);
 
         if (!empty($product_title) && $product_price > 0) {
-            if (add_product_ctr($product_title, $product_price, $product_desc, $product_cat, $product_brand, '', $stock_quantity)) {
+            if (add_product_ctr($product_title, $product_price, $product_desc, $product_cat, $product_brand, $product_keywords, $stock_quantity)) {
                 $success_message = "Product added successfully!";
             } else {
                 $error_message = "Failed to add product.";
@@ -199,11 +200,11 @@ try {
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-6">
+                        <div class="col-md-8">
                             <label for="product_price" class="form-label-modern">Excellent Condition Price (GH₵)</label>
                             <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-4">
                             <label for="stock_quantity" class="form-label-modern">Stock</label>
                             <input type="number" class="form-control-modern" id="stock_quantity" name="stock_quantity" required>
                         </div>
@@ -212,6 +213,12 @@ try {
                     <div class="form-group mb-3">
                         <label for="product_desc" class="form-label-modern">Description</label>
                         <textarea class="form-control-modern" id="product_desc" name="product_desc" rows="3"></textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="product_keywords" class="form-label-modern">Product Keywords</label>
+                        <input type="text" class="form-control-modern" id="product_keywords" name="product_keywords" placeholder="e.g., laptop, gaming, portable, wireless">
+                        <small class="text-muted">Separate keywords with commas for better search results</small>
                     </div>
 
                     <div class="form-group mb-3">

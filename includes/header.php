@@ -92,6 +92,20 @@
                                 <i class="fas fa-heart"></i>
                                 <span>Wishlist</span>
                             </a>
+                            <div class="dropdown-divider-custom"></div>
+                            <a href="notifications.php" class="dropdown-item-custom" onclick="showNotifications(); return false;">
+                                <i class="fas fa-bell"></i>
+                                <span>Notifications</span>
+                                <?php
+                                if ($is_logged_in && !$is_admin) {
+                                    require_once __DIR__ . '/../controllers/support_controller.php';
+                                    $unread_count = get_unread_notification_count_ctr($_SESSION['user_id']);
+                                    if ($unread_count > 0) {
+                                        echo '<span class="notification-badge">' . $unread_count . '</span>';
+                                    }
+                                }
+                                ?>
+                            </a>
                             <?php if ($is_admin): ?>
                                 <div class="dropdown-divider-custom"></div>
                                 <a href="admin/category.php" class="dropdown-item-custom">
@@ -211,8 +225,7 @@
                 <div class="simple-dropdown" id="moreDropdown">
                     <ul>
                         <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                        <li><a href="legal.php"><i class="fas fa-gavel"></i> Legal</a></li>
-                        <li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+                        <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                     </ul>
                 </div>
             </div>

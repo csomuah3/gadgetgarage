@@ -725,7 +725,7 @@ if (!check_login() || !check_admin()) {
                         <i class="fas fa-calendar"></i>
                         <span>Appointments</span>
                     </a>
-                    <a href="../index.php" class="nav-link">
+                    <a href="../index.php?view_customer=1" class="nav-link">
                         <i class="fas fa-home"></i>
                         <span>Customer Homepage</span>
                     </a>

@@ -180,20 +180,128 @@ function add_admin_response_ctr($message_id, $response, $admin_id = null) {
     $response = mysqli_real_escape_string($db->db_conn(), trim($response));
     $admin_id = $admin_id ? intval($admin_id) : null;
 
-    $sql = "UPDATE support_messages
-            SET admin_response = '$response',
-                response_date = NOW(),
-                status = 'resolved'";
+    // Get customer_id for notification
+    $customer_query = "SELECT customer_id, customer_name FROM support_messages WHERE message_id = $message_id";
+    $customer_data = $db->db_fetch_one($customer_query);
 
-    if ($admin_id) {
-        $sql .= ", assigned_to = $admin_id";
+    if (!$customer_data) {
+        return false;
     }
 
-    $sql .= " WHERE message_id = $message_id";
+    $customer_id = $customer_data['customer_id'];
 
-    $result = $db->db_query($sql);
+    // Insert into support_responses table
+    $response_sql = "INSERT INTO support_responses (message_id, response_text, admin_id, response_date)
+                     VALUES ($message_id, '$response', " . ($admin_id ? $admin_id : 'NULL') . ", NOW())";
 
-    return $result;
+    $response_result = $db->db_query($response_sql);
+
+    if (!$response_result) {
+        return false;
+    }
+
+    // Update support_messages table
+    $update_sql = "UPDATE support_messages
+                   SET last_response_date = NOW(),
+                       response_count = response_count + 1,
+                       status = 'in_progress'";
+
+    if ($admin_id) {
+        $update_sql .= ", assigned_to = $admin_id";
+    }
+
+    $update_sql .= " WHERE message_id = $message_id";
+
+    $update_result = $db->db_query($update_sql);
+
+    // Create notification for customer
+    $notification_message = "You have received a response to your support message.";
+    $notification_sql = "INSERT INTO notifications (customer_id, message, type, related_id, created_at)
+                         VALUES ($customer_id, '$notification_message', 'support_response', $message_id, NOW())";
+
+    $notification_result = $db->db_query($notification_sql);
+
+    return $response_result && $update_result && $notification_result;
+}
+
+/**
+ * Get notifications for a customer
+ */
+function get_customer_notifications_ctr($customer_id, $unread_only = false) {
+    $db = new db_connection();
+
+    if (!$db->db_connect()) {
+        return [];
+    }
+
+    $customer_id = intval($customer_id);
+    $where_clause = $unread_only ? "AND is_read = FALSE" : "";
+
+    $sql = "SELECT * FROM notifications
+            WHERE customer_id = $customer_id $where_clause
+            ORDER BY created_at DESC";
+
+    return $db->db_fetch_all($sql) ?: [];
+}
+
+/**
+ * Mark notification as read
+ */
+function mark_notification_read_ctr($notification_id, $customer_id) {
+    $db = new db_connection();
+
+    if (!$db->db_connect()) {
+        return false;
+    }
+
+    $notification_id = intval($notification_id);
+    $customer_id = intval($customer_id);
+
+    $sql = "UPDATE notifications
+            SET is_read = TRUE
+            WHERE notification_id = $notification_id AND customer_id = $customer_id";
+
+    return $db->db_query($sql);
+}
+
+/**
+ * Get unread notification count
+ */
+function get_unread_notification_count_ctr($customer_id) {
+    $db = new db_connection();
+
+    if (!$db->db_connect()) {
+        return 0;
+    }
+
+    $customer_id = intval($customer_id);
+
+    $sql = "SELECT COUNT(*) as count FROM notifications
+            WHERE customer_id = $customer_id AND is_read = FALSE";
+
+    $result = $db->db_fetch_one($sql);
+    return $result ? intval($result['count']) : 0;
+}
+
+/**
+ * Get support responses for a message
+ */
+function get_support_responses_ctr($message_id) {
+    $db = new db_connection();
+
+    if (!$db->db_connect()) {
+        return [];
+    }
+
+    $message_id = intval($message_id);
+
+    $sql = "SELECT sr.*, c.customer_name as admin_name
+            FROM support_responses sr
+            LEFT JOIN customer c ON sr.admin_id = c.customer_id
+            WHERE sr.message_id = $message_id
+            ORDER BY sr.response_date DESC";
+
+    return $db->db_fetch_all($sql) ?: [];
 }
 
 /**

@@ -16,8 +16,8 @@ try {
 	if ($is_logged_in) {
 		$is_admin = check_admin();
 
-		// Redirect admins to admin dashboard
-		if ($is_admin) {
+		// Redirect admins to admin dashboard (unless they specifically want to view customer homepage)
+		if ($is_admin && !isset($_GET['view_customer'])) {
 			header("Location: admin/index.php");
 			exit();
 		}
@@ -5882,6 +5882,122 @@ try {
 		// Initialize countdown when page loads
 		document.addEventListener('DOMContentLoaded', updateCountdown);
 	</script>
+
+	<!-- Notification Modal -->
+	<?php if ($is_logged_in && !$is_admin): ?>
+	<div class="notification-modal" id="notificationModal">
+		<div class="notification-content">
+			<div class="notification-header">
+				<h3><i class="fas fa-bell me-2"></i>Notifications</h3>
+				<button class="notification-close" onclick="closeNotifications()">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="notification-body" id="notificationBody">
+				<div class="no-notifications">
+					<i class="fas fa-bell-slash"></i>
+					<p>Loading notifications...</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+	// Notification functions
+	function showNotifications() {
+		const modal = document.getElementById('notificationModal');
+		modal.classList.add('show');
+		loadNotifications();
+	}
+
+	function closeNotifications() {
+		const modal = document.getElementById('notificationModal');
+		modal.classList.remove('show');
+	}
+
+	function loadNotifications() {
+		fetch('actions/get_notifications_action.php')
+			.then(response => response.json())
+			.then(data => {
+				const body = document.getElementById('notificationBody');
+
+				if (data.status === 'success' && data.notifications.length > 0) {
+					body.innerHTML = data.notifications.map(notification => {
+						const timeAgo = getTimeAgo(notification.created_at);
+						const unreadClass = notification.is_read == '0' ? 'unread' : '';
+
+						return `
+							<div class="notification-item ${unreadClass}" onclick="openNotification(${notification.notification_id}, '${notification.type}', ${notification.related_id})">
+								<div class="notification-text">${notification.message}</div>
+								<div class="notification-time">${timeAgo}</div>
+							</div>
+						`;
+					}).join('');
+				} else {
+					body.innerHTML = `
+						<div class="no-notifications">
+							<i class="fas fa-bell-slash"></i>
+							<p>No notifications yet</p>
+						</div>
+					`;
+				}
+			})
+			.catch(error => {
+				console.error('Error loading notifications:', error);
+				document.getElementById('notificationBody').innerHTML = `
+					<div class="no-notifications">
+						<i class="fas fa-exclamation-triangle"></i>
+						<p>Error loading notifications</p>
+					</div>
+				`;
+			});
+	}
+
+	function openNotification(notificationId, type, relatedId) {
+		// Mark as read
+		fetch('actions/mark_notification_read_action.php', {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+			body: JSON.stringify({
+				notification_id: notificationId
+			})
+		});
+
+		// Handle different notification types
+		if (type === 'support_response') {
+			// Open support chat for this message
+			window.location.href = `support_message.php?message_id=${relatedId}`;
+		}
+
+		closeNotifications();
+
+		// Refresh notification badge
+		setTimeout(() => {
+			location.reload();
+		}, 1000);
+	}
+
+	function getTimeAgo(dateString) {
+		const date = new Date(dateString);
+		const now = new Date();
+		const diffInSeconds = Math.floor((now - date) / 1000);
+
+		if (diffInSeconds < 60) return 'Just now';
+		if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' min ago';
+		if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' hour ago';
+		return Math.floor(diffInSeconds / 86400) + ' day ago';
+	}
+
+	// Close modal when clicking outside
+	document.getElementById('notificationModal').addEventListener('click', function(e) {
+		if (e.target === this) {
+			closeNotifications();
+		}
+	});
+	</script>
+	<?php endif; ?>
 </body>
 
 </html>

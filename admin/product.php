@@ -189,7 +189,7 @@ try {
 <!-- Product Management -->
 <div class="row g-4 mb-4">
     <!-- Add Product Form -->
-    <div class="col-lg-6">
+    <div class="col-lg-8 mx-auto">
         <div class="admin-card" style="animation-delay: 0.5s;">
             <div class="card-header-custom">
                 <h5><i class="fas fa-plus me-2"></i>Add New Product</h5>
@@ -553,6 +553,22 @@ try {
     outline: none;
     border-color: var(--electric-blue);
     box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Force wider form container */
+.admin-card {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+.card-body-custom {
+    width: 100% !important;
+    max-width: none !important;
+}
+
+.modern-form {
+    width: 100% !important;
+    max-width: none !important;
 }
 
 /* Force wider inputs */

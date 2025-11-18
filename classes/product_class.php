@@ -25,7 +25,27 @@ class Product extends db_connection {
             return false;
         }
 
-        // Simple INSERT query
+        // Validate that category exists
+        $cat_check = "SELECT cat_id FROM categories WHERE cat_id = $category_id";
+        $cat_result = $this->db_fetch_one($cat_check);
+        if (!$cat_result) {
+            return false; // Category doesn't exist
+        }
+
+        // Validate that brand exists
+        $brand_check = "SELECT brand_id FROM brands WHERE brand_id = $brand_id";
+        $brand_result = $this->db_fetch_one($brand_check);
+        if (!$brand_result) {
+            return false; // Brand doesn't exist
+        }
+
+        // Escape strings to prevent SQL injection
+        $product_title = mysqli_real_escape_string($this->db, $product_title);
+        $product_desc = mysqli_real_escape_string($this->db, $product_desc);
+        $product_image = mysqli_real_escape_string($this->db, $product_image);
+        $product_keywords = mysqli_real_escape_string($this->db, $product_keywords);
+
+        // INSERT query
         $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
                 VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id, $stock_quantity)";
 

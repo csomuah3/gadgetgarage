@@ -2307,56 +2307,132 @@ try {
 		}
 
 
-		/* Most Popular Categories */
+		/* Most Popular Categories - Grid Layout */
 		.popular-categories {
 			padding: 60px 0;
 			background: white;
 		}
 
 		.popular-categories .section-title {
-			color: #008060;
-			font-size: 6.1 rem;
+			color: #1a1a1a;
+			font-size: 2rem;
 			font-weight: 700;
-			margin-bottom: 30px;
-			text-align: center;
+			margin-bottom: 40px;
+			text-align: left;
 		}
 
-		.category-card {
-			text-align: center;
-			padding: 20px;
-			background: white;
+		.category-grid-container {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 20px;
+			max-width: 1400px;
+			margin: 0 auto;
+		}
+
+		.category-large {
+			grid-row: span 2;
+			position: relative;
 			border-radius: 12px;
+			overflow: hidden;
+			cursor: pointer;
 			transition: all 0.3s ease;
-			border: 1px solid #f1f1f1;
 		}
 
-		.category-card:hover {
+		.category-large:hover {
 			transform: translateY(-5px);
-			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
 		}
 
-		.category-icon {
-			margin-bottom: 15px;
-		}
-
-		.category-icon img {
-			width: 80px;
-			height: 80px;
-			border-radius: 50%;
+		.category-large img {
+			width: 100%;
+			height: 100%;
 			object-fit: cover;
 		}
 
-		.category-card h4 {
-			font-size: 1rem;
-			font-weight: 600;
-			color: #1f2937;
-			margin-bottom: 8px;
+		.category-large-overlay {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+			padding: 30px 20px 20px;
+			color: white;
 		}
 
-		.category-card p {
-			color: #6b7280;
-			font-size: 0.9rem;
+		.category-large-overlay h4 {
+			font-size: 1.5rem;
+			font-weight: 700;
 			margin: 0;
+			text-align: center;
+		}
+
+		.category-grid-right {
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			gap: 20px;
+		}
+
+		.category-small {
+			position: relative;
+			border-radius: 12px;
+			overflow: hidden;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			aspect-ratio: 1;
+		}
+
+		.category-small:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+		}
+
+		.category-small img {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+		}
+
+		.category-small-overlay {
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			background: linear-gradient(to top, rgba(0, 0, 0, 0.7), transparent);
+			padding: 20px;
+			color: white;
+		}
+
+		.category-small-overlay h4 {
+			font-size: 1.1rem;
+			font-weight: 700;
+			margin: 0;
+			text-align: center;
+		}
+
+		.category-small-overlay p {
+			font-size: 0.9rem;
+			margin: 5px 0 0;
+			text-align: center;
+			opacity: 0.9;
+		}
+
+		@media (max-width: 768px) {
+			.category-grid-container {
+				grid-template-columns: 1fr;
+			}
+
+			.category-large {
+				grid-row: span 1;
+				aspect-ratio: 4/3;
+			}
+
+			.category-grid-right {
+				grid-template-columns: 1fr;
+			}
+
+			.popular-categories .section-title {
+				text-align: center;
+			}
 		}
 
 		.view-all-link {
@@ -3923,52 +3999,46 @@ try {
 
 	<!-- Most Popular Categories -->
 	<section class="popular-categories">
-		<div class="container-fluid">
-			<h2 class="section-title text-center">Most Popular Categories</h2>
-			<div class="row g-4 justify-content-center">
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads and Tablets">
-						</div>
-						<h4><span data-translate="ipads">iPads and Tablets</span></h4>
-						<p>From GH₵ 3000</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/smartphones.webp" alt="Smartphones">
-						</div>
-						<h4><span data-translate="smartphones">Smartphones</span></h4>
-						<p>From GH₵ 2500</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops and Desktop">
-						</div>
-						<h4><span data-translate="laptops">Laptops and Desktop</span></h4>
-						<p>From GH₵ 4000</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography and Video equipment">
-						</div>
-						<h4><span data-translate="photography">Photography and Video equipment</span></h4>
-						<p>From GH₵ 5000</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/flashdeals.png" alt="Flash Deals">
-						</div>
+		<div class="container">
+			<h2 class="section-title">SHOP BY CATEGORY</h2>
+			<div class="category-grid-container">
+				<!-- Large Category on Left -->
+				<div class="category-large">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/flashdeals.png" alt="Flash Deals">
+					<div class="category-large-overlay">
 						<h4>Flash Deals</h4>
-						<p>Limited Time Offers</p>
+					</div>
+				</div>
+				
+				<!-- Grid of Smaller Categories on Right -->
+				<div class="category-grid-right">
+					<div class="category-small">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads and Tablets">
+						<div class="category-small-overlay">
+							<h4><span data-translate="ipads">iPads and Tablets</span></h4>
+							<p>From GH₵ 3000</p>
+						</div>
+					</div>
+					<div class="category-small">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/smartphones.webp" alt="Smartphones">
+						<div class="category-small-overlay">
+							<h4><span data-translate="smartphones">Smartphones</span></h4>
+							<p>From GH₵ 2500</p>
+						</div>
+					</div>
+					<div class="category-small">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops and Desktop">
+						<div class="category-small-overlay">
+							<h4><span data-translate="laptops">Laptops and Desktop</span></h4>
+							<p>From GH₵ 4000</p>
+						</div>
+					</div>
+					<div class="category-small">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography and Video equipment">
+						<div class="category-small-overlay">
+							<h4><span data-translate="photography">Photography and Video equipment</span></h4>
+							<p>From GH₵ 5000</p>
+						</div>
 					</div>
 				</div>
 			</div>

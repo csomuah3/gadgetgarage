@@ -89,50 +89,67 @@ try {
 
 		/* Promotional Banner Styles */
 		.promo-banner {
-			background: #001f3f;
+			background: #001f3f !important;
 			color: white;
-			padding: 12px 20px;
+			padding: 6px 15px;
 			text-align: center;
-			font-size: 1.1rem;
+			font-size: 1.4rem;
 			font-weight: 700;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-			min-height: 50px;
+			height: 38px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 15px;
+			max-width: 100%;
+		}
+
+		.promo-banner-left {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			flex: 0 0 auto;
+		}
+
+		.promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 15px;
+			gap: 20px;
+			flex: 1;
 		}
 
 		.promo-banner i {
-			font-size: 1.3rem;
+			font-size: 1.5rem;
 		}
 
-		.promo-banner span {
-			font-size: 1.1rem;
+		.promo-banner .promo-text {
+			font-size: 1.65rem;
 			font-weight: 700;
 			letter-spacing: 0.5px;
 		}
 
 		.promo-timer {
-			background: rgba(255, 255, 255, 0.25);
-			padding: 6px 12px;
-			border-radius: 20px;
-			font-size: 1rem;
+			background: transparent;
+			padding: 0;
+			border-radius: 0;
+			font-size: 1.65rem;
 			font-weight: 700;
-			margin-left: 15px;
-			border: 1px solid rgba(255, 255, 255, 0.3);
+			margin: 0;
+			border: none;
 		}
 
 		.promo-shop-link {
 			color: white;
 			text-decoration: underline;
 			font-weight: 700;
-			margin-left: 10px;
 			cursor: pointer;
 			transition: opacity 0.3s ease;
+			font-size: 1.2rem;
+			flex: 0 0 auto;
 		}
 
 		.promo-shop-link:hover {
@@ -738,7 +755,7 @@ try {
 		}
 
 		body.dark-mode .promo-banner {
-			background: linear-gradient(135deg, #2d3748, #4a5568);
+			background: #001f3f !important;
 		}
 
 		body.dark-mode .main-header {
@@ -3690,9 +3707,13 @@ try {
 
 	<!-- Promotional Banner -->
 	<div class="promo-banner">
-		<i class="fas fa-truck"></i>
-		<span>BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
-		<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+		<div class="promo-banner-left">
+			<i class="fas fa-bolt"></i>
+		</div>
+		<div class="promo-banner-center">
+			<span class="promo-text">BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
+			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+		</div>
 		<a href="#flash-deals" class="promo-shop-link">Shop Now</a>
 	</div>
 

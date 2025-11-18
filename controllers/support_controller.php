@@ -68,6 +68,15 @@ function create_support_message_ctr($customer_id, $name, $email, $subject, $mess
 
     mysqli_stmt_close($stmt);
 
+    // If mysqli_insert_id returns 0, try to get the ID from the last inserted row
+    if ($message_id == 0) {
+        $last_id_result = $db->db_fetch_one("SELECT MAX(message_id) as id FROM support_messages WHERE customer_id = $customer_id AND customer_name = '$name' ORDER BY created_at DESC LIMIT 1");
+        if ($last_id_result) {
+            $message_id = $last_id_result['id'];
+            error_log("Support controller: Retrieved ID using MAX query: $message_id");
+        }
+    }
+
     // If message was created successfully, prepare data for email notifications
     if ($result && $message_id) {
         // Get the complete message details for email

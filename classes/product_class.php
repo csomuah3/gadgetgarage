@@ -45,22 +45,46 @@ class Product extends db_connection {
         $product_image = mysqli_real_escape_string($this->db, $product_image);
         $product_keywords = mysqli_real_escape_string($this->db, $product_keywords);
 
-        // INSERT query
-        $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
-                VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id, $stock_quantity)";
+        // Check if stock_quantity column exists
+        $check_column = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
+        $column_exists = $this->db_fetch_one($check_column);
+
+        if ($column_exists) {
+            // INSERT query with stock_quantity
+            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
+                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id, $stock_quantity)";
+        } else {
+            // INSERT query without stock_quantity
+            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand)
+                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id)";
+        }
 
         return $this->db_write_query($sql);
     }
 
     // Get all products
     public function get_all_products() {
-        $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand, p.stock_quantity,
-                       c.cat_name, b.brand_name
-                FROM products p
-                LEFT JOIN categories c ON p.product_cat = c.cat_id
-                LEFT JOIN brands b ON p.product_brand = b.brand_id
-                ORDER BY p.product_title";
+        // First check if stock_quantity column exists
+        $check_column = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
+        $column_exists = $this->db_fetch_one($check_column);
+
+        if ($column_exists) {
+            $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
+                           p.product_cat, p.product_brand, p.stock_quantity,
+                           c.cat_name, b.brand_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.product_cat = c.cat_id
+                    LEFT JOIN brands b ON p.product_brand = b.brand_id
+                    ORDER BY p.product_title";
+        } else {
+            $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
+                           p.product_cat, p.product_brand, 0 as stock_quantity,
+                           c.cat_name, b.brand_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.product_cat = c.cat_id
+                    LEFT JOIN brands b ON p.product_brand = b.brand_id
+                    ORDER BY p.product_title";
+        }
 
         return $this->db_fetch_all($sql);
     }

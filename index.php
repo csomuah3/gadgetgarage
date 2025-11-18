@@ -728,66 +728,10 @@ try {
 		}
 
 
-		.bubble {
-			position: absolute;
-			border-radius: 50%;
-			background: linear-gradient(135deg, rgba(139, 95, 191, 0.1), rgba(240, 147, 251, 0.05));
-			animation: floatUp linear infinite;
-			opacity: 0.8;
-		}
 
-		.bubble:nth-child(odd) {
-			background: linear-gradient(135deg, rgba(240, 147, 251, 0.1), rgba(139, 95, 191, 0.05));
-		}
 
-		.bubble:nth-child(3n) {
-			background: linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(139, 95, 191, 0.05));
-		}
 
-		.bubble:nth-child(5n) {
-			background: linear-gradient(135deg, rgba(236, 72, 153, 0.1), rgba(240, 147, 251, 0.05));
-		}
 
-		@keyframes floatUp {
-			from {
-				transform: translateY(100vh) rotate(0deg);
-				opacity: 0;
-			}
-
-			10% {
-				opacity: 0.8;
-			}
-
-			90% {
-				opacity: 0.8;
-			}
-
-			to {
-				transform: translateY(-100px) rotate(360deg);
-				opacity: 0;
-			}
-		}
-
-		/* Dark mode bubble adjustments */
-		body.dark-mode .bubble {
-			background: linear-gradient(135deg, rgba(139, 95, 191, 0.4), rgba(240, 147, 251, 0.3));
-			box-shadow: 0 0 20px rgba(139, 95, 191, 0.3);
-		}
-
-		body.dark-mode .bubble:nth-child(odd) {
-			background: linear-gradient(135deg, rgba(240, 147, 251, 0.4), rgba(139, 95, 191, 0.3));
-			box-shadow: 0 0 20px rgba(240, 147, 251, 0.3);
-		}
-
-		body.dark-mode .bubble:nth-child(3n) {
-			background: linear-gradient(135deg, rgba(99, 102, 241, 0.4), rgba(139, 95, 191, 0.3));
-			box-shadow: 0 0 20px rgba(99, 102, 241, 0.3);
-		}
-
-		body.dark-mode .bubble:nth-child(5n) {
-			background: linear-gradient(135deg, rgba(236, 72, 153, 0.4), rgba(240, 147, 251, 0.3));
-			box-shadow: 0 0 20px rgba(236, 72, 153, 0.3);
-		}
 
 		/* Dark mode top picks section */
 		body.dark-mode .top-picks-section {
@@ -3611,123 +3555,6 @@ try {
 </head>
 
 <body>
-	<!-- Main Header -->
-	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 120px 0 95px;">
-			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-				<!-- Logo - Far Left -->
-				<a href="index.php" class="logo">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage"
-					     style="height: 40px; width: auto; object-fit: contain;">
-				</a>
-
-				<!-- Center Content -->
-				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
-						<i class="fas fa-search search-icon"></i>
-						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-						<button type="submit" class="search-btn">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
-
-					<!-- Tech Revival Section -->
-					<div class="tech-revival-section">
-						<i class="fas fa-recycle tech-revival-icon"></i>
-						<div>
-							<p class="tech-revival-text">Bring Retired Tech</p>
-							<p class="contact-number">055-138-7578</p>
-						</div>
-					</div>
-				</div>
-
-				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-					<span style="color: #ddd;">|</span>
-					<?php if ($is_logged_in): ?>
-						<!-- Wishlist Icon -->
-						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
-								<i class="fas fa-heart"></i>
-							</a>
-						</div>
-
-						<!-- Cart Icon -->
-						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none;">
-								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
-							</a>
-						</div>
-
-						<!-- User Avatar Dropdown -->
-						<div class="user-dropdown">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
-							</div>
-							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
-								</button>
-								<div class="dropdown-divider-custom"></div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-globe"></i>
-									<div class="language-selector">
-										<span>Language</span>
-										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-											<option value="en">🇬🇧 EN</option>
-											<option value="es">🇪🇸 ES</option>
-											<option value="fr">🇫🇷 FR</option>
-											<option value="de">🇩🇪 DE</option>
-										</select>
-									</div>
-								</div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-moon"></i>
-									<div class="theme-toggle">
-										<span>Dark Mode</span>
-										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-											<div class="toggle-slider"></div>
-										</div>
-									</div>
-								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
-								</a>
-								<div class="dropdown-divider-custom"></div>
-								<a href="wishlist.php" class="dropdown-item-custom">
-									<i class="fas fa-heart"></i>
-									<span> My Wishlist</span>
-								</a>
-								<?php if ($is_admin): ?>
-									<div class="dropdown-divider-custom"></div>
-									<a href="admin/index.php" class="dropdown-item-custom">
-										<i class="fas fa-chart-bar"></i>
-										<span>Admin Dashboard</span>
-									</a>
-								<?php endif; ?>
-								<div class="dropdown-divider-custom"></div>
-								<a href="login/logout.php" class="dropdown-item-custom">
-									<i class="fas fa-sign-out-alt"></i>
-									<span>Logout</span>
-								</a>
-							</div>
-						</div>
-					<?php else: ?>
-						<!-- Not logged in: Register | Login -->
-						<a href="login/register.php" class="login-btn me-2">Register</a>
-						<a href="login/login.php" class="login-btn">Login</a>
-					<?php endif; ?>
-
-				</div>
-			</div>
-		</div>
-	</header>
 
 	<!-- Main Navigation -->
 	<nav class="main-nav">
@@ -5450,74 +5277,11 @@ try {
 				document.getElementById('themeToggle').classList.add('active');
 			}
 
-			// Create floating bubbles
-			createFloatingBubbles();
 
 			// Load top picks
 			loadTopPicks();
 		});
 
-		// Create 40+ floating bubbles with different sizes and animations
-		function createFloatingBubbles() {
-			const bubblesContainer = document.getElementById('floatingBubbles');
-			const bubbleCount = 50; // Create 50 bubbles
-
-			for (let i = 0; i < bubbleCount; i++) {
-				const bubble = document.createElement('div');
-				bubble.className = 'bubble';
-
-				// Create distinct size categories: small, medium, large
-				let size;
-				const sizeCategory = Math.random();
-				if (sizeCategory < 0.5) {
-					// 50% small bubbles (15-35px)
-					size = Math.random() * 20 + 15;
-					bubble.classList.add('bubble-small');
-				} else if (sizeCategory < 0.8) {
-					// 30% medium bubbles (35-60px)
-					size = Math.random() * 25 + 35;
-					bubble.classList.add('bubble-medium');
-				} else {
-					// 20% large bubbles (60-90px)
-					size = Math.random() * 30 + 60;
-					bubble.classList.add('bubble-large');
-				}
-
-				bubble.style.width = size + 'px';
-				bubble.style.height = size + 'px';
-
-				// Random horizontal position
-				bubble.style.left = Math.random() * 100 + '%';
-
-				// Animation duration based on size (larger bubbles float slower)
-				let duration;
-				if (size < 35) {
-					duration = Math.random() * 8 + 12; // Small: 12-20s
-				} else if (size < 60) {
-					duration = Math.random() * 6 + 15; // Medium: 15-21s
-				} else {
-					duration = Math.random() * 4 + 18; // Large: 18-22s
-				}
-				bubble.style.animationDuration = duration + 's';
-
-				// Random delay between 0s and 15s
-				const delay = Math.random() * 15;
-				bubble.style.animationDelay = delay + 's';
-
-				// Opacity based on size (larger bubbles slightly more visible)
-				let opacity;
-				if (size < 35) {
-					opacity = Math.random() * 0.3 + 0.4; // Small: 0.4-0.7
-				} else if (size < 60) {
-					opacity = Math.random() * 0.3 + 0.5; // Medium: 0.5-0.8
-				} else {
-					opacity = Math.random() * 0.2 + 0.6; // Large: 0.6-0.8
-				}
-				bubble.style.opacity = opacity;
-
-				bubblesContainer.appendChild(bubble);
-			}
-		}
 
 		// Load top picks products
 		function loadTopPicks() {

@@ -4004,7 +4004,7 @@ try {
 			<div class="category-grid-container">
 				<!-- Large Category on Left -->
 				<div class="category-large">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/flashdeals.png" alt="Flash Deals">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/black-friday-sale-offer-deals-background_1055-8959.avif" alt="Flash Deals">
 					<div class="category-large-overlay">
 						<h4>Flash Deals</h4>
 					</div>
@@ -4034,9 +4034,9 @@ try {
 						</div>
 					</div>
 					<div class="category-small">
-						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography and Video equipment">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography and Video Devices">
 						<div class="category-small-overlay">
-							<h4><span data-translate="photography">Photography and Video equipment</span></h4>
+							<h4><span data-translate="photography">Photography and Video Devices</span></h4>
 							<p>From GH₵ 5000</p>
 						</div>
 					</div>

@@ -36,10 +36,13 @@ if (!isset($is_logged_in)) {
         error_log("Failed to load brands: " . $e->getMessage());
     }
 }
+
+// Include language configuration
+require_once __DIR__ . '/language_config.php';
 ?>
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="<?= $current_language ?>">
 
 <head>
     <meta charset="utf-8">

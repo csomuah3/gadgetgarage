@@ -18,18 +18,17 @@ if ($is_logged_in) {
 $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+
+// Set page variables for universal header
+$page_title = 'My Wishlist';
+$nav_path_prefix = '';
+$css_path_prefix = '';
+$logo_link = 'index.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include_once 'includes/universal_header.php'; ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>My Wishlist - Gadget Garage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
+<style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         * {

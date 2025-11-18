@@ -1,6 +1,9 @@
 <?php
 // This file should be included after setting up the necessary variables:
 // $is_logged_in, $is_admin, $cart_count, $brands, $categories
+
+// Include language configuration
+require_once __DIR__ . '/language_config.php';
 ?>
 
 <!-- Main Header -->
@@ -17,7 +20,7 @@
             <!-- Search Bar -->
             <form class="search-container" method="GET" action="product_search_result.php">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+                <input type="text" name="query" class="search-input" placeholder="<?= t('search_placeholder') ?>" required>
                 <button type="submit" class="search-btn">
                     <i class="fas fa-search"></i>
                 </button>
@@ -27,7 +30,7 @@
             <div class="tech-revival-section">
                 <i class="fas fa-recycle tech-revival-icon"></i>
                 <div>
-                    <p class="tech-revival-text">Bring Retired Tech</p>
+                    <p class="tech-revival-text"><?= t('tech_revival') ?></p>
                     <p class="contact-number">055-138-7578</p>
                 </div>
             </div>
@@ -64,19 +67,20 @@
                             <div class="dropdown-item-custom">
                                 <i class="fas fa-globe"></i>
                                 <div class="language-selector">
-                                    <span>Language</span>
+                                    <span><?= t('language') ?></span>
                                     <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                        <option value="en">🇬🇧 EN</option>
-                                        <option value="es">🇪🇸 ES</option>
-                                        <option value="fr">🇫🇷 FR</option>
-                                        <option value="de">🇩🇪 DE</option>
+                                        <?php foreach ($available_languages as $lang_code => $lang_info): ?>
+                                            <option value="<?= $lang_code ?>" <?= ($current_language === $lang_code) ? 'selected' : '' ?>>
+                                                <?= $lang_info['flag'] ?> <?= $lang_info['code'] ?>
+                                            </option>
+                                        <?php endforeach; ?>
                                     </select>
                                 </div>
                             </div>
                             <div class="dropdown-item-custom">
                                 <i class="fas fa-moon"></i>
                                 <div class="theme-toggle">
-                                    <span>Dark Mode</span>
+                                    <span><?= t('dark_mode') ?></span>
                                     <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
                                         <div class="toggle-slider"></div>
                                     </div>
@@ -85,17 +89,17 @@
                             <div class="dropdown-divider-custom"></div>
                             <a href="my_orders.php" class="dropdown-item-custom">
                                 <i class="fas fa-box"></i>
-                                <span>My Orders</span>
+                                <span><?= t('my_orders') ?></span>
                             </a>
                             <div class="dropdown-divider-custom"></div>
                             <a href="wishlist.php" class="dropdown-item-custom">
                                 <i class="fas fa-heart"></i>
-                                <span>Wishlist</span>
+                                <span><?= t('wishlist') ?></span>
                             </a>
                             <div class="dropdown-divider-custom"></div>
                             <a href="notifications.php" class="dropdown-item-custom" onclick="showNotifications(); return false;">
                                 <i class="fas fa-bell"></i>
-                                <span>Notifications</span>
+                                <span><?= t('notifications') ?></span>
                                 <?php
                                 if ($is_logged_in && !$is_admin) {
                                     require_once __DIR__ . '/../controllers/support_controller.php';
@@ -110,20 +114,20 @@
                                 <div class="dropdown-divider-custom"></div>
                                 <a href="admin/category.php" class="dropdown-item-custom">
                                     <i class="fas fa-cog"></i>
-                                    <span>Admin Panel</span>
+                                    <span><?= t('admin_panel') ?></span>
                                 </a>
                             <?php endif; ?>
                             <div class="dropdown-divider-custom"></div>
                             <a href="login/logout.php" class="dropdown-item-custom">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span>Logout</span>
+                                <span><?= t('logout') ?></span>
                             </a>
                         </div>
                     </div>
                 <?php else: ?>
                     <!-- Not logged in: Register | Login -->
-                    <a href="login/register.php" class="login-btn me-2">Register</a>
-                    <a href="login/login.php" class="login-btn">Login</a>
+                    <a href="login/register.php" class="login-btn me-2"><?= t('register') ?></a>
+                    <a href="login/login.php" class="login-btn"><?= t('login') ?></a>
                 <?php endif; ?>
             </div>
         </div>
@@ -138,29 +142,29 @@
             <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
                 <button class="categories-button">
                     <i class="fas fa-tags"></i>
-                    SHOP BY BRANDS
+                    <?= t('shop_by_brands') ?>
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="brands-dropdown" id="shopDropdown">
-                    <h4>All Brands</h4>
+                    <h4><?= t('all_brands') ?></h4>
                     <ul>
                         <?php if (!empty($brands)): ?>
                             <?php foreach ($brands as $brand): ?>
                                 <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> <?= t('all_products') ?></a></li>
                         <?php endif; ?>
                     </ul>
                 </div>
             </div>
 
-            <a href="index.php" class="nav-item">HOME</a>
+            <a href="index.php" class="nav-item"><?= t('home') ?></a>
 
             <!-- Shop Dropdown -->
             <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
                 <a href="#" class="nav-item">
-                    SHOP
+                    <?= t('shop') ?>
                     <i class="fas fa-chevron-down"></i>
                 </a>
                 <div class="mega-dropdown" id="shopCategoryDropdown">
@@ -168,44 +172,44 @@
                         <div class="dropdown-column">
                             <h4>
                                 <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                    Mobile Devices
+                                    <?= t('mobile_devices') ?>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-                                <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
+                                <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <?= t('smartphones') ?></a></li>
+                                <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <?= t('ipads') ?></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
                             <h4>
                                 <a href="computing.php" style="text-decoration: none; color: inherit;">
-                                    Computing
+                                    <?= t('computing') ?>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-                                <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+                                <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <?= t('laptops') ?></a></li>
+                                <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <?= t('desktops') ?></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
                             <h4>
                                 <a href="photography_video.php" style="text-decoration: none; color: inherit;">
-                                    Photography & Video
+                                    <?= t('photography_video') ?>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-                                <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+                                <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <?= t('cameras') ?></a></li>
+                                <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <?= t('video_equipment') ?></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column featured">
-                            <h4>Shop All</h4>
+                            <h4><?= t('shop_all') ?></h4>
                             <div class="featured-item">
-                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="<?= t('new_arrivals') ?>">
                                 <div class="featured-text">
-                                    <strong>New Arrivals</strong>
-                                    <p>Latest tech gadgets</p>
-                                    <a href="all_product.php" class="shop-now-btn">Shop Now</a>
+                                    <strong><?= t('new_arrivals') ?></strong>
+                                    <p><?= t('latest_tech_gadgets') ?></p>
+                                    <a href="all_product.php" class="shop-now-btn"><?= t('shop_now') ?></a>
                                 </div>
                             </div>
                         </div>
@@ -213,25 +217,25 @@
                 </div>
             </div>
 
-            <a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
-            <a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+            <a href="repair_services.php" class="nav-item"><?= t('repair_studio') ?></a>
+            <a href="device_drop.php" class="nav-item"><?= t('device_drop') ?></a>
 
             <!-- More Dropdown -->
             <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
                 <a href="#" class="nav-item">
-                    MORE
+                    <?= t('more') ?>
                     <i class="fas fa-chevron-down"></i>
                 </a>
                 <div class="simple-dropdown" id="moreDropdown">
                     <ul>
-                        <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                        <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        <li><a href="contact.php"><i class="fas fa-phone"></i> <?= t('contact') ?></a></li>
+                        <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> <?= t('terms_conditions') ?></a></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Flash Deal positioned at far right -->
-            <a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
+            <a href="#" class="nav-item flash-deal"><?= t('flash_deal') ?></a>
         </div>
     </div>
 </nav>

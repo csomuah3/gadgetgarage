@@ -62,8 +62,22 @@ $logo_link = 'index.php';
 
 <?php include_once 'includes/universal_header.php'; ?>
 
+	<style>
+		/* Page-specific styles for index.php */
 
-		/* Header Styles */
+		/* Floating Bubbles Background */
+		.floating-bubbles {
+			position: fixed;
+			width: 100%;
+			height: 100%;
+			top: 0;
+			left: 0;
+			z-index: -1;
+			background: linear-gradient(45deg, #f0f9ff, #e0f2fe, #f0f9ff);
+			overflow: hidden;
+		}
+
+		/* Hero Section Styles */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);

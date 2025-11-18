@@ -66,20 +66,17 @@ $fairPrice = calculateConditionPrice($basePrice, $productCategory, 'fair', $cate
 // Calculate discounts
 $goodDiscount = $basePrice - $goodPrice;
 $fairDiscount = $basePrice - $fairPrice;
+
+// Set page variables for universal header
+$page_title = htmlspecialchars($product['product_title']);
+$nav_path_prefix = '';
+$css_path_prefix = '';
+$logo_link = 'index.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include_once 'includes/universal_header.php'; ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title><?php echo htmlspecialchars($product['product_title']); ?> - Gadget Garage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link href="css/dark-mode.css" rel="stylesheet">
-    <style>
+<style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
         * {
@@ -762,10 +759,6 @@ $fairDiscount = $basePrice - $fairPrice;
             }
         }
     </style>
-</head>
-
-<body>
-    <header class="main-header">
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3">

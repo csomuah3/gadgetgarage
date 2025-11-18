@@ -70,21 +70,17 @@ $total_pages = ceil($total_products / $products_per_page);
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
 $products_to_display = array_slice($filtered_products, $offset, $products_per_page);
+
+// Set page variables for universal header
+$page_title = 'All Products';
+$nav_path_prefix = '';
+$css_path_prefix = '';
+$logo_link = 'index.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include_once 'includes/universal_header.php'; ?>
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Products - Gadget Garage</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link href="includes/header-styles.css" rel="stylesheet">
-    <link href="includes/chatbot-styles.css" rel="stylesheet">
-    <style>
+<style>
 
         /* Floating Bubbles Animation */
         .floating-bubbles {
@@ -1499,14 +1495,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
     </style>
-</head>
 
-<body>
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles"></div>
-
-    <!-- Main Header -->
-    <header class="main-header animate__animated animate__fadeInDown">
         <div class="container-fluid" style="padding: 0 120px 0 95px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->

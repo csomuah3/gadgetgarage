@@ -31,11 +31,14 @@ if ($_POST && isset($_POST['send_message'])) {
         $error_message = 'Please enter a valid email address.';
     } else {
         // Save message to database
+        error_log("Attempting to save support message: name=$name, email=$email, subject=$subject");
         $message_id = create_support_message_ctr($customer_id, $name, $email, $subject, $message);
 
         if ($message_id) {
+            error_log("Support message saved successfully with ID: $message_id");
             $message_sent = true;
         } else {
+            error_log("Failed to save support message");
             $error_message = 'There was an error sending your message. Please try again.';
         }
     }

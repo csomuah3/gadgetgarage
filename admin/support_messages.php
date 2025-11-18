@@ -249,6 +249,11 @@ try {
         <div class="admin-card" style="animation-delay: 0.7s;">
             <div class="card-header-custom">
                 <h5><i class="fas fa-list me-2"></i>Support Tickets</h5>
+                <div class="ms-auto">
+                    <button class="btn btn-light btn-sm" onclick="refreshMessages()" id="refreshBtn">
+                        <i class="fas fa-sync-alt me-1"></i> Refresh
+                    </button>
+                </div>
             </div>
             <div class="card-body-custom p-0">
                 <?php if (empty($messages)): ?>
@@ -287,9 +292,7 @@ try {
                                                     <strong><?= htmlspecialchars($message['customer_name'] ?? 'Unknown Customer') ?></strong>
                                                 </div>
                                                 <?php if (!empty($message['customer_email'])): ?>
-                                                    <small class="text-muted"><?= htmlspecialchars($message['customer_email']) ?></small>
-                                                <?php elseif (!empty($message['customer_phone'])): ?>
-                                                    <small class="text-muted"><i class="fas fa-phone me-1"></i><?= htmlspecialchars($message['customer_phone']) ?></small>
+                                                    <small class="text-muted"><i class="fas fa-envelope me-1"></i><?= htmlspecialchars($message['customer_email']) ?></small>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
@@ -768,10 +771,28 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Auto-refresh every 30 seconds
-setTimeout(function() {
-    location.reload();
-}, 30000);
+// Manual refresh function
+function refreshMessages() {
+    const refreshBtn = document.getElementById('refreshBtn');
+    const originalContent = refreshBtn.innerHTML;
+
+    // Show loading state
+    refreshBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Refreshing...';
+    refreshBtn.disabled = true;
+
+    // Reload the page after a short delay
+    setTimeout(() => {
+        window.location.reload();
+    }, 500);
+}
+
+// Auto-refresh every 60 seconds (increased from 30)
+setInterval(function() {
+    // Only auto-refresh if no modals are open
+    if (!document.querySelector('.modal.show')) {
+        location.reload();
+    }
+}, 60000);
 </script>
 
 <?php include 'includes/admin_footer.php'; ?>

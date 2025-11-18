@@ -10,22 +10,25 @@ require_once(__DIR__ . '/../settings/db_class.php');
 /**
  * Create a new support message
  */
-function create_support_message_ctr($customer_id, $name, $phone, $subject, $message) {
+function create_support_message_ctr($customer_id, $name, $email, $subject, $message) {
     $db = new db_connection();
 
     if (!$db->db_connect()) {
+        error_log("Support controller: Database connection failed");
         return false;
     }
+
+    error_log("Support controller: Database connected successfully");
 
     // Sanitize inputs
     $customer_id = $customer_id ? intval($customer_id) : null;
     $name = mysqli_real_escape_string($db->db_conn(), trim($name));
-    $phone = mysqli_real_escape_string($db->db_conn(), trim($phone));
+    $email = mysqli_real_escape_string($db->db_conn(), trim($email));
     $subject = mysqli_real_escape_string($db->db_conn(), trim($subject));
     $message = mysqli_real_escape_string($db->db_conn(), trim($message));
 
-    // Validate phone (basic validation)
-    if (empty($phone) || strlen($phone) < 8) {
+    // Validate email
+    if (empty($email) || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return false;
     }
 
@@ -39,19 +42,29 @@ function create_support_message_ctr($customer_id, $name, $phone, $subject, $mess
 
     // Create the message
     $sql = "INSERT INTO support_messages
-            (customer_id, customer_name, customer_phone, subject, message, priority, status)
-            VALUES (?, ?, ?, ?, ?, ?, 'new')";
+            (customer_id, customer_name, customer_email, customer_phone, subject, message, priority, status)
+            VALUES (?, ?, ?, '000-000-0000', ?, ?, ?, 'new')";
 
     $stmt = mysqli_prepare($db->db_conn(), $sql);
 
     if (!$stmt) {
+        error_log("Support controller: Failed to prepare statement: " . mysqli_error($db->db_conn()));
         return false;
     }
 
-    mysqli_stmt_bind_param($stmt, "isssss", $customer_id, $name, $phone, $subject, $message, $priority);
+    error_log("Support controller: Statement prepared successfully");
+
+    mysqli_stmt_bind_param($stmt, "isssss", $customer_id, $name, $email, $subject, $message, $priority);
 
     $result = mysqli_stmt_execute($stmt);
+    if (!$result) {
+        error_log("Support controller: Failed to execute statement: " . mysqli_error($db->db_conn()));
+        mysqli_stmt_close($stmt);
+        return false;
+    }
+
     $message_id = mysqli_insert_id($db->db_conn());
+    error_log("Support controller: Message inserted with ID: $message_id");
 
     mysqli_stmt_close($stmt);
 
@@ -62,7 +75,7 @@ function create_support_message_ctr($customer_id, $name, $phone, $subject, $mess
             'message_id' => $message_id,
             'customer_id' => $customer_id,
             'customer_name' => $name,
-            'customer_phone' => $phone,
+            'customer_email' => $email,
             'subject' => $subject,
             'message' => $message,
             'priority' => $priority,
@@ -94,7 +107,7 @@ function get_all_support_messages_ctr($status = null, $limit = null) {
         return false;
     }
 
-    $sql = "SELECT message_id, customer_id, customer_name, customer_phone, subject,
+    $sql = "SELECT message_id, customer_id, customer_name, customer_email, subject,
                    LEFT(message, 100) as message_preview, message, status, priority,
                    assigned_to, admin_response, response_date, created_at, updated_at
             FROM support_messages";

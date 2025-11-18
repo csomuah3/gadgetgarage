@@ -3556,6 +3556,121 @@ try {
 
 <body>
 
+	<!-- Main Header -->
+	<header class="main-header animate__animated animate__fadeInDown">
+		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+				<!-- Logo - Far Left -->
+				<a href="index.php" class="logo">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+					     alt="Gadget Garage"
+					     style="height: 40px; width: auto; object-fit: contain;">
+				</a>
+
+				<!-- Center Content -->
+				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+					<!-- Search Bar -->
+					<form class="search-container" method="GET" action="product_search_result.php">
+						<i class="fas fa-search search-icon"></i>
+						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+						<button type="submit" class="search-btn">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+
+					<!-- Tech Revival Section -->
+					<div class="tech-revival-section">
+						<i class="fas fa-recycle tech-revival-icon"></i>
+						<div>
+							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="contact-number">055-138-7578</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- User Actions - Far Right -->
+				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
+					<span style="color: #ddd;">|</span>
+					<?php if (isset($_SESSION['user_id'])): ?>
+						<!-- Wishlist Icon -->
+						<div class="header-icon">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-heart"></i>
+							</a>
+						</div>
+
+						<!-- Cart Icon -->
+						<div class="header-icon">
+							<a href="cart.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-shopping-cart"></i>
+								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+							</a>
+						</div>
+
+						<!-- User Avatar Dropdown -->
+						<div class="user-dropdown">
+							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+							</div>
+							<div class="dropdown-menu-custom" id="userDropdownMenu">
+								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+									<i class="fas fa-camera"></i>
+									<span>Profile Picture</span>
+								</button>
+								<div class="dropdown-divider-custom"></div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-globe"></i>
+									<div class="language-selector">
+										<span>Language</span>
+										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+											<option value="en">🇬🇧 EN</option>
+											<option value="es">🇪🇸 ES</option>
+											<option value="fr">🇫🇷 FR</option>
+											<option value="de">🇩🇪 DE</option>
+										</select>
+									</div>
+								</div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-moon"></i>
+									<div class="theme-toggle">
+										<span>Dark Mode</span>
+										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+											<div class="toggle-slider"></div>
+										</div>
+									</div>
+								</div>
+								<div class="dropdown-divider-custom"></div>
+								<a href="my_orders.php" class="dropdown-item-custom">
+									<i class="fas fa-box"></i>
+									<span>My Orders</span>
+								</a>
+								<a href="repair_services.php" class="dropdown-item-custom">
+									<i class="fas fa-wrench"></i>
+									<span>Repair Services</span>
+								</a>
+								<a href="support_message.php" class="dropdown-item-custom">
+									<i class="fas fa-life-ring"></i>
+									<span>Support</span>
+								</a>
+								<div class="dropdown-divider-custom"></div>
+								<a href="login/logout.php" class="dropdown-item-custom">
+									<i class="fas fa-sign-out-alt"></i>
+									<span>Logout</span>
+								</a>
+							</div>
+						</div>
+					<?php else: ?>
+						<!-- Login Button -->
+						<a href="login/login_view.php" class="login-btn">
+							<i class="fas fa-user"></i>
+							Login
+						</a>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</header>
+
 	<!-- Main Navigation -->
 	<nav class="main-nav">
 		<div class="container-fluid px-0">

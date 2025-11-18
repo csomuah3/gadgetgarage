@@ -94,7 +94,7 @@ function create_support_message_ctr($customer_id, $name, $email, $subject, $mess
         // }
     }
 
-    return $result ? $message_id : false;
+    return $result && $message_id > 0 ? $message_id : false;
 }
 
 /**

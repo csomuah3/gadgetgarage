@@ -4,39 +4,84 @@
 
 // Include language configuration
 require_once __DIR__ . '/language_config.php';
+
+// Load brands and categories if not already loaded
+if (!isset($brands) || empty($brands)) {
+    try {
+        require_once __DIR__ . '/../controllers/brand_controller.php';
+        $brands = get_all_brands_ctr() ?: [];
+    } catch (Exception $e) {
+        $brands = [];
+        error_log("Failed to load brands in header: " . $e->getMessage());
+    }
+}
+
+if (!isset($categories) || empty($categories)) {
+    try {
+        require_once __DIR__ . '/../controllers/category_controller.php';
+        $categories = get_all_categories_ctr() ?: [];
+    } catch (Exception $e) {
+        $categories = [];
+        error_log("Failed to load categories in header: " . $e->getMessage());
+    }
+}
+
+// Initialize user state variables if not set
+if (!isset($is_logged_in)) {
+    require_once __DIR__ . '/../settings/core.php';
+    $is_logged_in = check_login();
+    $is_admin = $is_logged_in ? check_admin() : false;
+}
+
+// Get cart count for logged in users
+if (!isset($cart_count)) {
+    $cart_count = 0;
+    if ($is_logged_in && !$is_admin) {
+        try {
+            require_once __DIR__ . '/../controllers/cart_controller.php';
+            $cart_count = get_cart_count_ctr($_SESSION['user_id']) ?: 0;
+        } catch (Exception $e) {
+            error_log("Failed to get cart count in header: " . $e->getMessage());
+        }
+    }
+}
 ?>
 
 <!-- Main Header -->
 <header class="main-header animate__animated animate__fadeInDown">
-    <div class="container">
-        <div class="d-flex align-items-center justify-content-between w-100 header-container">
-            <!-- Logo -->
+    <div class="container-fluid" style="padding: 0 120px 0 95px;">
+        <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+            <!-- Logo - Far Left -->
             <a href="index.php" class="logo">
                 <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
                      alt="Gadget Garage"
                      style="height: 40px; width: auto; object-fit: contain;">
             </a>
 
-            <!-- Search Bar -->
-            <form class="search-container" method="GET" action="product_search_result.php">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" name="query" class="search-input" placeholder="<?= t('search_placeholder') ?>" required>
-                <button type="submit" class="search-btn">
-                    <i class="fas fa-search"></i>
-                </button>
-            </form>
+            <!-- Center Content -->
+            <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                <!-- Search Bar -->
+                <form class="search-container" method="GET" action="product_search_result.php">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" name="query" class="search-input" placeholder="<?= t('search_placeholder') ?>" required>
+                    <button type="submit" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </form>
 
-            <!-- Tech Revival Section -->
-            <div class="tech-revival-section">
-                <i class="fas fa-recycle tech-revival-icon"></i>
-                <div>
-                    <p class="tech-revival-text"><?= t('tech_revival') ?></p>
-                    <p class="contact-number">055-138-7578</p>
+                <!-- Tech Revival Section -->
+                <div class="tech-revival-section">
+                    <i class="fas fa-recycle tech-revival-icon"></i>
+                    <div>
+                        <p class="tech-revival-text"><?= t('tech_revival') ?></p>
+                        <p class="contact-number">055-138-7578</p>
+                    </div>
                 </div>
             </div>
 
-            <!-- User Actions -->
-            <div class="user-actions">
+            <!-- User Actions - Far Right -->
+            <div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
+                <span style="color: #ddd;">|</span>
                 <?php if ($is_logged_in): ?>
                     <!-- Wishlist Icon -->
                     <div class="header-icon">
@@ -148,12 +193,15 @@ require_once __DIR__ . '/language_config.php';
                 <div class="brands-dropdown" id="shopDropdown">
                     <h4><?= t('all_brands') ?></h4>
                     <ul>
-                        <?php if (!empty($brands)): ?>
+                        <?php if (!empty($brands) && count($brands) > 0): ?>
                             <?php foreach ($brands as $brand): ?>
                                 <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                             <?php endforeach; ?>
+                            <li class="divider"></li>
+                            <li><a href="all_product.php"><i class="fas fa-th-large"></i> <?= t('all_products') ?></a></li>
                         <?php else: ?>
-                            <li><a href="all_product.php"><i class="fas fa-tag"></i> <?= t('all_products') ?></a></li>
+                            <li><a href="all_product.php"><i class="fas fa-th-large"></i> <?= t('all_products') ?></a></li>
+                            <li class="no-brands"><small>No brands available</small></li>
                         <?php endif; ?>
                     </ul>
                 </div>

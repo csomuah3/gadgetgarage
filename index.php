@@ -4595,9 +4595,8 @@ try {
 
 		// Enhanced translation application with better element detection
 		function applyTranslationsEnhanced() {
-			// Force English as default - always reset on page load
-			localStorage.setItem('selectedLanguage', 'en');
-			const currentLang = 'en';
+			// Get stored language preference or default to English
+			const currentLang = localStorage.getItem('selectedLanguage') || 'en';
 			console.log('Current language:', currentLang); // Debug log
 
 			// Update language dropdown to show current selection

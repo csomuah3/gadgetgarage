@@ -398,6 +398,18 @@ body {
     color: #008060;
 }
 
+.brands-dropdown li.divider {
+    border-top: 1px solid #e5e7eb;
+    margin: 8px 0;
+    padding: 0;
+}
+
+.brands-dropdown li.no-brands {
+    padding: 8px 12px;
+    color: #9ca3af;
+    font-style: italic;
+}
+
 /* Mega Dropdown */
 .mega-dropdown {
     position: absolute;

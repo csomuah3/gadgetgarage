@@ -77,12 +77,47 @@ usort($flash_deal_products, function($a, $b) {
 			min-height: 100vh;
 		}
 
+		/* Promotional Banner Styles */
+		.promo-banner {
+			background: linear-gradient(90deg, #16a085, #f39c12);
+			color: white;
+			text-align: center;
+			padding: 12px 20px;
+			font-size: 14px;
+			font-weight: 600;
+			position: sticky;
+			top: 0;
+			z-index: 1001;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+
+		.promo-banner .fas {
+			font-size: 16px;
+			animation: bounce 2s infinite;
+		}
+
+		@keyframes bounce {
+			0%, 20%, 50%, 80%, 100% {
+				transform: translateY(0);
+			}
+			40% {
+				transform: translateY(-5px);
+			}
+			60% {
+				transform: translateY(-3px);
+			}
+		}
+
 		/* Header Styles */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 0;
+			top: 44px;
 			z-index: 1000;
 			padding: 16px 0;
 			border-bottom: 1px solid #e5e7eb;
@@ -589,10 +624,23 @@ usort($flash_deal_products, function($a, $b) {
 				padding: 30px 15px;
 			}
 		}
+    /* Dark Mode Promotional Banner Styles */
+    @media (prefers-color-scheme: dark) {
+        .promo-banner {
+            background: linear-gradient(90deg, #1a202c, #2d3748);
+            color: #f7fafc;
+        }
+    }
 	</style>
 </head>
 
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
+
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container-fluid" style="padding: 0 120px 0 95px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">

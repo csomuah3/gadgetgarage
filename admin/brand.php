@@ -258,7 +258,7 @@ try {
                                         </td>
                                         <td>
                                             <span class="category-badge">
-                                                <?= htmlspecialchars($brand['cat_name']) ?>
+                                                <?= htmlspecialchars($brand['cat_name'] ?? 'No Category') ?>
                                             </span>
                                         </td>
                                         <td>

@@ -989,9 +989,23 @@ try {
 				width: auto;
 			}
 		}
+
+    /* Dark Mode Promotional Banner Styles */
+    @media (prefers-color-scheme: dark) {
+        .promo-banner {
+            background: linear-gradient(90deg, #1a202c, #2d3748);
+            color: #f7fafc;
+        }
+    }
     </style>
 </head>
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
+
 	<!-- Floating Bubbles Background -->
 	<div class="floating-bubbles" id="floatingBubbles"></div>
 

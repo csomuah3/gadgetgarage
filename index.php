@@ -91,22 +91,32 @@ try {
 		.promo-banner {
 			background: linear-gradient(135deg, #008060, #00a077);
 			color: white;
-			padding: 8px 0;
+			padding: 4px 0;
 			text-align: center;
-			font-size: 0.9rem;
+			font-size: 0.8rem;
 			font-weight: 500;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+			height: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
 		}
 
 		.promo-banner i {
-			margin-right: 8px;
+			font-size: 0.8rem;
 		}
 
-		.promo-banner:hover {
-			background: linear-gradient(135deg, #00a077, #008060);
+		.promo-timer {
+			background: rgba(255, 255, 255, 0.2);
+			padding: 2px 6px;
+			border-radius: 12px;
+			font-size: 0.7rem;
+			font-weight: 600;
+			margin-left: 8px;
 		}
 
 		/* Header Styles */
@@ -114,7 +124,7 @@ try {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 44px;
+			top: 32px;
 			z-index: 1000;
 			padding: 16px 0;
 			border-bottom: 1px solid #e5e7eb;
@@ -3586,6 +3596,7 @@ try {
 	<div class="promo-banner">
 		<i class="fas fa-truck"></i>
 		<span>Free Next Day Delivery on Orders Above GH₵2,000!</span>
+		<span class="promo-timer" id="promoTimer">23:59:45</span>
 	</div>
 
 	<!-- Main Header -->
@@ -5910,6 +5921,42 @@ try {
 	});
 	</script>
 	<?php endif; ?>
+
+	<script>
+		// Countdown timer for promotional banner
+		function startPromoTimer() {
+			const timer = document.getElementById('promoTimer');
+			if (!timer) return;
+
+			// Set timer to end at midnight today
+			const now = new Date();
+			const midnight = new Date();
+			midnight.setHours(24, 0, 0, 0);
+
+			let timeLeft = midnight.getTime() - now.getTime();
+
+			const countdown = setInterval(() => {
+				const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+				const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+				timer.textContent = `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+
+				timeLeft -= 1000;
+
+				if (timeLeft < 0) {
+					clearInterval(countdown);
+					timer.textContent = "23:59:59";
+					// Restart timer for next day
+					setTimeout(startPromoTimer, 1000);
+				}
+			}, 1000);
+		}
+
+		// Start timer when page loads
+		startPromoTimer();
+	</script>
+
 </body>
 
 </html>

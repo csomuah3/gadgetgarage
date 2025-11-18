@@ -49,12 +49,47 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             line-height: 1.6;
         }
 
+        /* Promotional Banner Styles */
+        .promo-banner {
+            background: linear-gradient(90deg, #16a085, #f39c12);
+            color: white;
+            text-align: center;
+            padding: 12px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .promo-banner .fas {
+            font-size: 16px;
+            animation: bounce 2s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 20%, 50%, 80%, 100% {
+                transform: translateY(0);
+            }
+            40% {
+                transform: translateY(-5px);
+            }
+            60% {
+                transform: translateY(-3px);
+            }
+        }
+
         /* Header Styles */
         .main-header {
             background: #ffffff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
             position: sticky;
-            top: 0;
+            top: 44px;
             z-index: 1000;
             padding: 16px 0;
             border-bottom: 1px solid #e5e7eb;
@@ -611,75 +646,232 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             font-size: 0.9rem;
             margin: 0;
         }
+
+        /* Dark Mode Promotional Banner Styles */
+        @media (prefers-color-scheme: dark) {
+            .promo-banner {
+                background: linear-gradient(90deg, #1a202c, #2d3748);
+                color: #f7fafc;
+            }
+        }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="row align-items-center">
-                <div class="col-lg-3">
-                    <a href="index.php" class="logo">
-                        <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                             alt="Gadget Garage"
-                             style="height: 40px; width: auto; object-fit: contain;">
-                    </a>
-                </div>
-                <div class="col-lg-6 text-center">
-                    <!-- Breadcrumb or search can go here -->
-                </div>
-                <div class="col-lg-3 text-end">
-                    <div class="d-flex align-items-center justify-content-end gap-3">
-                        <!-- Cart Icon -->
-                        <a href="cart.php" class="cart-icon position-relative">
-                            <i class="fas fa-shopping-cart" style="font-size: 1.5rem; color: #008060;"></i>
-                            <span class="cart-badge position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>">
-                                <?php echo $cart_count; ?>
-                            </span>
-                        </a>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
 
-                        <!-- Dark Mode Toggle -->
-                        <button class="btn btn-outline-secondary me-2" onclick="toggleTheme()" id="darkModeToggleBtn" title="Toggle Dark Mode">
-                            <i class="fas fa-moon" id="darkModeIcon"></i>
-                        </button>
+	<!-- Main Header -->
+	<header class="main-header animate__animated animate__fadeInDown">
+		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+				<!-- Logo - Far Left -->
+				<a href="index.php" class="logo">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+					     alt="Gadget Garage"
+					     style="height: 40px; width: auto; object-fit: contain;">
+				</a>
 
-                        <?php if ($is_logged_in): ?>
-                            <a href="my_orders.php" class="btn btn-outline-primary me-2">
-                                <i class="fas fa-box"></i> My Orders
-                            </a>
-                            <a href="login/logout.php" class="btn btn-outline-danger">Logout</a>
-                        <?php else: ?>
-                            <a href="login/login.php" class="btn btn-outline-primary">Login</a>
-                        <?php endif; ?>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </header>
+				<!-- Center Content -->
+				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+					<!-- Search Bar -->
+					<form class="search-container" method="GET" action="product_search_result.php">
+						<i class="fas fa-search search-icon"></i>
+						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+						<button type="submit" class="search-btn">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
 
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="container">
-            <div class="nav-menu">
-                <!-- Blue Shop by Categories Button -->
-                <div class="shop-categories-btn">
-                    <button class="categories-button">
-                        <i class="fas fa-bars"></i>
-                        SHOP BY CATEGORIES
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                </div>
-                <a href="index.php" class="nav-item">Home</a>
-                <a href="all_product.php" class="nav-item">All Products</a>
-                <a href="all_product.php?category=phones" class="nav-item">Smartphones</a>
-                <a href="all_product.php?category=laptops" class="nav-item">Laptops</a>
-                <a href="all_product.php?category=ipads" class="nav-item">Tablets</a>
-                <a href="all_product.php?category=cameras" class="nav-item">Cameras</a>
-                <a href="contact.php" class="nav-item active">Contact</a>
-            </div>
-        </div>
-    </nav>
+					<!-- Tech Revival Section -->
+					<div class="tech-revival-section">
+						<i class="fas fa-recycle tech-revival-icon"></i>
+						<div>
+							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="contact-number">055-138-7578</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- User Actions - Far Right -->
+				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
+					<span style="color: #ddd;">|</span>
+					<?php if (isset($_SESSION['user_id'])): ?>
+						<!-- Wishlist Icon -->
+						<div class="header-icon">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-heart"></i>
+							</a>
+						</div>
+
+						<!-- Cart Icon -->
+						<div class="header-icon">
+							<a href="cart.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-shopping-cart"></i>
+								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+							</a>
+						</div>
+
+						<!-- User Avatar Dropdown -->
+						<div class="user-dropdown">
+							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+							</div>
+							<div class="dropdown-menu-custom" id="userDropdownMenu">
+								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+									<i class="fas fa-camera"></i>
+									<span>Profile Picture</span>
+								</button>
+								<div class="dropdown-divider-custom"></div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-globe"></i>
+									<div class="language-selector">
+										<span>Language</span>
+										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+											<option value="en">🇬🇧 EN</option>
+											<option value="es">🇪🇸 ES</option>
+											<option value="fr">🇫🇷 FR</option>
+											<option value="de">🇩🇪 DE</option>
+										</select>
+									</div>
+								</div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-moon"></i>
+									<div class="theme-toggle">
+										<span>Dark Mode</span>
+										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+											<div class="toggle-slider"></div>
+										</div>
+									</div>
+								</div>
+								<div class="dropdown-divider-custom"></div>
+								<a href="login/logout.php" class="dropdown-item-custom">
+									<i class="fas fa-sign-out-alt"></i>
+									<span>Logout</span>
+								</a>
+							</div>
+						</div>
+					<?php else: ?>
+						<!-- Login Button -->
+						<a href="login/login_view.php" class="login-btn">
+							<i class="fas fa-user"></i>
+							Login
+						</a>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Main Navigation -->
+	<nav class="main-nav">
+		<div class="container-fluid px-0">
+			<div class="nav-menu">
+				<!-- Shop by Brands Button -->
+				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+					<button class="categories-button">
+						<i class="fas fa-tags"></i>
+						<span data-translate="shop_by_brands">SHOP BY BRANDS</span>
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="brands-dropdown" id="shopDropdown">
+						<h4>All Brands</h4>
+						<ul>
+							<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<a href="index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+
+				<!-- Shop Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+					<a href="#" class="nav-item">
+						<span data-translate="shop">SHOP</span>
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="mega-dropdown" id="shopCategoryDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>
+									<a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="mobile_devices">Mobile Devices</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="computing.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="computing">Computing</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="photography_video.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="photography_video">Photography & Video</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column featured">
+								<h4>Shop All</h4>
+								<div class="featured-item">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+									<div class="featured-text">
+										<strong>New Arrivals</strong>
+										<p>Latest tech gadgets</p>
+										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+
+				<!-- More Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+					<a href="#" class="nav-item">
+						<span data-translate="more">MORE</span>
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="simple-dropdown" id="moreDropdown">
+						<ul>
+							<li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Flash Deal positioned at far right -->
+				<a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+			</div>
+		</div>
+	</nav>
 
     <!-- Contact Hero Section -->
     <section class="contact-hero">

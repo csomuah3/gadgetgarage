@@ -58,7 +58,7 @@ class Brand extends db_connection {
 
     // Get all brands (for admin)
     public function get_all_brands() {
-        $sql = "SELECT brand_id, brand_name, brand_desc, created_at
+        $sql = "SELECT brand_id, brand_name
                 FROM brands
                 ORDER BY brand_name";
 

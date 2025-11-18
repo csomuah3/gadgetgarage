@@ -676,18 +676,17 @@ usort($flash_deal_products, function($a, $b) {
 									</div>
 								</div>
 								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
+								<a href="wishlist.php" class="dropdown-item-custom">
+									<i class="fas fa-heart"></i>
+									<span>Wishlist</span>
 								</a>
-								<a href="repair_services.php" class="dropdown-item-custom">
-									<i class="fas fa-wrench"></i>
-									<span>Repair Services</span>
-								</a>
-								<a href="support_message.php" class="dropdown-item-custom">
-									<i class="fas fa-life-ring"></i>
-									<span>Support</span>
-								</a>
+								<?php if ($is_admin): ?>
+									<div class="dropdown-divider-custom"></div>
+									<a href="admin/category.php" class="dropdown-item-custom">
+										<i class="fas fa-cog"></i>
+										<span>Admin Panel</span>
+									</a>
+								<?php endif; ?>
 								<div class="dropdown-divider-custom"></div>
 								<a href="login/logout.php" class="dropdown-item-custom">
 									<i class="fas fa-sign-out-alt"></i>

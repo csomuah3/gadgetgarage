@@ -70,12 +70,47 @@ try {
 			overflow-x: hidden;
 		}
 
+		/* Promotional Banner Styles */
+		.promo-banner {
+			background: linear-gradient(90deg, #16a085, #f39c12);
+			color: white;
+			text-align: center;
+			padding: 12px 20px;
+			font-size: 14px;
+			font-weight: 600;
+			position: sticky;
+			top: 0;
+			z-index: 1001;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+
+		.promo-banner .fas {
+			font-size: 16px;
+			animation: bounce 2s infinite;
+		}
+
+		@keyframes bounce {
+			0%, 20%, 50%, 80%, 100% {
+				transform: translateY(0);
+			}
+			40% {
+				transform: translateY(-5px);
+			}
+			60% {
+				transform: translateY(-3px);
+			}
+		}
+
 		/* Header Styles */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 0;
+			top: 44px;
 			z-index: 1000;
 			padding: 16px 0;
 			border-bottom: 1px solid #e5e7eb;
@@ -1032,10 +1067,24 @@ try {
                 display: none;
             }
         }
+
+        /* Dark Mode Promotional Banner Styles */
+        @media (prefers-color-scheme: dark) {
+            .promo-banner {
+                background: linear-gradient(90deg, #1a202c, #2d3748);
+                color: #f7fafc;
+            }
+        }
     </style>
 </head>
 
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
+
 	<!-- Floating Bubbles Background -->
 	<div class="floating-bubbles" id="floatingBubbles"></div>
 
@@ -1123,11 +1172,6 @@ try {
 										</div>
 									</div>
 								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
-								</a>
 								<div class="dropdown-divider-custom"></div>
 								<a href="wishlist.php" class="dropdown-item-custom">
 									<i class="fas fa-heart"></i>

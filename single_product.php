@@ -793,9 +793,6 @@ $fairDiscount = $basePrice - $fairPrice;
                         </a>
 
                         <?php if ($is_logged_in): ?>
-                            <a href="my_orders.php" class="btn btn-outline-primary me-2">
-                                <i class="fas fa-box"></i> My Orders
-                            </a>
                             <a href="login/logout.php" class="btn btn-outline-danger">Logout</a>
                         <?php else: ?>
                             <a href="login/login.php" class="btn btn-outline-primary">Login</a>

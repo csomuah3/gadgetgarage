@@ -41,12 +41,47 @@ try {
 			overflow-x: hidden;
 		}
 
+		/* Promotional Banner Styles */
+		.promo-banner {
+			background: linear-gradient(90deg, #16a085, #f39c12);
+			color: white;
+			text-align: center;
+			padding: 12px 20px;
+			font-size: 14px;
+			font-weight: 600;
+			position: sticky;
+			top: 0;
+			z-index: 1001;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 10px;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+		}
+
+		.promo-banner .fas {
+			font-size: 16px;
+			animation: bounce 2s infinite;
+		}
+
+		@keyframes bounce {
+			0%, 20%, 50%, 80%, 100% {
+				transform: translateY(0);
+			}
+			40% {
+				transform: translateY(-5px);
+			}
+			60% {
+				transform: translateY(-3px);
+			}
+		}
+
 		/* Header Styles */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 0;
+			top: 44px;
 			z-index: 1000;
 			padding: 16px 0;
 			border-bottom: 1px solid #e5e7eb;
@@ -1044,11 +1079,6 @@ try {
 									</div>
 								</div>
 								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
-								</a>
-								<div class="dropdown-divider-custom"></div>
 								<a href="wishlist.php" class="dropdown-item-custom">
 									<i class="fas fa-heart"></i>
 									<span>Wishlist</span>
@@ -1079,23 +1109,30 @@ try {
 				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
 					<button class="categories-button">
 						<i class="fas fa-tags"></i>
-						SHOP BY BRANDS
+						<span data-translate="shop_by_brands">SHOP BY BRANDS</span>
 						<i class="fas fa-chevron-down"></i>
 					</button>
 					<div class="brands-dropdown" id="shopDropdown">
 						<h4>All Brands</h4>
 						<ul>
-							<li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
 						</ul>
 					</div>
 				</div>
 
-				<a href="index.php" class="nav-item">HOME</a>
+				<a href="index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
 				<!-- Shop Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
 					<a href="#" class="nav-item">
-						SHOP
+						<span data-translate="shop">SHOP</span>
 						<i class="fas fa-chevron-down"></i>
 					</a>
 					<div class="mega-dropdown" id="shopCategoryDropdown">
@@ -1103,34 +1140,34 @@ try {
 							<div class="dropdown-column">
 								<h4>
 									<a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-										Mobile Devices
+										<span data-translate="mobile_devices">Mobile Devices</span>
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
 								<h4>
 									<a href="computing.php" style="text-decoration: none; color: inherit;">
-										Computing
+										<span data-translate="computing">Computing</span>
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
 								<h4>
 									<a href="photography_video.php" style="text-decoration: none; color: inherit;">
-										Photography & Video
+										<span data-translate="photography_video">Photography & Video</span>
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
@@ -1148,25 +1185,25 @@ try {
 					</div>
 				</div>
 
-				<a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
-				<a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+				<a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
 				<!-- More Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
 					<a href="#" class="nav-item">
-						MORE
+						<span data-translate="more">MORE</span>
 						<i class="fas fa-chevron-down"></i>
 					</a>
 					<div class="simple-dropdown" id="moreDropdown">
 						<ul>
-							<li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
-							<li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+							<li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
 						</ul>
 					</div>
 				</div>
 
 				<!-- Flash Deal positioned at far right -->
-				<a href="#" class="nav-item flash-deal">⚡ FLASH DEAL</a>
+				<a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
 	</nav>

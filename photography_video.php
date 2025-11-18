@@ -609,11 +609,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     </div>
                                 </div>
                                 <div class="dropdown-divider-custom"></div>
-                                <a href="my_orders.php" class="dropdown-item-custom">
-                                    <i class="fas fa-box"></i>
-                                    <span>My Orders</span>
-                                </a>
-                                <div class="dropdown-divider-custom"></div>
                                 <a href="wishlist.php" class="dropdown-item-custom">
                                     <i class="fas fa-heart"></i>
                                     <span>Wishlist</span>

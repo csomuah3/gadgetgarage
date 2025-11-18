@@ -44,6 +44,279 @@ $page_title = "Terms & Conditions - GadgetGarage";
     <link rel="stylesheet" href="includes/header-styles.css">
 
     <style>
+        /* Header Styles */
+        .main-header {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            padding: 16px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-container {
+            position: relative;
+            flex: 1;
+            max-width: 500px;
+            margin: 0 40px;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 20px 12px 50px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: #f8fafc;
+        }
+
+        .search-input:focus {
+            outline: none;
+            border-color: #008060;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #008060;
+            font-size: 1.1rem;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 6px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #008060, #006b4e);
+            border: none;
+            padding: 8px 16px;
+            border-radius: 20px;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .search-btn:hover {
+            background: linear-gradient(135deg, #006b4e, #008060);
+            transform: translateY(-50%) scale(1.05);
+        }
+
+        .tech-revival-section {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-align: center;
+            margin: 0 60px;
+        }
+
+        .tech-revival-icon {
+            font-size: 1.5rem;
+            color: #008060;
+        }
+
+        .tech-revival-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .contact-number {
+            font-size: 0.8rem;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-icon {
+            position: relative;
+            padding: 8px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            color: #4b5563;
+            cursor: pointer;
+        }
+
+        .header-icon:hover {
+            background: rgba(0, 128, 96, 0.1);
+            color: #008060;
+        }
+
+        .cart-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: linear-gradient(135deg, #006b4e, #008060);
+            color: white;
+            font-size: 0.75rem;
+            padding: 2px 6px;
+            border-radius: 10px;
+            min-width: 18px;
+            text-align: center;
+        }
+
+        .login-btn {
+            background: linear-gradient(135deg, #008060, #006b4e);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 20px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .login-btn:hover {
+            background: linear-gradient(135deg, #006b4e, #008060);
+            transform: translateY(-1px);
+            color: white;
+        }
+
+        .user-dropdown {
+            position: relative;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: linear-gradient(135deg, #008060, #006b4e);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
+        }
+
+        .dropdown-menu-custom {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(0, 128, 96, 0.2);
+            border-radius: 15px;
+            box-shadow: 0 8px 32px rgba(0, 128, 96, 0.15);
+            padding: 15px 0;
+            min-width: 220px;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-menu-custom.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-item-custom {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            border: none;
+            background: none;
+            width: 100%;
+            cursor: pointer;
+            font-size: 0.9rem;
+        }
+
+        .dropdown-item-custom:hover {
+            background: rgba(0, 128, 96, 0.1);
+            color: #008060;
+            transform: translateX(3px);
+        }
+
+        .dropdown-item-custom i {
+            font-size: 1rem;
+            width: 18px;
+            text-align: center;
+        }
+
+        .dropdown-divider-custom {
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(0, 128, 96, 0.2), transparent);
+            margin: 8px 0;
+        }
+
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #008060, #006b4e);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Terms Page Styles */
         .terms-hero {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
@@ -121,8 +394,220 @@ $page_title = "Terms & Conditions - GadgetGarage";
     </style>
 </head>
 <body>
-    <!-- Include Header -->
-    <?php include 'includes/header.php'; ?>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
+
+    <!-- Main Header -->
+	<header class="main-header animate__animated animate__fadeInDown">
+		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+				<!-- Logo - Far Left -->
+				<a href="index.php" class="logo">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+					     alt="Gadget Garage"
+					     style="height: 40px; width: auto; object-fit: contain;">
+				</a>
+
+				<!-- Center Content -->
+				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+					<!-- Search Bar -->
+					<form class="search-container" method="GET" action="product_search_result.php">
+						<i class="fas fa-search search-icon"></i>
+						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+						<button type="submit" class="search-btn">
+							<i class="fas fa-search"></i>
+						</button>
+					</form>
+
+					<!-- Tech Revival Section -->
+					<div class="tech-revival-section">
+						<i class="fas fa-recycle tech-revival-icon"></i>
+						<div>
+							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="contact-number">055-138-7578</p>
+						</div>
+					</div>
+				</div>
+
+				<!-- User Actions - Far Right -->
+				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
+					<span style="color: #ddd;">|</span>
+					<?php if ($is_logged_in): ?>
+						<!-- Wishlist Icon -->
+						<div class="header-icon">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-heart"></i>
+							</a>
+						</div>
+
+						<!-- Cart Icon -->
+						<div class="header-icon">
+							<a href="cart.php" style="color: inherit; text-decoration: none;">
+								<i class="fas fa-shopping-cart"></i>
+								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+							</a>
+						</div>
+
+						<!-- User Avatar Dropdown -->
+						<div class="user-dropdown">
+							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+							</div>
+							<div class="dropdown-menu-custom" id="userDropdownMenu">
+								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+									<i class="fas fa-camera"></i>
+									<span>Profile Picture</span>
+								</button>
+								<div class="dropdown-divider-custom"></div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-globe"></i>
+									<div class="language-selector">
+										<span>Language</span>
+										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+											<option value="en">🇬🇧 EN</option>
+											<option value="es">🇪🇸 ES</option>
+											<option value="fr">🇫🇷 FR</option>
+											<option value="de">🇩🇪 DE</option>
+										</select>
+									</div>
+								</div>
+								<div class="dropdown-item-custom">
+									<i class="fas fa-moon"></i>
+									<div class="theme-toggle">
+										<span>Dark Mode</span>
+										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+											<div class="toggle-slider"></div>
+										</div>
+									</div>
+								</div>
+								<div class="dropdown-divider-custom"></div>
+								<a href="login/logout.php" class="dropdown-item-custom">
+									<i class="fas fa-sign-out-alt"></i>
+									<span>Logout</span>
+								</a>
+							</div>
+						</div>
+					<?php else: ?>
+						<!-- Login Button -->
+						<a href="login/login_view.php" class="login-btn">
+							<i class="fas fa-user"></i>
+							Login
+						</a>
+					<?php endif; ?>
+				</div>
+			</div>
+		</div>
+	</header>
+
+	<!-- Main Navigation -->
+	<nav class="main-nav">
+		<div class="container-fluid px-0">
+			<div class="nav-menu">
+				<!-- Shop by Brands Button -->
+				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+					<button class="categories-button">
+						<i class="fas fa-tags"></i>
+						<span data-translate="shop_by_brands">SHOP BY BRANDS</span>
+						<i class="fas fa-chevron-down"></i>
+					</button>
+					<div class="brands-dropdown" id="shopDropdown">
+						<h4>All Brands</h4>
+						<ul>
+							<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<a href="index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+
+				<!-- Shop Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+					<a href="#" class="nav-item">
+						<span data-translate="shop">SHOP</span>
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="mega-dropdown" id="shopCategoryDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>
+									<a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="mobile_devices">Mobile Devices</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="computing.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="computing">Computing</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="photography_video.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="photography_video">Photography & Video</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column featured">
+								<h4>Shop All</h4>
+								<div class="featured-item">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+									<div class="featured-text">
+										<strong>New Arrivals</strong>
+										<p>Latest tech gadgets</p>
+										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+
+				<!-- More Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+					<a href="#" class="nav-item">
+						<span data-translate="more">MORE</span>
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="simple-dropdown" id="moreDropdown">
+						<ul>
+							<li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Flash Deal positioned at far right -->
+				<a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+			</div>
+		</div>
+	</nav>
 
     <!-- Terms Hero Section -->
     <section class="terms-hero">
@@ -274,6 +759,39 @@ $page_title = "Terms & Conditions - GadgetGarage";
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 
     <!-- Header JavaScript -->
-    <script src="js/header.js"></script>
+    <script>
+        // User dropdown functionality
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdownMenu');
+            const avatar = document.querySelector('.user-avatar');
+
+            if (!dropdown.contains(event.target) && !avatar.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function openProfilePictureModal() {
+            alert('Profile picture functionality will be implemented');
+        }
+
+        function changeLanguage(language) {
+            localStorage.setItem('selectedLanguage', language);
+            console.log('Language changed to:', language);
+        }
+
+        function toggleTheme() {
+            const toggle = document.getElementById('themeToggle');
+            const body = document.body;
+
+            toggle.classList.toggle('active');
+            body.classList.toggle('dark-mode');
+        }
+    </script>
 </body>
 </html>

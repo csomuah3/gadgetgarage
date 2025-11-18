@@ -469,10 +469,6 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                                 <i class="fas fa-user"></i>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdown">
-                                <a href="my_orders.php" class="dropdown-item-custom">
-                                    <i class="fas fa-box"></i>
-                                    My Orders
-                                </a>
                                 <a href="profile.php" class="dropdown-item-custom">
                                     <i class="fas fa-user-cog"></i>
                                     Profile Settings

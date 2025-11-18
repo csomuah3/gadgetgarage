@@ -21,18 +21,18 @@ $error_message = '';
 
 if ($_POST && isset($_POST['send_message'])) {
     $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
+    $phone = trim($_POST['phone'] ?? '');
     $subject = trim($_POST['subject'] ?? '');
     $message = trim($_POST['message'] ?? '');
 
-    if (empty($name) || empty($email) || empty($subject) || empty($message)) {
+    if (empty($name) || empty($phone) || empty($subject) || empty($message)) {
         $error_message = 'Please fill in all required fields.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $error_message = 'Please enter a valid email address.';
+    } elseif (strlen($phone) < 10) {
+        $error_message = 'Please enter a valid phone number.';
     } else {
         // Save message to database
-        error_log("Attempting to save support message: name=$name, email=$email, subject=$subject");
-        $message_id = create_support_message_ctr($customer_id, $name, $email, $subject, $message);
+        error_log("Attempting to save support message: name=$name, phone=$phone, subject=$subject");
+        $message_id = create_support_message_ctr($customer_id, $name, $phone, $subject, $message);
 
         if ($message_id) {
             error_log("Support message saved successfully with ID: $message_id");
@@ -257,6 +257,12 @@ if ($_POST && isset($_POST['send_message'])) {
 </head>
 
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
+
     <!-- Main Header -->
     <header class="main-header animate__animated animate__fadeInDown">
         <div class="container-fluid" style="padding: 0 120px 0 95px;">
@@ -318,11 +324,6 @@ if ($_POST && isset($_POST['send_message'])) {
                                     <i class="fas fa-camera"></i>
                                     <span>Profile Picture</span>
                                 </button>
-                                <div class="dropdown-divider-custom"></div>
-                                <a href="my_orders.php" class="dropdown-item-custom">
-                                    <i class="fas fa-box"></i>
-                                    <span>My Orders</span>
-                                </a>
                                 <div class="dropdown-divider-custom"></div>
                                 <a href="wishlist.php" class="dropdown-item-custom">
                                     <i class="fas fa-heart"></i>
@@ -396,9 +397,10 @@ if ($_POST && isset($_POST['send_message'])) {
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="email" class="form-label">Email Address *</label>
-                                        <input type="email" class="form-control" id="email" name="email"
-                                               value="<?php echo htmlspecialchars($_POST['email'] ?? ($is_logged_in ? $_SESSION['email'] ?? '' : '')); ?>"
+                                        <label for="phone" class="form-label">Phone Number *</label>
+                                        <input type="tel" class="form-control" id="phone" name="phone"
+                                               value="<?php echo htmlspecialchars($_POST['phone'] ?? ($is_logged_in ? $_SESSION['phone'] ?? '' : '')); ?>"
+                                               placeholder="e.g. 0551387578"
                                                required>
                                     </div>
                                 </div>

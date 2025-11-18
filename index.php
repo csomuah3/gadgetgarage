@@ -87,12 +87,34 @@ try {
 			overflow-x: hidden;
 		}
 
+		/* Promotional Banner Styles */
+		.promo-banner {
+			background: linear-gradient(135deg, #008060, #00a077);
+			color: white;
+			padding: 8px 0;
+			text-align: center;
+			font-size: 0.9rem;
+			font-weight: 500;
+			position: sticky;
+			top: 0;
+			z-index: 1001;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+		}
+
+		.promo-banner i {
+			margin-right: 8px;
+		}
+
+		.promo-banner:hover {
+			background: linear-gradient(135deg, #00a077, #008060);
+		}
+
 		/* Header Styles */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 0;
+			top: 44px;
 			z-index: 1000;
 			padding: 16px 0;
 			border-bottom: 1px solid #e5e7eb;
@@ -683,6 +705,10 @@ try {
 		body.dark-mode {
 			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 			color: #e2e8f0;
+		}
+
+		body.dark-mode .promo-banner {
+			background: linear-gradient(135deg, #2d3748, #4a5568);
 		}
 
 		body.dark-mode .main-header {
@@ -3556,6 +3582,12 @@ try {
 
 <body>
 
+	<!-- Promotional Banner -->
+	<div class="promo-banner">
+		<i class="fas fa-truck"></i>
+		<span>Free Next Day Delivery on Orders Above GH₵2,000!</span>
+	</div>
+
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container-fluid" style="padding: 0 120px 0 95px;">
@@ -3639,19 +3671,6 @@ try {
 										</div>
 									</div>
 								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
-								</a>
-								<a href="repair_services.php" class="dropdown-item-custom">
-									<i class="fas fa-wrench"></i>
-									<span>Repair Services</span>
-								</a>
-								<a href="support_message.php" class="dropdown-item-custom">
-									<i class="fas fa-life-ring"></i>
-									<span>Support</span>
-								</a>
 								<div class="dropdown-divider-custom"></div>
 								<a href="login/logout.php" class="dropdown-item-custom">
 									<i class="fas fa-sign-out-alt"></i>

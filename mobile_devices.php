@@ -518,6 +518,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 </head>
 
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <i class="fas fa-shipping-fast"></i>
+        Free Next Day Delivery on Orders Above GH₵2,000!
+    </div>
+
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles" id="floatingBubbles"></div>
 
@@ -603,19 +609,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 										</div>
 									</div>
 								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-box"></i>
-									<span>My Orders</span>
-								</a>
-								<a href="repair_services.php" class="dropdown-item-custom">
-									<i class="fas fa-wrench"></i>
-									<span>Repair Services</span>
-								</a>
-								<a href="support_message.php" class="dropdown-item-custom">
-									<i class="fas fa-life-ring"></i>
-									<span>Support</span>
-								</a>
 								<div class="dropdown-divider-custom"></div>
 								<a href="login/logout.php" class="dropdown-item-custom">
 									<i class="fas fa-sign-out-alt"></i>

@@ -43,17 +43,20 @@ if ($_POST && isset($_POST['send_message'])) {
         }
     }
 }
-
-// Set page variables for universal header
-$page_title = 'Contact Support';
-$nav_path_prefix = '';
-$css_path_prefix = '';
-$logo_link = 'index.php';
 ?>
 
-<?php include_once 'includes/universal_header.php'; ?>
+<!DOCTYPE html>
+<html lang="en">
 
-<style>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Contact Support - Gadget Garage</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="includes/header-styles.css" rel="stylesheet">
+    <link href="includes/chatbot-styles.css" rel="stylesheet">
+    <style>
         .support-page {
             min-height: 100vh;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);

@@ -189,7 +189,7 @@ try {
 <!-- Product Management -->
 <div class="row g-4 mb-4">
     <!-- Add Product Form -->
-    <div class="col-lg-8 mx-auto">
+    <div class="col-lg-6">
         <div class="admin-card" style="animation-delay: 0.5s;">
             <div class="card-header-custom">
                 <h5><i class="fas fa-plus me-2"></i>Add New Product</h5>
@@ -202,11 +202,11 @@ try {
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-11">
+                        <div class="col-md-7">
                             <label for="product_price" class="form-label-modern">Excellent Condition Price (GH₵)</label>
                             <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
                         </div>
-                        <div class="col-md-1">
+                        <div class="col-md-5">
                             <label for="stock_quantity" class="form-label-modern">Stock</label>
                             <input type="number" class="form-control-modern" id="stock_quantity" name="stock_quantity" required>
                         </div>
@@ -376,9 +376,9 @@ try {
         </div>
     </div>
 
-    <!-- Inventory Chart -->
+    <!-- Category Distribution Chart -->
     <div class="col-lg-6">
-        <div class="admin-card">
+        <div class="admin-card" style="animation-delay: 0.6s;">
             <div class="card-header-custom">
                 <h5><i class="fas fa-chart-bar me-2"></i>Category Distribution</h5>
             </div>
@@ -577,7 +577,8 @@ try {
     min-width: 100% !important;
 }
 
-.col-md-11 .form-control-modern {
+.col-md-7 .form-control-modern,
+.col-md-5 .form-control-modern {
     width: 100% !important;
     min-width: 100% !important;
 }

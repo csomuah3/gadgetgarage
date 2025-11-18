@@ -200,11 +200,11 @@ try {
                     </div>
 
                     <div class="row mb-3">
-                        <div class="col-md-8">
+                        <div class="col-md-10">
                             <label for="product_price" class="form-label-modern">Excellent Condition Price (GH₵)</label>
                             <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
                         </div>
-                        <div class="col-md-4">
+                        <div class="col-md-2">
                             <label for="stock_quantity" class="form-label-modern">Stock</label>
                             <input type="number" class="form-control-modern" id="stock_quantity" name="stock_quantity" required>
                         </div>

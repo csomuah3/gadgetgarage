@@ -3690,7 +3690,14 @@ try {
 									<li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
 								<?php endforeach; ?>
 							<?php else: ?>
-								<li><a href="all_product.php"><i class="fas fa-tag"></i> <span data-translate="all_products">All Products</span></a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
 							<?php endif; ?>
 						</ul>
 					</div>
@@ -3765,14 +3772,14 @@ try {
 					</a>
 					<div class="simple-dropdown" id="moreDropdown">
 						<ul>
-							<li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
-							<li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+							<li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
 						</ul>
 					</div>
 				</div>
 
 				<!-- Flash Deal positioned at far right -->
-				<a href="#" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+				<a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
 	</nav>

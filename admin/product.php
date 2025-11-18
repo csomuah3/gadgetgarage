@@ -23,15 +23,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $product_price = floatval($_POST['product_price']);
         $product_desc = trim($_POST['product_desc']);
         $product_keywords = trim($_POST['product_keywords']);
+        $product_color = trim($_POST['product_color']);
         $product_cat = intval($_POST['product_cat']);
         $product_brand = intval($_POST['product_brand']);
         $stock_quantity = intval($_POST['stock_quantity']);
 
         if (!empty($product_title) && $product_price > 0) {
-            if (add_product_ctr($product_title, $product_price, $product_desc, $product_cat, $product_brand, $product_keywords, $stock_quantity)) {
-                $success_message = "Product added successfully!";
+            $result = add_product_ctr($product_title, $product_price, $product_desc, '', $product_keywords, $product_color, $product_cat, $product_brand, $stock_quantity);
+            if ($result['status'] === 'success') {
+                $success_message = $result['message'];
             } else {
-                $error_message = "Failed to add product.";
+                $error_message = $result['message'];
             }
         } else {
             $error_message = "Please fill in all required fields.";
@@ -219,6 +221,63 @@ try {
                         <label for="product_keywords" class="form-label-modern">Product Keywords</label>
                         <input type="text" class="form-control-modern" id="product_keywords" name="product_keywords" placeholder="e.g., laptop, gaming, portable, wireless">
                         <small class="text-muted">Separate keywords with commas for better search results</small>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label-modern">Product Color</label>
+                        <div class="color-selector">
+                            <div class="color-options">
+                                <div class="color-option" data-color="Black">
+                                    <div class="color-circle" style="background-color: #000000;"></div>
+                                    <span class="color-name">Black</span>
+                                </div>
+                                <div class="color-option" data-color="White">
+                                    <div class="color-circle" style="background-color: #FFFFFF; border: 2px solid #e2e8f0;"></div>
+                                    <span class="color-name">White</span>
+                                </div>
+                                <div class="color-option" data-color="Silver">
+                                    <div class="color-circle" style="background-color: #C0C0C0;"></div>
+                                    <span class="color-name">Silver</span>
+                                </div>
+                                <div class="color-option" data-color="Gray">
+                                    <div class="color-circle" style="background-color: #808080;"></div>
+                                    <span class="color-name">Gray</span>
+                                </div>
+                                <div class="color-option" data-color="Gold">
+                                    <div class="color-circle" style="background-color: #FFD700;"></div>
+                                    <span class="color-name">Gold</span>
+                                </div>
+                                <div class="color-option" data-color="Rose Gold">
+                                    <div class="color-circle" style="background-color: #E8B4B8;"></div>
+                                    <span class="color-name">Rose Gold</span>
+                                </div>
+                                <div class="color-option" data-color="Blue">
+                                    <div class="color-circle" style="background-color: #007AFF;"></div>
+                                    <span class="color-name">Blue</span>
+                                </div>
+                                <div class="color-option" data-color="Red">
+                                    <div class="color-circle" style="background-color: #FF3B30;"></div>
+                                    <span class="color-name">Red</span>
+                                </div>
+                                <div class="color-option" data-color="Green">
+                                    <div class="color-circle" style="background-color: #34C759;"></div>
+                                    <span class="color-name">Green</span>
+                                </div>
+                                <div class="color-option" data-color="Purple">
+                                    <div class="color-circle" style="background-color: #AF52DE;"></div>
+                                    <span class="color-name">Purple</span>
+                                </div>
+                                <div class="color-option" data-color="Pink">
+                                    <div class="color-circle" style="background-color: #FF2D92;"></div>
+                                    <span class="color-name">Pink</span>
+                                </div>
+                                <div class="color-option" data-color="Yellow">
+                                    <div class="color-circle" style="background-color: #FFCC00;"></div>
+                                    <span class="color-name">Yellow</span>
+                                </div>
+                            </div>
+                            <input type="hidden" id="product_color" name="product_color" value="">
+                        </div>
                     </div>
 
                     <div class="form-group mb-3">
@@ -813,6 +872,13 @@ try {
 }
 
 /* Color Selection Styles */
+.color-selector {
+    border: 2px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 1.5rem;
+    background: rgba(248, 250, 252, 0.5);
+}
+
 .color-selection-container {
     border: 2px solid #e2e8f0;
     border-radius: 12px;
@@ -1001,7 +1067,148 @@ function animateCounters() {
 
 // Product management functions
 function editProduct(productId) {
-    alert(`Edit product #${productId} - Advanced edit form coming soon!`);
+    // Fetch product data and show edit modal
+    fetchProductData(productId).then(product => {
+        showEditModal(product);
+    }).catch(error => {
+        alert('Failed to load product data: ' + error.message);
+    });
+}
+
+// Fetch product data for editing
+async function fetchProductData(productId) {
+    try {
+        const response = await fetch(`actions/get_product_action.php?id=${productId}`);
+        const data = await response.json();
+        if (data.status === 'success') {
+            return data.product;
+        } else {
+            throw new Error(data.message || 'Failed to fetch product data');
+        }
+    } catch (error) {
+        throw error;
+    }
+}
+
+// Show edit modal with product data
+function showEditModal(product) {
+    const modal = document.createElement('div');
+    modal.className = 'product-edit-modal';
+    modal.innerHTML = `
+        <div class="modal-overlay" onclick="closeEditModal()"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3><i class="fas fa-edit me-2"></i>Edit Product</h3>
+                <button type="button" class="btn-close" onclick="closeEditModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form id="editProductForm" enctype="multipart/form-data">
+                    <input type="hidden" id="edit_product_id" value="${product.product_id}">
+
+                    <div class="row mb-3">
+                        <div class="col-md-8">
+                            <label for="edit_product_title" class="form-label-modern">Product Title</label>
+                            <input type="text" class="form-control-modern" id="edit_product_title" value="${product.product_title}" required>
+                        </div>
+                        <div class="col-md-4">
+                            <label for="edit_product_price" class="form-label-modern">Price (GH₵)</label>
+                            <input type="number" class="form-control-modern" id="edit_product_price" value="${product.product_price}" step="0.01" required>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="edit_product_desc" class="form-label-modern">Description</label>
+                        <textarea class="form-control-modern" id="edit_product_desc" rows="3">${product.product_desc || ''}</textarea>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="edit_product_keywords" class="form-label-modern">Keywords</label>
+                        <input type="text" class="form-control-modern" id="edit_product_keywords" value="${product.product_keywords || ''}" placeholder="e.g., laptop, gaming, portable">
+                    </div>
+
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="edit_product_cat" class="form-label-modern">Category</label>
+                            <select class="form-control-modern" id="edit_product_cat" required>
+                                <option value="">Select Category</option>
+                                ${getCategoryOptions(product.product_cat)}
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label for="edit_product_brand" class="form-label-modern">Brand</label>
+                            <select class="form-control-modern" id="edit_product_brand" required>
+                                <option value="">Select Brand</option>
+                                ${getBrandOptions(product.product_brand)}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label for="edit_product_color" class="form-label-modern">Color</label>
+                        <div class="color-selection-container">
+                            <div class="color-options" id="editColorOptions">
+                                ${getColorOptions(product.product_color)}
+                            </div>
+                            <input type="hidden" id="edit_product_color" value="${product.product_color || ''}">
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <label class="form-label-modern">Current Image</label>
+                        <div class="current-image-container">
+                            ${product.product_image ?
+                                `<img src="uploads/products/${product.product_image}" alt="Current product image" class="current-product-image">` :
+                                '<div class="no-image-placeholder"><i class="fas fa-image"></i><span>No image</span></div>'
+                            }
+                        </div>
+                    </div>
+
+                    <div class="form-group mb-4">
+                        <label for="edit_product_image" class="form-label-modern">Update Image</label>
+                        <div class="edit-image-upload">
+                            <div class="upload-area" id="editUploadArea">
+                                <div class="upload-icon">
+                                    <i class="fas fa-cloud-upload-alt"></i>
+                                </div>
+                                <div class="upload-text">
+                                    <h6>Upload New Image</h6>
+                                    <p>Click to select or drag & drop</p>
+                                </div>
+                                <input type="file" id="edit_product_image" accept="image/*" hidden>
+                            </div>
+                            <div class="image-preview" id="editImagePreview" style="display: none;">
+                                <img src="" alt="Preview" class="preview-image">
+                                <div class="image-overlay">
+                                    <button type="button" class="btn btn-danger btn-sm remove-image" onclick="removeEditImage()">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeEditModal()">Cancel</button>
+                <button type="button" class="btn btn-primary" onclick="updateProduct()">
+                    <i class="fas fa-save me-2"></i>Update Product
+                </button>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    // Initialize color selection for edit modal
+    initializeEditColorSelection();
+
+    // Initialize image upload for edit modal
+    initializeEditImageUpload();
+
+    // Show modal with animation
+    setTimeout(() => modal.classList.add('show'), 10);
 }
 
 function deleteProduct(productId, productName) {
@@ -1119,6 +1326,24 @@ function initializeDropdowns() {
             brandOptions.classList.remove('show');
             brandSelected.classList.remove('open');
         }
+    });
+
+    // Color Picker Functionality
+    const colorOptions = document.querySelectorAll('.color-option');
+    const colorInput = document.getElementById('product_color');
+
+    colorOptions.forEach(option => {
+        option.addEventListener('click', function() {
+            // Remove selected class from all options
+            colorOptions.forEach(opt => opt.classList.remove('selected'));
+
+            // Add selected class to clicked option
+            this.classList.add('selected');
+
+            // Set the value in hidden input
+            const colorValue = this.getAttribute('data-color');
+            colorInput.value = colorValue;
+        });
     });
 }
 

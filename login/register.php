@@ -703,19 +703,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <label for="city" class="form-label">City</label>
                 <input type="text" id="city" name="city" class="form-control" placeholder="e.g. Accra" required>
             </div>
-            <div class="mb-4">
-                <label class="form-label">Register As</label>
-                <div class="d-flex justify-content-start">
-                    <div class="form-check me-3">
-                        <input class="form-check-input" type="radio" name="role" id="customer" value="1" checked>
-                        <label class="form-check-label" for="customer">Customer</label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="role" id="owner" value="2">
-                        <label class="form-check-label" for="owner">Tech Business</label>
-                    </div>
-                </div>
-            </div>
+            <!-- Role is now hidden and fixed to Customer (1) -->
+            <input type="hidden" name="role" value="1">
             <button type="submit" class="btn-custom">Create Account</button>
         </form>
 

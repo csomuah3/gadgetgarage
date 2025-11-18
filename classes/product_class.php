@@ -9,13 +9,14 @@ class Product extends db_connection {
     }
 
     // Add a new product
-    public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity = 10) {
+    public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity = 10) {
         // Sanitize inputs
         $product_title = trim($product_title);
         $product_price = (float)$product_price;
         $product_desc = trim($product_desc);
         $product_image = trim($product_image);
         $product_keywords = trim($product_keywords);
+        $product_color = trim($product_color);
         $category_id = (int)$category_id;
         $brand_id = (int)$brand_id;
         $stock_quantity = (int)$stock_quantity;
@@ -44,17 +45,27 @@ class Product extends db_connection {
         $product_desc = mysqli_real_escape_string($this->db, $product_desc);
         $product_image = mysqli_real_escape_string($this->db, $product_image);
         $product_keywords = mysqli_real_escape_string($this->db, $product_keywords);
+        $product_color = mysqli_real_escape_string($this->db, $product_color);
 
         // Check if stock_quantity column exists
-        $check_column = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
-        $column_exists = $this->db_fetch_one($check_column);
+        $check_stock = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
+        $stock_exists = $this->db_fetch_one($check_stock);
 
-        if ($column_exists) {
-            // INSERT query with stock_quantity
+        // Check if product_color column exists
+        $check_color = "SHOW COLUMNS FROM products LIKE 'product_color'";
+        $color_exists = $this->db_fetch_one($check_color);
+
+        // Build INSERT query based on available columns
+        if ($stock_exists && $color_exists) {
+            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
+                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', '$product_color', $category_id, $brand_id, $stock_quantity)";
+        } else if ($stock_exists && !$color_exists) {
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
                     VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id, $stock_quantity)";
+        } else if (!$stock_exists && $color_exists) {
+            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand)
+                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', '$product_color', $category_id, $brand_id)";
         } else {
-            // INSERT query without stock_quantity
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand)
                     VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id)";
         }

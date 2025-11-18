@@ -908,20 +908,20 @@ $fairDiscount = $basePrice - $fairPrice;
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
                             <!-- Excellent Condition -->
-                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo $excellentPrice; ?>" onclick="selectCondition('excellent', <?php echo $excellentPrice; ?>)">
+                            <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo $excellentPrice; ?>" onclick="selectCondition('excellent')">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Excellent Condition</div>
                                         <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Like new, no visible wear</div>
                                     </div>
                                     <div style="text-align: right;">
-                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($product['product_price'], 0); ?></div>
+                                        <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($excellentPrice, 0); ?></div>
                                     </div>
                                 </div>
                             </div>
 
                             <!-- Good Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo $goodPrice; ?>" onclick="selectCondition('good', <?php echo $goodPrice; ?>)">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="good-option" data-condition="good" data-price="<?php echo $goodPrice; ?>" onclick="selectCondition('good')">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Good Condition</div>
@@ -937,7 +937,7 @@ $fairDiscount = $basePrice - $fairPrice;
                             </div>
 
                             <!-- Fair Condition -->
-                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo $fairPrice; ?>" onclick="selectCondition('fair', <?php echo $fairPrice; ?>)">
+                            <div style="background: rgba(255,255,255,0.1); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="fair-option" data-condition="fair" data-price="<?php echo $fairPrice; ?>" onclick="selectCondition('fair')">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
                                     <div>
                                         <div style="font-weight: 600; margin-bottom: 5px;">Fair Condition</div>
@@ -1000,10 +1000,22 @@ $fairDiscount = $basePrice - $fairPrice;
         let selectedPrice = <?php echo floatval($product['product_price']); ?>;
         let originalPrice = <?php echo floatval($product['product_price']); ?>;
 
+        // Price calculation data
+        const priceData = {
+            excellent: <?php echo $excellentPrice; ?>,
+            good: <?php echo $goodPrice; ?>,
+            fair: <?php echo $fairPrice; ?>
+        };
+
         // IMMEDIATE function definition - available right away
-        function selectCondition(condition, price) {
+        function selectCondition(condition, price = null) {
+            console.log('selectCondition called with:', condition, price);
+
             selectedCondition = condition;
-            selectedPrice = parseFloat(price);
+            // Use price from priceData if not provided
+            selectedPrice = price !== null ? parseFloat(price) : priceData[condition];
+
+            console.log('Updated selectedCondition:', selectedCondition, 'selectedPrice:', selectedPrice);
 
             // Update visual selection - reset all options first
             const allOptions = document.querySelectorAll('[data-condition]');
@@ -1019,7 +1031,7 @@ $fairDiscount = $basePrice - $fairPrice;
                 selectedOption.style.background = 'rgba(255,255,255,0.3)';
                 selectedOption.style.border = '2px solid #10b981';
                 selectedOption.style.transform = 'scale(1.02)';
-                console.log('Selected option updated:', condition);
+                console.log('Selected option visually updated:', condition);
             }
 
             // Update pricing display
@@ -1027,10 +1039,10 @@ $fairDiscount = $basePrice - $fairPrice;
             const cartButtonPrice = document.getElementById('cartButtonPrice');
 
             if (currentPrice) {
-                currentPrice.textContent = 'GH₵' + selectedPrice.toLocaleString();
+                currentPrice.textContent = 'GH₵' + Math.round(selectedPrice).toLocaleString();
             }
             if (cartButtonPrice) {
-                cartButtonPrice.textContent = selectedPrice.toLocaleString();
+                cartButtonPrice.textContent = Math.round(selectedPrice).toLocaleString();
             }
 
             // Show/hide discount information
@@ -1044,11 +1056,13 @@ $fairDiscount = $basePrice - $fairPrice;
                 const discountAmount = originalPrice - selectedPrice;
                 const discountPercent = Math.round((discountAmount / originalPrice) * 100);
                 if (discountBadge) discountBadge.textContent = discountPercent + '% off';
-                if (originalPriceElement) originalPriceElement.textContent = 'GH₵' + originalPrice.toLocaleString();
+                if (originalPriceElement) originalPriceElement.textContent = 'GH₵' + Math.round(originalPrice).toLocaleString();
             } else {
                 if (originalPriceElement) originalPriceElement.style.display = 'none';
                 if (discountBadge) discountBadge.style.display = 'none';
             }
+
+            console.log('Price display updated. Current price:', selectedPrice);
         }
 
         // Make function available globally
@@ -1056,7 +1070,8 @@ $fairDiscount = $basePrice - $fairPrice;
 
         // Initialize condition selection
         function initializeConditionSelection() {
-            selectCondition('excellent', originalPrice);
+            console.log('Initializing condition selection with prices:', priceData);
+            selectCondition('excellent');
         }
 
         // Enhanced Add to Cart Modal Function
@@ -1619,10 +1634,8 @@ $fairDiscount = $basePrice - $fairPrice;
             }
         }
 
-        // Initialize condition selection for the new design
-        function initializeConditionSelection() {
-            selectCondition('excellent', originalPrice);
-        }
+        // Initialize condition selection for the new design (duplicate removal)
+        // This function is now handled above
 
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
@@ -1635,39 +1648,14 @@ $fairDiscount = $basePrice - $fairPrice;
             console.log('Initializing condition selection');
             initializeConditionSelection();
 
-            // Add event listeners for condition selection with multiple fallback methods
+            // Add event listeners for condition selection
             const conditionOptions = document.querySelectorAll('[data-condition]');
             console.log('Found condition options:', conditionOptions.length);
 
             conditionOptions.forEach((option, index) => {
                 const condition = option.getAttribute('data-condition');
-                const price = parseFloat(option.getAttribute('data-price'));
 
-                console.log(`Setting up listeners for option ${index + 1}:`, condition, price);
-
-                // Method 1: Click event listener
-                option.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Click listener triggered:', condition, price);
-                    selectCondition(condition, price);
-                });
-
-                // Method 2: Mouse down for immediate response
-                option.addEventListener('mousedown', function(e) {
-                    console.log('Mousedown listener triggered:', condition, price);
-                    selectCondition(condition, price);
-                });
-
-                // Method 3: Touch events for mobile
-                option.addEventListener('touchstart', function(e) {
-                    e.preventDefault();
-                    console.log('Touch listener triggered:', condition, price);
-                    selectCondition(condition, price);
-                });
-
-                // Method 4: Add onclick attribute as fallback
-                option.setAttribute('onclick', `selectCondition('${condition}', ${price})`);
+                console.log(`Setting up listeners for option ${index + 1}:`, condition);
 
                 // Visual feedback on hover
                 option.addEventListener('mouseenter', function() {
@@ -1681,17 +1669,6 @@ $fairDiscount = $basePrice - $fairPrice;
                         this.style.background = 'rgba(255,255,255,0.1)';
                     }
                 });
-            });
-
-            // Add global click handler as final fallback
-            document.addEventListener('click', function(e) {
-                const clickedElement = e.target.closest('[data-condition]');
-                if (clickedElement) {
-                    const condition = clickedElement.getAttribute('data-condition');
-                    const price = parseFloat(clickedElement.getAttribute('data-price'));
-                    console.log('Global click handler triggered:', condition, price);
-                    selectCondition(condition, price);
-                }
             });
 
             // Animate product details on load

@@ -2,7 +2,7 @@
 require_once __DIR__ . '/../classes/product_class.php';
 
 // Add product
-function add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity = 10) {
+function add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity = 10) {
     $product = new Product();
 
     // Check if product title already exists
@@ -11,7 +11,7 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
         return ['status' => 'error', 'message' => 'Product title already exists'];
     }
 
-    $result = $product->add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity);
+    $result = $product->add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
     if ($result) {
         return ['status' => 'success', 'message' => 'Product added successfully'];
     } else {

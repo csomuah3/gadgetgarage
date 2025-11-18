@@ -1236,15 +1236,45 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function openProfilePictureModal() {
-            alert('Profile picture modal not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Profile Picture',
+                    text: 'Profile picture modal not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Profile picture modal not implemented yet');
+            }
         }
 
         function changeLanguage(lang) {
-            alert('Language change to ' + lang + ' not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Language Change',
+                    text: 'Language change to ' + lang + ' not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Language change to ' + lang + ' not implemented yet');
+            }
         }
 
         function toggleTheme() {
-            alert('Theme toggle not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Theme Toggle',
+                    text: 'Theme toggle not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Theme toggle not implemented yet');
+            }
         }
 
         function showDropdown() {

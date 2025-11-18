@@ -424,16 +424,37 @@ function editCategory(id, name) {
 
 // Delete category function
 function deleteCategory(id, name) {
-    if (confirm(`Are you sure you want to delete the category "${name}"?`)) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.innerHTML = `
-            <input type="hidden" name="delete_category" value="1">
-            <input type="hidden" name="cat_id" value="${id}">
-        `;
-        document.body.appendChild(form);
-        form.submit();
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Delete Category',
+            text: `Are you sure you want to delete the category "${name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performDeleteCategory(id);
+            }
+        });
+    } else {
+        if (confirm(`Are you sure you want to delete the category "${name}"?`)) {
+            performDeleteCategory(id);
+        }
     }
+}
+
+function performDeleteCategory(id) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.innerHTML = `
+        <input type="hidden" name="delete_category" value="1">
+        <input type="hidden" name="cat_id" value="${id}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
 }
 
 // Initialize animations when page loads

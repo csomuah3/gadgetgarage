@@ -680,7 +680,17 @@ function updateStatus(appointmentId, currentStatus) {
 
 // View appointment details
 function viewAppointment(appointmentId) {
-    alert('Appointment details for #' + appointmentId + ' - Feature coming soon!');
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Appointment Details',
+            text: 'Appointment details for #' + appointmentId + ' - Feature coming soon!',
+            icon: 'info',
+            confirmButtonColor: '#D19C97',
+            confirmButtonText: 'OK'
+        });
+    } else {
+        alert('Appointment details for #' + appointmentId + ' - Feature coming soon!');
+    }
 }
 
 // Initialize animations and charts when page loads

@@ -750,14 +750,34 @@ try {
         document.getElementById('appointmentForm').addEventListener('submit', function(e) {
             if (!selectedDate || !selectedTime) {
                 e.preventDefault();
-                alert('Please select both date and time for your appointment.');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Incomplete Selection',
+                        text: 'Please select both date and time for your appointment.',
+                        icon: 'warning',
+                        confirmButtonColor: '#D19C97',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    alert('Please select both date and time for your appointment.');
+                }
                 return false;
             }
 
             const phone = document.getElementById('customer_phone').value.trim();
             if (!phone) {
                 e.preventDefault();
-                alert('Please enter your phone number.');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Phone Required',
+                        text: 'Please enter your phone number.',
+                        icon: 'warning',
+                        confirmButtonColor: '#D19C97',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    alert('Please enter your phone number.');
+                }
                 return false;
             }
 
@@ -766,7 +786,17 @@ try {
             const allTermsChecked = Array.from(termsCheckboxes).every(checkbox => checkbox.checked);
             if (!allTermsChecked) {
                 e.preventDefault();
-                alert('Please accept all terms and conditions before scheduling your appointment.');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Terms Required',
+                        text: 'Please accept all terms and conditions before scheduling your appointment.',
+                        icon: 'warning',
+                        confirmButtonColor: '#D19C97',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    alert('Please accept all terms and conditions before scheduling your appointment.');
+                }
                 return false;
             }
         });

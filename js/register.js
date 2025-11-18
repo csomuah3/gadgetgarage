@@ -22,19 +22,46 @@ $(document).ready(function() {
 
         // Basic validation
         if (name === '' || email === '' || password === '' || phone_number === '' || country === '' || city === '') {
-            alert('Please fill in all fields!');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Validation Error',
+                    text: 'Please fill in all fields!',
+                    icon: 'error',
+                    confirmButtonColor: '#D19C97'
+                });
+            } else {
+                alert('Please fill in all fields!');
+            }
             return;
         }
 
         // Simple email validation
         if (!email.includes('@') || !email.includes('.')) {
-            alert('Please enter a valid email address!');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Validation Error',
+                    text: 'Please enter a valid email address!',
+                    icon: 'error',
+                    confirmButtonColor: '#D19C97'
+                });
+            } else {
+                alert('Please enter a valid email address!');
+            }
             return;
         }
 
         // Password length validation
         if (password.length < 6) {
-            alert('Password must be at least 6 characters long!');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Validation Error',
+                    text: 'Password must be at least 6 characters long!',
+                    icon: 'error',
+                    confirmButtonColor: '#D19C97'
+                });
+            } else {
+                alert('Password must be at least 6 characters long!');
+            }
             return;
         }
 
@@ -61,12 +88,33 @@ $(document).ready(function() {
                 console.log('Full Response:', response);
                 console.log('Status:', response.status);
                 console.log('Message:', response.message);
-                
+
                 if (response.status === 'success') {
-                    alert('SUCCESS: ' + response.message);
-                    window.location.href = 'login.php';
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Registration Successful!',
+                            text: response.message + ' Please login to continue.',
+                            icon: 'success',
+                            confirmButtonColor: '#D19C97',
+                            confirmButtonText: 'Go to Login'
+                        }).then(() => {
+                            window.location.href = 'login.php';
+                        });
+                    } else {
+                        alert('SUCCESS: ' + response.message);
+                        window.location.href = 'login.php';
+                    }
                 } else {
-                    alert('ERROR: ' + response.message);
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Registration Failed',
+                            text: response.message,
+                            icon: 'error',
+                            confirmButtonColor: '#D19C97'
+                        });
+                    } else {
+                        alert('ERROR: ' + response.message);
+                    }
                 }
             },
             error: function(xhr, status, error) {
@@ -75,8 +123,17 @@ $(document).ready(function() {
                 console.log('Error:', error);
                 console.log('Response Text:', xhr.responseText);
                 console.log('Status Code:', xhr.status);
-                
-                alert('AJAX Error: ' + xhr.responseText);
+
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Connection Error',
+                        text: 'Failed to connect to server. Please try again.',
+                        icon: 'error',
+                        confirmButtonColor: '#D19C97'
+                    });
+                } else {
+                    alert('Connection Error: ' + xhr.responseText);
+                }
             },
             complete: function() {
                 $btn.prop('disabled', false).text('Register');

@@ -2236,7 +2236,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function showCart() {
-            alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Cart',
+                    text: 'Cart functionality will be implemented soon!\nThis will show your cart items.',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+            }
         }
 
         function updateCartCount() {
@@ -2673,7 +2683,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 })
                 .catch(error => {
                     console.error('Filter Error:', error);
-                    alert('Error applying filters. Please try again.');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error applying filters. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#D19C97',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert('Error applying filters. Please try again.');
+                    }
                 })
                 .finally(() => {
                     applyBtn.innerHTML = originalText;
@@ -3057,15 +3077,45 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function openProfilePictureModal() {
-            alert('Profile picture modal not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Profile Picture',
+                    text: 'Profile picture modal not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Profile picture modal not implemented yet');
+            }
         }
 
         function changeLanguage(lang) {
-            alert('Language change to ' + lang + ' not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Language Change',
+                    text: 'Language change to ' + lang + ' not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Language change to ' + lang + ' not implemented yet');
+            }
         }
 
         function toggleTheme() {
-            alert('Theme toggle not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Theme Toggle',
+                    text: 'Theme toggle not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Theme toggle not implemented yet');
+            }
         }
 
         function closeAllDropdowns(except = []) {
@@ -3081,8 +3131,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function confirmLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = 'login/logout.php';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Logout',
+                    text: 'Are you sure you want to logout?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D19C97',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Logout',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'login/logout.php';
+                    }
+                });
+            } else {
+                if (confirm('Are you sure you want to logout?')) {
+                    window.location.href = 'login/logout.php';
+                }
             }
         }
 

@@ -251,8 +251,8 @@ try {
                                 <form method="POST" action="../admin/orders.php" style="display: inline;">
                                     <input type="hidden" name="order_id" value="<?php echo $order['order_id']; ?>">
                                     <input type="hidden" name="status" value="cancelled">
-                                    <button type="submit" name="update_status" class="btn btn-danger"
-                                            onclick="return confirm('Are you sure you want to cancel this order? This action cannot be undone.')">
+                                    <button type="button" name="update_status" class="btn btn-danger"
+                                            onclick="confirmCancelOrder(this)">
                                         <i class="fas fa-times"></i> Cancel Order
                                     </button>
                                 </form>
@@ -307,6 +307,32 @@ try {
             }
         }
     </style>
+
+    <script>
+    function confirmCancelOrder(button) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Cancel Order',
+                text: 'Are you sure you want to cancel this order? This action cannot be undone.',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, Cancel Order',
+                cancelButtonText: 'No, Keep Order'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Submit the form
+                    button.closest('form').submit();
+                }
+            });
+        } else {
+            if (confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
+                button.closest('form').submit();
+            }
+        }
+    }
+    </script>
 
     <?php
 } catch (Exception $e) {

@@ -59,20 +59,40 @@ try {
 
     if ($result) {
         $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+        $cart_total = get_cart_total_ctr($customer_id, $ip_address);
+
         echo json_encode([
             'success' => true,
             'message' => 'You have successfully added "' . $product['product_title'] . '" to your cart',
-            'cart_count' => $cart_count
+            'cart_count' => $cart_count,
+            'cart_total' => $cart_total,
+            'product_id' => $product_id,
+            'product_name' => $product['product_title'],
+            'product_image' => !empty($product['product_image']) ? 'uploads/products/' . $product['product_image'] : null,
+            'product_price' => $product['product_price'],
+            'final_price' => $final_price > 0 ? $final_price : $product['product_price'],
+            'condition' => $condition,
+            'quantity' => $quantity
         ]);
     } else {
         // Try basic cart addition as fallback
         $basic_result = add_to_cart_ctr($product_id, $quantity, $customer_id, $ip_address);
         if ($basic_result) {
             $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+            $cart_total = get_cart_total_ctr($customer_id, $ip_address);
+
             echo json_encode([
                 'success' => true,
                 'message' => 'You have successfully added "' . $product['product_title'] . '" to your cart',
-                'cart_count' => $cart_count
+                'cart_count' => $cart_count,
+                'cart_total' => $cart_total,
+                'product_id' => $product_id,
+                'product_name' => $product['product_title'],
+                'product_image' => !empty($product['product_image']) ? 'uploads/products/' . $product['product_image'] : null,
+                'product_price' => $product['product_price'],
+                'final_price' => $product['product_price'],
+                'condition' => null,
+                'quantity' => $quantity
             ]);
         } else {
             echo json_encode(['success' => false, 'message' => 'Failed to add product to cart - both methods failed']);

@@ -489,16 +489,37 @@ function editBrand(id, name, catId) {
 
 // Delete brand function
 function deleteBrand(id, name) {
-    if (confirm(`Are you sure you want to delete the brand "${name}"?`)) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.innerHTML = `
-            <input type="hidden" name="delete_brand" value="1">
-            <input type="hidden" name="brand_id" value="${id}">
-        `;
-        document.body.appendChild(form);
-        form.submit();
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Delete Brand',
+            text: `Are you sure you want to delete the brand "${name}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performDeleteBrand(id);
+            }
+        });
+    } else {
+        if (confirm(`Are you sure you want to delete the brand "${name}"?`)) {
+            performDeleteBrand(id);
+        }
     }
+}
+
+function performDeleteBrand(id) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.innerHTML = `
+        <input type="hidden" name="delete_brand" value="1">
+        <input type="hidden" name="brand_id" value="${id}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
 }
 
 // Initialize animations when page loads

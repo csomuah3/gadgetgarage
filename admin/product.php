@@ -1210,7 +1210,17 @@ function editProduct(productId) {
     fetchProductData(productId).then(product => {
         showEditModal(product);
     }).catch(error => {
-        alert('Failed to load product data: ' + error.message);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to load product data: ' + error.message,
+                icon: 'error',
+                confirmButtonColor: '#D19C97',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            alert('Failed to load product data: ' + error.message);
+        }
     });
 }
 
@@ -1530,10 +1540,30 @@ async function updateProduct() {
             // Refresh the page to show updated data
             window.location.reload();
         } else {
-            alert('Error updating product: ' + (data.message || 'Unknown error'));
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error updating product: ' + (data.message || 'Unknown error'),
+                    icon: 'error',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Error updating product: ' + (data.message || 'Unknown error'));
+            }
         }
     } catch (error) {
-        alert('Error updating product: ' + error.message);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Error',
+                text: 'Error updating product: ' + error.message,
+                icon: 'error',
+                confirmButtonColor: '#D19C97',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            alert('Error updating product: ' + error.message);
+        }
     } finally {
         // Restore button state
         submitBtn.innerHTML = originalBtnText;
@@ -1542,16 +1572,37 @@ async function updateProduct() {
 }
 
 function deleteProduct(productId, productName) {
-    if (confirm(`Are you sure you want to delete "${productName}"?`)) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.innerHTML = `
-            <input type="hidden" name="delete_product" value="1">
-            <input type="hidden" name="product_id" value="${productId}">
-        `;
-        document.body.appendChild(form);
-        form.submit();
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Delete Product',
+            text: `Are you sure you want to delete "${productName}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performDeleteProduct(productId);
+            }
+        });
+    } else {
+        if (confirm(`Are you sure you want to delete "${productName}"?`)) {
+            performDeleteProduct(productId);
+        }
     }
+}
+
+function performDeleteProduct(productId) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.innerHTML = `
+        <input type="hidden" name="delete_product" value="1">
+        <input type="hidden" name="product_id" value="${productId}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function filterLowStock() {

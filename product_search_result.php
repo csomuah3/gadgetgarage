@@ -839,7 +839,17 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         function showCart() {
-            alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Cart',
+                    text: 'Cart functionality will be implemented soon!\nThis will show your cart items.',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+            }
         }
 
         function updateCartCount() {
@@ -927,8 +937,25 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         function confirmLogout() {
-            if (confirm('Are you sure you want to logout?')) {
-                window.location.href = 'login/logout.php';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Logout',
+                    text: 'Are you sure you want to logout?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#D19C97',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Logout',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        window.location.href = 'login/logout.php';
+                    }
+                });
+            } else {
+                if (confirm('Are you sure you want to logout?')) {
+                    window.location.href = 'login/logout.php';
+                }
             }
         }
 

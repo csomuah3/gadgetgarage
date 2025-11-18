@@ -754,7 +754,17 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             // Add new files to selectedFiles array
             Array.from(input.files).forEach(file => {
                 if (file.size > 5 * 1024 * 1024) { // 5MB limit
-                    alert(`File ${file.name} is too large. Maximum size is 5MB.`);
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'File Too Large',
+                            text: `File ${file.name} is too large. Maximum size is 5MB.`,
+                            icon: 'warning',
+                            confirmButtonColor: '#D19C97',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert(`File ${file.name} is too large. Maximum size is 5MB.`);
+                    }
                     return;
                 }
 
@@ -856,12 +866,32 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                     });
                 } else {
                     console.error('Server error:', result);
-                    alert('Error: ' + (result.message || 'There was an error submitting your request.'));
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error: ' + (result.message || 'There was an error submitting your request.'),
+                            icon: 'error',
+                            confirmButtonColor: '#D19C97',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert('Error: ' + (result.message || 'There was an error submitting your request.'));
+                    }
                 }
 
             } catch (error) {
                 console.error('Network error:', error);
-                alert('There was a network error submitting your request. Please try again or contact us directly.');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Network Error',
+                        text: 'There was a network error submitting your request. Please try again or contact us directly.',
+                        icon: 'error',
+                        confirmButtonColor: '#D19C97',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    alert('There was a network error submitting your request. Please try again or contact us directly.');
+                }
             } finally {
                 // Reset button
                 submitBtn.innerHTML = originalText;

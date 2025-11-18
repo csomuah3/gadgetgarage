@@ -688,7 +688,7 @@ try {
                                                                         <form method="POST" style="display: inline;">
                                                                             <input type="hidden" name="appointment_id" value="<?php echo $appointment['appointment_id']; ?>">
                                                                             <input type="hidden" name="status" value="cancelled">
-                                                                            <button type="submit" name="update_status" class="dropdown-item text-danger" onclick="return confirm('Are you sure you want to cancel this appointment?')">
+                                                                            <button type="button" name="update_status" class="dropdown-item text-danger" onclick="confirmCancelAppointment(this)">
                                                                                 <i class="fas fa-times text-danger"></i> Cancel Appointment
                                                                             </button>
                                                                         </form>
@@ -733,6 +733,30 @@ try {
         setInterval(() => {
             location.reload();
         }, 60000);
+
+        function confirmCancelAppointment(button) {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Cancel Appointment',
+                    text: 'Are you sure you want to cancel this appointment?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, Cancel',
+                    cancelButtonText: 'No, Keep'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Submit the form
+                        button.closest('form').submit();
+                    }
+                });
+            } else {
+                if (confirm('Are you sure you want to cancel this appointment?')) {
+                    button.closest('form').submit();
+                }
+            }
+        }
     </script>
 </body>
 </html>

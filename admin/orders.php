@@ -517,25 +517,61 @@ function updateStatus(orderId) {
         { value: 'cancelled', label: 'Cancelled' }
     ];
 
-    let options = statuses.map(s => `${s.value}: ${s.label}`).join('\n');
-    const newStatus = prompt(`Select new status:\n${options}\n\nEnter status:`);
-
-    if (newStatus && ['pending', 'processing', 'completed', 'cancelled'].includes(newStatus.toLowerCase())) {
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.innerHTML = `
-            <input type="hidden" name="update_status" value="1">
-            <input type="hidden" name="order_id" value="${orderId}">
-            <input type="hidden" name="status" value="${newStatus.toLowerCase()}">
-        `;
-        document.body.appendChild(form);
-        form.submit();
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Update Order Status',
+            input: 'select',
+            inputOptions: {
+                'pending': 'Pending',
+                'processing': 'Processing',
+                'completed': 'Completed',
+                'cancelled': 'Cancelled'
+            },
+            inputPlaceholder: 'Select new status',
+            showCancelButton: true,
+            confirmButtonColor: '#D19C97',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Update',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                performStatusUpdate(orderId, result.value);
+            }
+        });
+    } else {
+        let options = statuses.map(s => `${s.value}: ${s.label}`).join('\n');
+        const newStatus = prompt(`Select new status:\n${options}\n\nEnter status:`);
+        if (newStatus && ['pending', 'processing', 'completed', 'cancelled'].includes(newStatus.toLowerCase())) {
+            performStatusUpdate(orderId, newStatus.toLowerCase());
+        }
     }
+}
+
+function performStatusUpdate(orderId, newStatus) {
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.innerHTML = `
+        <input type="hidden" name="update_status" value="1">
+        <input type="hidden" name="order_id" value="${orderId}">
+        <input type="hidden" name="status" value="${newStatus}">
+    `;
+    document.body.appendChild(form);
+    form.submit();
 }
 
 function viewOrder(orderId) {
     // Create modal for order details
-    alert(`Order #${orderId} details - Advanced order view coming soon!`);
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Order Details',
+            text: `Order #${orderId} details - Advanced order view coming soon!`,
+            icon: 'info',
+            confirmButtonColor: '#D19C97',
+            confirmButtonText: 'OK'
+        });
+    } else {
+        alert(`Order #${orderId} details - Advanced order view coming soon!`);
+    }
 }
 
 function refreshOrders() {

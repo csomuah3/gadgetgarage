@@ -437,7 +437,16 @@ class ChatBot {
                 throw new Error(result.message || 'Failed to send message');
             }
         } catch (error) {
-            alert('Error sending message: ' + error.message);
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error sending message: ' + error.message,
+                    icon: 'error',
+                    confirmButtonColor: '#D19C97'
+                });
+            } else {
+                alert('Error sending message: ' + error.message);
+            }
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         }

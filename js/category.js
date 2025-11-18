@@ -236,12 +236,31 @@ function saveEdit(categoryId) {
  */
 function deleteCategory(categoryId, categoryName) {
     console.log('Deleting category ID:', categoryId, 'Name:', categoryName);
-    
+
     // Confirm deletion
-    if (!confirm(`Are you sure you want to delete "${categoryName}"?`)) {
-        return;
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Delete Category',
+            text: `Are you sure you want to delete "${categoryName}"?`,
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#6c757d',
+            confirmButtonText: 'Yes, Delete',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                performDeleteCategory(categoryId, categoryName);
+            }
+        });
+    } else {
+        if (confirm(`Are you sure you want to delete "${categoryName}"?`)) {
+            performDeleteCategory(categoryId, categoryName);
+        }
     }
-    
+}
+
+function performDeleteCategory(categoryId, categoryName) {
     const formData = new FormData();
     formData.append('category_id', categoryId);
     

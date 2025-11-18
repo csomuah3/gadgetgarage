@@ -471,7 +471,17 @@ if ($_POST && isset($_POST['send_message'])) {
         }
 
         function openProfilePictureModal() {
-            alert('Profile picture modal not implemented yet');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Profile Picture',
+                    text: 'Profile picture modal not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Profile picture modal not implemented yet');
+            }
         }
 
         // Close dropdowns when clicking outside

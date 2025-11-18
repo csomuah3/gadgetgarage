@@ -1996,7 +1996,17 @@ try {
 		// Profile picture modal functionality
 		function openProfilePictureModal() {
 			// For now, show alert - will be replaced with actual modal
-			alert('Profile picture upload functionality will be implemented');
+			if (typeof Swal !== 'undefined') {
+				Swal.fire({
+					title: 'Profile Picture',
+					text: 'Profile picture upload functionality will be implemented',
+					icon: 'info',
+					confirmButtonColor: '#D19C97',
+					confirmButtonText: 'OK'
+				});
+			} else {
+				alert('Profile picture upload functionality will be implemented');
+			}
 		}
 
 		// Language change functionality

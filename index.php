@@ -52,39 +52,16 @@ try {
 	// If core fails, show error
 	die("Critical error: " . $e->getMessage());
 }
+
+// Set page variables for universal header
+$page_title = 'Home';
+$nav_path_prefix = '';
+$css_path_prefix = '';
+$logo_link = 'index.php';
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
+<?php include_once 'includes/universal_header.php'; ?>
 
-<head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Gadget Garage - Premium Refurbrished Tech Devices & Repair Services</title>
-	<link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
-	<link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-	<link href="includes/chatbot-styles.css" rel="stylesheet">
-	<link href="css/dark-mode.css" rel="stylesheet">
-	<style>
-		/* Import Google Fonts */
-		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
-
-		/* Reset and Base Styles */
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-
-		body {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-			background-color: #ffffff;
-			color: #1a1a1a;
-			overflow-x: hidden;
-		}
 
 		/* Header Styles */
 		.main-header {
@@ -4745,7 +4722,17 @@ try {
 		// Profile picture modal functionality
 		function openProfilePictureModal() {
 			// For now, show alert - will be replaced with actual modal
-			alert('Profile picture upload functionality will be implemented');
+			if (typeof Swal !== 'undefined') {
+				Swal.fire({
+					title: 'Profile Picture',
+					text: 'Profile picture upload functionality will be implemented',
+					icon: 'info',
+					confirmButtonColor: '#D19C97',
+					confirmButtonText: 'OK'
+				});
+			} else {
+				alert('Profile picture upload functionality will be implemented');
+			}
 		}
 
 		// Language change functionality - instant translation
@@ -5653,7 +5640,17 @@ try {
 			const email = event.target.querySelector('.newsletter-input').value;
 
 			// Here you would typically send the email to your backend
-			alert('Thank you for subscribing! You will receive updates at ' + email);
+			if (typeof Swal !== 'undefined') {
+				Swal.fire({
+					title: 'Thank You!',
+					text: 'Thank you for subscribing! You will receive updates at ' + email,
+					icon: 'success',
+					confirmButtonColor: '#D19C97',
+					confirmButtonText: 'OK'
+				});
+			} else {
+				alert('Thank you for subscribing! You will receive updates at ' + email);
+			}
 			closeNewsletter();
 		}
 

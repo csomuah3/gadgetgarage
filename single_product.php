@@ -1288,8 +1288,9 @@ $fairDiscount = $basePrice - $fairPrice;
                         btn.disabled = false;
                     }, 2500);
 
+                    // Show enhanced cart popup instead of notification
+                    showAddedToCartPopup(data);
                     updateCartBadge(data.cart_count);
-                    showNotification(data.message || 'Product added to cart!', 'success');
                 } else {
                     btn.innerHTML = originalText;
                     btn.disabled = false;

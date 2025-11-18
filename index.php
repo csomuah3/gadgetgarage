@@ -3929,7 +3929,16 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=150&h=150&fit=crop&crop=center" alt="Smartphones">
+							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads and Tablets">
+						</div>
+						<h4><span data-translate="ipads">iPads and Tablets</span></h4>
+						<p>From GH₵ 3000</p>
+					</div>
+				</div>
+				<div class="col-lg-2 col-md-4 col-6">
+					<div class="category-card">
+						<div class="category-icon">
+							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/smartphones.webp" alt="Smartphones">
 						</div>
 						<h4><span data-translate="smartphones">Smartphones</span></h4>
 						<p>From GH₵ 2500</p>
@@ -3938,37 +3947,28 @@ try {
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1496181133206-80ce9b88a853?w=150&h=150&fit=crop&crop=center" alt="Laptops">
+							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops and Desktop">
 						</div>
-						<h4><span data-translate="laptops">Laptops</span></h4>
+						<h4><span data-translate="laptops">Laptops and Desktop</span></h4>
 						<p>From GH₵ 4000</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1561154464-82e9adf32764?w=150&h=150&fit=crop&crop=center" alt="iPads">
+							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography and Video equipment">
 						</div>
-						<h4><span data-translate="ipads">iPads</span></h4>
-						<p>From GH₵ 3000</p>
-					</div>
-				</div>
-				<div class="col-lg-2 col-md-4 col-6">
-					<div class="category-card">
-						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1606983340126-99ab4feaa64a?w=150&h=150&fit=crop&crop=center" alt="Cameras">
-						</div>
-						<h4><span data-translate="cameras">Cameras</span></h4>
+						<h4><span data-translate="photography">Photography and Video equipment</span></h4>
 						<p>From GH₵ 5000</p>
 					</div>
 				</div>
 				<div class="col-lg-2 col-md-4 col-6">
 					<div class="category-card">
 						<div class="category-icon">
-							<img src="https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=150&h=150&fit=crop&crop=center" alt="Video Equipment">
+							<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/flashdeals.png" alt="Flash Deals">
 						</div>
-						<h4>Video Equipment</h4>
-						<p>From GH₵ 1200</p>
+						<h4>Flash Deals</h4>
+						<p>Limited Time Offers</p>
 					</div>
 				</div>
 			</div>

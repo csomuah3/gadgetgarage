@@ -12,42 +12,22 @@
  * @return string The image URL to use
  */
 function get_product_image_url($image_filename, $product_title = 'Product', $size = '400x300') {
-    // Base directory for the application
-    $base_dir = __DIR__ . '/..';
+    // Server upload URL base
+    $server_base_url = 'http://169.239.251.102:442/~chelsea.somuah/uploads/';
 
     // Clean the image filename
     $image_filename = trim($image_filename);
 
-    // List of possible image directories to check (in order of preference)
-    $image_directories = [
-        'uploads/products/',
-        'uploads/',
-        'images/',
-        'assets/images/',
-        'assets/img/'
-    ];
-
-    // If we have an image filename, try to find it
+    // If we have an image filename, return the server URL
     if (!empty($image_filename)) {
-        // Check if filename already has a path
-        if (strpos($image_filename, '/') !== false) {
-            $direct_path = $base_dir . '/' . $image_filename;
-            if (file_exists($direct_path)) {
-                return htmlspecialchars($image_filename);
-            }
+        // If the filename already contains the full server URL, return as is
+        if (strpos($image_filename, 'http://169.239.251.102:442/~chelsea.somuah/uploads/') === 0) {
+            return htmlspecialchars($image_filename);
         }
 
-        // Try each directory
-        foreach ($image_directories as $dir) {
-            $full_path = $base_dir . '/' . $dir . $image_filename;
-            if (file_exists($full_path)) {
-                return $dir . htmlspecialchars($image_filename);
-            }
-        }
-
-        // If file doesn't exist, still return the first directory path
-        // This allows for graceful fallback to onerror handling
-        return 'uploads/products/' . htmlspecialchars($image_filename);
+        // Remove any leading path separators and build the full server URL
+        $clean_filename = ltrim($image_filename, '/');
+        return $server_base_url . htmlspecialchars($clean_filename);
     }
 
     // No image found, return placeholder URL directly

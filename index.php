@@ -3815,7 +3815,7 @@ try {
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+			<span class="promo-text" data-translate="black_friday_deals"> BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
 		<a href="#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>

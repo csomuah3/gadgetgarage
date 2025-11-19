@@ -79,6 +79,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>All Products - Gadget Garage</title>
+    <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
+    <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -1964,11 +1966,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                     <!-- Product Image -->
                                     <div style="position: relative; background: #f8f9fa; padding: 30px; text-align: center; height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <img src="uploads/products/<?php echo $product['product_image']; ?>"
+                                        <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
                                             alt="<?php echo htmlspecialchars($product['product_title']); ?>"
                                             style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;"
                                             onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
-                                            onerror="this.src='https://via.placeholder.com/200x200?text=No+Image';">
+                                            onerror="<?php echo get_image_onerror($product['product_title']); ?>">
                                     </div>
 
                                     <!-- Product Content -->
@@ -2744,7 +2746,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     return `
         <div class="product-card" onclick="viewProduct(${product.product_id})">
             <div class="product-image-container">
-                <img src="${product.product_image || ''}"
+                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/${product.product_image || ''}"
                      alt="${product.product_title}"
                      class="product-image"
                      data-product-id="${product.product_id}"
@@ -2765,7 +2767,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         ${product.brand_name || 'N/A'}
                     </span>
                 </div>
-                <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${product.product_id}, '${product.product_title.replace(/'/g, "\\'")}', ${product.product_price}, '${product.product_image || ''}')">
+                <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${product.product_id}, '${product.product_title.replace(/'/g, "\\'")}', ${product.product_price}, 'http://169.239.251.102:442/~chelsea.somuah/uploads/${product.product_image || ''}')">
                     <i class="fas fa-shopping-cart"></i>
                     Add to Cart
                 </button>
@@ -2937,7 +2939,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Populate product info
             document.getElementById('modalProductInfo').innerHTML = `
                 <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
-                    <img src="${product.image}" alt="${product.name}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/${product.image}" alt="${product.name}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <div>
                         <h6 style="color: #6b7280; font-size: 0.9rem; margin: 0 0 5px 0;">${product.brand.charAt(0).toUpperCase() + product.brand.slice(1)}</h6>
                         <h5 style="color: #1f2937; margin: 0; font-size: 1.1rem;">${product.name}</h5>

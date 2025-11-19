@@ -2,6 +2,7 @@
 session_start();
 require_once __DIR__ . '/../controllers/cart_controller.php';
 require_once __DIR__ . '/../controllers/product_controller.php';
+require_once __DIR__ . '/../helpers/image_helper.php';
 
 header('Content-Type: application/json');
 
@@ -68,7 +69,7 @@ try {
             'cart_total' => $cart_total,
             'product_id' => $product_id,
             'product_name' => $product['product_title'],
-            'product_image' => !empty($product['product_image']) ? 'uploads/products/' . $product['product_image'] : null,
+            'product_image' => !empty($product['product_image']) ? get_product_image_url($product['product_image'], $product['product_title']) : null,
             'product_price' => $product['product_price'],
             'final_price' => $final_price > 0 ? $final_price : $product['product_price'],
             'condition' => $condition,
@@ -88,7 +89,7 @@ try {
                 'cart_total' => $cart_total,
                 'product_id' => $product_id,
                 'product_name' => $product['product_title'],
-                'product_image' => !empty($product['product_image']) ? 'uploads/products/' . $product['product_image'] : null,
+                'product_image' => !empty($product['product_image']) ? get_product_image_url($product['product_image'], $product['product_title']) : null,
                 'product_price' => $product['product_price'],
                 'final_price' => $product['product_price'],
                 'condition' => null,

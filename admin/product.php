@@ -1309,7 +1309,7 @@ function showEditModal(product) {
                         <label class="form-label-modern">Current Image</label>
                         <div class="current-image-container">
                             ${product.product_image ?
-                                `<img src="uploads/products/${product.product_image}" alt="Current product image" class="current-product-image">` :
+                                `<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/${product.product_image}" alt="Current product image" class="current-product-image">` :
                                 '<div class="no-image-placeholder"><i class="fas fa-image"></i><span>No image</span></div>'
                             }
                         </div>

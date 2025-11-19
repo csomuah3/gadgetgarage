@@ -5696,7 +5696,7 @@ try {
 			container.innerHTML = '';
 
 			products.forEach((product, index) => {
-				const imagePath = 'uploads/products/' + product.product_image;
+				const imagePath = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' + product.product_image;
 
 				const badges = ['Hot', 'Trending', 'Popular', 'Best Seller'];
 				const ratings = [4.8, 4.9, 4.7, 4.6];

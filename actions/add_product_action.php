@@ -185,24 +185,35 @@ function uploadSingleImage($file, $type = 'gallery') {
             throw new Exception('cURL error: ' . $error);
         }
 
-        if ($httpCode === 200 && $response) {
-            $uploadResult = json_decode($response, true);
-            if ($uploadResult && isset($uploadResult['status'])) {
-                if ($uploadResult['status'] === 'success') {
+        if ($httpCode === 200) {
+            // If we got a 200 response, consider it successful regardless of response format
+            if (!empty($response)) {
+                // Try to parse as JSON, but don't fail if it's not JSON
+                $uploadResult = json_decode($response, true);
+                if ($uploadResult && isset($uploadResult['status'])) {
+                    if ($uploadResult['status'] === 'success') {
+                        return [
+                            'success' => true,
+                            'filename' => $file_name,
+                            'server_response' => $uploadResult
+                        ];
+                    } else {
+                        throw new Exception('Server error: ' . ($uploadResult['message'] ?? 'Upload failed'));
+                    }
+                } else {
+                    // Response is not JSON or doesn't have status, but HTTP 200 means success
                     return [
                         'success' => true,
                         'filename' => $file_name,
-                        'server_response' => $uploadResult
+                        'server_response' => substr($response, 0, 200)
                     ];
-                } else {
-                    throw new Exception('Server error: ' . ($uploadResult['message'] ?? 'Upload failed'));
                 }
             } else {
-                // If response is not JSON, assume success if HTTP 200
+                // Empty response but HTTP 200 - assume success
                 return [
                     'success' => true,
                     'filename' => $file_name,
-                    'server_response' => $response
+                    'server_response' => 'Empty response but HTTP 200'
                 ];
             }
         } else {

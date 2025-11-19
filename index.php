@@ -632,7 +632,7 @@ try {
 			background: none;
 			width: 100%;
 			cursor: pointer;
-			font-size: 0.9rem;
+			font-size: 1.1rem;
 		}
 
 		.dropdown-item-custom:hover {
@@ -1096,7 +1096,7 @@ try {
 
 		.dropdown-column ul li a i {
 			color: #9ca3af;
-			width: 16px;
+			width: 20px;
 		}
 
 		.dropdown-column.featured {
@@ -1129,7 +1129,7 @@ try {
 
 		.featured-text strong {
 			color: #1f2937;
-			font-size: 0.9rem;
+			font-size: 1rem;
 			font-weight: 600;
 		}
 
@@ -1145,7 +1145,7 @@ try {
 			padding: 4px 8px;
 			border-radius: 6px;
 			text-decoration: none;
-			font-size: 0.6rem;
+			font-size: 1rem;
 			font-weight: 500;
 			transition: all 0.3s ease;
 		}

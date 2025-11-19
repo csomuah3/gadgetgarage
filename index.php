@@ -81,7 +81,7 @@ try {
 		}
 
 		body {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+			font-family: "Times New Roman", Times, serif;
 			background-color: #ffffff;
 			color: #1a1a1a;
 			overflow-x: hidden;
@@ -93,13 +93,13 @@ try {
 			color: white;
 			padding: 6px 15px;
 			text-align: center;
-			font-size: 1.4rem;
-			font-weight: 700;
+			font-size: 1rem;
+			font-weight: 400;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-			height: 38px;
+			height: 32px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -123,12 +123,12 @@ try {
 		}
 
 		.promo-banner i {
-			font-size: 1.5rem;
+			font-size: 1rem;
 		}
 
 		.promo-banner .promo-text {
-			font-size: 1.65rem;
-			font-weight: 700;
+			font-size: 1rem;
+			font-weight: 400;
 			letter-spacing: 0.5px;
 		}
 
@@ -136,8 +136,8 @@ try {
 			background: transparent;
 			padding: 0;
 			border-radius: 0;
-			font-size: 1.65rem;
-			font-weight: 700;
+			font-size: 1.3rem;
+			font-weight: 500;
 			margin: 0;
 			border: none;
 		}
@@ -3814,7 +3814,7 @@ try {
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
+			<span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
 		<a href="#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
@@ -5699,9 +5699,9 @@ try {
 			container.innerHTML = '';
 
 			products.forEach((product, index) => {
-				const imagePath = (product.image_url && product.image_url.trim() !== '')
-					? product.image_url
-					: generatePlaceholderImage(product.product_title, '300x200');
+				const imagePath = (product.image_url && product.image_url.trim() !== '') ?
+					product.image_url :
+					generatePlaceholderImage(product.product_title, '300x200');
 				const safeTitleAttr = (product.product_title || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
 				const badges = ['Hot', 'Trending', 'Popular', 'Best Seller'];

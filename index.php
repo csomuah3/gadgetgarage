@@ -4679,10 +4679,10 @@ try {
 						</div>
 						<div class="col-md-6 text-end">
 							<div class="payment-methods">
-								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=VISA" alt="Visa">
-								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=MC" alt="Mastercard">
-								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=AMEX" alt="American Express">
-								<img src="https://via.placeholder.com/40x25/cccccc/666666?text=GPAY" alt="Google Pay">
+								<img src="<?php echo generate_placeholder_url('VISA', '40x25'); ?>" alt="Visa">
+								<img src="<?php echo generate_placeholder_url('MC', '40x25'); ?>" alt="Mastercard">
+								<img src="<?php echo generate_placeholder_url('AMEX', '40x25'); ?>" alt="American Express">
+								<img src="<?php echo generate_placeholder_url('GPAY', '40x25'); ?>" alt="Google Pay">
 							</div>
 						</div>
 					</div>
@@ -5608,6 +5608,23 @@ try {
 			applyTranslationsEnhanced();
 		}
 
+		function generatePlaceholderImage(text = 'Product', size = '300x200', bgColor = '#eef2ff', textColor = '#1f2937') {
+			const [width, height] = size.split('x').map(Number);
+			const safeText = (text || 'Gadget Garage').substring(0, 28).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+				<rect width="100%" height="100%" fill="${bgColor}"/>
+				<rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#cbd5f5" stroke-width="2"/>
+				<text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 14)}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
+			</svg>`;
+			return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+		}
+
+		function handleImageError(event, text = 'Product', size = '300x200') {
+			if (!event || !event.target) return;
+			event.target.onerror = null;
+			event.target.src = generatePlaceholderImage(text, size);
+		}
+
 		// Initialize translations on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			// Force English as default if no language is set or if you want to reset
@@ -5682,7 +5699,10 @@ try {
 			container.innerHTML = '';
 
 			products.forEach((product, index) => {
-				const imagePath = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' + product.product_image;
+				const imagePath = (product.image_url && product.image_url.trim() !== '')
+					? product.image_url
+					: generatePlaceholderImage(product.product_title, '300x200');
+				const safeTitleAttr = (product.product_title || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
 				const badges = ['Hot', 'Trending', 'Popular', 'Best Seller'];
 				const ratings = [4.8, 4.9, 4.7, 4.6];
@@ -5691,8 +5711,8 @@ try {
 					<div class="col-lg-3 col-md-6 mb-4">
 						<a href="single_product.php?id=${product.product_id}" class="top-pick-card">
 							<div class="position-relative">
-								<img src="${imagePath}" alt="${product.product_title}" class="pick-image"
-									 onerror="this.src='https://via.placeholder.com/300x200/8b5fbf/ffffff?text=${encodeURIComponent(product.product_title)}'">
+								<img src="${imagePath}" alt="${safeTitleAttr}" class="pick-image"
+									 onerror="handleImageError(event, '${safeTitleAttr}', '300x200')">
 								<div class="pick-badge">${badges[index]}</div>
 							</div>
 							<h4 class="pick-title">${product.product_title}</h4>

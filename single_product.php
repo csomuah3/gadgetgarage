@@ -1099,7 +1099,7 @@ $fairDiscount = $basePrice - $fairPrice;
                     </div>
                     <div class="cart-modal-body">
                         <div class="product-preview">
-                            <img src="${productImage || 'https://via.placeholder.com/80x80'}" alt="${productName}" class="product-image">
+                            <img src="${productImage || generatePlaceholderUrl(productName, '80x80')}" alt="${productName}" class="product-image">
                             <div class="product-info">
                                 <h4>${productName}</h4>
                                 <div class="price-display">
@@ -2070,10 +2070,10 @@ $fairDiscount = $basePrice - $fairPrice;
                         </div>
                         <div class="col-md-6 text-end">
                             <div class="payment-methods">
-                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=VISA" alt="Visa">
-                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=MC" alt="Mastercard">
-                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=AMEX" alt="American Express">
-                                <img src="https://via.placeholder.com/40x25/cccccc/666666?text=GPAY" alt="Google Pay">
+                                <img src="<?php echo generate_placeholder_url('VISA', '40x25'); ?>" alt="Visa">
+                                <img src="<?php echo generate_placeholder_url('MC', '40x25'); ?>" alt="Mastercard">
+                                <img src="<?php echo generate_placeholder_url('AMEX', '40x25'); ?>" alt="American Express">
+                                <img src="<?php echo generate_placeholder_url('GPAY', '40x25'); ?>" alt="Google Pay">
                             </div>
                         </div>
                     </div>

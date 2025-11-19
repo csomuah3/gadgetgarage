@@ -178,7 +178,7 @@ try {
 		}
 
 		.logo img {
-			height: 90px !important;
+			height: 82px !important;
 			width: auto !important;
 			object-fit: contain;
 			transition: transform 0.3s ease;
@@ -200,7 +200,7 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 500px;
+			max-width: 450px;
 			margin: 0 40px;
 		}
 
@@ -209,7 +209,7 @@ try {
 			padding: 12px 20px 12px 50px;
 			border: 2px solid #e2e8f0;
 			border-radius: 25px;
-			font-size: 1rem;
+			font-size: 1.5rem;
 			transition: all 0.3s ease;
 			background: #f8fafc;
 		}
@@ -227,7 +227,7 @@ try {
 			top: 50%;
 			transform: translateY(-50%);
 			color: #008060;
-			font-size: 1.1rem;
+			font-size: 1.2rem;
 		}
 
 		.search-btn {
@@ -290,15 +290,19 @@ try {
 			line-height: 1.3;
 		}
 
-		
+
 
 		@keyframes wave {
-			0%, 100% {
+
+			0%,
+			100% {
 				transform: rotate(0deg);
 			}
+
 			25% {
 				transform: rotate(-5deg);
 			}
+
 			75% {
 				transform: rotate(5deg);
 			}
@@ -315,7 +319,7 @@ try {
 		.user-actions {
 			display: flex;
 			align-items: center;
-			gap: 12px;
+			gap: 11px;
 		}
 
 		/* Navigation Separator Styles */
@@ -498,13 +502,13 @@ try {
 			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
 			font-size: 1rem;
-			font-weight: 800;
+			font-weight: 300;
 			padding: 5px 9px;
 			border-radius: 14px;
 			min-width: 26px;
 			text-align: center;
 			border: 3px solid white;
-			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+			box-shadow: none;
 			line-height: 1;
 		}
 
@@ -515,13 +519,13 @@ try {
 			background: linear-gradient(135deg, #ef4444, #dc2626);
 			color: white;
 			font-size: 1rem;
-			font-weight: 800;
+			font-weight: 300;
 			padding: 5px 9px;
 			border-radius: 14px;
 			min-width: 26px;
 			text-align: center;
 			border: 3px solid white;
-			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+			box-shadow: none;
 			line-height: 1;
 		}
 
@@ -579,7 +583,7 @@ try {
 			align-items: center;
 			justify-content: center;
 			color: white;
-			font-weight: 800;
+			font-weight: 500;
 			font-size: 1.6rem;
 			cursor: pointer;
 			transition: all 0.3s ease;
@@ -1606,6 +1610,7 @@ try {
 			from {
 				transform: translateX(0);
 			}
+
 			to {
 				transform: translateX(-100%);
 			}
@@ -1972,8 +1977,13 @@ try {
 		}
 
 		@keyframes fadeIn {
-			from { opacity: 0; }
-			to { opacity: 1; }
+			from {
+				opacity: 0;
+			}
+
+			to {
+				opacity: 1;
+			}
 		}
 
 		@keyframes slideUp {
@@ -1981,6 +1991,7 @@ try {
 				transform: translateY(30px);
 				opacity: 0;
 			}
+
 			to {
 				transform: translateY(0);
 				opacity: 1;
@@ -3816,7 +3827,7 @@ try {
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage">
+						alt="Gadget Garage">
 				</a>
 
 				<!-- Center Content -->
@@ -3834,7 +3845,7 @@ try {
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech <span class="ghana-flag">🇬🇭</span> Ghana Store</p>
+							<p class="tech-revival-text">Bring Retired Tech </p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>
@@ -3865,49 +3876,45 @@ try {
 							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
-							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
-								</button>
-								<div class="dropdown-divider-custom"></div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-globe"></i>
-									<div class="language-selector">
-										<span>Language</span>
-										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-											<option value="en">🇬🇧 EN</option>
-											<option value="es">🇪🇸 ES</option>
-											<option value="fr">🇫🇷 FR</option>
-											<option value="de">🇩🇪 DE</option>
-										</select>
-									</div>
+							</button>
+							<div class="dropdown-divider-custom"></div>
+							<div class="dropdown-item-custom">
+								<i class="fas fa-globe"></i>
+								<div class="language-selector">
+									<span>Language</span>
+									<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+										<option value="en">🇬🇧 EN</option>
+										<option value="es">🇪🇸 ES</option>
+										<option value="fr">🇫🇷 FR</option>
+										<option value="de">🇩🇪 DE</option>
+									</select>
 								</div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-moon"></i>
-									<div class="theme-toggle">
-										<span>Dark Mode</span>
-										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-											<div class="toggle-slider"></div>
-										</div>
-									</div>
-								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="login/logout.php" class="dropdown-item-custom">
-									<i class="fas fa-sign-out-alt"></i>
-									<span>Logout</span>
-								</a>
 							</div>
+							<div class="dropdown-item-custom">
+								<i class="fas fa-moon"></i>
+								<div class="theme-toggle">
+									<span>Dark Mode</span>
+									<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+										<div class="toggle-slider"></div>
+									</div>
+								</div>
+							</div>
+							<div class="dropdown-divider-custom"></div>
+							<a href="login/logout.php" class="dropdown-item-custom">
+								<i class="fas fa-sign-out-alt"></i>
+								<span>Logout</span>
+							</a>
 						</div>
-					<?php else: ?>
-						<!-- Login Button -->
-						<a href="login/login_view.php" class="login-btn">
-							<i class="fas fa-user"></i>
-							Login
-						</a>
-					<?php endif; ?>
 				</div>
+			<?php else: ?>
+				<!-- Login Button -->
+				<a href="login/login_view.php" class="login-btn">
+					<i class="fas fa-user"></i>
+					Login
+				</a>
+			<?php endif; ?>
 			</div>
+		</div>
 		</div>
 	</header>
 
@@ -4143,7 +4150,7 @@ try {
 						<h4>Flash Deals</h4>
 					</div>
 				</div>
-				
+
 				<!-- Grid of Smaller Categories on Right -->
 				<div class="category-grid-right">
 					<div class="category-small">
@@ -4632,8 +4639,8 @@ try {
 						<div class="footer-brand">
 							<div class="footer-logo" style="margin-bottom: 16px;">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-								     alt="Gadget Garage"
-								     style="height: 35px; width: auto; object-fit: contain;">
+									alt="Gadget Garage"
+									style="height: 35px; width: auto; object-fit: contain;">
 							</div>
 							<p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
 							<div class="social-links">
@@ -5859,7 +5866,9 @@ try {
 				};
 
 				this.cards = Array.from(this.container.querySelectorAll('.testimonial-card'));
-				this.order = Array.from({ length: this.cards.length }, (_, i) => i);
+				this.order = Array.from({
+					length: this.cards.length
+				}, (_, i) => i);
 				this.intervalRef = null;
 				this.isAnimating = false;
 
@@ -5983,8 +5992,7 @@ try {
 
 		// Countdown timer functionality for deals
 		function updateCountdown() {
-			const timers = [
-				{
+			const timers = [{
 					days: document.getElementById('days1'),
 					hours: document.getElementById('hours1'),
 					minutes: document.getElementById('minutes1'),
@@ -6044,118 +6052,118 @@ try {
 
 	<!-- Notification Modal -->
 	<?php if ($is_logged_in && !$is_admin): ?>
-	<div class="notification-modal" id="notificationModal">
-		<div class="notification-content">
-			<div class="notification-header">
-				<h3><i class="fas fa-bell me-2"></i>Notifications</h3>
-				<button class="notification-close" onclick="closeNotifications()">
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			<div class="notification-body" id="notificationBody">
-				<div class="no-notifications">
-					<i class="fas fa-bell-slash"></i>
-					<p>Loading notifications...</p>
+		<div class="notification-modal" id="notificationModal">
+			<div class="notification-content">
+				<div class="notification-header">
+					<h3><i class="fas fa-bell me-2"></i>Notifications</h3>
+					<button class="notification-close" onclick="closeNotifications()">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+				<div class="notification-body" id="notificationBody">
+					<div class="no-notifications">
+						<i class="fas fa-bell-slash"></i>
+						<p>Loading notifications...</p>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<script>
-	// Notification functions
-	function showNotifications() {
-		const modal = document.getElementById('notificationModal');
-		modal.classList.add('show');
-		loadNotifications();
-	}
+		<script>
+			// Notification functions
+			function showNotifications() {
+				const modal = document.getElementById('notificationModal');
+				modal.classList.add('show');
+				loadNotifications();
+			}
 
-	function closeNotifications() {
-		const modal = document.getElementById('notificationModal');
-		modal.classList.remove('show');
-	}
+			function closeNotifications() {
+				const modal = document.getElementById('notificationModal');
+				modal.classList.remove('show');
+			}
 
-	function loadNotifications() {
-		fetch('actions/get_notifications_action.php')
-			.then(response => response.json())
-			.then(data => {
-				const body = document.getElementById('notificationBody');
+			function loadNotifications() {
+				fetch('actions/get_notifications_action.php')
+					.then(response => response.json())
+					.then(data => {
+						const body = document.getElementById('notificationBody');
 
-				if (data.status === 'success' && data.notifications.length > 0) {
-					body.innerHTML = data.notifications.map(notification => {
-						const timeAgo = getTimeAgo(notification.created_at);
-						const unreadClass = notification.is_read == '0' ? 'unread' : '';
+						if (data.status === 'success' && data.notifications.length > 0) {
+							body.innerHTML = data.notifications.map(notification => {
+								const timeAgo = getTimeAgo(notification.created_at);
+								const unreadClass = notification.is_read == '0' ? 'unread' : '';
 
-						return `
+								return `
 							<div class="notification-item ${unreadClass}" onclick="openNotification(${notification.notification_id}, '${notification.type}', ${notification.related_id})">
 								<div class="notification-text">${notification.message}</div>
 								<div class="notification-time">${timeAgo}</div>
 							</div>
 						`;
-					}).join('');
-				} else {
-					body.innerHTML = `
+							}).join('');
+						} else {
+							body.innerHTML = `
 						<div class="no-notifications">
 							<i class="fas fa-bell-slash"></i>
 							<p>No notifications yet</p>
 						</div>
 					`;
-				}
-			})
-			.catch(error => {
-				console.error('Error loading notifications:', error);
-				document.getElementById('notificationBody').innerHTML = `
+						}
+					})
+					.catch(error => {
+						console.error('Error loading notifications:', error);
+						document.getElementById('notificationBody').innerHTML = `
 					<div class="no-notifications">
 						<i class="fas fa-exclamation-triangle"></i>
 						<p>Error loading notifications</p>
 					</div>
 				`;
+					});
+			}
+
+			function openNotification(notificationId, type, relatedId) {
+				// Mark as read
+				fetch('actions/mark_notification_read_action.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						notification_id: notificationId
+					})
+				});
+
+				// Handle different notification types
+				if (type === 'support_response') {
+					// Open support chat for this message
+					window.location.href = `support_message.php?message_id=${relatedId}`;
+				}
+
+				closeNotifications();
+
+				// Refresh notification badge
+				setTimeout(() => {
+					location.reload();
+				}, 1000);
+			}
+
+			function getTimeAgo(dateString) {
+				const date = new Date(dateString);
+				const now = new Date();
+				const diffInSeconds = Math.floor((now - date) / 1000);
+
+				if (diffInSeconds < 60) return 'Just now';
+				if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' min ago';
+				if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' hour ago';
+				return Math.floor(diffInSeconds / 86400) + ' day ago';
+			}
+
+			// Close modal when clicking outside
+			document.getElementById('notificationModal').addEventListener('click', function(e) {
+				if (e.target === this) {
+					closeNotifications();
+				}
 			});
-	}
-
-	function openNotification(notificationId, type, relatedId) {
-		// Mark as read
-		fetch('actions/mark_notification_read_action.php', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				notification_id: notificationId
-			})
-		});
-
-		// Handle different notification types
-		if (type === 'support_response') {
-			// Open support chat for this message
-			window.location.href = `support_message.php?message_id=${relatedId}`;
-		}
-
-		closeNotifications();
-
-		// Refresh notification badge
-		setTimeout(() => {
-			location.reload();
-		}, 1000);
-	}
-
-	function getTimeAgo(dateString) {
-		const date = new Date(dateString);
-		const now = new Date();
-		const diffInSeconds = Math.floor((now - date) / 1000);
-
-		if (diffInSeconds < 60) return 'Just now';
-		if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' min ago';
-		if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' hour ago';
-		return Math.floor(diffInSeconds / 86400) + ' day ago';
-	}
-
-	// Close modal when clicking outside
-	document.getElementById('notificationModal').addEventListener('click', function(e) {
-		if (e.target === this) {
-			closeNotifications();
-		}
-	});
-	</script>
+		</script>
 	<?php endif; ?>
 
 	<script>

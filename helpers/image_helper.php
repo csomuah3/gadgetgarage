@@ -16,18 +16,27 @@ function get_product_image_url($image_filename, $product_title = 'Product', $siz
     $server_base_url = 'http://169.239.251.102:442/~chelsea.somuah/uploads/';
 
     // Clean the image filename
-    $image_filename = trim($image_filename);
+    $image_filename = trim($image_filename ?? '');
 
     // If we have an image filename, return the server URL
-    if (!empty($image_filename)) {
+    if (!empty($image_filename) && $image_filename !== 'null' && strtolower($image_filename) !== 'null') {
         // If the filename already contains the full server URL, return as is
+        if (strpos($image_filename, 'http://') === 0 || strpos($image_filename, 'https://') === 0) {
+            return htmlspecialchars($image_filename);
+        }
+        
+        // If it already contains the server base URL, return as is
         if (strpos($image_filename, 'http://169.239.251.102:442/~chelsea.somuah/uploads/') === 0) {
             return htmlspecialchars($image_filename);
         }
 
         // Remove any leading path separators and build the full server URL
         $clean_filename = ltrim($image_filename, '/');
-        return $server_base_url . htmlspecialchars($clean_filename);
+        $clean_filename = ltrim($clean_filename, '\\');
+        
+        // Build the full URL
+        $full_url = $server_base_url . urlencode($clean_filename);
+        return htmlspecialchars($full_url);
     }
 
     // No image found, return placeholder data URL directly

@@ -950,13 +950,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <div class="product-grid" id="productGrid">
                 <?php foreach ($products_to_display as $product): ?>
                     <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)">
-                        <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
-                             alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                        <?php 
+                        $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
+                        $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
+                        ?>
+                        <img src="<?php echo htmlspecialchars($image_url); ?>"
+                             alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
                              class="product-image"
                              data-product-id="<?php echo $product['product_id']; ?>"
                              data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                             data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>"
-                             onerror="<?php echo get_image_onerror($product['product_title'], '400x300'); ?>">
+                             data-product-title="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
+                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
                         <div class="product-content">
                             <h5 class="product-title">
                                 <?php echo htmlspecialchars($product['product_title']); ?>

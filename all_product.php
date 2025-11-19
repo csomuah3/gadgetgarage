@@ -1966,11 +1966,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                     <!-- Product Image -->
                                     <div style="position: relative; background: #f8f9fa; padding: 30px; text-align: center; height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
-                                            alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                        <?php 
+                                        $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
+                                        $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
+                                        ?>
+                                        <img src="<?php echo htmlspecialchars($image_url); ?>"
+                                            alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
                                             style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;"
                                             onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
-                                            onerror="<?php echo get_image_onerror($product['product_title']); ?>">
+                                            onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
                                     </div>
 
                                     <!-- Product Content -->

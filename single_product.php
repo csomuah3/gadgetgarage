@@ -837,13 +837,17 @@ $fairDiscount = $basePrice - $fairPrice;
                     <div class="product-gallery">
                         <!-- Main Image Display -->
                         <div class="main-image-container">
-                            <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>" id="mainProductImage"
-                                alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                            <?php 
+                            $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product', '600x400');
+                            $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '600x400');
+                            ?>
+                            <img src="<?php echo htmlspecialchars($image_url); ?>" id="mainProductImage"
+                                alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
                                 class="main-product-image"
                                 data-product-id="<?php echo $product['product_id']; ?>"
                                 data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                                data-product-title="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                onerror="<?php echo get_image_onerror($product['product_title'], '600x400'); ?>">
+                                data-product-title="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
+                                onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
 
                             <!-- Navigation Arrows -->
                             <button class="gallery-arrow gallery-arrow-left" onclick="previousImage()" style="display: none;">

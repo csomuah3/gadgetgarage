@@ -64,6 +64,7 @@ try {
     $total_appointments = count($appointments);
     $confirmed_appointments = count(array_filter($appointments, function($app) { return $app['status'] === 'confirmed'; }));
     $completed_appointments = count(array_filter($appointments, function($app) { return $app['status'] === 'completed'; }));
+    $scheduled_appointments = count(array_filter($appointments, function($app) { return $app['status'] === 'scheduled'; }));
     $pending_appointments = count(array_filter($appointments, function($app) { return $app['status'] === 'pending'; }));
     $cancelled_appointments = count(array_filter($appointments, function($app) { return $app['status'] === 'cancelled'; }));
 
@@ -108,6 +109,7 @@ try {
     $total_appointments = 0;
     $confirmed_appointments = 0;
     $completed_appointments = 0;
+    $scheduled_appointments = 0;
     $pending_appointments = 0;
     $cancelled_appointments = 0;
     $today_appointments = [];
@@ -630,12 +632,13 @@ function initStatusChart() {
     const ctx = document.getElementById('statusChart').getContext('2d');
 
     const chartData = {
-        labels: ['Completed', 'Confirmed', 'Pending', 'Cancelled'],
+        labels: ['Completed', 'Confirmed', 'Scheduled', 'Pending', 'Cancelled'],
         datasets: [{
-            data: [<?= $completed_appointments ?>, <?= $confirmed_appointments ?>, <?= $pending_appointments ?>, <?= $cancelled_appointments ?>],
+            data: [<?= $completed_appointments ?>, <?= $confirmed_appointments ?>, <?= $scheduled_appointments ?>, <?= $pending_appointments ?>, <?= $cancelled_appointments ?>],
             backgroundColor: [
                 '#10b981',
                 '#3b82f6',
+                '#8b5cf6',
                 '#f59e0b',
                 '#ef4444'
             ],

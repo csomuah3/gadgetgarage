@@ -162,27 +162,42 @@ function uploadSingleImage($file, $type = 'gallery') {
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => [
-                'file' => new CURLFile($file['tmp_name'], $file_type, $file_name)
-            ]
+                'upload' => new CURLFile($file['tmp_name'], $file_type, $file_name)
+            ],
+            CURLOPT_HTTPHEADER => [
+                'Content-Type: multipart/form-data'
+            ],
+            CURLOPT_TIMEOUT => 30
         ]);
 
         $response = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        $error = curl_error($curl);
         curl_close($curl);
 
-        if ($httpCode === 200 && $response) {
+        if ($response && $httpCode === 200) {
             $uploadResult = json_decode($response, true);
-            if ($uploadResult && $uploadResult['status'] === 'success') {
+            if ($uploadResult && isset($uploadResult['status']) && $uploadResult['status'] === 'success') {
                 return [
                     'success' => true,
                     'filename' => $file_name,
                     'path' => $server_upload_url
                 ];
             } else {
-                throw new Exception('Failed to upload to server: ' . ($uploadResult['message'] ?? 'Unknown error'));
+                $errorMsg = 'Server upload failed';
+                if ($uploadResult && isset($uploadResult['message'])) {
+                    $errorMsg = $uploadResult['message'];
+                } elseif (!empty($response)) {
+                    $errorMsg = 'Server response: ' . substr($response, 0, 200);
+                }
+                throw new Exception('Failed to upload to server: ' . $errorMsg);
             }
         } else {
-            throw new Exception('Server upload failed');
+            $errorMsg = 'Server upload failed (HTTP: ' . $httpCode . ')';
+            if (!empty($error)) {
+                $errorMsg .= ' - cURL error: ' . $error;
+            }
+            throw new Exception($errorMsg);
         }
 
     } catch (Exception $e) {

@@ -61,9 +61,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		body {
 			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-			background-color: #ffffff;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
 			color: #1a1a1a;
 			overflow-x: hidden;
+			margin: 0;
+			padding: 0;
 		}
 
 		/* Promotional Banner Styles */
@@ -333,37 +336,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			color: #991b1b !important;
 		}
 
-		/* Login Form Section */
+		/* Hide header and navigation for clean login page */
+		.promo-banner, .main-header, .main-nav {
+			display: none;
+		}
+
+		/* Full screen login section */
 		.login-section {
-			min-height: calc(100vh - 200px);
-			background: #f0f2f5;
+			min-height: 100vh;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 40px 20px;
-		}
-
-		/* Login Card */
-		.login-card {
-			background: #87ceeb;
-			background-image:
-				linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px),
-				linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
-				radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3) 2px, transparent 2px),
-				radial-gradient(circle at 80% 80%, rgba(255,255,255,0.3) 2px, transparent 2px);
-			background-size: 40px 40px, 40px 40px, 80px 80px, 80px 80px;
-			background-position: 0 0, 0 0, 0 0, 40px 40px;
-			animation: circuitFlow 15s linear infinite;
-			border-radius: 15px;
-			padding: 40px;
-			box-shadow: 0 15px 35px rgba(0,0,0,0.1);
-			max-width: 450px;
-			width: 100%;
+			padding: 20px;
 			position: relative;
-			overflow: hidden;
+			background: #667eea;
 		}
 
-		.login-card::before {
+		/* Circuit Board Background */
+		.login-section::before {
 			content: '';
 			position: absolute;
 			top: 0;
@@ -371,191 +361,233 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			right: 0;
 			bottom: 0;
 			background:
-				linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%),
-				radial-gradient(circle at 30% 70%, rgba(255,255,255,0.2) 0%, transparent 50%);
-			animation: circuitPulse 8s ease-in-out infinite alternate;
-			pointer-events: none;
-		}
-
-		.login-card .form-container {
-			background: rgba(255, 255, 255, 0.95);
-			border-radius: 10px;
-			padding: 30px;
-			position: relative;
-			z-index: 2;
-			backdrop-filter: blur(10px);
+				/* Main circuit lines */
+				linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+				linear-gradient(0deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+				/* Secondary lines */
+				linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+				linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+				/* Circuit nodes */
+				radial-gradient(circle at 25% 25%, rgba(255,255,255,0.3) 2px, transparent 2px),
+				radial-gradient(circle at 75% 75%, rgba(255,255,255,0.3) 2px, transparent 2px),
+				radial-gradient(circle at 25% 75%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
+				radial-gradient(circle at 75% 25%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
+				/* Connecting circuits */
+				linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%),
+				linear-gradient(-45deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+			background-size:
+				60px 60px, 60px 60px,
+				20px 20px, 20px 20px,
+				120px 120px, 120px 120px, 120px 120px, 120px 120px,
+				200px 200px, 200px 200px;
+			background-position:
+				0 0, 0 0,
+				30px 30px, 30px 30px,
+				0 0, 60px 60px, 0 60px, 60px 0,
+				0 0, 100px 100px;
+			animation: circuitFlow 20s linear infinite;
+			opacity: 0.7;
 		}
 
 		@keyframes circuitFlow {
-			0% { background-position: 0 0, 0 0, 0 0, 40px 40px; }
-			100% { background-position: 40px 40px, 40px 40px, 40px 40px, 80px 80px; }
+			0% {
+				background-position:
+					0 0, 0 0,
+					30px 30px, 30px 30px,
+					0 0, 60px 60px, 0 60px, 60px 0,
+					0 0, 100px 100px;
+			}
+			100% {
+				background-position:
+					60px 60px, 60px 60px,
+					50px 50px, 50px 50px,
+					120px 120px, 180px 180px, 120px 180px, 180px 120px,
+					200px 200px, 300px 300px;
+			}
 		}
 
-		@keyframes circuitPulse {
-			0% { opacity: 0.4; }
-			100% { opacity: 0.8; }
+		/* Main Login Container */
+		.login-container {
+			background: rgba(255, 255, 255, 0.98);
+			backdrop-filter: blur(20px);
+			border-radius: 24px;
+			padding: 60px 50px;
+			box-shadow:
+				0 32px 64px rgba(0, 0, 0, 0.2),
+				0 0 0 1px rgba(255, 255, 255, 0.1),
+				inset 0 1px 0 rgba(255, 255, 255, 0.9);
+			max-width: 480px;
+			width: 100%;
+			position: relative;
+			z-index: 10;
+			border: 1px solid rgba(255, 255, 255, 0.2);
 		}
 
-		.login-card h2 {
-			color: #2c3e50;
+		/* Logo Section */
+		.logo-section {
+			text-align: center;
+			margin-bottom: 40px;
+		}
+
+		.logo-section img {
+			height: 80px;
+			width: auto;
+			margin-bottom: 20px;
+			filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+		}
+
+		.welcome-text {
+			font-size: 28px;
 			font-weight: 700;
+			color: #2d3748;
 			margin-bottom: 8px;
-			text-align: center;
-			font-size: 1.8rem;
+			letter-spacing: -0.5px;
 		}
 
-		.login-card .subtitle {
-			color: #6c757d;
-			text-align: center;
-			margin-bottom: 25px;
-			font-size: 0.95rem;
+		.subtitle-text {
+			font-size: 16px;
+			color: #718096;
+			margin-bottom: 0;
+		}
+
+		/* Form Styles */
+		.form-container {
+			margin-top: 32px;
 		}
 
 		.form-group {
-			margin-bottom: 20px;
+			margin-bottom: 24px;
 		}
 
-		.form-control {
-			height: 50px;
-			border: 2px solid #e9ecef;
-			border-radius: 10px;
-			padding: 15px;
-			font-size: 16px;
-			transition: all 0.3s ease;
-			background: rgba(248, 249, 250, 0.8);
-		}
-
-		.form-control:focus {
-			border-color: #87ceeb;
-			box-shadow: 0 0 0 0.2rem rgba(135, 206, 235, 0.25);
-			background: white;
-		}
-
-		.btn-login {
+		.form-input {
 			width: 100%;
-			height: 55px;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			color: white;
-			border: none;
-			border-radius: 15px;
+			height: 56px;
+			border: 2px solid #e2e8f0;
+			border-radius: 12px;
+			padding: 16px 20px;
 			font-size: 16px;
-			font-weight: 700;
-			text-transform: uppercase;
-			letter-spacing: 1px;
-			transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+			font-weight: 500;
+			color: #2d3748;
+			background: #ffffff;
+			transition: all 0.3s ease;
+			outline: none;
+		}
+
+		.form-input::placeholder {
+			color: #a0aec0;
+			font-weight: 400;
+		}
+
+		.form-input:focus {
+			border-color: #667eea;
+			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+		}
+
+		.login-button {
+			width: 100%;
+			height: 56px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			border: none;
+			border-radius: 12px;
+			color: white;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			margin-top: 8px;
 			position: relative;
 			overflow: hidden;
-			cursor: pointer;
-			box-shadow: 0 8px 32px rgba(102, 126, 234, 0.3);
 		}
 
-		.btn-login::before {
+		.login-button::before {
 			content: '';
 			position: absolute;
 			top: 0;
 			left: -100%;
 			width: 100%;
 			height: 100%;
-			background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+			background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
 			transition: left 0.6s ease;
 		}
 
-		.btn-login:hover::before {
+		.login-button:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+		}
+
+		.login-button:hover::before {
 			left: 100%;
 		}
 
-		.btn-login:hover {
-			background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-			transform: translateY(-3px) scale(1.02);
-			box-shadow: 0 15px 40px rgba(102, 126, 234, 0.4);
+		.login-button:active {
+			transform: translateY(0);
 		}
 
-		.btn-login:active {
-			transform: translateY(-1px) scale(0.98);
-			box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+		/* Links */
+		.forgot-link {
+			text-align: right;
+			margin-top: 8px;
 		}
 
-		.btn-login.loading {
-			background: linear-gradient(135deg, #6c757d, #495057);
-			cursor: not-allowed;
-			transform: none;
-			animation: pulse 2s infinite;
-		}
-
-		.btn-login.loading::before {
-			display: none;
-		}
-
-		@keyframes pulse {
-			0% {
-				box-shadow: 0 8px 32px rgba(108, 117, 125, 0.3);
-			}
-			50% {
-				box-shadow: 0 8px 32px rgba(108, 117, 125, 0.5);
-			}
-			100% {
-				box-shadow: 0 8px 32px rgba(108, 117, 125, 0.3);
-			}
-		}
-
-		.btn-login.success {
-			background: linear-gradient(135deg, #56ab2f, #a8e6cf);
-			animation: successPulse 0.6s ease;
-		}
-
-		@keyframes successPulse {
-			0% { transform: scale(1); }
-			50% { transform: scale(1.05); }
-			100% { transform: scale(1); }
-		}
-
-		.forgot-password {
-			color: #4682b4;
+		.forgot-link a {
+			color: #667eea;
 			text-decoration: none;
 			font-size: 14px;
-			transition: color 0.3s;
-		}
-
-		.forgot-password:hover {
-			text-decoration: underline;
-			color: #2c5aa0;
-		}
-
-		.register-link {
-			text-align: center;
-			margin-top: 20px;
-			color: #6c757d;
-		}
-
-		.register-link a {
-			color: #4682b4;
-			text-decoration: none;
 			font-weight: 500;
 		}
 
-		.register-link a:hover {
+		.forgot-link a:hover {
 			text-decoration: underline;
 		}
 
+		.signup-link {
+			text-align: center;
+			margin-top: 32px;
+			padding-top: 24px;
+			border-top: 1px solid #e2e8f0;
+		}
+
+		.signup-link a {
+			color: #667eea;
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.signup-link a:hover {
+			text-decoration: underline;
+		}
+
+		/* Alerts */
 		.alert {
-			border-radius: 10px;
-			margin-bottom: 20px;
+			border-radius: 12px;
+			margin-bottom: 24px;
+			border: none;
 		}
 
-		/* Fly-up animation */
-		@keyframes flyUp {
-			0% {
-				transform: translateY(0) scale(1);
-				opacity: 1;
-			}
-			100% {
-				transform: translateY(-100px) scale(0.9);
-				opacity: 0;
-			}
+		.alert-danger {
+			background: #fed7d7;
+			color: #9b2c2c;
 		}
 
-		.fly-up {
-			animation: flyUp 0.8s ease-in-out forwards;
+		.alert-success {
+			background: #c6f6d5;
+			color: #276749;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.login-container {
+				padding: 40px 30px;
+				margin: 20px;
+			}
+
+			.logo-section img {
+				height: 60px;
+			}
+
+			.welcome-text {
+				font-size: 24px;
+			}
 		}
 	</style>
 </head>
@@ -641,73 +673,67 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	<!-- Login Form Section -->
 	<section class="login-section">
-		<div class="login-card" id="loginCard">
-			<div class="form-container">
-				<!-- Logo -->
-				<div class="text-center mb-4">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png"
-					     alt="Gadget Garage" style="height: 60px; width: auto;">
+		<div class="login-container" id="loginContainer">
+			<!-- Logo Section -->
+			<div class="logo-section">
+				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+				     alt="Gadget Garage">
+				<h1 class="welcome-text">Welcome Back</h1>
+				<p class="subtitle-text">Sign in to your account to continue</p>
+			</div>
+
+			<!-- Alert Messages -->
+			<?php if (!empty($login_error)): ?>
+				<div class="alert alert-danger" role="alert">
+					<i class="fas fa-exclamation-triangle me-2"></i><?php echo $login_error; ?>
 				</div>
+			<?php endif; ?>
 
-				<h2>Log in to your account</h2>
-				<p class="subtitle">Access your Gadget Garage account to start shopping!</p>
+			<?php if ($login_success): ?>
+				<div class="alert alert-success" role="alert">
+					<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
+				</div>
+				<script>
+					setTimeout(function() {
+						window.location.href = '../index.php';
+					}, 1500);
+				</script>
+			<?php else: ?>
 
-				<?php if (!empty($login_error)): ?>
-					<div class="alert alert-danger" role="alert">
-						<i class="fas fa-exclamation-triangle me-2"></i><?php echo $login_error; ?>
-					</div>
-				<?php endif; ?>
-
-				<?php if ($login_success): ?>
-					<div class="alert alert-success" role="alert">
-						<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
-					</div>
-					<script>
-						const loginBtn = document.getElementById('loginBtn');
-						if (loginBtn) {
-							loginBtn.classList.remove('loading');
-							loginBtn.classList.add('success');
-							loginBtn.innerHTML = '<i class="fas fa-check me-2"></i>Login Successful!';
-						}
-
-						setTimeout(function() {
-							document.getElementById('loginCard').classList.add('fly-up');
-							setTimeout(function() {
-								window.location.href = '../index.php';
-							}, 800);
-						}, 1000);
-					</script>
-				<?php else: ?>
-
+			<!-- Form Container -->
+			<div class="form-container">
 				<form method="POST" id="loginForm">
 					<div class="form-group">
-						<input type="email" class="form-control" name="email" placeholder="Email Address" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+						<input type="email"
+						       class="form-input"
+						       name="email"
+						       placeholder="Email address"
+						       required
+						       value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
 					</div>
 
 					<div class="form-group">
-						<input type="password" class="form-control" name="password" placeholder="Password" required>
-						<div class="text-end mt-2">
-							<a href="#" class="forgot-password">Forgot your password?</a>
+						<input type="password"
+						       class="form-input"
+						       name="password"
+						       placeholder="Password"
+						       required>
+						<div class="forgot-link">
+							<a href="#">Forgot your password?</a>
 						</div>
 					</div>
 
-					<button type="submit" class="btn-login" id="loginBtn">
-						<span class="btn-text">
-							<i class="fas fa-sign-in-alt me-2"></i>
-							Sign In
-						</span>
-						<span class="btn-loading" style="display: none;">
-							Signing In...
-						</span>
+					<button type="submit" class="login-button" id="loginBtn">
+						Sign In
 					</button>
 				</form>
 
-				<div class="register-link">
-					No account yet? <a href="../register.php">Create an account</a>
+				<div class="signup-link">
+					Don't have an account? <a href="../register.php">Sign up</a>
 				</div>
-
-				<?php endif; ?>
 			</div>
+
+			<?php endif; ?>
 		</div>
 	</section>
 

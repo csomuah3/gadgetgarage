@@ -948,30 +948,109 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             </div>
         <?php else: ?>
             <div class="product-grid" id="productGrid">
-                <?php foreach ($products_to_display as $product): ?>
-                    <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)">
-                        <?php 
-                        $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
-                        $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
-                        ?>
-                        <img src="<?php echo htmlspecialchars($image_url); ?>"
-                             alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                             class="product-image"
-                             data-product-id="<?php echo $product['product_id']; ?>"
-                             data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                             data-product-title="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
-                        <div class="product-content">
-                            <h5 class="product-title">
+                <?php foreach ($products_to_display as $product):
+                    // Calculate random discount percentage (13% shown in your example)
+                    $discount_percentage = rand(10, 25);
+                    $original_price = $product['product_price'] * (1 + $discount_percentage / 100);
+                    $rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
+                ?>
+                    <div class="modern-product-card" style="
+                        background: white;
+                        border-radius: 16px;
+                        border: 1px solid #e5e7eb;
+                        overflow: hidden;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        cursor: pointer;
+                        position: relative;
+                        transform-origin: center;
+                    " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
+                       onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+
+                        <!-- Discount Badge -->
+                        <?php if ($discount_percentage > 0): ?>
+                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                            -<?php echo $discount_percentage; ?>%
+                        </div>
+                        <?php endif; ?>
+
+                        <!-- Wishlist Heart -->
+                        <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                            <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
+                                    style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                    onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                            </button>
+                        </div>
+
+                        <!-- Product Image -->
+                        <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                            <?php
+                            $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
+                            $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
+                            ?>
+                            <img src="<?php echo htmlspecialchars($image_url); ?>"
+                                alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
+                                style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
+                        </div>
+
+                        <!-- Product Content -->
+                        <div style="padding: 25px;">
+                            <!-- Product Title -->
+                            <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
                                 <?php echo htmlspecialchars($product['product_title']); ?>
-                            </h5>
-                            <div class="product-price">$<?php echo number_format($product['product_price'], 2); ?></div>
-                            <div class="product-meta">
-                                <span><i class="fas fa-tag"></i> <?php echo htmlspecialchars($product['cat_name'] ?? 'N/A'); ?></span>
-                                <span><i class="fas fa-store"></i> <?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?></span>
+                            </h3>
+
+                            <!-- Rating -->
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="color: #fbbf24; margin-right: 8px;">
+                                    <?php
+                                    $full_stars = floor($rating);
+                                    $half_star = $rating - $full_stars >= 0.5;
+
+                                    for($i = 0; $i < $full_stars; $i++) {
+                                        echo '<i class="fas fa-star"></i>';
+                                    }
+                                    if($half_star) {
+                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                        $full_stars++;
+                                    }
+                                    for($i = $full_stars; $i < 5; $i++) {
+                                        echo '<i class="far fa-star"></i>';
+                                    }
+                                    ?>
+                                </div>
+                                <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
                             </div>
-                            <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(<?php echo $product['product_id']; ?>)">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
+
+                            <!-- Optional Status Text -->
+                            <?php if (rand(1, 3) === 1): // Only show for some products ?>
+                                <div style="margin-bottom: 12px;">
+                                    <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
+                                </div>
+                            <?php endif; ?>
+
+                            <!-- Pricing -->
+                            <div style="margin-bottom: 25px;">
+                                <div style="display: flex; align-items: center; gap: 12px;">
+                                    <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 800;">
+                                        GH₵<?php echo number_format($product['product_price'], 0); ?>
+                                    </span>
+                                    <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through;">
+                                        GH₵<?php echo number_format($original_price, 0); ?>
+                                    </span>
+                                </div>
+                                <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px;">
+                                    Limited time offer - While supplies last
+                                </div>
+                            </div>
+
+                            <!-- View Details Button -->
+                            <button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
+                                    style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                <i class="fas fa-eye"></i>
+                                View Details
                             </button>
                         </div>
                     </div>
@@ -1081,6 +1160,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         function viewProduct(productId) {
             window.location.href = 'single_product.php?id=' + productId;
+        }
+
+        function viewProductDetails(productId) {
+            window.location.href = 'single_product.php?pid=' + productId;
+        }
+
+        function toggleWishlist(productId) {
+            // Placeholder function for wishlist functionality
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Wishlist',
+                    text: 'Wishlist functionality coming soon!',
+                    icon: 'info',
+                    confirmButtonColor: '#4f46e5',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Wishlist functionality coming soon!');
+            }
         }
 
         function addToCart(productId) {

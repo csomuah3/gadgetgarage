@@ -445,7 +445,7 @@ function displayProducts(products) {
         var imageHtml = '';
         if (product.product_image && product.product_image.trim() !== '') {
             // Product has an image - create img element
-            imageHtml = '<img class="product-image" width="50" height="50" style="object-fit: cover; border-radius: 8px;" data-product-id="' + product.product_id + '" data-product-title="' + product.product_title.replace(/'/g, "&apos;") + '" src="../uploads/products/' + product.product_image + '" alt="' + product.product_title + '">';
+            imageHtml = '<img class="product-image" width="50" height="50" style="object-fit: cover; border-radius: 8px;" data-product-id="' + product.product_id + '" data-product-title="' + product.product_title.replace(/'/g, "&apos;") + '" src="http://169.239.251.102:442/~chelsea.somuah/uploads/' + product.product_image + '" alt="' + product.product_title + '">';
         } else {
             // No image - create placeholder
             var initials = product.product_title.substring(0, 2).toUpperCase();
@@ -796,7 +796,7 @@ function displayBulkUploadedImages(images) {
         imagesHtml += `
             <div class="col-md-3 mb-3">
                 <div class="uploaded-image-item">
-                    <img src="../uploads/products/${image.filename}" alt="${image.original_name}" class="uploaded-image">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/${image.filename}" alt="${image.original_name}" class="uploaded-image">
                     <div class="image-overlay">
                         <button class="copy-url-btn" onclick="copyImageUrl('${image.filename}')">
                             <i class="fas fa-copy me-1"></i>Copy URL
@@ -812,8 +812,7 @@ function displayBulkUploadedImages(images) {
 
 // Copy image URL to clipboard
 function copyImageUrl(filename) {
-    var baseUrl = window.location.origin + window.location.pathname.replace('admin/product.php', '');
-    var imageUrl = baseUrl + 'uploads/products/' + filename;
+    var imageUrl = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' + filename;
 
     navigator.clipboard.writeText(imageUrl).then(function() {
         Swal.fire({

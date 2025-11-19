@@ -479,18 +479,20 @@ usort($flash_deal_products, function($a, $b) {
 			margin-top: 30px;
 		}
 
-		.flash-product-card {
+		.flash-product-card,
+		.modern-product-card {
 			background: white;
 			border-radius: 20px;
-			padding: 25px;
+			padding: 0;
 			box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 			transition: all 0.3s ease;
 			position: relative;
 			overflow: hidden;
 		}
 
-		.flash-product-card:hover {
-			transform: translateY(-10px);
+		.flash-product-card:hover,
+		.modern-product-card:hover {
+			transform: rotate(-2deg) scale(1.02);
 			box-shadow: 0 20px 50px rgba(0,0,0,0.15);
 		}
 
@@ -689,7 +691,11 @@ usort($flash_deal_products, function($a, $b) {
 						<div class="header-icon">
 							<a href="cart.php" style="color: inherit; text-decoration: none;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -802,37 +808,107 @@ usort($flash_deal_products, function($a, $b) {
 
 			<?php if (!empty($flash_deal_products)): ?>
 				<div class="products-grid">
-					<?php foreach ($flash_deal_products as $product): ?>
-						<div class="flash-product-card animate__animated animate__fadeInUp">
-							<div class="flash-badge">⚡ FLASH DEAL</div>
-
-							<?php
-							$image_path = get_product_image_path($product['product_id']);
-							if (!$image_path) {
-								$image_path = generate_placeholder_url($product['product_title'], '300x200');
-							}
-							?>
-							<img src="<?php echo htmlspecialchars($image_path); ?>"
-								 alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-								 class="product-image"
-								 onerror="<?php echo get_image_onerror($product['product_title'], '300x200'); ?>">
-
-							<h3 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h3>
-
-							<div class="price-section">
-								<?php
-								$original_price = floatval($product['product_price']);
-								$flash_price = $original_price * 0.7; // 30% discount for flash deals
-								$discount_percent = 30;
-								?>
-								<span class="flash-price">$<?php echo number_format($flash_price, 2); ?></span>
-								<span class="original-price">$<?php echo number_format($original_price, 2); ?></span>
-								<span class="discount-percent"><?php echo $discount_percent; ?>% OFF</span>
+					<?php foreach ($flash_deal_products as $product):
+						// Calculate flash deal discount (fixed at 30% for flash deals)
+						$original_price = floatval($product['product_price']);
+						$flash_discount_percentage = 30;
+						$flash_price = $original_price * 0.7; // 30% discount for flash deals
+						$rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
+					?>
+						<div class="modern-product-card animate__animated animate__fadeInUp" style="
+							background: white;
+							border-radius: 16px;
+							border: 1px solid #e5e7eb;
+							overflow: hidden;
+							transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+							cursor: pointer;
+							position: relative;
+							transform-origin: center;
+						" onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
+						   onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+							<!-- Flash Deal Badge (top-left) -->
+							<div style="position: absolute; top: 12px; left: 12px; background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; padding: 8px 15px; border-radius: 25px; font-weight: 700; font-size: 0.8rem; z-index: 10; animation: flash 2s infinite;">
+								⚡ FLASH DEAL
 							</div>
-
-							<button class="add-to-cart-btn" onclick="addToCart(<?php echo $product['product_id']; ?>)">
-								<i class="fas fa-bolt"></i> Add to Cart - Flash Deal!
-							</button>
+							<!-- Discount Badge (below flash badge) -->
+							<div style="position: absolute; top: 55px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+								-<?php echo $flash_discount_percentage; ?>%
+							</div>
+							<!-- Wishlist Heart -->
+							<div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+								<button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
+										style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+										onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+										onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+									<i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+								</button>
+							</div>
+							<!-- Product Image -->
+							<div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+								<?php
+								$image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
+								$fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
+								?>
+								<img src="<?php echo htmlspecialchars($image_url); ?>"
+									alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
+									style="max-width: 100%; max-height: 100%; object-fit: contain;"
+									onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
+							</div>
+							<!-- Product Content -->
+							<div style="padding: 25px;">
+								<!-- Product Title -->
+								<h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
+									<?php echo htmlspecialchars($product['product_title']); ?>
+								</h3>
+								<!-- Rating -->
+								<div style="display: flex; align-items: center; margin-bottom: 15px;">
+									<div style="color: #fbbf24; margin-right: 8px;">
+										<?php
+										$full_stars = floor($rating);
+										$half_star = $rating - $full_stars >= 0.5;
+										for($i = 0; $i < $full_stars; $i++) {
+											echo '<i class="fas fa-star"></i>';
+										}
+										if($half_star) {
+											echo '<i class="fas fa-star-half-alt"></i>';
+											$full_stars++;
+										}
+										for($i = $full_stars; $i < 5; $i++) {
+											echo '<i class="far fa-star"></i>';
+										}
+										?>
+									</div>
+									<span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
+								</div>
+								<!-- Optional Status Text -->
+								<?php if (rand(1, 3) === 1): // Only show for some products ?>
+									<div style="margin-bottom: 12px;">
+										<span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
+									</div>
+								<?php endif; ?>
+								<!-- Pricing -->
+								<div style="margin-bottom: 25px;">
+									<div style="display: flex; align-items: center; gap: 12px;">
+										<span style="color: #ff6b6b; font-size: 1.75rem; font-weight: 800;">
+											GH₵<?php echo number_format($flash_price, 0); ?>
+										</span>
+										<span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through;">
+											GH₵<?php echo number_format($original_price, 0); ?>
+										</span>
+									</div>
+									<div style="color: #ff6b6b; font-size: 0.85rem; margin-top: 4px; font-weight: 600;">
+										⚡ Flash Deal - Limited time offer!
+									</div>
+								</div>
+								<!-- View Details Button -->
+								<button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
+										style="width: 100%; background: linear-gradient(135deg, #ff6b6b, #ffa500); color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;"
+										onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 5px 15px rgba(255,107,107,0.3)';"
+										onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='none';">
+									<i class="fas fa-bolt"></i>
+									View Details
+								</button>
+							</div>
 						</div>
 					<?php endforeach; ?>
 				</div>
@@ -943,6 +1019,50 @@ usort($flash_deal_products, function($a, $b) {
 					badge.style.display = 'block';
 				}
 			});
+		}
+
+		// View product details
+		function viewProductDetails(productId) {
+			window.location.href = 'single_product.php?pid=' + productId;
+		}
+
+		// Toggle wishlist functionality
+		function toggleWishlist(productId) {
+			<?php if (isset($_SESSION['user_id'])): ?>
+				fetch('actions/toggle_wishlist.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						product_id: productId
+					})
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						const heartIcon = event.target.closest('button').querySelector('i');
+						if (data.added) {
+							heartIcon.className = 'fas fa-heart';
+							heartIcon.style.color = '#ef4444';
+							alert('Added to wishlist!');
+						} else {
+							heartIcon.className = 'far fa-heart';
+							heartIcon.style.color = '#6b7280';
+							alert('Removed from wishlist!');
+						}
+					} else {
+						alert('Error: ' + data.message);
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					alert('Error updating wishlist');
+				});
+			<?php else: ?>
+				alert('Please login to add items to wishlist');
+				window.location.href = 'login/login_view.php';
+			<?php endif; ?>
 		}
 	</script>
 </body>

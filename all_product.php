@@ -1958,22 +1958,44 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 $original_price = $product['product_price'] * (1 + $discount_percentage / 100);
                                 $rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
                             ?>
-                                <div class="product-card" style="background: white; border-radius: 20px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); overflow: hidden; transition: transform 0.3s ease;">
+                                <div class="modern-product-card" style="
+                                    background: white;
+                                    border-radius: 16px;
+                                    border: 1px solid #e5e7eb;
+                                    overflow: hidden;
+                                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                                    cursor: pointer;
+                                    position: relative;
+                                    transform-origin: center;
+                                " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
+                                   onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+
                                     <!-- Discount Badge -->
-                                    <div style="position: absolute; top: 15px; left: 15px; background: #ef4444; color: white; padding: 8px 12px; border-radius: 20px; font-weight: 600; font-size: 0.9rem; z-index: 10;">
-                                        <?php echo $discount_percentage; ?>% off
+                                    <?php if ($discount_percentage > 0): ?>
+                                    <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                                        -<?php echo $discount_percentage; ?>%
+                                    </div>
+                                    <?php endif; ?>
+
+                                    <!-- Wishlist Heart -->
+                                    <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                                        <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
+                                                style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                                onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                                onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                            <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                                        </button>
                                     </div>
 
                                     <!-- Product Image -->
-                                    <div style="position: relative; background: #f8f9fa; padding: 30px; text-align: center; height: 250px; display: flex; align-items: center; justify-content: center;">
-                                        <?php 
+                                    <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                                        <?php
                                         $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
                                         $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
                                         ?>
                                         <img src="<?php echo htmlspecialchars($image_url); ?>"
                                             alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                                            style="max-width: 100%; max-height: 100%; object-fit: contain; cursor: pointer;"
-                                            onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
+                                            style="max-width: 100%; max-height: 100%; object-fit: contain;"
                                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
                                     </div>
 
@@ -1984,30 +2006,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             <?php echo htmlspecialchars($product['product_title']); ?>
                                         </h3>
 
-                                        <!-- Product Description -->
-                                        <p style="color: #6b7280; font-size: 0.95rem; margin-bottom: 15px; line-height: 1.5;">
-                                            <?php
-                                            $description = $product['product_desc'] ?? 'High-quality product perfect for your needs. Experience superior performance and reliability.';
-                                            echo htmlspecialchars(strlen($description) > 80 ? substr($description, 0, 80) . '...' : $description);
-                                            ?>
-                                        </p>
-
-                                        <!-- Key Features -->
-                                        <div style="margin-bottom: 20px;">
-                                            <?php
-                                            // Generate some random tech specs based on product type
-                                            $features = [
-                                                '• ' . ucfirst($product['brand_name'] ?? 'Premium') . ' brand quality',
-                                                '• ' . ucfirst($product['cat_name'] ?? 'Electronic') . ' category',
-                                                '• High-performance specifications'
-                                            ];
-                                            foreach($features as $feature): ?>
-                                                <div style="color: #4b5563; font-size: 0.85rem; margin-bottom: 4px; display: flex; align-items: center;">
-                                                    <i class="fas fa-check" style="color: #10b981; margin-right: 8px; font-size: 0.7rem;"></i>
-                                                    <?php echo $feature; ?>
-                                                </div>
-                                            <?php endforeach; ?>
-                                        </div>
 
                                         <!-- Rating -->
                                         <div style="display: flex; align-items: center; margin-bottom: 15px;">
@@ -2031,29 +2029,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
                                         </div>
 
-                                        <!-- Social Proof -->
-                                        <div style="margin-bottom: 20px;">
-                                            <?php
-                                            // Generate random social proof messages
-                                            $social_proofs = [
-                                                rand(1, 5) . " people just looked at this",
-                                                rand(2, 8) . " people have this in their basket",
-                                                rand(3, 12) . " people viewed this today",
-                                                rand(1, 6) . " people bought this recently",
-                                                rand(2, 7) . " people are considering this item",
-                                                rand(4, 15) . " people viewed this in the last hour",
-                                                rand(1, 4) . " people added this to cart today",
-                                                rand(2, 9) . " people are watching this item",
-                                                rand(3, 10) . " people have this on their wishlist",
-                                                rand(1, 5) . " people just purchased this"
-                                            ];
-                                            $selected_proof = $social_proofs[array_rand($social_proofs)];
-                                            ?>
-                                            <div style="background: rgba(79, 70, 229, 0.1); color: #4f46e5; padding: 8px 12px; border-radius: 8px; font-size: 0.85rem; font-weight: 500; display: flex; align-items: center; gap: 6px;">
-                                                <i class="fas fa-eye" style="font-size: 0.8rem;"></i>
-                                                <?php echo $selected_proof; ?>
+                                        <!-- Optional Status Text -->
+                                        <?php if (rand(1, 3) === 1): // Only show for some products ?>
+                                            <div style="margin-bottom: 12px;">
+                                                <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
                                             </div>
-                                        </div>
+                                        <?php endif; ?>
 
                                         <!-- Pricing -->
                                         <div style="margin-bottom: 25px;">

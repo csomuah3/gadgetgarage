@@ -22,7 +22,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cat_id = intval($_POST['cat_id']);
 
         if (!empty($brand_name) && $cat_id > 0) {
-            if (add_brand_ctr($brand_name, $cat_id)) {
+            $result = add_brand_ctr($brand_name, $cat_id, $_SESSION['user_id'] ?? null);
+            if (is_array($result)) {
+                if ($result['status'] === 'success') {
+                    $success_message = $result['message'];
+                } else {
+                    $error_message = $result['message'];
+                }
+            } else if ($result) {
                 $success_message = "Brand added successfully!";
             } else {
                 $error_message = "Failed to add brand or brand already exists.";
@@ -38,7 +45,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $cat_id = intval($_POST['cat_id']);
 
         if (!empty($brand_name) && $cat_id > 0) {
-            if (update_brand_ctr($brand_id, $brand_name, $cat_id)) {
+            $result = update_brand_ctr($brand_id, $brand_name, $cat_id, $_SESSION['user_id'] ?? null);
+            if (is_array($result)) {
+                if ($result['status'] === 'success') {
+                    $success_message = $result['message'];
+                } else {
+                    $error_message = $result['message'];
+                }
+            } else if ($result) {
                 $success_message = "Brand updated successfully!";
             } else {
                 $error_message = "Failed to update brand.";
@@ -50,7 +64,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['delete_brand'])) {
         $brand_id = intval($_POST['brand_id']);
-        if (delete_brand_ctr($brand_id)) {
+        $result = delete_brand_ctr($brand_id);
+        if (is_array($result)) {
+            if ($result['status'] === 'success') {
+                $success_message = $result['message'];
+            } else {
+                $error_message = $result['message'];
+            }
+        } else if ($result) {
             $success_message = "Brand deleted successfully!";
         } else {
             $error_message = "Failed to delete brand. It may be linked to products.";

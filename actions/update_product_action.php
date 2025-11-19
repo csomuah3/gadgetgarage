@@ -52,24 +52,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     CURLOPT_RETURNTRANSFER => true,
                     CURLOPT_POST => true,
                     CURLOPT_POSTFIELDS => [
-                        'file' => new CURLFile($_FILES['product_image']['tmp_name'], $file_type, $file_name)
-                    ]
+                        'upload' => new CURLFile($_FILES['product_image']['tmp_name'], $file_type, $file_name)
+                    ],
+                    CURLOPT_HTTPHEADER => [
+                        'Content-Type: multipart/form-data'
+                    ],
+                    CURLOPT_TIMEOUT => 30
                 ]);
 
                 $response = curl_exec($curl);
                 $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                $error = curl_error($curl);
                 curl_close($curl);
 
-                if ($httpCode === 200 && $response) {
+                if ($response && $httpCode === 200) {
                     $uploadResult = json_decode($response, true);
-                    if ($uploadResult && $uploadResult['status'] === 'success') {
+                    if ($uploadResult && isset($uploadResult['status']) && $uploadResult['status'] === 'success') {
                         $product_image = $file_name;
                     } else {
-                        echo json_encode(['status' => 'error', 'message' => 'Failed to upload image to server: ' . ($uploadResult['message'] ?? 'Unknown error')]);
+                        // Try to decode response for better error handling
+                        $errorMsg = 'Server upload failed';
+                        if ($uploadResult && isset($uploadResult['message'])) {
+                            $errorMsg = $uploadResult['message'];
+                        } elseif (!empty($response)) {
+                            $errorMsg = 'Server response: ' . substr($response, 0, 200);
+                        }
+                        echo json_encode(['status' => 'error', 'message' => 'Failed to upload image to server: ' . $errorMsg]);
                         exit;
                     }
                 } else {
-                    echo json_encode(['status' => 'error', 'message' => 'Server upload failed']);
+                    $errorMsg = 'Server upload failed (HTTP: ' . $httpCode . ')';
+                    if (!empty($error)) {
+                        $errorMsg .= ' - cURL error: ' . $error;
+                    }
+                    echo json_encode(['status' => 'error', 'message' => $errorMsg]);
                     exit;
                 }
             } else {

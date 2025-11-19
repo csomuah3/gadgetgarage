@@ -84,9 +84,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 		body {
 			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-			background-color: #ffffff;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			min-height: 100vh;
 			color: #1a1a1a;
 			overflow-x: hidden;
+			margin: 0;
+			padding: 0;
 		}
 
 		/* Promotional Banner Styles */
@@ -356,19 +359,257 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			color: #991b1b !important;
 		}
 
-		/* Registration Form Section */
+		/* Hide header and navigation for clean register page */
+		.promo-banner, .main-header, .main-nav {
+			display: none;
+		}
+
+		/* Full screen register section */
 		.register-section {
-			min-height: calc(100vh - 200px);
-			background: #f0f2f5;
+			min-height: 100vh;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 40px 20px;
+			padding: 20px;
+			position: relative;
+			background: #667eea;
 		}
 
-		/* Registration Card */
-		.register-card {
-			background: #87ceeb;
+		/* Circuit Board Background */
+		.register-section::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background:
+				/* Main circuit lines */
+				linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+				linear-gradient(0deg, rgba(255,255,255,0.1) 1px, transparent 1px),
+				/* Secondary lines */
+				linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+				linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
+				/* Circuit nodes */
+				radial-gradient(circle at 25% 25%, rgba(255,255,255,0.3) 2px, transparent 2px),
+				radial-gradient(circle at 75% 75%, rgba(255,255,255,0.3) 2px, transparent 2px),
+				radial-gradient(circle at 25% 75%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
+				radial-gradient(circle at 75% 25%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
+				/* Connecting circuits */
+				linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%),
+				linear-gradient(-45deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
+			background-size:
+				60px 60px, 60px 60px,
+				20px 20px, 20px 20px,
+				120px 120px, 120px 120px, 120px 120px, 120px 120px,
+				200px 200px, 200px 200px;
+			background-position:
+				0 0, 0 0,
+				30px 30px, 30px 30px,
+				0 0, 60px 60px, 0 60px, 60px 0,
+				0 0, 100px 100px;
+			animation: circuitFlow 20s linear infinite;
+			opacity: 0.7;
+		}
+
+		@keyframes circuitFlow {
+			0% {
+				background-position:
+					0 0, 0 0,
+					30px 30px, 30px 30px,
+					0 0, 60px 60px, 0 60px, 60px 0,
+					0 0, 100px 100px;
+			}
+			100% {
+				background-position:
+					60px 60px, 60px 60px,
+					50px 50px, 50px 50px,
+					120px 120px, 180px 180px, 120px 180px, 180px 120px,
+					200px 200px, 300px 300px;
+			}
+		}
+
+		/* Main Register Container */
+		.register-container {
+			background: rgba(255, 255, 255, 0.98);
+			backdrop-filter: blur(20px);
+			border-radius: 24px;
+			padding: 60px 50px;
+			box-shadow:
+				0 32px 64px rgba(0, 0, 0, 0.2),
+				0 0 0 1px rgba(255, 255, 255, 0.1),
+				inset 0 1px 0 rgba(255, 255, 255, 0.9);
+			max-width: 480px;
+			width: 100%;
+			position: relative;
+			z-index: 10;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		/* Logo Section */
+		.logo-section {
+			text-align: center;
+			margin-bottom: 40px;
+		}
+
+		.logo-section img {
+			height: 80px;
+			width: auto;
+			margin-bottom: 20px;
+			filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
+		}
+
+		.welcome-text {
+			font-size: 28px;
+			font-weight: 700;
+			color: #2d3748;
+			margin-bottom: 8px;
+			letter-spacing: -0.5px;
+		}
+
+		.subtitle-text {
+			font-size: 16px;
+			color: #718096;
+			margin-bottom: 0;
+		}
+
+		/* Form Styles */
+		.form-container {
+			margin-top: 32px;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-row {
+			display: flex;
+			gap: 16px;
+		}
+
+		.form-row .form-group {
+			flex: 1;
+		}
+
+		.form-input {
+			width: 100%;
+			height: 56px;
+			border: 2px solid #e2e8f0;
+			border-radius: 12px;
+			padding: 16px 20px;
+			font-size: 16px;
+			font-weight: 500;
+			color: #2d3748;
+			background: #ffffff;
+			transition: all 0.3s ease;
+			outline: none;
+		}
+
+		.form-input::placeholder {
+			color: #a0aec0;
+			font-weight: 400;
+		}
+
+		.form-input:focus {
+			border-color: #667eea;
+			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+		}
+
+		.register-button {
+			width: 100%;
+			height: 56px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			border: none;
+			border-radius: 12px;
+			color: white;
+			font-size: 16px;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			margin-top: 8px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.register-button::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: -100%;
+			width: 100%;
+			height: 100%;
+			background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+			transition: left 0.6s ease;
+		}
+
+		.register-button:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+		}
+
+		.register-button:hover::before {
+			left: 100%;
+		}
+
+		.register-button:active {
+			transform: translateY(0);
+		}
+
+		/* Links */
+		.signin-link {
+			text-align: center;
+			margin-top: 32px;
+			padding-top: 24px;
+			border-top: 1px solid #e2e8f0;
+		}
+
+		.signin-link a {
+			color: #667eea;
+			text-decoration: none;
+			font-weight: 600;
+		}
+
+		.signin-link a:hover {
+			text-decoration: underline;
+		}
+
+		/* Alerts */
+		.alert {
+			border-radius: 12px;
+			margin-bottom: 24px;
+			border: none;
+		}
+
+		.alert-danger {
+			background: #fed7d7;
+			color: #9b2c2c;
+		}
+
+		.alert-success {
+			background: #c6f6d5;
+			color: #276749;
+		}
+
+		/* Responsive Design */
+		@media (max-width: 768px) {
+			.register-container {
+				padding: 40px 30px;
+				margin: 20px;
+			}
+
+			.logo-section img {
+				height: 60px;
+			}
+
+			.welcome-text {
+				font-size: 24px;
+			}
+
+			.form-row {
+				flex-direction: column;
+				gap: 0;
+			}
+		}
 			background-image:
 				linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px),
 				linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
@@ -652,78 +893,88 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 	<!-- Registration Form Section -->
 	<section class="register-section">
-		<div class="register-card" id="registerCard">
-			<div class="form-container">
-				<!-- Logo -->
-				<div class="text-center mb-4">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png"
-					     alt="Gadget Garage" style="height: 60px; width: auto;">
+		<div class="register-container" id="registerContainer">
+			<!-- Logo Section -->
+			<div class="logo-section">
+				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+				     alt="Gadget Garage">
+				<h1 class="welcome-text">Create Account</h1>
+				<p class="subtitle-text">Join Gadget Garage and start shopping today</p>
+			</div>
+
+			<!-- Alert Messages -->
+			<?php if (!empty($registration_error)): ?>
+				<div class="alert alert-danger" role="alert">
+					<i class="fas fa-exclamation-triangle me-2"></i><?php echo $registration_error; ?>
 				</div>
+			<?php endif; ?>
 
-				<h2>Create Account</h2>
-				<p class="subtitle">Join Gadget Garage today and start shopping!</p>
+			<?php if ($registration_success): ?>
+				<div class="alert alert-success" role="alert">
+					<i class="fas fa-check-circle me-2"></i>Account created successfully! Redirecting...
+				</div>
+				<script>
+					setTimeout(function() {
+						window.location.href = 'index.php';
+					}, 1500);
+				</script>
+			<?php else: ?>
 
-				<?php if (!empty($registration_error)): ?>
-					<div class="alert alert-danger" role="alert">
-						<i class="fas fa-exclamation-triangle me-2"></i><?php echo $registration_error; ?>
-					</div>
-				<?php endif; ?>
-
-				<?php if ($registration_success): ?>
-					<div class="alert alert-success" role="alert">
-						<i class="fas fa-check-circle me-2"></i>Account created successfully! Redirecting...
-					</div>
-					<script>
-						const registerBtn = document.getElementById('registerBtn');
-						if (registerBtn) {
-							registerBtn.classList.remove('loading');
-							registerBtn.classList.add('success');
-							registerBtn.innerHTML = '<i class="fas fa-check me-2"></i>Account Created Successfully!';
-						}
-
-						setTimeout(function() {
-							document.getElementById('registerCard').classList.add('fly-up');
-							setTimeout(function() {
-								window.location.href = 'index.php';
-							}, 800);
-						}, 1000);
-					</script>
-				<?php else: ?>
-
+			<!-- Form Container -->
+			<div class="form-container">
 				<form method="POST" id="registerForm">
-					<div class="form-group">
-						<input type="text" class="form-control" name="first_name" placeholder="First Name" required value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>">
+					<div class="form-row">
+						<div class="form-group">
+							<input type="text"
+							       class="form-input"
+							       name="first_name"
+							       placeholder="First name"
+							       required
+							       value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>">
+						</div>
+
+						<div class="form-group">
+							<input type="text"
+							       class="form-input"
+							       name="last_name"
+							       placeholder="Last name"
+							       required
+							       value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>">
+						</div>
 					</div>
 
 					<div class="form-group">
-						<input type="text" class="form-control" name="last_name" placeholder="Last Name" required value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>">
+						<input type="email"
+						       class="form-input"
+						       name="email"
+						       placeholder="Email address"
+						       required
+						       value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
 					</div>
 
 					<div class="form-group">
-						<input type="email" class="form-control" name="email" placeholder="Email Address" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+						<input type="password"
+						       class="form-input"
+						       name="password"
+						       placeholder="Password"
+						       required>
 					</div>
 
 					<div class="form-group">
-						<input type="password" class="form-control" name="password" placeholder="Password" required>
+						<input type="password"
+						       class="form-input"
+						       name="confirm_password"
+						       placeholder="Confirm password"
+						       required>
 					</div>
 
-					<div class="form-group">
-						<input type="password" class="form-control" name="confirm_password" placeholder="Confirm Password" required>
-					</div>
-
-					<button type="submit" class="btn-register" id="registerBtn">
-						<span class="btn-text">
-							<i class="fas fa-user-plus me-2"></i>
-							Create Account
-						</span>
-						<span class="btn-loading" style="display: none;">
-							Creating Account...
-						</span>
+					<button type="submit" class="register-button" id="registerBtn">
+						Create Account
 					</button>
 				</form>
 
-				<div class="login-link">
-					Already have an account? <a href="login/login.php">Login here</a>
+				<div class="signin-link">
+					Already have an account? <a href="login/login.php">Sign in</a>
 				</div>
 
 				<?php endif; ?>

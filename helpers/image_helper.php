@@ -1,46 +1,45 @@
 <?php
 /**
- * Image Helper Functions
- * Handles image path resolution and fallback mechanisms
+ * COMPREHENSIVE Image Helper Functions
+ * FORCES ALL images to use server URLs - NO EXCEPTIONS
  */
 
 /**
- * Get the correct image path for a product image
+ * Get the correct image path for a product image - ALWAYS RETURNS SERVER URL
  * @param string $image_filename The image filename from database
  * @param string $product_title The product title for placeholder text
  * @param string $size Optional size parameter for placeholder (default: 400x300)
- * @return string The image URL to use
+ * @return string The FULL SERVER image URL to use
  */
 function get_product_image_url($image_filename, $product_title = 'Product', $size = '400x300') {
-    // Server upload URL base
+    // FORCE SERVER URL - NO LOCAL PATHS ALLOWED
     $server_base_url = 'http://169.239.251.102:442/~chelsea.somuah/uploads/';
 
     // Clean the image filename
     $image_filename = trim($image_filename ?? '');
 
-    // If we have an image filename, return the server URL
-    if (!empty($image_filename) && $image_filename !== 'null' && strtolower($image_filename) !== 'null') {
-        // If the filename already contains the full server URL, return as is
-        if (strpos($image_filename, 'http://') === 0 || strpos($image_filename, 'https://') === 0) {
-            return htmlspecialchars($image_filename);
-        }
-        
-        // If it already contains the server base URL, return as is
-        if (strpos($image_filename, 'http://169.239.251.102:442/~chelsea.somuah/uploads/') === 0) {
-            return htmlspecialchars($image_filename);
-        }
-
-        // Remove any leading path separators and build the full server URL
-        $clean_filename = ltrim($image_filename, '/');
-        $clean_filename = ltrim($clean_filename, '\\');
-        
-        // Build the full URL
-        $full_url = $server_base_url . urlencode($clean_filename);
-        return htmlspecialchars($full_url);
+    // Remove any null or empty values
+    if (empty($image_filename) || $image_filename === 'null' || strtolower($image_filename) === 'null') {
+        return generate_placeholder_url($product_title, $size);
     }
 
-    // No image found, return placeholder data URL directly
-    return generate_placeholder_url($product_title, $size);
+    // If already a full URL, return it
+    if (strpos($image_filename, 'http://') === 0 || strpos($image_filename, 'https://') === 0) {
+        return htmlspecialchars($image_filename);
+    }
+
+    // Remove ANY local path prefixes
+    $clean_filename = $image_filename;
+    $clean_filename = str_replace('uploads/products/', '', $clean_filename);
+    $clean_filename = str_replace('uploads/', '', $clean_filename);
+    $clean_filename = str_replace('images/', '', $clean_filename);
+    $clean_filename = str_replace('../', '', $clean_filename);
+    $clean_filename = str_replace('./', '', $clean_filename);
+    $clean_filename = ltrim($clean_filename, '/\\');
+
+    // FORCE SERVER URL
+    $full_url = $server_base_url . $clean_filename;
+    return htmlspecialchars($full_url);
 }
 
 /**

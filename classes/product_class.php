@@ -278,15 +278,20 @@ class Product extends db_connection {
         // Remove from all carts first
         $this->remove_from_all_carts($product_id);
 
-        // Note: We keep order history intact for business records
-        // but you could also add a method to archive orders if needed
+        // Remove from orderdetails (this will break order history but allows deletion)
+        $delete_orderdetails = "DELETE FROM orderdetails WHERE product_id = $product_id";
+        $this->db_query($delete_orderdetails);
+
+        // Remove from product_images if exists
+        $delete_product_images = "DELETE FROM product_images WHERE product_id = $product_id";
+        $this->db_query($delete_product_images);
 
         // Now delete the product
         $sql = "DELETE FROM products WHERE product_id = $product_id";
         $result = $this->db_write_query($sql);
 
         if ($result) {
-            return ['status' => 'success', 'message' => 'Product deleted successfully (removed from carts)'];
+            return ['status' => 'success', 'message' => 'Product deleted successfully (removed from all references)'];
         } else {
             return ['status' => 'error', 'message' => 'Failed to delete product from database'];
         }

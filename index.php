@@ -478,7 +478,7 @@ try {
 		}
 
 		.header-icon i {
-			font-size: 2.5rem;
+			font-size: 2.2rem;
 			font-weight: 700;
 			stroke-width: 2;
 			-webkit-text-stroke: 1px currentColor;
@@ -498,7 +498,7 @@ try {
 			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
 			font-size: 1rem;
-			font-weight: 300;
+			font-weight: 100;
 			padding: 5px 9px;
 			border-radius: 14px;
 			min-width: 26px;
@@ -515,7 +515,7 @@ try {
 			background: linear-gradient(135deg, #ef4444, #dc2626);
 			color: white;
 			font-size: 1rem;
-			font-weight: 300;
+			font-weight: 100;
 			padding: 5px 9px;
 			border-radius: 14px;
 			min-width: 26px;

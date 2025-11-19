@@ -3810,10 +3810,10 @@ try {
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text">BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
+			<span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
-		<a href="#flash-deals" class="promo-shop-link">Shop Now</a>
+		<a href="#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
@@ -4038,7 +4038,7 @@ try {
 				<!-- LEFT: MAIN BANNER -->
 				<article class="main-banner coral">
 					<div class="banner-copy">
-						<h1 class="banner-title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</h1>
+						<h1 class="banner-title"><span data-translate="ipad_pro_title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</span></h1>
 						<p class="banner-price"><span data-translate="starting_at">Starting At</span> <span class="price">GH₵ 236.00</span></p>
 						<a href="#" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 					</div>
@@ -4225,8 +4225,8 @@ try {
 	<section class="top-picks-section py-2">
 		<div class="container">
 			<div class="text-center mb-3">
-				<h2 class="section-title">Gadget Garage's Top Picks for You</h2>
-				<p class="section-subtitle">Discover our most popular and trending products this week</p>
+				<h2 class="section-title"><span data-translate="top_picks_title">Gadget Garage's Top Picks for You</span></h2>
+				<p class="section-subtitle"><span data-translate="top_picks_subtitle">Discover our most popular and trending products this week</span></p>
 			</div>
 
 			<div class="row" id="topPicksContainer">
@@ -4250,7 +4250,7 @@ try {
 	<!-- DEALS OF THE WEEK — Special offers section -->
 	<section class="deals-section">
 		<div class="deals-container">
-			<h2 class="deals-title">Deals Of The Week</h2>
+			<h2 class="deals-title"><span data-translate="deals_of_week">Deals Of The Week</span></h2>
 
 			<div class="deals-grid">
 				<!-- Deal 1: Canon Washing Machine -->
@@ -5157,7 +5157,14 @@ try {
 				"total": "Total",
 				"subtotal": "Subtotal",
 				"checkout": "Checkout",
-				"continue_shopping": "Continue Shopping"
+				"continue_shopping": "Continue Shopping",
+
+				// New Content Translations
+				"black_friday_deals": "BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!",
+				"top_picks_title": "Gadget Garage's Top Picks for You",
+				"top_picks_subtitle": "Discover our most popular and trending products this week",
+				"deals_of_week": "Deals Of The Week",
+				"ipad_pro_title": "Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB"
 			},
 
 			es: {
@@ -5300,7 +5307,14 @@ try {
 				"total": "Total",
 				"subtotal": "Subtotal",
 				"checkout": "Finalizar Compra",
-				"continue_shopping": "Continuar Comprando"
+				"continue_shopping": "Continuar Comprando",
+
+				// New Content Translations
+				"black_friday_deals": "¡OFERTAS DE VIERNES NEGRO! ¡EN PEDIDOS SUPERIORES A GH₵2,000!",
+				"top_picks_title": "Las Mejores Selecciones de Gadget Garage para Ti",
+				"top_picks_subtitle": "Descubre nuestros productos más populares y de tendencia esta semana",
+				"deals_of_week": "Ofertas de la Semana",
+				"ipad_pro_title": "Apple IPad Pro 11<br>Pantalla Ultra Retina XDR<br>256GB"
 			},
 
 			fr: {
@@ -5443,7 +5457,14 @@ try {
 				"total": "Total",
 				"subtotal": "Sous-total",
 				"checkout": "Commande",
-				"continue_shopping": "Continuer les Achats"
+				"continue_shopping": "Continuer les Achats",
+
+				// New Content Translations
+				"black_friday_deals": "OFFRES VENDREDI NOIR! SUR COMMANDES SUPÉRIEURES À GH₵2,000!",
+				"top_picks_title": "Les Meilleurs Choix de Gadget Garage pour Vous",
+				"top_picks_subtitle": "Découvrez nos produits les plus populaires et tendances cette semaine",
+				"deals_of_week": "Offres de la Semaine",
+				"ipad_pro_title": "Apple IPad Pro 11<br>Écran Ultra Retina XDR<br>256GB"
 			},
 
 			de: {
@@ -5586,7 +5607,14 @@ try {
 				"total": "Gesamt",
 				"subtotal": "Zwischensumme",
 				"checkout": "Kasse",
-				"continue_shopping": "Weiter Einkaufen"
+				"continue_shopping": "Weiter Einkaufen",
+
+				// New Content Translations
+				"black_friday_deals": "BLACK FRIDAY ANGEBOTE! BEI BESTELLUNGEN ÜBER GH₵2,000!",
+				"top_picks_title": "Gadget Garage's Top Auswahl für Sie",
+				"top_picks_subtitle": "Entdecken Sie unsere beliebtesten und trendigen Produkte diese Woche",
+				"deals_of_week": "Angebote der Woche",
+				"ipad_pro_title": "Apple IPad Pro 11<br>Ultra Retina XDR Display<br>256GB"
 			}
 		};
 

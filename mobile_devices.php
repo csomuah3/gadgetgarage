@@ -521,7 +521,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <!-- Promotional Banner -->
     <div class="promo-banner">
         <i class="fas fa-shipping-fast"></i>
-        Free Next Day Delivery on Orders Above GH₵2,000!
+        <span data-translate="free_next_day_delivery">Free Next Day Delivery on Orders Above GH₵2,000!</span>
     </div>
 
     <!-- Floating Bubbles Background -->
@@ -542,7 +542,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 					<!-- Search Bar -->
 					<form class="search-container" method="GET" action="product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
-						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+						<input type="text" name="query" class="search-input" data-translate="search_placeholder" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
 							<i class="fas fa-search"></i>
 						</button>
@@ -552,7 +552,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="tech-revival-text" data-translate="bring_retired_tech">Bring Retired Tech</p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>
@@ -636,11 +636,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
                     <button class="categories-button">
                         <i class="fas fa-tags"></i>
-                        SHOP BY BRANDS
+                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="brands-dropdown" id="shopDropdown">
-                        <h4>All Brands</h4>
+                        <h4 data-translate="all_brands">All Brands</h4>
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
@@ -653,12 +653,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="index.php" class="nav-item">HOME</a>
+                <a href="index.php" class="nav-item" data-translate="home">HOME</a>
 
                 <!-- Shop Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
                     <a href="#" class="nav-item">
-                        SHOP
+                        <span data-translate="shop">SHOP</span>
                         <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="mega-dropdown" id="shopCategoryDropdown">
@@ -666,45 +666,45 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             <div class="dropdown-column">
                                 <h4>
                                     <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                        Mobile Devices
+                                        <span data-translate="mobile_devices">Mobile Devices</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="mobile_devices.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-                                    <li><a href="mobile_devices.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
-                                    <li><a href="mobile_devices.php?category=tablets"><i class="fas fa-tablet-alt"></i> Tablets</a></li>
+                                    <li><a href="mobile_devices.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="mobile_devices.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                    <li><a href="mobile_devices.php?category=tablets"><i class="fas fa-tablet-alt"></i> <span data-translate="tablets">Tablets</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
                                     <a href="computing.php" style="text-decoration: none; color: inherit;">
-                                        Computing
+                                        <span data-translate="computing">Computing</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="computing.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-                                    <li><a href="computing.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+                                    <li><a href="computing.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="computing.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
                                     <a href="photography_video.php" style="text-decoration: none; color: inherit;">
-                                        Photography & Video
+                                        <span data-translate="photography_video">Photography & Video</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="photography_video.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-                                    <li><a href="photography_video.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+                                    <li><a href="photography_video.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="photography_video.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column featured">
-                                <h4>Shop All</h4>
+                                <h4 data-translate="shop_all">Shop All</h4>
                                 <div class="featured-item">
                                     <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
                                     <div class="featured-text">
-                                        <strong>New Arrivals</strong>
-                                        <p>Latest tech gadgets</p>
-                                        <a href="all_product.php" class="shop-now-btn">Shop Now</a>
+                                        <strong data-translate="new_arrivals">New Arrivals</strong>
+                                        <p data-translate="latest_tech_gadgets">Latest tech gadgets</p>
+                                        <a href="all_product.php" class="shop-now-btn" data-translate="shop_now">Shop Now</a>
                                     </div>
                                 </div>
                             </div>
@@ -712,25 +712,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
-                <a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+                <a href="repair_services.php" class="nav-item" data-translate="repair_studio">REPAIR STUDIO</a>
+                <a href="device_drop.php" class="nav-item" data-translate="device_drop">DEVICE DROP</a>
 
                 <!-- More Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
                     <a href="#" class="nav-item">
-                        MORE
+                        <span data-translate="more">MORE</span>
                         <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="simple-dropdown" id="moreDropdown">
                         <ul>
-                            <li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+                            <li><a href="#contact"><i class="fas fa-phone"></i> <span data-translate="contact_us">Contact</span></a></li>
+                            <li><a href="#blog"><i class="fas fa-blog"></i> <span data-translate="blog">Blog</span></a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Flash Deal positioned at far right -->
-                <a href="flash_deals.php" class="nav-item flash-deal">⚡ FLASH DEAL</a>
+                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
             </div>
         </div>
     </nav>
@@ -744,7 +744,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-header">
                         <h3 class="filter-title">
                             <i class="fas fa-filter"></i>
-                            Filter Products
+                            <span data-translate="filter_products">Filter Products</span>
                         </h3>
                         <button class="filter-close d-lg-none" id="closeFilters">
                             <i class="fas fa-times"></i>
@@ -754,51 +754,51 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Search Bar -->
                     <div class="filter-group">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
+                            <input type="text" class="search-input" id="searchInput" data-translate="search_products_placeholder" placeholder="Search products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
                         </div>
                     </div>
 
                     <!-- Rating Filter -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Rating</h6>
+                        <h6 class="filter-subtitle" data-translate="rating">Rating</h6>
                         <div class="rating-filters">
                             <div class="rating-option" data-rating="5">
                                 <div class="stars">
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
                                 </div>
-                                <span>5 Star</span>
+                                <span data-translate="five_star">5 Star</span>
                             </div>
                             <div class="rating-option" data-rating="4">
                                 <div class="stars">
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
                                 </div>
-                                <span>4 Star</span>
+                                <span data-translate="four_star">4 Star</span>
                             </div>
                             <div class="rating-option" data-rating="3">
                                 <div class="stars">
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
                                 </div>
-                                <span>3 Star</span>
+                                <span data-translate="three_star">3 Star</span>
                             </div>
                             <div class="rating-option" data-rating="2">
                                 <div class="stars">
                                     <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
                                 </div>
-                                <span>2 Star</span>
+                                <span data-translate="two_star">2 Star</span>
                             </div>
                             <div class="rating-option" data-rating="1">
                                 <div class="stars">
                                     <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
                                 </div>
-                                <span>1 Star</span>
+                                <span data-translate="one_star">1 Star</span>
                             </div>
                         </div>
                     </div>
 
                     <!-- Price Range Filter -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Price Range</h6>
+                        <h6 class="filter-subtitle" data-translate="price_range">Price Range</h6>
                         <div class="price-range-container">
                             <input type="range" class="price-slider" id="priceRange" min="0" max="5000" value="2500" step="10">
                             <div class="price-display">
@@ -811,17 +811,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Filter by Category -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Category</h6>
+                        <h6 class="filter-subtitle" data-translate="filter_by_category">Filter By Category</h6>
                         <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="">All</button>
-                            <button class="tag-btn" data-category="smartphones">Smartphones</button>
-                            <button class="tag-btn" data-category="ipads">iPads and Tablets</button>
+                            <button class="tag-btn active" data-category="" data-translate="all">All</button>
+                            <button class="tag-btn" data-category="smartphones" data-translate="smartphones">Smartphones</button>
+                            <button class="tag-btn" data-category="ipads" data-translate="ipads_tablets">iPads and Tablets</button>
                         </div>
                     </div>
 
                     <!-- Filter by Brand -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Brand</h6>
+                        <h6 class="filter-subtitle" data-translate="filter_by_brand">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
                             <button class="tag-btn active" data-brand="">All</button>
                             <button class="tag-btn" data-brand="apple">Apple</button>
@@ -835,7 +835,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Filter by Size -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
+                        <h6 class="filter-subtitle" data-translate="filter_by_size">Filter By Size</h6>
                         <div class="tag-filters" id="sizeTags">
                             <button class="tag-btn active" data-size="">All</button>
                             <button class="tag-btn" data-size="large">Large</button>
@@ -846,7 +846,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Filter by Color -->
                     <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Color</h6>
+                        <h6 class="filter-subtitle" data-translate="filter_by_color">Filter By Color</h6>
                         <div class="color-filters" id="colorTags">
                             <div class="color-option active" data-color="">
                                 <div class="color-circle" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);"></div>
@@ -873,7 +873,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-actions">
                         <button class="clear-all-filters-btn" id="clearAllFilters">
                             <i class="fas fa-times"></i>
-                            Clear All Filters
+                            <span data-translate="clear_all_filters">Clear All Filters</span>
                         </button>
                     </div>
                 </div>
@@ -882,10 +882,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <!-- Right Content - Products -->
             <div class="col-lg-9 col-md-8" id="productContent">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="page-title mb-0">Mobile Devices</h1>
+                    <h1 class="page-title mb-0" data-translate="mobile_devices">Mobile Devices</h1>
                     <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
                         <i class="fas fa-filter me-2"></i>
-                        Filters
+                        <span data-translate="filters">Filters</span>
                     </button>
                 </div>
 
@@ -893,10 +893,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         <?php if (empty($products_to_display)): ?>
             <div class="no-results">
                 <i class="fas fa-mobile-alt fa-4x mb-3" style="color: #cbd5e0;"></i>
-                <h3>No Mobile Devices Found</h3>
-                <p>Try adjusting your filters or search terms.</p>
+                <h3 data-translate="no_mobile_devices_found">No Mobile Devices Found</h3>
+                <p data-translate="try_adjusting_filters">Try adjusting your filters or search terms.</p>
                 <a href="mobile_devices.php" class="btn btn-primary mt-3">
-                    <i class="fas fa-refresh"></i> View All Mobile Devices
+                    <i class="fas fa-refresh"></i> <span data-translate="view_all_mobile_devices">View All Mobile Devices</span>
                 </a>
             </div>
         <?php else: ?>
@@ -920,7 +920,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 <span><i class="fas fa-store"></i> <?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?></span>
                             </div>
                             <button class="add-to-cart-btn" onclick="event.stopPropagation(); addToCart(<?php echo $product['product_id']; ?>)">
-                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                                <i class="fas fa-shopping-cart"></i> <span data-translate="add_to_cart">Add to Cart</span>
                             </button>
                         </div>
                     </div>
@@ -932,7 +932,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <div class="pagination">
                     <?php if ($current_page > 1): ?>
                         <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $current_page - 1; ?>" class="page-btn">
-                            <i class="fas fa-chevron-left"></i> Previous
+                            <i class="fas fa-chevron-left"></i> <span data-translate="previous">Previous</span>
                         </a>
                     <?php endif; ?>
 
@@ -945,7 +945,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <?php if ($current_page < $total_pages): ?>
                         <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $current_page + 1; ?>" class="page-btn">
-                            Next <i class="fas fa-chevron-right"></i>
+                            <span data-translate="next">Next</span> <i class="fas fa-chevron-right"></i>
                         </a>
                     <?php endif; ?>
                 </div>
@@ -1298,6 +1298,459 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     dropdown.classList.remove('show');
                 });
             }
+        });
+    </script>
+
+    <script>
+        // Translation System
+        const translations = {
+            en: {
+                // Header & Navigation
+                "shop_by_brands": "SHOP BY BRANDS",
+                "all_brands": "All Brands",
+                "home": "HOME",
+                "shop": "SHOP",
+                "all_products": "All Products",
+                "mobile_devices": "Mobile Devices",
+                "computing": "Computing",
+                "photography_video": "Photography & Video",
+                "photography": "Photography",
+                "more": "MORE",
+                "device_drop": "Device Drop",
+                "repair_studio": "Repair Studio",
+                "flash_deal": "Flash Deal",
+                "search_placeholder": "Search phones, laptops, cameras...",
+                "cart": "Cart",
+                "login": "Login",
+                "register": "Register",
+                "logout": "Logout",
+                "profile": "Profile",
+                "my_orders": "My Orders",
+                "language": "Language",
+                "dark_mode": "Dark Mode",
+                "bring_retired_tech": "Bring Retired Tech",
+
+                // Page specific content
+                "mobile_devices_title": "Mobile Devices - Gadget Garage",
+                "free_next_day_delivery": "Free Next Day Delivery on Orders Above GH₵2,000!",
+                "smartphones": "Smartphones",
+                "ipads": "iPads",
+                "tablets": "Tablets",
+                "laptops": "Laptops",
+                "desktops": "Desktops",
+                "cameras": "Cameras",
+                "video_equipment": "Video Equipment",
+                "shop_all": "Shop All",
+                "new_arrivals": "New Arrivals",
+                "latest_tech_gadgets": "Latest tech gadgets",
+                "shop_now": "Shop Now",
+                "contact_us": "Contact",
+                "blog": "Blog",
+
+                // Filter section
+                "filter_products": "Filter Products",
+                "search_products_placeholder": "Search products...",
+                "rating": "Rating",
+                "five_star": "5 Star",
+                "four_star": "4 Star",
+                "three_star": "3 Star",
+                "two_star": "2 Star",
+                "one_star": "1 Star",
+                "price_range": "Price Range",
+                "filter_by_category": "Filter By Category",
+                "filter_by_brand": "Filter By Brand",
+                "filter_by_size": "Filter By Size",
+                "filter_by_color": "Filter By Color",
+                "all": "All",
+                "ipads_tablets": "iPads and Tablets",
+                "clear_all_filters": "Clear All Filters",
+                "filters": "Filters",
+
+                // Product listing
+                "no_mobile_devices_found": "No Mobile Devices Found",
+                "try_adjusting_filters": "Try adjusting your filters or search terms.",
+                "view_all_mobile_devices": "View All Mobile Devices",
+                "add_to_cart": "Add to Cart",
+                "previous": "Previous",
+                "next": "Next",
+
+                // Common buttons
+                "view_all": "View All",
+                "see_more": "See More",
+                "back": "Back",
+                "close": "Close",
+                "save": "Save",
+                "edit": "Edit",
+                "delete": "Delete",
+                "confirm": "Confirm",
+                "submit": "Submit",
+
+                // Product related
+                "price": "Price",
+                "description": "Description",
+                "specifications": "Specifications",
+                "reviews": "Reviews",
+                "in_stock": "In Stock",
+                "out_of_stock": "Out of Stock",
+                "quantity": "Quantity",
+                "total": "Total",
+                "subtotal": "Subtotal",
+                "checkout": "Checkout",
+                "continue_shopping": "Continue Shopping"
+            },
+
+            es: {
+                // Header & Navigation
+                "shop_by_brands": "COMPRAR POR MARCAS",
+                "all_brands": "Todas las Marcas",
+                "home": "INICIO",
+                "shop": "TIENDA",
+                "all_products": "Todos los Productos",
+                "mobile_devices": "Dispositivos Móviles",
+                "computing": "Informática",
+                "photography_video": "Fotografía y Video",
+                "photography": "Fotografía",
+                "more": "MÁS",
+                "device_drop": "Entrega de Dispositivo",
+                "repair_studio": "Estudio de Reparación",
+                "flash_deal": "Oferta Flash",
+                "search_placeholder": "Buscar teléfonos, laptops, cámaras...",
+                "cart": "Carrito",
+                "login": "Iniciar Sesión",
+                "register": "Registrarse",
+                "logout": "Cerrar Sesión",
+                "profile": "Perfil",
+                "my_orders": "Mis Pedidos",
+                "language": "Idioma",
+                "dark_mode": "Modo Oscuro",
+                "bring_retired_tech": "Traer Tecnología Retirada",
+
+                // Page specific content
+                "mobile_devices_title": "Dispositivos Móviles - Gadget Garage",
+                "free_next_day_delivery": "¡Entrega Gratis al Día Siguiente en Pedidos Superiores a GH₵2,000!",
+                "smartphones": "Smartphones",
+                "ipads": "iPads",
+                "tablets": "Tabletas",
+                "laptops": "Laptops",
+                "desktops": "Escritorios",
+                "cameras": "Cámaras",
+                "video_equipment": "Equipo de Video",
+                "shop_all": "Comprar Todo",
+                "new_arrivals": "Nuevas Llegadas",
+                "latest_tech_gadgets": "Los últimos gadgets tecnológicos",
+                "shop_now": "Comprar Ahora",
+                "contact_us": "Contáctanos",
+                "blog": "Blog",
+
+                // Filter section
+                "filter_products": "Filtrar Productos",
+                "search_products_placeholder": "Buscar productos...",
+                "rating": "Calificación",
+                "five_star": "5 Estrellas",
+                "four_star": "4 Estrellas",
+                "three_star": "3 Estrellas",
+                "two_star": "2 Estrellas",
+                "one_star": "1 Estrella",
+                "price_range": "Rango de Precios",
+                "filter_by_category": "Filtrar por Categoría",
+                "filter_by_brand": "Filtrar por Marca",
+                "filter_by_size": "Filtrar por Tamaño",
+                "filter_by_color": "Filtrar por Color",
+                "all": "Todos",
+                "ipads_tablets": "iPads y Tabletas",
+                "clear_all_filters": "Limpiar Todos los Filtros",
+                "filters": "Filtros",
+
+                // Product listing
+                "no_mobile_devices_found": "No se Encontraron Dispositivos Móviles",
+                "try_adjusting_filters": "Intenta ajustar tus filtros o términos de búsqueda.",
+                "view_all_mobile_devices": "Ver Todos los Dispositivos Móviles",
+                "add_to_cart": "Añadir al Carrito",
+                "previous": "Anterior",
+                "next": "Siguiente",
+
+                // Common buttons
+                "view_all": "Ver Todo",
+                "see_more": "Ver Más",
+                "back": "Atrás",
+                "close": "Cerrar",
+                "save": "Guardar",
+                "edit": "Editar",
+                "delete": "Eliminar",
+                "confirm": "Confirmar",
+                "submit": "Enviar",
+
+                // Product related
+                "price": "Precio",
+                "description": "Descripción",
+                "specifications": "Especificaciones",
+                "reviews": "Reseñas",
+                "in_stock": "En Stock",
+                "out_of_stock": "Agotado",
+                "quantity": "Cantidad",
+                "total": "Total",
+                "subtotal": "Subtotal",
+                "checkout": "Finalizar Compra",
+                "continue_shopping": "Continuar Comprando"
+            },
+
+            fr: {
+                // Header & Navigation
+                "shop_by_brands": "ACHETER PAR MARQUES",
+                "all_brands": "Toutes les Marques",
+                "home": "ACCUEIL",
+                "shop": "BOUTIQUE",
+                "all_products": "Tous les Produits",
+                "mobile_devices": "Appareils Mobiles",
+                "computing": "Informatique",
+                "photography_video": "Photo et Vidéo",
+                "photography": "Photographie",
+                "more": "PLUS",
+                "device_drop": "Dépôt d'Appareil",
+                "repair_studio": "Studio de Réparation",
+                "flash_deal": "Vente Flash",
+                "search_placeholder": "Rechercher téléphones, ordinateurs, appareils photo...",
+                "cart": "Panier",
+                "login": "Connexion",
+                "register": "S'inscrire",
+                "logout": "Déconnexion",
+                "profile": "Profil",
+                "my_orders": "Mes Commandes",
+                "language": "Langue",
+                "dark_mode": "Mode Sombre",
+                "bring_retired_tech": "Apporter de la Technologie Retraite",
+
+                // Page specific content
+                "mobile_devices_title": "Appareils Mobiles - Gadget Garage",
+                "free_next_day_delivery": "Livraison Gratuite le Lendemain sur Commandes Supérieures à GH₵2,000!",
+                "smartphones": "Smartphones",
+                "ipads": "iPads",
+                "tablets": "Tablettes",
+                "laptops": "Ordinateurs Portables",
+                "desktops": "Ordinateurs de Bureau",
+                "cameras": "Appareils Photo",
+                "video_equipment": "Équipement Vidéo",
+                "shop_all": "Tout Acheter",
+                "new_arrivals": "Nouvelles Arrivées",
+                "latest_tech_gadgets": "Les derniers gadgets technologiques",
+                "shop_now": "Acheter Maintenant",
+                "contact_us": "Nous Contacter",
+                "blog": "Blog",
+
+                // Filter section
+                "filter_products": "Filtrer Produits",
+                "search_products_placeholder": "Rechercher des produits...",
+                "rating": "Évaluation",
+                "five_star": "5 Étoiles",
+                "four_star": "4 Étoiles",
+                "three_star": "3 Étoiles",
+                "two_star": "2 Étoiles",
+                "one_star": "1 Étoile",
+                "price_range": "Fourchette de Prix",
+                "filter_by_category": "Filtrer par Catégorie",
+                "filter_by_brand": "Filtrer par Marque",
+                "filter_by_size": "Filtrer par Taille",
+                "filter_by_color": "Filtrer par Couleur",
+                "all": "Tout",
+                "ipads_tablets": "iPads et Tablettes",
+                "clear_all_filters": "Effacer Tous les Filtres",
+                "filters": "Filtres",
+
+                // Product listing
+                "no_mobile_devices_found": "Aucun Appareil Mobile Trouvé",
+                "try_adjusting_filters": "Essayez d'ajuster vos filtres ou termes de recherche.",
+                "view_all_mobile_devices": "Voir Tous les Appareils Mobiles",
+                "add_to_cart": "Ajouter au Panier",
+                "previous": "Précédent",
+                "next": "Suivant",
+
+                // Common buttons
+                "view_all": "Voir Tout",
+                "see_more": "Voir Plus",
+                "back": "Retour",
+                "close": "Fermer",
+                "save": "Enregistrer",
+                "edit": "Modifier",
+                "delete": "Supprimer",
+                "confirm": "Confirmer",
+                "submit": "Soumettre",
+
+                // Product related
+                "price": "Prix",
+                "description": "Description",
+                "specifications": "Spécifications",
+                "reviews": "Avis",
+                "in_stock": "En Stock",
+                "out_of_stock": "Rupture de Stock",
+                "quantity": "Quantité",
+                "total": "Total",
+                "subtotal": "Sous-total",
+                "checkout": "Commande",
+                "continue_shopping": "Continuer les Achats"
+            },
+
+            de: {
+                // Header & Navigation
+                "shop_by_brands": "NACH MARKEN EINKAUFEN",
+                "all_brands": "Alle Marken",
+                "home": "STARTSEITE",
+                "shop": "SHOP",
+                "all_products": "Alle Produkte",
+                "mobile_devices": "Mobile Geräte",
+                "computing": "Computer",
+                "photography_video": "Foto & Video",
+                "photography": "Fotografie",
+                "more": "MEHR",
+                "device_drop": "Gerät Abgeben",
+                "repair_studio": "Reparatur Studio",
+                "flash_deal": "Blitz Angebot",
+                "search_placeholder": "Telefone, Laptops, Kameras suchen...",
+                "cart": "Warenkorb",
+                "login": "Anmelden",
+                "register": "Registrieren",
+                "logout": "Abmelden",
+                "profile": "Profil",
+                "my_orders": "Meine Bestellungen",
+                "language": "Sprache",
+                "dark_mode": "Dunkler Modus",
+                "bring_retired_tech": "Alte Technologie Bringen",
+
+                // Page specific content
+                "mobile_devices_title": "Mobile Geräte - Gadget Garage",
+                "free_next_day_delivery": "Kostenlose Lieferung am nächsten Tag bei Bestellungen über GH₵2,000!",
+                "smartphones": "Smartphones",
+                "ipads": "iPads",
+                "tablets": "Tablets",
+                "laptops": "Laptops",
+                "desktops": "Desktop-Computer",
+                "cameras": "Kameras",
+                "video_equipment": "Video-Ausrüstung",
+                "shop_all": "Alles Kaufen",
+                "new_arrivals": "Neue Ankömmlinge",
+                "latest_tech_gadgets": "Die neuesten Tech-Gadgets",
+                "shop_now": "Jetzt Einkaufen",
+                "contact_us": "Kontakt",
+                "blog": "Blog",
+
+                // Filter section
+                "filter_products": "Produkte Filtern",
+                "search_products_placeholder": "Produkte suchen...",
+                "rating": "Bewertung",
+                "five_star": "5 Sterne",
+                "four_star": "4 Sterne",
+                "three_star": "3 Sterne",
+                "two_star": "2 Sterne",
+                "one_star": "1 Stern",
+                "price_range": "Preisbereich",
+                "filter_by_category": "Nach Kategorie Filtern",
+                "filter_by_brand": "Nach Marke Filtern",
+                "filter_by_size": "Nach Größe Filtern",
+                "filter_by_color": "Nach Farbe Filtern",
+                "all": "Alle",
+                "ipads_tablets": "iPads und Tablets",
+                "clear_all_filters": "Alle Filter Löschen",
+                "filters": "Filter",
+
+                // Product listing
+                "no_mobile_devices_found": "Keine Mobile Geräte Gefunden",
+                "try_adjusting_filters": "Versuchen Sie, Ihre Filter oder Suchbegriffe anzupassen.",
+                "view_all_mobile_devices": "Alle Mobile Geräte Anzeigen",
+                "add_to_cart": "In den Warenkorb",
+                "previous": "Zurück",
+                "next": "Weiter",
+
+                // Common buttons
+                "view_all": "Alle Anzeigen",
+                "see_more": "Mehr Sehen",
+                "back": "Zurück",
+                "close": "Schließen",
+                "save": "Speichern",
+                "edit": "Bearbeiten",
+                "delete": "Löschen",
+                "confirm": "Bestätigen",
+                "submit": "Absenden",
+
+                // Product related
+                "price": "Preis",
+                "description": "Beschreibung",
+                "specifications": "Spezifikationen",
+                "reviews": "Bewertungen",
+                "in_stock": "Auf Lager",
+                "out_of_stock": "Ausverkauft",
+                "quantity": "Menge",
+                "total": "Gesamt",
+                "subtotal": "Zwischensumme",
+                "checkout": "Zur Kasse",
+                "continue_shopping": "Weiter Einkaufen"
+            }
+        };
+
+        function translate(key, language = null) {
+            const lang = language || localStorage.getItem('selectedLanguage') || 'en';
+            return translations[lang] && translations[lang][key] ? translations[lang][key] : translations.en[key] || key;
+        }
+
+        // Enhanced translation application with better element detection
+        function applyTranslationsEnhanced() {
+            // Get stored language preference or default to English
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+            console.log('Current language:', currentLang); // Debug log
+
+            // Update language dropdown to show current selection
+            const languageSelectors = document.querySelectorAll('select[onchange="changeLanguage(this.value)"]');
+            languageSelectors.forEach(selector => {
+                if (selector) {
+                    selector.value = currentLang;
+                }
+            });
+
+            // Find and translate all elements with data-translate attribute
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const translation = translate(key, currentLang);
+
+                // Handle different element types
+                if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'search')) {
+                    element.placeholder = translation;
+                } else if (element.tagName === 'INPUT' && (element.type === 'button' || element.type === 'submit')) {
+                    element.value = translation;
+                } else if (element.tagName === 'TITLE') {
+                    element.textContent = translation;
+                } else {
+                    // For other elements, replace text content
+                    element.textContent = translation;
+                }
+            });
+        }
+
+        // Apply translations to all elements on page load
+        function applyTranslations() {
+            applyTranslationsEnhanced();
+        }
+
+        function changeLanguage(language) {
+            // Get current language
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            // If same language, do nothing
+            if (currentLang === language) return;
+
+            // Store language preference immediately
+            localStorage.setItem('selectedLanguage', language);
+
+            // Apply translations instantly
+            applyTranslations();
+
+            // Update language selector to show current selection
+            const languageSelect = document.querySelector('select[onchange="changeLanguage(this.value)"]');
+            if (languageSelect) {
+                languageSelect.value = language;
+            }
+        }
+
+        // Initialize translations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations();
         });
     </script>
 </body>

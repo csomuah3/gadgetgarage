@@ -98,7 +98,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Computing - Gadget Garage</title>
+    <title data-translate="computing_title">Computing - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
@@ -524,7 +524,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <!-- Promotional Banner -->
     <div class="promo-banner">
         <i class="fas fa-shipping-fast"></i>
-        Free Next Day Delivery on Orders Above GH₵2,000!
+        <span data-translate="free_next_day_delivery">Free Next Day Delivery on Orders Above GH₵2,000!</span>
     </div>
 
     <!-- Floating Bubbles Background -->
@@ -639,11 +639,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
                     <button class="categories-button">
                         <i class="fas fa-tags"></i>
-                        SHOP BY BRANDS
+                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="brands-dropdown" id="shopDropdown">
-                        <h4>All Brands</h4>
+                        <h4 data-translate="all_brands">All Brands</h4>
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
@@ -656,12 +656,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="index.php" class="nav-item">HOME</a>
+                <a href="index.php" class="nav-item" data-translate="home">HOME</a>
 
                 <!-- Shop Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
                     <a href="#" class="nav-item">
-                        SHOP
+                        <span data-translate="shop">SHOP</span>
                         <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="mega-dropdown" id="shopCategoryDropdown">
@@ -715,7 +715,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="repair_services.php" class="nav-item">REPAIR STUDIO</a>
+                <a href="repair_services.php" class="nav-item" data-translate="repair_studio">REPAIR STUDIO</a>
                 <a href="device_drop.php" class="nav-item">DEVICE DROP</a>
 
                 <!-- More Dropdown -->
@@ -895,7 +895,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <!-- Right Content - Products -->
             <div class="col-lg-9 col-md-8" id="productContent">
                 <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="page-title mb-0">Computing</h1>
+                    <h1 class="page-title mb-0" data-translate="computing">Computing</h1>
                     <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
                         <i class="fas fa-filter me-2"></i>
                         Filters
@@ -938,10 +938,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         <?php if (empty($products_to_display)): ?>
             <div class="no-results">
                 <i class="fas fa-laptop fa-4x mb-3" style="color: #cbd5e0;"></i>
-                <h3>No Computing Products Found</h3>
-                <p>Try adjusting your filters or search terms.</p>
+                <h3 data-translate="no_computing_products_found">No Computing Products Found</h3>
+                <p data-translate="try_adjusting_filters">Try adjusting your filters or search terms.</p>
                 <a href="computing.php" class="btn btn-primary mt-3">
-                    <i class="fas fa-refresh"></i> View All Computing
+                    <i class="fas fa-refresh"></i> <span data-translate="view_all_computing">View All Computing</span>
                 </a>
             </div>
         <?php else: ?>
@@ -1316,6 +1316,133 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     dropdown.classList.remove('show');
                 });
             }
+        });
+    </script>
+
+    <script>
+        // Translation System for Computing Page
+        const translations = {
+            en: {
+                // Header & Navigation
+                "shop_by_brands": "SHOP BY BRANDS",
+                "all_brands": "All Brands",
+                "home": "HOME",
+                "shop": "SHOP",
+                "repair_studio": "REPAIR STUDIO",
+                "computing_title": "Computing - Gadget Garage",
+                "free_next_day_delivery": "Free Next Day Delivery on Orders Above GH₵2,000!",
+                "computing": "Computing",
+                "no_computing_products_found": "No Computing Products Found",
+                "try_adjusting_filters": "Try adjusting your filters or search terms.",
+                "view_all_computing": "View All Computing",
+                "add_to_cart": "Add to Cart",
+                "previous": "Previous",
+                "next": "Next"
+            },
+            es: {
+                // Header & Navigation
+                "shop_by_brands": "COMPRAR POR MARCAS",
+                "all_brands": "Todas las Marcas",
+                "home": "INICIO",
+                "shop": "TIENDA",
+                "repair_studio": "Estudio de Reparación",
+                "computing_title": "Informática - Gadget Garage",
+                "free_next_day_delivery": "¡Entrega Gratis al Día Siguiente en Pedidos Superiores a GH₵2,000!",
+                "computing": "Informática",
+                "no_computing_products_found": "No se Encontraron Productos de Informática",
+                "try_adjusting_filters": "Intenta ajustar tus filtros o términos de búsqueda.",
+                "view_all_computing": "Ver Toda la Informática",
+                "add_to_cart": "Añadir al Carrito",
+                "previous": "Anterior",
+                "next": "Siguiente"
+            },
+            fr: {
+                // Header & Navigation
+                "shop_by_brands": "ACHETER PAR MARQUES",
+                "all_brands": "Toutes les Marques",
+                "home": "ACCUEIL",
+                "shop": "BOUTIQUE",
+                "repair_studio": "Studio de Réparation",
+                "computing_title": "Informatique - Gadget Garage",
+                "free_next_day_delivery": "Livraison Gratuite le Lendemain sur Commandes Supérieures à GH₵2,000!",
+                "computing": "Informatique",
+                "no_computing_products_found": "Aucun Produit Informatique Trouvé",
+                "try_adjusting_filters": "Essayez d'ajuster vos filtres ou termes de recherche.",
+                "view_all_computing": "Voir Toute l'Informatique",
+                "add_to_cart": "Ajouter au Panier",
+                "previous": "Précédent",
+                "next": "Suivant"
+            },
+            de: {
+                // Header & Navigation
+                "shop_by_brands": "NACH MARKEN EINKAUFEN",
+                "all_brands": "Alle Marken",
+                "home": "STARTSEITE",
+                "shop": "SHOP",
+                "repair_studio": "Reparatur Studio",
+                "computing_title": "Computer - Gadget Garage",
+                "free_next_day_delivery": "Kostenlose Lieferung am nächsten Tag bei Bestellungen über GH₵2,000!",
+                "computing": "Computer",
+                "no_computing_products_found": "Keine Computer-Produkte Gefunden",
+                "try_adjusting_filters": "Versuchen Sie, Ihre Filter oder Suchbegriffe anzupassen.",
+                "view_all_computing": "Alle Computer Anzeigen",
+                "add_to_cart": "In den Warenkorb",
+                "previous": "Zurück",
+                "next": "Weiter"
+            }
+        };
+
+        function translate(key, language = null) {
+            const lang = language || localStorage.getItem('selectedLanguage') || 'en';
+            return translations[lang] && translations[lang][key] ? translations[lang][key] : translations.en[key] || key;
+        }
+
+        function applyTranslationsEnhanced() {
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            const languageSelectors = document.querySelectorAll('select[onchange="changeLanguage(this.value)"]');
+            languageSelectors.forEach(selector => {
+                if (selector) {
+                    selector.value = currentLang;
+                }
+            });
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const translation = translate(key, currentLang);
+
+                if (element.tagName === 'INPUT' && (element.type === 'text' || element.type === 'email' || element.type === 'search')) {
+                    element.placeholder = translation;
+                } else if (element.tagName === 'INPUT' && (element.type === 'button' || element.type === 'submit')) {
+                    element.value = translation;
+                } else if (element.tagName === 'TITLE') {
+                    element.textContent = translation;
+                } else {
+                    element.textContent = translation;
+                }
+            });
+        }
+
+        function applyTranslations() {
+            applyTranslationsEnhanced();
+        }
+
+        function changeLanguage(language) {
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            if (currentLang === language) return;
+
+            localStorage.setItem('selectedLanguage', language);
+            applyTranslations();
+
+            const languageSelect = document.querySelector('select[onchange="changeLanguage(this.value)"]');
+            if (languageSelect) {
+                languageSelect.value = language;
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            applyTranslations();
         });
     </script>
 </body>

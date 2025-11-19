@@ -21,8 +21,8 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Contact Us - Gadget Garage</title>
-    <meta name="description" content="Get in touch with Gadget Garage. Contact us for support, repairs, or any questions about our premium tech devices.">
+    <title data-translate="contact_us_title">Contact Us - Gadget Garage</title>
+    <meta name="description" data-translate="contact_description" content="Get in touch with Gadget Garage. Contact us for support, repairs, or any questions about our premium tech devices.">
 
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
@@ -1249,6 +1249,52 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                     });
                 }
             });
+        });
+
+        // Contact Page Translation System
+        const contactTranslations = {
+            en: {
+                "contact_us_title": "Contact Us - Gadget Garage",
+                "contact_description": "Get in touch with Gadget Garage. Contact us for support, repairs, or any questions about our premium tech devices."
+            },
+            es: {
+                "contact_us_title": "Contáctanos - Gadget Garage",
+                "contact_description": "Ponte en contacto con Gadget Garage. Contáctanos para soporte, reparaciones, o cualquier pregunta sobre nuestros dispositivos tecnológicos premium."
+            },
+            fr: {
+                "contact_us_title": "Nous Contacter - Gadget Garage",
+                "contact_description": "Entrez en contact avec Gadget Garage. Contactez-nous pour le support, les réparations, ou toute question concernant nos appareils technologiques premium."
+            },
+            de: {
+                "contact_us_title": "Kontakt - Gadget Garage",
+                "contact_description": "Nehmen Sie Kontakt mit Gadget Garage auf. Kontaktieren Sie uns für Support, Reparaturen oder Fragen zu unseren Premium-Tech-Geräten."
+            }
+        };
+
+        function contactTranslate(key, language = null) {
+            const lang = language || localStorage.getItem('selectedLanguage') || 'en';
+            return contactTranslations[lang] && contactTranslations[lang][key] ? contactTranslations[lang][key] : contactTranslations.en[key] || key;
+        }
+
+        function applyContactTranslations() {
+            const currentLang = localStorage.getItem('selectedLanguage') || 'en';
+
+            document.querySelectorAll('[data-translate]').forEach(element => {
+                const key = element.getAttribute('data-translate');
+                const translation = contactTranslate(key, currentLang);
+
+                if (element.tagName === 'TITLE') {
+                    element.textContent = translation;
+                } else if (element.tagName === 'META' && element.getAttribute('name') === 'description') {
+                    element.setAttribute('content', translation);
+                } else {
+                    element.textContent = translation;
+                }
+            });
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            applyContactTranslations();
         });
     </script>
 </body>

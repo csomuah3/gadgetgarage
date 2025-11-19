@@ -178,7 +178,7 @@ try {
 		}
 
 		.logo img {
-			height: 82px !important;
+			height: 70px !important;
 			width: auto !important;
 			object-fit: contain;
 			transition: transform 0.3s ease;
@@ -209,7 +209,7 @@ try {
 			padding: 12px 20px 12px 50px;
 			border: 2px solid #e2e8f0;
 			border-radius: 25px;
-			font-size: 1.5rem;
+			font-size: 1.2rem;
 			transition: all 0.3s ease;
 			background: #f8fafc;
 		}
@@ -227,7 +227,7 @@ try {
 			top: 50%;
 			transform: translateY(-50%);
 			color: #008060;
-			font-size: 1.2rem;
+			font-size: 1.1rem;
 		}
 
 		.search-btn {
@@ -240,7 +240,7 @@ try {
 			padding: 8px 16px;
 			border-radius: 20px;
 			color: white;
-			font-weight: 500;
+			font-weight: 200;
 			cursor: pointer;
 			transition: all 0.3s ease;
 		}
@@ -272,7 +272,7 @@ try {
 		}
 
 		.tech-revival-icon {
-			font-size: 1.7rem;
+			font-size: 1.4rem;
 			color: #008060;
 			transition: transform 0.3s ease;
 		}
@@ -282,7 +282,7 @@ try {
 		}
 
 		.tech-revival-text {
-			font-size: 1.5rem;
+			font-size: 1.2rem;
 			font-weight: 300;
 			color: #1f2937;
 			margin: 0;
@@ -305,7 +305,7 @@ try {
 		}
 
 		.contact-number {
-			font-size: 1.2 rem;
+			font-size: 1.1 rem;
 			font-weight: 600;
 			color: #008060;
 			margin: 0;
@@ -3107,7 +3107,7 @@ try {
 			}
 
 			.logo img {
-				height: 30px !important;
+				height: 25px !important;
 			}
 
 			.tech-revival-text {
@@ -3155,16 +3155,16 @@ try {
 
 			.search-input {
 				padding: 9px 14px 9px 40px;
-				font-size: 0.5rem;
+				font-size: 0.3rem;
 			}
 
 			.search-btn {
 				padding: 5px 12px;
-				font-size: 0.85rem;
+				font-size: 0.5rem;
 			}
 
 			.category-item {
-				font-size: 0.8rem;
+				font-size: 0.5rem;
 				padding: 5px 10px;
 			}
 

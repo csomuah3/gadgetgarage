@@ -939,6 +939,7 @@ try {
 			text-decoration: none;
 			font-weight: 600;
 			padding: 16px 20px;
+			font-size: 1.3rem;
 			display: flex;
 			align-items: center;
 			gap: 6px;

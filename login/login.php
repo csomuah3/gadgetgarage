@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'config/database.php';
+require_once '../settings/db_class.php';
 
 // Handle language switching
 if (isset($_GET['lang'])) {
@@ -169,22 +169,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         $login_error = 'Please enter a valid email address.';
     } else {
-        try {
-            $stmt = $pdo->prepare("SELECT * FROM users WHERE email = ?");
-            $stmt->execute([$email]);
-            $user = $stmt->fetch();
+        $db = new db_connection();
 
-            if ($user && password_verify($password, $user['password'])) {
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $user['first_name'] . ' ' . $user['last_name'];
-                $_SESSION['user_email'] = $user['email'];
+        $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+        $sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
 
-                $login_success = true;
-            } else {
-                $login_error = 'Invalid email or password.';
-            }
-        } catch (PDOException $e) {
-            $login_error = 'Database error. Please try again later.';
+        $user = $db->db_fetch_one($sql);
+
+        if ($user && password_verify($password, $user['customer_pass'])) {
+            $_SESSION['user_id'] = $user['customer_id'];
+            $_SESSION['user_name'] = $user['customer_name'];
+            $_SESSION['user_email'] = $user['customer_email'];
+            $_SESSION['email'] = $user['customer_email'];
+            $_SESSION['role'] = $user['user_role'];
+            $_SESSION['name'] = $user['customer_name'];
+
+            $login_success = true;
+        } else {
+            $login_error = 'Invalid email or password.';
         }
     }
 }

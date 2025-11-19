@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once 'config/database.php';
+require_once 'settings/db_class.php';
 
 // Handle language switching
 if (isset($_GET['lang'])) {
@@ -184,32 +184,40 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } elseif ($password !== $confirm_password) {
         $registration_error = 'Passwords do not match.';
     } else {
-        try {
-            // Check if user already exists
-            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
-            $stmt->execute([$email]);
+        $db = new db_connection();
 
-            if ($stmt->rowCount() > 0) {
-                $registration_error = 'An account with this email already exists.';
+        // Check if user already exists
+        $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+        $check_sql = "SELECT customer_id FROM customer WHERE customer_email = '$email_escaped'";
+        $existing_user = $db->db_fetch_one($check_sql);
+
+        if ($existing_user) {
+            $registration_error = 'An account with this email already exists.';
+        } else {
+            // Create new user
+            $hashed_password = password_hash($password, PASSWORD_DEFAULT);
+            $first_name_escaped = mysqli_real_escape_string($db->db_conn(), $first_name);
+            $last_name_escaped = mysqli_real_escape_string($db->db_conn(), $last_name);
+            $full_name = $first_name . ' ' . $last_name;
+            $full_name_escaped = mysqli_real_escape_string($db->db_conn(), $full_name);
+
+            $insert_sql = "INSERT INTO customer (customer_name, customer_email, customer_pass, customer_contact, user_role, customer_country, customer_city, customer_address, date_created)
+                          VALUES ('$full_name_escaped', '$email_escaped', '$hashed_password', '', 1, 'Ghana', 'Accra', '', NOW())";
+
+            if ($db->db_write_query($insert_sql)) {
+                // Auto-login the user
+                $user_id = $db->last_insert_id();
+                $_SESSION['user_id'] = $user_id;
+                $_SESSION['user_name'] = $full_name;
+                $_SESSION['user_email'] = $email;
+                $_SESSION['email'] = $email;
+                $_SESSION['role'] = 1;
+                $_SESSION['name'] = $full_name;
+
+                $registration_success = true;
             } else {
-                // Create new user
-                $hashed_password = password_hash($password, PASSWORD_DEFAULT);
-                $stmt = $pdo->prepare("INSERT INTO users (first_name, last_name, email, password, created_at) VALUES (?, ?, ?, ?, NOW())");
-
-                if ($stmt->execute([$first_name, $last_name, $email, $hashed_password])) {
-                    // Auto-login the user
-                    $user_id = $pdo->lastInsertId();
-                    $_SESSION['user_id'] = $user_id;
-                    $_SESSION['user_name'] = $first_name . ' ' . $last_name;
-                    $_SESSION['user_email'] = $email;
-
-                    $registration_success = true;
-                } else {
-                    $registration_error = 'Registration failed. Please try again.';
-                }
+                $registration_error = 'Registration failed. Please try again.';
             }
-        } catch (PDOException $e) {
-            $registration_error = 'Database error. Please try again later.';
         }
     }
 }

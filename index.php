@@ -178,7 +178,7 @@ try {
 		}
 
 		.logo img {
-			height: 110px !important;
+			height: 60px !important;
 			width: auto !important;
 			object-fit: contain;
 			transition: transform 0.3s ease;
@@ -200,7 +200,7 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 500px;
+			max-width: 600px;
 			margin: 0 40px;
 		}
 
@@ -272,7 +272,7 @@ try {
 		}
 
 		.tech-revival-icon {
-			font-size: 2.8rem;
+			font-size: 1.7rem;
 			color: #008060;
 			transition: transform 0.3s ease;
 		}
@@ -282,22 +282,15 @@ try {
 		}
 
 		.tech-revival-text {
-			font-size: 1.9rem;
-			font-weight: 800;
+			font-size: 1.5rem;
+			font-weight: 100;
 			color: #1f2937;
 			margin: 0;
 			letter-spacing: 0.5px;
 			line-height: 1.3;
 		}
 
-		.ghana-flag {
-			font-size: 2.2rem;
-			margin-left: 10px;
-			margin-right: 6px;
-			vertical-align: middle;
-			display: inline-block;
-			animation: wave 2s ease-in-out infinite;
-		}
+		
 
 		@keyframes wave {
 			0%, 100% {
@@ -312,7 +305,7 @@ try {
 		}
 
 		.contact-number {
-			font-size: 1rem;
+			font-size: 0.8rem;
 			font-weight: 600;
 			color: #008060;
 			margin: 0;

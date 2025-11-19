@@ -2279,8 +2279,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Images now load directly using get_product_image_url() helper function
 
         function generatePlaceholderUrl(text, size = '320x240') {
-            const encodedText = encodeURIComponent(text);
-            return `https://via.placeholder.com/${size}/8b5fbf/ffffff?text=${encodedText}`;
+            // Use inline SVG to avoid network requests
+            const svg = `data:image/svg+xml;base64,${btoa(`
+                <svg width="320" height="240" xmlns="http://www.w3.org/2000/svg">
+                    <rect width="100%" height="100%" fill="#f8f9fa"/>
+                    <rect x="1" y="1" width="318" height="238" fill="none" stroke="#dee2e6" stroke-width="2"/>
+                    <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="14" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">No Image</text>
+                </svg>
+            `)}`;
+            return svg;
         }
 
         // Autocomplete functionality

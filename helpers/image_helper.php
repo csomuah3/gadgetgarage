@@ -41,8 +41,9 @@ function get_product_image_url($image_filename, $product_title = 'Product', $siz
  * @return string Placeholder URL
  */
 function generate_placeholder_url($text, $size = '400x300') {
+    // Use a more reliable placeholder service or create a local fallback
     $encoded_text = urlencode($text);
-    return "https://via.placeholder.com/{$size}/008060/ffffff?text={$encoded_text}";
+    return "https://placehold.co/{$size}/008060/ffffff?text={$encoded_text}";
 }
 
 /**
@@ -52,8 +53,15 @@ function generate_placeholder_url($text, $size = '400x300') {
  * @return string JavaScript onerror attribute value
  */
 function get_image_onerror($product_title, $size = '400x300') {
-    $placeholder_url = generate_placeholder_url($product_title, $size);
-    return "this.src='{$placeholder_url}'";
+    // Use a data URL as fallback to avoid network requests
+    $svg_placeholder = "data:image/svg+xml;base64," . base64_encode('
+        <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
+            <rect width="100%" height="100%" fill="#f8f9fa"/>
+            <rect x="1" y="1" width="398" height="298" fill="none" stroke="#dee2e6" stroke-width="2"/>
+            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="16" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">No Image Available</text>
+        </svg>
+    ');
+    return "this.src='{$svg_placeholder}'";
 }
 
 /**

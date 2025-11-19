@@ -933,11 +933,11 @@ try {
 		.nav-item {
 			color: #1f2937;
 			text-decoration: none;
-			font-weight: 500;
+			font-weight: 400;
 			padding: 16px 20px;
 			display: flex;
 			align-items: center;
-			gap: 5px;
+			gap: 6px;
 			transition: all 0.3s ease;
 			border-radius: 8px;
 			white-space: nowrap;
@@ -972,7 +972,7 @@ try {
 			padding: 12px 20px;
 			border-radius: 6px;
 			font-weight: 600;
-			font-size: 0.9rem;
+			font-size: 1rem;
 			display: flex;
 			align-items: center;
 			gap: 10px;
@@ -1002,7 +1002,7 @@ try {
 			color: #1f2937;
 			text-decoration: none;
 			font-weight: 500;
-			font-size: 1rem;
+			font-size: 2rem;
 			padding: 12px 0;
 			display: flex;
 			align-items: center;
@@ -1015,7 +1015,7 @@ try {
 		}
 
 		.nav-link i {
-			font-size: 0.8rem;
+			font-size: 0.9rem;
 			transition: transform 0.3s ease;
 		}
 
@@ -1056,7 +1056,7 @@ try {
 
 		.dropdown-column h4 {
 			color: #1f2937;
-			font-size: 1.1rem;
+			font-size: 1.2rem;
 			font-weight: 600;
 			margin-bottom: 16px;
 			border-bottom: 2px solid #f3f4f6;
@@ -1076,7 +1076,7 @@ try {
 		.dropdown-column ul li a {
 			color: #6b7280;
 			text-decoration: none;
-			font-size: 0.95rem;
+			font-size: 1rem;
 			display: flex;
 			align-items: center;
 			gap: 8px;
@@ -1137,10 +1137,10 @@ try {
 		.shop-now-btn {
 			background: #008060;
 			color: white;
-			padding: 4px 12px;
+			padding: 4px 8px;
 			border-radius: 6px;
 			text-decoration: none;
-			font-size: 0.8rem;
+			font-size: 0.6rem;
 			font-weight: 500;
 			transition: all 0.3s ease;
 		}

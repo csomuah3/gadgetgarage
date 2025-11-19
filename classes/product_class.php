@@ -70,7 +70,19 @@ class Product extends db_connection {
                     VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id)";
         }
 
-        return $this->db_write_query($sql);
+        $result = $this->db_write_query($sql);
+
+        // Store the inserted ID for later use
+        if ($result) {
+            $this->last_inserted_id = mysqli_insert_id($this->db);
+        }
+
+        return $result;
+    }
+
+    // Get the last inserted product ID
+    public function get_last_inserted_id() {
+        return isset($this->last_inserted_id) ? $this->last_inserted_id : mysqli_insert_id($this->db);
     }
 
     // Get all products

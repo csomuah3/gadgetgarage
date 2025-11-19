@@ -67,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
     $product_keywords = trim($_POST['product_keywords'] ?? '');
+    $product_color = trim($_POST['product_color'] ?? '');
     $category_id = (int)($_POST['category_id'] ?? 0);
     $brand_id = (int)($_POST['brand_id'] ?? 0);
     $stock_quantity = (int)($_POST['stock_quantity'] ?? 10);
@@ -94,7 +95,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     try {
         // Add the product first
-        $result = add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity);
+        $result = add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
 
         if ($result['status'] === 'success' && !empty($uploaded_images)) {
             // Get the new product ID
@@ -125,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 }
 
 /**
- * Upload a single image file
+ * Upload a single image file to external server
  */
 function uploadSingleImage($file, $type = 'gallery') {
     try {
@@ -148,26 +149,27 @@ function uploadSingleImage($file, $type = 'gallery') {
             throw new Exception('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.');
         }
 
-        // Upload to server using curl
+        // Upload to external server
         $server_upload_url = 'http://169.239.251.102:442/~chelsea.somuah/upload.php';
 
         // Generate proper filename with product prefix
         $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $file_name = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
 
-        // Upload to server using curl
+        // Create cURL file upload
         $curl = curl_init();
         curl_setopt_array($curl, [
             CURLOPT_URL => $server_upload_url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => [
-                'upload' => new CURLFile($file['tmp_name'], $file_type, $file_name)
+                'file' => new CURLFile($file['tmp_name'], $file_type, $file_name)
             ],
-            CURLOPT_HTTPHEADER => [
-                'Content-Type: multipart/form-data'
-            ],
-            CURLOPT_TIMEOUT => 30
+            CURLOPT_TIMEOUT => 30,
+            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false,
+            CURLOPT_FOLLOWLOCATION => true
         ]);
 
         $response = curl_exec($curl);
@@ -175,29 +177,36 @@ function uploadSingleImage($file, $type = 'gallery') {
         $error = curl_error($curl);
         curl_close($curl);
 
-        if ($response && $httpCode === 200) {
+        // Log the response for debugging
+        error_log("Upload response: " . $response);
+        error_log("HTTP Code: " . $httpCode);
+
+        if ($error) {
+            throw new Exception('cURL error: ' . $error);
+        }
+
+        if ($httpCode === 200 && $response) {
             $uploadResult = json_decode($response, true);
-            if ($uploadResult && isset($uploadResult['status']) && $uploadResult['status'] === 'success') {
+            if ($uploadResult && isset($uploadResult['status'])) {
+                if ($uploadResult['status'] === 'success') {
+                    return [
+                        'success' => true,
+                        'filename' => $file_name,
+                        'server_response' => $uploadResult
+                    ];
+                } else {
+                    throw new Exception('Server error: ' . ($uploadResult['message'] ?? 'Upload failed'));
+                }
+            } else {
+                // If response is not JSON, assume success if HTTP 200
                 return [
                     'success' => true,
                     'filename' => $file_name,
-                    'path' => $server_upload_url
+                    'server_response' => $response
                 ];
-            } else {
-                $errorMsg = 'Server upload failed';
-                if ($uploadResult && isset($uploadResult['message'])) {
-                    $errorMsg = $uploadResult['message'];
-                } elseif (!empty($response)) {
-                    $errorMsg = 'Server response: ' . substr($response, 0, 200);
-                }
-                throw new Exception('Failed to upload to server: ' . $errorMsg);
             }
         } else {
-            $errorMsg = 'Server upload failed (HTTP: ' . $httpCode . ')';
-            if (!empty($error)) {
-                $errorMsg .= ' - cURL error: ' . $error;
-            }
-            throw new Exception($errorMsg);
+            throw new Exception("Server returned HTTP $httpCode. Response: " . substr($response, 0, 200));
         }
 
     } catch (Exception $e) {

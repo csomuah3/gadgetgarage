@@ -202,7 +202,7 @@ try {
                 <h5><i class="fas fa-plus me-2"></i>Add New Product</h5>
             </div>
             <div class="card-body-custom">
-                <form method="POST" class="modern-form">
+                <form method="POST" class="modern-form" enctype="multipart/form-data" id="addProductForm">
                     <div class="form-group mb-3">
                         <label for="product_title" class="form-label-modern">Product Title</label>
                         <input type="text" class="form-control-modern" id="product_title" name="product_title" required>
@@ -305,7 +305,7 @@ try {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <input type="hidden" id="product_cat" name="product_cat" required>
+                            <input type="hidden" id="category_id" name="category_id" required>
                         </div>
                     </div>
 
@@ -327,7 +327,7 @@ try {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <input type="hidden" id="product_brand" name="product_brand" required>
+                            <input type="hidden" id="brand_id" name="brand_id" required>
                         </div>
                     </div>
 
@@ -344,7 +344,7 @@ try {
                                         <h6>Upload Main Image</h6>
                                         <p>Drag & drop or click to select</p>
                                     </div>
-                                    <input type="file" id="single-image-input" accept="image/*" hidden>
+                                    <input type="file" id="single-image-input" name="product_image" accept="image/*" hidden>
                                 </div>
                                 <div class="image-preview" id="single-image-preview" style="display: none;">
                                     <img src="" alt="Preview" class="preview-image">
@@ -366,7 +366,7 @@ try {
                                         <h6>Upload Additional Images</h6>
                                         <p>Multiple images for gallery</p>
                                     </div>
-                                    <input type="file" id="multiple-images-input" accept="image/*" multiple hidden>
+                                    <input type="file" id="multiple-images-input" name="product_images[]" accept="image/*" multiple hidden>
                                 </div>
                                 <div class="images-preview-grid" id="multiple-images-preview"></div>
                             </div>
@@ -374,7 +374,7 @@ try {
                     </div>
 
 
-                    <button type="submit" name="add_product" class="btn-primary-custom w-100">
+                    <button type="button" onclick="submitProductForm()" class="btn-primary-custom w-100" id="addProductBtn">
                         <i class="fas fa-plus me-2"></i>
                         Add Product
                     </button>
@@ -1638,7 +1638,7 @@ function initializeDropdowns() {
     // Category Dropdown
     const categorySelected = document.getElementById('category-selected');
     const categoryOptions = document.getElementById('category-options');
-    const categoryInput = document.getElementById('product_cat');
+    const categoryInput = document.getElementById('category_id');
     const categorySearchInput = categoryOptions.querySelector('.dropdown-search-input');
 
     categorySelected.addEventListener('click', function() {
@@ -1674,7 +1674,7 @@ function initializeDropdowns() {
     // Brand Dropdown
     const brandSelected = document.getElementById('brand-selected');
     const brandOptions = document.getElementById('brand-options');
-    const brandInput = document.getElementById('product_brand');
+    const brandInput = document.getElementById('brand_id');
     const brandSearchInput = brandOptions.querySelector('.dropdown-search-input');
 
     brandSelected.addEventListener('click', function() {
@@ -1876,6 +1876,75 @@ function initializeColorSelection() {
     if (colorOptions.length > 0) {
         colorOptions[0].classList.add('selected');
         colorInput.value = colorOptions[0].getAttribute('data-color');
+    }
+}
+
+// Submit product form with AJAX
+async function submitProductForm() {
+    const form = document.getElementById('addProductForm');
+    const submitBtn = document.getElementById('addProductBtn');
+    const originalBtnText = submitBtn.innerHTML;
+
+    // Show loading state
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding Product...';
+    submitBtn.disabled = true;
+
+    try {
+        const formData = new FormData(form);
+
+        // Validate required fields
+        const requiredFields = ['product_title', 'product_price', 'category_id', 'brand_id'];
+        for (const field of requiredFields) {
+            if (!formData.get(field)) {
+                throw new Error(`Please fill in the ${field.replace('_', ' ')}.`);
+            }
+        }
+
+        const response = await fetch('../actions/add_product_action.php', {
+            method: 'POST',
+            body: formData
+        });
+
+        const data = await response.json();
+
+        if (data.status === 'success') {
+            // Show success message
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Success!',
+                    text: data.message + (data.uploaded_images_count ? ` (${data.uploaded_images_count} images uploaded)` : ''),
+                    icon: 'success',
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    // Reset form and reload page
+                    form.reset();
+                    window.location.reload();
+                });
+            } else {
+                alert(data.message);
+                form.reset();
+                window.location.reload();
+            }
+        } else {
+            throw new Error(data.message || 'Failed to add product');
+        }
+    } catch (error) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'OK'
+            });
+        } else {
+            alert('Error: ' + error.message);
+        }
+    } finally {
+        // Restore button state
+        submitBtn.innerHTML = originalBtnText;
+        submitBtn.disabled = false;
     }
 }
 

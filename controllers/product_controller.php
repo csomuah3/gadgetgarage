@@ -13,7 +13,9 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
 
     $result = $product->add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
     if ($result) {
-        return ['status' => 'success', 'message' => 'Product added successfully'];
+        // Get the inserted product ID
+        $product_id = $product->get_last_inserted_id();
+        return ['status' => 'success', 'message' => 'Product added successfully', 'product_id' => $product_id];
     } else {
         return ['status' => 'error', 'message' => 'Failed to add product'];
     }

@@ -621,6 +621,9 @@ function updateCartBadge(count) {
     }
 }
 
+// Make updateCartBadge globally available
+window.updateCartBadge = updateCartBadge;
+
 // Update cart totals
 function updateCartTotals(total) {
     const cartSubtotal = document.getElementById('cartSubtotal');

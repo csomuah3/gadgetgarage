@@ -3868,7 +3868,11 @@ try {
 						<div class="header-icon">
 							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -6198,6 +6202,38 @@ try {
 
 		// Start timer when page loads
 		startPromoTimer();
+
+		// Cart badge refresh function (to fetch latest count from server)
+		function refreshCartBadge() {
+			fetch('actions/get_cart_count.php')
+				.then(response => response.json())
+				.then(data => {
+					// Use the existing updateCartBadge function from cart.js if available
+					if (window.updateCartBadge) {
+						window.updateCartBadge(data.count);
+					} else {
+						// Fallback if cart.js is not loaded
+						const cartBadge = document.getElementById('cartBadge');
+						if (cartBadge) {
+							if (data.count > 0) {
+								cartBadge.textContent = data.count;
+								cartBadge.style.display = 'flex';
+							} else {
+								cartBadge.style.display = 'none';
+							}
+						}
+					}
+				})
+				.catch(error => {
+					console.error('Error updating cart badge:', error);
+				});
+		}
+
+		// Update cart badge on page load
+		refreshCartBadge();
+
+		// Make refreshCartBadge globally available for other scripts
+		window.refreshCartBadge = refreshCartBadge;
 	</script>
 
 </body>

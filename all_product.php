@@ -124,7 +124,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        /* Main header styles removed - using header-styles.css instead */
+    
 
         /* Logo styles removed - using header-styles.css instead */
 

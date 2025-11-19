@@ -2846,7 +2846,7 @@ try {
 		.promo-cards {
 			display: flex;
 			gap: 20px;
-			margin-top: 40px;
+			margin-top: 50px;
 		}
 
 		.promo-card {
@@ -2883,8 +2883,8 @@ try {
 			padding: 6px 16px;
 			border-radius: 16px;
 			font-size: 1rem;
-			font-weight: 600;
-			margin-bottom: 16px;
+			font-weight: 400;
+			margin-bottom: 20px;
 			display: inline-block;
 		}
 
@@ -3114,19 +3114,19 @@ try {
 			}
 
 			.logo img {
-				height: 50px !important;
+				height: 30px !important;
 			}
 
 			.tech-revival-text {
-				font-size: 1.1rem;
+				font-size: 1rem;
 			}
 
 			.tech-revival-icon {
-				font-size: 1.6rem;
+				font-size: 1.1rem;
 			}
 
 			.header-icon i {
-				font-size: 1.3rem;
+				font-size: 1rem;
 			}
 
 			.user-avatar {

@@ -2,6 +2,30 @@
 require_once __DIR__ . '/../controllers/product_controller.php';
 require_once __DIR__ . '/../controllers/category_controller.php';
 require_once __DIR__ . '/../controllers/brand_controller.php';
+require_once __DIR__ . '/../helpers/image_helper.php';
+
+function enrich_product_image_urls($products) {
+    if (empty($products)) {
+        return $products;
+    }
+
+    // Single product
+    if (isset($products['product_id'])) {
+        $products['image_url'] = get_product_image_url(
+            $products['product_image'] ?? '',
+            $products['product_title'] ?? ''
+        );
+        return $products;
+    }
+
+    return array_map(function ($product) {
+        $product['image_url'] = get_product_image_url(
+            $product['product_image'] ?? '',
+            $product['product_title'] ?? ''
+        );
+        return $product;
+    }, $products);
+}
 header('Content-Type: application/json');
 
 // Handle product actions
@@ -12,6 +36,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
     switch ($action) {
         case 'view_all_products':
             $products = view_all_products_ctr();
+            $products = enrich_product_image_urls($products);
             echo json_encode($products);
             break;
 
@@ -19,6 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
             $query = $_REQUEST['query'] ?? '';
             if (!empty($query)) {
                 $products = search_products_ctr($query);
+                $products = enrich_product_image_urls($products);
                 echo json_encode($products);
             } else {
                 echo json_encode(['error' => 'Search query is required']);
@@ -29,6 +55,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
             $cat_id = $_REQUEST['cat_id'] ?? 0;
             if ($cat_id > 0) {
                 $products = filter_products_by_category_ctr($cat_id);
+                $products = enrich_product_image_urls($products);
                 echo json_encode($products);
             } else {
                 echo json_encode(['error' => 'Valid category ID is required']);
@@ -39,6 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
             $brand_id = $_REQUEST['brand_id'] ?? 0;
             if ($brand_id > 0) {
                 $products = filter_products_by_brand_ctr($brand_id);
+                $products = enrich_product_image_urls($products);
                 echo json_encode($products);
             } else {
                 echo json_encode(['error' => 'Valid brand ID is required']);
@@ -49,6 +77,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
             $product_id = $_REQUEST['product_id'] ?? 0;
             if ($product_id > 0) {
                 $product = view_single_product_ctr($product_id);
+                $product = enrich_product_image_urls($product);
                 echo json_encode($product);
             } else {
                 echo json_encode(['error' => 'Valid product ID is required']);
@@ -146,7 +175,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' || $_SERVER['REQUEST_METHOD'] === 'GET
                 });
             }
 
-            echo json_encode(array_values($products));
+            $products = enrich_product_image_urls(array_values($products));
+            echo json_encode($products);
             break;
 
         default:

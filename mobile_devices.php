@@ -1139,8 +1139,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 
         function generatePlaceholderUrl(text, size = '320x240') {
-            const encodedText = encodeURIComponent(text);
-            return `https://via.placeholder.com/${size}/008060/ffffff?text=${encodedText}`;
+            if (typeof generatePlaceholderImage === 'function') {
+                return generatePlaceholderImage(text, size);
+            }
+
+            const [width, height] = size.split('x').map(Number);
+            const safeText = (text || 'Gadget Garage').substring(0, 32).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+                <rect width="100%" height="100%" fill="#eef2ff"/>
+                <rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#cbd5f5" stroke-width="2"/>
+                <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 14)}" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
+            </svg>`;
+            return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         }
 
         // Floating Bubbles Animation

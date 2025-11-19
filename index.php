@@ -178,7 +178,7 @@ try {
 		}
 
 		.logo img {
-			height: 70px !important;
+			height: 60px !important;
 			width: auto !important;
 			object-fit: contain;
 			transition: transform 0.3s ease;
@@ -272,7 +272,7 @@ try {
 		}
 
 		.tech-revival-icon {
-			font-size: 1.4rem;
+			font-size: 1.2rem;
 			color: #008060;
 			transition: transform 0.3s ease;
 		}
@@ -282,8 +282,8 @@ try {
 		}
 
 		.tech-revival-text {
-			font-size: 1.2rem;
-			font-weight: 300;
+			font-size: 1.1rem;
+			font-weight: 600;
 			color: #1f2937;
 			margin: 0;
 			letter-spacing: 0.5px;
@@ -478,7 +478,7 @@ try {
 		}
 
 		.header-icon i {
-			font-size: 2.2rem;
+			font-size: 1.8rem;
 			font-weight: 700;
 			stroke-width: 2;
 			-webkit-text-stroke: 1px currentColor;
@@ -571,20 +571,20 @@ try {
 		}
 
 		.user-avatar {
-			width: 56px;
-			height: 56px;
+			width: 48px;
+			height: 48px;
 			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			color: white;
-			font-weight: 500;
-			font-size: 1.6rem;
+			font-weight: 600;
+			font-size: 1.3rem;
 			cursor: pointer;
 			transition: all 0.3s ease;
 			box-shadow: 0 3px 10px rgba(0, 128, 96, 0.4);
-			border: 3px solid rgba(255, 255, 255, 0.3);
+			border: 2px solid rgba(255, 255, 255, 0.3);
 		}
 
 		.user-avatar:hover {
@@ -3993,7 +3993,7 @@ try {
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
-										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
+										<a href="all_product.php" class="shop-now-btn">Shop </a>
 									</div>
 								</div>
 							</div>
@@ -4089,7 +4089,7 @@ try {
 						</div>
 						<div class="feature-content">
 							<h5>Free Shipping</h5>
-							<p>Free shipping all order over GH₵ 99</p>
+							<p>Free shipping all order over GH₵ 2000</p>
 						</div>
 					</div>
 				</div>
@@ -4099,8 +4099,8 @@ try {
 							<i class="fas fa-undo"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Money Return</h5>
-							<p>Back guarantee under 5 days</p>
+							<h5>Free Returns</h5>
+							<p>Back guarantee under 72 hours</p>
 						</div>
 					</div>
 				</div>
@@ -4111,7 +4111,7 @@ try {
 						</div>
 						<div class="feature-content">
 							<h5>Member Discount</h5>
-							<p>Onevery order over GH₵ 140.00</p>
+							<p>On every order over GH₵ 2000.00</p>
 						</div>
 					</div>
 				</div>
@@ -4149,7 +4149,7 @@ try {
 					<div class="category-small">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads">
 						<div class="category-small-overlay">
-							<h4><span data-translate="ipads">iPads</span></h4>
+							<h4><span data-translate="ipads">IPads and Tablets</span></h4>
 							<p>From GH₵ 3000</p>
 						</div>
 					</div>
@@ -4163,14 +4163,14 @@ try {
 					<div class="category-small">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops">
 						<div class="category-small-overlay">
-							<h4><span data-translate="laptops">Laptops</span></h4>
+							<h4><span data-translate="laptops">Laptops and Desktops</span></h4>
 							<p>From GH₵ 4000</p>
 						</div>
 					</div>
 					<div class="category-small">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography">
 						<div class="category-small-overlay">
-							<h4><span data-translate="photography">Photography</span></h4>
+							<h4><span data-translate="photography">Photography and Video Equipment</span></h4>
 							<p>From GH₵ 5000</p>
 						</div>
 					</div>
@@ -5622,6 +5622,23 @@ try {
 			applyTranslationsEnhanced();
 		}
 
+		function generatePlaceholderImage(text = 'Product', size = '300x200', bgColor = '#eef2ff', textColor = '#1f2937') {
+			const [width, height] = size.split('x').map(Number);
+			const safeText = (text || 'Gadget Garage').substring(0, 28).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+			const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+				<rect width="100%" height="100%" fill="${bgColor}"/>
+				<rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#cbd5f5" stroke-width="2"/>
+				<text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 14)}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
+			</svg>`;
+			return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+		}
+
+		function handleImageError(event, text = 'Product', size = '300x200') {
+			if (!event || !event.target) return;
+			event.target.onerror = null;
+			event.target.src = generatePlaceholderImage(text, size);
+		}
+
 		// Initialize translations on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			// Force English as default if no language is set or if you want to reset
@@ -5696,7 +5713,10 @@ try {
 			container.innerHTML = '';
 
 			products.forEach((product, index) => {
-				const imagePath = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' + product.product_image;
+				const imagePath = (product.image_url && product.image_url.trim() !== '')
+					? product.image_url
+					: generatePlaceholderImage(product.product_title, '300x200');
+				const safeTitleAttr = (product.product_title || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
 
 				const badges = ['Hot', 'Trending', 'Popular', 'Best Seller'];
 				const ratings = [4.8, 4.9, 4.7, 4.6];
@@ -5705,8 +5725,8 @@ try {
 					<div class="col-lg-3 col-md-6 mb-4">
 						<a href="single_product.php?id=${product.product_id}" class="top-pick-card">
 							<div class="position-relative">
-								<img src="${imagePath}" alt="${product.product_title}" class="pick-image"
-									 onerror="this.src='https://via.placeholder.com/300x200/8b5fbf/ffffff?text=${encodeURIComponent(product.product_title)}'">
+								<img src="${imagePath}" alt="${safeTitleAttr}" class="pick-image"
+									 onerror="handleImageError(event, '${safeTitleAttr}', '300x200')">
 								<div class="pick-badge">${badges[index]}</div>
 							</div>
 							<h4 class="pick-title">${product.product_title}</h4>

@@ -30,7 +30,7 @@ function get_product_image_url($image_filename, $product_title = 'Product', $siz
         return $server_base_url . htmlspecialchars($clean_filename);
     }
 
-    // No image found, return placeholder URL directly
+    // No image found, return placeholder data URL directly
     return generate_placeholder_url($product_title, $size);
 }
 
@@ -41,9 +41,28 @@ function get_product_image_url($image_filename, $product_title = 'Product', $siz
  * @return string Placeholder URL
  */
 function generate_placeholder_url($text, $size = '400x300') {
-    // Use a more reliable placeholder service or create a local fallback
-    $encoded_text = urlencode($text);
-    return "https://placehold.co/{$size}/008060/ffffff?text={$encoded_text}";
+    $text = $text ?: 'Gadget Garage';
+    $size_parts = explode('x', strtolower($size));
+    $width = isset($size_parts[0]) ? (int)$size_parts[0] : 400;
+    $height = isset($size_parts[1]) ? (int)$size_parts[1] : 300;
+
+    $sanitized_text = htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+
+    $svg = sprintf(
+        '<svg xmlns="http://www.w3.org/2000/svg" width="%1$d" height="%2$d">
+            <rect width="100%%" height="100%%" fill="#eef2ff"/>
+            <rect x="1" y="1" width="%3$d" height="%4$d" fill="none" stroke="#cbd5f5" stroke-width="2"/>
+            <text x="50%%" y="50%%" font-family="Arial, sans-serif" font-size="%5$d" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">%6$s</text>
+        </svg>',
+        $width,
+        $height,
+        max($width - 2, 0),
+        max($height - 2, 0),
+        max((int)($height * 0.12), 12),
+        $sanitized_text
+    );
+
+    return 'data:image/svg+xml;base64,' . base64_encode($svg);
 }
 
 /**
@@ -53,15 +72,8 @@ function generate_placeholder_url($text, $size = '400x300') {
  * @return string JavaScript onerror attribute value
  */
 function get_image_onerror($product_title, $size = '400x300') {
-    // Use a data URL as fallback to avoid network requests
-    $svg_placeholder = "data:image/svg+xml;base64," . base64_encode('
-        <svg width="400" height="300" xmlns="http://www.w3.org/2000/svg">
-            <rect width="100%" height="100%" fill="#f8f9fa"/>
-            <rect x="1" y="1" width="398" height="298" fill="none" stroke="#dee2e6" stroke-width="2"/>
-            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="16" fill="#6c757d" text-anchor="middle" dominant-baseline="middle">No Image Available</text>
-        </svg>
-    ');
-    return "this.src='{$svg_placeholder}'";
+    $data_uri = generate_placeholder_url($product_title, $size);
+    return "this.src='{$data_uri}'";
 }
 
 /**

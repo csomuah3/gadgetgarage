@@ -1155,27 +1155,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             window.location.href = 'computing.php';
         }
 
-        // Image Loading System
-        function loadProductImages() {
-            document.querySelectorAll('.product-image').forEach(img => {
-                const productId = img.getAttribute('data-product-id');
-                const productTitle = img.getAttribute('data-product-title');
-
-                fetch(`actions/upload_product_image_action.php?action=get_image_url&product_id=${productId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success && data.url) {
-                            img.src = data.url;
-                        } else {
-                            img.src = generatePlaceholderUrl(productTitle);
-                        }
-                    })
-                    .catch(error => {
-                        console.log('Image load error for product', productId, '- using placeholder');
-                        img.src = generatePlaceholderUrl(productTitle);
-                    });
-            });
-        }
 
         function generatePlaceholderUrl(text, size = '320x240') {
             const encodedText = encodeURIComponent(text);
@@ -1304,7 +1283,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingBubbles();
-            loadProductImages();
+            // Images now load directly using get_product_image_url() helper function
         });
 
         // Close dropdowns when clicking outside

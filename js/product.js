@@ -478,8 +478,7 @@ function displayProducts(products) {
         tbody.append(row);
     });
 
-    // Load product images after table is populated
-    loadProductImages();
+    // Images now load directly using get_product_image_url() helper function
 }
 
 // Load categories for dropdown
@@ -789,79 +788,6 @@ function copyImageUrl(url) {
     });
 }
 
-// Load product images using centralized image system
-function loadProductImages() {
-    // Add a small delay to ensure DOM is ready
-    setTimeout(() => {
-        const productImages = document.querySelectorAll('.product-image');
-        console.log('Loading images for', productImages.length, 'products');
-
-        productImages.forEach((element, index) => {
-            const productId = element.getAttribute('data-product-id');
-            const productTitle = element.getAttribute('data-product-title');
-
-            console.log('Loading image for product', productId, productTitle);
-
-            // If it's already an img element with src, skip loading
-            if (element.tagName === 'IMG' && element.src && !element.src.includes('placeholder')) {
-                console.log('Image already loaded for product', productId);
-                return;
-            }
-
-            if (productId) {
-                // Add loading indicator for div placeholders
-                if (element.tagName === 'DIV') {
-                    element.style.opacity = '0.5';
-                }
-
-                fetch('../actions/upload_product_image_action.php?action=get_image_url&product_id=' + productId)
-                    .then(response => {
-                        if (!response.ok) {
-                            throw new Error('Network response was not ok');
-                        }
-                        return response.json();
-                    })
-                    .then(data => {
-                        console.log('Image response for product', productId, data);
-
-                        if (data.success && data.url) {
-                            // Replace placeholder div with actual image
-                            if (element.tagName === 'DIV') {
-                                const img = document.createElement('img');
-                                img.className = 'product-image';
-                                img.width = 50;
-                                img.height = 50;
-                                img.style.objectFit = 'cover';
-                                img.style.borderRadius = '8px';
-                                img.setAttribute('data-product-id', productId);
-                                img.setAttribute('data-product-title', productTitle);
-                                img.src = data.url;
-                                img.alt = productTitle;
-                                element.parentNode.replaceChild(img, element);
-                                console.log('✅ Image loaded and replaced placeholder for product', productId);
-                            } else if (element.tagName === 'IMG') {
-                                element.src = data.url;
-                                console.log('✅ Image loaded for product', productId);
-                            }
-                        } else {
-                            // Keep placeholder but restore opacity
-                            if (element.tagName === 'DIV') {
-                                element.style.opacity = '1';
-                            }
-                            console.log('No image found for product', productId, '- keeping placeholder');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Image load error for product', productId, error);
-                        // Keep placeholder but restore opacity
-                        if (element.tagName === 'DIV') {
-                            element.style.opacity = '1';
-                        }
-                    });
-            }
-        });
-    }, 100);
-}
 
 // Display bulk uploaded images
 function displayBulkUploadedImages(images) {

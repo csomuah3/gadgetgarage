@@ -2276,30 +2276,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        // Image Loading System
-        function loadProductImages() {
-            document.querySelectorAll('.product-image').forEach(img => {
-                const productId = img.getAttribute('data-product-id');
-                const productImage = img.getAttribute('data-product-image');
-                const productTitle = img.getAttribute('data-product-title');
-
-                // Load image using the dedicated action
-                fetch(`actions/upload_product_image_action.php?action=get_image_url&product_id=${productId}`)
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success && data.url) {
-                            img.src = data.url;
-                        } else {
-                            // Use placeholder
-                            img.src = generatePlaceholderUrl(productTitle);
-                        }
-                    })
-                    .catch(error => {
-                        console.log('Image load error for product', productId, '- using placeholder');
-                        img.src = generatePlaceholderUrl(productTitle);
-                    });
-            });
-        }
+        // Images now load directly using get_product_image_url() helper function
 
         function generatePlaceholderUrl(text, size = '320x240') {
             const encodedText = encodeURIComponent(text);
@@ -2673,8 +2650,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             throw new Error('Server error: ' + data.error);
                         }
                         updateProductGrid(data);
-                        // Reload images for filtered products
-                        setTimeout(loadProductImages, 100);
+                        // Images already loaded via PHP helper function
                         // Hide apply button after successful application
                         hideApplyButton();
                         // Update initial state
@@ -2788,8 +2764,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 initNewFilters();
             }, 100);
 
-            // Load product images
-            loadProductImages();
+            // Images loaded via PHP helper function
 
             // Apply Filters button click handler
             applyFiltersBtn.addEventListener('click', function() {

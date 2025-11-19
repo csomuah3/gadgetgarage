@@ -1177,7 +1177,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Wishlist functionality coming soon!');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Wishlist functionality coming soon!', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 
@@ -1330,7 +1330,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Profile picture modal not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture modal not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 
@@ -1344,7 +1344,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Language change to ' + lang + ' not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Language change to ' + lang + ' not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 
@@ -1358,7 +1358,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Theme toggle not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Theme toggle not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 

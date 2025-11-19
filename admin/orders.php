@@ -570,7 +570,13 @@ function viewOrder(orderId) {
             confirmButtonText: 'OK'
         });
     } else {
-        alert(`Order #${orderId} details - Advanced order view coming soon!`);
+        Swal.fire({
+            title: 'Order Details',
+            text: `Order #${orderId} details - Advanced order view coming soon!`,
+            icon: 'info',
+            confirmButtonColor: '#007bff',
+            confirmButtonText: 'OK'
+        });
     }
 }
 

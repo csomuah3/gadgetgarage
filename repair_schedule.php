@@ -761,7 +761,7 @@ try {
                         confirmButtonText: 'OK'
                     });
                 } else {
-                    alert('Please select both date and time for your appointment.');
+                    Swal.fire({title: 'Missing Information', text: 'Please select both date and time for your appointment.', icon: 'warning', confirmButtonColor: '#ffc107', confirmButtonText: 'OK'});
                 }
                 return false;
             }
@@ -778,7 +778,7 @@ try {
                         confirmButtonText: 'OK'
                     });
                 } else {
-                    alert('Please enter your phone number.');
+                    Swal.fire({title: 'Missing Information', text: 'Please enter your phone number.', icon: 'warning', confirmButtonColor: '#ffc107', confirmButtonText: 'OK'});
                 }
                 return false;
             }
@@ -797,7 +797,7 @@ try {
                         confirmButtonText: 'OK'
                     });
                 } else {
-                    alert('Please accept all terms and conditions before scheduling your appointment.');
+                    Swal.fire({title: 'Terms Required', text: 'Please accept all terms and conditions before scheduling your appointment.', icon: 'warning', confirmButtonColor: '#ffc107', confirmButtonText: 'OK'});
                 }
                 return false;
             }

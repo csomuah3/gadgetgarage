@@ -282,8 +282,6 @@ function openProfilePictureModal() {
             icon: 'info',
             confirmButtonColor: '#D19C97'
         });
-    } else {
-        alert('Profile picture functionality will be available soon!');
     }
 }
 

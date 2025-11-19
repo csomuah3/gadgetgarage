@@ -692,7 +692,13 @@ function viewAppointment(appointmentId) {
             confirmButtonText: 'OK'
         });
     } else {
-        alert('Appointment details for #' + appointmentId + ' - Feature coming soon!');
+        Swal.fire({
+            title: 'Appointment Details',
+            text: 'Appointment details for #' + appointmentId + ' - Feature coming soon!',
+            icon: 'info',
+            confirmButtonColor: '#007bff',
+            confirmButtonText: 'OK'
+        });
     }
 }
 

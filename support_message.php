@@ -484,7 +484,7 @@ if ($_POST && isset($_POST['send_message'])) {
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Profile picture modal not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture modal not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 

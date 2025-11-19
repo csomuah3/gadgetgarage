@@ -928,7 +928,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+                Swal.fire({title: 'Cart Feature Coming Soon', text: 'Cart functionality will be implemented soon!', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 

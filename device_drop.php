@@ -764,8 +764,6 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                             confirmButtonColor: '#D19C97',
                             confirmButtonText: 'OK'
                         });
-                    } else {
-                        alert(`File ${file.name} is too large. Maximum size is 5MB.`);
                     }
                     return;
                 }
@@ -876,8 +874,6 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                             confirmButtonColor: '#D19C97',
                             confirmButtonText: 'OK'
                         });
-                    } else {
-                        alert('Error: ' + (result.message || 'There was an error submitting your request.'));
                     }
                 }
 
@@ -891,8 +887,6 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                         confirmButtonColor: '#D19C97',
                         confirmButtonText: 'OK'
                     });
-                } else {
-                    alert('There was a network error submitting your request. Please try again or contact us directly.');
                 }
             } finally {
                 // Reset button

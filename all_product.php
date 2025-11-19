@@ -2234,7 +2234,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Cart functionality will be implemented soon!\nThis will show your cart items.');
+                Swal.fire({title: 'Cart Feature Coming Soon', text: 'Cart functionality will be implemented soon!', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 
@@ -2664,7 +2664,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             confirmButtonText: 'OK'
                         });
                     } else {
-                        alert('Error applying filters. Please try again.');
+                        Swal.fire({title: 'Filter Error', text: 'Error applying filters. Please try again.', icon: 'error', confirmButtonColor: '#dc3545', confirmButtonText: 'OK'});
                     }
                 })
                 .finally(() => {
@@ -3057,7 +3057,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Profile picture modal not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture modal not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 
@@ -3071,7 +3071,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Language change to ' + lang + ' not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Language change to ' + lang + ' not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 
@@ -3085,7 +3085,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Theme toggle not implemented yet');
+                Swal.fire({title: 'Feature Coming Soon', text: 'Theme toggle not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
             }
         }
 

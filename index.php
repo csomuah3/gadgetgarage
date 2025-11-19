@@ -3878,9 +3878,9 @@ try {
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
+								<button class="dropdown-item-custom" onclick="goToAccount()">
+									<i class="fas fa-user"></i>
+									<span>Account</span>
 								</button>
 								<div class="dropdown-divider-custom"></div>
 								<div class="dropdown-item-custom">
@@ -4900,20 +4900,10 @@ try {
 			}
 		});
 
-		// Profile picture modal functionality
-		function openProfilePictureModal() {
-			// For now, show alert - will be replaced with actual modal
-			if (typeof Swal !== 'undefined') {
-				Swal.fire({
-					title: 'Profile Picture',
-					text: 'Profile picture upload functionality will be implemented',
-					icon: 'info',
-					confirmButtonColor: '#D19C97',
-					confirmButtonText: 'OK'
-				});
-			} else {
-				alert('Profile picture upload functionality will be implemented');
-			}
+		// Account page navigation
+		function goToAccount() {
+			// Redirect to account/profile page
+			window.location.href = 'my_orders.php';
 		}
 
 		// Language change functionality - instant translation
@@ -5817,8 +5807,6 @@ try {
 					confirmButtonColor: '#D19C97',
 					confirmButtonText: 'OK'
 				});
-			} else {
-				alert('Thank you for subscribing! You will receive updates at ' + email);
 			}
 			closeNewsletter();
 		}

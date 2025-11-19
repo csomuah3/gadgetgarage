@@ -1227,7 +1227,13 @@ function editProduct(productId) {
                 confirmButtonText: 'OK'
             });
         } else {
-            alert('Failed to load product data: ' + error.message);
+            Swal.fire({
+                title: 'Error',
+                text: 'Failed to load product data: ' + error.message,
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'OK'
+            });
         }
     });
 }
@@ -1557,7 +1563,13 @@ async function updateProduct() {
                     confirmButtonText: 'OK'
                 });
             } else {
-                alert('Error updating product: ' + (data.message || 'Unknown error'));
+                Swal.fire({
+                    title: 'Error',
+                    text: 'Error updating product: ' + (data.message || 'Unknown error'),
+                    icon: 'error',
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'OK'
+                });
             }
         }
     } catch (error) {
@@ -1570,7 +1582,13 @@ async function updateProduct() {
                 confirmButtonText: 'OK'
             });
         } else {
-            alert('Error updating product: ' + error.message);
+            Swal.fire({
+                title: 'Error',
+                text: 'Error updating product: ' + error.message,
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'OK'
+            });
         }
     } finally {
         // Restore button state
@@ -1922,9 +1940,16 @@ async function submitProductForm() {
                     window.location.reload();
                 });
             } else {
-                alert(data.message);
-                form.reset();
-                window.location.reload();
+                Swal.fire({
+                    title: 'Success!',
+                    text: data.message,
+                    icon: 'success',
+                    confirmButtonColor: '#28a745',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    form.reset();
+                    window.location.reload();
+                });
             }
         } else {
             throw new Error(data.message || 'Failed to add product');
@@ -1939,7 +1964,13 @@ async function submitProductForm() {
                 confirmButtonText: 'OK'
             });
         } else {
-            alert('Error: ' + error.message);
+            Swal.fire({
+                title: 'Error',
+                text: error.message,
+                icon: 'error',
+                confirmButtonColor: '#dc3545',
+                confirmButtonText: 'OK'
+            });
         }
     } finally {
         // Restore button state

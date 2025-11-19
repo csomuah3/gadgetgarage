@@ -779,7 +779,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
         });
 
         function openProfilePictureModal() {
-            alert('Profile picture functionality will be implemented');
+            Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture functionality will be implemented', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
         }
 
         function changeLanguage(language) {

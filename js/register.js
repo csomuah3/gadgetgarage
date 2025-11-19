@@ -30,7 +30,6 @@ $(document).ready(function() {
                     confirmButtonColor: '#D19C97'
                 });
             } else {
-                alert('Please fill in all fields!');
             }
             return;
         }
@@ -45,7 +44,6 @@ $(document).ready(function() {
                     confirmButtonColor: '#D19C97'
                 });
             } else {
-                alert('Please enter a valid email address!');
             }
             return;
         }
@@ -60,7 +58,6 @@ $(document).ready(function() {
                     confirmButtonColor: '#D19C97'
                 });
             } else {
-                alert('Password must be at least 6 characters long!');
             }
             return;
         }
@@ -101,7 +98,6 @@ $(document).ready(function() {
                             window.location.href = 'login.php';
                         });
                     } else {
-                        alert('SUCCESS: ' + response.message);
                         window.location.href = 'login.php';
                     }
                 } else {
@@ -113,7 +109,6 @@ $(document).ready(function() {
                             confirmButtonColor: '#D19C97'
                         });
                     } else {
-                        alert('ERROR: ' + response.message);
                     }
                 }
             },
@@ -132,7 +127,6 @@ $(document).ready(function() {
                         confirmButtonColor: '#D19C97'
                     });
                 } else {
-                    alert('Connection Error: ' + xhr.responseText);
                 }
             },
             complete: function() {
@@ -162,7 +156,6 @@ $(document).ready(function() {
                     confirmButtonColor: '#D19C97'
                 });
             } else {
-                alert('Please fill in all fields!');
             }
             return;
         }
@@ -177,7 +170,6 @@ $(document).ready(function() {
                     confirmButtonColor: '#D19C97'
                 });
             } else {
-                alert('Please enter a valid email address!');
             }
             return;
         }
@@ -215,7 +207,6 @@ $(document).ready(function() {
                             window.location.href = '../index.php';
                         });
                     } else {
-                        alert('SUCCESS: ' + response.message);
                         window.location.href = '../index.php';
                     }
                 } else {
@@ -227,7 +218,6 @@ $(document).ready(function() {
                             confirmButtonColor: '#D19C97'
                         });
                     } else {
-                        alert('ERROR: ' + response.message);
                     }
                 }
             },
@@ -246,7 +236,6 @@ $(document).ready(function() {
                         confirmButtonColor: '#D19C97'
                     });
                 } else {
-                    alert('Connection Error: ' + xhr.responseText);
                 }
             },
             complete: function() {

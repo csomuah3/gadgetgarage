@@ -444,8 +444,6 @@ class ChatBot {
                     icon: 'error',
                     confirmButtonColor: '#D19C97'
                 });
-            } else {
-                alert('Error sending message: ' + error.message);
             }
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;

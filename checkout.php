@@ -2202,7 +2202,7 @@ try {
 					confirmButtonText: 'OK'
 				});
 			} else {
-				alert('Profile picture upload functionality will be implemented');
+				Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture upload functionality will be implemented', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
 			}
 		}
 

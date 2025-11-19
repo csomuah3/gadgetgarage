@@ -36,6 +36,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
+
+// Try to load categories and brands for navigation
+$categories = [];
+$brands = [];
+
+try {
+    require_once('../controllers/category_controller.php');
+    $categories = get_all_categories_ctr();
+} catch (Exception $e) {
+    error_log("Failed to load categories: " . $e->getMessage());
+}
+
+try {
+    require_once('../controllers/brand_controller.php');
+    $brands = get_all_brands_ctr();
+} catch (Exception $e) {
+    error_log("Failed to load brands: " . $e->getMessage());
+}
 ?>
 
 <!DOCTYPE html>
@@ -54,34 +72,38 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-	<link href="../includes/header-styles.css" rel="stylesheet">
+	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-		body {
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			min-height: 100vh;
-			color: #1a1a1a;
-			overflow-x: hidden;
+		/* Reset and Base Styles */
+		* {
 			margin: 0;
 			padding: 0;
+			box-sizing: border-box;
 		}
 
-		/* Promotional Banner Styles */
+		body {
+			font-family: "Times New Roman", Times, serif;
+			background-color: #ffffff;
+			color: #1a1a1a;
+			overflow-x: hidden;
+		}
+
+		/* Promotional Banner Styles - Same as index */
 		.promo-banner {
 			background: #001f3f !important;
 			color: white;
 			padding: 6px 15px;
 			text-align: center;
-			font-size: 1.4rem;
-			font-weight: 700;
+			font-size: 1rem;
+			font-weight: 400;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-			height: 38px;
+			height: 32px;
 			display: flex;
 			align-items: center;
 			justify-content: space-between;
@@ -105,12 +127,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		}
 
 		.promo-banner i {
-			font-size: 1.5rem;
+			font-size: 1rem;
 		}
 
 		.promo-banner .promo-text {
-			font-size: 1.65rem;
-			font-weight: 700;
+			font-size: 1rem;
+			font-weight: 400;
 			letter-spacing: 0.5px;
 		}
 
@@ -118,63 +140,89 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			background: transparent;
 			padding: 0;
 			border-radius: 0;
-			font-size: 1.65rem;
-			font-weight: 700;
-			color: #FFD700;
-			letter-spacing: 1px;
+			font-size: 1.3rem;
+			font-weight: 500;
+			margin: 0;
+			border: none;
 		}
 
 		.promo-shop-link {
-			color: #FFD700;
-			text-decoration: none;
+			color: white;
+			text-decoration: underline;
 			font-weight: 700;
-			font-size: 1.4rem;
-			transition: color 0.3s ease;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+			font-size: 1.2rem;
+			flex: 0 0 auto;
 		}
 
 		.promo-shop-link:hover {
-			color: white;
+			opacity: 0.8;
 		}
 
-		/* Header Styles */
+		/* Header Styles - Same as index */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 38px;
+			top: 32px;
 			z-index: 1000;
-			padding: 16px 0;
+			padding: 20px 0;
 			border-bottom: 1px solid #e5e7eb;
 		}
 
+		.logo {
+			font-size: 2.2rem;
+			font-weight: 700;
+			color: #1f2937;
+			text-decoration: none;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+		}
+
 		.logo img {
-			height: 45px;
-			width: auto;
+			height: 60px !important;
+			width: auto !important;
 			object-fit: contain;
+			transition: transform 0.3s ease;
+		}
+
+		.logo:hover img {
+			transform: scale(1.05);
+		}
+
+		.logo .garage {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: white;
+			padding: 4px 8px;
+			border-radius: 6px;
+			font-size: 1rem;
+			font-weight: 600;
 		}
 
 		.search-container {
 			position: relative;
-			flex: 1;
-			max-width: 500px;
-			margin: 0 40px;
+			max-width: 600px;
+			width: 100%;
+			margin: 0 auto;
 		}
 
 		.search-input {
 			width: 100%;
-			padding: 12px 20px 12px 50px;
-			border: 2px solid #e2e8f0;
-			border-radius: 25px;
+			padding: 15px 50px 15px 50px;
+			border: 2px solid #e5e7eb;
+			border-radius: 50px;
+			background: #f8fafc;
 			font-size: 1rem;
 			transition: all 0.3s ease;
-			background: #f8fafc;
+			outline: none;
 		}
 
 		.search-input:focus {
-			outline: none;
-			border-color: #008060;
+			border-color: #3b82f6;
 			background: white;
-			box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 		}
 
 		.search-icon {
@@ -182,411 +230,393 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
-			color: #008060;
+			color: #6b7280;
 			font-size: 1.1rem;
 		}
 
 		.search-btn {
 			position: absolute;
-			right: 6px;
+			right: 8px;
 			top: 50%;
 			transform: translateY(-50%);
-			background: linear-gradient(135deg, #008060, #006b4e);
-			border: none;
-			padding: 8px 16px;
-			border-radius: 20px;
+			background: linear-gradient(135deg, #3b82f6, #1e40af);
 			color: white;
-			font-weight: 500;
-			cursor: pointer;
+			border: none;
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			transition: all 0.3s ease;
 		}
 
 		.search-btn:hover {
-			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-50%) scale(1.05);
+			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
 		}
 
 		.tech-revival-section {
 			display: flex;
 			align-items: center;
-			gap: 10px;
-			text-align: center;
-			margin: 0 60px;
+			gap: 12px;
+			color: #1f2937;
 		}
 
 		.tech-revival-icon {
-			font-size: 2.8rem;
-			color: #008060;
-			transition: transform 0.3s ease;
-		}
-
-		.tech-revival-icon:hover {
-			transform: rotate(15deg) scale(1.1);
+			font-size: 2.5rem;
+			color: #10b981;
 		}
 
 		.tech-revival-text {
-			font-size: 1.9rem;
-			font-weight: 800;
-			color: #1f2937;
+			font-size: 1.1rem;
+			font-weight: 600;
 			margin: 0;
-			letter-spacing: 0.5px;
-			line-height: 1.3;
-		}
-
-		.ghana-flag {
-			font-size: 2.2rem;
-			margin-left: 10px;
-			margin-right: 6px;
-			vertical-align: middle;
-			display: inline-block;
-			animation: wave 2s ease-in-out infinite;
-		}
-
-		@keyframes wave {
-			0%, 100% {
-				transform: rotate(0deg);
-			}
-			25% {
-				transform: rotate(-5deg);
-			}
-			75% {
-				transform: rotate(5deg);
-			}
+			line-height: 1.2;
 		}
 
 		.contact-number {
 			font-size: 1rem;
-			font-weight: 600;
-			color: #008060;
+			font-weight: 500;
+			color: #6b7280;
 			margin: 0;
-			margin-top: 4px;
+			line-height: 1.2;
 		}
 
-		.user-actions {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-		}
-
-		/* Main Navigation */
+		/* Navigation Styles */
 		.main-nav {
-			background: #ffffff;
+			background: #f8fafc;
 			border-bottom: 1px solid #e5e7eb;
-			padding: 12px 0;
 			position: sticky;
-			top: 85px;
+			top: 112px;
 			z-index: 999;
-			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 		}
 
 		.nav-menu {
 			display: flex;
 			align-items: center;
-			width: 100%;
-			padding-left: 260px;
-		}
-
-		.nav-item {
-			color: #1f2937;
-			text-decoration: none;
-			font-weight: 500;
-			padding: 16px 20px;
-			display: flex;
-			align-items: center;
-			gap: 5px;
-			transition: all 0.3s ease;
-			border-radius: 8px;
-		}
-
-		.nav-item:hover {
-			color: #008060;
-			background: rgba(0, 128, 96, 0.1);
+			justify-content: center;
+			padding: 0;
 		}
 
 		.shop-categories-btn {
 			position: relative;
-			margin-right: 20px;
 		}
 
 		.categories-button {
-			background: #008060;
+			background: linear-gradient(135deg, #3b82f6, #1e40af);
 			color: white;
 			border: none;
-			padding: 12px 20px;
+			padding: 15px 30px;
 			border-radius: 8px;
-			font-weight: 500;
-			display: flex;
-			align-items: center;
-			gap: 8px;
+			font-weight: 600;
+			font-size: 1rem;
 			cursor: pointer;
 			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			gap: 10px;
 		}
 
 		.categories-button:hover {
-			background: #006b4e;
+			transform: translateY(-2px);
+			box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
 		}
 
-		.flash-deal {
-			color: #dc2626 !important;
-			font-weight: 700;
-			margin-left: auto;
+		.nav-items {
+			display: flex;
+			list-style: none;
+			margin: 0;
+			padding: 0;
+			gap: 30px;
+			align-items: center;
+			margin-left: 50px;
 		}
 
-		.flash-deal:hover {
-			color: #991b1b !important;
+		.nav-item a {
+			color: #1f2937;
+			text-decoration: none;
+			font-weight: 500;
+			font-size: 1rem;
+			padding: 15px 0;
+			transition: color 0.3s ease;
+			position: relative;
 		}
 
-		/* Hide header and navigation for clean login page */
-		.promo-banner, .main-header, .main-nav {
-			display: none;
+		.nav-item a:hover {
+			color: #3b82f6;
 		}
 
-		/* Full screen login section */
-		.login-section {
-			min-height: 100vh;
+		.nav-item a::after {
+			content: '';
+			position: absolute;
+			bottom: 10px;
+			left: 0;
+			width: 0;
+			height: 2px;
+			background: #3b82f6;
+			transition: width 0.3s ease;
+		}
+
+		.nav-item a:hover::after {
+			width: 100%;
+		}
+
+		.brands-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: white;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			min-width: 300px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.shop-categories-btn:hover .brands-dropdown {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.brands-dropdown h4 {
+			margin-bottom: 15px;
+			color: #1f2937;
+			font-size: 1.1rem;
+			font-weight: 600;
+		}
+
+		.brands-dropdown ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		.brands-dropdown li {
+			margin-bottom: 8px;
+		}
+
+		.brands-dropdown a {
+			color: #6b7280;
+			text-decoration: none;
+			padding: 8px 12px;
+			border-radius: 6px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.3s ease;
+		}
+
+		.brands-dropdown a:hover {
+			background: #f3f4f6;
+			color: #3b82f6;
+		}
+
+		/* Login Form Container */
+		.login-page-container {
+			min-height: calc(100vh - 200px);
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 20px;
-			position: relative;
-			background: #667eea;
+			padding: 50px 20px;
+			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 		}
 
-		/* Circuit Board Background */
-		.login-section::before {
+		.login-form-wrapper {
+			background: white;
+			border-radius: 20px;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+			overflow: hidden;
+			width: 100%;
+			max-width: 500px;
+			position: relative;
+		}
+
+		.login-form-wrapper::before {
 			content: '';
 			position: absolute;
 			top: 0;
 			left: 0;
 			right: 0;
-			bottom: 0;
-			background:
-				/* Main circuit lines */
-				linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-				linear-gradient(0deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-				/* Secondary lines */
-				linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-				linear-gradient(0deg, rgba(255,255,255,0.05) 1px, transparent 1px),
-				/* Circuit nodes */
-				radial-gradient(circle at 25% 25%, rgba(255,255,255,0.3) 2px, transparent 2px),
-				radial-gradient(circle at 75% 75%, rgba(255,255,255,0.3) 2px, transparent 2px),
-				radial-gradient(circle at 25% 75%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
-				radial-gradient(circle at 75% 25%, rgba(255,255,255,0.2) 1.5px, transparent 1.5px),
-				/* Connecting circuits */
-				linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%),
-				linear-gradient(-45deg, transparent 40%, rgba(255,255,255,0.08) 50%, transparent 60%);
-			background-size:
-				60px 60px, 60px 60px,
-				20px 20px, 20px 20px,
-				120px 120px, 120px 120px, 120px 120px, 120px 120px,
-				200px 200px, 200px 200px;
-			background-position:
-				0 0, 0 0,
-				30px 30px, 30px 30px,
-				0 0, 60px 60px, 0 60px, 60px 0,
-				0 0, 100px 100px;
-			animation: circuitFlow 20s linear infinite;
-			opacity: 0.7;
+			height: 6px;
+			background: linear-gradient(90deg, #3b82f6, #1e40af, #7c3aed);
 		}
 
-		@keyframes circuitFlow {
-			0% {
-				background-position:
-					0 0, 0 0,
-					30px 30px, 30px 30px,
-					0 0, 60px 60px, 0 60px, 60px 0,
-					0 0, 100px 100px;
-			}
-			100% {
-				background-position:
-					60px 60px, 60px 60px,
-					50px 50px, 50px 50px,
-					120px 120px, 180px 180px, 120px 180px, 180px 120px,
-					200px 200px, 300px 300px;
-			}
-		}
-
-		/* Main Login Container */
-		.login-container {
-			background: rgba(255, 255, 255, 0.98);
-			backdrop-filter: blur(20px);
-			border-radius: 24px;
-			padding: 60px 50px;
-			box-shadow:
-				0 32px 64px rgba(0, 0, 0, 0.2),
-				0 0 0 1px rgba(255, 255, 255, 0.1),
-				inset 0 1px 0 rgba(255, 255, 255, 0.9);
-			max-width: 480px;
-			width: 100%;
-			position: relative;
-			z-index: 10;
-			border: 1px solid rgba(255, 255, 255, 0.2);
-		}
-
-		/* Logo Section */
-		.logo-section {
+		.login-form-header {
 			text-align: center;
-			margin-bottom: 40px;
+			padding: 40px 40px 0;
 		}
 
-		.logo-section img {
+		.login-form-header img {
 			height: 80px;
-			width: auto;
 			margin-bottom: 20px;
-			filter: drop-shadow(0 4px 8px rgba(0,0,0,0.1));
 		}
 
-		.welcome-text {
-			font-size: 28px;
+		.login-form-title {
+			font-size: 2rem;
 			font-weight: 700;
-			color: #2d3748;
-			margin-bottom: 8px;
-			letter-spacing: -0.5px;
+			color: #1a1a1a;
+			margin-bottom: 10px;
 		}
 
-		.subtitle-text {
-			font-size: 16px;
-			color: #718096;
-			margin-bottom: 0;
+		.login-form-subtitle {
+			color: #6b7280;
+			font-size: 1rem;
+			margin-bottom: 30px;
 		}
 
-		/* Form Styles */
-		.form-container {
-			margin-top: 32px;
+		.login-form-body {
+			padding: 0 40px 40px;
 		}
 
 		.form-group {
-			margin-bottom: 24px;
+			margin-bottom: 25px;
 		}
 
-		.form-input {
+		.form-label {
+			display: block;
+			font-weight: 600;
+			color: #374151;
+			margin-bottom: 8px;
+			font-size: 0.95rem;
+		}
+
+		.form-control {
 			width: 100%;
-			height: 56px;
-			border: 2px solid #e2e8f0;
+			padding: 15px 18px;
+			border: 2px solid #e5e7eb;
 			border-radius: 12px;
-			padding: 16px 20px;
-			font-size: 16px;
-			font-weight: 500;
-			color: #2d3748;
-			background: #ffffff;
+			font-size: 1rem;
 			transition: all 0.3s ease;
+			background: #f8fafc;
+		}
+
+		.form-control:focus {
 			outline: none;
+			border-color: #3b82f6;
+			background: white;
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 		}
 
-		.form-input::placeholder {
-			color: #a0aec0;
-			font-weight: 400;
+		.input-group {
+			position: relative;
 		}
 
-		.form-input:focus {
-			border-color: #667eea;
-			box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+		.input-icon {
+			position: absolute;
+			left: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #9ca3af;
+			font-size: 1.1rem;
 		}
 
-		.login-button {
+		.form-control.with-icon {
+			padding-left: 50px;
+		}
+
+		.login-btn {
 			width: 100%;
-			height: 56px;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-			border: none;
-			border-radius: 12px;
+			background: linear-gradient(135deg, #3b82f6, #1e40af);
 			color: white;
-			font-size: 16px;
+			border: none;
+			padding: 16px;
+			border-radius: 12px;
+			font-size: 1.1rem;
 			font-weight: 600;
 			cursor: pointer;
 			transition: all 0.3s ease;
-			margin-top: 8px;
 			position: relative;
 			overflow: hidden;
 		}
 
-		.login-button::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: -100%;
-			width: 100%;
-			height: 100%;
-			background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-			transition: left 0.6s ease;
-		}
-
-		.login-button:hover {
+		.login-btn:hover {
 			transform: translateY(-2px);
-			box-shadow: 0 12px 24px rgba(102, 126, 234, 0.3);
+			box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
 		}
 
-		.login-button:hover::before {
-			left: 100%;
-		}
-
-		.login-button:active {
+		.login-btn:active {
 			transform: translateY(0);
 		}
 
-		/* Links */
-		.forgot-link {
-			text-align: right;
-			margin-top: 8px;
+		.form-links {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-top: 20px;
+			padding-top: 20px;
+			border-top: 1px solid #e5e7eb;
 		}
 
-		.forgot-link a {
-			color: #667eea;
+		.forgot-password {
+			color: #3b82f6;
 			text-decoration: none;
-			font-size: 14px;
+			font-size: 0.9rem;
 			font-weight: 500;
 		}
 
-		.forgot-link a:hover {
+		.forgot-password:hover {
 			text-decoration: underline;
 		}
 
 		.signup-link {
-			text-align: center;
-			margin-top: 32px;
-			padding-top: 24px;
-			border-top: 1px solid #e2e8f0;
-		}
-
-		.signup-link a {
-			color: #667eea;
+			color: #3b82f6;
 			text-decoration: none;
 			font-weight: 600;
 		}
 
-		.signup-link a:hover {
+		.signup-link:hover {
 			text-decoration: underline;
 		}
 
-		/* Alerts */
 		.alert {
 			border-radius: 12px;
-			margin-bottom: 24px;
+			margin-bottom: 20px;
 			border: none;
+			padding: 15px 18px;
 		}
 
 		.alert-danger {
-			background: #fed7d7;
-			color: #9b2c2c;
+			background: #fee2e2;
+			color: #dc2626;
 		}
 
 		.alert-success {
-			background: #c6f6d5;
-			color: #276749;
+			background: #d1fae5;
+			color: #059669;
 		}
 
-		/* Responsive Design */
+		/* Mobile Responsive */
 		@media (max-width: 768px) {
-			.login-container {
-				padding: 40px 30px;
+			.main-header .container-fluid {
+				padding: 0 20px !important;
+			}
+
+			.search-container {
+				max-width: 300px;
+			}
+
+			.tech-revival-section {
+				display: none;
+			}
+
+			.login-form-wrapper {
 				margin: 20px;
 			}
 
-			.logo-section img {
-				height: 60px;
+			.login-form-header,
+			.login-form-body {
+				padding: 30px 25px;
 			}
 
-			.welcome-text {
-				font-size: 24px;
+			.login-form-title {
+				font-size: 1.7rem;
 			}
 		}
 	</style>
@@ -599,10 +629,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text">BLACK FRIDAY DEALS! ON ORDERS OVER GH₵2,000!</span>
+			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
-		<a href="#flash-deals" class="promo-shop-link">Shop Now</a>
+		<a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
@@ -612,7 +642,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				<!-- Logo - Far Left -->
 				<a href="../index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage">
+						alt="Gadget Garage">
 				</a>
 
 				<!-- Center Content -->
@@ -630,17 +660,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech <span class="ghana-flag">🇬🇭</span> Ghana Store</p>
+							<p class="tech-revival-text">Bring Retired Devices</p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>
 				</div>
 
 				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-					<span style="color: #ddd;">|</span>
-					<a href="../register.php" class="login-btn me-2">Register</a>
-					<span style="color: #008060; font-weight: 600;">Login</span>
+				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
+					<div class="header-icon">
+						<a href="../cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<i class="fas fa-shopping-cart"></i>
+						</a>
+					</div>
+					<div class="header-icon">
+						<a href="login.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<i class="fas fa-user"></i>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -651,123 +689,174 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 		<div class="container-fluid px-0">
 			<div class="nav-menu">
 				<!-- Shop by Brands Button -->
-				<div class="shop-categories-btn">
+				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
 					<button class="categories-button">
 						<i class="fas fa-tags"></i>
 						<span>SHOP BY BRANDS</span>
 						<i class="fas fa-chevron-down"></i>
 					</button>
+					<div class="brands-dropdown" id="shopDropdown">
+						<h4>All Brands</h4>
+						<ul>
+							<?php if (!empty($brands)): ?>
+								<?php foreach ($brands as $brand): ?>
+									<li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
+								<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+							<?php endif; ?>
+						</ul>
+					</div>
 				</div>
 
-				<a href="../index.php" class="nav-item"><span>HOME</span></a>
-				<a href="../all_product.php" class="nav-item"><span>SHOP</span></a>
-				<a href="../repair_services.php" class="nav-item"><span>REPAIR STUDIO</span></a>
-				<a href="../device_drop.php" class="nav-item"><span>DEVICE DROP</span></a>
-				<a href="../contact.php" class="nav-item"><span>MORE</span></a>
-
-				<!-- Flash Deal positioned at far right -->
-				<a href="../flash_deals.php" class="nav-item flash-deal">⚡ <span>FLASH DEAL</span></a>
+				<!-- Navigation Items -->
+				<ul class="nav-items">
+					<li class="nav-item"><a href="../index.php">Home</a></li>
+					<li class="nav-item"><a href="../all_product.php">All Products</a></li>
+					<li class="nav-item"><a href="../mobile_devices.php">Mobile Devices</a></li>
+					<li class="nav-item"><a href="../computing.php">Computing</a></li>
+					<li class="nav-item"><a href="../photography_video.php">Photography & Video</a></li>
+					<li class="nav-item"><a href="../repair_services.php">Repair Services</a></li>
+				</ul>
 			</div>
 		</div>
 	</nav>
 
 	<!-- Login Form Section -->
-	<section class="login-section">
-		<div class="login-container" id="loginContainer">
-			<!-- Logo Section -->
-			<div class="logo-section">
-				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-				     alt="Gadget Garage">
-				<h1 class="welcome-text">Welcome Back</h1>
-				<p class="subtitle-text">Sign in to your account to continue</p>
+	<div class="login-page-container">
+		<div class="login-form-wrapper">
+			<div class="login-form-header">
+				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
+				<h1 class="login-form-title">Welcome Back</h1>
+				<p class="login-form-subtitle">Please sign in to your account</p>
 			</div>
 
-			<!-- Alert Messages -->
-			<?php if (!empty($login_error)): ?>
-				<div class="alert alert-danger" role="alert">
-					<i class="fas fa-exclamation-triangle me-2"></i><?php echo $login_error; ?>
-				</div>
-			<?php endif; ?>
-
-			<?php if ($login_success): ?>
-				<div class="alert alert-success" role="alert">
-					<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
-				</div>
-				<script>
-					setTimeout(function() {
-						window.location.href = '../index.php';
-					}, 1500);
-				</script>
-			<?php else: ?>
-
-			<!-- Form Container -->
-			<div class="form-container">
-				<form method="POST" id="loginForm">
-					<div class="form-group">
-						<input type="email"
-						       class="form-input"
-						       name="email"
-						       placeholder="Email address"
-						       required
-						       value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+			<div class="login-form-body">
+				<?php if ($login_error): ?>
+					<div class="alert alert-danger">
+						<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
 					</div>
+				<?php endif; ?>
 
-					<div class="form-group">
-						<input type="password"
-						       class="form-input"
-						       name="password"
-						       placeholder="Password"
-						       required>
-						<div class="forgot-link">
-							<a href="#">Forgot your password?</a>
+				<?php if ($login_success): ?>
+					<div class="alert alert-success">
+						<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
+					</div>
+					<script>
+						setTimeout(function() {
+							window.location.href = '../index.php';
+						}, 1500);
+					</script>
+				<?php else: ?>
+					<form method="POST" id="loginForm">
+						<div class="form-group">
+							<label for="email" class="form-label">Email Address</label>
+							<div class="input-group">
+								<i class="fas fa-envelope input-icon"></i>
+								<input type="email"
+									   id="email"
+									   name="email"
+									   class="form-control with-icon"
+									   placeholder="Enter your email"
+									   value="<?php echo htmlspecialchars($email ?? ''); ?>"
+									   required>
+							</div>
 						</div>
-					</div>
 
-					<button type="submit" class="login-button" id="loginBtn">
-						Sign In
-					</button>
-				</form>
+						<div class="form-group">
+							<label for="password" class="form-label">Password</label>
+							<div class="input-group">
+								<i class="fas fa-lock input-icon"></i>
+								<input type="password"
+									   id="password"
+									   name="password"
+									   class="form-control with-icon"
+									   placeholder="Enter your password"
+									   required>
+							</div>
+						</div>
 
-				<div class="signup-link">
-					Don't have an account? <a href="../register.php">Sign up</a>
-				</div>
+						<button type="submit" class="login-btn">
+							<i class="fas fa-sign-in-alt me-2"></i>
+							Sign In
+						</button>
+
+						<div class="form-links">
+							<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
+							<a href="register.php" class="signup-link">Create Account</a>
+						</div>
+					</form>
+				<?php endif; ?>
 			</div>
-
-			<?php endif; ?>
 		</div>
-	</section>
+	</div>
 
+	<!-- Footer spacer -->
+	<div style="height: 100px;"></div>
+
+	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="../js/header.js"></script>
-
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
 	<script>
-		// Handle form submission with enhanced animations
-		document.getElementById('loginForm').addEventListener('submit', function(e) {
-			const submitBtn = document.getElementById('loginBtn');
-			const btnText = submitBtn.querySelector('.btn-text');
-			const btnLoading = submitBtn.querySelector('.btn-loading');
+		// Dropdown functions
+		let dropdownTimeout;
 
-			// Add loading state with animation
-			submitBtn.classList.add('loading');
-			submitBtn.disabled = true;
+		function showDropdown() {
+			const dropdown = document.getElementById('shopDropdown');
+			if (dropdown) {
+				clearTimeout(dropdownTimeout);
+				dropdown.style.opacity = '1';
+				dropdown.style.visibility = 'visible';
+				dropdown.style.transform = 'translateY(0)';
+			}
+		}
 
-			// Smooth transition to loading state
-			btnText.style.opacity = '0';
-			btnText.style.transform = 'translateY(-10px)';
+		function hideDropdown() {
+			const dropdown = document.getElementById('shopDropdown');
+			if (dropdown) {
+				clearTimeout(dropdownTimeout);
+				dropdownTimeout = setTimeout(() => {
+					dropdown.style.opacity = '0';
+					dropdown.style.visibility = 'hidden';
+					dropdown.style.transform = 'translateY(-10px)';
+				}, 300);
+			}
+		}
 
-			setTimeout(() => {
-				btnText.style.display = 'none';
-				btnLoading.style.display = 'inline-flex';
-				btnLoading.style.opacity = '0';
-				btnLoading.style.transform = 'translateY(10px)';
+		// Timer functionality
+		function updateTimer() {
+			const timerElement = document.getElementById('promoTimer');
+			if (timerElement) {
+				const now = new Date().getTime();
+				const nextDay = new Date();
+				nextDay.setDate(nextDay.getDate() + 1);
+				nextDay.setHours(0, 0, 0, 0);
 
-				// Animate loading text in
-				setTimeout(() => {
-					btnLoading.style.opacity = '1';
-					btnLoading.style.transform = 'translateY(0)';
-				}, 50);
-			}, 200);
-		});
+				const distance = nextDay.getTime() - now;
+
+				const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+				const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+				timerElement.innerHTML = days + "d:" +
+										 (hours < 10 ? "0" : "") + hours + "h:" +
+										 (minutes < 10 ? "0" : "") + minutes + "m:" +
+										 (seconds < 10 ? "0" : "") + seconds + "s";
+			}
+		}
+
+		// Update timer every second
+		setInterval(updateTimer, 1000);
+		updateTimer(); // Initial call
 	</script>
 </body>
+
 </html>

@@ -1291,8 +1291,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonColor: '#D19C97',
                     confirmButtonText: 'OK'
                 });
-            } else {
-                alert('Profile picture modal not implemented yet');
             }
         }
 
@@ -1305,8 +1303,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonColor: '#D19C97',
                     confirmButtonText: 'OK'
                 });
-            } else {
-                alert('Language change to ' + lang + ' not implemented yet');
             }
         }
 
@@ -1319,8 +1315,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonColor: '#D19C97',
                     confirmButtonText: 'OK'
                 });
-            } else {
-                alert('Theme toggle not implemented yet');
             }
         }
 

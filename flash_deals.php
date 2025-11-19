@@ -963,7 +963,7 @@ usort($flash_deal_products, function($a, $b) {
 		});
 
 		function openProfilePictureModal() {
-			alert('Profile picture functionality will be implemented');
+			Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture functionality will be implemented', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
 		}
 
 		function changeLanguage(language) {
@@ -995,16 +995,36 @@ usort($flash_deal_products, function($a, $b) {
 			.then(response => response.json())
 			.then(data => {
 				if (data.success) {
-					alert('Item added to cart!');
+					Swal.fire({
+						title: 'Success!',
+						text: 'Item added to cart!',
+						icon: 'success',
+						confirmButtonColor: '#28a745',
+						confirmButtonText: 'OK',
+						timer: 2000,
+						timerProgressBar: true
+					});
 					// Update cart badge if exists
 					updateCartBadge();
 				} else {
-					alert('Error adding item to cart: ' + data.message);
+					Swal.fire({
+						title: 'Error',
+						text: 'Error adding item to cart: ' + data.message,
+						icon: 'error',
+						confirmButtonColor: '#dc3545',
+						confirmButtonText: 'OK'
+					});
 				}
 			})
 			.catch(error => {
 				console.error('Error:', error);
-				alert('Error adding item to cart');
+				Swal.fire({
+					title: 'Error',
+					text: 'Error adding item to cart',
+					icon: 'error',
+					confirmButtonColor: '#dc3545',
+					confirmButtonText: 'OK'
+				});
 			});
 		}
 
@@ -1045,22 +1065,60 @@ usort($flash_deal_products, function($a, $b) {
 						if (data.added) {
 							heartIcon.className = 'fas fa-heart';
 							heartIcon.style.color = '#ef4444';
-							alert('Added to wishlist!');
+							Swal.fire({
+								title: 'Added to Wishlist!',
+								icon: 'success',
+								confirmButtonColor: '#28a745',
+								timer: 1500,
+								timerProgressBar: true,
+								showConfirmButton: false
+							});
 						} else {
 							heartIcon.className = 'far fa-heart';
 							heartIcon.style.color = '#6b7280';
-							alert('Removed from wishlist!');
+							Swal.fire({
+								title: 'Removed from Wishlist!',
+								icon: 'info',
+								confirmButtonColor: '#17a2b8',
+								timer: 1500,
+								timerProgressBar: true,
+								showConfirmButton: false
+							});
 						}
 					} else {
-						alert('Error: ' + data.message);
+						Swal.fire({
+							title: 'Error',
+							text: data.message,
+							icon: 'error',
+							confirmButtonColor: '#dc3545',
+							confirmButtonText: 'OK'
+						});
 					}
 				})
 				.catch(error => {
 					console.error('Error:', error);
-					alert('Error updating wishlist');
+					Swal.fire({
+						title: 'Error',
+						text: 'Error updating wishlist',
+						icon: 'error',
+						confirmButtonColor: '#dc3545',
+						confirmButtonText: 'OK'
+					});
 				});
 			<?php else: ?>
-				alert('Please login to add items to wishlist');
+				Swal.fire({
+					title: 'Login Required',
+					text: 'Please login to add items to wishlist',
+					icon: 'warning',
+					confirmButtonColor: '#ffc107',
+					confirmButtonText: 'Login',
+					showCancelButton: true,
+					cancelButtonText: 'Cancel'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = 'login/login.php';
+					}
+				});
 				window.location.href = 'login/login_view.php';
 			<?php endif; ?>
 		}

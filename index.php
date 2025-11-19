@@ -178,7 +178,7 @@ try {
 		}
 
 		.logo img {
-			height: 60px !important;
+			height: 90px !important;
 			width: auto !important;
 			object-fit: contain;
 			transition: transform 0.3s ease;
@@ -200,7 +200,7 @@ try {
 		.search-container {
 			position: relative;
 			flex: 1;
-			max-width: 600px;
+			max-width: 500px;
 			margin: 0 40px;
 		}
 
@@ -283,7 +283,7 @@ try {
 
 		.tech-revival-text {
 			font-size: 1.5rem;
-			font-weight: 100;
+			font-weight: 300;
 			color: #1f2937;
 			margin: 0;
 			letter-spacing: 0.5px;
@@ -305,7 +305,7 @@ try {
 		}
 
 		.contact-number {
-			font-size: 0.8rem;
+			font-size: 1.2 rem;
 			font-weight: 600;
 			color: #008060;
 			margin: 0;

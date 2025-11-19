@@ -290,15 +290,19 @@ try {
 			line-height: 1.3;
 		}
 
-		
+
 
 		@keyframes wave {
-			0%, 100% {
+
+			0%,
+			100% {
 				transform: rotate(0deg);
 			}
+
 			25% {
 				transform: rotate(-5deg);
 			}
+
 			75% {
 				transform: rotate(5deg);
 			}
@@ -1606,6 +1610,7 @@ try {
 			from {
 				transform: translateX(0);
 			}
+
 			to {
 				transform: translateX(-100%);
 			}
@@ -1972,8 +1977,13 @@ try {
 		}
 
 		@keyframes fadeIn {
-			from { opacity: 0; }
-			to { opacity: 1; }
+			from {
+				opacity: 0;
+			}
+
+			to {
+				opacity: 1;
+			}
 		}
 
 		@keyframes slideUp {
@@ -1981,6 +1991,7 @@ try {
 				transform: translateY(30px);
 				opacity: 0;
 			}
+
 			to {
 				transform: translateY(0);
 				opacity: 1;
@@ -3816,7 +3827,7 @@ try {
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage">
+						alt="Gadget Garage">
 				</a>
 
 				<!-- Center Content -->
@@ -4143,7 +4154,7 @@ try {
 						<h4>Flash Deals</h4>
 					</div>
 				</div>
-				
+
 				<!-- Grid of Smaller Categories on Right -->
 				<div class="category-grid-right">
 					<div class="category-small">
@@ -4214,31 +4225,6 @@ try {
 		</div>
 	<?php endif; ?>
 
-	<!-- Top Picks Section -->
-	<section class="top-picks-section py-2">
-		<div class="container">
-			<div class="text-center mb-3">
-				<h2 class="section-title"><span data-translate="top_picks_title">Gadget Garage's Top Picks for You</span></h2>
-				<p class="section-subtitle"><span data-translate="top_picks_subtitle">Discover our most popular and trending products this week</span></p>
-			</div>
-
-			<div class="row" id="topPicksContainer">
-				<div class="col-12 text-center">
-					<div class="loading-spinner">
-						<i class="fas fa-spinner fa-spin fa-2x" style="color: #008060;"></i>
-						<p class="mt-3">Loading top picks...</p>
-					</div>
-				</div>
-			</div>
-
-			<div class="text-center mt-4">
-				<a href="all_product.php" class="view-all-products-btn">
-					<i class="fas fa-eye me-2"></i>
-					<span data-translate="view_all_products">View All Products</span>
-				</a>
-			</div>
-		</div>
-	</section>
 
 	<!-- DEALS OF THE WEEK — Special offers section -->
 	<section class="deals-section">
@@ -4632,8 +4618,8 @@ try {
 						<div class="footer-brand">
 							<div class="footer-logo" style="margin-bottom: 16px;">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-								     alt="Gadget Garage"
-								     style="height: 35px; width: auto; object-fit: contain;">
+									alt="Gadget Garage"
+									style="height: 35px; width: auto; object-fit: contain;">
 							</div>
 							<p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
 							<div class="social-links">
@@ -5622,23 +5608,6 @@ try {
 			applyTranslationsEnhanced();
 		}
 
-		function generatePlaceholderImage(text = 'Product', size = '300x200', bgColor = '#eef2ff', textColor = '#1f2937') {
-			const [width, height] = size.split('x').map(Number);
-			const safeText = (text || 'Gadget Garage').substring(0, 28).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-			const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
-				<rect width="100%" height="100%" fill="${bgColor}"/>
-				<rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#cbd5f5" stroke-width="2"/>
-				<text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 14)}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
-			</svg>`;
-			return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
-		}
-
-		function handleImageError(event, text = 'Product', size = '300x200') {
-			if (!event || !event.target) return;
-			event.target.onerror = null;
-			event.target.src = generatePlaceholderImage(text, size);
-		}
-
 		// Initialize translations on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			// Force English as default if no language is set or if you want to reset
@@ -5713,10 +5682,7 @@ try {
 			container.innerHTML = '';
 
 			products.forEach((product, index) => {
-				const imagePath = (product.image_url && product.image_url.trim() !== '')
-					? product.image_url
-					: generatePlaceholderImage(product.product_title, '300x200');
-				const safeTitleAttr = (product.product_title || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+				const imagePath = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' + product.product_image;
 
 				const badges = ['Hot', 'Trending', 'Popular', 'Best Seller'];
 				const ratings = [4.8, 4.9, 4.7, 4.6];
@@ -5725,8 +5691,8 @@ try {
 					<div class="col-lg-3 col-md-6 mb-4">
 						<a href="single_product.php?id=${product.product_id}" class="top-pick-card">
 							<div class="position-relative">
-								<img src="${imagePath}" alt="${safeTitleAttr}" class="pick-image"
-									 onerror="handleImageError(event, '${safeTitleAttr}', '300x200')">
+								<img src="${imagePath}" alt="${product.product_title}" class="pick-image"
+									 onerror="this.src='https://via.placeholder.com/300x200/8b5fbf/ffffff?text=${encodeURIComponent(product.product_title)}'">
 								<div class="pick-badge">${badges[index]}</div>
 							</div>
 							<h4 class="pick-title">${product.product_title}</h4>
@@ -5879,7 +5845,9 @@ try {
 				};
 
 				this.cards = Array.from(this.container.querySelectorAll('.testimonial-card'));
-				this.order = Array.from({ length: this.cards.length }, (_, i) => i);
+				this.order = Array.from({
+					length: this.cards.length
+				}, (_, i) => i);
 				this.intervalRef = null;
 				this.isAnimating = false;
 
@@ -6003,8 +5971,7 @@ try {
 
 		// Countdown timer functionality for deals
 		function updateCountdown() {
-			const timers = [
-				{
+			const timers = [{
 					days: document.getElementById('days1'),
 					hours: document.getElementById('hours1'),
 					minutes: document.getElementById('minutes1'),
@@ -6064,118 +6031,118 @@ try {
 
 	<!-- Notification Modal -->
 	<?php if ($is_logged_in && !$is_admin): ?>
-	<div class="notification-modal" id="notificationModal">
-		<div class="notification-content">
-			<div class="notification-header">
-				<h3><i class="fas fa-bell me-2"></i>Notifications</h3>
-				<button class="notification-close" onclick="closeNotifications()">
-					<i class="fas fa-times"></i>
-				</button>
-			</div>
-			<div class="notification-body" id="notificationBody">
-				<div class="no-notifications">
-					<i class="fas fa-bell-slash"></i>
-					<p>Loading notifications...</p>
+		<div class="notification-modal" id="notificationModal">
+			<div class="notification-content">
+				<div class="notification-header">
+					<h3><i class="fas fa-bell me-2"></i>Notifications</h3>
+					<button class="notification-close" onclick="closeNotifications()">
+						<i class="fas fa-times"></i>
+					</button>
+				</div>
+				<div class="notification-body" id="notificationBody">
+					<div class="no-notifications">
+						<i class="fas fa-bell-slash"></i>
+						<p>Loading notifications...</p>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 
-	<script>
-	// Notification functions
-	function showNotifications() {
-		const modal = document.getElementById('notificationModal');
-		modal.classList.add('show');
-		loadNotifications();
-	}
+		<script>
+			// Notification functions
+			function showNotifications() {
+				const modal = document.getElementById('notificationModal');
+				modal.classList.add('show');
+				loadNotifications();
+			}
 
-	function closeNotifications() {
-		const modal = document.getElementById('notificationModal');
-		modal.classList.remove('show');
-	}
+			function closeNotifications() {
+				const modal = document.getElementById('notificationModal');
+				modal.classList.remove('show');
+			}
 
-	function loadNotifications() {
-		fetch('actions/get_notifications_action.php')
-			.then(response => response.json())
-			.then(data => {
-				const body = document.getElementById('notificationBody');
+			function loadNotifications() {
+				fetch('actions/get_notifications_action.php')
+					.then(response => response.json())
+					.then(data => {
+						const body = document.getElementById('notificationBody');
 
-				if (data.status === 'success' && data.notifications.length > 0) {
-					body.innerHTML = data.notifications.map(notification => {
-						const timeAgo = getTimeAgo(notification.created_at);
-						const unreadClass = notification.is_read == '0' ? 'unread' : '';
+						if (data.status === 'success' && data.notifications.length > 0) {
+							body.innerHTML = data.notifications.map(notification => {
+								const timeAgo = getTimeAgo(notification.created_at);
+								const unreadClass = notification.is_read == '0' ? 'unread' : '';
 
-						return `
+								return `
 							<div class="notification-item ${unreadClass}" onclick="openNotification(${notification.notification_id}, '${notification.type}', ${notification.related_id})">
 								<div class="notification-text">${notification.message}</div>
 								<div class="notification-time">${timeAgo}</div>
 							</div>
 						`;
-					}).join('');
-				} else {
-					body.innerHTML = `
+							}).join('');
+						} else {
+							body.innerHTML = `
 						<div class="no-notifications">
 							<i class="fas fa-bell-slash"></i>
 							<p>No notifications yet</p>
 						</div>
 					`;
-				}
-			})
-			.catch(error => {
-				console.error('Error loading notifications:', error);
-				document.getElementById('notificationBody').innerHTML = `
+						}
+					})
+					.catch(error => {
+						console.error('Error loading notifications:', error);
+						document.getElementById('notificationBody').innerHTML = `
 					<div class="no-notifications">
 						<i class="fas fa-exclamation-triangle"></i>
 						<p>Error loading notifications</p>
 					</div>
 				`;
+					});
+			}
+
+			function openNotification(notificationId, type, relatedId) {
+				// Mark as read
+				fetch('actions/mark_notification_read_action.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						notification_id: notificationId
+					})
+				});
+
+				// Handle different notification types
+				if (type === 'support_response') {
+					// Open support chat for this message
+					window.location.href = `support_message.php?message_id=${relatedId}`;
+				}
+
+				closeNotifications();
+
+				// Refresh notification badge
+				setTimeout(() => {
+					location.reload();
+				}, 1000);
+			}
+
+			function getTimeAgo(dateString) {
+				const date = new Date(dateString);
+				const now = new Date();
+				const diffInSeconds = Math.floor((now - date) / 1000);
+
+				if (diffInSeconds < 60) return 'Just now';
+				if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' min ago';
+				if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' hour ago';
+				return Math.floor(diffInSeconds / 86400) + ' day ago';
+			}
+
+			// Close modal when clicking outside
+			document.getElementById('notificationModal').addEventListener('click', function(e) {
+				if (e.target === this) {
+					closeNotifications();
+				}
 			});
-	}
-
-	function openNotification(notificationId, type, relatedId) {
-		// Mark as read
-		fetch('actions/mark_notification_read_action.php', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/json',
-			},
-			body: JSON.stringify({
-				notification_id: notificationId
-			})
-		});
-
-		// Handle different notification types
-		if (type === 'support_response') {
-			// Open support chat for this message
-			window.location.href = `support_message.php?message_id=${relatedId}`;
-		}
-
-		closeNotifications();
-
-		// Refresh notification badge
-		setTimeout(() => {
-			location.reload();
-		}, 1000);
-	}
-
-	function getTimeAgo(dateString) {
-		const date = new Date(dateString);
-		const now = new Date();
-		const diffInSeconds = Math.floor((now - date) / 1000);
-
-		if (diffInSeconds < 60) return 'Just now';
-		if (diffInSeconds < 3600) return Math.floor(diffInSeconds / 60) + ' min ago';
-		if (diffInSeconds < 86400) return Math.floor(diffInSeconds / 3600) + ' hour ago';
-		return Math.floor(diffInSeconds / 86400) + ' day ago';
-	}
-
-	// Close modal when clicking outside
-	document.getElementById('notificationModal').addEventListener('click', function(e) {
-		if (e.target === this) {
-			closeNotifications();
-		}
-	});
-	</script>
+		</script>
 	<?php endif; ?>
 
 	<script>

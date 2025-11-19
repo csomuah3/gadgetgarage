@@ -1537,8 +1537,18 @@ $fairDiscount = $basePrice - $fairPrice;
         }
 
         function generatePlaceholderUrl(text, size = '600x400') {
-            const encodedText = encodeURIComponent(text);
-            return `https://via.placeholder.com/${size}/8b5fbf/ffffff?text=${encodedText}`;
+            if (typeof generatePlaceholderImage === 'function') {
+                return generatePlaceholderImage(text, size, '#8b5fbf', '#ffffff');
+            }
+
+            const [width, height] = size.split('x').map(Number);
+            const safeText = (text || 'Gadget Garage').substring(0, 32).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+                <rect width="100%" height="100%" fill="#8b5fbf"/>
+                <rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#6c3fb6" stroke-width="2"/>
+                <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 16)}" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
+            </svg>`;
+            return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         }
 
         // Condition-based pricing configuration

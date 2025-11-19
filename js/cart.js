@@ -3,6 +3,22 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Cart.js loaded');
 });
 
+function createCartPlaceholder(text = 'Product', size = '80x80', bgColor = '#8b5fbf', textColor = '#ffffff') {
+    const [width, height] = size.split('x').map(Number);
+    const safeText = (text || 'Gadget Garage').substring(0, 20).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+        <rect width="100%" height="100%" rx="8" ry="8" fill="${bgColor}"/>
+        <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.25), 16)}" fill="${textColor}" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
+    </svg>`;
+    return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+}
+
+function handleCartImageError(event, text = 'Product', size = '80x80') {
+    if (!event || !event.target) return;
+    event.target.onerror = null;
+    event.target.src = createCartPlaceholder(text, size);
+}
+
 // Add item to cart
 function addToCart(productId, quantity = 1) {
     const formData = new FormData();
@@ -655,6 +671,10 @@ function showAddToCartModal(productId, productName, productPrice, productImage) 
     const existingModal = document.getElementById('addToCartModal');
     if (existingModal) existingModal.remove();
 
+    const safeNameForAttr = (productName || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+    const placeholderImage = createCartPlaceholder(productName, '80x80');
+    const resolvedImage = (productImage && productImage.trim() !== '') ? productImage : placeholderImage;
+
     const modal = document.createElement('div');
     modal.id = 'addToCartModal';
     modal.className = 'cart-modal-overlay';
@@ -668,7 +688,7 @@ function showAddToCartModal(productId, productName, productPrice, productImage) 
             </div>
             <div class="cart-modal-body">
                 <div class="product-preview">
-                    <img src="${productImage || 'https://via.placeholder.com/80x80/8b5fbf/ffffff?text=Product'}" alt="${productName}" class="product-image" onerror="this.src='https://via.placeholder.com/80x80/8b5fbf/ffffff?text=Product'">
+                    <img src="${resolvedImage}" alt="${safeNameForAttr}" class="product-image" onerror="handleCartImageError(event, '${safeNameForAttr}', '80x80')">
                     <div class="product-info">
                         <h4>${productName}</h4>
                         <div class="price-display">
@@ -804,6 +824,10 @@ function showAddedToCartPopup(data) {
     const existingPopup = document.getElementById('addedToCartPopup');
     if (existingPopup) existingPopup.remove();
 
+    const popupPlaceholder = createCartPlaceholder(data.product_name, '80x80', '#667eea', '#ffffff');
+    const popupImage = (data.product_image && data.product_image.trim() !== '') ? data.product_image : popupPlaceholder;
+    const safePopupName = (data.product_name || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&apos;');
+
     const popup = document.createElement('div');
     popup.id = 'addedToCartPopup';
     popup.className = 'cart-popup-overlay';
@@ -817,7 +841,7 @@ function showAddedToCartPopup(data) {
             </div>
             <div class="cart-popup-body">
                 <div class="added-item">
-                    <img src="${data.product_image || 'uploads/products/default.jpg'}" alt="${data.product_name}" class="item-image" onerror="this.src='https://via.placeholder.com/80x80/667eea/ffffff?text=Product'">
+                    <img src="${popupImage}" alt="${safePopupName}" class="item-image" onerror="handleCartImageError(event, '${safePopupName}', '80x80')">
                     <div class="item-details">
                         <h4>${data.product_name}</h4>
                         <div class="item-specs">

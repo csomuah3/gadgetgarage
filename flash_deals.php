@@ -809,12 +809,13 @@ usort($flash_deal_products, function($a, $b) {
 							<?php
 							$image_path = get_product_image_path($product['product_id']);
 							if (!$image_path) {
-								$image_path = 'https://via.placeholder.com/300x200/f8f9fa/6c757d?text=No+Image';
+								$image_path = generate_placeholder_url($product['product_title'], '300x200');
 							}
 							?>
 							<img src="<?php echo htmlspecialchars($image_path); ?>"
 								 alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-								 class="product-image">
+								 class="product-image"
+								 onerror="<?php echo get_image_onerror($product['product_title'], '300x200'); ?>">
 
 							<h3 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h3>
 

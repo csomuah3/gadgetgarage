@@ -937,7 +937,7 @@ try {
 		.nav-item {
 			color: #1f2937;
 			text-decoration: none;
-			font-weight: 500;
+			font-weight: 600;
 			padding: 16px 20px;
 			display: flex;
 			align-items: center;
@@ -1019,7 +1019,7 @@ try {
 		}
 
 		.nav-link i {
-			font-size: 1rem;
+			font-size: 1.2rem;
 			transition: transform 0.3s ease;
 		}
 

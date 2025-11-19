@@ -161,9 +161,9 @@ try {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 32px;
+			top: 38px;
 			z-index: 1000;
-			padding: 16px 0;
+			padding: 20px 0;
 			border-bottom: 1px solid #e5e7eb;
 		}
 
@@ -178,9 +178,14 @@ try {
 		}
 
 		.logo img {
-			height: 65px !important;
+			height: 110px !important;
 			width: auto !important;
 			object-fit: contain;
+			transition: transform 0.3s ease;
+		}
+
+		.logo:hover img {
+			transform: scale(1.05);
 		}
 
 		.logo .garage {
@@ -267,29 +272,51 @@ try {
 		}
 
 		.tech-revival-icon {
-			font-size: 2rem;
+			font-size: 2.8rem;
 			color: #008060;
+			transition: transform 0.3s ease;
+		}
+
+		.tech-revival-icon:hover {
+			transform: rotate(15deg) scale(1.1);
 		}
 
 		.tech-revival-text {
-			font-size: 1.3rem;
-			font-weight: 700;
+			font-size: 1.9rem;
+			font-weight: 800;
 			color: #1f2937;
 			margin: 0;
-			letter-spacing: 0.3px;
+			letter-spacing: 0.5px;
+			line-height: 1.3;
 		}
 
 		.ghana-flag {
-			font-size: 1.8rem;
-			margin-left: 8px;
-			margin-right: 4px;
+			font-size: 2.2rem;
+			margin-left: 10px;
+			margin-right: 6px;
 			vertical-align: middle;
+			display: inline-block;
+			animation: wave 2s ease-in-out infinite;
+		}
+
+		@keyframes wave {
+			0%, 100% {
+				transform: rotate(0deg);
+			}
+			25% {
+				transform: rotate(-5deg);
+			}
+			75% {
+				transform: rotate(5deg);
+			}
 		}
 
 		.contact-number {
-			font-size: 0.8rem;
-			color: #6b7280;
+			font-size: 1rem;
+			font-weight: 600;
+			color: #008060;
 			margin: 0;
+			margin-top: 4px;
 		}
 
 		.user-actions {
@@ -447,38 +474,62 @@ try {
 
 		.header-icon {
 			position: relative;
-			padding: 10px;
-			border-radius: 10px;
+			padding: 14px;
+			border-radius: 12px;
 			transition: all 0.3s ease;
 			color: #1f2937;
 			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 		}
 
 		.header-icon i {
-			font-size: 1.6rem;
-			font-weight: 600;
+			font-size: 2.5rem;
+			font-weight: 700;
+			stroke-width: 2;
+			-webkit-text-stroke: 1px currentColor;
 		}
 
 		.header-icon:hover {
-			background: rgba(0, 128, 96, 0.1);
+			background: rgba(0, 128, 96, 0.15);
 			color: #008060;
-			transform: scale(1.1);
+			transform: scale(1.15);
+			box-shadow: 0 4px 12px rgba(0, 128, 96, 0.2);
 		}
 
 		.cart-badge {
 			position: absolute;
-			top: 2px;
-			right: 2px;
+			top: 4px;
+			right: 4px;
 			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
-			font-size: 0.85rem;
-			font-weight: 700;
-			padding: 4px 7px;
-			border-radius: 12px;
-			min-width: 22px;
+			font-size: 1rem;
+			font-weight: 800;
+			padding: 5px 9px;
+			border-radius: 14px;
+			min-width: 26px;
 			text-align: center;
-			border: 2px solid white;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			border: 3px solid white;
+			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+			line-height: 1;
+		}
+
+		.wishlist-badge {
+			position: absolute;
+			top: 4px;
+			right: 4px;
+			background: linear-gradient(135deg, #ef4444, #dc2626);
+			color: white;
+			font-size: 1rem;
+			font-weight: 800;
+			padding: 5px 9px;
+			border-radius: 14px;
+			min-width: 26px;
+			text-align: center;
+			border: 3px solid white;
+			box-shadow: 0 3px 6px rgba(0, 0, 0, 0.25);
+			line-height: 1;
 		}
 
 		.user-menu {
@@ -527,24 +578,25 @@ try {
 		}
 
 		.user-avatar {
-			width: 48px;
-			height: 48px;
+			width: 56px;
+			height: 56px;
 			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			color: white;
-			font-weight: 700;
-			font-size: 1.3rem;
+			font-weight: 800;
+			font-size: 1.6rem;
 			cursor: pointer;
 			transition: all 0.3s ease;
-			box-shadow: 0 2px 8px rgba(0, 128, 96, 0.3);
+			box-shadow: 0 3px 10px rgba(0, 128, 96, 0.4);
+			border: 3px solid rgba(255, 255, 255, 0.3);
 		}
 
 		.user-avatar:hover {
-			transform: scale(1.1);
-			box-shadow: 0 4px 12px rgba(139, 95, 191, 0.3);
+			transform: scale(1.15);
+			box-shadow: 0 5px 15px rgba(0, 128, 96, 0.5);
 		}
 
 		.dropdown-menu-custom {
@@ -3789,26 +3841,27 @@ try {
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech <span class="ghana-flag">🇬🇭</span></p>
+							<p class="tech-revival-text">Bring Retired Tech <span class="ghana-flag">🇬🇭</span> Ghana Store</p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>
 				</div>
 
 				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-					<span style="color: #ddd;">|</span>
+				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
 					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
+								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
 						</div>
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none;">
+							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
 								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
 							</a>

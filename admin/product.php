@@ -42,7 +42,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     if (isset($_POST['delete_product'])) {
         $product_id = intval($_POST['product_id']);
-        if (delete_product_ctr($product_id)) {
+        $result = delete_product_ctr($product_id);
+        if (is_array($result)) {
+            if ($result['status'] === 'success') {
+                $success_message = $result['message'];
+            } else {
+                $error_message = $result['message'];
+            }
+        } elseif ($result) {
             $success_message = "Product deleted successfully!";
         } else {
             $error_message = "Failed to delete product.";
@@ -1228,7 +1235,7 @@ function editProduct(productId) {
 // Fetch product data for editing
 async function fetchProductData(productId) {
     try {
-        const response = await fetch(`actions/get_product_action.php?id=${productId}`);
+        const response = await fetch(`../actions/get_product_action.php?id=${productId}`);
         const data = await response.json();
         if (data.status === 'success') {
             return data.product;
@@ -1529,7 +1536,7 @@ async function updateProduct() {
             formData.append('product_image', imageInput.files[0]);
         }
 
-        const response = await fetch('actions/update_product_action.php', {
+        const response = await fetch('../actions/update_product_action.php', {
             method: 'POST',
             body: formData
         });

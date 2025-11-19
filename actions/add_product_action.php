@@ -148,29 +148,41 @@ function uploadSingleImage($file, $type = 'gallery') {
             throw new Exception('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.');
         }
 
-        $upload_dir = __DIR__ . '/../uploads/products/';
-
-        // Create uploads directory if it doesn't exist
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
-        }
+        // Upload to server using curl
+        $server_upload_url = 'http://169.239.251.102:442/~chelsea.somuah/upload.php';
 
         // Generate proper filename with product prefix
         $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
         $file_name = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
-        $upload_path = $upload_dir . $file_name;
 
-        if (move_uploaded_file($file['tmp_name'], $upload_path)) {
-            // Set proper file permissions
-            chmod($upload_path, 0644);
+        // Upload to server using curl
+        $curl = curl_init();
+        curl_setopt_array($curl, [
+            CURLOPT_URL => $server_upload_url,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_POST => true,
+            CURLOPT_POSTFIELDS => [
+                'file' => new CURLFile($file['tmp_name'], $file_type, $file_name)
+            ]
+        ]);
 
-            return [
-                'success' => true,
-                'filename' => $file_name,
-                'path' => $upload_path
-            ];
+        $response = curl_exec($curl);
+        $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+        curl_close($curl);
+
+        if ($httpCode === 200 && $response) {
+            $uploadResult = json_decode($response, true);
+            if ($uploadResult && $uploadResult['status'] === 'success') {
+                return [
+                    'success' => true,
+                    'filename' => $file_name,
+                    'path' => $server_upload_url
+                ];
+            } else {
+                throw new Exception('Failed to upload to server: ' . ($uploadResult['message'] ?? 'Unknown error'));
+            }
         } else {
-            throw new Exception('Failed to move uploaded file');
+            throw new Exception('Server upload failed');
         }
 
     } catch (Exception $e) {

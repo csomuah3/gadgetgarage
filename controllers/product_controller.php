@@ -64,7 +64,7 @@ function update_product_ctr($product_id, $product_title, $product_price, $produc
 // Delete product
 function delete_product_ctr($product_id) {
     $product = new Product();
-    $result = $product->delete_product($product_id);
+    $result = $product->force_delete_product($product_id);
 
     // Check if result is an array (new detailed response) or boolean (old response)
     if (is_array($result)) {

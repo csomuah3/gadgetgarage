@@ -31,17 +31,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $product_image = $existing_product['product_image']; // Keep existing image by default
 
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
-        $upload_dir = __DIR__ . '/../uploads/products/';
-
-        // Create uploads directory if it doesn't exist
-        if (!is_dir($upload_dir)) {
-            mkdir($upload_dir, 0755, true);
-        }
+        // Upload to server using curl
+        $server_upload_url = 'http://169.239.251.102:442/~chelsea.somuah/upload.php';
 
         // Generate proper filename with product prefix
         $file_extension = strtolower(pathinfo($_FILES['product_image']['name'], PATHINFO_EXTENSION));
         $file_name = 'product_' . $product_id . '_' . time() . '_' . uniqid() . '.' . $file_extension;
-        $upload_path = $upload_dir . $file_name;
 
         // Check if file is an image with more thorough validation
         $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -50,15 +45,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (in_array($file_type, $allowed_types)) {
             // Check file size (5MB max)
             if ($_FILES['product_image']['size'] <= 5 * 1024 * 1024) {
-                if (move_uploaded_file($_FILES['product_image']['tmp_name'], $upload_path)) {
-                    // Delete old image if it exists
-                    if (!empty($existing_product['product_image'])) {
-                        $old_image_path = $upload_dir . $existing_product['product_image'];
-                        if (file_exists($old_image_path)) {
-                            unlink($old_image_path);
-                        }
+                // Upload to server using curl
+                $curl = curl_init();
+                curl_setopt_array($curl, [
+                    CURLOPT_URL => $server_upload_url,
+                    CURLOPT_RETURNTRANSFER => true,
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => [
+                        'file' => new CURLFile($_FILES['product_image']['tmp_name'], $file_type, $file_name)
+                    ]
+                ]);
+
+                $response = curl_exec($curl);
+                $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
+                curl_close($curl);
+
+                if ($httpCode === 200 && $response) {
+                    $uploadResult = json_decode($response, true);
+                    if ($uploadResult && $uploadResult['status'] === 'success') {
+                        $product_image = $file_name;
+                    } else {
+                        echo json_encode(['status' => 'error', 'message' => 'Failed to upload image to server: ' . ($uploadResult['message'] ?? 'Unknown error')]);
+                        exit;
                     }
-                    $product_image = $file_name; // Store just the filename, not the path
+                } else {
+                    echo json_encode(['status' => 'error', 'message' => 'Server upload failed']);
+                    exit;
                 }
             } else {
                 echo json_encode(['status' => 'error', 'message' => 'Image file too large. Maximum 5MB allowed.']);

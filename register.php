@@ -233,8 +233,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         body {
             font-family: 'Roboto', sans-serif;
-            background: #f8f9fa;
+            background: #f0f2f5;
             overflow-x: hidden;
+            margin: 0;
+            padding: 0;
         }
 
         /* Promotional Banner */
@@ -329,66 +331,275 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             transition: all 0.3s;
         }
 
-        /* Navigation */
+        /* Main Navigation */
         .main-nav {
-            background: #2c3e50;
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
             position: sticky;
-            top: 118px;
-            z-index: 1020;
+            top: 85px;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         }
 
-        .navbar-nav .nav-link {
-            color: white !important;
-            padding: 15px 20px;
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            width: 100%;
+            padding-left: 260px;
+        }
+
+        .nav-item {
+            color: #1f2937;
+            text-decoration: none;
             font-weight: 500;
-            transition: all 0.3s;
+            padding: 16px 20px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .nav-item:hover {
+            color: #008060;
+            background: rgba(0, 128, 96, 0.1);
+        }
+
+        .nav-dropdown {
             position: relative;
+            display: inline-block;
         }
 
-        .navbar-nav .nav-link:hover {
-            background: rgba(255,255,255,0.1);
-            transform: translateY(-2px);
+        .simple-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            min-width: 160px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
         }
 
-        .dropdown-menu {
-            background: #34495e;
+        .simple-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .simple-dropdown ul {
+            list-style: none;
+            padding: 8px 0;
+            margin: 0;
+        }
+
+        .simple-dropdown li {
+            padding: 0;
+        }
+
+        .simple-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 16px;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .simple-dropdown a:hover {
+            background: #f3f4f6;
+            color: #008060;
+        }
+
+        /* Shop by Brands Button */
+        .shop-categories-btn {
+            position: relative;
+            margin-right: 20px;
+        }
+
+        .categories-button {
+            background: #008060;
+            color: white;
             border: none;
-            border-radius: 0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-        }
-
-        .dropdown-item {
-            color: white !important;
             padding: 12px 20px;
-            transition: background 0.3s;
+            border-radius: 8px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .dropdown-item:hover {
-            background: rgba(255,255,255,0.1);
-            color: white !important;
+        .categories-button:hover {
+            background: #006b4e;
         }
 
-        /* Circuit Board Background */
-        .circuit-background {
+        .brands-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            min-width: 200px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .brands-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .brands-dropdown h4 {
+            padding: 12px 16px;
+            margin: 0;
+            font-size: 0.9rem;
+            color: #374151;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .brands-dropdown ul {
+            list-style: none;
+            padding: 8px 0;
+            margin: 0;
+        }
+
+        .brands-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .brands-dropdown a:hover {
+            background: #f3f4f6;
+            color: #008060;
+        }
+
+        /* Mega Dropdown for Shop */
+        .mega-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            min-width: 600px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+
+        .mega-dropdown.show {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-content {
+            display: flex;
+            padding: 20px;
+        }
+
+        .dropdown-column {
+            flex: 1;
+            padding: 0 15px;
+        }
+
+        .dropdown-column h4 {
+            color: #1f2937;
+            font-size: 1rem;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .dropdown-column ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .dropdown-column li {
+            margin-bottom: 8px;
+        }
+
+        .dropdown-column a {
+            color: #4b5563;
+            text-decoration: none;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-column a:hover {
+            color: #008060;
+        }
+
+        .flash-deal {
+            color: #dc2626 !important;
+            font-weight: 700;
+            margin-left: auto;
+        }
+
+        .flash-deal:hover {
+            color: #991b1b !important;
+        }
+
+        /* Registration Section */
+        .register-section {
             min-height: calc(100vh - 200px);
-            background: #2dd4bf;
-            background-image:
-                linear-gradient(90deg, rgba(255,255,255,0.1) 1px, transparent 1px),
-                linear-gradient(rgba(255,255,255,0.1) 1px, transparent 1px),
-                radial-gradient(circle at 25% 25%, rgba(255,255,255,0.2) 2px, transparent 2px),
-                radial-gradient(circle at 75% 75%, rgba(255,255,255,0.2) 2px, transparent 2px);
-            background-size: 60px 60px, 60px 60px, 120px 120px, 120px 120px;
-            background-position: 0 0, 0 0, 0 0, 60px 60px;
-            animation: circuitFlow 20s linear infinite;
+            background: #f0f2f5;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 40px 20px;
+        }
+
+        /* Registration Card */
+        .register-card {
+            background: #87ceeb;
+            background-image:
+                linear-gradient(90deg, rgba(255,255,255,0.15) 1px, transparent 1px),
+                linear-gradient(rgba(255,255,255,0.15) 1px, transparent 1px),
+                radial-gradient(circle at 20% 20%, rgba(255,255,255,0.3) 2px, transparent 2px),
+                radial-gradient(circle at 80% 80%, rgba(255,255,255,0.3) 2px, transparent 2px);
+            background-size: 40px 40px, 40px 40px, 80px 80px, 80px 80px;
+            background-position: 0 0, 0 0, 0 0, 40px 40px;
+            animation: circuitFlow 15s linear infinite;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.1);
+            max-width: 450px;
+            width: 100%;
             position: relative;
             overflow: hidden;
         }
 
-        .circuit-background::before {
+        .register-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -396,59 +607,44 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             right: 0;
             bottom: 0;
             background:
-                linear-gradient(45deg, transparent 30%, rgba(255,255,255,0.1) 50%, transparent 70%),
-                radial-gradient(circle at 20% 80%, rgba(255,255,255,0.2) 0%, transparent 50%),
-                radial-gradient(circle at 80% 20%, rgba(255,255,255,0.2) 0%, transparent 50%);
-            animation: circuitPulse 10s ease-in-out infinite alternate;
+                linear-gradient(45deg, transparent 40%, rgba(255,255,255,0.1) 50%, transparent 60%),
+                radial-gradient(circle at 30% 70%, rgba(255,255,255,0.2) 0%, transparent 50%);
+            animation: circuitPulse 8s ease-in-out infinite alternate;
+            pointer-events: none;
+        }
+
+        .register-card .form-container {
+            background: rgba(255, 255, 255, 0.95);
+            border-radius: 10px;
+            padding: 30px;
+            position: relative;
+            z-index: 2;
+            backdrop-filter: blur(10px);
         }
 
         @keyframes circuitFlow {
-            0% { background-position: 0 0, 0 0, 0 0, 60px 60px; }
-            100% { background-position: 60px 60px, 60px 60px, 60px 60px, 120px 120px; }
+            0% { background-position: 0 0, 0 0, 0 0, 40px 40px; }
+            100% { background-position: 40px 40px, 40px 40px, 40px 40px, 80px 80px; }
         }
 
         @keyframes circuitPulse {
-            0% { opacity: 0.3; }
-            100% { opacity: 0.7; }
-        }
-
-        /* Registration Card */
-        .register-card {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 20px;
-            padding: 40px;
-            box-shadow:
-                0 20px 40px rgba(0,0,0,0.1),
-                0 0 0 1px rgba(255,255,255,0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.2);
-            max-width: 500px;
-            width: 100%;
-            position: relative;
-            z-index: 10;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .register-card:hover {
-            transform: translateY(-5px);
-            box-shadow:
-                0 30px 60px rgba(0,0,0,0.15),
-                0 0 0 1px rgba(255,255,255,0.5);
+            0% { opacity: 0.4; }
+            100% { opacity: 0.8; }
         }
 
         .register-card h2 {
             color: #2c3e50;
             font-weight: 700;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
 
         .register-card .subtitle {
             color: #6c757d;
             text-align: center;
-            margin-bottom: 30px;
-            font-size: 1rem;
+            margin-bottom: 25px;
+            font-size: 0.95rem;
         }
 
         .form-group {
@@ -466,38 +662,109 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-control:focus {
-            border-color: #2dd4bf;
-            box-shadow: 0 0 0 0.2rem rgba(45, 212, 191, 0.25);
+            border-color: #87ceeb;
+            box-shadow: 0 0 0 0.2rem rgba(135, 206, 235, 0.25);
             background: white;
         }
 
         .btn-register {
             width: 100%;
-            height: 50px;
-            background: linear-gradient(45deg, #2dd4bf, #20b2aa);
+            height: 55px;
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
             color: white;
             border: none;
-            border-radius: 10px;
+            border-radius: 15px;
             font-size: 16px;
-            font-weight: 600;
-            transition: all 0.3s ease;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             position: relative;
             overflow: hidden;
+            cursor: pointer;
+            box-shadow: 0 8px 32px rgba(240, 147, 251, 0.3);
+        }
+
+        .btn-register::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.4), transparent);
+            transition: left 0.6s ease;
+        }
+
+        .btn-register:hover::before {
+            left: 100%;
         }
 
         .btn-register:hover {
-            background: linear-gradient(45deg, #20b2aa, #2dd4bf);
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(45, 212, 191, 0.3);
+            background: linear-gradient(135deg, #f5576c 0%, #f093fb 100%);
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 15px 40px rgba(240, 147, 251, 0.4);
         }
 
         .btn-register:active {
-            transform: translateY(0);
+            transform: translateY(-1px) scale(0.98);
+            box-shadow: 0 5px 20px rgba(240, 147, 251, 0.3);
         }
 
         .btn-register.loading {
-            background: #6c757d;
+            background: linear-gradient(135deg, #6c757d, #495057);
             cursor: not-allowed;
+            transform: none;
+            animation: pulse 2s infinite;
+        }
+
+        .btn-register.loading::before {
+            display: none;
+        }
+
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 8px 32px rgba(108, 117, 125, 0.3);
+            }
+            50% {
+                box-shadow: 0 8px 32px rgba(108, 117, 125, 0.5);
+            }
+            100% {
+                box-shadow: 0 8px 32px rgba(108, 117, 125, 0.3);
+            }
+        }
+
+        /* Loading spinner enhancement */
+        .btn-loading {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-loading::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success animation */
+        .btn-register.success {
+            background: linear-gradient(135deg, #56ab2f, #a8e6cf);
+            animation: successPulse 0.6s ease;
+        }
+
+        @keyframes successPulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
         }
 
         .login-link {
@@ -507,7 +774,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .login-link a {
-            color: #2dd4bf;
+            color: #4682b4;
             text-decoration: none;
             font-weight: 500;
         }
@@ -613,7 +880,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 position: relative;
             }
 
-            .circuit-background {
+            .register-section {
                 padding: 20px 15px;
                 min-height: calc(100vh - 250px);
             }
@@ -700,116 +967,176 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <!-- Main Navigation -->
     <nav class="main-nav">
-        <div class="container">
-            <div class="navbar navbar-expand-lg navbar-dark p-0">
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#mainNavbar">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-
-                <div class="collapse navbar-collapse" id="mainNavbar">
-                    <ul class="navbar-nav me-auto">
-                        <li class="nav-item">
-                            <a class="nav-link" href="index.php">
-                                <i class="fas fa-home"></i> <?php echo translate('menu_home', $lang); ?>
-                            </a>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                <i class="fas fa-mobile-alt"></i> <?php echo translate('menu_mobile_devices', $lang); ?>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="mobile_devices.php?category=smartphones"><?php echo translate('menu_smartphones', $lang); ?></a></li>
-                                <li><a class="dropdown-item" href="mobile_devices.php?category=tablets"><?php echo translate('menu_tablets', $lang); ?></a></li>
-                                <li><a class="dropdown-item" href="mobile_devices.php?category=accessories"><?php echo translate('menu_accessories', $lang); ?></a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">
-                                <i class="fas fa-laptop"></i> <?php echo translate('menu_computing', $lang); ?>
-                            </a>
-                            <ul class="dropdown-menu">
-                                <li><a class="dropdown-item" href="computing.php?category=laptops"><?php echo translate('menu_laptops', $lang); ?></a></li>
-                                <li><a class="dropdown-item" href="computing.php?category=accessories"><?php echo translate('menu_accessories', $lang); ?></a></li>
-                            </ul>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="contact.php">
-                                <i class="fas fa-envelope"></i> <?php echo translate('menu_contact', $lang); ?>
-                            </a>
-                        </li>
-
-                        <li class="nav-item">
-                            <a class="nav-link" href="#about">
-                                <i class="fas fa-info-circle"></i> <?php echo translate('menu_about', $lang); ?>
-                            </a>
-                        </li>
-                    </ul>
+        <div class="container-fluid px-0">
+            <div class="nav-menu">
+                <!-- Shop by Brands Button -->
+                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+                    <button class="categories-button">
+                        <i class="fas fa-tags"></i>
+                        <span>SHOP BY BRANDS</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="brands-dropdown" id="shopDropdown">
+                        <h4>All Brands</h4>
+                        <ul>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> Apple</a></li>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> Samsung</a></li>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> HP</a></li>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> Dell</a></li>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> Sony</a></li>
+                            <li><a href="all_product.php"><i class="fas fa-tag"></i> Canon</a></li>
+                        </ul>
+                    </div>
                 </div>
+
+                <a href="index.php" class="nav-item"><span>HOME</span></a>
+
+                <!-- Shop Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+                    <a href="#" class="nav-item">
+                        <span>SHOP</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="mega-dropdown" id="shopCategoryDropdown">
+                        <div class="dropdown-content">
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                        <span>Mobile Devices</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span>Smartphones</span></a></li>
+                                    <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span>iPads</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
+                                        <span>Computing</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span>Laptops</span></a></li>
+                                    <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span>Desktops</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
+                                        <span>Photography & Video</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span>Cameras</span></a></li>
+                                    <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span>Video Equipment</span></a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="repair_services.php" class="nav-item"><span>REPAIR STUDIO</span></a>
+                <a href="device_drop.php" class="nav-item"><span>DEVICE DROP</span></a>
+
+                <!-- More Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+                    <a href="#" class="nav-item">
+                        <span>MORE</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="simple-dropdown" id="moreDropdown">
+                        <ul>
+                            <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Flash Deal positioned at far right -->
+                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span>FLASH DEAL</span></a>
             </div>
         </div>
     </nav>
 
     <!-- Registration Section -->
-    <section class="circuit-background">
+    <section class="register-section">
         <div class="register-card" id="registerCard">
-            <h2><?php echo translate('welcome_back', $lang); ?></h2>
-            <p class="subtitle"><?php echo translate('register_subtitle', $lang); ?></p>
-
-            <?php if (!empty($registration_error)): ?>
-                <div class="alert alert-danger" role="alert">
-                    <i class="fas fa-exclamation-triangle me-2"></i><?php echo $registration_error; ?>
+            <div class="form-container">
+                <!-- Logo -->
+                <div class="text-center mb-4">
+                    <a href="index.php" class="logo text-decoration-none">
+                        <i class="fas fa-bolt"></i> <?php echo translate('site_name', $lang); ?>
+                    </a>
                 </div>
-            <?php endif; ?>
 
-            <?php if ($registration_success): ?>
-                <div class="alert alert-success" role="alert">
-                    <i class="fas fa-check-circle me-2"></i>Account created successfully! Redirecting...
-                </div>
-                <script>
-                    setTimeout(function() {
-                        document.getElementById('registerCard').classList.add('fly-up');
+                <h2><?php echo translate('welcome_back', $lang); ?></h2>
+                <p class="subtitle"><?php echo translate('register_subtitle', $lang); ?></p>
+
+                <?php if (!empty($registration_error)): ?>
+                    <div class="alert alert-danger" role="alert">
+                        <i class="fas fa-exclamation-triangle me-2"></i><?php echo $registration_error; ?>
+                    </div>
+                <?php endif; ?>
+
+                <?php if ($registration_success): ?>
+                    <div class="alert alert-success" role="alert">
+                        <i class="fas fa-check-circle me-2"></i>Account created successfully! Redirecting...
+                    </div>
+                    <script>
+                        // Add success animation to button first
+                        const registerBtn = document.getElementById('registerBtn');
+                        registerBtn.classList.remove('loading');
+                        registerBtn.classList.add('success');
+                        registerBtn.innerHTML = '<i class="fas fa-check me-2"></i>Account Created Successfully!';
+
                         setTimeout(function() {
-                            window.location.href = 'index.php';
-                        }, 800);
-                    }, 1500);
-                </script>
-            <?php else: ?>
+                            document.getElementById('registerCard').classList.add('fly-up');
+                            setTimeout(function() {
+                                window.location.href = 'index.php';
+                            }, 800);
+                        }, 1000);
+                    </script>
+                <?php else: ?>
 
-            <form method="POST" id="registerForm">
-                <div class="form-group">
-                    <input type="text" class="form-control" name="first_name" placeholder="<?php echo translate('first_name_placeholder', $lang); ?>" required value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>">
+                <form method="POST" id="registerForm">
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="first_name" placeholder="<?php echo translate('first_name_placeholder', $lang); ?>" required value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="last_name" placeholder="<?php echo translate('last_name_placeholder', $lang); ?>" required value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="email" class="form-control" name="email" placeholder="<?php echo translate('email_placeholder', $lang); ?>" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="password" placeholder="<?php echo translate('password_placeholder', $lang); ?>" required>
+                    </div>
+
+                    <div class="form-group">
+                        <input type="password" class="form-control" name="confirm_password" placeholder="<?php echo translate('confirm_password_placeholder', $lang); ?>" required>
+                    </div>
+
+                    <button type="submit" class="btn-register" id="registerBtn">
+                        <span class="btn-text">
+                            <i class="fas fa-user-plus me-2"></i>
+                            <?php echo translate('register_button', $lang); ?>
+                        </span>
+                        <span class="btn-loading" style="display: none;">
+                            <?php echo translate('creating_account', $lang); ?>
+                        </span>
+                    </button>
+                </form>
+
+                <div class="login-link">
+                    <?php echo translate('login_link', $lang); ?> <a href="login/login.php"><?php echo translate('menu_login', $lang); ?></a>
                 </div>
 
-                <div class="form-group">
-                    <input type="text" class="form-control" name="last_name" placeholder="<?php echo translate('last_name_placeholder', $lang); ?>" required value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>">
-                </div>
-
-                <div class="form-group">
-                    <input type="email" class="form-control" name="email" placeholder="<?php echo translate('email_placeholder', $lang); ?>" required value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>">
-                </div>
-
-                <div class="form-group">
-                    <input type="password" class="form-control" name="password" placeholder="<?php echo translate('password_placeholder', $lang); ?>" required>
-                </div>
-
-                <div class="form-group">
-                    <input type="password" class="form-control" name="confirm_password" placeholder="<?php echo translate('confirm_password_placeholder', $lang); ?>" required>
-                </div>
-
-                <button type="submit" class="btn-register" id="registerBtn">
-                    <span class="btn-text"><?php echo translate('register_button', $lang); ?></span>
-                    <span class="btn-loading" style="display: none;"><?php echo translate('creating_account', $lang); ?></span>
-                </button>
-            </form>
-
-            <div class="login-link">
-                <?php echo translate('login_link', $lang); ?> <a href="login/login.php"><?php echo translate('menu_login', $lang); ?></a>
+                <?php endif; ?>
             </div>
-
-            <?php endif; ?>
         </div>
     </section>
 
@@ -876,16 +1203,57 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Handle form submission with loading state
+        // Handle form submission with enhanced animations
         document.getElementById('registerForm').addEventListener('submit', function(e) {
             const submitBtn = document.getElementById('registerBtn');
             const btnText = submitBtn.querySelector('.btn-text');
             const btnLoading = submitBtn.querySelector('.btn-loading');
 
+            // Add loading state with animation
             submitBtn.classList.add('loading');
             submitBtn.disabled = true;
-            btnText.style.display = 'none';
-            btnLoading.style.display = 'inline';
+
+            // Smooth transition to loading state
+            btnText.style.opacity = '0';
+            btnText.style.transform = 'translateY(-10px)';
+
+            setTimeout(() => {
+                btnText.style.display = 'none';
+                btnLoading.style.display = 'inline-flex';
+                btnLoading.style.opacity = '0';
+                btnLoading.style.transform = 'translateY(10px)';
+
+                // Animate loading text in
+                setTimeout(() => {
+                    btnLoading.style.opacity = '1';
+                    btnLoading.style.transform = 'translateY(0)';
+                }, 50);
+            }, 200);
+        });
+
+        // Add input focus animations
+        document.querySelectorAll('.form-control').forEach(input => {
+            input.addEventListener('focus', function() {
+                this.style.transform = 'scale(1.02)';
+                this.style.transition = 'all 0.3s ease';
+            });
+
+            input.addEventListener('blur', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Add button hover effects
+        document.getElementById('registerBtn').addEventListener('mouseenter', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(-3px) scale(1.02)';
+            }
+        });
+
+        document.getElementById('registerBtn').addEventListener('mouseleave', function() {
+            if (!this.disabled) {
+                this.style.transform = 'translateY(0) scale(1)';
+            }
         });
 
         // Password confirmation validation
@@ -912,6 +1280,31 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 }
             });
         });
+
+        // Navigation dropdown functions
+        function showDropdown() {
+            document.getElementById('shopDropdown').classList.add('show');
+        }
+
+        function hideDropdown() {
+            document.getElementById('shopDropdown').classList.remove('show');
+        }
+
+        function showShopDropdown() {
+            document.getElementById('shopCategoryDropdown').classList.add('show');
+        }
+
+        function hideShopDropdown() {
+            document.getElementById('shopCategoryDropdown').classList.remove('show');
+        }
+
+        function showMoreDropdown() {
+            document.getElementById('moreDropdown').classList.add('show');
+        }
+
+        function hideMoreDropdown() {
+            document.getElementById('moreDropdown').classList.remove('show');
+        }
     </script>
 </body>
 </html>

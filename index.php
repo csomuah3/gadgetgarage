@@ -931,13 +931,13 @@ try {
 			display: flex;
 			align-items: center;
 			width: 100%;
-			padding-left: 260px;
+			padding-left: 280px;
 		}
 
 		.nav-item {
 			color: #1f2937;
 			text-decoration: none;
-			font-weight: 400;
+			font-weight: 500;
 			padding: 16px 20px;
 			display: flex;
 			align-items: center;
@@ -957,7 +957,7 @@ try {
 			color: #ef4444;
 			font-weight: 700;
 			margin-left: auto;
-			padding-right: 470px;
+			padding-right: 600px;
 		}
 
 		.nav-item.flash-deal:hover {
@@ -1019,7 +1019,7 @@ try {
 		}
 
 		.nav-link i {
-			font-size: 0.9rem;
+			font-size: 1rem;
 			transition: transform 0.3s ease;
 		}
 

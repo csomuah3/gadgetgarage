@@ -144,5 +144,78 @@ if (!class_exists('db_connection')) {
         {
             return mysqli_insert_id($this->db);
         }
+
+        //execute a prepared statement
+        /**
+         * Execute a prepared statement
+         * @param string $sql
+         * @param string $types
+         * @param array $params
+         * @return boolean|mysqli_result
+         **/
+        function db_prepare_execute($sql, $types = '', $params = [])
+        {
+            if (!$this->db_connect()) {
+                return false;
+            } elseif ($this->db == null) {
+                return false;
+            }
+
+            $stmt = mysqli_prepare($this->db, $sql);
+            if (!$stmt) {
+                return false;
+            }
+
+            if (!empty($types) && !empty($params)) {
+                mysqli_stmt_bind_param($stmt, $types, ...$params);
+            }
+
+            $result = mysqli_stmt_execute($stmt);
+
+            if (!$result) {
+                mysqli_stmt_close($stmt);
+                return false;
+            }
+
+            // For SELECT statements, return the result
+            $stmt_result = mysqli_stmt_get_result($stmt);
+            mysqli_stmt_close($stmt);
+
+            return $stmt_result ?: $result;
+        }
+
+        //fetch one using prepared statement
+        /**
+         * Get a single record using prepared statement
+         * @param string $sql
+         * @param string $types
+         * @param array $params
+         * @return array|false
+         **/
+        function db_prepare_fetch_one($sql, $types = '', $params = [])
+        {
+            $result = $this->db_prepare_execute($sql, $types, $params);
+            if (!$result || !is_object($result)) {
+                return false;
+            }
+            return mysqli_fetch_assoc($result);
+        }
+
+        //fetch all using prepared statement
+        /**
+         * Get all records using prepared statement
+         * @param string $sql
+         * @param string $types
+         * @param array $params
+         * @return array|false
+         **/
+        function db_prepare_fetch_all($sql, $types = '', $params = [])
+        {
+            $result = $this->db_prepare_execute($sql, $types, $params);
+            if (!$result || !is_object($result)) {
+                return false;
+            }
+            return mysqli_fetch_all($result, MYSQLI_ASSOC);
+        }
     }
 }

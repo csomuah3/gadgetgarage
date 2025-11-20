@@ -3823,7 +3823,7 @@ try {
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
@@ -3917,7 +3917,7 @@ try {
 						</div>
 					<?php else: ?>
 						<!-- Login Button -->
-						<a href="login/login_view.php" class="login-btn">
+						<a href="login/login.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
 						</a>

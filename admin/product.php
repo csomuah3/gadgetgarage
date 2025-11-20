@@ -305,7 +305,7 @@ try {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <input type="hidden" id="category_id" name="category_id" required>
+                            <input type="hidden" id="product_cat" name="product_cat" required>
                         </div>
                     </div>
 
@@ -327,7 +327,7 @@ try {
                                     </div>
                                 <?php endforeach; ?>
                             </div>
-                            <input type="hidden" id="brand_id" name="brand_id" required>
+                            <input type="hidden" id="product_brand" name="product_brand" required>
                         </div>
                     </div>
 
@@ -1656,7 +1656,7 @@ function initializeDropdowns() {
     // Category Dropdown
     const categorySelected = document.getElementById('category-selected');
     const categoryOptions = document.getElementById('category-options');
-    const categoryInput = document.getElementById('category_id');
+    const categoryInput = document.getElementById('product_cat');
     const categorySearchInput = categoryOptions.querySelector('.dropdown-search-input');
 
     categorySelected.addEventListener('click', function() {
@@ -1692,7 +1692,7 @@ function initializeDropdowns() {
     // Brand Dropdown
     const brandSelected = document.getElementById('brand-selected');
     const brandOptions = document.getElementById('brand-options');
-    const brandInput = document.getElementById('brand_id');
+    const brandInput = document.getElementById('product_brand');
     const brandSearchInput = brandOptions.querySelector('.dropdown-search-input');
 
     brandSelected.addEventListener('click', function() {

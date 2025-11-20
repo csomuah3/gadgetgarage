@@ -68,8 +68,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
     $product_keywords = trim($_POST['product_keywords'] ?? '');
     $product_color = trim($_POST['product_color'] ?? '');
-    $category_id = (int)($_POST['category_id'] ?? 0);
-    $brand_id = (int)($_POST['brand_id'] ?? 0);
+    $category_id = (int)($_POST['product_cat'] ?? 0);
+    $brand_id = (int)($_POST['product_brand'] ?? 0);
     $stock_quantity = (int)($_POST['stock_quantity'] ?? 10);
 
     // Validate input
@@ -163,7 +163,7 @@ function uploadSingleImage($file, $type = 'gallery') {
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => [
-                'file' => new CURLFile($file['tmp_name'], $file_type, $file_name)
+                'uploadedFile' => new CURLFile($file['tmp_name'], $file_type, $file_name)
             ],
             CURLOPT_TIMEOUT => 30,
             CURLOPT_CONNECTTIMEOUT => 10,
@@ -186,28 +186,25 @@ function uploadSingleImage($file, $type = 'gallery') {
         }
 
         if ($httpCode === 200) {
-            // If we got a 200 response, consider it successful regardless of response format
+            // Check if response contains success indicators
             if (!empty($response)) {
-                // Try to parse as JSON, but don't fail if it's not JSON
-                $uploadResult = json_decode($response, true);
-                if ($uploadResult && isset($uploadResult['status'])) {
-                    if ($uploadResult['status'] === 'success') {
-                        return [
-                            'success' => true,
-                            'filename' => $file_name,
-                            'server_response' => $uploadResult
-                        ];
-                    } else {
-                        throw new Exception('Server error: ' . ($uploadResult['message'] ?? 'Upload failed'));
-                    }
-                } else {
-                    // Response is not JSON or doesn't have status, but HTTP 200 means success
-                    return [
-                        'success' => true,
-                        'filename' => $file_name,
-                        'server_response' => substr($response, 0, 200)
-                    ];
+                // For HTML responses, check for error indicators
+                if (strpos($response, 'class="error"') !== false ||
+                    strpos($response, 'Upload failed') !== false ||
+                    strpos($response, 'Error:') !== false) {
+
+                    // Extract error message from HTML if possible
+                    preg_match('/<div class="error"[^>]*>(.*?)<\/div>/s', $response, $matches);
+                    $errorMsg = isset($matches[1]) ? strip_tags($matches[1]) : 'Upload failed';
+                    throw new Exception('Server error: ' . trim($errorMsg));
                 }
+
+                // If no error indicators found, assume success
+                return [
+                    'success' => true,
+                    'filename' => $file_name,
+                    'server_response' => 'File uploaded successfully'
+                ];
             } else {
                 // Empty response but HTTP 200 - assume success
                 return [

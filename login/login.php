@@ -989,15 +989,15 @@ try {
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+			<span class="promo-text" data-translate="black_friday_deals"> BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
-		<a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
+		<a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="../index.php" class="logo">

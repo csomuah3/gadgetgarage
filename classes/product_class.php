@@ -27,25 +27,16 @@ class Product extends db_connection {
         }
 
         // Validate that category exists
-        $cat_check = "SELECT cat_id FROM categories WHERE cat_id = $category_id";
-        $cat_result = $this->db_fetch_one($cat_check);
+        $cat_result = $this->db_prepare_fetch_one("SELECT cat_id FROM categories WHERE cat_id = ?", "i", [$category_id]);
         if (!$cat_result) {
             return false; // Category doesn't exist
         }
 
         // Validate that brand exists
-        $brand_check = "SELECT brand_id FROM brands WHERE brand_id = $brand_id";
-        $brand_result = $this->db_fetch_one($brand_check);
+        $brand_result = $this->db_prepare_fetch_one("SELECT brand_id FROM brands WHERE brand_id = ?", "i", [$brand_id]);
         if (!$brand_result) {
             return false; // Brand doesn't exist
         }
-
-        // Escape strings to prevent SQL injection
-        $product_title = mysqli_real_escape_string($this->db, $product_title);
-        $product_desc = mysqli_real_escape_string($this->db, $product_desc);
-        $product_image = mysqli_real_escape_string($this->db, $product_image);
-        $product_keywords = mysqli_real_escape_string($this->db, $product_keywords);
-        $product_color = mysqli_real_escape_string($this->db, $product_color);
 
         // Check if stock_quantity column exists
         $check_stock = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
@@ -55,22 +46,24 @@ class Product extends db_connection {
         $check_color = "SHOW COLUMNS FROM products LIKE 'product_color'";
         $color_exists = $this->db_fetch_one($check_color);
 
-        // Build INSERT query based on available columns
+        // Use prepared statement for INSERT based on available columns
         if ($stock_exists && $color_exists) {
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
-                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', '$product_color', $category_id, $brand_id, $stock_quantity)";
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+            $result = $this->db_prepare_execute($sql, "sdssssiid", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity]);
         } else if ($stock_exists && !$color_exists) {
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
-                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id, $stock_quantity)";
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $result = $this->db_prepare_execute($sql, "sdsssiid", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity]);
         } else if (!$stock_exists && $color_exists) {
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand)
-                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', '$product_color', $category_id, $brand_id)";
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+            $result = $this->db_prepare_execute($sql, "sdssssii", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id]);
         } else {
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand)
-                    VALUES ('$product_title', $product_price, '$product_desc', '$product_image', '$product_keywords', $category_id, $brand_id)";
+                    VALUES (?, ?, ?, ?, ?, ?, ?)";
+            $result = $this->db_prepare_execute($sql, "sdsssii", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id]);
         }
-
-        $result = $this->db_write_query($sql);
 
         // Store the inserted ID for later use
         if ($result) {
@@ -232,12 +225,11 @@ class Product extends db_connection {
 
         if ($product_id) {
             $product_id = (int)$product_id;
-            $sql = "SELECT product_id FROM products WHERE product_title = '$product_title' AND product_id != $product_id";
+            $result = $this->db_prepare_fetch_one("SELECT product_id FROM products WHERE product_title = ? AND product_id != ?", "si", [$product_title, $product_id]);
         } else {
-            $sql = "SELECT product_id FROM products WHERE product_title = '$product_title'";
+            $result = $this->db_prepare_fetch_one("SELECT product_id FROM products WHERE product_title = ?", "s", [$product_title]);
         }
 
-        $result = $this->db_fetch_one($sql);
         return $result ? true : false;
     }
 

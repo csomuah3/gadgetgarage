@@ -162,35 +162,265 @@ if (isset($_SESSION['error_message'])) {
                 <h5><i class="fas fa-plus me-2"></i>Add New Product</h5>
             </div>
             <div class="card-body-custom">
+                <style>
+                    .form-group {
+                        margin-bottom: 20px;
+                    }
+
+                    .form-label-modern {
+                        font-weight: 600;
+                        color: #333;
+                        margin-bottom: 8px;
+                        display: block;
+                        font-size: 14px;
+                    }
+
+                    .form-control-modern {
+                        width: 100%;
+                        padding: 12px 16px;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 8px;
+                        font-size: 14px;
+                        background: #fff;
+                        transition: all 0.3s ease;
+                        box-sizing: border-box;
+                    }
+
+                    .form-control-modern:focus {
+                        outline: none;
+                        border-color: #4285f4;
+                        box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+                    }
+
+                    .custom-dropdown {
+                        position: relative;
+                        width: 100%;
+                    }
+
+                    .dropdown-selected {
+                        display: flex;
+                        align-items: center;
+                        justify-content: space-between;
+                        padding: 12px 16px;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 8px;
+                        background: #fff;
+                        cursor: pointer;
+                        font-size: 14px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .dropdown-selected:hover {
+                        border-color: #4285f4;
+                    }
+
+                    .dropdown-selected.active {
+                        border-color: #4285f4;
+                        border-bottom-left-radius: 0;
+                        border-bottom-right-radius: 0;
+                    }
+
+                    .dropdown-text {
+                        color: #666;
+                    }
+
+                    .dropdown-text.selected {
+                        color: #333;
+                    }
+
+                    .dropdown-arrow {
+                        transition: transform 0.3s ease;
+                        color: #666;
+                    }
+
+                    .dropdown-selected.active .dropdown-arrow {
+                        transform: rotate(180deg);
+                    }
+
+                    .dropdown-options {
+                        position: absolute;
+                        top: 100%;
+                        left: 0;
+                        right: 0;
+                        background: #fff;
+                        border: 1px solid #4285f4;
+                        border-top: none;
+                        border-radius: 0 0 8px 8px;
+                        max-height: 200px;
+                        overflow-y: auto;
+                        z-index: 1000;
+                        display: none;
+                    }
+
+                    .dropdown-search {
+                        padding: 12px;
+                        border-bottom: 1px solid #e0e0e0;
+                    }
+
+                    .dropdown-search-input {
+                        width: 100%;
+                        padding: 8px 12px;
+                        border: 1px solid #e0e0e0;
+                        border-radius: 4px;
+                        font-size: 14px;
+                        outline: none;
+                    }
+
+                    .dropdown-search-input:focus {
+                        border-color: #4285f4;
+                    }
+
+                    .dropdown-option {
+                        padding: 12px 16px;
+                        cursor: pointer;
+                        font-size: 14px;
+                        transition: background 0.2s ease;
+                    }
+
+                    .dropdown-option:hover {
+                        background: #f8f9fa;
+                    }
+
+                    .dropdown-option.selected {
+                        background: #e3f2fd;
+                        color: #4285f4;
+                        font-weight: 500;
+                    }
+
+                    .color-selector {
+                        margin-top: 8px;
+                    }
+
+                    .color-options {
+                        display: grid;
+                        grid-template-columns: repeat(6, 1fr);
+                        gap: 12px;
+                    }
+
+                    .color-option {
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        cursor: pointer;
+                        padding: 8px;
+                        border-radius: 8px;
+                        transition: all 0.3s ease;
+                    }
+
+                    .color-option:hover {
+                        background: #f8f9fa;
+                    }
+
+                    .color-option.selected {
+                        background: #e3f2fd;
+                        border: 2px solid #4285f4;
+                    }
+
+                    .color-circle {
+                        width: 32px;
+                        height: 32px;
+                        border-radius: 50%;
+                        margin-bottom: 4px;
+                        border: 2px solid #e0e0e0;
+                    }
+
+                    .color-name {
+                        font-size: 12px;
+                        color: #666;
+                        text-align: center;
+                    }
+
+                    .upload-area {
+                        border: 2px dashed #e0e0e0;
+                        border-radius: 12px;
+                        padding: 40px 20px;
+                        text-align: center;
+                        cursor: pointer;
+                        transition: all 0.3s ease;
+                        background: #fafafa;
+                        position: relative;
+                    }
+
+                    .upload-area:hover {
+                        border-color: #4285f4;
+                        background: #f8f9ff;
+                    }
+
+                    .upload-area.drag-over {
+                        border-color: #4285f4;
+                        background: #f0f8ff;
+                    }
+
+                    .upload-content h6 {
+                        margin: 12px 0 8px 0;
+                        color: #333;
+                        font-weight: 600;
+                    }
+
+                    .upload-content p {
+                        color: #666;
+                        margin: 0;
+                        font-size: 14px;
+                    }
+
+                    .upload-icon {
+                        font-size: 32px;
+                        color: #4285f4;
+                        margin-bottom: 8px;
+                    }
+
+                    .file-input {
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        width: 100%;
+                        height: 100%;
+                        opacity: 0;
+                        cursor: pointer;
+                    }
+
+                    .image-preview {
+                        margin-top: 12px;
+                        display: flex;
+                        flex-wrap: wrap;
+                        gap: 8px;
+                        justify-content: center;
+                    }
+                </style>
+
                 <form id="addProductForm" class="modern-form" enctype="multipart/form-data">
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label for="product_title" class="form-label-modern">Product Title</label>
                         <input type="text" class="form-control-modern" id="product_title" name="product_title" required>
                     </div>
 
-                    <div class="row mb-3">
+                    <div class="row">
                         <div class="col-md-7">
-                            <label for="product_price" class="form-label-modern">Excellent Condition Price (GH₵)</label>
-                            <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
+                            <div class="form-group">
+                                <label for="product_price" class="form-label-modern">Excellent Condition Price (GH₵)</label>
+                                <input type="number" class="form-control-modern" id="product_price" name="product_price" step="0.01" required>
+                            </div>
                         </div>
                         <div class="col-md-5">
-                            <label for="stock_quantity" class="form-label-modern">Stock</label>
-                            <input type="number" class="form-control-modern" id="stock_quantity" name="stock_quantity" required>
+                            <div class="form-group">
+                                <label for="stock_quantity" class="form-label-modern">Stock</label>
+                                <input type="number" class="form-control-modern" id="stock_quantity" name="stock_quantity" required>
+                            </div>
                         </div>
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label for="product_desc" class="form-label-modern">Description</label>
                         <textarea class="form-control-modern" id="product_desc" name="product_desc" rows="3"></textarea>
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label for="product_keywords" class="form-label-modern">Product Keywords</label>
                         <input type="text" class="form-control-modern" id="product_keywords" name="product_keywords" placeholder="e.g., laptop, gaming, portable, wireless">
                         <small class="text-muted">Separate keywords with commas for better search results</small>
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label class="form-label-modern">Product Color</label>
                         <div class="color-selector">
                             <div class="color-options">
@@ -247,27 +477,47 @@ if (isset($_SESSION['error_message'])) {
                         </div>
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label for="product_cat" class="form-label-modern">Category</label>
-                        <select class="form-control-modern" id="product_cat" name="product_cat" required>
-                            <option value="">Select Category</option>
-                            <?php foreach ($categories as $category): ?>
-                                <option value="<?= $category['cat_id'] ?>"><?= htmlspecialchars($category['cat_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="custom-dropdown" id="categoryDropdown">
+                            <div class="dropdown-selected" id="category-selected">
+                                <span class="dropdown-text">Laptops</span>
+                                <i class="fas fa-chevron-up dropdown-arrow"></i>
+                            </div>
+                            <div class="dropdown-options" id="category-options">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search categories..." class="dropdown-search-input" id="categorySearch">
+                                </div>
+                                <div class="dropdown-option selected" data-value="1">Laptops</div>
+                                <?php foreach ($categories as $category): ?>
+                                    <div class="dropdown-option" data-value="<?= $category['cat_id'] ?>"><?= htmlspecialchars($category['cat_name']) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="product_cat" name="product_cat" value="1">
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label for="product_brand" class="form-label-modern">Brand</label>
-                        <select class="form-control-modern" id="product_brand" name="product_brand" required>
-                            <option value="">Select Brand</option>
-                            <?php foreach ($brands as $brand): ?>
-                                <option value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></option>
-                            <?php endforeach; ?>
-                        </select>
+                        <div class="custom-dropdown" id="brandDropdown">
+                            <div class="dropdown-selected" id="brand-selected">
+                                <span class="dropdown-text">Lenovo Laptop</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="dropdown-options" id="brand-options">
+                                <div class="dropdown-search">
+                                    <input type="text" placeholder="Search brands..." class="dropdown-search-input" id="brandSearch">
+                                </div>
+                                <div class="dropdown-option selected" data-value="1">Lenovo Laptop</div>
+                                <?php foreach ($brands as $brand): ?>
+                                    <div class="dropdown-option" data-value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                        <input type="hidden" id="product_brand" name="product_brand" value="1">
                     </div>
 
-                    <div class="form-group mb-3">
+                    <div class="form-group">
                         <label class="form-label-modern">Product Images</label>
                         <div class="image-upload-section">
                             <div class="upload-area" id="mainImageUpload">
@@ -424,6 +674,76 @@ if (isset($_SESSION['error_message'])) {
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+// Custom dropdown functionality
+function setupDropdown(dropdownId, optionsId, hiddenInputId, searchId) {
+    const dropdown = document.getElementById(dropdownId);
+    const selected = dropdown.querySelector('.dropdown-selected');
+    const options = document.getElementById(optionsId);
+    const hiddenInput = document.getElementById(hiddenInputId);
+    const searchInput = document.getElementById(searchId);
+
+    // Toggle dropdown
+    selected.addEventListener('click', () => {
+        const isActive = selected.classList.contains('active');
+
+        // Close all dropdowns first
+        document.querySelectorAll('.dropdown-selected.active').forEach(sel => {
+            sel.classList.remove('active');
+        });
+        document.querySelectorAll('.dropdown-options').forEach(opts => {
+            opts.style.display = 'none';
+        });
+
+        if (!isActive) {
+            selected.classList.add('active');
+            options.style.display = 'block';
+            searchInput.focus();
+        }
+    });
+
+    // Handle option selection
+    options.addEventListener('click', (e) => {
+        if (e.target.classList.contains('dropdown-option')) {
+            const value = e.target.getAttribute('data-value');
+            const text = e.target.textContent;
+
+            // Update selected text and value
+            selected.querySelector('.dropdown-text').textContent = text;
+            selected.querySelector('.dropdown-text').classList.add('selected');
+            hiddenInput.value = value;
+
+            // Update selected option
+            options.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+            e.target.classList.add('selected');
+
+            // Close dropdown
+            selected.classList.remove('active');
+            options.style.display = 'none';
+        }
+    });
+
+    // Search functionality
+    searchInput.addEventListener('input', (e) => {
+        const query = e.target.value.toLowerCase();
+        options.querySelectorAll('.dropdown-option').forEach(option => {
+            const text = option.textContent.toLowerCase();
+            option.style.display = text.includes(query) ? 'block' : 'none';
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+        if (!dropdown.contains(e.target)) {
+            selected.classList.remove('active');
+            options.style.display = 'none';
+        }
+    });
+}
+
+// Initialize dropdowns
+setupDropdown('categoryDropdown', 'category-options', 'product_cat', 'categorySearch');
+setupDropdown('brandDropdown', 'brand-options', 'product_brand', 'brandSearch');
+
 // Color selector functionality
 document.querySelectorAll('.color-option').forEach(option => {
     option.addEventListener('click', function() {
@@ -496,24 +816,36 @@ new Chart(ctx, {
         datasets: [{
             data: categoryData.map(cat => cat.count),
             backgroundColor: [
-                '#4285f4',
-                '#34a853',
-                '#fbbc04',
-                '#ea4335',
-                '#ff6d01',
-                '#9c27b0'
+                '#e74c3c',  // Red
+                '#f39c12',  // Orange
+                '#9b59b6',  // Purple
+                '#3498db',  // Blue
+                '#2ecc71',  // Green
+                '#34495e'   // Dark Gray
             ],
             borderWidth: 0,
-            hoverBorderWidth: 3,
-            hoverBorderColor: '#fff'
+            hoverBorderWidth: 0,
+            hoverBorderColor: 'transparent'
         }]
     },
     options: {
         responsive: true,
         maintainAspectRatio: false,
+        animation: false,
+        hover: {
+            mode: null
+        },
         plugins: {
             legend: {
                 display: false
+            },
+            tooltip: {
+                enabled: false
+            }
+        },
+        elements: {
+            arc: {
+                borderWidth: 0
             }
         }
     }

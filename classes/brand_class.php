@@ -58,9 +58,10 @@ class Brand extends db_connection {
 
     // Get all brands (for admin)
     public function get_all_brands() {
-        $sql = "SELECT brand_id, brand_name
-                FROM brands
-                ORDER BY brand_name";
+        $sql = "SELECT b.brand_id, b.brand_name, b.category_id, b.user_id, c.cat_name
+                FROM brands b
+                LEFT JOIN categories c ON b.category_id = c.cat_id
+                ORDER BY b.brand_name";
 
         return $this->db_fetch_all($sql);
     }

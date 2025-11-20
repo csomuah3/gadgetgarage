@@ -7,34 +7,34 @@ $login_error = '';
 $login_success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-	$email = trim($_POST['email'] ?? '');
-	$password = $_POST['password'] ?? '';
+    $email = trim($_POST['email'] ?? '');
+    $password = $_POST['password'] ?? '';
 
-	if (empty($email) || empty($password)) {
-		$login_error = 'Please enter both email and password.';
-	} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-		$login_error = 'Please enter a valid email address.';
-	} else {
-		$db = new db_connection();
+    if (empty($email) || empty($password)) {
+        $login_error = 'Please enter both email and password.';
+    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        $login_error = 'Please enter a valid email address.';
+    } else {
+        $db = new db_connection();
 
-		$email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
-		$sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
+        $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+        $sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
 
-		$user = $db->db_fetch_one($sql);
+        $user = $db->db_fetch_one($sql);
 
-		if ($user && password_verify($password, $user['customer_pass'])) {
-			$_SESSION['user_id'] = $user['customer_id'];
-			$_SESSION['user_name'] = $user['customer_name'];
-			$_SESSION['user_email'] = $user['customer_email'];
-			$_SESSION['email'] = $user['customer_email'];
-			$_SESSION['role'] = $user['user_role'];
-			$_SESSION['name'] = $user['customer_name'];
+        if ($user && password_verify($password, $user['customer_pass'])) {
+            $_SESSION['user_id'] = $user['customer_id'];
+            $_SESSION['user_name'] = $user['customer_name'];
+            $_SESSION['user_email'] = $user['customer_email'];
+            $_SESSION['email'] = $user['customer_email'];
+            $_SESSION['role'] = $user['user_role'];
+            $_SESSION['name'] = $user['customer_name'];
 
-			$login_success = true;
-		} else {
-			$login_error = 'Invalid email or password.';
-		}
-	}
+            $login_success = true;
+        } else {
+            $login_error = 'Invalid email or password.';
+        }
+    }
 }
 
 // Try to load categories and brands for navigation
@@ -42,17 +42,17 @@ $categories = [];
 $brands = [];
 
 try {
-	require_once('../controllers/category_controller.php');
-	$categories = get_all_categories_ctr();
+    require_once('../controllers/category_controller.php');
+    $categories = get_all_categories_ctr();
 } catch (Exception $e) {
-	error_log("Failed to load categories: " . $e->getMessage());
+    error_log("Failed to load categories: " . $e->getMessage());
 }
 
 try {
-	require_once('../controllers/brand_controller.php');
-	$brands = get_all_brands_ctr();
+    require_once('../controllers/brand_controller.php');
+    $brands = get_all_brands_ctr();
 } catch (Exception $e) {
-	error_log("Failed to load brands: " . $e->getMessage());
+    error_log("Failed to load brands: " . $e->getMessage());
 }
 
 // Get cart count - same as index.php
@@ -61,10 +61,10 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = 0;
 try {
-	require_once('../controllers/cart_controller.php');
-	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    require_once('../controllers/cart_controller.php');
+    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 } catch (Exception $e) {
-	error_log("Failed to load cart count: " . $e->getMessage());
+    error_log("Failed to load cart count: " . $e->getMessage());
 }
 ?>
 
@@ -97,24 +97,10 @@ try {
 		}
 
 		body {
-			background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png') no-repeat center center fixed;
-			background-size: cover;
-			position: relative;
 			font-family: "Times New Roman", Times, serif;
+			background-color: #ffffff;
+			color: #1a1a1a;
 			overflow-x: hidden;
-		}
-
-		body::before {
-			content: '';
-			position: fixed;
-			top: 0;
-			left: 0;
-			right: 0;
-			bottom: 0;
-			background: rgba(255, 255, 255, 0.5);
-			/* Adjust alpha for brightness (0.5 = 50% white overlay) */
-			z-index: 0;
-			pointer-events: none;
 		}
 
 		/* Promotional Banner Styles - Same as index */
@@ -783,14 +769,13 @@ try {
 			min-height: calc(100vh - 200px);
 			display: flex;
 			align-items: center;
-
 			justify-content: center;
 			padding: 50px 20px;
 			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 		}
 
 		.login-form-wrapper {
-			background: rgba(255, 255, 255, 0.7);
+			background: white;
 			border-radius: 20px;
 			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 			overflow: hidden;
@@ -798,8 +783,6 @@ try {
 			max-width: 500px;
 			min-height: 650px;
 			position: relative;
-			z-index: 1;
-			/* Make sure it's above the overlay */
 		}
 
 		.login-form-wrapper::before {
@@ -989,15 +972,15 @@ try {
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text" data-translate="black_friday_deals"> BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
-		<a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
+		<a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 40px;">
+		<div class="container-fluid" style="padding: 0 120px 0 95px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="../index.php" class="logo">
@@ -1248,12 +1231,12 @@ try {
 							<div class="input-group">
 								<i class="fas fa-envelope input-icon"></i>
 								<input type="email"
-									id="email"
-									name="email"
-									class="form-control with-icon"
-									placeholder="Enter your email"
-									value="<?php echo htmlspecialchars($email ?? ''); ?>"
-									required>
+									   id="email"
+									   name="email"
+									   class="form-control with-icon"
+									   placeholder="Enter your email"
+									   value="<?php echo htmlspecialchars($email ?? ''); ?>"
+									   required>
 							</div>
 						</div>
 
@@ -1262,11 +1245,11 @@ try {
 							<div class="input-group">
 								<i class="fas fa-lock input-icon"></i>
 								<input type="password"
-									id="password"
-									name="password"
-									class="form-control with-icon"
-									placeholder="Enter your password"
-									required>
+									   id="password"
+									   name="password"
+									   class="form-control with-icon"
+									   placeholder="Enter your password"
+									   required>
 							</div>
 						</div>
 
@@ -1334,9 +1317,9 @@ try {
 				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 				timerElement.innerHTML = days + "d:" +
-					(hours < 10 ? "0" : "") + hours + "h:" +
-					(minutes < 10 ? "0" : "") + minutes + "m:" +
-					(seconds < 10 ? "0" : "") + seconds + "s";
+										 (hours < 10 ? "0" : "") + hours + "h:" +
+										 (minutes < 10 ? "0" : "") + minutes + "m:" +
+										 (seconds < 10 ? "0" : "") + seconds + "s";
 			}
 		}
 

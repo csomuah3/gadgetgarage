@@ -33,12 +33,8 @@ function get_brands_ctr($user_id) {
 // Get all brands (for admin)
 function get_all_brands_ctr() {
     $brand = new Brand();
-    // Query to get brands with category information since category_id exists
-    $sql = "SELECT b.brand_id, b.brand_name, b.category_id, b.user_id, c.cat_name
-            FROM brands b
-            LEFT JOIN categories c ON b.category_id = c.cat_id
-            ORDER BY b.brand_name";
-    return $brand->db_fetch_all($sql);
+    // Use the existing method from brand class which correctly queries the table structure
+    return $brand->get_all_brands();
 }
 
 // Get brand by ID

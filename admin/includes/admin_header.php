@@ -42,11 +42,27 @@ if (!check_login() || !check_admin()) {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 50%, #cbd5e1 100%);
+            background: #f8fafc;
             color: var(--primary-navy);
             line-height: 1.6;
             min-height: 100vh;
             overflow-x: hidden;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.45;
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* Animated Background */

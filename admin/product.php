@@ -831,10 +831,17 @@ new Chart(ctx, {
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: false,
-        hover: {
-            mode: null
+        animation: {
+            animateRotate: false,
+            animateScale: true,
+            duration: 1500,
+            easing: 'easeOutQuart'
         },
+        hover: {
+            mode: null,
+            animationDuration: 0
+        },
+        responsiveAnimationDuration: 0,
         plugins: {
             legend: {
                 display: false
@@ -847,6 +854,9 @@ new Chart(ctx, {
             arc: {
                 borderWidth: 0
             }
+        },
+        interaction: {
+            intersect: false
         }
     }
 });

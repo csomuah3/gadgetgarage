@@ -105,6 +105,22 @@ try {
 			overflow-x: hidden;
 		}
 
+		body::after {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
+			background-size: cover;
+			background-position: center;
+			background-attachment: fixed;
+			opacity: 0.45;
+			z-index: -1;
+			pointer-events: none;
+		}
+
 		/* Promotional Banner Styles - Same as index */
 		.promo-banner {
 			background: #001f3f !important;

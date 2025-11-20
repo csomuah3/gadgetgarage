@@ -1031,7 +1031,6 @@ try {
 		/* Mega Dropdown */
 		.mega-dropdown {
 			position: absolute;
-
 			top: 100%;
 			left: 0;
 			width: 800px;
@@ -1041,8 +1040,8 @@ try {
 			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 			padding: 32px;
 			opacity: 0;
-			visibility: visible;
-			transform: translateY(0px);
+			visibility: hidden;
+			transform: translateY(-10px);
 			transition: all 0.3s ease;
 			z-index: 1000;
 		}

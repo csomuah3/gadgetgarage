@@ -92,10 +92,6 @@ function removeFromCart(productId) {
                 performRemoveFromCart(productId);
             }
         });
-    } else {
-        if (confirm('Are you sure you want to remove this item from your cart?')) {
-            performRemoveFromCart(productId);
-        }
     }
 }
 
@@ -501,10 +497,6 @@ function removeFromCartByCartId(cartItemId, productId) {
                 performRemoveFromCartByCartId(cartItemId, productId);
             }
         });
-    } else {
-        if (confirm('Are you sure you want to remove this item from your cart?')) {
-            performRemoveFromCartByCartId(cartItemId, productId);
-        }
     }
 }
 
@@ -565,10 +557,6 @@ function emptyCart() {
                 performEmptyCart();
             }
         });
-    } else {
-        if (confirm('Are you sure you want to empty your cart? This action cannot be undone.')) {
-            performEmptyCart();
-        }
     }
 }
 

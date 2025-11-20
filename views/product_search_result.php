@@ -1,9 +1,9 @@
 <?php
-require_once(__DIR__ . '/settings/core.php');
-require_once(__DIR__ . '/controllers/product_controller.php');
-require_once(__DIR__ . '/controllers/category_controller.php');
-require_once(__DIR__ . '/controllers/brand_controller.php');
-require_once(__DIR__ . '/helpers/image_helper.php');
+require_once(__DIR__ . '/../settings/core.php');
+require_once(__DIR__ . '/../controllers/product_controller.php');
+require_once(__DIR__ . '/../controllers/category_controller.php');
+require_once(__DIR__ . '/../controllers/brand_controller.php');
+require_once(__DIR__ . '/../helpers/image_helper.php');
 
 $is_logged_in = check_login();
 $is_admin = false;
@@ -438,7 +438,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                 </a>
 
                 <div class="search-container">
-                    <form action="product_search_result.php" method="GET" class="position-relative">
+                    <form action="views/product_search_result.php" method="GET" class="position-relative">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" name="query" class="search-input" placeholder="Search for refurbished devices, parts, or repair services..." value="<?php echo htmlspecialchars($search_query); ?>">
                         <button type="submit" class="search-btn">Search</button>
@@ -624,7 +624,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         </div>
 
         <div class="search-header">
-            <form method="GET" action="product_search_result.php">
+            <form method="GET" action="views/product_search_result.php">
                 <div class="search-input-container">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" name="query" class="search-input"
@@ -1021,10 +1021,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                         window.location.href = 'login/logout.php';
                     }
                 });
-            } else {
-                if (confirm('Are you sure you want to logout?')) {
-                    window.location.href = 'login/logout.php';
-                }
+            }
             }
         }
 

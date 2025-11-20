@@ -253,10 +253,6 @@ function deleteCategory(categoryId, categoryName) {
                 performDeleteCategory(categoryId, categoryName);
             }
         });
-    } else {
-        if (confirm(`Are you sure you want to delete "${categoryName}"?`)) {
-            performDeleteCategory(categoryId, categoryName);
-        }
     }
 }
 

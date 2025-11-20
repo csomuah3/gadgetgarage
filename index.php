@@ -3833,7 +3833,7 @@ try {
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
+					<form class="search-container" method="GET" action="views/product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
@@ -3857,7 +3857,7 @@ try {
 					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<a href="views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
 								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
@@ -3865,7 +3865,7 @@ try {
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<a href="views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
 								<?php if ($cart_count > 0): ?>
 									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
@@ -3970,7 +3970,7 @@ try {
 						<div class="dropdown-content">
 							<div class="dropdown-column">
 								<h4>
-									<a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+									<a href="views/mobile_devices.php" style="text-decoration: none; color: inherit;">
 										<span data-translate="mobile_devices">Mobile Devices</span>
 									</a>
 								</h4>
@@ -3981,7 +3981,7 @@ try {
 							</div>
 							<div class="dropdown-column">
 								<h4>
-									<a href="computing.php" style="text-decoration: none; color: inherit;">
+									<a href="views/computing.php" style="text-decoration: none; color: inherit;">
 										<span data-translate="computing">Computing</span>
 									</a>
 								</h4>
@@ -3992,7 +3992,7 @@ try {
 							</div>
 							<div class="dropdown-column">
 								<h4>
-									<a href="photography_video.php" style="text-decoration: none; color: inherit;">
+									<a href="views/photography_video.php" style="text-decoration: none; color: inherit;">
 										<span data-translate="photography_video">Photography & Video</span>
 									</a>
 								</h4>
@@ -4008,7 +4008,7 @@ try {
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
-										<a href="all_product.php" class="shop-now-btn">Shop </a>
+										<a href="views/all_product.php" class="shop-now-btn">Shop </a>
 									</div>
 								</div>
 							</div>
@@ -4016,8 +4016,8 @@ try {
 					</div>
 				</div>
 
-				<a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-				<a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+				<a href="views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
 				<!-- More Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
@@ -4027,14 +4027,14 @@ try {
 					</a>
 					<div class="simple-dropdown" id="moreDropdown">
 						<ul>
-							<li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-							<li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+							<li><a href="views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
 						</ul>
 					</div>
 				</div>
 
 				<!-- Flash Deal positioned at far right -->
-				<a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+				<a href="views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
 	</nav>
@@ -4647,7 +4647,7 @@ try {
 					<div class="col-lg-2 col-md-6 mb-4">
 						<h5 class="footer-title">Services</h5>
 						<ul class="footer-links">
-							<li><a href="repair_services.php">Device Repair</a></li>
+							<li><a href="views/repair_services.php">Device Repair</a></li>
 							<li><a href="#">Tech Support</a></li>
 							<li><a href="#">Data Recovery</a></li>
 							<li><a href="#">Setup Services</a></li>
@@ -5734,7 +5734,7 @@ try {
 						<i class="fas fa-microchip fa-2x mb-3" style="color: #008060;"></i>
 						<h4>Coming Soon!</h4>
 						<p>We're preparing amazing tech picks for you.</p>
-						<a href="all_product.php" class="btn btn-primary mt-3">Browse All Products</a>
+						<a href="views/all_product.php" class="btn btn-primary mt-3">Browse All Products</a>
 					</div>
 				</div>
 			`;

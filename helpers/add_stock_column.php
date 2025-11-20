@@ -1,6 +1,6 @@
 <?php
 // Add stock quantity column to products table
-require_once __DIR__ . '/settings/db_class.php';
+require_once __DIR__ . '/../settings/db_class.php';
 
 $db = new db_connection();
 

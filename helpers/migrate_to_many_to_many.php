@@ -4,7 +4,7 @@
  * This script safely migrates existing data without losing any information
  */
 
-require_once __DIR__ . '/settings/db_class.php';
+require_once __DIR__ . '/../settings/db_class.php';
 
 try {
     $db = new db_connection();

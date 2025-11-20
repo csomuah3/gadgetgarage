@@ -1,10 +1,10 @@
 <?php
-require_once(__DIR__ . '/settings/core.php');
-require_once(__DIR__ . '/controllers/cart_controller.php');
-require_once(__DIR__ . '/controllers/product_controller.php');
-require_once(__DIR__ . '/controllers/category_controller.php');
-require_once(__DIR__ . '/controllers/brand_controller.php');
-require_once(__DIR__ . '/helpers/image_helper.php');
+require_once(__DIR__ . '/../settings/core.php');
+require_once(__DIR__ . '/../controllers/cart_controller.php');
+require_once(__DIR__ . '/../controllers/product_controller.php');
+require_once(__DIR__ . '/../controllers/category_controller.php');
+require_once(__DIR__ . '/../controllers/brand_controller.php');
+require_once(__DIR__ . '/../helpers/image_helper.php');
 
 $is_logged_in = check_login();
 $is_admin = false;
@@ -658,7 +658,7 @@ usort($flash_deal_products, function($a, $b) {
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
+					<form class="search-container" method="GET" action="views/product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">

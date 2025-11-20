@@ -1373,7 +1373,7 @@ try {
 	<div class="login-page-container">
 		<div class="login-form-wrapper">
 			<div class="login-form-header">
-				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
+				<!-- Login form logo removed -->
 				<h1 class="login-form-title">Welcome Back</h1>
 				<p class="login-form-subtitle">Please sign in to your account</p>
 			</div>

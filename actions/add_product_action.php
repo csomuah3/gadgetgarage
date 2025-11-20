@@ -1,80 +1,38 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+
 require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../controllers/product_controller.php';
 
 header('Content-Type: application/json');
 
-// Check if user is logged in using core function
+// Check if user is logged in and is admin
 if (!check_login()) {
+    http_response_code(401);
     echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
     exit;
 }
 
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    http_response_code(405);
+    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+    exit;
+}
+
+try {
+    // Get and validate form data
     $product_title = trim($_POST['product_title'] ?? '');
-    $product_price = (float)($_POST['product_price'] ?? 0);
+    $product_price = floatval($_POST['product_price'] ?? 0);
     $product_desc = trim($_POST['product_desc'] ?? '');
-
-    // Handle primary image upload (backward compatibility)
-    $product_image = '';
-    $uploaded_images = [];
-    $upload_warnings = [];
-
-    // Handle single image upload (for backward compatibility)
-    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
-        $upload_result = uploadSingleImage($_FILES['product_image'], 'primary');
-        if ($upload_result['success']) {
-            $product_image = $upload_result['filename'];
-            $uploaded_images[] = [
-                'filename' => $upload_result['filename'],
-                'is_primary' => true,
-                'order' => 0
-            ];
-        } else {
-            // Don't fail the entire product creation, just warn about image upload
-            $upload_warnings[] = 'Image upload failed: ' . $upload_result['message'];
-            $product_image = 'placeholder.jpg'; // Use placeholder
-        }
-    }
-
-    // Handle multiple images upload (new functionality)
-    if (isset($_FILES['product_images']) && is_array($_FILES['product_images']['name'])) {
-        $multiple_files = $_FILES['product_images'];
-
-        for ($i = 0; $i < count($multiple_files['name']); $i++) {
-            if ($multiple_files['error'][$i] === UPLOAD_ERR_OK) {
-                $file = [
-                    'name' => $multiple_files['name'][$i],
-                    'type' => $multiple_files['type'][$i],
-                    'tmp_name' => $multiple_files['tmp_name'][$i],
-                    'error' => $multiple_files['error'][$i],
-                    'size' => $multiple_files['size'][$i]
-                ];
-
-                $is_primary = empty($uploaded_images); // First image becomes primary if no single image
-                $upload_result = uploadSingleImage($file, $is_primary ? 'primary' : 'gallery');
-
-                if ($upload_result['success']) {
-                    if ($is_primary && empty($product_image)) {
-                        $product_image = $upload_result['filename'];
-                    }
-
-                    $uploaded_images[] = [
-                        'filename' => $upload_result['filename'],
-                        'is_primary' => $is_primary,
-                        'order' => count($uploaded_images)
-                    ];
-                }
-            }
-        }
-    }
     $product_keywords = trim($_POST['product_keywords'] ?? '');
     $product_color = trim($_POST['product_color'] ?? '');
-    $category_id = (int)($_POST['product_cat'] ?? 0);
-    $brand_id = (int)($_POST['product_brand'] ?? 0);
-    $stock_quantity = (int)($_POST['stock_quantity'] ?? 10);
+    $product_cat = intval($_POST['product_cat'] ?? 0);
+    $product_brand = intval($_POST['product_brand'] ?? 0);
+    $stock_quantity = intval($_POST['stock_quantity'] ?? 0);
 
-    // Validate input
+    // Validate required fields
     if (empty($product_title)) {
         echo json_encode(['status' => 'error', 'message' => 'Product title is required']);
         exit;
@@ -85,63 +43,95 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit;
     }
 
-    if ($category_id <= 0) {
+    if ($product_cat <= 0) {
         echo json_encode(['status' => 'error', 'message' => 'Please select a valid category']);
         exit;
     }
 
-    if ($brand_id <= 0) {
+    if ($product_brand <= 0) {
         echo json_encode(['status' => 'error', 'message' => 'Please select a valid brand']);
         exit;
     }
 
-    try {
-        // Add the product first
-        $result = add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
+    if ($stock_quantity < 0) {
+        echo json_encode(['status' => 'error', 'message' => 'Stock quantity cannot be negative']);
+        exit;
+    }
 
-        if ($result['status'] === 'success' && !empty($uploaded_images)) {
-            // Get the new product ID
-            $product_id = $result['product_id'];
+    // Handle image upload
+    $product_image = '';
+    $upload_warnings = [];
 
-            // Save all images to the product_images table
-            $image_save_errors = [];
-            foreach ($uploaded_images as $image) {
-                $image_result = saveProductImageToDatabase($product_id, $image['filename'], $image['is_primary'], $image['order']);
-                if (!$image_result) {
-                    $image_save_errors[] = "Failed to save image: " . $image['filename'];
-                }
+    // Handle main image upload
+    if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+        $upload_result = uploadImageToServer($_FILES['product_image']);
+        if ($upload_result['success']) {
+            $product_image = $upload_result['filename'];
+        } else {
+            $upload_warnings[] = 'Main image upload failed: ' . $upload_result['message'];
+        }
+    }
+
+    // If no main image uploaded, use placeholder
+    if (empty($product_image)) {
+        $product_image = 'placeholder.jpg';
+    }
+
+    // Add the product to database
+    $result = add_product_ctr(
+        $product_title,
+        $product_price,
+        $product_desc,
+        $product_image,
+        $product_keywords,
+        $product_color,
+        $product_cat,
+        $product_brand,
+        $stock_quantity
+    );
+
+    if ($result['status'] === 'success') {
+        // Handle additional images if uploaded
+        if (isset($_FILES['product_images']) && is_array($_FILES['product_images']['name'])) {
+            $additional_images = handleMultipleImageUpload($_FILES['product_images']);
+            if (!empty($additional_images)) {
+                $result['additional_images'] = $additional_images;
+                $result['message'] .= ' (' . count($additional_images) . ' additional images uploaded)';
             }
-
-            if (!empty($image_save_errors)) {
-                $result['warnings'] = $image_save_errors;
-            }
-
-            $result['uploaded_images_count'] = count($uploaded_images);
         }
 
-        // Add upload warnings if any
+        // Add warnings if any
         if (!empty($upload_warnings)) {
-            $result['warnings'] = array_merge($result['warnings'] ?? [], $upload_warnings);
+            $result['warnings'] = $upload_warnings;
         }
+
+        // Set session success message for page reload
+        $_SESSION['success_message'] = $result['message'];
 
         echo json_encode($result);
-    } catch (Exception $e) {
-        echo json_encode(['status' => 'error', 'message' => 'Failed to add product: ' . $e->getMessage()]);
+    } else {
+        echo json_encode($result);
     }
-} else {
-    echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
+
+} catch (Exception $e) {
+    error_log("Add product error: " . $e->getMessage());
+    http_response_code(500);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Server error: ' . $e->getMessage()
+    ]);
 }
 
 /**
- * Upload a single image file to external server
+ * Upload single image to external server
  */
-function uploadSingleImage($file, $type = 'gallery') {
+function uploadImageToServer($file) {
     try {
-        // Check for upload errors with detailed messages
+        // Validate file upload
         if ($file['error'] !== UPLOAD_ERR_OK) {
             $error_messages = [
-                UPLOAD_ERR_INI_SIZE => 'File exceeds PHP upload_max_filesize limit (40MB)',
-                UPLOAD_ERR_FORM_SIZE => 'File exceeds form MAX_FILE_SIZE limit',
+                UPLOAD_ERR_INI_SIZE => 'File exceeds PHP upload limit',
+                UPLOAD_ERR_FORM_SIZE => 'File exceeds form limit',
                 UPLOAD_ERR_PARTIAL => 'File upload was interrupted',
                 UPLOAD_ERR_NO_FILE => 'No file was selected',
                 UPLOAD_ERR_NO_TMP_DIR => 'Server missing temporary folder',
@@ -149,36 +139,31 @@ function uploadSingleImage($file, $type = 'gallery') {
                 UPLOAD_ERR_EXTENSION => 'File upload blocked by server extension'
             ];
 
-            $error_msg = $error_messages[$file['error']] ?? 'Unknown upload error: ' . $file['error'];
-            throw new Exception($error_msg);
+            throw new Exception($error_messages[$file['error']] ?? 'Unknown upload error');
         }
-
-        // Remove file size limit - allow any size
-        // Note: Server and PHP limits may still apply, but we won't artificially restrict it
 
         // Validate file type
         $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
         $file_type = mime_content_type($file['tmp_name']);
 
         if (!in_array($file_type, $allowed_types)) {
-            throw new Exception('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed.');
+            throw new Exception('Invalid file type. Only JPEG, PNG, GIF, and WebP are allowed');
         }
 
-        // Upload to external server
-        $server_upload_url = 'http://169.239.251.102:442/~chelsea.somuah/upload.php';
-
-        // Generate proper filename with product prefix
+        // Generate unique filename
         $file_extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-        $file_name = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
+        $filename = 'product_' . time() . '_' . uniqid() . '.' . $file_extension;
 
-        // Create cURL file upload
+        // Upload to external server
+        $upload_url = 'http://169.239.251.102:442/~chelsea.somuah/upload.php';
+
         $curl = curl_init();
         curl_setopt_array($curl, [
-            CURLOPT_URL => $server_upload_url,
+            CURLOPT_URL => $upload_url,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => [
-                'uploadedFile' => new CURLFile($file['tmp_name'], $file_type, $file_name)
+                'uploadedFile' => new CURLFile($file['tmp_name'], $file_type, $filename)
             ],
             CURLOPT_TIMEOUT => 120,
             CURLOPT_CONNECTTIMEOUT => 30,
@@ -190,53 +175,33 @@ function uploadSingleImage($file, $type = 'gallery') {
         $response = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $error = curl_error($curl);
-        $curlInfo = curl_getinfo($curl);
         curl_close($curl);
 
-        // Log detailed debugging info
-        error_log("Upload response: " . substr($response, 0, 500));
-        error_log("HTTP Code: " . $httpCode);
-        error_log("cURL Info: " . json_encode($curlInfo));
+        // Log for debugging
+        error_log("Upload attempt - HTTP Code: $httpCode, Response: " . substr($response, 0, 200));
 
         if ($error) {
-            throw new Exception('Network error connecting to upload server: ' . $error);
+            throw new Exception('Network error: ' . $error);
         }
 
-        if ($httpCode >= 500) {
-            throw new Exception('Upload server error (500). Server may be overloaded or have configuration issues. Please try again in a moment.');
+        if ($httpCode !== 200) {
+            throw new Exception("Upload server returned HTTP $httpCode");
         }
 
-        if ($httpCode === 200) {
-            // Check if response contains success indicators
-            if (!empty($response)) {
-                // For HTML responses, check for error indicators
-                if (strpos($response, 'class="error"') !== false ||
-                    strpos($response, 'Upload failed') !== false ||
-                    strpos($response, 'Error:') !== false) {
-
-                    // Extract error message from HTML if possible
-                    preg_match('/<div class="error"[^>]*>(.*?)<\/div>/s', $response, $matches);
-                    $errorMsg = isset($matches[1]) ? strip_tags($matches[1]) : 'Upload failed';
-                    throw new Exception('Server error: ' . trim($errorMsg));
-                }
-
-                // If no error indicators found, assume success
-                return [
-                    'success' => true,
-                    'filename' => $file_name,
-                    'server_response' => 'File uploaded successfully'
-                ];
-            } else {
-                // Empty response but HTTP 200 - assume success
-                return [
-                    'success' => true,
-                    'filename' => $file_name,
-                    'server_response' => 'Empty response but HTTP 200'
-                ];
-            }
-        } else {
-            throw new Exception("Server returned HTTP $httpCode. Response: " . substr($response, 0, 200));
+        // Check for error indicators in response
+        if (!empty($response) && (
+            strpos($response, 'class="error"') !== false ||
+            strpos($response, 'Upload failed') !== false ||
+            strpos($response, 'Error:') !== false
+        )) {
+            throw new Exception('Server rejected the file upload');
         }
+
+        return [
+            'success' => true,
+            'filename' => $filename,
+            'server_response' => 'File uploaded successfully'
+        ];
 
     } catch (Exception $e) {
         return [
@@ -247,24 +212,32 @@ function uploadSingleImage($file, $type = 'gallery') {
 }
 
 /**
- * Save product image to database
+ * Handle multiple image uploads
  */
-function saveProductImageToDatabase($product_id, $filename, $is_primary = false, $image_order = 0) {
-    require_once __DIR__ . '/../settings/connection.php';
+function handleMultipleImageUpload($files) {
+    $uploaded_images = [];
 
-    try {
-        $pdo = new PDO("mysql:host=localhost;dbname=ecommerce_2025A_chelsea_somuah", "root", "");
-        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-
-        $stmt = $pdo->prepare("
-            INSERT INTO product_images (product_id, image_filename, is_primary, image_order)
-            VALUES (?, ?, ?, ?)
-        ");
-
-        return $stmt->execute([$product_id, $filename, $is_primary, $image_order]);
-    } catch (Exception $e) {
-        error_log("Failed to save product image to database: " . $e->getMessage());
-        return false;
+    if (!is_array($files['name'])) {
+        return $uploaded_images;
     }
+
+    for ($i = 0; $i < count($files['name']); $i++) {
+        if ($files['error'][$i] === UPLOAD_ERR_OK) {
+            $file = [
+                'name' => $files['name'][$i],
+                'type' => $files['type'][$i],
+                'tmp_name' => $files['tmp_name'][$i],
+                'error' => $files['error'][$i],
+                'size' => $files['size'][$i]
+            ];
+
+            $upload_result = uploadImageToServer($file);
+            if ($upload_result['success']) {
+                $uploaded_images[] = $upload_result['filename'];
+            }
+        }
+    }
+
+    return $uploaded_images;
 }
 ?>

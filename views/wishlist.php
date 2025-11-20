@@ -3,8 +3,8 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
-require_once(__DIR__ . '/settings/core.php');
-require_once(__DIR__ . '/controllers/cart_controller.php');
+require_once(__DIR__ . '/../settings/core.php');
+require_once(__DIR__ . '/../controllers/cart_controller.php');
 
 // Check login status
 $is_logged_in = check_login();

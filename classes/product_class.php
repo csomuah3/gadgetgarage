@@ -3,255 +3,303 @@ require_once __DIR__ . '/../settings/db_class.php';
 
 class Product extends db_connection {
 
-    public function __construct() {
-        // Ensure database connection is established
-        $this->db_connect();
-    }
-
-    // Add a new product
-    public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity = 10) {
-        // Sanitize inputs
-        $product_title = trim($product_title);
-        $product_price = (float)$product_price;
-        $product_desc = trim($product_desc);
-        $product_image = trim($product_image);
-        $product_keywords = trim($product_keywords);
-        $product_color = trim($product_color);
-        $category_id = (int)$category_id;
-        $brand_id = (int)$brand_id;
-        $stock_quantity = (int)$stock_quantity;
-
-        // Validate inputs
-        if (empty($product_title) || $product_price <= 0) {
-            return false;
-        }
-
-        // Validate that category exists
-        $cat_result = $this->db_prepare_fetch_one("SELECT cat_id FROM categories WHERE cat_id = ?", "i", [$category_id]);
-        if (!$cat_result) {
-            return false; // Category doesn't exist
-        }
-
-        // Validate that brand exists
-        $brand_result = $this->db_prepare_fetch_one("SELECT brand_id FROM brands WHERE brand_id = ?", "i", [$brand_id]);
-        if (!$brand_result) {
-            return false; // Brand doesn't exist
-        }
-
-        // Check if stock_quantity column exists
-        $check_stock = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
-        $stock_exists = $this->db_fetch_one($check_stock);
-
-        // Check if product_color column exists
-        $check_color = "SHOW COLUMNS FROM products LIKE 'product_color'";
-        $color_exists = $this->db_fetch_one($check_color);
-
-        // Use prepared statement for INSERT based on available columns
-        if ($stock_exists && $color_exists) {
+    /**
+     * Add a new product to the database
+     */
+    public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity) {
+        try {
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
-            $result = $this->db_prepare_execute($sql, "sdssssiid", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity]);
-        } else if ($stock_exists && !$color_exists) {
-            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand, stock_quantity)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            $result = $this->db_prepare_execute($sql, "sdsssiid", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $stock_quantity]);
-        } else if (!$stock_exists && $color_exists) {
-            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-            $result = $this->db_prepare_execute($sql, "sdssssii", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id]);
-        } else {
-            $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_cat, product_brand)
-                    VALUES (?, ?, ?, ?, ?, ?, ?)";
-            $result = $this->db_prepare_execute($sql, "sdsssii", [$product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id]);
-        }
 
-        // Store the inserted ID for later use
-        if ($result) {
-            $this->last_inserted_id = mysqli_insert_id($this->db);
-        }
-
-        return $result;
-    }
-
-    // Get the last inserted product ID
-    public function get_last_inserted_id() {
-        return isset($this->last_inserted_id) ? $this->last_inserted_id : mysqli_insert_id($this->db);
-    }
-
-    // Get all products
-    public function get_all_products() {
-        // First check if stock_quantity column exists
-        $check_column = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
-        $column_exists = $this->db_fetch_one($check_column);
-
-        if ($column_exists) {
-            $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                           p.product_cat, p.product_brand, p.stock_quantity,
-                           c.cat_name, b.brand_name
-                    FROM products p
-                    LEFT JOIN categories c ON p.product_cat = c.cat_id
-                    LEFT JOIN brands b ON p.product_brand = b.brand_id
-                    ORDER BY p.product_title";
-        } else {
-            $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                           p.product_cat, p.product_brand, 0 as stock_quantity,
-                           c.cat_name, b.brand_name
-                    FROM products p
-                    LEFT JOIN categories c ON p.product_cat = c.cat_id
-                    LEFT JOIN brands b ON p.product_brand = b.brand_id
-                    ORDER BY p.product_title";
-        }
-
-        return $this->db_fetch_all($sql);
-    }
-
-    // Get products by category
-    public function get_products_by_category($category_id) {
-        $category_id = (int)$category_id;
-
-        $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand, p.stock_quantity,
-                       c.cat_name, b.brand_name
-                FROM products p
-                LEFT JOIN categories c ON p.product_cat = c.cat_id
-                LEFT JOIN brands b ON p.product_brand = b.brand_id
-                WHERE p.product_cat = $category_id
-                ORDER BY p.product_title";
-
-        return $this->db_fetch_all($sql);
-    }
-
-    // Get products by brand
-    public function get_products_by_brand($brand_id) {
-        $brand_id = (int)$brand_id;
-
-        $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand, p.stock_quantity,
-                       c.cat_name, b.brand_name
-                FROM products p
-                LEFT JOIN categories c ON p.product_cat = c.cat_id
-                LEFT JOIN brands b ON p.product_brand = b.brand_id
-                WHERE p.product_brand = $brand_id
-                ORDER BY p.product_title";
-
-        return $this->db_fetch_all($sql);
-    }
-
-    // Get a specific product by ID
-    public function get_product_by_id($product_id) {
-        $product_id = (int)$product_id;
-
-        $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand, p.stock_quantity,
-                       c.cat_name, b.brand_name
-                FROM products p
-                LEFT JOIN categories c ON p.product_cat = c.cat_id
-                LEFT JOIN brands b ON p.product_brand = b.brand_id
-                WHERE p.product_id = $product_id";
-
-        return $this->db_fetch_one($sql);
-    }
-
-    // Update a product
-    public function update_product($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id) {
-        $product_id = (int)$product_id;
-        $product_title = trim($product_title);
-        $product_price = (float)$product_price;
-        $product_desc = trim($product_desc);
-        $product_image = trim($product_image);
-        $product_keywords = trim($product_keywords);
-        $category_id = (int)$category_id;
-        $brand_id = (int)$brand_id;
-
-        if (empty($product_title) || $product_price <= 0) {
+            return $this->db_prepare_execute($sql, 'sdssssiid', [
+                $product_title,
+                $product_price,
+                $product_desc,
+                $product_image,
+                $product_keywords,
+                $product_color,
+                $category_id,
+                $brand_id,
+                $stock_quantity
+            ]);
+        } catch (Exception $e) {
+            error_log("Add product error: " . $e->getMessage());
             return false;
         }
-
-        $sql = "UPDATE products SET
-                product_title = '$product_title',
-                product_price = $product_price,
-                product_desc = '$product_desc',
-                product_image = '$product_image',
-                product_keywords = '$product_keywords',
-                product_cat = $category_id,
-                product_brand = $brand_id
-                WHERE product_id = $product_id";
-
-        return $this->db_write_query($sql);
     }
 
-    // Delete a product
+    /**
+     * Check if product title already exists
+     */
+    public function check_product_exists($product_title, $exclude_id = null) {
+        try {
+            if ($exclude_id) {
+                $sql = "SELECT product_id FROM products WHERE product_title = ? AND product_id != ?";
+                $result = $this->db_prepare_fetch_one($sql, 'si', [$product_title, $exclude_id]);
+            } else {
+                $sql = "SELECT product_id FROM products WHERE product_title = ?";
+                $result = $this->db_prepare_fetch_one($sql, 's', [$product_title]);
+            }
+
+            return !empty($result);
+        } catch (Exception $e) {
+            error_log("Check product exists error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get last inserted product ID
+     */
+    public function get_last_inserted_id() {
+        try {
+            $connection = $this->db_connect();
+            return $connection->lastInsertId();
+        } catch (Exception $e) {
+            error_log("Get last inserted ID error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    /**
+     * Get all products
+     */
+    public function get_all_products() {
+        try {
+            $sql = "SELECT * FROM products ORDER BY product_id DESC";
+            return $this->db_prepare_fetch_all($sql);
+        } catch (Exception $e) {
+            error_log("Get all products error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get product by ID
+     */
+    public function get_product_by_id($product_id) {
+        try {
+            $sql = "SELECT * FROM products WHERE product_id = ?";
+            return $this->db_prepare_fetch_one($sql, 'i', [$product_id]);
+        } catch (Exception $e) {
+            error_log("Get product by ID error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get products by category
+     */
+    public function get_products_by_category($category_id) {
+        try {
+            $sql = "SELECT * FROM products WHERE product_cat = ? ORDER BY product_id DESC";
+            return $this->db_prepare_fetch_all($sql, 'i', [$category_id]);
+        } catch (Exception $e) {
+            error_log("Get products by category error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get products by brand
+     */
+    public function get_products_by_brand($brand_id) {
+        try {
+            $sql = "SELECT * FROM products WHERE product_brand = ? ORDER BY product_id DESC";
+            return $this->db_prepare_fetch_all($sql, 'i', [$brand_id]);
+        } catch (Exception $e) {
+            error_log("Get products by brand error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Update product
+     */
+    public function update_product($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity) {
+        try {
+            // If image is empty, don't update it
+            if (empty($product_image)) {
+                $sql = "UPDATE products SET
+                        product_title = ?, product_price = ?, product_desc = ?, product_keywords = ?,
+                        product_color = ?, product_cat = ?, product_brand = ?, stock_quantity = ?
+                        WHERE product_id = ?";
+
+                return $this->db_prepare_execute($sql, 'sdsssiiid', [
+                    $product_title, $product_price, $product_desc, $product_keywords,
+                    $product_color, $category_id, $brand_id, $stock_quantity, $product_id
+                ]);
+            } else {
+                $sql = "UPDATE products SET
+                        product_title = ?, product_price = ?, product_desc = ?, product_image = ?,
+                        product_keywords = ?, product_color = ?, product_cat = ?, product_brand = ?,
+                        stock_quantity = ?
+                        WHERE product_id = ?";
+
+                return $this->db_prepare_execute($sql, 'sdssssiidi', [
+                    $product_title, $product_price, $product_desc, $product_image, $product_keywords,
+                    $product_color, $category_id, $brand_id, $stock_quantity, $product_id
+                ]);
+            }
+        } catch (Exception $e) {
+            error_log("Update product error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Delete product (soft delete by default)
+     */
     public function delete_product($product_id) {
-        $product_id = (int)$product_id;
-
-        // Check for dependencies in various tables
-        $dependencies = [];
-
-        // Check cart items
-        $cart_check = "SELECT COUNT(*) as count FROM cart WHERE p_id = $product_id";
-        $cart_result = $this->db_fetch_one($cart_check);
-        if ($cart_result && $cart_result['count'] > 0) {
-            $dependencies[] = $cart_result['count'] . " item(s) in shopping carts";
-        }
-
-        // Check order details
-        $order_check = "SELECT COUNT(*) as count FROM orderdetails WHERE product_id = $product_id";
-        $order_result = $this->db_fetch_one($order_check);
-        if ($order_result && $order_result['count'] > 0) {
-            $dependencies[] = $order_result['count'] . " order(s)";
-        }
-
-        // If there are dependencies, return error with details
-        if (!empty($dependencies)) {
-            $message = "Cannot delete product. It is referenced by: " . implode(", ", $dependencies) . ". ";
-            $message .= "Please remove these references first or contact support.";
-            return ['status' => 'error', 'message' => $message];
-        }
-
-        // If no dependencies, proceed with deletion
-        $sql = "DELETE FROM products WHERE product_id = $product_id";
-        $result = $this->db_write_query($sql);
-
-        if ($result) {
-            return ['status' => 'success', 'message' => 'Product deleted successfully'];
-        } else {
-            return ['status' => 'error', 'message' => 'Failed to delete product from database'];
+        try {
+            $sql = "DELETE FROM products WHERE product_id = ?";
+            return $this->db_prepare_execute($sql, 'i', [$product_id]);
+        } catch (Exception $e) {
+            error_log("Delete product error: " . $e->getMessage());
+            return false;
         }
     }
 
-    // Check if product title exists
-    public function check_product_exists($product_title, $product_id = null) {
-        $product_title = trim($product_title);
+    /**
+     * Force delete product (removes all dependencies)
+     */
+    public function force_delete_product($product_id) {
+        try {
+            // Start transaction
+            $connection = $this->db_connect();
+            $connection->beginTransaction();
 
-        if ($product_id) {
-            $product_id = (int)$product_id;
-            $result = $this->db_prepare_fetch_one("SELECT product_id FROM products WHERE product_title = ? AND product_id != ?", "si", [$product_title, $product_id]);
-        } else {
-            $result = $this->db_prepare_fetch_one("SELECT product_id FROM products WHERE product_title = ?", "s", [$product_title]);
+            try {
+                // Delete from cart first (if exists)
+                $sql = "DELETE FROM cart WHERE p_id = ?";
+                $this->db_prepare_execute($sql, 'i', [$product_id]);
+
+                // Delete from order items (if exists)
+                $sql = "DELETE FROM orderdetails WHERE product_id = ?";
+                $this->db_prepare_execute($sql, 'i', [$product_id]);
+
+                // Delete product images (if exists)
+                $sql = "DELETE FROM product_images WHERE product_id = ?";
+                $this->db_prepare_execute($sql, 'i', [$product_id]);
+
+                // Finally delete the product
+                $sql = "DELETE FROM products WHERE product_id = ?";
+                $result = $this->db_prepare_execute($sql, 'i', [$product_id]);
+
+                if ($result) {
+                    $connection->commit();
+                    return [
+                        'status' => 'success',
+                        'message' => 'Product and all related data deleted successfully'
+                    ];
+                } else {
+                    $connection->rollBack();
+                    return [
+                        'status' => 'error',
+                        'message' => 'Failed to delete product'
+                    ];
+                }
+            } catch (Exception $e) {
+                $connection->rollBack();
+                error_log("Force delete product transaction error: " . $e->getMessage());
+                return [
+                    'status' => 'error',
+                    'message' => 'Database error during deletion: ' . $e->getMessage()
+                ];
+            }
+        } catch (Exception $e) {
+            error_log("Force delete product error: " . $e->getMessage());
+            return [
+                'status' => 'error',
+                'message' => 'Failed to connect to database'
+            ];
         }
-
-        return $result ? true : false;
     }
 
-    // Search products
+    /**
+     * Search products by title or keywords
+     */
     public function search_products($search_term) {
-        $search_term = trim($search_term);
+        try {
+            $search_pattern = "%$search_term%";
+            $sql = "SELECT * FROM products
+                    WHERE product_title LIKE ? OR product_keywords LIKE ? OR product_desc LIKE ?
+                    ORDER BY product_title";
 
-        $sql = "SELECT p.product_id, p.product_title, p.product_price, p.product_desc, p.product_image, p.product_keywords,
-                       p.product_cat, p.product_brand, p.stock_quantity,
-                       c.cat_name, b.brand_name
-                FROM products p
-                LEFT JOIN categories c ON p.product_cat = c.cat_id
-                LEFT JOIN brands b ON p.product_brand = b.brand_id
-                WHERE p.product_title LIKE '%$search_term%'
-                   OR p.product_desc LIKE '%$search_term%'
-                   OR p.product_keywords LIKE '%$search_term%'
-                ORDER BY p.product_title";
-
-        return $this->db_fetch_all($sql);
+            return $this->db_prepare_fetch_all($sql, 'sss', [$search_pattern, $search_pattern, $search_pattern]);
+        } catch (Exception $e) {
+            error_log("Search products error: " . $e->getMessage());
+            return [];
+        }
     }
 
-    // Required method aliases for assignment compliance
+    /**
+     * Get products with low stock (below threshold)
+     */
+    public function get_low_stock_products($threshold = 10) {
+        try {
+            $sql = "SELECT * FROM products WHERE stock_quantity < ? AND stock_quantity > 0 ORDER BY stock_quantity ASC";
+            return $this->db_prepare_fetch_all($sql, 'i', [$threshold]);
+        } catch (Exception $e) {
+            error_log("Get low stock products error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Get out of stock products
+     */
+    public function get_out_of_stock_products() {
+        try {
+            $sql = "SELECT * FROM products WHERE stock_quantity = 0 ORDER BY product_title";
+            return $this->db_prepare_fetch_all($sql);
+        } catch (Exception $e) {
+            error_log("Get out of stock products error: " . $e->getMessage());
+            return [];
+        }
+    }
+
+    /**
+     * Update stock quantity
+     */
+    public function update_stock_quantity($product_id, $new_quantity) {
+        try {
+            $sql = "UPDATE products SET stock_quantity = ? WHERE product_id = ?";
+            return $this->db_prepare_execute($sql, 'ii', [$new_quantity, $product_id]);
+        } catch (Exception $e) {
+            error_log("Update stock quantity error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Reduce stock quantity (for purchases)
+     */
+    public function reduce_stock($product_id, $quantity) {
+        try {
+            $sql = "UPDATE products SET stock_quantity = stock_quantity - ? WHERE product_id = ? AND stock_quantity >= ?";
+            return $this->db_prepare_execute($sql, 'iii', [$quantity, $product_id, $quantity]);
+        } catch (Exception $e) {
+            error_log("Reduce stock error: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Get total inventory value
+     */
+    public function get_total_inventory_value() {
+        try {
+            $sql = "SELECT SUM(product_price * stock_quantity) as total_value FROM products";
+            $result = $this->db_prepare_fetch_one($sql);
+            return $result ? floatval($result['total_value']) : 0;
+        } catch (Exception $e) {
+            error_log("Get total inventory value error: " . $e->getMessage());
+            return 0;
+        }
+    }
+
+    // Assignment required methods (aliases for backward compatibility)
     public function view_all_products() {
         return $this->get_all_products();
     }
@@ -266,39 +314,6 @@ class Product extends db_connection {
 
     public function view_single_product($id) {
         return $this->get_product_by_id($id);
-    }
-
-    // Remove product from all cart items (helper method for deletion)
-    public function remove_from_all_carts($product_id) {
-        $product_id = (int)$product_id;
-        $sql = "DELETE FROM cart WHERE p_id = $product_id";
-        return $this->db_write_query($sql);
-    }
-
-    // Force delete product (removes dependencies first)
-    public function force_delete_product($product_id) {
-        $product_id = (int)$product_id;
-
-        // Remove from all carts first
-        $this->remove_from_all_carts($product_id);
-
-        // Remove from orderdetails (this will break order history but allows deletion)
-        $delete_orderdetails = "DELETE FROM orderdetails WHERE product_id = $product_id";
-        $this->db_query($delete_orderdetails);
-
-        // Remove from product_images if exists
-        $delete_product_images = "DELETE FROM product_images WHERE product_id = $product_id";
-        $this->db_query($delete_product_images);
-
-        // Now delete the product
-        $sql = "DELETE FROM products WHERE product_id = $product_id";
-        $result = $this->db_write_query($sql);
-
-        if ($result) {
-            return ['status' => 'success', 'message' => 'Product deleted successfully (removed from all references)'];
-        } else {
-            return ['status' => 'error', 'message' => 'Failed to delete product from database'];
-        }
     }
 }
 ?>

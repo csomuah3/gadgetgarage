@@ -439,10 +439,6 @@ function deleteCategory(id, name) {
                 performDeleteCategory(id);
             }
         });
-    } else {
-        if (confirm(`Are you sure you want to delete the category "${name}"?`)) {
-            performDeleteCategory(id);
-        }
     }
 }
 

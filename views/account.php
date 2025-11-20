@@ -1,8 +1,8 @@
 <?php
 try {
-    require_once(__DIR__ . '/settings/core.php');
-    require_once(__DIR__ . '/controllers/cart_controller.php');
-    require_once(__DIR__ . '/helpers/image_helper.php');
+    require_once(__DIR__ . '/../settings/core.php');
+    require_once(__DIR__ . '/../controllers/cart_controller.php');
+    require_once(__DIR__ . '/../helpers/image_helper.php');
 
     $is_logged_in = check_login();
 
@@ -22,14 +22,14 @@ try {
     $brands = [];
 
     try {
-        require_once(__DIR__ . '/controllers/category_controller.php');
+        require_once(__DIR__ . '/../controllers/category_controller.php');
         $categories = get_all_categories_ctr();
     } catch (Exception $e) {
         error_log("Failed to load categories: " . $e->getMessage());
     }
 
     try {
-        require_once(__DIR__ . '/controllers/brand_controller.php');
+        require_once(__DIR__ . '/../controllers/brand_controller.php');
         $brands = get_all_brands_ctr();
     } catch (Exception $e) {
         error_log("Failed to load brands: " . $e->getMessage());

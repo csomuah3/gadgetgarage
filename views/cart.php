@@ -1,8 +1,8 @@
 <?php
 try {
-    require_once(__DIR__ . '/settings/core.php');
-    require_once(__DIR__ . '/controllers/cart_controller.php');
-    require_once(__DIR__ . '/helpers/image_helper.php');
+    require_once(__DIR__ . '/../settings/core.php');
+    require_once(__DIR__ . '/../controllers/cart_controller.php');
+    require_once(__DIR__ . '/../helpers/image_helper.php');
 
     $is_logged_in = check_login();
     $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
@@ -16,14 +16,14 @@ try {
     $brands = [];
 
     try {
-        require_once(__DIR__ . '/controllers/category_controller.php');
+        require_once(__DIR__ . '/../controllers/category_controller.php');
         $categories = get_all_categories_ctr();
     } catch (Exception $e) {
         error_log("Failed to load categories: " . $e->getMessage());
     }
 
     try {
-        require_once(__DIR__ . '/controllers/brand_controller.php');
+        require_once(__DIR__ . '/../controllers/brand_controller.php');
         $brands = get_all_brands_ctr();
     } catch (Exception $e) {
         error_log("Failed to load brands: " . $e->getMessage());
@@ -242,6 +242,127 @@ try {
             font-weight: 600;
         }
 
+        /* Discount Code Styles */
+        .promo-section-redesign {
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        .promo-banner-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 1px solid #dee2e6;
+        }
+
+        .promo-banner-text {
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+
+        .promo-code-pill {
+            background: #dc3545;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 16px;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .promo-input-container {
+            display: flex;
+            gap: 0;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #dee2e6;
+        }
+
+        .promo-input-redesign {
+            flex: 1;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            background: #ffffff;
+            color: #6c757d;
+            outline: none;
+        }
+
+        .promo-input-redesign::placeholder {
+            color: #adb5bd;
+        }
+
+        .promo-input-redesign:focus {
+            outline: none;
+            background: #ffffff;
+        }
+
+        .promo-apply-btn {
+            background: #28a745;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 80px;
+        }
+
+        .promo-apply-btn:hover {
+            background: #218838;
+        }
+
+        .promo-apply-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+        }
+
+        .applied-promo-redesign {
+            background: #d1fae5;
+            border: 1px solid #10b981;
+            border-radius: 8px;
+            padding: 12px 16px;
+        }
+
+        .promo-info-redesign {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #065f46;
+        }
+
+        .discount-row {
+            border-top: 1px solid #e2e8f0;
+            padding-top: 0.5rem;
+            margin-top: 0.5rem;
+        }
+
+        .alert-promo {
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+            border: 1px solid #10b981;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #991b1b;
+            border: 1px solid #ef4444;
+        }
+
         @media (max-width: 768px) {
             .product-image {
                 width: 80px;
@@ -280,7 +401,7 @@ try {
                 <!-- Center Content -->
                 <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                     <!-- Search Bar -->
-                    <form class="search-container" method="GET" action="product_search_result.php">
+                    <form class="search-container" method="GET" action="views/product_search_result.php">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
                         <button type="submit" class="search-btn">
@@ -501,11 +622,6 @@ try {
                         <?php endif; ?>
                     </p>
                 </div>
-                <div class="col-md-4 text-md-end">
-                    <div class="fs-3 fw-bold">
-                        GH₵ <?php echo number_format($cart_total, 2); ?>
-                    </div>
-                </div>
             </div>
         </div>
     </div>
@@ -614,6 +730,32 @@ try {
                 </div>
 
                 <div class="col-lg-4">
+                    <!-- Discount Code Section -->
+                    <div class="promo-section-redesign">
+                        <!-- Promotional Banner -->
+                        <div class="promo-banner-card">
+                            <span class="promo-banner-text">Get 20% Off On Orders! Use Code:</span>
+                            <span class="promo-code-pill">BLACKFRIDAY20</span>
+                        </div>
+
+                        <!-- Input Section -->
+                        <div class="promo-input-container">
+                            <input type="text" id="promoCode" class="promo-input-redesign" placeholder="Enter discount code" maxlength="50">
+                            <button type="button" id="applyPromoBtn" class="promo-apply-btn">Apply</button>
+                        </div>
+
+                        <div id="promoMessage" class="mt-2" style="display: none;"></div>
+                        <div id="appliedPromo" class="applied-promo-redesign mt-2" style="display: none;">
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="promo-info-redesign">
+                                    <i class="fas fa-tag text-success me-1"></i>
+                                    <span id="promoCodeText"></span>
+                                </span>
+                                <button type="button" id="removePromoBtn" class="btn btn-sm btn-outline-danger">Remove</button>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="cart-summary">
                         <h4 class="mb-4">Order Summary</h4>
 
@@ -625,6 +767,15 @@ try {
                         <div class="d-flex justify-content-between mb-3">
                             <span>Shipping:</span>
                             <span class="text-success fw-bold">FREE</span>
+                        </div>
+
+                        <!-- Discount Row (hidden by default) -->
+                        <div class="d-flex justify-content-between mb-3 discount-row" id="discountRow" style="display: none;">
+                            <span class="text-success">
+                                <i class="fas fa-tag me-1"></i>
+                                Discount (<span id="discountPercent">20</span>%):
+                            </span>
+                            <span class="text-success fw-bold" id="discountAmount">-GH₵ 0.00</span>
                         </div>
 
                         <hr>
@@ -964,6 +1115,152 @@ try {
                 chatSend.addEventListener('click', sendChatMessage);
             }
         });
+
+        // Promo Code Functionality
+        let appliedPromo = null;
+        const originalTotal = <?php echo $cart_total; ?>;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            const promoInput = document.getElementById('promoCode');
+            const applyBtn = document.getElementById('applyPromoBtn');
+            const removeBtn = document.getElementById('removePromoBtn');
+
+            // Apply promo code on button click
+            if (applyBtn) {
+                applyBtn.addEventListener('click', applyPromoCode);
+            }
+
+            // Apply promo code on Enter key
+            if (promoInput) {
+                promoInput.addEventListener('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        applyPromoCode();
+                    }
+                });
+            }
+
+            // Remove promo code
+            if (removeBtn) {
+                removeBtn.addEventListener('click', removePromoCode);
+            }
+        });
+
+        async function applyPromoCode() {
+            const promoInput = document.getElementById('promoCode');
+            const applyBtn = document.getElementById('applyPromoBtn');
+            const promoMessage = document.getElementById('promoMessage');
+
+            const promoCode = promoInput.value.trim().toUpperCase();
+
+            if (!promoCode) {
+                showPromoMessage('Please enter a promo code', 'error');
+                return;
+            }
+
+            // Disable button during processing
+            applyBtn.disabled = true;
+            applyBtn.textContent = 'Applying...';
+
+            try {
+                const response = await fetch('actions/validate_promo_code.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        promo_code: promoCode,
+                        cart_total: originalTotal
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    // Store applied promo data
+                    appliedPromo = data;
+
+                    // Show success message
+                    showPromoMessage(data.message, 'success');
+
+                    // Hide promo input section and show applied promo
+                    document.querySelector('.promo-input-container').style.display = 'none';
+                    document.getElementById('appliedPromo').style.display = 'block';
+                    document.getElementById('promoCodeText').textContent = data.promo_code;
+
+                    // Show discount row and update totals
+                    updateOrderSummary(data);
+
+                } else {
+                    showPromoMessage(data.message, 'error');
+                }
+            } catch (error) {
+                console.error('Promo code error:', error);
+                showPromoMessage('An error occurred. Please try again.', 'error');
+            } finally {
+                // Re-enable button
+                applyBtn.disabled = false;
+                applyBtn.textContent = 'Apply';
+            }
+        }
+
+        function removePromoCode() {
+            // Clear applied promo
+            appliedPromo = null;
+
+            // Reset UI
+            document.querySelector('.promo-input-container').style.display = 'flex';
+            document.getElementById('appliedPromo').style.display = 'none';
+            document.getElementById('promoCode').value = '';
+            document.getElementById('promoMessage').style.display = 'none';
+
+            // Hide discount row and reset totals
+            document.getElementById('discountRow').style.display = 'none';
+            document.getElementById('cartTotal').textContent = 'GH₵ ' + originalTotal.toFixed(2);
+        }
+
+        function showPromoMessage(message, type) {
+            const promoMessage = document.getElementById('promoMessage');
+            promoMessage.textContent = message;
+            promoMessage.className = `alert-promo alert-${type === 'success' ? 'success' : 'error'}`;
+            promoMessage.style.display = 'block';
+
+            // Hide message after 5 seconds for success, 7 seconds for error
+            setTimeout(() => {
+                if (type === 'error') {
+                    promoMessage.style.display = 'none';
+                }
+            }, type === 'success' ? 5000 : 7000);
+        }
+
+        function updateOrderSummary(promoData) {
+            // Show discount row
+            const discountRow = document.getElementById('discountRow');
+            discountRow.style.display = 'flex';
+
+            // Update discount details
+            document.getElementById('discountPercent').textContent = promoData.discount_value;
+            document.getElementById('discountAmount').textContent = '-GH₵ ' + promoData.discount_amount.toFixed(2);
+            document.getElementById('cartTotal').textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+
+            // Add some celebration animation
+            discountRow.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+
+        // Add CSS animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes fadeInUp {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 
     <!-- Footer -->

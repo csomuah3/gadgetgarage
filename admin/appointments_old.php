@@ -751,10 +751,7 @@ try {
                         button.closest('form').submit();
                     }
                 });
-            } else {
-                if (confirm('Are you sure you want to cancel this appointment?')) {
-                    button.closest('form').submit();
-                }
+            }
             }
         }
     </script>

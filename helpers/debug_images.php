@@ -3,7 +3,7 @@
  * Debug script to check product images
  * Access this file directly in your browser to see product image information
  */
-require_once(__DIR__ . '/settings/core.php');
+require_once(__DIR__ . '/../settings/core.php');
 require_once(__DIR__ . '/controllers/product_controller.php');
 require_once(__DIR__ . '/helpers/image_helper.php');
 

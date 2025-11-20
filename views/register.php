@@ -838,7 +838,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
+					<form class="search-container" method="GET" action="views/product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
@@ -915,7 +915,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 				</div>
 				<script>
 					setTimeout(function() {
-						window.location.href = 'index.php';
+						window.location.href = '../index.php';
 					}, 1500);
 				</script>
 			<?php else: ?>

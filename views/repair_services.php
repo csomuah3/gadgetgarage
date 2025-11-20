@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/settings/core.php';
-require_once __DIR__ . '/settings/db_class.php';
+require_once __DIR__ . '/../settings/core.php';
+require_once __DIR__ . '/../settings/db_class.php';
 
 // Get repair issue types
 try {
@@ -1025,7 +1025,7 @@ try {
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
+					<form class="search-container" method="GET" action="views/product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">

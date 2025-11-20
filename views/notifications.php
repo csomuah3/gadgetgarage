@@ -1,6 +1,6 @@
 <?php
 session_start();
-require_once __DIR__ . '/settings/core.php';
+require_once __DIR__ . '/../settings/core.php';
 
 // Check if user is logged in
 if (!isset($_SESSION['user_id'])) {
@@ -15,19 +15,19 @@ $cart_count = 0;
 
 // Get cart count for logged in users
 if (!$is_admin) {
-    require_once __DIR__ . '/controllers/cart_controller.php';
+    require_once __DIR__ . '/../controllers/cart_controller.php';
     $cart_count = get_cart_count_ctr($_SESSION['user_id']);
 }
 
 // Get brands and categories for navigation
-require_once __DIR__ . '/controllers/brand_controller.php';
-require_once __DIR__ . '/controllers/category_controller.php';
+require_once __DIR__ . '/../controllers/brand_controller.php';
+require_once __DIR__ . '/../controllers/category_controller.php';
 
 $brands = get_all_brands_ctr() ?: [];
 $categories = get_all_categories_ctr() ?: [];
 
 // Get customer notifications
-require_once __DIR__ . '/controllers/support_controller.php';
+require_once __DIR__ . '/../controllers/support_controller.php';
 $notifications = get_customer_notifications_ctr($_SESSION['user_id']);
 $unread_count = get_unread_notification_count_ctr($_SESSION['user_id']);
 

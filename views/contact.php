@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/settings/core.php');
+require_once(__DIR__ . '/../settings/core.php');
 
 $is_logged_in = check_login();
 $is_admin = false;
@@ -11,7 +11,7 @@ if ($is_logged_in) {
 // Get cart count for logged in users
 $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
-require_once(__DIR__ . '/controllers/cart_controller.php');
+require_once(__DIR__ . '/../controllers/cart_controller.php');
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 ?>
 
@@ -678,7 +678,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
+					<form class="search-container" method="GET" action="views/product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">

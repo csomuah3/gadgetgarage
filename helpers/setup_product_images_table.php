@@ -1,5 +1,5 @@
 <?php
-require_once(__DIR__ . '/settings/db_class.php');
+require_once(__DIR__ . '/../settings/db_class.php');
 
 try {
     $db = new db_connection();

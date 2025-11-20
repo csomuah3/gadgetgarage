@@ -525,10 +525,6 @@ function deleteBrand(id, name) {
                 performDeleteBrand(id);
             }
         });
-    } else {
-        if (confirm(`Are you sure you want to delete the brand "${name}"?`)) {
-            performDeleteBrand(id);
-        }
     }
 }
 

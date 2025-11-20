@@ -1,7 +1,7 @@
 <?php
 session_start();
-require_once __DIR__ . '/settings/core.php';
-require_once __DIR__ . '/settings/db_class.php';
+require_once __DIR__ . '/../settings/core.php';
+require_once __DIR__ . '/../settings/db_class.php';
 
 // Get issue details from URL
 $issue_id = isset($_GET['issue_id']) ? intval($_GET['issue_id']) : 0;

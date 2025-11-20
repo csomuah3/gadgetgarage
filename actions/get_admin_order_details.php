@@ -326,10 +326,7 @@ try {
                     button.closest('form').submit();
                 }
             });
-        } else {
-            if (confirm('Are you sure you want to cancel this order? This action cannot be undone.')) {
-                button.closest('form').submit();
-            }
+        }
         }
     }
     </script>

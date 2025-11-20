@@ -1,8 +1,8 @@
 <?php
-require_once(__DIR__ . '/settings/core.php');
-require_once(__DIR__ . '/controllers/product_controller.php');
-require_once(__DIR__ . '/controllers/cart_controller.php');
-require_once(__DIR__ . '/helpers/image_helper.php');
+require_once(__DIR__ . '/../settings/core.php');
+require_once(__DIR__ . '/../controllers/product_controller.php');
+require_once(__DIR__ . '/../controllers/cart_controller.php');
+require_once(__DIR__ . '/../helpers/image_helper.php');
 
 $is_logged_in = check_login();
 $is_admin = false;

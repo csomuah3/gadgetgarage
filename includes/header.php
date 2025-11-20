@@ -61,7 +61,7 @@ if (!isset($cart_count)) {
             <!-- Center Content -->
             <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                 <!-- Search Bar -->
-                <form class="search-container" method="GET" action="product_search_result.php">
+                <form class="search-container" method="GET" action="views/product_search_result.php">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" name="query" class="search-input" placeholder="<?= t('search_placeholder') ?>" required>
                     <button type="submit" class="search-btn">

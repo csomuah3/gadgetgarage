@@ -530,7 +530,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <div class="floating-bubbles" id="floatingBubbles"></div>
 
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">

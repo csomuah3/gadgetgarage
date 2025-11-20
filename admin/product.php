@@ -1899,9 +1899,22 @@ function initializeColorSelection() {
 
 // Submit product form with AJAX
 async function submitProductForm() {
+    console.log('submitProductForm called');
     const form = document.getElementById('addProductForm');
     const submitBtn = document.getElementById('addProductBtn');
     const originalBtnText = submitBtn.innerHTML;
+
+    if (!form) {
+        console.error('Form not found!');
+        alert('Form not found!');
+        return;
+    }
+
+    if (!submitBtn) {
+        console.error('Submit button not found!');
+        alert('Submit button not found!');
+        return;
+    }
 
     // Show loading state
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding Product...';
@@ -1909,21 +1922,47 @@ async function submitProductForm() {
 
     try {
         const formData = new FormData(form);
+        console.log('FormData created');
+
+        // Debug: log form data
+        for (let [key, value] of formData.entries()) {
+            console.log(`${key}: ${value}`);
+        }
 
         // Validate required fields
-        const requiredFields = ['product_title', 'product_price', 'category_id', 'brand_id'];
+        const requiredFields = ['product_title', 'product_price', 'product_cat', 'product_brand'];
+        console.log('Validating required fields:', requiredFields);
+
         for (const field of requiredFields) {
-            if (!formData.get(field)) {
+            const value = formData.get(field);
+            console.log(`${field}: ${value}`);
+            if (!value) {
                 throw new Error(`Please fill in the ${field.replace('_', ' ')}.`);
             }
         }
 
+        console.log('Making fetch request to ../actions/add_product_action.php');
         const response = await fetch('../actions/add_product_action.php', {
             method: 'POST',
             body: formData
         });
 
-        const data = await response.json();
+        console.log('Response received:', response.status, response.statusText);
+
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status} ${response.statusText}`);
+        }
+
+        const responseText = await response.text();
+        console.log('Response text:', responseText);
+
+        let data;
+        try {
+            data = JSON.parse(responseText);
+        } catch (parseError) {
+            console.error('JSON parse error:', parseError);
+            throw new Error('Invalid response format from server. Check console for details.');
+        }
 
         if (data.status === 'success') {
             // Show success message
@@ -1940,16 +1979,9 @@ async function submitProductForm() {
                     window.location.reload();
                 });
             } else {
-                Swal.fire({
-                    title: 'Success!',
-                    text: data.message,
-                    icon: 'success',
-                    confirmButtonColor: '#28a745',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    form.reset();
-                    window.location.reload();
-                });
+                alert('Product added successfully!');
+                form.reset();
+                window.location.reload();
             }
         } else {
             throw new Error(data.message || 'Failed to add product');
@@ -1964,13 +1996,7 @@ async function submitProductForm() {
                 confirmButtonText: 'OK'
             });
         } else {
-            Swal.fire({
-                title: 'Error',
-                text: error.message,
-                icon: 'error',
-                confirmButtonColor: '#dc3545',
-                confirmButtonText: 'OK'
-            });
+            alert('Error: ' + error.message);
         }
     } finally {
         // Restore button state

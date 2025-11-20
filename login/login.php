@@ -297,7 +297,264 @@ try {
 			line-height: 1.2;
 		}
 
-		/* Navigation Styles - Using external CSS files to match index.php */
+		/* Main Navigation - Copied from index.php */
+		.main-nav {
+			background: #ffffff;
+			border-bottom: 1px solid #e5e7eb;
+			padding: 12px 0;
+			position: sticky;
+			top: 85px;
+			z-index: 999;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		}
+
+		.nav-menu {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			padding-left: 280px;
+		}
+
+		.nav-item {
+			color: #1f2937;
+			text-decoration: none;
+			font-weight: 600;
+			padding: 16px 20px;
+			font-size: 1.3rem;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.3s ease;
+			border-radius: 8px;
+			white-space: nowrap;
+		}
+
+		.nav-item:hover {
+			background: rgba(0, 128, 96, 0.1);
+			color: #008060;
+			transform: translateY(-2px);
+		}
+
+		.nav-item.flash-deal {
+			color: #ef4444;
+			font-weight: 700;
+			margin-left: auto;
+			padding-right: 600px;
+		}
+
+		.nav-item.flash-deal:hover {
+			color: #dc2626;
+		}
+
+		/* Blue Shop by Categories Button */
+		.shop-categories-btn {
+			position: relative;
+		}
+
+		.categories-button {
+			background: #4f63d2;
+			color: white;
+			border: none;
+			padding: 12px 20px;
+			border-radius: 6px;
+			font-weight: 600;
+			font-size: 1rem;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.categories-button:hover {
+			background: #3d4fd1;
+		}
+
+		.categories-button i:last-child {
+			font-size: 0.8rem;
+			transition: transform 0.3s ease;
+		}
+
+		.shop-categories-btn:hover .categories-button i:last-child {
+			transform: rotate(180deg);
+		}
+
+		.nav-item.dropdown {
+			position: relative;
+		}
+
+		/* Mega Dropdown */
+		.mega-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			width: 800px;
+			background: #ffffff;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+			padding: 32px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.mega-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.dropdown-content {
+			display: grid;
+			grid-template-columns: repeat(4, 1fr);
+			gap: 40px;
+		}
+
+		.dropdown-column h4 {
+			color: #1f2937;
+			font-size: 1.2rem;
+			font-weight: 600;
+			margin-bottom: 16px;
+			border-bottom: 2px solid #f3f4f6;
+			padding-bottom: 8px;
+		}
+
+		.dropdown-column ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.dropdown-column ul li {
+			margin-bottom: 8px;
+		}
+
+		.dropdown-column ul li a {
+			color: #6b7280;
+			text-decoration: none;
+			font-size: 1rem;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			padding: 8px 0;
+			transition: all 0.3s ease;
+		}
+
+		.dropdown-column ul li a:hover {
+			color: #008060;
+			transform: translateX(4px);
+		}
+
+		.dropdown-column ul li a i {
+			color: #9ca3af;
+			width: 20px;
+		}
+
+		.dropdown-column.featured {
+			border-left: 2px solid #f3f4f6;
+			padding-left: 24px;
+		}
+
+		.featured-item {
+			display: flex;
+			gap: 12px;
+			align-items: center;
+		}
+
+		.featured-item img {
+			width: 60px;
+			height: 60px;
+			border-radius: 8px;
+			object-fit: cover;
+		}
+
+		.featured-text {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.featured-text strong {
+			color: #1f2937;
+			font-size: 1rem;
+		}
+
+		.featured-text p {
+			color: #6b7280;
+			font-size: 0.9rem;
+			margin: 0;
+		}
+
+		.shop-now-btn {
+			background: #008060;
+			color: white;
+			text-decoration: none;
+			padding: 6px 12px;
+			border-radius: 4px;
+			font-size: 0.8rem;
+			font-weight: 500;
+			margin-top: 4px;
+			display: inline-block;
+			transition: background 0.3s ease;
+		}
+
+		.shop-now-btn:hover {
+			background: #006b4e;
+			color: white;
+		}
+
+		/* Simple Dropdown */
+		.simple-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: #ffffff;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			padding: 8px 0;
+			min-width: 200px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.simple-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.simple-dropdown ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.simple-dropdown ul li a {
+			color: #6b7280;
+			text-decoration: none;
+			padding: 8px 16px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.3s ease;
+		}
+
+		.simple-dropdown ul li a:hover {
+			background: #f9fafb;
+			color: #008060;
+		}
+
+		/* Dropdown Positioning */
+		.nav-dropdown {
+			position: relative;
+		}
 
 		.brands-dropdown {
 			position: absolute;
@@ -1081,7 +1338,7 @@ try {
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
-										<a href="../all_product.php" class="shop-now-btn">Shop </a>
+										<a href="../all_product.php" class="shop-now-btn">Shop</a>
 									</div>
 								</div>
 							</div>

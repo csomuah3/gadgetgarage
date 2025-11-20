@@ -18,6 +18,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Handle primary image upload (backward compatibility)
     $product_image = '';
     $uploaded_images = [];
+    $upload_warnings = [];
 
     // Handle single image upload (for backward compatibility)
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
@@ -30,8 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'order' => 0
             ];
         } else {
-            echo json_encode(['status' => 'error', 'message' => $upload_result['message']]);
-            exit;
+            // Don't fail the entire product creation, just warn about image upload
+            $upload_warnings[] = 'Image upload failed: ' . $upload_result['message'];
+            $product_image = 'placeholder.jpg'; // Use placeholder
         }
     }
 
@@ -117,6 +119,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $result['uploaded_images_count'] = count($uploaded_images);
         }
 
+        // Add upload warnings if any
+        if (!empty($upload_warnings)) {
+            $result['warnings'] = array_merge($result['warnings'] ?? [], $upload_warnings);
+        }
+
         echo json_encode($result);
     } catch (Exception $e) {
         echo json_encode(['status' => 'error', 'message' => 'Failed to add product: ' . $e->getMessage()]);
@@ -130,16 +137,24 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
  */
 function uploadSingleImage($file, $type = 'gallery') {
     try {
-        // Check for upload errors
+        // Check for upload errors with detailed messages
         if ($file['error'] !== UPLOAD_ERR_OK) {
-            throw new Exception('Upload error: ' . $file['error']);
+            $error_messages = [
+                UPLOAD_ERR_INI_SIZE => 'File exceeds PHP upload_max_filesize limit (40MB)',
+                UPLOAD_ERR_FORM_SIZE => 'File exceeds form MAX_FILE_SIZE limit',
+                UPLOAD_ERR_PARTIAL => 'File upload was interrupted',
+                UPLOAD_ERR_NO_FILE => 'No file was selected',
+                UPLOAD_ERR_NO_TMP_DIR => 'Server missing temporary folder',
+                UPLOAD_ERR_CANT_WRITE => 'Server cannot write to disk',
+                UPLOAD_ERR_EXTENSION => 'File upload blocked by server extension'
+            ];
+
+            $error_msg = $error_messages[$file['error']] ?? 'Unknown upload error: ' . $file['error'];
+            throw new Exception($error_msg);
         }
 
-        // Validate file size (max 5MB)
-        $max_size = 5 * 1024 * 1024; // 5MB
-        if ($file['size'] > $max_size) {
-            throw new Exception('File size too large. Maximum 5MB allowed.');
-        }
+        // Remove file size limit - allow any size
+        // Note: Server and PHP limits may still apply, but we won't artificially restrict it
 
         // Validate file type
         $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
@@ -165,8 +180,8 @@ function uploadSingleImage($file, $type = 'gallery') {
             CURLOPT_POSTFIELDS => [
                 'uploadedFile' => new CURLFile($file['tmp_name'], $file_type, $file_name)
             ],
-            CURLOPT_TIMEOUT => 30,
-            CURLOPT_CONNECTTIMEOUT => 10,
+            CURLOPT_TIMEOUT => 120,
+            CURLOPT_CONNECTTIMEOUT => 30,
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false,
             CURLOPT_FOLLOWLOCATION => true
@@ -175,14 +190,20 @@ function uploadSingleImage($file, $type = 'gallery') {
         $response = curl_exec($curl);
         $httpCode = curl_getinfo($curl, CURLINFO_HTTP_CODE);
         $error = curl_error($curl);
+        $curlInfo = curl_getinfo($curl);
         curl_close($curl);
 
-        // Log the response for debugging
-        error_log("Upload response: " . $response);
+        // Log detailed debugging info
+        error_log("Upload response: " . substr($response, 0, 500));
         error_log("HTTP Code: " . $httpCode);
+        error_log("cURL Info: " . json_encode($curlInfo));
 
         if ($error) {
-            throw new Exception('cURL error: ' . $error);
+            throw new Exception('Network error connecting to upload server: ' . $error);
+        }
+
+        if ($httpCode >= 500) {
+            throw new Exception('Upload server error (500). Server may be overloaded or have configuration issues. Please try again in a moment.');
         }
 
         if ($httpCode === 200) {

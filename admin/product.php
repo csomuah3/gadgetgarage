@@ -1916,8 +1916,8 @@ async function submitProductForm() {
         return;
     }
 
-    // Show loading state
-    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding Product...';
+    // Show loading state for large file uploads
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding Product... (Large files may take longer)';
     submitBtn.disabled = true;
 
     try {

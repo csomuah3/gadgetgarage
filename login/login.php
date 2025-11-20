@@ -85,6 +85,8 @@ try {
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+	<link href="../includes/chatbot-styles.css" rel="stylesheet">
+	<link href="../css/dark-mode.css" rel="stylesheet">
 
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -295,84 +297,7 @@ try {
 			line-height: 1.2;
 		}
 
-		/* Navigation Styles */
-		.main-nav {
-			background: #f8fafc;
-			border-bottom: 1px solid #e5e7eb;
-			position: sticky;
-			top: 112px;
-			z-index: 999;
-		}
-
-		.nav-menu {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			padding: 0;
-		}
-
-		.shop-categories-btn {
-			position: relative;
-		}
-
-		.categories-button {
-			background: linear-gradient(135deg, #3b82f6, #1e40af);
-			color: white;
-			border: none;
-			padding: 15px 30px;
-			border-radius: 8px;
-			font-weight: 600;
-			font-size: 1rem;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			display: flex;
-			align-items: center;
-			gap: 10px;
-		}
-
-		.categories-button:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 8px 20px rgba(59, 130, 246, 0.3);
-		}
-
-		.nav-items {
-			display: flex;
-			list-style: none;
-			margin: 0;
-			padding: 0;
-			gap: 30px;
-			align-items: center;
-			margin-left: 50px;
-		}
-
-		.nav-item a {
-			color: #1f2937;
-			text-decoration: none;
-			font-weight: 500;
-			font-size: 1rem;
-			padding: 15px 0;
-			transition: color 0.3s ease;
-			position: relative;
-		}
-
-		.nav-item a:hover {
-			color: #3b82f6;
-		}
-
-		.nav-item a::after {
-			content: '';
-			position: absolute;
-			bottom: 10px;
-			left: 0;
-			width: 0;
-			height: 2px;
-			background: #3b82f6;
-			transition: width 0.3s ease;
-		}
-
-		.nav-item a:hover::after {
-			width: 100%;
-		}
+		/* Navigation Styles - Using external CSS files to match index.php */
 
 		.brands-dropdown {
 			position: absolute;
@@ -624,10 +549,7 @@ try {
 			border-bottom-color: #4a5568;
 		}
 
-		body.dark-mode .main-nav {
-			background: #2d3748;
-			border-bottom-color: #4a5568;
-		}
+		/* Dark mode navigation styles removed - using external CSS */
 
 		body.dark-mode .logo,
 		body.dark-mode .tech-revival-text,
@@ -658,13 +580,6 @@ try {
 			background: linear-gradient(135deg, #4a5568, #374151);
 		}
 
-		body.dark-mode .nav-item a {
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .nav-item a:hover {
-			color: #60a5fa;
-		}
 
 		body.dark-mode .brands-dropdown {
 			background: rgba(45, 55, 72, 0.95);

@@ -7,34 +7,34 @@ $login_error = '';
 $login_success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+	$email = trim($_POST['email'] ?? '');
+	$password = $_POST['password'] ?? '';
 
-    if (empty($email) || empty($password)) {
-        $login_error = 'Please enter both email and password.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $login_error = 'Please enter a valid email address.';
-    } else {
-        $db = new db_connection();
+	if (empty($email) || empty($password)) {
+		$login_error = 'Please enter both email and password.';
+	} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$login_error = 'Please enter a valid email address.';
+	} else {
+		$db = new db_connection();
 
-        $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
-        $sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
+		$email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+		$sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
 
-        $user = $db->db_fetch_one($sql);
+		$user = $db->db_fetch_one($sql);
 
-        if ($user && password_verify($password, $user['customer_pass'])) {
-            $_SESSION['user_id'] = $user['customer_id'];
-            $_SESSION['user_name'] = $user['customer_name'];
-            $_SESSION['user_email'] = $user['customer_email'];
-            $_SESSION['email'] = $user['customer_email'];
-            $_SESSION['role'] = $user['user_role'];
-            $_SESSION['name'] = $user['customer_name'];
+		if ($user && password_verify($password, $user['customer_pass'])) {
+			$_SESSION['user_id'] = $user['customer_id'];
+			$_SESSION['user_name'] = $user['customer_name'];
+			$_SESSION['user_email'] = $user['customer_email'];
+			$_SESSION['email'] = $user['customer_email'];
+			$_SESSION['role'] = $user['user_role'];
+			$_SESSION['name'] = $user['customer_name'];
 
-            $login_success = true;
-        } else {
-            $login_error = 'Invalid email or password.';
-        }
-    }
+			$login_success = true;
+		} else {
+			$login_error = 'Invalid email or password.';
+		}
+	}
 }
 
 // Try to load categories and brands for navigation
@@ -42,17 +42,29 @@ $categories = [];
 $brands = [];
 
 try {
-    require_once('../controllers/category_controller.php');
-    $categories = get_all_categories_ctr();
+	require_once('../controllers/category_controller.php');
+	$categories = get_all_categories_ctr();
 } catch (Exception $e) {
-    error_log("Failed to load categories: " . $e->getMessage());
+	error_log("Failed to load categories: " . $e->getMessage());
 }
 
 try {
-    require_once('../controllers/brand_controller.php');
-    $brands = get_all_brands_ctr();
+	require_once('../controllers/brand_controller.php');
+	$brands = get_all_brands_ctr();
 } catch (Exception $e) {
-    error_log("Failed to load brands: " . $e->getMessage());
+	error_log("Failed to load brands: " . $e->getMessage());
+}
+
+// Get cart count - same as index.php
+$is_logged_in = isset($_SESSION['user_id']);
+$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
+$ip_address = $_SERVER['REMOTE_ADDR'];
+$cart_count = 0;
+try {
+	require_once('../controllers/cart_controller.php');
+	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
+} catch (Exception $e) {
+	error_log("Failed to load cart count: " . $e->getMessage());
 }
 ?>
 
@@ -85,10 +97,24 @@ try {
 		}
 
 		body {
+			background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png') no-repeat center center fixed;
+			background-size: cover;
+			position: relative;
 			font-family: "Times New Roman", Times, serif;
-			background-color: #ffffff;
-			color: #1a1a1a;
 			overflow-x: hidden;
+		}
+
+		body::before {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(255, 255, 255, 0.5);
+			/* Adjust alpha for brightness (0.5 = 50% white overlay) */
+			z-index: 0;
+			pointer-events: none;
 		}
 
 		/* Promotional Banner Styles - Same as index */
@@ -757,13 +783,14 @@ try {
 			min-height: calc(100vh - 200px);
 			display: flex;
 			align-items: center;
+
 			justify-content: center;
 			padding: 50px 20px;
 			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 		}
 
 		.login-form-wrapper {
-			background: white;
+			background: rgba(255, 255, 255, 0.7);
 			border-radius: 20px;
 			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 			overflow: hidden;
@@ -771,6 +798,8 @@ try {
 			max-width: 500px;
 			min-height: 650px;
 			position: relative;
+			z-index: 1;
+			/* Make sure it's above the overlay */
 		}
 
 		.login-form-wrapper::before {
@@ -788,10 +817,6 @@ try {
 			padding: 25px 40px 0;
 		}
 
-		.login-form-header img {
-			height: 80px;
-			margin-bottom: 15px;
-		}
 
 		.login-form-title {
 			font-size: 2.4rem;
@@ -1017,7 +1042,11 @@ try {
 						<div class="header-icon">
 							<a href="../cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -1054,7 +1083,7 @@ try {
 									</div>
 								</div>
 								<div class="dropdown-divider-custom"></div>
-								<a href="logout.php" class="dropdown-item-custom">
+								<a href="../login/logout.php" class="dropdown-item-custom">
 									<i class="fas fa-sign-out-alt"></i>
 									<span>Logout</span>
 								</a>
@@ -1062,7 +1091,7 @@ try {
 						</div>
 					<?php else: ?>
 						<!-- Login Button -->
-						<a href="login.php" class="login-btn">
+						<a href="../login/login_view.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
 						</a>
@@ -1080,7 +1109,7 @@ try {
 				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
 					<button class="categories-button">
 						<i class="fas fa-tags"></i>
-						<span>SHOP BY BRANDS</span>
+						<span data-translate="shop_by_brands">SHOP BY BRANDS</span>
 						<i class="fas fa-chevron-down"></i>
 					</button>
 					<div class="brands-dropdown" id="shopDropdown">
@@ -1104,15 +1133,83 @@ try {
 					</div>
 				</div>
 
-				<!-- Navigation Items -->
-				<ul class="nav-items">
-					<li class="nav-item"><a href="../index.php">Home</a></li>
-					<li class="nav-item"><a href="../all_product.php">All Products</a></li>
-					<li class="nav-item"><a href="../mobile_devices.php">Mobile Devices</a></li>
-					<li class="nav-item"><a href="../computing.php">Computing</a></li>
-					<li class="nav-item"><a href="../photography_video.php">Photography & Video</a></li>
-					<li class="nav-item"><a href="../repair_services.php">Repair Services</a></li>
-				</ul>
+				<a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+
+				<!-- Shop Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+					<a href="#" class="nav-item">
+						<span data-translate="shop">SHOP</span>
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="mega-dropdown" id="shopCategoryDropdown">
+						<div class="dropdown-content">
+							<div class="dropdown-column">
+								<h4>
+									<a href="../mobile_devices.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="mobile_devices">Mobile Devices</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="../computing.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="computing">Computing</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column">
+								<h4>
+									<a href="../photography_video.php" style="text-decoration: none; color: inherit;">
+										<span data-translate="photography_video">Photography & Video</span>
+									</a>
+								</h4>
+								<ul>
+									<li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+								</ul>
+							</div>
+							<div class="dropdown-column featured">
+								<h4>Shop All</h4>
+								<div class="featured-item">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+									<div class="featured-text">
+										<strong>New Arrivals</strong>
+										<p>Latest tech gadgets</p>
+										<a href="../all_product.php" class="shop-now-btn">Shop </a>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+
+				<a href="../repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="../device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+
+				<!-- More Dropdown -->
+				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+					<a href="#" class="nav-item">
+						<span data-translate="more">MORE</span>
+						<i class="fas fa-chevron-down"></i>
+					</a>
+					<div class="simple-dropdown" id="moreDropdown">
+						<ul>
+							<li><a href="../contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="../terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+						</ul>
+					</div>
+				</div>
+
+				<!-- Flash Deal positioned at far right -->
+				<a href="../flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
 	</nav>
@@ -1151,12 +1248,12 @@ try {
 							<div class="input-group">
 								<i class="fas fa-envelope input-icon"></i>
 								<input type="email"
-									   id="email"
-									   name="email"
-									   class="form-control with-icon"
-									   placeholder="Enter your email"
-									   value="<?php echo htmlspecialchars($email ?? ''); ?>"
-									   required>
+									id="email"
+									name="email"
+									class="form-control with-icon"
+									placeholder="Enter your email"
+									value="<?php echo htmlspecialchars($email ?? ''); ?>"
+									required>
 							</div>
 						</div>
 
@@ -1165,11 +1262,11 @@ try {
 							<div class="input-group">
 								<i class="fas fa-lock input-icon"></i>
 								<input type="password"
-									   id="password"
-									   name="password"
-									   class="form-control with-icon"
-									   placeholder="Enter your password"
-									   required>
+									id="password"
+									name="password"
+									class="form-control with-icon"
+									placeholder="Enter your password"
+									required>
 							</div>
 						</div>
 
@@ -1237,9 +1334,9 @@ try {
 				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 				timerElement.innerHTML = days + "d:" +
-										 (hours < 10 ? "0" : "") + hours + "h:" +
-										 (minutes < 10 ? "0" : "") + minutes + "m:" +
-										 (seconds < 10 ? "0" : "") + seconds + "s";
+					(hours < 10 ? "0" : "") + hours + "h:" +
+					(minutes < 10 ? "0" : "") + minutes + "m:" +
+					(seconds < 10 ? "0" : "") + seconds + "s";
 			}
 		}
 
@@ -1299,6 +1396,48 @@ try {
 				}
 			}
 		});
+
+		// Shop Dropdown Functions
+		function showShopDropdown() {
+			const dropdown = document.getElementById('shopCategoryDropdown');
+			if (dropdown) {
+				clearTimeout(shopDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideShopDropdown() {
+			const dropdown = document.getElementById('shopCategoryDropdown');
+			if (dropdown) {
+				clearTimeout(shopDropdownTimeout);
+				shopDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		// More Dropdown Functions
+		function showMoreDropdown() {
+			const dropdown = document.getElementById('moreDropdown');
+			if (dropdown) {
+				clearTimeout(moreDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideMoreDropdown() {
+			const dropdown = document.getElementById('moreDropdown');
+			if (dropdown) {
+				clearTimeout(moreDropdownTimeout);
+				moreDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		// Timeout variables
+		let shopDropdownTimeout;
+		let moreDropdownTimeout;
 	</script>
 </body>
 

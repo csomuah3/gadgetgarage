@@ -33,11 +33,10 @@ function get_brands_ctr($user_id) {
 // Get all brands (for admin)
 function get_all_brands_ctr() {
     $brand = new Brand();
-    // Use a custom query to get brands with category information
-    $sql = "SELECT b.brand_id, b.brand_name, b.category_id, c.cat_name
-            FROM brands b
-            LEFT JOIN categories c ON b.category_id = c.cat_id
-            ORDER BY b.brand_name";
+    // Simple query to get all brands without category information
+    $sql = "SELECT brand_id, brand_name, brand_desc, created_at
+            FROM brands
+            ORDER BY brand_name";
     return $brand->db_fetch_all($sql);
 }
 

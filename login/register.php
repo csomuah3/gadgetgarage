@@ -441,7 +441,7 @@ try {
 			align-items: center;
 			justify-content: center;
 			padding: 50px 20px;
-			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+			background: transparent;
 		}
 
 		.register-form-wrapper {

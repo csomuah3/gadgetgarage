@@ -1540,28 +1540,28 @@ try {
                     </h4>
 
                     <div class="payment-methods">
-                        <div class="payment-option selected" data-method="mobile-money">
+                        <div class="payment-option selected" data-method="paystack-mobile">
                             <i class="fas fa-mobile-alt"></i>
                             <div class="fw-bold">Mobile Money</div>
-                            <small class="text-muted">MTN MoMo, Vodafone Cash, AirtelTigo Money</small>
+                            <small class="text-muted">MTN MoMo, Vodafone Cash, AirtelTigo Money via PayStack</small>
                         </div>
 
-                        <div class="payment-option" data-method="credit-card">
+                        <div class="payment-option" data-method="paystack-card">
                             <i class="fas fa-credit-card"></i>
                             <div class="fw-bold">Credit/Debit Card</div>
-                            <small class="text-muted">Visa, Mastercard</small>
+                            <small class="text-muted">Visa, Mastercard via PayStack</small>
                         </div>
 
                         <div class="payment-option" data-method="paystack">
                             <i class="fas fa-wallet"></i>
-                            <div class="fw-bold">Paystack</div>
-                            <small class="text-muted">Secure online payment</small>
+                            <div class="fw-bold">PayStack</div>
+                            <small class="text-muted">Secure online payment gateway</small>
                         </div>
 
-                        <div class="payment-option" data-method="bank-transfer">
+                        <div class="payment-option" data-method="paystack-bank">
                             <i class="fas fa-university"></i>
                             <div class="fw-bold">Bank Transfer</div>
-                            <small class="text-muted">Direct bank transfer</small>
+                            <small class="text-muted">Direct bank transfer via PayStack</small>
                         </div>
                     </div>
 
@@ -1642,9 +1642,9 @@ try {
             <div class="modal-content">
                 <div class="modal-header text-center border-0">
                     <div class="w-100">
-                        <i class="fas fa-mobile-alt payment-icon"></i>
-                        <h4 class="mb-0">Simulate Payment</h4>
-                        <p class="mb-0 opacity-90">This is a simulation - no real payment will be processed</p>
+                        <i class="fas fa-credit-card payment-icon"></i>
+                        <h4 class="mb-0">Secure Payment via PayStack</h4>
+                        <p class="mb-0 opacity-90">🔒 Powered by PayStack - Ghana's trusted payment gateway</p>
                     </div>
                 </div>
                 <div class="modal-body text-center">
@@ -1653,14 +1653,18 @@ try {
                             GHS <?php echo number_format($cart_total, 2); ?>
                         </div>
                         <p class="text-muted">
-                            Choose your preferred payment method and proceed with this simulated payment.
+                            You'll be redirected to PayStack's secure payment page where you can choose from Mobile Money, Cards, or Bank Transfer options.
                         </p>
+                        <div class="alert alert-info mb-3">
+                            <i class="fas fa-info-circle me-2"></i>
+                            <small><strong>All payment methods</strong> (Mobile Money, Cards, Bank Transfer) are processed securely through PayStack</small>
+                        </div>
                     </div>
 
                     <div class="d-grid gap-3">
                         <button type="button" class="btn btn-primary btn-lg" id="confirmPaymentBtn">
-                            <i class="fas fa-check me-2"></i>
-                            Complete Payment
+                            <i class="fas fa-credit-card me-2"></i>
+                            💳 Pay Now
                         </button>
                         <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
                             <i class="fas fa-times me-2"></i>

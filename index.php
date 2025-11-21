@@ -61,7 +61,7 @@ try {
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Gadget Garage - Premium Refurbrished Tech Devices & Repair Services</title>
+	<title><?= t('gadget_garage_title') ?></title>
 	<link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
 	<link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -3938,7 +3938,7 @@ try {
 						<i class="fas fa-chevron-down"></i>
 					</button>
 					<div class="brands-dropdown" id="shopDropdown">
-						<h4>All Brands</h4>
+						<h4 data-translate="all_brands"><?= t('all_brands') ?></h4>
 						<ul>
 							<?php if (!empty($brands)): ?>
 								<?php foreach ($brands as $brand): ?>
@@ -4002,13 +4002,13 @@ try {
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
-								<h4>Shop All</h4>
+								<h4 data-translate="shop_all"><?= t('shop_all') ?></h4>
 								<div class="featured-item">
-									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="<?= t('new_arrivals') ?>">
 									<div class="featured-text">
-										<strong>New Arrivals</strong>
-										<p>Latest tech gadgets</p>
-										<a href="views/all_product.php" class="shop-now-btn">Shop </a>
+										<strong data-translate="new_arrivals"><?= t('new_arrivals') ?></strong>
+										<p data-translate="latest_tech_gadgets"><?= t('latest_tech_gadgets') ?></p>
+										<a href="views/all_product.php" class="shop-now-btn" data-translate="shop_now"><?= t('shop_now') ?></a>
 									</div>
 								</div>
 							</div>
@@ -4027,8 +4027,8 @@ try {
 					</a>
 					<div class="simple-dropdown" id="moreDropdown">
 						<ul>
-							<li><a href="views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-							<li><a href="views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+							<li><a href="views/contact.php"><i class="fas fa-phone"></i> <span data-translate="contact"><?= t('contact') ?></span></a></li>
+							<li><a href="views/terms_conditions.php"><i class="fas fa-file-contract"></i> <span data-translate="terms_conditions"><?= t('terms_conditions') ?></span></a></li>
 						</ul>
 					</div>
 				</div>
@@ -4063,28 +4063,28 @@ try {
 					<!-- Top -->
 					<article class="side-card yellow">
 						<div class="side-copy">
-							<h3 class="side-title">T900 Ultra<br>Watch</h3>
-							<p class="side-price">Starting <span class="price">GH₵ 19.00</span></p>
-							<a href="#" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
+							<h3 class="side-title" data-translate="t900_ultra_watch"><?= t('t900_ultra_watch') ?></h3>
+							<p class="side-price"><span data-translate="starting"><?= t('starting') ?></span> <span class="price">GH₵ 19.00</span></p>
+							<a href="#" class="side-link"><span data-translate="shop_now"><?= t('shop_now') ?></span></a>
 						</div>
 						<div class="side-media">
 							<img
 								src="https://images.unsplash.com/photo-1603791452906-bcce5e6d47a5?q=80&w=1200&auto=format&fit=crop"
-								alt="Watch" />
+								alt="<?= t('t900_ultra_watch') ?>" />
 						</div>
 					</article>
 
 					<!-- Bottom -->
 					<article class="side-card purple">
 						<div class="side-copy">
-							<h3 class="side-title">Kids Wireless<br>Headphones</h3>
-							<p class="side-price">Starting <span class="price">GH₵ 36.00</span></p>
-							<a href="#" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
+							<h3 class="side-title" data-translate="kids_wireless_headphones"><?= t('kids_wireless_headphones') ?></h3>
+							<p class="side-price"><span data-translate="starting"><?= t('starting') ?></span> <span class="price">GH₵ 36.00</span></p>
+							<a href="#" class="side-link"><span data-translate="shop_now"><?= t('shop_now') ?></span></a>
 						</div>
 						<div class="side-media">
 							<img
 								src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=1200&auto=format&fit=crop"
-								alt="Headphones" />
+								alt="<?= t('kids_wireless_headphones') ?>" />
 						</div>
 					</article>
 				</div>
@@ -4103,8 +4103,8 @@ try {
 							<i class="fas fa-shipping-fast"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Free Shipping</h5>
-							<p>Free shipping all order over GH₵ 2000</p>
+							<h5><span data-translate="free_shipping"><?= t('free_shipping') ?></span></h5>
+							<p><span data-translate="free_shipping_desc"><?= t('free_shipping_desc') ?></span></p>
 						</div>
 					</div>
 				</div>
@@ -4114,8 +4114,8 @@ try {
 							<i class="fas fa-undo"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Free Returns</h5>
-							<p>Back guarantee under 72 hours</p>
+							<h5><span data-translate="free_returns"><?= t('free_returns') ?></span></h5>
+							<p><span data-translate="returns_guarantee"><?= t('returns_guarantee') ?></span></p>
 						</div>
 					</div>
 				</div>
@@ -4125,8 +4125,8 @@ try {
 							<i class="fas fa-user-friends"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Member Discount</h5>
-							<p>On every order over GH₵ 2000.00</p>
+							<h5><span data-translate="member_discount"><?= t('member_discount') ?></span></h5>
+							<p><span data-translate="member_discount_desc"><?= t('member_discount_desc') ?></span></p>
 						</div>
 					</div>
 				</div>
@@ -4136,8 +4136,8 @@ try {
 							<i class="fas fa-gift"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Special Gifts</h5>
-							<p>New product get special gifts</p>
+							<h5><span data-translate="special_gifts"><?= t('special_gifts') ?></span></h5>
+							<p><span data-translate="special_gifts_desc"><?= t('special_gifts_desc') ?></span></p>
 						</div>
 					</div>
 				</div>
@@ -4149,13 +4149,13 @@ try {
 	<!-- Most Popular Categories -->
 	<section class="popular-categories">
 		<div class="container">
-			<h2 class="section-title">SHOP BY CATEGORY</h2>
+			<h2 class="section-title"><span data-translate="shop_by_category"><?= t('shop_by_category') ?></span></h2>
 			<div class="category-grid-container">
 				<!-- Large Category on Left -->
 				<div class="category-large">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/black-friday-sale-offer-deals-background_1055-8959.avif" alt="Flash Deals">
 					<div class="category-large-overlay">
-						<h4>Flash Deals</h4>
+						<h4><span data-translate="flash_deals"><?= t('flash_deals') ?></span></h4>
 					</div>
 				</div>
 
@@ -4165,28 +4165,28 @@ try {
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads">
 						<div class="category-small-overlay">
 							<h4><span data-translate="ipads">IPads and Tablets</span></h4>
-							<p>From GH₵ 3000</p>
+							<p><span data-translate="from_price_3000"><?= t('from_price_3000') ?></span></p>
 						</div>
 					</div>
 					<div class="category-small">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/smartphones.webp" alt="Smartphones">
 						<div class="category-small-overlay">
 							<h4><span data-translate="smartphones">Smartphones</span></h4>
-							<p>From GH₵ 2500</p>
+							<p><span data-translate="from_price_2500"><?= t('from_price_2500') ?></span></p>
 						</div>
 					</div>
 					<div class="category-small">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops">
 						<div class="category-small-overlay">
 							<h4><span data-translate="laptops">Laptops and Desktops</span></h4>
-							<p>From GH₵ 4000</p>
+							<p><span data-translate="from_price_4000"><?= t('from_price_4000') ?></span></p>
 						</div>
 					</div>
 					<div class="category-small">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography">
 						<div class="category-small-overlay">
 							<h4><span data-translate="photography">Photography and Video Equipment</span></h4>
-							<p>From GH₵ 5000</p>
+							<p><span data-translate="from_price_5000"><?= t('from_price_5000') ?></span></p>
 						</div>
 					</div>
 				</div>
@@ -4200,13 +4200,9 @@ try {
 		<div class="container">
 			<div class="promo-banner" style="background: linear-gradient(135deg, #7f56d9 0%, #6a5af9 100%);">
 				<div class="promo-content">
-					<h2>DJI Osmo Pocket 3 — Small Frame, Big Flex 🎥</h2>
-					<p>
-						Meet the vlogging beast that fits in your hand.
-						4K clarity, buttery-smooth shots, and creator-level power —
-						ready to shoot, edit, and post anywhere you go.
-					</p>
-					<a href="#" class="cta-btn">Shop Now →</a>
+					<h2><span data-translate="dji_promo_title"><?= t('dji_promo_title') ?></span></h2>
+					<p><span data-translate="dji_promo_desc"><?= t('dji_promo_desc') ?></span></p>
+					<a href="#" class="cta-btn"><span data-translate="shop_now_arrow"><?= t('shop_now_arrow') ?></span></a>
 				</div>
 
 				<div class="promo-image">
@@ -4223,9 +4219,9 @@ try {
 	<!-- Admin Panel (only visible to admins) -->
 	<?php if ($is_admin): ?>
 		<div class="admin-panel animate__animated animate__zoomIn">
-			<h3>Admin Dashboard</h3>
-			<p>Welcome back, <?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?>! Manage your store.</p>
-			<a href="admin/category.php" class="admin-btn">Manage Store</a>
+			<h3><span data-translate="admin_dashboard"><?= t('admin_dashboard') ?></span></h3>
+			<p><span data-translate="admin_welcome"><?= t('admin_welcome') ?></span>, <?= htmlspecialchars($_SESSION['name'] ?? 'Admin') ?>! <span data-translate="manage_store"><?= t('manage_store') ?></span>.</p>
+			<a href="admin/category.php" class="admin-btn"><span data-translate="manage_store"><?= t('manage_store') ?></span></a>
 		</div>
 	<?php endif; ?>
 
@@ -4241,7 +4237,7 @@ try {
 					<div class="deal-discount">-23%</div>
 					<img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop&crop=center" alt="Canon Washing Machine" class="deal-image">
 					<div class="deal-brand">Canon</div>
-					<h3 class="deal-title">12KG 1600rpm 3-in-1 Combo Washing Machine</h3>
+					<h3 class="deal-title"><span data-translate="washing_machine_deal"><?= t('washing_machine_deal') ?></span></h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="far fa-star"></i>
@@ -4259,23 +4255,23 @@ try {
 						<div class="countdown-grid">
 							<div class="countdown-item">
 								<span class="countdown-number" id="days1">335</span>
-								<span class="countdown-label">Days</span>
+								<span class="countdown-label"><span data-translate="days"><?= t('days') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="hours1">15</span>
-								<span class="countdown-label">Hour</span>
+								<span class="countdown-label"><span data-translate="hour"><?= t('hour') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="minutes1">35</span>
-								<span class="countdown-label">Min</span>
+								<span class="countdown-label"><span data-translate="min"><?= t('min') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="seconds1">01</span>
-								<span class="countdown-label">Sec</span>
+								<span class="countdown-label"><span data-translate="sec"><?= t('sec') ?></span></span>
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='all_product.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='all_product.php'"><span data-translate="options"><?= t('options') ?></span></button>
 				</div>
 
 				<!-- Deal 2: Apple iPad -->
@@ -4283,7 +4279,7 @@ try {
 					<div class="deal-discount">-8%</div>
 					<img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&crop=center" alt="iPad m2" class="deal-image">
 					<div class="deal-brand">Apple m2</div>
-					<h3 class="deal-title">iPad m2</h3>
+					<h3 class="deal-title"><span data-translate="ipad_m2_deal"><?= t('ipad_m2_deal') ?></span></h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="fas fa-star"></i>
@@ -4302,23 +4298,23 @@ try {
 						<div class="countdown-grid">
 							<div class="countdown-item">
 								<span class="countdown-number" id="days2">335</span>
-								<span class="countdown-label">Days</span>
+								<span class="countdown-label"><span data-translate="days"><?= t('days') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="hours2">15</span>
-								<span class="countdown-label">Hour</span>
+								<span class="countdown-label"><span data-translate="hour"><?= t('hour') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="minutes2">35</span>
-								<span class="countdown-label">Min</span>
+								<span class="countdown-label"><span data-translate="min"><?= t('min') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="seconds2">01</span>
-								<span class="countdown-label">Sec</span>
+								<span class="countdown-label"><span data-translate="sec"><?= t('sec') ?></span></span>
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='all_product.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='all_product.php'"><span data-translate="options"><?= t('options') ?></span></button>
 				</div>
 
 				<!-- Deal 3: LG Apple iPad Mini -->
@@ -4326,7 +4322,7 @@ try {
 					<div class="deal-discount">-19%</div>
 					<img src="https://images.unsplash.com/photo-1542119621-a8e5bf80c227?w=400&h=300&fit=crop&crop=center" alt="Apple iPad Mini" class="deal-image">
 					<div class="deal-brand">LG</div>
-					<h3 class="deal-title">Apple iPad Mini 6th Gen 8.3 Inch With Wi-fi</h3>
+					<h3 class="deal-title"><span data-translate="ipad_mini_deal"><?= t('ipad_mini_deal') ?></span></h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="fas fa-star"></i>
@@ -4345,23 +4341,23 @@ try {
 						<div class="countdown-grid">
 							<div class="countdown-item">
 								<span class="countdown-number" id="days3">427</span>
-								<span class="countdown-label">Days</span>
+								<span class="countdown-label"><span data-translate="days"><?= t('days') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="hours3">15</span>
-								<span class="countdown-label">Hour</span>
+								<span class="countdown-label"><span data-translate="hour"><?= t('hour') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="minutes3">35</span>
-								<span class="countdown-label">Min</span>
+								<span class="countdown-label"><span data-translate="min"><?= t('min') ?></span></span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="seconds3">01</span>
-								<span class="countdown-label">Sec</span>
+								<span class="countdown-label"><span data-translate="sec"><?= t('sec') ?></span></span>
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='all_product.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='all_product.php'"><span data-translate="options"><?= t('options') ?></span></button>
 				</div>
 			</div>
 		</div>
@@ -4512,12 +4508,12 @@ try {
 							<span class="star">★</span>
 						</div>
 						<div class="testimonial-quote">
-							"Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!"
+							<span data-translate="testimonial_1"><?= t('testimonial_1') ?></span>
 						</div>
 						<div class="testimonial-author">
 							<div class="author-info">
-								<h4>Yaw Mensah</h4>
-								<p>Software Developer, Accra</p>
+								<h4><span data-translate="author_1_name"><?= t('author_1_name') ?></span></h4>
+								<p><span data-translate="author_1_title"><?= t('author_1_title') ?></span></p>
 							</div>
 						</div>
 					</div>
@@ -4541,12 +4537,12 @@ try {
 							<span class="star">★</span>
 						</div>
 						<div class="testimonial-quote">
-							"The prices are great and the checkout process was incredibly smooth. No hidden fees!"
+							<span data-translate="testimonial_2"><?= t('testimonial_2') ?></span>
 						</div>
 						<div class="testimonial-author">
 							<div class="author-info">
-								<h4>Akua Asante</h4>
-								<p>Marketing Manager, Kumasi</p>
+								<h4><span data-translate="author_2_name"><?= t('author_2_name') ?></span></h4>
+								<p><span data-translate="author_2_title"><?= t('author_2_title') ?></span></p>
 							</div>
 						</div>
 					</div>
@@ -4555,10 +4551,10 @@ try {
 				<div class="testimonial-card">
 					<div class="card-features">
 						<div class="card-feature">
-							<i class="fas fa-headset"></i> Support
+							<i class="fas fa-headset"></i> <span data-translate="support_label"><?= t('support_label') ?></span>
 						</div>
 						<div class="card-feature">
-							<i class="fas fa-wrench"></i> Expert
+							<i class="fas fa-wrench"></i> <span data-translate="expert_label"><?= t('expert_label') ?></span>
 						</div>
 					</div>
 					<div class="testimonial-content">
@@ -4570,12 +4566,12 @@ try {
 							<span class="star">★</span>
 						</div>
 						<div class="testimonial-quote">
-							"Customer support was amazing! They helped me pick the right camera for my photography business."
+							<span data-translate="testimonial_3"><?= t('testimonial_3') ?></span>
 						</div>
 						<div class="testimonial-author">
 							<div class="author-info">
-								<h4>Kofi Boateng</h4>
-								<p>Photographer, Tema</p>
+								<h4><span data-translate="author_3_name"><?= t('author_3_name') ?></span></h4>
+								<p><span data-translate="author_3_title"><?= t('author_3_title') ?></span></p>
 							</div>
 						</div>
 					</div>
@@ -4584,10 +4580,10 @@ try {
 				<div class="testimonial-card">
 					<div class="card-features">
 						<div class="card-feature">
-							<i class="fas fa-certificate"></i> Authentic
+							<i class="fas fa-certificate"></i> <span data-translate="authentic_label"><?= t('authentic_label') ?></span>
 						</div>
 						<div class="card-feature">
-							<i class="fas fa-tools"></i> Warranty
+							<i class="fas fa-tools"></i> <span data-translate="warranty_label"><?= t('warranty_label') ?></span>
 						</div>
 					</div>
 					<div class="testimonial-content">
@@ -4599,12 +4595,12 @@ try {
 							<span class="star">★</span>
 						</div>
 						<div class="testimonial-quote">
-							"Authentic brands with solid warranties. My iPhone has been working perfectly for months!"
+							<span data-translate="testimonial_4"><?= t('testimonial_4') ?></span>
 						</div>
 						<div class="testimonial-author">
 							<div class="author-info">
-								<h4>Ama Adjei</h4>
-								<p>Student, Cape Coast</p>
+								<h4><span data-translate="author_4_name"><?= t('author_4_name') ?></span></h4>
+								<p><span data-translate="author_4_title"><?= t('author_4_title') ?></span></p>
 							</div>
 						</div>
 					</div>
@@ -4635,43 +4631,43 @@ try {
 						</div>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Shop</h5>
+						<h5 class="footer-title" data-translate="shop"><?= t('shop') ?></h5>
 						<ul class="footer-links">
-							<li><a href="all_product.php?category=phones">Smartphones</a></li>
-							<li><a href="all_product.php?category=laptops">Laptops</a></li>
-							<li><a href="all_product.php?category=ipads">Tablets</a></li>
-							<li><a href="all_product.php?category=cameras">Cameras</a></li>
-							<li><a href="all_product.php?category=video">Video Equipment</a></li>
+							<li><a href="all_product.php?category=phones" data-translate="smartphones_footer"><?= t('smartphones_footer') ?></a></li>
+							<li><a href="all_product.php?category=laptops" data-translate="laptops_footer"><?= t('laptops_footer') ?></a></li>
+							<li><a href="all_product.php?category=ipads" data-translate="tablets"><?= t('tablets') ?></a></li>
+							<li><a href="all_product.php?category=cameras" data-translate="cameras_footer"><?= t('cameras_footer') ?></a></li>
+							<li><a href="all_product.php?category=video" data-translate="video_equipment_footer"><?= t('video_equipment_footer') ?></a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Services</h5>
+						<h5 class="footer-title" data-translate="services"><?= t('services') ?></h5>
 						<ul class="footer-links">
-							<li><a href="views/repair_services.php">Device Repair</a></li>
-							<li><a href="#">Tech Support</a></li>
-							<li><a href="#">Data Recovery</a></li>
-							<li><a href="#">Setup Services</a></li>
-							<li><a href="#">Warranty</a></li>
+							<li><a href="views/repair_services.php" data-translate="device_repair"><?= t('device_repair') ?></a></li>
+							<li><a href="#" data-translate="tech_support"><?= t('tech_support') ?></a></li>
+							<li><a href="#" data-translate="data_recovery"><?= t('data_recovery') ?></a></li>
+							<li><a href="#" data-translate="setup_services"><?= t('setup_services') ?></a></li>
+							<li><a href="#" data-translate="warranty"><?= t('warranty') ?></a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Company</h5>
+						<h5 class="footer-title" data-translate="company"><?= t('company') ?></h5>
 						<ul class="footer-links">
-							<li><a href="#">About Us</a></li>
-							<li><a href="#">Contact</a></li>
-							<li><a href="#">Careers</a></li>
-							<li><a href="#">Blog</a></li>
-							<li><a href="#">Press</a></li>
+							<li><a href="#" data-translate="about_us"><?= t('about_us') ?></a></li>
+							<li><a href="#" data-translate="contact"><?= t('contact') ?></a></li>
+							<li><a href="#" data-translate="careers"><?= t('careers') ?></a></li>
+							<li><a href="#" data-translate="blog"><?= t('blog') ?></a></li>
+							<li><a href="#" data-translate="press"><?= t('press') ?></a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Support</h5>
+						<h5 class="footer-title" data-translate="support"><?= t('support') ?></h5>
 						<ul class="footer-links">
-							<li><a href="#">Help Center</a></li>
-							<li><a href="#">Shipping Info</a></li>
-							<li><a href="#">Returns</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Terms of Service</a></li>
+							<li><a href="#" data-translate="help_center"><?= t('help_center') ?></a></li>
+							<li><a href="#" data-translate="shipping_info"><?= t('shipping_info') ?></a></li>
+							<li><a href="#" data-translate="returns"><?= t('returns') ?></a></li>
+							<li><a href="#" data-translate="privacy_policy"><?= t('privacy_policy') ?></a></li>
+							<li><a href="#" data-translate="terms_of_service"><?= t('terms_of_service') ?></a></li>
 						</ul>
 					</div>
 				</div>
@@ -4679,7 +4675,7 @@ try {
 				<div class="footer-bottom">
 					<div class="row align-items-center">
 						<div class="col-md-6">
-							<p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+							<p class="copyright" data-translate="copyright"><?= t('copyright') ?></p>
 						</div>
 						<div class="col-md-6 text-end">
 							<div class="payment-methods">

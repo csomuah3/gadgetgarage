@@ -19,9 +19,9 @@ function initializePaymentMethods() {
             // Add selected class to clicked option
             this.classList.add('selected');
 
-            // Update payment method for processing
+            // Update payment method for processing - All methods go through PayStack
             const selectedMethod = this.getAttribute('data-method');
-            console.log('Selected payment method:', selectedMethod);
+            console.log('Selected payment method:', selectedMethod, '- Will process via PayStack');
         });
     });
 }
@@ -46,50 +46,88 @@ function showPaymentModal() {
     paymentModal.show();
 }
 
-// Process checkout and handle payment simulation
+// Process checkout with PayStack payment
 function processCheckout() {
     // Validate forms first
     if (!validateCheckoutForms()) {
         return;
     }
 
+    // Prompt for customer email
+    promptForEmailAndPay();
+}
+
+// Prompt for customer email before payment
+function promptForEmailAndPay() {
+    const email = prompt("Please enter your email address for payment confirmation:");
+
+    if (!email) {
+        showNotification('Email is required for payment processing.', 'error');
+        return;
+    }
+
+    if (!isValidEmail(email)) {
+        showNotification('Please enter a valid email address.', 'error');
+        return;
+    }
+
+    // Initialize PayStack payment
+    initializePayStackPayment(email);
+}
+
+// Validate email format
+function isValidEmail(email) {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+}
+
+// Initialize PayStack payment
+function initializePayStackPayment(email) {
     const confirmBtn = document.getElementById('confirmPaymentBtn');
     const originalText = confirmBtn.innerHTML;
 
     // Show loading state
-    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Processing...';
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Initializing Payment...';
     confirmBtn.disabled = true;
 
-    // Simulate processing delay
-    setTimeout(() => {
-        fetch('actions/process_checkout_action.php', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded',
-            }
+    // Call backend to initialize PayStack transaction
+    fetch('actions/paystack_init_transaction.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+            email: email
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                // Hide payment modal
-                const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
-                paymentModal.hide();
+    })
+    .then(response => response.json())
+    .then(data => {
+        console.log('PayStack initialization response:', data);
 
-                // Show success modal with order details
-                showSuccessModal(data);
-            } else {
-                showNotification(data.message || 'Payment failed. Please try again.', 'error');
-                confirmBtn.innerHTML = originalText;
-                confirmBtn.disabled = false;
-            }
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            showNotification('An error occurred during payment processing.', 'error');
+        if (data.status === 'success') {
+            // Hide payment modal
+            const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
+            paymentModal.hide();
+
+            // Show redirecting message
+            showNotification('Redirecting to PayStack payment gateway...', 'info');
+
+            // Redirect to PayStack
+            setTimeout(() => {
+                window.location.href = data.authorization_url;
+            }, 1500);
+        } else {
+            showNotification(data.message || 'Failed to initialize payment. Please try again.', 'error');
             confirmBtn.innerHTML = originalText;
             confirmBtn.disabled = false;
-        });
-    }, 2000); // 2 second delay to simulate payment processing
+        }
+    })
+    .catch(error => {
+        console.error('Error initializing PayStack payment:', error);
+        showNotification('An error occurred while initializing payment.', 'error');
+        confirmBtn.innerHTML = originalText;
+        confirmBtn.disabled = false;
+    });
 }
 
 // Show success modal with order details

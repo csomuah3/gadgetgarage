@@ -38,7 +38,7 @@ class Order extends db_connection
         return $this->db_write_query($sql);
     }
 
-    public function record_payment($customer_id, $order_id, $amount, $currency = 'GHS')
+    public function record_payment($customer_id, $order_id, $amount, $currency = 'GHS', $payment_method = 'paystack', $transaction_ref = null, $authorization_code = null, $payment_channel = null)
     {
         $payment_date = date('Y-m-d');
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);
@@ -46,9 +46,33 @@ class Order extends db_connection
         $amount = mysqli_real_escape_string($this->db, $amount);
         $currency = mysqli_real_escape_string($this->db, $currency);
         $payment_date = mysqli_real_escape_string($this->db, $payment_date);
+        $payment_method = mysqli_real_escape_string($this->db, $payment_method);
 
-        $sql = "INSERT INTO payment (amt, customer_id, order_id, currency, payment_date) VALUES ($amount, $customer_id, $order_id, '$currency', '$payment_date')";
-        return $this->db_write_query($sql);
+        // Build SQL dynamically based on provided parameters
+        $columns = ['amt', 'customer_id', 'order_id', 'currency', 'payment_date', 'payment_method'];
+        $values = [$amount, $customer_id, $order_id, "'$currency'", "'$payment_date'", "'$payment_method'"];
+
+        if ($transaction_ref !== null) {
+            $columns[] = 'transaction_ref';
+            $values[] = "'" . mysqli_real_escape_string($this->db, $transaction_ref) . "'";
+        }
+
+        if ($authorization_code !== null) {
+            $columns[] = 'authorization_code';
+            $values[] = "'" . mysqli_real_escape_string($this->db, $authorization_code) . "'";
+        }
+
+        if ($payment_channel !== null) {
+            $columns[] = 'payment_channel';
+            $values[] = "'" . mysqli_real_escape_string($this->db, $payment_channel) . "'";
+        }
+
+        $sql = "INSERT INTO payment (" . implode(', ', $columns) . ") VALUES (" . implode(', ', $values) . ")";
+
+        if ($this->db_write_query($sql)) {
+            return $this->get_last_insert_id();
+        }
+        return false;
     }
 
     public function get_user_orders($customer_id)

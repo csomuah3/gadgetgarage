@@ -54,4 +54,22 @@ function check_product_in_cart_ctr($product_id, $customer_id = null, $ip_address
     $cart = new Cart();
     return $cart->check_product_exists_in_cart($product_id, $customer_id, $ip_address);
 }
+
+function get_cart_items_ctr($customer_id = null, $ip_address = null)
+{
+    $cart = new Cart();
+    return $cart->get_user_cart($customer_id, $ip_address);
+}
+
+function get_abandoned_carts_ctr($min_idle_time_seconds = 1800)
+{
+    $cart = new Cart();
+    return $cart->get_abandoned_carts($min_idle_time_seconds);
+}
+
+function update_cart_activity_ctr($customer_id = null, $ip_address = null)
+{
+    $cart = new Cart();
+    return $cart->update_cart_activity($customer_id, $ip_address);
+}
 ?>

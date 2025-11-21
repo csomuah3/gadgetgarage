@@ -263,5 +263,35 @@ class Cart extends db_connection
         $result = $this->db_fetch_one($sql);
         return $result && $result['count'] !== null ? intval($result['count']) : 0;
     }
+
+    public function get_abandoned_carts($min_idle_time_seconds = 1800)
+    {
+        $sql = "SELECT DISTINCT c.c_id as user_id, u.user_name as name, u.user_email as email, u.user_contact as phone
+                FROM cart c
+                JOIN users u ON c.c_id = u.user_id
+                WHERE c.c_id IS NOT NULL
+                AND c.c_id NOT IN (
+                    SELECT customer_id FROM orders
+                    WHERE DATE(order_date) = CURDATE()
+                )
+                AND TIMESTAMPDIFF(SECOND, IFNULL(c.updated_at, c.created_at), NOW()) > $min_idle_time_seconds
+                GROUP BY c.c_id
+                HAVING COUNT(c.p_id) > 0";
+
+        return $this->db_fetch_all($sql);
+    }
+
+    public function update_cart_activity($customer_id = null, $ip_address = null)
+    {
+        if ($customer_id) {
+            $customer_id = mysqli_real_escape_string($this->db, $customer_id);
+            $sql = "UPDATE cart SET updated_at = NOW() WHERE c_id = $customer_id";
+        } else {
+            $ip_address = mysqli_real_escape_string($this->db, $ip_address);
+            $sql = "UPDATE cart SET updated_at = NOW() WHERE ip_add = '$ip_address'";
+        }
+
+        return $this->db_write_query($sql);
+    }
 }
 ?>

@@ -287,3 +287,10 @@ if (!isset($cart_count)) {
         </div>
     </div>
 </nav>
+
+<!-- Translation System Scripts -->
+<script src="js/translation.js"></script>
+<script>
+    // Initialize translation system with current language
+    window.currentLanguage = '<?= $current_language ?>';
+</script>

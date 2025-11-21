@@ -1895,7 +1895,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             <?php endif; ?>
                                         </div>
 
-                                        <!-- Add to Cart Button -->
+                                        <!-- View Details Button -->
                                         <a href="single_product.php?id=<?= $product['product_id'] ?>" style="width: 100%; background: linear-gradient(135deg, #008060, #006b4e); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;"
                                                onmouseover="this.style.background='linear-gradient(135deg, #006b4e, #008060)'; this.style.transform='translateY(-1px)';"
                                                onmouseout="this.style.background='linear-gradient(135deg, #008060, #006b4e)'; this.style.transform='translateY(0)';">

@@ -976,21 +976,256 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             color: white;
         }
 
-        .clear-filters-btn {
+        /* Rating Filter Styles */
+        .rating-filter {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .rating-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            padding: 6px 0;
+        }
+
+        .rating-option input[type="radio"] {
+            margin: 0;
+        }
+
+        .rating-option label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .stars {
+            display: flex;
+            gap: 2px;
+            color: #fbbf24;
+        }
+
+        .stars i {
+            font-size: 14px;
+        }
+
+        .rating-text {
+            color: #6b7280;
+        }
+
+        /* Price Range Slider Styles */
+        .price-slider-container {
+            padding: 10px 0;
+        }
+
+        .price-slider-track {
+            position: relative;
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin: 20px 0;
+        }
+
+        .price-slider-range {
+            position: absolute;
+            height: 4px;
+            background: #008060;
+            border-radius: 2px;
+        }
+
+        .price-slider {
+            position: absolute;
             width: 100%;
-            background: #f3f4f6;
-            color: #374151;
-            border: 1px solid #d1d5db;
-            padding: 10px 16px;
+            height: 4px;
+            background: transparent;
+            -webkit-appearance: none;
+            appearance: none;
+            outline: none;
+            pointer-events: auto;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .price-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            background: #008060;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .price-slider::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            background: #008060;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        .price-display {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            color: #000000;
+        }
+
+        .price-separator {
+            color: #666;
+        }
+
+        /* Size Filter Styles */
+        .size-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .size-btn {
+            background: #f8fafc;
+            border: 1px solid #e2e8f0;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 500;
+            color: #64748b;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .size-btn:hover {
+            background: rgba(0, 128, 96, 0.1);
+            border-color: #008060;
+            color: #008060;
+        }
+
+        .size-btn.active {
+            background: linear-gradient(135deg, #008060, #006b4e);
+            border-color: #008060;
+            color: white;
+        }
+
+        /* Color Filter Styles */
+        .color-filters {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .color-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .color-btn:hover {
+            border-color: #008060;
+            transform: scale(1.1);
+        }
+
+        .color-btn.active {
+            border-color: #008060;
+            transform: scale(1.1);
+        }
+
+        .color-btn.active::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .color-multicolor {
+            background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
+        }
+
+        .color-blue {
+            background: #3b82f6;
+        }
+
+        .color-gray {
+            background: #6b7280;
+        }
+
+        .color-green {
+            background: #10b981;
+        }
+
+        .color-red {
+            background: #ef4444;
+        }
+
+        .color-orange {
+            background: #f97316;
+        }
+
+        /* Filter Action Buttons */
+        .filter-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .apply-filters-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #008060, #006b4e);
+            color: white;
+            border: none;
+            padding: 12px 16px;
             border-radius: 8px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .apply-filters-btn:hover {
+            background: linear-gradient(135deg, #006b4e, #008060);
+            transform: translateY(-1px);
+        }
+
+        .clear-filters-btn {
+            width: 100%;
+            background: #dc2626;
+            color: white;
+            border: none;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .clear-filters-btn:hover {
-            background: #e5e7eb;
+            background: #b91c1c;
+            transform: translateY(-1px);
         }
 
         /* Products Grid */
@@ -1411,8 +1646,77 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Search Bar -->
                     <div class="filter-group">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search mobile devices..." autocomplete="off">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Rating Filter -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Rating</h6>
+                        <div class="rating-filter">
+                            <div class="rating-option" data-rating="5">
+                                <input type="radio" id="rating_5" name="rating_filter" value="5">
+                                <label for="rating_5">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">5 Star</span>
+                                </label>
+                            </div>
+                            <div class="rating-option" data-rating="4">
+                                <input type="radio" id="rating_4" name="rating_filter" value="4">
+                                <label for="rating_4">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">4 Star</span>
+                                </label>
+                            </div>
+                            <div class="rating-option" data-rating="3">
+                                <input type="radio" id="rating_3" name="rating_filter" value="3">
+                                <label for="rating_3">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">3 Star</span>
+                                </label>
+                            </div>
+                            <div class="rating-option" data-rating="2">
+                                <input type="radio" id="rating_2" name="rating_filter" value="2">
+                                <label for="rating_2">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">2 Star</span>
+                                </label>
+                            </div>
+                            <div class="rating-option" data-rating="1">
+                                <input type="radio" id="rating_1" name="rating_filter" value="1">
+                                <label for="rating_1">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">1 Star</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Price Range -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Price Range</h6>
+                        <div class="price-slider-container">
+                            <div class="price-slider-track">
+                                <div class="price-slider-range" id="priceRange"></div>
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
+                            </div>
+                            <div class="price-display">
+                                <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
+                                <span class="price-separator">-</span>
+                                <span class="price-max" id="priceMaxDisplay">GH₵ 50,000</span>
+                            </div>
                         </div>
                     </div>
 
@@ -1431,16 +1735,45 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
-                            <button class="tag-btn active" data-brand="all">All Brands</button>
+                            <button class="tag-btn active" data-brand="all">All</button>
                             <?php if (!empty($brands)): ?>
-                                <?php foreach ($brands as $brand): ?>
+                                <?php $displayed_brands = array_slice($brands, 0, 8); ?>
+                                <?php foreach ($displayed_brands as $brand): ?>
                                     <button class="tag-btn" data-brand="<?= htmlspecialchars($brand['brand_name']) ?>"><?= htmlspecialchars($brand['brand_name']) ?></button>
                                 <?php endforeach; ?>
                             <?php endif; ?>
                         </div>
                     </div>
 
+                    <!-- Filter by Size -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Filter By Size</h6>
+                        <div class="size-filters" id="sizeTags">
+                            <button class="size-btn active" data-size="all">All</button>
+                            <button class="size-btn" data-size="large">Large</button>
+                            <button class="size-btn" data-size="medium">Medium</button>
+                            <button class="size-btn" data-size="small">Small</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Color -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Filter By Color</h6>
+                        <div class="color-filters" id="colorTags">
+                            <button class="color-btn color-multicolor active" data-color="all" title="All Colors"></button>
+                            <button class="color-btn color-blue" data-color="blue" title="Blue"></button>
+                            <button class="color-btn color-gray" data-color="gray" title="Gray"></button>
+                            <button class="color-btn color-green" data-color="green" title="Green"></button>
+                            <button class="color-btn color-red" data-color="red" title="Red"></button>
+                            <button class="color-btn color-orange" data-color="orange" title="Orange"></button>
+                        </div>
+                    </div>
+
                     <div class="filter-actions">
+                        <button class="apply-filters-btn" id="applyFilters">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
                         <button class="clear-filters-btn" id="clearFilters">
                             <i class="fas fa-times"></i>
                             Clear All Filters
@@ -1563,11 +1896,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         </div>
 
                                         <!-- Add to Cart Button -->
-                                        <button onclick="addToCart(<?= $product['product_id'] ?>)" style="width: 100%; background: linear-gradient(135deg, #008060, #006b4e); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;"
-                                                onmouseover="this.style.background='linear-gradient(135deg, #006b4e, #008060)'; this.style.transform='translateY(-1px)';"
-                                                onmouseout="this.style.background='linear-gradient(135deg, #008060, #006b4e)'; this.style.transform='translateY(0)';">
-                                            <i class="fas fa-shopping-cart"></i> Add to Cart
-                                        </button>
+                                        <a href="single_product.php?id=<?= $product['product_id'] ?>" style="width: 100%; background: linear-gradient(135deg, #008060, #006b4e); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;"
+                                               onmouseover="this.style.background='linear-gradient(135deg, #006b4e, #008060)'; this.style.transform='translateY(-1px)';"
+                                               onmouseout="this.style.background='linear-gradient(135deg, #008060, #006b4e)'; this.style.transform='translateY(0)';">
+                                            <i class="fas fa-eye"></i> View Details
+                                        </a>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -1721,7 +2054,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Update timer every second
         setInterval(updatePromoTimer, 1000);
-        updatePromoTimer();
+        updatePromoTimer();\n\n        // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initializePriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
     </script>
 </body>
 </html>

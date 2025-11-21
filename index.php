@@ -1,19 +1,29 @@
 <?php
-// Enable error reporting for debugging
-error_reporting(E_ALL);
-ini_set('display_errors', 1);
+// Disable error reporting for production
+error_reporting(0);
+ini_set('display_errors', 0);
 
 try {
 	// Start session and include core functions
-	require_once(__DIR__ . '/settings/core.php');
-	require_once(__DIR__ . '/controllers/cart_controller.php');
-	require_once(__DIR__ . '/helpers/image_helper.php');
+	if (file_exists(__DIR__ . '/settings/core.php')) {
+		require_once(__DIR__ . '/settings/core.php');
+	} else {
+		die('Core file not found');
+	}
+
+	if (file_exists(__DIR__ . '/controllers/cart_controller.php')) {
+		require_once(__DIR__ . '/controllers/cart_controller.php');
+	}
+
+	if (file_exists(__DIR__ . '/helpers/image_helper.php')) {
+		require_once(__DIR__ . '/helpers/image_helper.php');
+	}
 
 	// Check login status and admin status
-	$is_logged_in = check_login();
+	$is_logged_in = function_exists('check_login') ? check_login() : false;
 	$is_admin = false;
 
-	if ($is_logged_in) {
+	if ($is_logged_in && function_exists('check_admin')) {
 		$is_admin = check_admin();
 
 		// Redirect admins to admin dashboard (unless they specifically want to view customer homepage)
@@ -26,7 +36,7 @@ try {
 	// Get cart count
 	$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 	$ip_address = $_SERVER['REMOTE_ADDR'];
-	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
+	$cart_count = function_exists('get_cart_count_ctr') ? get_cart_count_ctr($customer_id, $ip_address) : 0;
 
 	// Initialize arrays for navigation
 	$categories = [];

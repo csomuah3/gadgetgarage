@@ -334,10 +334,27 @@ function t($key) {
 	<?php include __DIR__ . '/includes/footer.php'; ?>
 
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-	<script src="js/translation.js"></script>
+
 	<script>
+		// Fix crypto.randomUUID for older browsers
+		if (!crypto.randomUUID) {
+			crypto.randomUUID = function() {
+				return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+					var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+					return v.toString(16);
+				});
+			};
+		}
+
 		// Initialize translation system
 		window.currentLanguage = '<?= $current_language ?? 'en' ?>';
+
+		// Load translation.js if it exists
+		<?php if (file_exists(__DIR__ . '/js/translation.js')): ?>
+		const translationScript = document.createElement('script');
+		translationScript.src = 'js/translation.js';
+		document.head.appendChild(translationScript);
+		<?php endif; ?>
 
 		// Smooth scrolling for anchor links
 		document.querySelectorAll('a[href^="#"]').forEach(anchor => {

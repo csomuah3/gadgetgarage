@@ -91,6 +91,22 @@ try {
 			overflow-x: hidden;
 		}
 
+		body::after {
+			content: '';
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
+			background-size: cover;
+			background-position: center;
+			background-attachment: fixed;
+			opacity: 0.45;
+			z-index: -1;
+			pointer-events: none;
+		}
+
 		/* Promotional Banner Styles - Same as index */
 		.promo-banner {
 			background: #001f3f !important;
@@ -429,9 +445,11 @@ try {
 		}
 
 		.register-form-wrapper {
-			background: white;
+			background: rgba(255, 255, 255, 0.85);
 			border-radius: 20px;
-			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
 			overflow: hidden;
 			width: 100%;
 			max-width: 600px;

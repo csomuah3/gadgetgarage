@@ -3877,6 +3877,18 @@ try {
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
+								<a href="views/account.php" class="dropdown-item-custom">
+									<i class="fas fa-user"></i>
+									<span data-translate="account">Account</span>
+								</a>
+								<a href="views/my_orders.php" class="dropdown-item-custom">
+									<i class="fas fa-shopping-bag"></i>
+									<span data-translate="my_orders">My Orders</span>
+								</a>
+								<a href="views/notifications.php" class="dropdown-item-custom">
+									<i class="fas fa-bell"></i>
+									<span>Notifications</span>
+								</a>
 								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
 									<i class="fas fa-camera"></i>
 									<span>Profile Picture</span>
@@ -3912,9 +3924,14 @@ try {
 						</div>
 					<?php else: ?>
 						<!-- Login Button -->
-						<a href="login/login_view.php" class="login-btn">
+						<a href="login/login.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
+						</a>
+						<!-- Register Button -->
+						<a href="login/register.php" class="login-btn" style="margin-left: 10px;">
+							<i class="fas fa-user-plus"></i>
+							Register
 						</a>
 					<?php endif; ?>
 				</div>
@@ -3938,17 +3955,17 @@ try {
 						<ul>
 							<?php if (!empty($brands)): ?>
 								<?php foreach ($brands as $brand): ?>
-									<li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+									<li><a href="views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
 								<?php endforeach; ?>
 							<?php else: ?>
-								<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+								<li><a href="views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+								<li><a href="views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+								<li><a href="views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+								<li><a href="views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+								<li><a href="views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+								<li><a href="views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+								<li><a href="views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+								<li><a href="views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
 							<?php endif; ?>
 						</ul>
 					</div>
@@ -3971,8 +3988,8 @@ try {
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+									<li><a href="views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
@@ -3982,8 +3999,8 @@ try {
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+									<li><a href="views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
@@ -3993,8 +4010,8 @@ try {
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+									<li><a href="views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
@@ -4044,7 +4061,7 @@ try {
 					<div class="banner-copy">
 						<h1 class="banner-title"><span data-translate="ipad_pro_title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</span></h1>
 						<p class="banner-price"><span data-translate="starting_at">Starting At</span> <span class="price">GH₵ 236.00</span></p>
-						<a href="#" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+						<a href="views/all_product.php" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 					</div>
 
 					<div class="banner-media">
@@ -4061,7 +4078,7 @@ try {
 						<div class="side-copy">
 							<h3 class="side-title">T900 Ultra<br>Watch</h3>
 							<p class="side-price">Starting <span class="price">GH₵ 19.00</span></p>
-							<a href="#" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
+							<a href="views/all_product.php" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
 						</div>
 						<div class="side-media">
 							<img
@@ -4075,7 +4092,7 @@ try {
 						<div class="side-copy">
 							<h3 class="side-title">Kids Wireless<br>Headphones</h3>
 							<p class="side-price">Starting <span class="price">GH₵ 36.00</span></p>
-							<a href="#" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
+							<a href="views/all_product.php" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
 						</div>
 						<div class="side-media">
 							<img
@@ -4202,7 +4219,7 @@ try {
 						4K clarity, buttery-smooth shots, and creator-level power —
 						ready to shoot, edit, and post anywhere you go.
 					</p>
-					<a href="#" class="cta-btn">Shop Now →</a>
+					<a href="views/all_product.php" class="cta-btn">Shop Now →</a>
 				</div>
 
 				<div class="promo-image">
@@ -4633,11 +4650,11 @@ try {
 					<div class="col-lg-2 col-md-6 mb-4">
 						<h5 class="footer-title">Shop</h5>
 						<ul class="footer-links">
-							<li><a href="all_product.php?category=phones">Smartphones</a></li>
-							<li><a href="all_product.php?category=laptops">Laptops</a></li>
-							<li><a href="all_product.php?category=ipads">Tablets</a></li>
-							<li><a href="all_product.php?category=cameras">Cameras</a></li>
-							<li><a href="all_product.php?category=video">Video Equipment</a></li>
+							<li><a href="views/all_product.php?category=phones">Smartphones</a></li>
+							<li><a href="views/all_product.php?category=laptops">Laptops</a></li>
+							<li><a href="views/all_product.php?category=ipads">Tablets</a></li>
+							<li><a href="views/all_product.php?category=cameras">Cameras</a></li>
+							<li><a href="views/all_product.php?category=video">Video Equipment</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
@@ -4654,7 +4671,7 @@ try {
 						<h5 class="footer-title">Company</h5>
 						<ul class="footer-links">
 							<li><a href="#">About Us</a></li>
-							<li><a href="#">Contact</a></li>
+							<li><a href="views/contact.php">Contact</a></li>
 							<li><a href="#">Careers</a></li>
 							<li><a href="#">Blog</a></li>
 							<li><a href="#">Press</a></li>
@@ -4666,8 +4683,8 @@ try {
 							<li><a href="#">Help Center</a></li>
 							<li><a href="#">Shipping Info</a></li>
 							<li><a href="#">Returns</a></li>
-							<li><a href="#">Privacy Policy</a></li>
-							<li><a href="#">Terms of Service</a></li>
+							<li><a href="views/legal.php">Privacy Policy</a></li>
+							<li><a href="views/terms_conditions.php">Terms of Service</a></li>
 						</ul>
 					</div>
 				</div>

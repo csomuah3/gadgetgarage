@@ -963,9 +963,11 @@ try {
 		}
 
 		.login-form-wrapper {
-			background: white;
+			background: rgba(255, 255, 255, 0.85);
 			border-radius: 20px;
-			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
 			overflow: hidden;
 			width: 100%;
 			max-width: 550px;

@@ -963,11 +963,11 @@ try {
 		}
 
 		.login-form-wrapper {
-			background: rgba(255, 255, 255, 0.85);
+			background: rgba(255, 255, 255, 0.65);
 			border-radius: 20px;
 			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-			backdrop-filter: blur(10px);
-			border: 1px solid rgba(255, 255, 255, 0.2);
+			backdrop-filter: blur(8px);
+			border: 1px solid rgba(255, 255, 255, 0.3);
 			overflow: hidden;
 			width: 100%;
 			max-width: 550px;
@@ -1205,7 +1205,7 @@ try {
 					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="../wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
 								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
@@ -1213,7 +1213,7 @@ try {
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="../cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
 								<?php if ($cart_count > 0): ?>
 									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
@@ -1264,7 +1264,7 @@ try {
 						</div>
 					<?php else: ?>
 						<!-- Login Button -->
-						<a href="../login/login_view.php" class="login-btn">
+						<a href="login.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
 						</a>
@@ -1293,14 +1293,14 @@ try {
 									<li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
 								<?php endforeach; ?>
 							<?php else: ?>
-								<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+								<li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+								<li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+								<li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+								<li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+								<li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+								<li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+								<li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+								<li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
 							<?php endif; ?>
 						</ul>
 					</div>
@@ -1318,7 +1318,7 @@ try {
 						<div class="dropdown-content">
 							<div class="dropdown-column">
 								<h4>
-									<a href="../mobile_devices.php" style="text-decoration: none; color: inherit;">
+									<a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
 										<span data-translate="mobile_devices">Mobile Devices</span>
 									</a>
 								</h4>
@@ -1329,7 +1329,7 @@ try {
 							</div>
 							<div class="dropdown-column">
 								<h4>
-									<a href="../computing.php" style="text-decoration: none; color: inherit;">
+									<a href="../views/computing.php" style="text-decoration: none; color: inherit;">
 										<span data-translate="computing">Computing</span>
 									</a>
 								</h4>
@@ -1340,7 +1340,7 @@ try {
 							</div>
 							<div class="dropdown-column">
 								<h4>
-									<a href="../photography_video.php" style="text-decoration: none; color: inherit;">
+									<a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
 										<span data-translate="photography_video">Photography & Video</span>
 									</a>
 								</h4>
@@ -1356,7 +1356,7 @@ try {
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
-										<a href="../all_product.php" class="shop-now-btn">Shop</a>
+										<a href="../views/all_product.php" class="shop-now-btn">Shop</a>
 									</div>
 								</div>
 							</div>
@@ -1364,8 +1364,8 @@ try {
 					</div>
 				</div>
 
-				<a href="../repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-				<a href="../device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+				<a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+				<a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
 				<!-- More Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
@@ -1375,14 +1375,14 @@ try {
 					</a>
 					<div class="simple-dropdown" id="moreDropdown">
 						<ul>
-							<li><a href="../contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-							<li><a href="../terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+							<li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+							<li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
 						</ul>
 					</div>
 				</div>
 
 				<!-- Flash Deal positioned at far right -->
-				<a href="../flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+				<a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
 	</nav>

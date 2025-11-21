@@ -101,8 +101,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link href="includes/header-styles.css" rel="stylesheet">
-    <link href="includes/chatbot-styles.css" rel="stylesheet">
     <style>
         /* Floating Bubbles Animation */
         .floating-bubbles {
@@ -1263,46 +1261,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         }
 
-        // Floating Bubbles Animation
-        function createFloatingBubbles() {
-            const bubblesContainer = document.querySelector('.floating-bubbles');
-            const colors = [
-                'rgba(0, 128, 96, 0.1)',
-                'rgba(0, 107, 78, 0.1)',
-                'rgba(0, 150, 112, 0.1)'
-            ];
-
-            function createBubble() {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-
-                const size = Math.random() * 60 + 20;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const left = Math.random() * 100;
-                const animationDuration = Math.random() * 10 + 10;
-                const delay = Math.random() * 5;
-
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.background = color;
-                bubble.style.left = left + '%';
-                bubble.style.animationDuration = animationDuration + 's';
-                bubble.style.animationDelay = delay + 's';
-
-                bubblesContainer.appendChild(bubble);
-
-                setTimeout(() => {
-                    if (bubblesContainer.contains(bubble)) {
-                        bubblesContainer.removeChild(bubble);
-                    }
-                }, (animationDuration + delay) * 1000);
-            }
-
-            setInterval(createBubble, 300);
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createBubble, i * 200);
-            }
-        }
 
         // Header dropdown functions
         function toggleUserDropdown() {
@@ -1378,7 +1336,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            createFloatingBubbles();
             // Images now load directly using get_product_image_url() helper function
         });
 

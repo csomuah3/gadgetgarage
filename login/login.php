@@ -968,8 +968,8 @@ try {
 			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
 			overflow: hidden;
 			width: 100%;
-			max-width: 500px;
-			min-height: 650px;
+			max-width: 550px;
+			min-height: 710px;
 			position: relative;
 		}
 
@@ -990,7 +990,7 @@ try {
 
 
 		.login-form-title {
-			font-size: 2.4rem;
+			font-size: 2.5rem;
 			font-weight: 700;
 			color: #1a1a1a;
 			margin-bottom: 8px;
@@ -998,7 +998,7 @@ try {
 
 		.login-form-subtitle {
 			color: #6b7280;
-			font-size: 1.2rem;
+			font-size: 1.5rem;
 			margin-bottom: 25px;
 		}
 
@@ -1015,7 +1015,7 @@ try {
 			font-weight: 600;
 			color: #374151;
 			margin-bottom: 8px;
-			font-size: 1.1rem;
+			font-size: 1.5rem;
 		}
 
 		.form-control {
@@ -1045,7 +1045,7 @@ try {
 			top: 50%;
 			transform: translateY(-50%);
 			color: #9ca3af;
-			font-size: 1.1rem;
+			font-size: 1.2rem;
 		}
 
 		.form-control.with-icon {

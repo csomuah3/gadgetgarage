@@ -2713,11 +2713,38 @@ $fairDiscount = $basePrice - $fairPrice;
 
         // SweetAlert Cart Popup - positioned on right side under navbar
         function showSweetCartPopup(data) {
-            // Get product image
-            const productImageElement = document.querySelector('.main-product-image');
+            // Get product image - try multiple methods
             let productImage = '';
-            if (productImageElement && productImageElement.src) {
-                productImage = productImageElement.src;
+
+            // Method 1: From response data
+            if (data.product_image) {
+                productImage = data.product_image;
+            }
+
+            // Method 2: From main product image element
+            if (!productImage) {
+                const productImageElement = document.querySelector('.main-product-image');
+                if (productImageElement && productImageElement.src) {
+                    productImage = productImageElement.src;
+                }
+            }
+
+            // Method 3: From data attribute
+            if (!productImage) {
+                const productImageElement = document.querySelector('.main-product-image');
+                if (productImageElement) {
+                    const dataImage = productImageElement.getAttribute('data-product-image');
+                    if (dataImage) {
+                        // Build full URL if needed
+                        productImage = dataImage.startsWith('http') ? dataImage : 'http://169.239.251.102:442/~chelsea.somuah/uploads/' + dataImage;
+                    }
+                }
+            }
+
+            // Method 4: Generate placeholder if still no image
+            if (!productImage) {
+                const productName = data.product_name || 'Product';
+                productImage = generatePlaceholderUrl(productName, '60x60');
             }
 
             // Create cart state display

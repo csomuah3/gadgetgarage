@@ -2425,13 +2425,23 @@ try {
         });
 
         async function applyPromoCode() {
+            console.log('ApplyPromoCode function called');
+
             const promoInput = document.getElementById('promoCode');
             const applyBtn = document.getElementById('applyPromoBtn');
             const promoMessage = document.getElementById('promoMessage');
 
+            console.log('Elements found:', {
+                promoInput: !!promoInput,
+                applyBtn: !!applyBtn,
+                promoMessage: !!promoMessage
+            });
+
             const promoCode = promoInput.value.trim().toUpperCase();
+            console.log('Promo code entered:', promoCode);
 
             if (!promoCode) {
+                console.log('No promo code entered');
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
                         title: 'Missing Promo Code',
@@ -2448,20 +2458,41 @@ try {
             // Disable button during processing
             applyBtn.disabled = true;
             applyBtn.textContent = 'Applying...';
+            console.log('Button disabled, making request...');
 
             try {
+                const requestData = {
+                    promo_code: promoCode,
+                    cart_total: originalTotal
+                };
+                console.log('Request data:', requestData);
+
                 const response = await fetch('../actions/validate_promo_code.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({
-                        promo_code: promoCode,
-                        cart_total: originalTotal
-                    })
+                    body: JSON.stringify(requestData)
                 });
 
-                const data = await response.json();
+                console.log('Response status:', response.status);
+                console.log('Response ok:', response.ok);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const responseText = await response.text();
+                console.log('Raw response:', responseText);
+
+                let data;
+                try {
+                    data = JSON.parse(responseText);
+                    console.log('Parsed data:', data);
+                } catch (parseError) {
+                    console.error('JSON parse error:', parseError);
+                    throw new Error('Invalid JSON response: ' + responseText);
+                }
 
                 if (data.success) {
                     // Store applied promo data

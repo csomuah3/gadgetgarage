@@ -2503,6 +2503,118 @@ try {
 				bubblesContainer.appendChild(bubble);
 			}
 		}
+
+		// Payment option selection functionality
+		let selectedPaymentMethod = 'paystack-mobile'; // Default to mobile money
+
+		document.addEventListener('DOMContentLoaded', function() {
+			// Add event listeners to payment options
+			const paymentOptions = document.querySelectorAll('.payment-option');
+			paymentOptions.forEach(option => {
+				option.addEventListener('click', function() {
+					// Remove selected class from all options
+					paymentOptions.forEach(opt => opt.classList.remove('selected'));
+
+					// Add selected class to clicked option
+					this.classList.add('selected');
+
+					// Store selected payment method
+					selectedPaymentMethod = this.getAttribute('data-method');
+
+					console.log('Selected payment method:', selectedPaymentMethod);
+				});
+			});
+
+			// Add event listener to checkout button
+			const checkoutButton = document.getElementById('simulatePaymentBtn');
+			if (checkoutButton) {
+				checkoutButton.addEventListener('click', processCheckout);
+			}
+		});
+
+		// Process checkout with selected payment method
+		function processCheckout() {
+			// Get customer email
+			const customerEmail = '<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>';
+			if (!customerEmail) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Customer email not found. Please login again.'
+				});
+				return;
+			}
+
+			// Get total amount (check if promo is applied)
+			const appliedPromo = localStorage.getItem('appliedPromo');
+			let totalAmount = <?php echo $cart_total; ?>;
+
+			if (appliedPromo) {
+				try {
+					const promoData = JSON.parse(appliedPromo);
+					totalAmount = promoData.new_total;
+				} catch (error) {
+					console.error('Error parsing promo data:', error);
+				}
+			}
+
+			// Show loading modal
+			Swal.fire({
+				title: 'Processing Payment...',
+				html: `
+					<div class="text-center">
+						<div class="spinner-border text-primary" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+						<p class="mt-3">Redirecting to PayStack...</p>
+					</div>
+				`,
+				allowOutsideClick: false,
+				allowEscapeKey: false,
+				showConfirmButton: false
+			});
+
+			// Initialize PayStack transaction
+			fetch('actions/paystack_init_transaction.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					email: customerEmail,
+					total_amount: totalAmount,
+					payment_method: selectedPaymentMethod
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.status === 'success') {
+					// Close loading modal and redirect to PayStack
+					Swal.close();
+
+					// Clear applied promo from localStorage after successful payment init
+					localStorage.removeItem('appliedPromo');
+
+					// Redirect to PayStack
+					window.location.href = data.authorization_url;
+				} else {
+					// Show error message
+					Swal.fire({
+						icon: 'error',
+						title: 'Payment Error',
+						text: data.message || 'Failed to initialize payment'
+					});
+				}
+			})
+			.catch(error => {
+				console.error('Payment initialization error:', error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Failed to initialize payment. Please try again.'
+				});
+			});
+		}
 	</script>
 </body>
 </html>

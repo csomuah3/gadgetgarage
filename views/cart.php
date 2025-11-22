@@ -2400,9 +2400,16 @@ try {
         const originalTotal = <?php echo $cart_total; ?>;
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('DOMContentLoaded event fired');
             const promoInput = document.getElementById('promoCode');
             const applyBtn = document.getElementById('applyPromoBtn');
             const removeBtn = document.getElementById('removePromoBtn');
+
+            console.log('Elements found:', {
+                promoInput: !!promoInput,
+                applyBtn: !!applyBtn,
+                removeBtn: !!removeBtn
+            });
 
             // Apply promo code on button click
             if (applyBtn) {

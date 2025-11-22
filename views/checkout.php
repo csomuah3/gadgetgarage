@@ -1089,6 +1089,9 @@ try {
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
+            position: relative;
+            z-index: 1;
+            user-select: none;
         }
 
         .payment-option:hover,
@@ -1689,7 +1692,7 @@ try {
                     </h4>
 
                     <div class="payment-methods">
-                        <div class="payment-option selected" data-method="paystack-mobile">
+                        <div class="payment-option" data-method="paystack-mobile">
                             <i class="fas fa-mobile-alt"></i>
                             <div class="fw-bold">Mobile Money</div>
                             <small class="text-muted">MTN MoMo, Vodafone Cash, AirtelTigo Money via PayStack</small>
@@ -2088,11 +2091,11 @@ try {
 			}
 		}
 
-		// Shop Category Dropdown Functions
+		// Shop Category Dropdown Functions (Fixed)
 		function showShopDropdown() {
 			const dropdown = document.getElementById('shopCategoryDropdown');
 			if (dropdown) {
-				clearTimeout(shopDropdownTimeout);
+				clearTimeout(window.shopDropdownTimeout);
 				dropdown.classList.add('show');
 			}
 		}
@@ -2100,8 +2103,8 @@ try {
 		function hideShopDropdown() {
 			const dropdown = document.getElementById('shopCategoryDropdown');
 			if (dropdown) {
-				clearTimeout(shopDropdownTimeout);
-				shopDropdownTimeout = setTimeout(() => {
+				clearTimeout(window.shopDropdownTimeout);
+				window.shopDropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
 				}, 300);
 			}
@@ -2126,9 +2129,9 @@ try {
 			}
 		}
 
-		// Timeout variables
-		let shopDropdownTimeout;
-		let moreDropdownTimeout;
+		// Timeout variables (Global)
+		window.shopDropdownTimeout = null;
+		window.moreDropdownTimeout = null;
 
 		// Enhanced dropdown behavior
 		document.addEventListener('DOMContentLoaded', function() {
@@ -2233,24 +2236,6 @@ try {
 			window.location.href = '../my_orders.php';
 		}
 
-		// Shop Dropdown Functions
-		function showShopDropdown() {
-			const dropdown = document.getElementById('shopCategoryDropdown');
-			if (dropdown) {
-				clearTimeout(shopDropdownTimeout);
-				dropdown.classList.add('show');
-			}
-		}
-
-		function hideShopDropdown() {
-			const dropdown = document.getElementById('shopCategoryDropdown');
-			if (dropdown) {
-				clearTimeout(shopDropdownTimeout);
-				shopDropdownTimeout = setTimeout(() => {
-					dropdown.classList.remove('show');
-				}, 300);
-			}
-		}
 
 		// More Dropdown Functions
 		function showMoreDropdown() {
@@ -2271,9 +2256,9 @@ try {
 			}
 		}
 
-		// Timeout variables
-		let shopDropdownTimeout;
-		let moreDropdownTimeout;
+		// Timeout variables (Global)
+		window.shopDropdownTimeout = null;
+		window.moreDropdownTimeout = null;
 
 		// Language change functionality
 		function changeLanguage(lang) {
@@ -2508,10 +2493,25 @@ try {
 		let selectedPaymentMethod = 'paystack-mobile'; // Default to mobile money
 
 		document.addEventListener('DOMContentLoaded', function() {
+			console.log('Checkout page loaded, setting up payment options...');
+
 			// Add event listeners to payment options
 			const paymentOptions = document.querySelectorAll('.payment-option');
-			paymentOptions.forEach(option => {
-				option.addEventListener('click', function() {
+			console.log('Found payment options:', paymentOptions.length);
+
+			// Select first payment option by default
+			if (paymentOptions.length > 0) {
+				paymentOptions[0].classList.add('selected');
+				selectedPaymentMethod = paymentOptions[0].getAttribute('data-method');
+				console.log('Default payment method set to:', selectedPaymentMethod);
+			}
+
+			paymentOptions.forEach((option, index) => {
+				console.log('Setting up payment option:', index, option.getAttribute('data-method'));
+				option.addEventListener('click', function(e) {
+					e.preventDefault();
+					console.log('Payment option clicked:', this.getAttribute('data-method'));
+
 					// Remove selected class from all options
 					paymentOptions.forEach(opt => opt.classList.remove('selected'));
 
@@ -2527,8 +2527,13 @@ try {
 
 			// Add event listener to checkout button
 			const checkoutButton = document.getElementById('simulatePaymentBtn');
+			console.log('Found checkout button:', !!checkoutButton);
 			if (checkoutButton) {
-				checkoutButton.addEventListener('click', processCheckout);
+				checkoutButton.addEventListener('click', function(e) {
+					e.preventDefault();
+					console.log('Checkout button clicked, processing payment...');
+					processCheckout();
+				});
 			}
 		});
 

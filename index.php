@@ -2586,6 +2586,7 @@ try {
 		/* text content */
 		.promo-content {
 			flex: 1;
+			max-height: fit-content;
 			min-width: 260px;
 			z-index: 1;
 		}

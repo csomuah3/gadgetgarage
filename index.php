@@ -2570,7 +2570,7 @@ try {
 		.promo-banner {
 			display: flex;
 			align-items: center;
-			max-height: 500px;
+			height: 160px;
 			justify-content: space-between;
 			border-radius: 15px;
 			padding: 30px;
@@ -2586,7 +2586,7 @@ try {
 		/* text content */
 		.promo-content {
 			flex: 1;
-			min-height: 400px;
+		;
 			min-width: 260px;
 			z-index: 1;
 		}

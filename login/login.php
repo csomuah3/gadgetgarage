@@ -91,6 +91,20 @@ try {
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
+		/* Color Scheme Variables */
+		:root {
+			--light-blue: #E8F0FE;
+			--medium-blue: #4285F4;
+			--dark-blue: #1A73E8;
+			--navy-blue: #0D47A1;
+			--off-white: #FAFAFA;
+			--text-dark: #1F2937;
+			--text-light: #6B7280;
+			--shadow: rgba(26, 115, 232, 0.1);
+			--gradient-primary: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-blue) 50%, var(--medium-blue) 100%);
+			--gradient-light: linear-gradient(135deg, var(--light-blue) 0%, var(--off-white) 100%);
+		}
+
 		/* Reset and Base Styles */
 		* {
 			margin: 0;
@@ -954,54 +968,163 @@ try {
 
 		/* Login Form Container */
 		.login-page-container {
-			min-height: calc(100vh - 200px);
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 50px 20px;
+			padding: 60px 20px;
+			min-height: calc(100vh - 200px);
 			background: transparent;
 		}
 
-		.login-form-wrapper {
-			background: rgba(255, 255, 255, 0.65);
-			border-radius: 20px;
-			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-			backdrop-filter: blur(8px);
-			border: 1px solid rgba(255, 255, 255, 0.3);
-			overflow: hidden;
+		.auth-container {
 			width: 100%;
-			max-width: 550px;
-			min-height: 710px;
+			max-width: 1000px;
+			height: 650px;
+			position: relative;
+			border-radius: 25px;
+			overflow: hidden;
+			box-shadow: 0 25px 80px var(--shadow);
+			backdrop-filter: blur(15px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.auth-panels {
+			display: flex;
+			height: 100%;
+			position: relative;
+			transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		}
+
+		/* Welcome Panel (Left) - Blue Gradient */
+		.welcome-panel {
+			flex: 1;
+			background: var(--gradient-primary);
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			padding: 60px 40px;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.welcome-panel::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+			animation: float 6s ease-in-out infinite;
+		}
+
+		@keyframes float {
+			0%, 100% { transform: translateY(0) rotate(0deg); }
+			50% { transform: translateY(-20px) rotate(180deg); }
+		}
+
+		.brand-logo {
+			width: 120px;
+			height: auto;
+			margin-bottom: 30px;
+			filter: brightness(0) invert(1);
+			z-index: 2;
 			position: relative;
 		}
 
-		.login-form-wrapper::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 6px;
-			background: linear-gradient(90deg, #3b82f6, #1e40af, #7c3aed);
-		}
-
-		.login-form-header {
-			text-align: center;
-			padding: 25px 40px 0;
-		}
-
-
-		.login-form-title {
-			font-size: 2.5rem;
+		.welcome-title {
+			font-size: 2.2rem;
 			font-weight: 700;
-			color: #1a1a1a;
+			margin-bottom: 15px;
+			z-index: 2;
+			position: relative;
+		}
+
+		.welcome-message {
+			font-size: 1rem;
+			line-height: 1.6;
+			opacity: 0.95;
+			max-width: 300px;
+			z-index: 2;
+			position: relative;
+		}
+
+		/* Form Panel (Right) */
+		.form-panel {
+			flex: 1;
+			background: rgba(255, 255, 255, 0.95);
+			backdrop-filter: blur(20px);
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			padding: 60px 50px;
+			position: relative;
+		}
+
+		.form-container {
+			width: 100%;
+			max-width: 380px;
+			margin: 0 auto;
+		}
+
+		.form-header {
+			text-align: center;
+			margin-bottom: 40px;
+		}
+
+		.form-title {
+			font-size: 2rem;
+			font-weight: 700;
+			color: var(--text-dark);
 			margin-bottom: 8px;
 		}
 
-		.login-form-subtitle {
-			color: #6b7280;
-			font-size: 1.5rem;
-			margin-bottom: 25px;
+		.form-subtitle {
+			color: var(--text-light);
+			font-size: 1rem;
+		}
+
+		/* Toggle Buttons */
+		.form-toggle {
+			display: flex;
+			background: var(--light-blue);
+			border-radius: 12px;
+			padding: 4px;
+			margin-bottom: 30px;
+			position: relative;
+		}
+
+		.toggle-btn {
+			flex: 1;
+			padding: 12px 20px;
+			background: transparent;
+			border: none;
+			border-radius: 8px;
+			font-weight: 500;
+			color: var(--text-light);
+			transition: all 0.3s ease;
+			cursor: pointer;
+			position: relative;
+			z-index: 2;
+		}
+
+		.toggle-btn.active {
+			color: white;
+		}
+
+		.toggle-slider {
+			position: absolute;
+			top: 4px;
+			left: 4px;
+			width: calc(50% - 4px);
+			height: calc(100% - 8px);
+			background: var(--gradient-primary);
+			border-radius: 8px;
+			transition: transform 0.3s ease;
+			box-shadow: 0 2px 10px rgba(26, 115, 232, 0.3);
 		}
 
 		.login-form-body {
@@ -1015,26 +1138,27 @@ try {
 		.form-label {
 			display: block;
 			font-weight: 600;
-			color: #374151;
+			color: var(--text-dark);
 			margin-bottom: 8px;
-			font-size: 1.5rem;
+			font-size: 0.9rem;
 		}
 
 		.form-control {
 			width: 100%;
-			padding: 18px 20px;
-			border: 2px solid #e5e7eb;
+			padding: 15px 20px 15px 50px;
+			border: 2px solid var(--light-blue);
 			border-radius: 12px;
-			font-size: 1.1rem;
+			background: rgba(255, 255, 255, 0.8);
+			color: var(--text-dark);
+			font-size: 1rem;
 			transition: all 0.3s ease;
-			background: #f8fafc;
+			outline: none;
 		}
 
 		.form-control:focus {
-			outline: none;
-			border-color: #3b82f6;
+			border-color: var(--medium-blue);
 			background: white;
-			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+			box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
 		}
 
 		.input-group {
@@ -1043,14 +1167,29 @@ try {
 
 		.input-icon {
 			position: absolute;
-			left: 18px;
+			left: 16px;
 			top: 50%;
 			transform: translateY(-50%);
-			color: #9ca3af;
-			font-size: 1.2rem;
+			color: var(--medium-blue);
+			font-size: 1.1rem;
+			z-index: 2;
+		}
+
+		.ghana-flag {
+			position: absolute;
+			left: 16px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 20px;
+			height: 14px;
+			z-index: 2;
 		}
 
 		.form-control.with-icon {
+			padding-left: 50px;
+		}
+
+		.form-control.with-flag {
 			padding-left: 50px;
 		}
 
@@ -1389,14 +1528,34 @@ try {
 
 	<!-- Login Form Section -->
 	<div class="login-page-container">
-		<div class="login-form-wrapper">
-			<div class="login-form-header">
-				<!-- Login form logo removed -->
-				<h1 class="login-form-title">Welcome Back</h1>
-				<p class="login-form-subtitle">Please sign in to your account</p>
-			</div>
+		<div class="auth-container">
+			<div class="auth-panels" id="authPanels">
 
-			<div class="login-form-body">
+				<!-- Welcome Panel (Left) -->
+				<div class="welcome-panel">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
+						 alt="Gadget Garage Logo" class="brand-logo">
+					<h1 class="welcome-title">Welcome Back!</h1>
+					<p class="welcome-message">Your one-stop shop for premium refurbished tech devices. Join thousands of satisfied customers who trust Gadget Garage for quality and value.</p>
+				</div>
+
+				<!-- Form Panel (Right) -->
+				<div class="form-panel">
+					<div class="form-container">
+						<div class="form-header">
+							<h2 class="form-title">Sign In</h2>
+							<p class="form-subtitle">Access your account</p>
+						</div>
+
+						<!-- Toggle Buttons -->
+						<div class="form-toggle">
+							<div class="toggle-slider" id="toggleSlider"></div>
+							<button class="toggle-btn active" onclick="switchToLogin()">Login</button>
+							<button class="toggle-btn" onclick="switchToSignup()">Sign Up</button>
+						</div>
+
+						<!-- Login Form -->
+						<div id="loginForm" class="form-content">
 				<?php if ($login_error): ?>
 					<div class="alert alert-danger">
 						<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>

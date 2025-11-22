@@ -162,16 +162,17 @@ function send_order_confirmation_sms($order_id) {
         // Calculate delivery date (3-5 business days)
         $delivery_date = date('M j, Y', strtotime('+4 days'));
 
-        $template_data = [
-            'name' => $order['customer_name'],
-            'order_id' => $order_id,
-            'amount' => number_format($order['total_amount'], 2),
-            'delivery_date' => $delivery_date,
-            'tracking_url' => $GLOBALS['sms_urls']['tracking_base'] . $order_id
-        ];
-
         $sms = new SMSService();
-        return $sms->sendSMS($phone, SMS_TYPE_ORDER_CONFIRMATION, $template_data, SMS_PRIORITY_HIGH);
+        $result = $sms->sendOrderConfirmationSMS($order_id, $order['customer_id'], $phone);
+
+        log_sms_activity('info', 'Order confirmation SMS attempt', [
+            'order_id' => $order_id,
+            'customer_id' => $order['customer_id'],
+            'phone' => $phone,
+            'result' => $result
+        ]);
+
+        return $result['success'] ?? false;
 
     } catch (Exception $e) {
         log_sms_activity('error', 'Failed to send order confirmation SMS', [

@@ -2228,6 +2228,30 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 gap: 15px;
             }
         }
+
+        /* Product Card Enhancements */
+        @keyframes popupFade {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+        }
+
+        .product-image-container:hover .product-image {
+            transform: rotate(-3deg) scale(1.05);
+        }
+
+        .customer-activity-popup {
+            animation-delay: var(--delay, 0s);
+        }
+
+        .wishlist-btn.active i {
+            color: #ef4444 !important;
+        }
+
+        .wishlist-btn.active {
+            background: rgba(239, 68, 68, 0.1) !important;
+        }
     </style>
 </head>
 
@@ -2701,8 +2725,41 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     cursor: pointer;
                                     position: relative;
                                     transform-origin: center;
-                                " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
-                                   onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+                                " onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
+                                   onmouseout="this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+
+                                    <!-- Customer Activity Popup -->
+                                    <?php if (rand(1, 4) !== 1): // Show on 75% of cards ?>
+                                    <div class="customer-activity-popup" style="
+                                        position: absolute;
+                                        top: 50%;
+                                        left: 50%;
+                                        transform: translate(-50%, -50%);
+                                        background: rgba(0,0,0,0.8);
+                                        color: white;
+                                        padding: 8px 12px;
+                                        border-radius: 20px;
+                                        font-size: 0.75rem;
+                                        font-weight: 600;
+                                        z-index: 20;
+                                        opacity: 0;
+                                        animation: popupFade 4s ease-in-out infinite;
+                                        white-space: nowrap;
+                                        pointer-events: none;
+                                    ">
+                                        <?php
+                                        $activities = [
+                                            rand(2, 8) . ' customers viewing this',
+                                            rand(1, 5) . ' customers added to cart',
+                                            rand(3, 12) . ' customers wishlisted this',
+                                            rand(1, 4) . ' customers bought recently',
+                                            rand(5, 15) . ' customers interested',
+                                            rand(2, 6) . ' customers comparing this'
+                                        ];
+                                        echo $activities[array_rand($activities)];
+                                        ?>
+                                    </div>
+                                    <?php endif; ?>
 
                                     <!-- Discount Badge -->
                                     <?php if ($discount_percentage > 0): ?>
@@ -2713,7 +2770,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                     <!-- Wishlist Heart -->
                                     <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
-                                        <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
+                                        <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>, this)"
+                                                class="wishlist-btn"
                                                 style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
                                                 onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
                                                 onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
@@ -2722,14 +2780,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     </div>
 
                                     <!-- Product Image -->
-                                    <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                                    <div class="product-image-container" style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden;">
                                         <?php
                                         $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
                                         $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
                                         ?>
                                         <img src="<?php echo htmlspecialchars($image_url); ?>"
                                             alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                                            style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                            class="product-image"
+                                            style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s ease;"
                                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
                                     </div>
 
@@ -2773,10 +2832,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         <!-- Pricing -->
                                         <div style="margin-bottom: 25px;">
                                             <div style="display: flex; align-items: center; gap: 12px;">
-                                                <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 800;">
+                                                <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 900;">
                                                     GH₵<?php echo number_format($product['product_price'], 0); ?>
                                                 </span>
-                                                <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through;">
+                                                <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through; font-weight: 600;">
                                                     GH₵<?php echo number_format($original_price, 0); ?>
                                                 </span>
                                             </div>
@@ -3999,6 +4058,89 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (!isDropdownButton && !isDropdownContent) {
                 closeAllDropdowns();
             }
+        });
+
+        // Wishlist functionality
+        function toggleWishlist(productId, button) {
+            const icon = button.querySelector('i');
+            const isActive = button.classList.contains('active');
+
+            if (isActive) {
+                // Remove from wishlist
+                button.classList.remove('active');
+                icon.className = 'far fa-heart';
+
+                // Make AJAX call to remove from wishlist
+                fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge if exists
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count = Math.max(0, count - 1);
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    }
+                })
+                .catch(error => console.error('Error:', error));
+            } else {
+                // Add to wishlist
+                button.classList.add('active');
+                icon.className = 'fas fa-heart';
+
+                // Make AJAX call to add to wishlist
+                fetch('../actions/add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count++;
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = 'flex';
+                        }
+                    } else {
+                        // Revert button state if failed
+                        button.classList.remove('active');
+                        icon.className = 'far fa-heart';
+                        if (data.message) {
+                            alert(data.message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert button state if failed
+                    button.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                });
+            }
+        }
+
+        // Add random delays to popup animations
+        document.addEventListener('DOMContentLoaded', function() {
+            const popups = document.querySelectorAll('.customer-activity-popup');
+            popups.forEach((popup, index) => {
+                const delay = Math.random() * 3; // Random delay between 0-3 seconds
+                popup.style.setProperty('--delay', delay + 's');
+            });
         });
     </script>
 

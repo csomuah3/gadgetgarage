@@ -29,6 +29,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['email'] = $user['customer_email'];
             $_SESSION['role'] = $user['user_role'];
             $_SESSION['name'] = $user['customer_name'];
+            $_SESSION['just_logged_in'] = true; // Flag for newsletter popup
 
             $login_success = true;
         } else {

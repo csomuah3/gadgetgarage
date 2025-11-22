@@ -2087,8 +2087,8 @@ $fairDiscount = $basePrice - $fairPrice;
                         btn.disabled = false;
                     }, 2500);
 
-                    // Show enhanced cart popup instead of notification
-                    showAddedToCartPopup(data);
+                    // Show SweetAlert cart popup positioned on the right side
+                    showSweetCartPopup(data);
                     updateCartBadge(data.cart_count);
                 } else {
                     btn.innerHTML = originalText;
@@ -2710,6 +2710,120 @@ $fairDiscount = $basePrice - $fairPrice;
         // Timeout variables
         let shopDropdownTimeout;
         let moreDropdownTimeout;
+
+        // SweetAlert Cart Popup - positioned on right side under navbar
+        function showSweetCartPopup(data) {
+            // Get product image
+            const productImageElement = document.querySelector('.main-product-image');
+            let productImage = '';
+            if (productImageElement && productImageElement.src) {
+                productImage = productImageElement.src;
+            }
+
+            // Create cart state display
+            const cartStateHTML = `
+                <div style="display: flex; gap: 12px; align-items: flex-start; text-align: left;">
+                    <img src="${productImage}" alt="${data.product_name}"
+                         style="width: 60px; height: 60px; border-radius: 8px; object-fit: cover; border: 2px solid #e2e8f0;">
+                    <div style="flex: 1;">
+                        <h4 style="margin: 0 0 8px 0; font-size: 14px; font-weight: 600; color: #1f2937;">${data.product_name}</h4>
+                        ${data.condition ? `<span style="background: #dbeafe; color: #1e40af; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600; margin-right: 6px;">${data.condition}</span>` : ''}
+                        <span style="background: #f3e8ff; color: #7c3aed; padding: 2px 6px; border-radius: 4px; font-size: 11px; font-weight: 600;">Qty: ${data.quantity || 1}</span>
+                        <div style="margin-top: 8px; font-size: 16px; font-weight: 700; color: #059669;">GH₵${parseFloat(data.final_price || data.product_price).toLocaleString()}</div>
+                    </div>
+                </div>
+                <hr style="margin: 16px 0; border: 1px solid #e2e8f0;">
+                <div style="background: #f8fafc; padding: 12px; border-radius: 8px; margin-bottom: 16px;">
+                    <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                        <span style="color: #6b7280; display: flex; align-items: center; gap: 6px;">
+                            <i class="fas fa-shopping-bag" style="color: #8b5cf6;"></i> Cart Items
+                        </span>
+                        <span style="font-weight: 600; color: #374151;">${data.cart_count || 0}</span>
+                    </div>
+                    <div style="display: flex; justify-content: space-between;">
+                        <span style="color: #6b7280;">Subtotal</span>
+                        <span style="font-weight: 700; color: #059669; font-size: 16px;">GH₵${parseFloat(data.cart_total || '0').toLocaleString()}</span>
+                    </div>
+                    ${parseFloat(data.cart_total || '0') > 200 ? '<div style="margin-top: 8px; padding: 6px; background: #dcfdf7; color: #065f46; border-radius: 6px; font-size: 12px; font-weight: 600; text-align: center;"><i class="fas fa-shipping-fast"></i> Free Standard Shipping Earned!</div>' : ''}
+                </div>
+            `;
+
+            Swal.fire({
+                title: '<i class="fas fa-check-circle" style="color: #10b981;"></i> Added to Cart!',
+                html: cartStateHTML,
+                width: 420,
+                position: 'top-end',
+                toast: false,
+                showConfirmButton: true,
+                showCancelButton: true,
+                confirmButtonText: '<i class="fas fa-shopping-cart"></i> View Cart (' + (data.cart_count || 0) + ')',
+                cancelButtonText: 'Continue Shopping',
+                confirmButtonColor: '#4f46e5',
+                cancelButtonColor: '#6b7280',
+                timer: 8000,
+                timerProgressBar: true,
+                customClass: {
+                    popup: 'swal-cart-popup',
+                    title: 'swal-cart-title',
+                    htmlContainer: 'swal-cart-content'
+                },
+                didOpen: (popup) => {
+                    // Position the popup under the navbar
+                    popup.style.marginTop = '80px'; // Adjust based on your navbar height
+                    popup.style.marginRight = '20px';
+                },
+                willClose: () => {
+                    // Optional: Add any cleanup here
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Go to cart page
+                    window.location.href = '../views/cart.php';
+                }
+                // If cancelled or auto-closed, user continues shopping
+            });
+
+            // Add custom CSS for better styling
+            const customStyle = document.createElement('style');
+            customStyle.textContent = `
+                .swal-cart-popup {
+                    border-radius: 16px !important;
+                    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
+                    border: 1px solid #e2e8f0 !important;
+                }
+                .swal-cart-title {
+                    font-size: 18px !important;
+                    font-weight: 600 !important;
+                    color: #1f2937 !important;
+                    margin-bottom: 16px !important;
+                }
+                .swal-cart-content {
+                    font-size: 14px !important;
+                    line-height: 1.5 !important;
+                }
+                .swal2-confirm {
+                    border-radius: 8px !important;
+                    font-weight: 600 !important;
+                    padding: 10px 20px !important;
+                }
+                .swal2-cancel {
+                    border-radius: 8px !important;
+                    font-weight: 600 !important;
+                    padding: 10px 20px !important;
+                }
+                .swal2-timer-progress-bar {
+                    background: #4f46e5 !important;
+                }
+            `;
+            document.head.appendChild(customStyle);
+
+            // Remove the style after the popup is closed to avoid accumulation
+            setTimeout(() => {
+                if (customStyle.parentNode) {
+                    customStyle.remove();
+                }
+            }, 10000);
+        }
     </script>
 
     <style>

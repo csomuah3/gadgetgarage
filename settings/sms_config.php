@@ -111,7 +111,7 @@ define('SMS_LOG_FILE', __DIR__ . '/../logs/sms.log');
 
 // URLs for links in SMS
 $sms_urls = [
-    'tracking_base' => 'http://169.239.251.102:442/~chelsea.somuah/track_order.php?order=',
-    'checkout_url' => 'http://169.239.251.102:442/~chelsea.somuah/views/checkout.php',
-    'website_url' => 'http://169.239.251.102:442/~chelsea.somuah/'
+    'tracking_base' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/track_order.php?order=',
+    'checkout_url' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/views/checkout.php',
+    'website_url' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/'
 ];

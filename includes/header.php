@@ -33,16 +33,23 @@ if (!isset($is_logged_in)) {
     $is_admin = $is_logged_in ? check_admin() : false;
 }
 
-// Get cart count for logged in users
+// Get cart count for all users (logged in and guest)
 if (!isset($cart_count)) {
     $cart_count = 0;
-    if ($is_logged_in && !$is_admin) {
-        try {
-            require_once __DIR__ . '/../controllers/cart_controller.php';
-            $cart_count = get_cart_count_ctr($_SESSION['user_id']) ?: 0;
-        } catch (Exception $e) {
-            error_log("Failed to get cart count in header: " . $e->getMessage());
-        }
+    try {
+        require_once __DIR__ . '/../controllers/cart_controller.php';
+
+        // Get customer ID if logged in, otherwise use null
+        $customer_id = ($is_logged_in && !$is_admin) ? $_SESSION['user_id'] : null;
+
+        // Get IP address for guest users
+        $ip_address = $_SERVER['REMOTE_ADDR'];
+
+        // Get cart count using the proper function that handles both logged in and guest users
+        $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
+    } catch (Exception $e) {
+        error_log("Failed to get cart count in header: " . $e->getMessage());
+        $cart_count = 0;
     }
 }
 ?>

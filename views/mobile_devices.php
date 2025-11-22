@@ -1397,15 +1397,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <i class="fas fa-bolt"></i>
         </div>
         <div class="promo-banner-center">
-            <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
             <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
         </div>
-        <a href="#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
+        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
     </div>
 
     <!-- Main Header -->
     <header class="main-header animate__animated animate__fadeInDown">
-        <div class="container-fluid" style="padding: 0 120px 0 95px;">
+        <div class="container-fluid" style="padding: 0 40px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->
                 <a href="../index.php" class="logo">
@@ -1440,7 +1440,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <!-- Wishlist Icon -->
                         <div class="header-icon">
-                            <a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-heart"></i>
                                 <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
                             </a>
@@ -1448,9 +1448,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                         <!-- Cart Icon -->
                         <div class="header-icon">
-                            <a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-shopping-cart"></i>
-                                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php else: ?>
+                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php endif; ?>
                             </a>
                         </div>
 
@@ -1460,21 +1464,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <a href="account.php" class="dropdown-item-custom">
+                                <button class="dropdown-item-custom" onclick="goToAccount()">
                                     <i class="fas fa-user"></i>
-                                    <span data-translate="account">Account</span>
-                                </a>
-                                <a href="my_orders.php" class="dropdown-item-custom">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span data-translate="my_orders">My Orders</span>
-                                </a>
-                                <a href="notifications.php" class="dropdown-item-custom">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Notifications</span>
-                                </a>
-                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-                                    <i class="fas fa-camera"></i>
-                                    <span>Profile Picture</span>
+                                    <span>Account</span>
                                 </button>
                                 <div class="dropdown-divider-custom"></div>
                                 <div class="dropdown-item-custom">
@@ -1511,7 +1503,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             <i class="fas fa-user"></i>
                             Login
                         </a>
-                        <!-- Register Button -->
                         <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
                             <i class="fas fa-user-plus"></i>
                             Register
@@ -1538,17 +1529,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
-                                    <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                    <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li><a href="all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                                <li><a href="all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                                <li><a href="all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                                <li><a href="all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                                <li><a href="all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                                <li><a href="all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                                <li><a href="all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                                <li><a href="all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                                <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                                <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                                <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                                <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                                <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                                <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                                <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                                <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>
@@ -1566,35 +1557,35 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="dropdown-content">
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                    <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
                                         <span data-translate="mobile_devices">Mobile Devices</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                    <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                    <li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
+                                    <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
                                         <span data-translate="computing">Computing</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                    <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                    <li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
+                                    <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
                                         <span data-translate="photography_video">Photography & Video</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                    <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                    <li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column featured">
@@ -1604,7 +1595,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <div class="featured-text">
                                         <strong>New Arrivals</strong>
                                         <p>Latest tech gadgets</p>
-                                        <a href="all_product.php" class="shop-now-btn">Shop </a>
+                                        <a href="../views/all_product.php" class="shop-now-btn">Shop</a>
                                     </div>
                                 </div>
                             </div>
@@ -1612,8 +1603,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-                <a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+                <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+                <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
                 <!-- More Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
@@ -1623,14 +1614,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </a>
                     <div class="simple-dropdown" id="moreDropdown">
                         <ul>
-                            <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                            <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Flash Deal positioned at far right -->
-                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+                <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
             </div>
         </div>
     </nav>
@@ -1922,13 +1913,29 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <!-- JavaScript -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Navigation Dropdown Functions
+        // Dropdown functions
+        let dropdownTimeout;
+
         function showDropdown() {
-            document.getElementById('shopDropdown').classList.add('show');
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.style.opacity = '1';
+                dropdown.style.visibility = 'visible';
+                dropdown.style.transform = 'translateY(0)';
+            }
         }
 
         function hideDropdown() {
-            document.getElementById('shopDropdown').classList.remove('show');
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.style.opacity = '0';
+                    dropdown.style.visibility = 'hidden';
+                    dropdown.style.transform = 'translateY(-10px)';
+                }, 300);
+            }
         }
 
         function showShopDropdown() {
@@ -2446,6 +2453,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             </svg>`;
             return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         }\n\n        // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initializePriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
-    </script>
+        // Additional functions from login.php\n        // Account page navigation\n        function goToAccount() {\n            window.location.href = '../my_orders.php';\n        }\n\n        // Language change functionality\n        function changeLanguage(lang) {\n            // Language change functionality can be implemented here\n            console.log('Language changed to:', lang);\n        }\n\n        // Theme toggle functionality\n        function toggleTheme() {\n            const toggleSwitch = document.getElementById('themeToggle');\n            const body = document.body;\n\n            body.classList.toggle('dark-mode');\n            toggleSwitch.classList.toggle('active');\n\n            // Save theme preference to localStorage\n            const isDarkMode = body.classList.contains('dark-mode');\n            localStorage.setItem('darkMode', isDarkMode);\n        }\n\n        // Load theme preference on page load\n        document.addEventListener('DOMContentLoaded', function() {\n            const isDarkMode = localStorage.getItem('darkMode') === 'true';\n            const toggleSwitch = document.getElementById('themeToggle');\n\n            if (isDarkMode) {\n                document.body.classList.add('dark-mode');\n                if (toggleSwitch) {\n                    toggleSwitch.classList.add('active');\n                }\n            }\n        });\n\n        // Timeout variables\n        let shopDropdownTimeout;\n        let moreDropdownTimeout;\n    </script>
 </body>
 </html>

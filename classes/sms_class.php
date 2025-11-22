@@ -23,19 +23,26 @@ class SMSService extends db_connection {
      * Load SMS settings from database
      */
     private function loadSettings() {
-        $sql = "SELECT setting_name, setting_value FROM sms_settings WHERE is_active = 1";
-        $result = $this->db_query($sql);
+        // Try to load settings from database first
+        try {
+            $sql = "SELECT setting_name, setting_value FROM sms_settings WHERE is_active = 1";
+            $result = $this->db_query($sql);
 
-        $this->settings = [];
-        if ($result) {
-            while ($row = $this->db_fetch_array($result)) {
-                $this->settings[$row['setting_name']] = $row['setting_value'];
+            $this->settings = [];
+            if ($result) {
+                while ($row = $this->db_fetch_array($result)) {
+                    $this->settings[$row['setting_name']] = $row['setting_value'];
+                }
             }
+        } catch (Exception $e) {
+            // Database table might not exist, use constants from config
+            $this->settings = [];
         }
 
-        $this->api_key = $this->settings['arkesel_api_key'] ?? '';
-        $this->api_url = $this->settings['arkesel_api_url'] ?? 'https://sms.arkesel.com/sms/api';
-        $this->sender_id = $this->settings['arkesel_sender_id'] ?? 'GadgetGarage';
+        // Use config constants as fallback
+        $this->api_key = $this->settings['arkesel_api_key'] ?? SMS_API_KEY;
+        $this->api_url = $this->settings['arkesel_api_url'] ?? SMS_API_URL;
+        $this->sender_id = $this->settings['arkesel_sender_id'] ?? SMS_SENDER_ID;
     }
 
     /**
@@ -455,7 +462,11 @@ class SMSService extends db_connection {
 
     // Helper methods
     private function isSMSEnabled($setting_name) {
-        return ($this->settings['sms_enabled'] ?? 0) == 1 && ($this->settings[$setting_name] ?? 0) == 1;
+        // Use config constants as fallback if database settings don't exist
+        $sms_enabled = $this->settings['sms_enabled'] ?? (SMS_ENABLED ? 1 : 0);
+        $setting_enabled = $this->settings[$setting_name] ?? 1; // Default to enabled
+
+        return $sms_enabled == 1 && $setting_enabled == 1;
     }
 
     private function getOrderDetails($order_id) {

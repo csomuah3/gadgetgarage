@@ -48,6 +48,17 @@ try {
 		// If brands fail to load, continue with empty array
 		error_log("Failed to load brands: " . $e->getMessage());
 	}
+
+	// Newsletter popup logic for new users
+	$show_newsletter_popup = false;
+	if ($is_logged_in) {
+		try {
+			require_once(__DIR__ . '/helpers/newsletter_helper.php');
+			$show_newsletter_popup = is_new_login_session() && should_show_newsletter_popup($customer_id);
+		} catch (Exception $e) {
+			error_log("Newsletter popup error: " . $e->getMessage());
+		}
+	}
 } catch (Exception $e) {
 	// If core fails, show error
 	die("Critical error: " . $e->getMessage());
@@ -1406,14 +1417,28 @@ try {
 			z-index: 10;
 		}
 
-		.deal-image {
+		.deal-image-container {
 			width: 100%;
 			height: 200px;
-			object-fit: contain;
 			margin-bottom: 20px;
 			border-radius: 12px;
 			background: #f8f9fa;
 			padding: 20px;
+			overflow: hidden;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+
+		.deal-image {
+			width: 100%;
+			height: 100%;
+			object-fit: contain;
+			transition: transform 0.3s ease;
+		}
+
+		.deal-image-container:hover .deal-image {
+			transform: rotate(-3deg) scale(1.05);
 		}
 
 		.deal-brand {
@@ -1459,6 +1484,22 @@ try {
 			color: #4f46e5;
 			font-size: 1.5rem;
 			font-weight: 800;
+		}
+
+		/* Product Card Enhancements */
+		@keyframes popupFade {
+			0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+			15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+			85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+			100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+		}
+
+		.wishlist-btn.active i {
+			color: #ef4444 !important;
+		}
+
+		.wishlist-btn.active {
+			background: rgba(239, 68, 68, 0.1) !important;
 		}
 
 		.countdown-timer {
@@ -3888,7 +3929,11 @@ try {
 						<div class="header-icon">
 							<a href="views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -4272,8 +4317,44 @@ try {
 			<div class="deals-grid">
 				<!-- Deal 1: HP LAPTOP -->
 				<div class="deal-card">
+					<!-- Customer Activity Popup -->
+					<div class="customer-activity-popup" style="
+						position: absolute;
+						top: 50%;
+						left: 50%;
+						transform: translate(-50%, -50%);
+						background: rgba(0,0,0,0.8);
+						color: white;
+						padding: 8px 12px;
+						border-radius: 20px;
+						font-size: 0.75rem;
+						font-weight: 600;
+						z-index: 20;
+						opacity: 0;
+						animation: popupFade 4s ease-in-out infinite;
+						white-space: nowrap;
+						pointer-events: none;
+						animation-delay: 1s;
+					">
+						4 customers viewing this
+					</div>
+
 					<div class="deal-discount">-23%</div>
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.24.50AM.png" alt="HP LAPTOP " class="deal-image">
+
+					<!-- Wishlist Heart -->
+					<div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+						<button onclick="event.stopPropagation(); toggleWishlist(1, this)"
+								class="wishlist-btn"
+								style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+								onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+								onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+							<i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+						</button>
+					</div>
+
+					<div class="deal-image-container">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.24.50AM.png" alt="HP LAPTOP " class="deal-image">
+					</div>
 					<div class="deal-brand">HP Elitebook</div>
 					<h3 class="deal-title">HP EliteBook X G1i 14 inch Notebook Next Gen AI PC Wolf Pro Security Edition</h3>
 					<div class="deal-rating">
@@ -4287,7 +4368,7 @@ try {
 					</div>
 					<div class="deal-pricing">
 						<span class="deal-original-price">GH₵ 15000.00</span>
-						<span class="deal-current-price">GH₵ 9000.00</span>
+						<span class="deal-current-price" style="font-weight: 900;">GH₵ 9000.00</span>
 					</div>
 					<div class="countdown-timer">
 						<div class="countdown-grid">
@@ -4783,6 +4864,7 @@ try {
 	<script src="js/cart.js"></script>
 	<script src="js/header.js"></script>
 	<script src="js/chatbot.js"></script>
+	<script src="js/newsletter-popup.js"></script>
 	<script>
 		// Search functionality
 		document.querySelector('.search-input').addEventListener('keypress', function(e) {
@@ -6247,6 +6329,90 @@ try {
 
 		// Start timer when page loads
 		startPromoTimer();
+
+		// Wishlist functionality
+		function toggleWishlist(productId, button) {
+			const icon = button.querySelector('i');
+			const isActive = button.classList.contains('active');
+
+			if (isActive) {
+				// Remove from wishlist
+				button.classList.remove('active');
+				icon.className = 'far fa-heart';
+
+				// Make AJAX call to remove from wishlist
+				fetch('actions/remove_from_wishlist.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: 'product_id=' + productId
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						// Update wishlist badge if exists
+						const wishlistBadge = document.getElementById('wishlistBadge');
+						if (wishlistBadge) {
+							let count = parseInt(wishlistBadge.textContent) || 0;
+							count = Math.max(0, count - 1);
+							wishlistBadge.textContent = count;
+							wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+						}
+					}
+				})
+				.catch(error => console.error('Error:', error));
+			} else {
+				// Add to wishlist
+				button.classList.add('active');
+				icon.className = 'fas fa-heart';
+
+				// Make AJAX call to add to wishlist
+				fetch('actions/add_to_wishlist.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: 'product_id=' + productId
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						// Update wishlist badge
+						const wishlistBadge = document.getElementById('wishlistBadge');
+						if (wishlistBadge) {
+							let count = parseInt(wishlistBadge.textContent) || 0;
+							count++;
+							wishlistBadge.textContent = count;
+							wishlistBadge.style.display = 'flex';
+						}
+					} else {
+						// Revert button state if failed
+						button.classList.remove('active');
+						icon.className = 'far fa-heart';
+						if (data.message) {
+							alert(data.message);
+						}
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					// Revert button state if failed
+					button.classList.remove('active');
+					icon.className = 'far fa-heart';
+				});
+			}
+		}
+
+		// Newsletter popup for new users
+		<?php if ($show_newsletter_popup): ?>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Show newsletter popup after a short delay
+			setTimeout(function() {
+				showNewsletterPopup();
+			}, 2000); // 2 second delay after page loads
+		});
+		<?php endif; ?>
 	</script>
 
 </body>

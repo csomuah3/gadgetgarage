@@ -545,7 +545,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="views/product_search_result.php">
+					<form class="search-container" method="GET" action="product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
@@ -557,28 +557,33 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="tech-revival-text">Bring Retired Devices</p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>
 				</div>
 
 				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-					<span style="color: #ddd;">|</span>
+				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
 					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
+								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
 						</div>
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none;">
+							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -588,9 +593,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
+								<button class="dropdown-item-custom" onclick="goToAccount()">
+									<i class="fas fa-user"></i>
+									<span>Account</span>
 								</button>
 								<div class="dropdown-divider-custom"></div>
 								<div class="dropdown-item-custom">
@@ -623,7 +628,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 						</div>
 					<?php else: ?>
 						<!-- Login Button -->
-						<a href="login/login_view.php" class="login-btn">
+						<a href="login/login.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
 						</a>
@@ -1821,10 +1826,68 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (dropdown) dropdown.classList.remove('show');
         }
 
+        // Timer functionality
+        function updateTimer() {
+            const timerElement = document.getElementById('promoTimer');
+            if (timerElement) {
+                const now = new Date().getTime();
+                const nextDay = new Date();
+                nextDay.setDate(nextDay.getDate() + 1);
+                nextDay.setHours(0, 0, 0, 0);
+
+                const distance = nextDay.getTime() - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerElement.innerHTML = days + "d:" +
+                                         (hours < 10 ? "0" : "") + hours + "h:" +
+                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
+                                         (seconds < 10 ? "0" : "") + seconds + "s";
+            }
+        }
+
+        // Account page navigation
+        function goToAccount() {
+            window.location.href = 'my_orders.php';
+        }
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const toggleSwitch = document.getElementById('themeToggle');
+            const body = document.body;
+
+            body.classList.toggle('dark-mode');
+            toggleSwitch.classList.toggle('active');
+
+            // Save theme preference to localStorage
+            const isDarkMode = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Load theme preference on page load
+        function loadThemePreference() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            const toggleSwitch = document.getElementById('themeToggle');
+
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                if (toggleSwitch) {
+                    toggleSwitch.classList.add('active');
+                }
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingBubbles();
             setupFilterHandlers();
+            loadThemePreference();
+            // Update timer every second
+            setInterval(updateTimer, 1000);
+            updateTimer(); // Initial call
             // Images now load directly using get_product_image_url() helper function
         });
 

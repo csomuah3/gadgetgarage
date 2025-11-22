@@ -1276,7 +1276,11 @@ try {
                         <div class="header-icon">
                             <a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-shopping-cart"></i>
-                                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php else: ?>
+                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php endif; ?>
                             </a>
                         </div>
 

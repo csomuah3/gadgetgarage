@@ -27,14 +27,16 @@ try {
                 product_desc TEXT,
                 product_image VARCHAR(255),
                 product_keywords VARCHAR(255),
+                product_color VARCHAR(100),
                 product_cat INT(11) NOT NULL,
                 product_brand INT(11) NOT NULL,
+                stock_quantity INT(11) NOT NULL DEFAULT 0,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
                 updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
                 PRIMARY KEY (product_id),
                 KEY product_cat (product_cat),
                 KEY product_brand (product_brand)
-            ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+            ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
         ";
 
         if ($db->db_write_query($createTableSQL)) {

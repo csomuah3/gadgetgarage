@@ -971,15 +971,15 @@ try {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			padding: 60px 20px;
+			padding: 40px 20px;
 			min-height: calc(100vh - 200px);
 			background: transparent;
 		}
 
 		.auth-container {
 			width: 100%;
-			max-width: 1000px;
-			height: 650px;
+			max-width: 1200px;
+			height: 700px;
 			position: relative;
 			border-radius: 25px;
 			overflow: hidden;
@@ -992,10 +992,10 @@ try {
 			display: flex;
 			height: 100%;
 			position: relative;
-			transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+			transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		}
 
-		/* Welcome Panel (Left) - Blue Gradient */
+		/* Welcome Panel - Blue Gradient */
 		.welcome-panel {
 			flex: 1;
 			background: var(--gradient-primary);
@@ -1004,10 +1004,11 @@ try {
 			align-items: center;
 			justify-content: center;
 			color: white;
-			padding: 60px 40px;
+			padding: 80px 60px;
 			text-align: center;
 			position: relative;
 			overflow: hidden;
+			transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		}
 
 		.welcome-panel::before {
@@ -1027,83 +1028,84 @@ try {
 		}
 
 		.brand-logo {
-			width: 120px;
+			width: 140px;
 			height: auto;
-			margin-bottom: 30px;
+			margin-bottom: 40px;
 			filter: brightness(0) invert(1);
 			z-index: 2;
 			position: relative;
 		}
 
 		.welcome-title {
-			font-size: 2.2rem;
+			font-size: 2.8rem;
 			font-weight: 700;
-			margin-bottom: 15px;
+			margin-bottom: 20px;
 			z-index: 2;
 			position: relative;
 		}
 
 		.welcome-message {
-			font-size: 1rem;
+			font-size: 1.2rem;
 			line-height: 1.6;
 			opacity: 0.95;
-			max-width: 300px;
+			max-width: 350px;
 			z-index: 2;
 			position: relative;
 		}
 
-		/* Form Panel (Right) */
+		/* Form Panel */
 		.form-panel {
 			flex: 1;
-			background: rgba(255, 255, 255, 0.95);
+			background: rgba(255, 255, 255, 0.98);
 			backdrop-filter: blur(20px);
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			padding: 60px 50px;
+			padding: 80px 60px;
 			position: relative;
 		}
 
 		.form-container {
 			width: 100%;
-			max-width: 380px;
+			max-width: 420px;
 			margin: 0 auto;
 		}
 
 		.form-header {
 			text-align: center;
-			margin-bottom: 40px;
+			margin-bottom: 50px;
 		}
 
 		.form-title {
-			font-size: 2rem;
+			font-size: 2.4rem;
 			font-weight: 700;
 			color: var(--text-dark);
-			margin-bottom: 8px;
+			margin-bottom: 12px;
 		}
 
 		.form-subtitle {
 			color: var(--text-light);
-			font-size: 1rem;
+			font-size: 1.2rem;
 		}
 
 		/* Toggle Buttons */
 		.form-toggle {
 			display: flex;
-			background: var(--light-blue);
-			border-radius: 12px;
-			padding: 4px;
-			margin-bottom: 30px;
+			background: #f8f9ff;
+			border-radius: 15px;
+			padding: 6px;
+			margin-bottom: 40px;
 			position: relative;
 		}
 
 		.toggle-btn {
 			flex: 1;
-			padding: 12px 20px;
+			padding: 16px 25px;
 			background: transparent;
 			border: none;
-			border-radius: 8px;
-			font-weight: 500;
+			border-radius: 12px;
+			font-weight: 600;
+			font-size: 1.1rem;
 			color: var(--text-light);
 			transition: all 0.3s ease;
 			cursor: pointer;
@@ -1117,14 +1119,106 @@ try {
 
 		.toggle-slider {
 			position: absolute;
-			top: 4px;
-			left: 4px;
-			width: calc(50% - 4px);
-			height: calc(100% - 8px);
+			top: 6px;
+			left: 6px;
+			width: calc(50% - 6px);
+			height: calc(100% - 12px);
 			background: var(--gradient-primary);
-			border-radius: 8px;
+			border-radius: 12px;
 			transition: transform 0.3s ease;
-			box-shadow: 0 2px 10px rgba(26, 115, 232, 0.3);
+			box-shadow: 0 4px 20px rgba(26, 115, 232, 0.3);
+		}
+
+		/* Social Login Buttons */
+		.social-login {
+			margin-bottom: 30px;
+		}
+
+		.social-login h4 {
+			text-align: center;
+			color: var(--text-dark);
+			font-size: 1.3rem;
+			font-weight: 600;
+			margin-bottom: 20px;
+		}
+
+		.social-buttons {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+			margin-bottom: 25px;
+		}
+
+		.social-btn {
+			width: 50px;
+			height: 50px;
+			border-radius: 12px;
+			border: 2px solid #e5e7eb;
+			background: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			font-size: 1.3rem;
+		}
+
+		.social-btn.google {
+			color: #ea4335;
+		}
+
+		.social-btn.facebook {
+			color: #1877f2;
+		}
+
+		.social-btn.pinterest {
+			color: #bd081c;
+		}
+
+		.social-btn.linkedin {
+			color: #0077b5;
+		}
+
+		.social-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+		}
+
+		.divider {
+			text-align: center;
+			position: relative;
+			margin: 25px 0;
+		}
+
+		.divider::before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: #e5e7eb;
+		}
+
+		.divider span {
+			background: rgba(255, 255, 255, 0.98);
+			padding: 0 20px;
+			color: var(--text-light);
+			font-size: 1.1rem;
+			font-weight: 500;
+		}
+
+		/* Sliding Animation States */
+		.auth-panels.signup-mode {
+			transform: translateX(-50%);
+		}
+
+		.auth-panels.signup-mode .welcome-panel {
+			order: 2;
+		}
+
+		.auth-panels.signup-mode .form-panel {
+			order: 1;
 		}
 
 		.login-form-body {
@@ -1132,25 +1226,25 @@ try {
 		}
 
 		.form-group {
-			margin-bottom: 25px;
+			margin-bottom: 30px;
 		}
 
 		.form-label {
 			display: block;
 			font-weight: 600;
 			color: var(--text-dark);
-			margin-bottom: 8px;
-			font-size: 0.9rem;
+			margin-bottom: 10px;
+			font-size: 1.1rem;
 		}
 
 		.form-control {
 			width: 100%;
-			padding: 15px 20px 15px 50px;
+			padding: 18px 25px 18px 55px;
 			border: 2px solid var(--light-blue);
-			border-radius: 12px;
-			background: rgba(255, 255, 255, 0.8);
+			border-radius: 15px;
+			background: rgba(255, 255, 255, 0.9);
 			color: var(--text-dark);
-			font-size: 1rem;
+			font-size: 1.1rem;
 			transition: all 0.3s ease;
 			outline: none;
 		}
@@ -1158,7 +1252,7 @@ try {
 		.form-control:focus {
 			border-color: var(--medium-blue);
 			background: white;
-			box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+			box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.1);
 		}
 
 		.input-group {
@@ -1167,69 +1261,69 @@ try {
 
 		.input-icon {
 			position: absolute;
-			left: 16px;
+			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
 			color: var(--medium-blue);
-			font-size: 1.1rem;
+			font-size: 1.2rem;
 			z-index: 2;
 		}
 
 		.ghana-flag {
 			position: absolute;
-			left: 16px;
+			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
-			width: 20px;
-			height: 14px;
+			width: 24px;
+			height: 16px;
 			z-index: 2;
 		}
 
 		.form-control.with-icon {
-			padding-left: 50px;
+			padding-left: 55px;
 		}
 
 		.form-control.with-flag {
-			padding-left: 50px;
+			padding-left: 55px;
 		}
 
-		.login-btn {
+		.submit-btn {
 			width: 100%;
-			background: linear-gradient(135deg, #3b82f6, #1e40af);
+			background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
 			color: white;
 			border: none;
-			padding: 18px;
-			border-radius: 12px;
-			font-size: 1.2rem;
+			padding: 20px;
+			border-radius: 15px;
+			font-size: 1.3rem;
 			font-weight: 600;
 			cursor: pointer;
 			transition: all 0.3s ease;
 			position: relative;
 			overflow: hidden;
+			margin-top: 10px;
 		}
 
-		.login-btn:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
+		.submit-btn:hover {
+			transform: translateY(-3px);
+			box-shadow: 0 15px 35px rgba(26, 115, 232, 0.4);
 		}
 
-		.login-btn:active {
+		.submit-btn:active {
 			transform: translateY(0);
 		}
 
 		.form-links {
 			display: flex;
-			justify-content: space-between;
+			justify-content: center;
 			align-items: center;
-			margin-top: 20px;
-			padding-top: 20px;
-			border-top: 1px solid #e5e7eb;
+			margin-top: 25px;
+			gap: 30px;
 		}
 
 		.forgot-password {
-			color: #3b82f6;
+			color: var(--medium-blue);
 			text-decoration: none;
-			font-size: 0.9rem;
+			font-size: 1rem;
 			font-weight: 500;
 		}
 
@@ -1238,13 +1332,23 @@ try {
 		}
 
 		.signup-link {
-			color: #3b82f6;
+			color: var(--medium-blue);
 			text-decoration: none;
 			font-weight: 600;
+			font-size: 1rem;
 		}
 
 		.signup-link:hover {
 			text-decoration: underline;
+		}
+
+		/* Hide content initially */
+		.form-content {
+			display: none;
+		}
+
+		.form-content.active {
+			display: block;
 		}
 
 		.alert {
@@ -1531,88 +1635,169 @@ try {
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 
-				<!-- Welcome Panel (Left) -->
+				<!-- Welcome Panel (Blue) -->
 				<div class="welcome-panel">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
 						 alt="Gadget Garage Logo" class="brand-logo">
-					<h1 class="welcome-title">Welcome Back!</h1>
-					<p class="welcome-message">Your one-stop shop for premium refurbished tech devices. Join thousands of satisfied customers who trust Gadget Garage for quality and value.</p>
+					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
+					<p class="welcome-message" id="welcomeMessage">Your one-stop shop for premium refurbished tech devices. Join thousands of satisfied customers who trust Gadget Garage for quality and value.</p>
 				</div>
 
-				<!-- Form Panel (Right) -->
+				<!-- Form Panel (White) -->
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
-							<h2 class="form-title">Sign In</h2>
-							<p class="form-subtitle">Access your account</p>
+							<h2 class="form-title" id="formTitle">Login With</h2>
 						</div>
 
 						<!-- Toggle Buttons -->
 						<div class="form-toggle">
 							<div class="toggle-slider" id="toggleSlider"></div>
-							<button class="toggle-btn active" onclick="switchToLogin()">Login</button>
-							<button class="toggle-btn" onclick="switchToSignup()">Sign Up</button>
+							<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
+							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Sign Up</button>
+						</div>
+
+						<!-- Social Login Buttons -->
+						<div class="social-login">
+							<div class="social-buttons">
+								<div class="social-btn google">
+									<i class="fab fa-google"></i>
+								</div>
+								<div class="social-btn facebook">
+									<i class="fab fa-facebook-f"></i>
+								</div>
+								<div class="social-btn pinterest">
+									<i class="fab fa-pinterest"></i>
+								</div>
+								<div class="social-btn linkedin">
+									<i class="fab fa-linkedin-in"></i>
+								</div>
+							</div>
+							<div class="divider">
+								<span>OR</span>
+							</div>
 						</div>
 
 						<!-- Login Form -->
-						<div id="loginForm" class="form-content">
-				<?php if ($login_error): ?>
-					<div class="alert alert-danger">
-						<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
+						<div id="loginForm" class="form-content active">
+							<?php if ($login_error): ?>
+								<div class="alert alert-danger">
+									<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
+								</div>
+							<?php endif; ?>
+
+							<?php if ($login_success): ?>
+								<div class="alert alert-success animate__animated animate__fadeInUp">
+									<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
+								</div>
+								<script>
+									setTimeout(function() {
+										window.location.href = '../index.php';
+									}, 1500);
+								</script>
+							<?php else: ?>
+								<form method="POST" id="actualLoginForm">
+									<div class="form-group">
+										<label for="email" class="form-label">Email</label>
+										<div class="input-group">
+											<i class="fas fa-envelope input-icon"></i>
+											<input type="email"
+												   id="email"
+												   name="email"
+												   class="form-control with-icon"
+												   placeholder="Enter your email"
+												   value="<?php echo htmlspecialchars($email ?? ''); ?>"
+												   required>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="password" class="form-label">Password</label>
+										<div class="input-group">
+											<i class="fas fa-lock input-icon"></i>
+											<input type="password"
+												   id="password"
+												   name="password"
+												   class="form-control with-icon"
+												   placeholder="Enter your password"
+												   required>
+										</div>
+									</div>
+
+									<button type="submit" class="submit-btn">
+										LOGIN
+									</button>
+
+									<div class="form-links">
+										<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
+									</div>
+								</form>
+							<?php endif; ?>
+						</div>
+
+						<!-- Sign Up Form -->
+						<div id="signupForm" class="form-content">
+							<form id="actualSignupForm">
+								<div class="form-group">
+									<label for="signup_name" class="form-label">Full Name</label>
+									<div class="input-group">
+										<i class="fas fa-user input-icon"></i>
+										<input type="text"
+											   id="signup_name"
+											   name="name"
+											   class="form-control with-icon"
+											   placeholder="Enter your full name"
+											   required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_email" class="form-label">Email</label>
+									<div class="input-group">
+										<i class="fas fa-envelope input-icon"></i>
+										<input type="email"
+											   id="signup_email"
+											   name="email"
+											   class="form-control with-icon"
+											   placeholder="Enter your email"
+											   required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_phone" class="form-label">Phone Number</label>
+									<div class="input-group">
+										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
+										<input type="tel"
+											   id="signup_phone"
+											   name="phone"
+											   class="form-control with-flag"
+											   placeholder="Enter your phone number"
+											   required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_password" class="form-label">Password</label>
+									<div class="input-group">
+										<i class="fas fa-lock input-icon"></i>
+										<input type="password"
+											   id="signup_password"
+											   name="password"
+											   class="form-control with-icon"
+											   placeholder="Create a password"
+											   required>
+									</div>
+								</div>
+
+								<button type="submit" class="submit-btn">
+									SIGN UP
+								</button>
+							</form>
+						</div>
+
 					</div>
-				<?php endif; ?>
-
-				<?php if ($login_success): ?>
-					<div class="alert alert-success animate__animated animate__fadeInUp">
-						<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
-					</div>
-					<script>
-						// Add fly-up animation to the entire form
-						document.querySelector('.login-form-wrapper').classList.add('animate__animated', 'animate__fadeOutUp');
-						setTimeout(function() {
-							window.location.href = '../index.php';
-						}, 1500);
-					</script>
-				<?php else: ?>
-					<form method="POST" id="loginForm">
-						<div class="form-group">
-							<label for="email" class="form-label">Email Address</label>
-							<div class="input-group">
-								<i class="fas fa-envelope input-icon"></i>
-								<input type="email"
-									   id="email"
-									   name="email"
-									   class="form-control with-icon"
-									   placeholder="Enter your email"
-									   value="<?php echo htmlspecialchars($email ?? ''); ?>"
-									   required>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="password" class="form-label">Password</label>
-							<div class="input-group">
-								<i class="fas fa-lock input-icon"></i>
-								<input type="password"
-									   id="password"
-									   name="password"
-									   class="form-control with-icon"
-									   placeholder="Enter your password"
-									   required>
-							</div>
-						</div>
-
-						<button type="submit" class="login-btn">
-							<i class="fas fa-sign-in-alt me-2"></i>
-							Sign In
-						</button>
-
-						<div class="form-links">
-							<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
-							<a href="register.php" class="signup-link">Create Account</a>
-						</div>
-					</form>
-				<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -1770,6 +1955,73 @@ try {
 		// Timeout variables
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
+
+		// Auth Panel Switching Functions
+		function switchToLogin() {
+			const authPanels = document.getElementById('authPanels');
+			const loginForm = document.getElementById('loginForm');
+			const signupForm = document.getElementById('signupForm');
+			const loginTab = document.getElementById('loginTab');
+			const signupTab = document.getElementById('signupTab');
+			const toggleSlider = document.getElementById('toggleSlider');
+			const welcomeTitle = document.getElementById('welcomeTitle');
+			const welcomeMessage = document.getElementById('welcomeMessage');
+			const formTitle = document.getElementById('formTitle');
+
+			// Remove signup mode
+			authPanels.classList.remove('signup-mode');
+
+			// Update form visibility
+			loginForm.classList.add('active');
+			signupForm.classList.remove('active');
+
+			// Update toggle buttons
+			loginTab.classList.add('active');
+			signupTab.classList.remove('active');
+
+			// Move toggle slider
+			toggleSlider.style.transform = 'translateX(0)';
+
+			// Update welcome panel content
+			welcomeTitle.textContent = 'Welcome Back!';
+			welcomeMessage.textContent = 'Your one-stop shop for premium refurbished tech devices. Join thousands of satisfied customers who trust Gadget Garage for quality and value.';
+
+			// Update form title
+			formTitle.textContent = 'Login With';
+		}
+
+		function switchToSignup() {
+			const authPanels = document.getElementById('authPanels');
+			const loginForm = document.getElementById('loginForm');
+			const signupForm = document.getElementById('signupForm');
+			const loginTab = document.getElementById('loginTab');
+			const signupTab = document.getElementById('signupTab');
+			const toggleSlider = document.getElementById('toggleSlider');
+			const welcomeTitle = document.getElementById('welcomeTitle');
+			const welcomeMessage = document.getElementById('welcomeMessage');
+			const formTitle = document.getElementById('formTitle');
+
+			// Add signup mode for sliding animation
+			authPanels.classList.add('signup-mode');
+
+			// Update form visibility
+			loginForm.classList.remove('active');
+			signupForm.classList.add('active');
+
+			// Update toggle buttons
+			loginTab.classList.remove('active');
+			signupTab.classList.add('active');
+
+			// Move toggle slider
+			toggleSlider.style.transform = 'translateX(100%)';
+
+			// Update welcome panel content
+			welcomeTitle.textContent = 'Hello';
+			welcomeMessage.textContent = 'Register to use all features in our site';
+
+			// Update form title
+			formTitle.textContent = 'Login With';
+		}
 	</script>
 </body>
 

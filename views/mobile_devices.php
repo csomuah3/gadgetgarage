@@ -1861,7 +1861,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                     <!-- Product Image -->
                                     <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
-                                        <img src="<?= function_exists('get_image_url') ? get_image_url($product['product_image'], 300, 200) : 'https://via.placeholder.com/300x200' ?>"
+                                        <img src="<?= get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product') ?>"
                                              alt="<?= htmlspecialchars($product['product_title']) ?>"
                                              style="max-width: 100%; max-height: 100%; object-fit: contain;"
                                              onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200';">

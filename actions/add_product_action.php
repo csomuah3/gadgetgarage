@@ -64,20 +64,38 @@ try {
 
     // Handle main image upload
     if (isset($_FILES['product_image']) && $_FILES['product_image']['error'] === UPLOAD_ERR_OK) {
+        error_log("Processing main image upload: " . $_FILES['product_image']['name']);
         $upload_result = uploadImageToServer($_FILES['product_image']);
         if ($upload_result['success']) {
             $product_image = $upload_result['filename'];
+            error_log("Main image uploaded successfully: " . $product_image);
         } else {
             $upload_warnings[] = 'Main image upload failed: ' . $upload_result['message'];
+            error_log("Main image upload failed: " . $upload_result['message']);
         }
+    } else if (isset($_FILES['product_image'])) {
+        error_log("Main image upload error code: " . $_FILES['product_image']['error']);
     }
 
     // If no main image uploaded, use placeholder
     if (empty($product_image)) {
         $product_image = 'placeholder.jpg';
+        error_log("Using placeholder image");
     }
 
     // Add the product to database
+    error_log("Adding product to database with data: " . json_encode([
+        'title' => $product_title,
+        'price' => $product_price,
+        'desc' => substr($product_desc, 0, 50) . '...',
+        'image' => $product_image,
+        'keywords' => $product_keywords,
+        'color' => $product_color,
+        'category' => $product_cat,
+        'brand' => $product_brand,
+        'stock' => $stock_quantity
+    ]));
+
     $result = add_product_ctr(
         $product_title,
         $product_price,
@@ -89,6 +107,8 @@ try {
         $product_brand,
         $stock_quantity
     );
+
+    error_log("Product insertion result: " . json_encode($result));
 
     if ($result['status'] === 'success') {
         // Handle additional images if uploaded

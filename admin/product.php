@@ -12,11 +12,61 @@ $page_title = "Product Management";
 require_once __DIR__ . '/../controllers/product_controller.php';
 require_once __DIR__ . '/../controllers/category_controller.php';
 require_once __DIR__ . '/../controllers/brand_controller.php';
+require_once __DIR__ . '/../settings/db_class.php';
+
+// Check and fix table structure first
+try {
+    $db = new db_connection();
+    $connection = $db->db_connect();
+
+    // Check if stock_quantity column exists
+    $sql = "SHOW COLUMNS FROM products LIKE 'stock_quantity'";
+    $result = $db->db_fetch_one($sql);
+
+    if (!$result) {
+        error_log("Adding missing stock_quantity column to products table");
+        $alter_sql = "ALTER TABLE products ADD COLUMN stock_quantity INT(11) NOT NULL DEFAULT 0";
+        $db->db_write_query($alter_sql);
+    }
+
+    // Check if product_color column exists
+    $sql = "SHOW COLUMNS FROM products LIKE 'product_color'";
+    $result = $db->db_fetch_one($sql);
+
+    if (!$result) {
+        error_log("Adding missing product_color column to products table");
+        $alter_sql = "ALTER TABLE products ADD COLUMN product_color VARCHAR(100)";
+        $db->db_write_query($alter_sql);
+    }
+
+} catch (Exception $e) {
+    error_log("Error checking/fixing table structure: " . $e->getMessage());
+}
 
 // Get data for dashboard
-$all_products = get_all_products_ctr();
-$categories = get_all_categories_ctr();
-$brands = get_all_brands_ctr();
+try {
+    $all_products = get_all_products_ctr();
+    error_log("Products fetched: " . count($all_products));
+} catch (Exception $e) {
+    error_log("Error fetching products: " . $e->getMessage());
+    $all_products = [];
+}
+
+try {
+    $categories = get_all_categories_ctr();
+    error_log("Categories fetched: " . count($categories));
+} catch (Exception $e) {
+    error_log("Error fetching categories: " . $e->getMessage());
+    $categories = [];
+}
+
+try {
+    $brands = get_all_brands_ctr();
+    error_log("Brands fetched: " . count($brands));
+} catch (Exception $e) {
+    error_log("Error fetching brands: " . $e->getMessage());
+    $brands = [];
+}
 
 // Calculate statistics
 $total_products = count($all_products);
@@ -552,7 +602,7 @@ if (isset($_SESSION['error_message'])) {
 
     <!-- Category Distribution -->
     <div class="col-lg-6">
-        <div class="admin-card" style="animation-delay: 0.6s;">
+        <div class="admin-card chart-container">
             <div class="card-header-custom">
                 <h5><i class="fas fa-chart-pie me-2"></i>Category Distribution</h5>
             </div>
@@ -596,6 +646,20 @@ if (isset($_SESSION['error_message'])) {
                     </tr>
                 </thead>
                 <tbody>
+                    <?php if (empty($all_products)): ?>
+                        <tr>
+                            <td colspan="7" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-box-open fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No Products Found</h5>
+                                    <p class="text-muted">Add your first product to get started.</p>
+                                    <?php if (ini_get('display_errors')): ?>
+                                        <small class="text-info">Debug: Products array count = <?= count($all_products) ?></small>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php else: ?>
                     <?php foreach ($all_products as $product): ?>
                         <?php
                         $status_class = 'success';
@@ -666,11 +730,38 @@ if (isset($_SESSION['error_message'])) {
                             </td>
                         </tr>
                     <?php endforeach; ?>
+                    <?php endif; ?>
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+<style>
+/* Fix chart animation issue */
+.chart-container {
+    animation: none !important;
+    opacity: 1 !important;
+    transform: none !important;
+}
+
+.chart-container .card-body-custom {
+    animation: none !important;
+}
+
+/* Ensure chart canvas is stable */
+#categoryChart {
+    position: relative !important;
+    animation: none !important;
+    transform: none !important;
+}
+
+/* Override any sliding animations for charts */
+.admin-card.chart-container {
+    animation: none !important;
+    animation-delay: 0s !important;
+}
+</style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
@@ -740,9 +831,13 @@ function setupDropdown(dropdownId, optionsId, hiddenInputId, searchId) {
     });
 }
 
-// Initialize dropdowns
-setupDropdown('categoryDropdown', 'category-options', 'product_cat', 'categorySearch');
-setupDropdown('brandDropdown', 'brand-options', 'product_brand', 'brandSearch');
+// Wait for DOM to be fully loaded
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM loaded, initializing form functionality');
+
+    // Initialize dropdowns
+    setupDropdown('categoryDropdown', 'category-options', 'product_cat', 'categorySearch');
+    setupDropdown('brandDropdown', 'brand-options', 'product_brand', 'brandSearch');
 
 // Color selector functionality
 document.querySelectorAll('.color-option').forEach(option => {
@@ -863,8 +958,15 @@ new Chart(ctx, {
 // Form submission
 document.getElementById('addProductForm').addEventListener('submit', function(e) {
     e.preventDefault();
+    console.log('Form submission started');
 
     const formData = new FormData(this);
+
+    // Debug: Log form data
+    console.log('Form data contents:');
+    for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
 
     // Validate required fields
     const requiredFields = ['product_title', 'product_price', 'product_cat', 'product_brand', 'stock_quantity'];
@@ -872,20 +974,28 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
 
     requiredFields.forEach(field => {
         const input = document.getElementById(field);
-        if (!input.value.trim()) {
-            input.classList.add('is-invalid');
+        console.log(`Checking field ${field}:`, input ? input.value : 'NOT FOUND');
+        if (!input || !input.value.trim()) {
+            if (input) input.classList.add('is-invalid');
             isValid = false;
         } else {
-            input.classList.remove('is-invalid');
+            if (input) input.classList.remove('is-invalid');
         }
     });
 
+    console.log('Validation result:', isValid);
+
     if (!isValid) {
-        Swal.fire({
-            icon: 'error',
-            title: 'Validation Error',
-            text: 'Please fill in all required fields'
-        });
+        console.log('Showing validation error');
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please fill in all required fields'
+            });
+        } else {
+            alert('Please fill in all required fields');
+        }
         return;
     }
 
@@ -895,12 +1005,18 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Adding Product...';
     submitBtn.disabled = true;
 
+    console.log('Sending request to add_product_action.php');
+
     fetch('../actions/add_product_action.php', {
         method: 'POST',
         body: formData
     })
-    .then(response => response.json())
+    .then(response => {
+        console.log('Response status:', response.status);
+        return response.json();
+    })
     .then(data => {
+        console.log('Response data:', data);
         if (data.status === 'success') {
             Swal.fire({
                 icon: 'success',
@@ -909,7 +1025,10 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
                 showConfirmButton: false,
                 timer: 1500
             }).then(() => {
-                location.reload();
+                // Instead of reloading, refresh the product list dynamically
+                setTimeout(() => {
+                    location.reload();
+                }, 500);
             });
         } else {
             Swal.fire({
@@ -920,17 +1039,24 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
         }
     })
     .catch(error => {
-        Swal.fire({
-            icon: 'error',
-            title: 'Error!',
-            text: 'An error occurred while adding the product'
-        });
+        console.error('Fetch error:', error);
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: 'An error occurred while adding the product: ' + error.message
+            });
+        } else {
+            alert('An error occurred while adding the product: ' + error.message);
+        }
     })
     .finally(() => {
         submitBtn.innerHTML = originalText;
         submitBtn.disabled = false;
     });
 });
+
+}); // End DOMContentLoaded
 
 // Delete product function
 function deleteProduct(productId, productName) {

@@ -4224,7 +4224,7 @@ try {
 
 				<div class="promo-image">
 					<img
-						src="https://images.unsplash.com/photo-1617088675215-7c7df7d2fa33?w=1200&h=700&fit=crop"
+						src="http://169.239.251.102:442/~chelsea.somuah/uploads/4fx0b5kd-removebg-preview.png"
 						alt="DJI Osmo Pocket 3 camera on table">
 				</div>
 			</div>
@@ -4249,12 +4249,12 @@ try {
 			<h2 class="deals-title"><span data-translate="deals_of_week">Deals Of The Week</span></h2>
 
 			<div class="deals-grid">
-				<!-- Deal 1: Canon Washing Machine -->
+				<!-- Deal 1: HP LAPTOP -->
 				<div class="deal-card">
 					<div class="deal-discount">-23%</div>
-					<img src="https://images.unsplash.com/photo-1626806787461-102c1bfaaea1?w=400&h=300&fit=crop&crop=center" alt="Canon Washing Machine" class="deal-image">
-					<div class="deal-brand">Canon</div>
-					<h3 class="deal-title">12KG 1600rpm 3-in-1 Combo Washing Machine</h3>
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.24.50AM.png" alt="HP LAPTOP " class="deal-image">
+					<div class="deal-brand">HP Elitebook</div>
+					<h3 class="deal-title">HP EliteBook X G1i 14 inch Notebook Next Gen AI PC Wolf Pro Security Edition</h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="far fa-star"></i>
@@ -4265,13 +4265,13 @@ try {
 						</div>
 					</div>
 					<div class="deal-pricing">
-						<span class="deal-original-price">GH₵ 130.00</span>
-						<span class="deal-current-price">GH₵ 100.00</span>
+						<span class="deal-original-price">GH₵ 15000.00</span>
+						<span class="deal-current-price">GH₵ 9000.00</span>
 					</div>
 					<div class="countdown-timer">
 						<div class="countdown-grid">
 							<div class="countdown-item">
-								<span class="countdown-number" id="days1">335</span>
+								<span class="countdown-number" id="days1">12</span>
 								<span class="countdown-label">Days</span>
 							</div>
 							<div class="countdown-item">
@@ -4294,9 +4294,9 @@ try {
 				<!-- Deal 2: Apple iPad -->
 				<div class="deal-card">
 					<div class="deal-discount">-8%</div>
-					<img src="https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?w=400&h=300&fit=crop&crop=center" alt="iPad m2" class="deal-image">
-					<div class="deal-brand">Apple m2</div>
-					<h3 class="deal-title">iPad m2</h3>
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
+					<div class="deal-brand">Apple M2</div>
+					<h3 class="deal-title">Apple iPad Pro 12.9" 6th Gen M2 256GB Wi-Fi </h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="fas fa-star"></i>
@@ -4308,13 +4308,13 @@ try {
 						<span>(4.4)</span>
 					</div>
 					<div class="deal-pricing">
-						<span class="deal-original-price">GH₵1,624</span>
-						<span class="deal-current-price">GH₵1,400</span>
+						<span class="deal-original-price">GH₵5,000</span>
+						<span class="deal-current-price">GH₵3,400</span>
 					</div>
 					<div class="countdown-timer">
 						<div class="countdown-grid">
 							<div class="countdown-item">
-								<span class="countdown-number" id="days2">335</span>
+								<span class="countdown-number" id="days2">12</span>
 								<span class="countdown-label">Days</span>
 							</div>
 							<div class="countdown-item">
@@ -4337,9 +4337,9 @@ try {
 				<!-- Deal 3: LG Apple iPad Mini -->
 				<div class="deal-card">
 					<div class="deal-discount">-19%</div>
-					<img src="https://images.unsplash.com/photo-1542119621-a8e5bf80c227?w=400&h=300&fit=crop&crop=center" alt="Apple iPad Mini" class="deal-image">
-					<div class="deal-brand">LG</div>
-					<h3 class="deal-title">Apple iPad Mini 6th Gen 8.3 Inch With Wi-fi</h3>
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
+					<div class="deal-brand">Sony</div>
+					<h3 class="deal-title">Sony a7R V Mirrorless Camera</h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="fas fa-star"></i>
@@ -4351,13 +4351,13 @@ try {
 						<span>(5)</span>
 					</div>
 					<div class="deal-pricing">
-						<span class="deal-original-price">GH₵250.00</span>
-						<span class="deal-current-price">GH₵230.00</span>
+						<span class="deal-original-price">GH₵25000.00</span>
+						<span class="deal-current-price">GH₵15000.00</span>
 					</div>
 					<div class="countdown-timer">
 						<div class="countdown-grid">
 							<div class="countdown-item">
-								<span class="countdown-number" id="days3">427</span>
+								<span class="countdown-number" id="days3">12</span>
 								<span class="countdown-label">Days</span>
 							</div>
 							<div class="countdown-item">
@@ -4502,7 +4502,7 @@ try {
 	<section class="testimonials">
 		<div class="container">
 			<div class="testimonials-text-section">
-				<h2 class="section-title" data-translate="what_customers_say">What Customers Say</h2>
+				<h2 class="section-title" data-translate="what_customers_say">What Our Customers Say</h2>
 				<p class="section-sub" data-translate="amazing_reviews">Stories from satisfied GadgetGarage customers</p>
 			</div>
 

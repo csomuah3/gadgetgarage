@@ -134,7 +134,16 @@ function log_sms_activity($level, $message, $context = []) {
 function send_order_confirmation_sms($order_id) {
     try {
         require_once __DIR__ . '/../controllers/order_controller.php';
-        $order = get_order_details_ctr($order_id);
+        require_once __DIR__ . '/../settings/db_class.php';
+
+        // Get order with customer information
+        $db = new db_connection();
+        $sql = "SELECT o.*, u.user_name as customer_name, u.user_contact as phone, py.amt as total_amount
+                FROM orders o
+                JOIN users u ON o.customer_id = u.user_id
+                LEFT JOIN payment py ON o.order_id = py.order_id
+                WHERE o.order_id = ?";
+        $order = $db->db_fetch_one($sql, [$order_id]);
 
         if (!$order) {
             log_sms_activity('error', 'Order not found for SMS', ['order_id' => $order_id]);

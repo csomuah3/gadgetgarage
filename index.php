@@ -4320,9 +4320,9 @@ try {
 					<!-- Customer Activity Popup -->
 					<div class="customer-activity-popup" style="
 						position: absolute;
-						top: 50%;
+						top: 15px;
 						left: 50%;
-						transform: translate(-50%, -50%);
+						transform: translateX(-50%);
 						background: rgba(0,0,0,0.8);
 						color: white;
 						padding: 8px 12px;
@@ -4334,7 +4334,7 @@ try {
 						animation: popupFade 4s ease-in-out infinite;
 						white-space: nowrap;
 						pointer-events: none;
-						animation-delay: 1s;
+						animation-delay: 1.2s;
 					">
 						4 customers viewing this
 					</div>
@@ -4395,6 +4395,27 @@ try {
 
 				<!-- Deal 2: Apple iPad -->
 				<div class="deal-card">
+					<!-- Customer Activity Popup -->
+					<div class="customer-activity-popup" style="
+						position: absolute;
+						top: 15px;
+						left: 50%;
+						transform: translateX(-50%);
+						background: rgba(0,0,0,0.8);
+						color: white;
+						padding: 8px 12px;
+						border-radius: 20px;
+						font-size: 0.75rem;
+						font-weight: 600;
+						z-index: 20;
+						opacity: 0;
+						animation: popupFade 4s ease-in-out infinite;
+						white-space: nowrap;
+						pointer-events: none;
+						animation-delay: 3.5s;
+					">
+						5 customers added to cart
+					</div>
 					<div class="deal-discount">-8%</div>
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
 					<div class="deal-brand">Apple M2</div>
@@ -4438,6 +4459,27 @@ try {
 
 				<!-- Deal 3: LG Apple iPad Mini -->
 				<div class="deal-card">
+					<!-- Customer Activity Popup -->
+					<div class="customer-activity-popup" style="
+						position: absolute;
+						top: 15px;
+						left: 50%;
+						transform: translateX(-50%);
+						background: rgba(0,0,0,0.8);
+						color: white;
+						padding: 8px 12px;
+						border-radius: 20px;
+						font-size: 0.75rem;
+						font-weight: 600;
+						z-index: 20;
+						opacity: 0;
+						animation: popupFade 4s ease-in-out infinite;
+						white-space: nowrap;
+						pointer-events: none;
+						animation-delay: 2.8s;
+					">
+						10 customers interested
+					</div>
 					<div class="deal-discount">-19%</div>
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
 					<div class="deal-brand">Sony</div>

@@ -2845,7 +2845,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         </div>
 
                                         <!-- View Details Button -->
-                                        <button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
+                                        <button onclick="viewProductDetails(<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>)"
+                                                data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
                                                 style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                             <i class="fas fa-eye"></i>
                                             View Details
@@ -2893,8 +2894,50 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function viewProductDetails(productId) {
-            window.location.href = 'single_product.php?pid=' + productId;
+            console.log('viewProductDetails called with ID:', productId);
+
+            // If productId is missing or invalid, try to get it from the button's data attribute
+            if (!productId || productId <= 0) {
+                const button = event.target.closest('button');
+                if (button) {
+                    productId = button.getAttribute('data-product-id');
+                    console.log('Got product ID from data attribute:', productId);
+                }
+            }
+
+            if (!productId || productId <= 0) {
+                console.error('Invalid product ID:', productId);
+                alert('Error: Invalid product ID. Please refresh the page and try again.');
+                return;
+            }
+
+            const url = 'single_product.php?pid=' + productId;
+            console.log('Redirecting to:', url);
+
+            try {
+                window.location.href = url;
+            } catch (error) {
+                console.error('Redirect failed:', error);
+                // Fallback: try opening in new tab
+                window.open(url, '_blank');
+            }
         }
+
+        // Add event listener for all View Details buttons
+        document.addEventListener('DOMContentLoaded', function() {
+            // Event delegation for View Details buttons
+            document.addEventListener('click', function(e) {
+                if (e.target.closest('button[data-product-id]')) {
+                    const button = e.target.closest('button');
+                    const productId = button.getAttribute('data-product-id');
+
+                    if (productId && productId > 0) {
+                        console.log('Event delegation: redirecting to product', productId);
+                        window.location.href = 'single_product.php?pid=' + productId;
+                    }
+                }
+            });
+        });
 
         function selectCondition(element, price, condition) {
             // Remove active class from all condition options in this product

@@ -8,7 +8,11 @@
 define('PAYSTACK_SECRET_KEY', 'sk_test_518f25129d73cf0383fc383569fd28ad1e8bfd4f');
 define('PAYSTACK_PUBLIC_KEY', 'pk_test_aba089a6fc33225c7c71f9e1c5207881b9933201');
 define('PAYSTACK_BASE_URL', 'https://api.paystack.co');
-define('PAYSTACK_CALLBACK_URL', 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/views/paystack_callback.php');
+// Dynamic callback URL based on current request
+$protocol = isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http';
+$host = $_SERVER['HTTP_HOST'] ?? '169.239.251.102:442';
+$base_path = dirname(dirname($_SERVER['PHP_SELF']));
+define('PAYSTACK_CALLBACK_URL', $protocol . '://' . $host . $base_path . '/views/paystack_callback.php');
 
 // Payment Settings
 define('PAYSTACK_CURRENCY', 'GHS'); // Ghana Cedis

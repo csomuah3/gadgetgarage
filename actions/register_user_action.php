@@ -106,6 +106,43 @@ if ($isLogin) {
                 : ['status' => 'error', 'message' => 'Failed to register'];
         }
 
+        // Send welcome SMS if registration was successful
+        if ($res['status'] === 'success') {
+            try {
+                require_once __DIR__ . '/../settings/sms_config.php';
+
+                if (defined('SMS_ENABLED') && SMS_ENABLED) {
+                    require_once __DIR__ . '/../helpers/sms_helper.php';
+
+                    // Get the newly created customer ID from the User class
+                    // We need to get this from the database since createUser doesn't return it
+                    require_once __DIR__ . '/../settings/db_class.php';
+                    $db = new db_connection();
+                    $customer_query = "SELECT customer_id FROM customer WHERE customer_email = ? ORDER BY customer_id DESC LIMIT 1";
+                    $customer_result = $db->db_fetch_one($customer_query, [$email]);
+
+                    if ($customer_result) {
+                        $customer_id = $customer_result['customer_id'];
+
+                        $sms_sent = send_welcome_registration_sms(
+                            $customer_id,
+                            $name,
+                            $phone_number
+                        );
+
+                        if ($sms_sent) {
+                            error_log('Welcome SMS sent successfully to new user: ' . $email);
+                        } else {
+                            error_log('Welcome SMS failed for new user: ' . $email);
+                        }
+                    }
+                }
+            } catch (Exception $sms_error) {
+                // Don't fail registration if SMS fails
+                error_log('Welcome SMS error during registration: ' . $sms_error->getMessage());
+            }
+        }
+
         echo json_encode($res);
     } catch (Throwable $e) {
         error_log("Registration error: " . $e->getMessage());

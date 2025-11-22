@@ -59,6 +59,12 @@ $sms_templates = [
         'es' => "¡Pago recibido! Hola {name}, hemos recibido tu pago de GH¢{amount} para el pedido #{order_id}. Procesando ahora.",
         'fr' => "Paiement reçu! Bonjour {name}, nous avons reçu votre paiement de GH¢{amount} pour la commande #{order_id}. En cours de traitement.",
         'de' => "Zahlung erhalten! Hallo {name}, wir haben Ihre Zahlung von GH¢{amount} für Bestellung #{order_id} erhalten. Wird verarbeitet."
+    ],
+    'welcome_registration' => [
+        'en' => "Welcome to Gadget Garage, {name}! 🎉 Your account has been created successfully. Start shopping for the best tech deals today! Visit: {website_url}",
+        'es' => "¡Bienvenido a Gadget Garage, {name}! 🎉 Tu cuenta se ha creado exitosamente. ¡Empieza a comprar las mejores ofertas tecnológicas hoy! Visita: {website_url}",
+        'fr' => "Bienvenue chez Gadget Garage, {name}! 🎉 Votre compte a été créé avec succès. Commencez à acheter les meilleures offres technologiques aujourd'hui! Visitez: {website_url}",
+        'de' => "Willkommen bei Gadget Garage, {name}! 🎉 Ihr Konto wurde erfolgreich erstellt. Beginnen Sie heute mit dem Einkauf der besten Tech-Angebote! Besuchen Sie: {website_url}"
     ]
 ];
 
@@ -74,6 +80,7 @@ define('SMS_TYPE_ORDER_DELIVERED', 'order_delivered');
 define('SMS_TYPE_CART_ABANDONMENT', 'cart_abandonment');
 define('SMS_TYPE_CART_REMINDER', 'cart_reminder');
 define('SMS_TYPE_PAYMENT_RECEIVED', 'payment_received');
+define('SMS_TYPE_WELCOME_REGISTRATION', 'welcome_registration');
 
 // Phone number validation patterns
 $phone_patterns = [

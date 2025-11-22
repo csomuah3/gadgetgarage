@@ -138,9 +138,9 @@ function send_order_confirmation_sms($order_id) {
 
         // Get order with customer information
         $db = new db_connection();
-        $sql = "SELECT o.*, u.user_name as customer_name, u.user_contact as phone, py.amt as total_amount
+        $sql = "SELECT o.*, c.customer_name as customer_name, c.customer_contact as phone, py.amt as total_amount
                 FROM orders o
-                JOIN users u ON o.customer_id = u.user_id
+                JOIN customer c ON o.customer_id = c.customer_id
                 LEFT JOIN payment py ON o.order_id = py.order_id
                 WHERE o.order_id = ?";
         $order = $db->db_fetch_one($sql, [$order_id]);
@@ -410,6 +410,59 @@ function get_sms_statistics($days = 30) {
         return $db->db_fetch_all($query, [$days]) ?: [];
     } catch (Exception $e) {
         return [];
+    }
+}
+
+/**
+ * Send welcome SMS to new registered user
+ * @param int $customer_id
+ * @param string $customer_name
+ * @param string $phone_number
+ * @return bool
+ */
+function send_welcome_registration_sms($customer_id, $customer_name, $phone_number) {
+    try {
+        global $sms_urls;
+
+        $phone = format_phone_number($phone_number);
+        if (!$phone) {
+            log_sms_activity('error', 'Invalid phone number for welcome SMS', [
+                'customer_id' => $customer_id,
+                'phone' => $phone_number
+            ]);
+            return false;
+        }
+
+        // Get welcome message template
+        $template = get_sms_template(SMS_TYPE_WELCOME_REGISTRATION, 'en');
+        if (!$template) {
+            log_sms_activity('error', 'Welcome SMS template not found');
+            return false;
+        }
+
+        // Replace template variables
+        $message = process_sms_template($template, [
+            'name' => $customer_name,
+            'website_url' => $sms_urls['website_url']
+        ]);
+
+        $sms = new SMSService();
+        $result = $sms->sendWelcomeRegistrationSMS($customer_id, $customer_name, $phone_number);
+
+        log_sms_activity('info', 'Welcome SMS attempt', [
+            'customer_id' => $customer_id,
+            'phone' => $phone,
+            'result' => $result
+        ]);
+
+        return $result['success'] ?? false;
+
+    } catch (Exception $e) {
+        log_sms_activity('error', 'Failed to send welcome SMS', [
+            'customer_id' => $customer_id,
+            'error' => $e->getMessage()
+        ]);
+        return false;
     }
 }
 

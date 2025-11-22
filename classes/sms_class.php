@@ -338,6 +338,43 @@ class SMSService extends db_connection {
     }
 
     /**
+     * Send welcome registration SMS
+     */
+    public function sendWelcomeRegistrationSMS($customer_id, $customer_name, $phone_number) {
+        try {
+            if (!$this->isSMSEnabled('welcome_sms_enabled')) {
+                return ['success' => false, 'message' => 'Welcome SMS disabled'];
+            }
+
+            // Validate phone number
+            $phone = format_phone_number($phone_number);
+            if (!$phone) {
+                return ['success' => false, 'message' => 'Invalid phone number'];
+            }
+
+            // Get welcome message template
+            $template = get_sms_template('welcome_registration', 'en');
+            if (!$template) {
+                $template = "Welcome to Gadget Garage, {name}! 🎉 Your account has been created successfully. Start shopping for the best tech deals today!";
+            }
+
+            // Replace template variables
+            $message = process_sms_template($template, [
+                'name' => $customer_name
+            ]);
+
+            // Send SMS
+            $result = $this->sendSMS($phone, $message, 'welcome_registration', null, $customer_id);
+
+            return $result;
+
+        } catch (Exception $e) {
+            $this->logError('Welcome Registration SMS Error', $e->getMessage(), $customer_id);
+            return ['success' => false, 'message' => 'SMS sending failed: ' . $e->getMessage()];
+        }
+    }
+
+    /**
      * Queue SMS for later sending
      */
     public function queueSMS($phone_number, $message, $message_type, $scheduled_at, $order_id = null, $customer_id = null, $priority = 'normal') {

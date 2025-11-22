@@ -117,12 +117,27 @@ try {
     log_paystack_activity('error', 'Failed to initialize PayStack transaction', [
         'customer_id' => $customer_id ?? null,
         'email' => $customer_email ?? null,
-        'error' => $e->getMessage()
+        'error' => $e->getMessage(),
+        'line' => $e->getLine(),
+        'file' => $e->getFile(),
+        'trace' => $e->getTraceAsString()
     ]);
 
-    echo json_encode([
+    // More detailed error for debugging
+    $debug_info = [
         'status' => 'error',
-        'message' => 'Failed to initialize payment: ' . $e->getMessage()
-    ]);
+        'message' => 'Failed to initialize payment: ' . $e->getMessage(),
+        'debug' => [
+            'customer_id' => $customer_id ?? 'not set',
+            'email' => $customer_email ?? 'not set',
+            'cart_total' => $cart_total ?? 'not set',
+            'amount_pesewas' => isset($amount_pesewas) ? $amount_pesewas : 'not set',
+            'reference' => isset($reference) ? $reference : 'not set',
+            'session_user_id' => $_SESSION['user_id'] ?? 'not set',
+            'session_email' => $_SESSION['email'] ?? 'not set'
+        ]
+    ];
+
+    echo json_encode($debug_info);
 }
 ?>

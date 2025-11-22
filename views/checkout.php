@@ -2539,13 +2539,28 @@ try {
 
 		// Process checkout with selected payment method
 		function processCheckout() {
+			// Debug session data
+			console.log('Session data check:');
+			console.log('User ID: <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'NOT SET'; ?>');
+			console.log('Email: <?php echo isset($_SESSION['email']) ? $_SESSION['email'] : 'NOT SET'; ?>');
+			console.log('Name: <?php echo isset($_SESSION['name']) ? $_SESSION['name'] : 'NOT SET'; ?>');
+
 			// Get customer email
 			const customerEmail = '<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>';
+			console.log('Customer email for payment:', customerEmail);
+
 			if (!customerEmail) {
 				Swal.fire({
 					icon: 'error',
-					title: 'Error',
-					text: 'Customer email not found. Please login again.'
+					title: 'Login Required',
+					text: 'Please login to complete your purchase.',
+					showCancelButton: true,
+					confirmButtonText: 'Login Now',
+					cancelButtonText: 'Cancel'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = 'login/login.php';
+					}
 				});
 				return;
 			}
@@ -2593,6 +2608,8 @@ try {
 			})
 			.then(response => response.json())
 			.then(data => {
+				console.log('Payment initialization response:', data);
+
 				if (data.status === 'success') {
 					// Close loading modal and redirect to PayStack
 					Swal.close();
@@ -2603,11 +2620,20 @@ try {
 					// Redirect to PayStack
 					window.location.href = data.authorization_url;
 				} else {
-					// Show error message
+					// Show detailed error for debugging
+					console.error('Payment initialization failed:', data);
+
+					let errorText = data.message || 'Failed to initialize payment';
+					if (data.debug) {
+						console.log('Debug info:', data.debug);
+						errorText += '\n\nDebug Info:\n' + JSON.stringify(data.debug, null, 2);
+					}
+
 					Swal.fire({
 						icon: 'error',
 						title: 'Payment Error',
-						text: data.message || 'Failed to initialize payment'
+						text: errorText,
+						footer: 'Check browser console for more details'
 					});
 				}
 			})

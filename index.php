@@ -2566,6 +2566,20 @@ try {
 			background: white;
 		}
 
+		.promo-banner2 {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			border-radius: 15px;
+			padding: 30px;
+			color: white;
+			position: relative;
+			overflow: hidden;
+			text-align: left;
+			/* switched from center */
+			gap: 30px;
+			background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+		}
 		/* main banner container */
 		.promo-banner {
 			display: flex;
@@ -3811,7 +3825,7 @@ try {
 <body>
 
 	<!-- Promotional Banner -->
-	<div class="promo-banner">
+	<div class="promo-banner2">
 		<div class="promo-banner-left">
 			<i class="fas fa-bolt"></i>
 		</div>

@@ -87,8 +87,8 @@ try {
 			overflow-x: hidden;
 		}
 
-		/* Promotional Banner Styles */
-		.promo-banner {
+		/* Promotional Banner Styles - First Banner (promo-banner2) matches login page */
+		.promo-banner2 {
 			background: #001f3f !important;
 			color: white;
 			padding: 6px 15px;
@@ -107,14 +107,14 @@ try {
 			max-width: 100%;
 		}
 
-		.promo-banner-left {
+		.promo-banner2 .promo-banner-left {
 			display: flex;
 			align-items: center;
 			gap: 15px;
 			flex: 0 0 auto;
 		}
 
-		.promo-banner-center {
+		.promo-banner2 .promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -122,17 +122,17 @@ try {
 			flex: 1;
 		}
 
-		.promo-banner i {
+		.promo-banner2 i {
 			font-size: 1rem;
 		}
 
-		.promo-banner .promo-text {
+		.promo-banner2 .promo-text {
 			font-size: 1rem;
 			font-weight: 400;
 			letter-spacing: 0.5px;
 		}
 
-		.promo-timer {
+		.promo-banner2 .promo-timer {
 			background: transparent;
 			padding: 0;
 			border-radius: 0;
@@ -142,7 +142,7 @@ try {
 			border: none;
 		}
 
-		.promo-shop-link {
+		.promo-banner2 .promo-shop-link {
 			color: white;
 			text-decoration: underline;
 			font-weight: 700;
@@ -152,7 +152,7 @@ try {
 			flex: 0 0 auto;
 		}
 
-		.promo-shop-link:hover {
+		.promo-banner2 .promo-shop-link:hover {
 			opacity: 0.8;
 		}
 
@@ -826,6 +826,10 @@ try {
 		body.dark-mode {
 			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 			color: #e2e8f0;
+		}
+
+		body.dark-mode .promo-banner2 {
+			background: #0f1419 !important;
 		}
 
 		body.dark-mode .promo-banner {

@@ -1990,7 +1990,7 @@ $fairDiscount = $basePrice - $fairPrice;
             formData.append('condition', window.enhancedModalData.condition);
             formData.append('final_price', window.enhancedModalData.unitPrice);
 
-            fetch('actions/add_to_cart_action.php', {
+            fetch('../actions/add_to_cart_action.php', {
                 method: 'POST',
                 body: formData
             })
@@ -2066,7 +2066,7 @@ $fairDiscount = $basePrice - $fairPrice;
             formData.append('condition', selectedCondition);
             formData.append('final_price', selectedPrice);
 
-            fetch('actions/add_to_cart_action.php', {
+            fetch('../actions/add_to_cart_action.php', {
                 method: 'POST',
                 body: formData
             })

@@ -6,6 +6,7 @@ header('Access-Control-Allow-Headers: Content-Type');
 
 try {
     require_once('../settings/core.php');
+    require_once('../settings/db_class.php');
 
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
         throw new Exception('Invalid request method');
@@ -29,11 +30,12 @@ try {
     }
 
     // Validate promo code against database
-    $conn = new mysqli(DB_HOST, DB_USER, DB_PASS, DB_NAME);
-
-    if ($conn->connect_error) {
+    $db = new db_connection();
+    if (!$db->db_connect()) {
         throw new Exception('Database connection failed');
     }
+
+    $conn = $db->db_conn();
 
     // Check if promo code exists and is valid
     $stmt = $conn->prepare("
@@ -106,8 +108,8 @@ try {
         'message' => $e->getMessage()
     ]);
 } finally {
-    if (isset($conn)) {
-        $conn->close();
+    if (isset($db)) {
+        $db->db_close();
     }
 }
 ?>

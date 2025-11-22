@@ -1646,7 +1646,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Search Bar -->
                     <div class="filter-group">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search mobile devices..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
                         </div>
                     </div>
@@ -1654,51 +1654,27 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Rating Filter -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Rating</h6>
-                        <div class="rating-filter">
+                        <div class="rating-filters">
+                            <div class="rating-option active" data-rating="">
+                                <span>All Ratings</span>
+                            </div>
                             <div class="rating-option" data-rating="5">
-                                <input type="radio" id="rating_5" name="rating_filter" value="5">
-                                <label for="rating_5">
-                                    <div class="stars">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                    </div>
-                                    <span class="rating-text">5 Star</span>
-                                </label>
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                </div>
+                                <span>5 Stars & Up</span>
                             </div>
                             <div class="rating-option" data-rating="4">
-                                <input type="radio" id="rating_4" name="rating_filter" value="4">
-                                <label for="rating_4">
-                                    <div class="stars">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                    </div>
-                                    <span class="rating-text">4 Star</span>
-                                </label>
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                </div>
+                                <span>4 Stars & Up</span>
                             </div>
                             <div class="rating-option" data-rating="3">
-                                <input type="radio" id="rating_3" name="rating_filter" value="3">
-                                <label for="rating_3">
-                                    <div class="stars">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    </div>
-                                    <span class="rating-text">3 Star</span>
-                                </label>
-                            </div>
-                            <div class="rating-option" data-rating="2">
-                                <input type="radio" id="rating_2" name="rating_filter" value="2">
-                                <label for="rating_2">
-                                    <div class="stars">
-                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    </div>
-                                    <span class="rating-text">2 Star</span>
-                                </label>
-                            </div>
-                            <div class="rating-option" data-rating="1">
-                                <input type="radio" id="rating_1" name="rating_filter" value="1">
-                                <label for="rating_1">
-                                    <div class="stars">
-                                        <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                    </div>
-                                    <span class="rating-text">1 Star</span>
-                                </label>
+                                <div class="stars">
+                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                </div>
+                                <span>3 Stars & Up</span>
                             </div>
                         </div>
                     </div>
@@ -1706,16 +1682,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Price Range -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Price Range</h6>
-                        <div class="price-slider-container">
-                            <div class="price-slider-track">
-                                <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
-                            </div>
+                        <div class="price-range-container">
+                            <input type="range" class="price-slider" id="priceMin" min="0" max="10000" value="0" step="50">
+                            <input type="range" class="price-slider" id="priceMax" min="0" max="10000" value="10000" step="50">
                             <div class="price-display">
-                                <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
-                                <span class="price-separator">-</span>
-                                <span class="price-max" id="priceMaxDisplay">GH₵ 50,000</span>
+                                <span id="minPriceDisplay">GH₵0</span>
+                                <span>-</span>
+                                <span id="maxPriceDisplay">GH₵10,000</span>
                             </div>
                         </div>
                     </div>
@@ -1724,10 +1697,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Category</h6>
                         <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="all">All</button>
+                            <button class="tag-btn active" data-category="">All</button>
                             <button class="tag-btn" data-category="smartphones">Smartphones</button>
                             <button class="tag-btn" data-category="ipads">iPads</button>
                             <button class="tag-btn" data-category="tablets">Tablets</button>
+                            <button class="tag-btn" data-category="phone">Phone</button>
+                            <button class="tag-btn" data-category="mobile">Mobile</button>
                         </div>
                     </div>
 
@@ -1735,24 +1710,26 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
-                            <button class="tag-btn active" data-brand="all">All</button>
-                            <?php if (!empty($brands)): ?>
-                                <?php $displayed_brands = array_slice($brands, 0, 8); ?>
-                                <?php foreach ($displayed_brands as $brand): ?>
-                                    <button class="tag-btn" data-brand="<?= htmlspecialchars($brand['brand_name']) ?>"><?= htmlspecialchars($brand['brand_name']) ?></button>
-                                <?php endforeach; ?>
-                            <?php endif; ?>
+                            <button class="tag-btn active" data-brand="">All</button>
+                            <button class="tag-btn" data-brand="apple">Apple</button>
+                            <button class="tag-btn" data-brand="samsung">Samsung</button>
+                            <button class="tag-btn" data-brand="google">Google</button>
+                            <button class="tag-btn" data-brand="xiaomi">Xiaomi</button>
+                            <button class="tag-btn" data-brand="huawei">Huawei</button>
+                            <button class="tag-btn" data-brand="oneplus">OnePlus</button>
+                            <button class="tag-btn" data-brand="sony">Sony</button>
+                            <button class="tag-btn" data-brand="lg">LG</button>
                         </div>
                     </div>
 
                     <!-- Filter by Size -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="size-filters" id="sizeTags">
-                            <button class="size-btn active" data-size="all">All</button>
-                            <button class="size-btn" data-size="large">Large</button>
-                            <button class="size-btn" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="small">Small</button>
+                        <div class="tag-filters" id="sizeTags">
+                            <button class="tag-btn active" data-size="">All</button>
+                            <button class="tag-btn" data-size="large">Large</button>
+                            <button class="tag-btn" data-size="medium">Medium</button>
+                            <button class="tag-btn" data-size="small">Small</button>
                         </div>
                     </div>
 
@@ -1760,21 +1737,36 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Color</h6>
                         <div class="color-filters" id="colorTags">
-                            <button class="color-btn color-multicolor active" data-color="all" title="All Colors"></button>
-                            <button class="color-btn color-blue" data-color="blue" title="Blue"></button>
-                            <button class="color-btn color-gray" data-color="gray" title="Gray"></button>
-                            <button class="color-btn color-green" data-color="green" title="Green"></button>
-                            <button class="color-btn color-red" data-color="red" title="Red"></button>
-                            <button class="color-btn color-orange" data-color="orange" title="Orange"></button>
+                            <div class="color-option active" data-color="">
+                                <div class="color-circle" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);"></div>
+                            </div>
+                            <div class="color-option" data-color="blue">
+                                <div class="color-circle" style="background: #3b82f6;"></div>
+                            </div>
+                            <div class="color-option" data-color="gray">
+                                <div class="color-circle" style="background: #6b7280;"></div>
+                            </div>
+                            <div class="color-option" data-color="green">
+                                <div class="color-circle" style="background: #10b981;"></div>
+                            </div>
+                            <div class="color-option" data-color="red">
+                                <div class="color-circle" style="background: #ef4444;"></div>
+                            </div>
+                            <div class="color-option" data-color="black">
+                                <div class="color-circle" style="background: #1f2937;"></div>
+                            </div>
+                            <div class="color-option" data-color="white">
+                                <div class="color-circle" style="background: #f9fafb; border: 2px solid #e5e7eb;"></div>
+                            </div>
+                            <div class="color-option" data-color="yellow">
+                                <div class="color-circle" style="background: #f59e0b;"></div>
+                            </div>
                         </div>
                     </div>
 
+                    <!-- Clear All Filters Button -->
                     <div class="filter-actions">
-                        <button class="apply-filters-btn" id="applyFilters">
-                            <i class="fas fa-check"></i>
-                            Apply Filters
-                        </button>
-                        <button class="clear-filters-btn" id="clearFilters">
+                        <button class="clear-all-filters-btn" id="clearAllFilters">
                             <i class="fas fa-times"></i>
                             Clear All Filters
                         </button>
@@ -1784,35 +1776,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             <!-- Right Content - Products -->
             <div class="col-lg-9 col-md-8" id="productContent">
-                <div class="stats-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
-                    <div style="display: flex; align-items: center; gap: 20px;">
-                        <div class="product-count" style="color: #6b7280; font-size: 0.9rem;">
-                            <i class="fas fa-mobile-alt" style="margin-right: 8px;"></i>
-                            Showing <?php echo count($products_to_display); ?> of <?php echo $total_products; ?> mobile devices
-                        </div>
-                        <!-- Sort Dropdown -->
-                        <div style="display: flex; align-items: center; gap: 10px;">
-                            <span style="color: #6b7280; font-size: 0.9rem; font-weight: 500;">Sort by:</span>
-                            <select id="sortSelect" onchange="sortProducts()" style="padding: 8px 12px; border: 1px solid #d1d5db; border-radius: 6px; background: white; color: #374151; font-size: 0.9rem; cursor: pointer;">
-                                <option value="alphabetically-az">Alphabetically, A-Z</option>
-                                <option value="alphabetically-za">Alphabetically, Z-A</option>
-                                <option value="price-low-high">Price, low to high</option>
-                                <option value="price-high-low">Price, high to low</option>
-                                <option value="newest">Date, new to old</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <span style="color: #6b7280; font-size: 0.9rem; font-weight: 500;"><?php echo $total_products; ?> Products</span>
-                        <div class="view-toggle" style="display: flex; border: 1px solid #d1d5db; border-radius: 6px; overflow: hidden;">
-                            <button class="view-btn active" onclick="toggleView('grid')" title="Grid View" style="padding: 8px 12px; border: none; background: #2563eb; color: white; cursor: pointer;">
-                                <i class="fas fa-th"></i>
-                            </button>
-                            <button class="view-btn" onclick="toggleView('list')" title="List View" style="padding: 8px 12px; border: none; background: white; color: #6b7280; cursor: pointer;">
-                                <i class="fas fa-list"></i>
-                            </button>
-                        </div>
-                    </div>
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h1 class="page-title mb-0" data-translate="mobile_devices">Mobile Devices</h1>
+                    <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
+                        <i class="fas fa-filter me-2"></i>
+                        Filters
+                    </button>
+                </div>
+
+                <!-- Results Info -->
+                <div class="results-info" id="resultsInfo" style="display: none;">
+                    <span id="resultsText">Showing all mobile devices</span>
                 </div>
 
                 <div id="productsContainer">
@@ -2054,7 +2028,417 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Update timer every second
         setInterval(updatePromoTimer, 1000);
-        updatePromoTimer();\n\n        // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initializePriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
+        updatePromoTimer();
+
+        // Advanced Filtering System
+        let currentFilters = {
+            search: '',
+            rating: '',
+            priceMin: 0,
+            priceMax: 10000,
+            categories: [],
+            brands: [],
+            sizes: [],
+            colors: []
+        };
+
+        function executeFilters() {
+            // Show loading state
+            const productGrid = document.getElementById('productGrid');
+            if (productGrid) {
+                productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Loading products...</div>';
+            }
+
+            // Apply filters via AJAX
+            applyFilters();
+        }
+
+        function applyFilters() {
+            const formData = new FormData();
+            formData.append('action', 'combined_filter');
+            formData.append('category_filter', 'Mobile'); // Fixed category for mobile page
+
+            // Add all filter values
+            if (currentFilters.search) formData.append('search_filter', currentFilters.search);
+            if (currentFilters.rating) formData.append('rating_filter', currentFilters.rating);
+            formData.append('price_min', currentFilters.priceMin);
+            formData.append('price_max', currentFilters.priceMax);
+            if (currentFilters.brands.length) formData.append('brand_filter', currentFilters.brands.join(','));
+            if (currentFilters.sizes.length) formData.append('size_filter', currentFilters.sizes.join(','));
+            if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
+
+            fetch('../actions/product_actions.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateProductGrid(data.products);
+                    updateResultsInfo(data.total_count);
+                } else {
+                    console.error('Filter error:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Network error:', error);
+                const productGrid = document.getElementById('productGrid');
+                if (productGrid) {
+                    productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>Error loading products. Please try again.</div>';
+                }
+            });
+        }
+
+        function updateProductGrid(products) {
+            const productGrid = document.getElementById('productGrid');
+            if (!productGrid) return;
+
+            if (!products || products.length === 0) {
+                productGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-mobile-alt fa-4x mb-3" style="color: #cbd5e0;"></i>
+                        <h3>No Mobile Devices Found</h3>
+                        <p>Try adjusting your filters or search terms.</p>
+                        <button onclick="clearAllFilters()" class="btn btn-primary mt-3">
+                            <i class="fas fa-refresh"></i> Clear All Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const productsHtml = products.map(product => {
+                const discount = Math.floor(Math.random() * 16) + 10;
+                const originalPrice = parseFloat(product.product_price) * (1 + discount / 100);
+                const rating = (Math.random() * 1 + 4).toFixed(1);
+                const imageUrl = product.image_url || generatePlaceholderUrl(product.product_title || 'Product', '400x300');
+
+                return `
+                    <div class="modern-product-card" style="
+                        background: white;
+                        border-radius: 16px;
+                        border: 1px solid #e5e7eb;
+                        overflow: hidden;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        cursor: pointer;
+                        position: relative;
+                        transform-origin: center;
+                    " onmouseover="this.style.transform='rotate(-1deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
+                       onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+
+                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                            -${discount}%
+                        </div>
+
+                        <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                            <button onclick="event.stopPropagation(); toggleWishlist(${product.product_id})"
+                                    style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                    onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                            </button>
+                        </div>
+
+                        <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                            <img src="${imageUrl}"
+                                alt="${product.product_title || 'Product'}"
+                                style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                onerror="this.src='${generatePlaceholderUrl(product.product_title || 'Product', '400x300')}'">
+                        </div>
+
+                        <div style="padding: 25px;">
+                            <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(${product.product_id})">
+                                ${product.product_title || 'Untitled Product'}
+                            </h3>
+
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="color: #fbbf24; margin-right: 8px;">
+                                    ${'★'.repeat(Math.floor(rating))}${'☆'.repeat(5 - Math.floor(rating))}
+                                </div>
+                                <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(${rating})</span>
+                            </div>
+
+                            <div style="margin-bottom: 12px;">
+                                <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
+                            </div>
+
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                <div>
+                                    <span style="color: #6b7280; text-decoration: line-through; font-size: 1rem; margin-right: 8px;">
+                                        GH₵${originalPrice.toFixed(2)}
+                                    </span>
+                                    <span style="color: #ef4444; font-size: 1.4rem; font-weight: 800;">
+                                        GH₵${parseFloat(product.product_price).toFixed(2)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.product_id})"
+                                style="width: 100%; padding: 12px; background: linear-gradient(135deg, #008060, #006b4e); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            productGrid.innerHTML = productsHtml;
+        }
+
+        function updateResultsInfo(totalCount) {
+            const resultsInfo = document.getElementById('resultsInfo');
+            const resultsText = document.getElementById('resultsText');
+
+            if (resultsInfo && resultsText) {
+                if (totalCount > 0) {
+                    resultsText.textContent = `Showing ${totalCount} mobile devices`;
+                    resultsInfo.style.display = 'block';
+                } else {
+                    resultsInfo.style.display = 'none';
+                }
+            }
+        }
+
+        // Filter interaction handlers
+        function setupFilterHandlers() {
+            // Search input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(function() {
+                    currentFilters.search = this.value;
+                    executeFilters();
+                }, 500));
+            }
+
+            // Rating filters
+            document.querySelectorAll('.rating-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilters.rating = this.dataset.rating || '';
+                    executeFilters();
+                });
+            });
+
+            // Price sliders
+            const priceMin = document.getElementById('priceMin');
+            const priceMax = document.getElementById('priceMax');
+            const minDisplay = document.getElementById('minPriceDisplay');
+            const maxDisplay = document.getElementById('maxPriceDisplay');
+
+            if (priceMin && priceMax) {
+                function updatePriceDisplay() {
+                    const min = parseInt(priceMin.value);
+                    const max = parseInt(priceMax.value);
+
+                    if (min > max) {
+                        priceMin.value = max;
+                    }
+                    if (max < min) {
+                        priceMax.value = min;
+                    }
+
+                    currentFilters.priceMin = parseInt(priceMin.value);
+                    currentFilters.priceMax = parseInt(priceMax.value);
+
+                    if (minDisplay) minDisplay.textContent = `GH₵${currentFilters.priceMin}`;
+                    if (maxDisplay) maxDisplay.textContent = `GH₵${currentFilters.priceMax}`;
+                }
+
+                priceMin.addEventListener('input', debounce(function() {
+                    updatePriceDisplay();
+                    executeFilters();
+                }, 300));
+
+                priceMax.addEventListener('input', debounce(function() {
+                    updatePriceDisplay();
+                    executeFilters();
+                }, 300));
+
+                updatePriceDisplay();
+            }
+
+            // Category tags
+            document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    if (category === '') {
+                        currentFilters.categories = [];
+                        document.querySelectorAll('#categoryTags .tag-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allBtn = document.querySelector('#categoryTags .tag-btn[data-category=""]');
+                        if (allBtn) allBtn.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.categories.indexOf(category);
+                        if (index > -1) {
+                            currentFilters.categories.splice(index, 1);
+                        } else {
+                            currentFilters.categories.push(category);
+                        }
+
+                        if (currentFilters.categories.length === 0) {
+                            if (allBtn) allBtn.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Brand tags
+            document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const brand = this.dataset.brand;
+                    if (brand === '') {
+                        currentFilters.brands = [];
+                        document.querySelectorAll('#brandTags .tag-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allBtn = document.querySelector('#brandTags .tag-btn[data-brand=""]');
+                        if (allBtn) allBtn.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.brands.indexOf(brand);
+                        if (index > -1) {
+                            currentFilters.brands.splice(index, 1);
+                        } else {
+                            currentFilters.brands.push(brand);
+                        }
+
+                        if (currentFilters.brands.length === 0) {
+                            if (allBtn) allBtn.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Size tags
+            document.querySelectorAll('#sizeTags .tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const size = this.dataset.size;
+                    if (size === '') {
+                        currentFilters.sizes = [];
+                        document.querySelectorAll('#sizeTags .tag-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allBtn = document.querySelector('#sizeTags .tag-btn[data-size=""]');
+                        if (allBtn) allBtn.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.sizes.indexOf(size);
+                        if (index > -1) {
+                            currentFilters.sizes.splice(index, 1);
+                        } else {
+                            currentFilters.sizes.push(size);
+                        }
+
+                        if (currentFilters.sizes.length === 0) {
+                            if (allBtn) allBtn.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Color filters
+            document.querySelectorAll('#colorTags .color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const color = this.dataset.color;
+                    if (color === '') {
+                        currentFilters.colors = [];
+                        document.querySelectorAll('#colorTags .color-option').forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allOption = document.querySelector('#colorTags .color-option[data-color=""]');
+                        if (allOption) allOption.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.colors.indexOf(color);
+                        if (index > -1) {
+                            currentFilters.colors.splice(index, 1);
+                        } else {
+                            currentFilters.colors.push(color);
+                        }
+
+                        if (currentFilters.colors.length === 0) {
+                            if (allOption) allOption.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Clear all filters
+            const clearAllBtn = document.getElementById('clearAllFilters');
+            if (clearAllBtn) {
+                clearAllBtn.addEventListener('click', clearAllFilters);
+            }
+        }
+
+        function clearAllFilters() {
+            // Reset filter state
+            currentFilters = {
+                search: '',
+                rating: '',
+                priceMin: 0,
+                priceMax: 10000,
+                categories: [],
+                brands: [],
+                sizes: [],
+                colors: []
+            };
+
+            // Reset UI elements
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.value = '';
+
+            document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.rating-option[data-rating=""]')?.classList.add('active');
+
+            const priceMin = document.getElementById('priceMin');
+            const priceMax = document.getElementById('priceMax');
+            if (priceMin) priceMin.value = 0;
+            if (priceMax) priceMax.value = 10000;
+
+            document.getElementById('minPriceDisplay').textContent = 'GH₵0';
+            document.getElementById('maxPriceDisplay').textContent = 'GH₵10,000';
+
+            // Reset all tag filters
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tag-btn[data-category=""], .tag-btn[data-brand=""], .tag-btn[data-size=""]').forEach(btn => btn.classList.add('active'));
+
+            // Reset color filters
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.color-option[data-color=""]')?.classList.add('active');
+
+            // Apply cleared filters
+            executeFilters();
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
+        function generatePlaceholderUrl(text, size = '320x240') {
+            const [width, height] = size.split('x').map(Number);
+            const safeText = (text || 'Mobile Device').substring(0, 32).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+                <rect width="100%" height="100%" fill="#eef2ff"/>
+                <rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#cbd5f5" stroke-width="2"/>
+                <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 14)}" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
+            </svg>`;
+            return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+        }\n\n        // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initializePriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
     </script>
 </body>
 </html>

@@ -759,57 +759,77 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Search Bar -->
                     <div class="filter-group">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search computing products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
+                            <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                         </div>
                     </div>
 
                     <!-- Rating Filter -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Rating</h6>
-                        <div class="rating-filters">
+                        <div class="rating-filter">
                             <div class="rating-option" data-rating="5">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                </div>
-                                <span>5 Star</span>
+                                <input type="radio" id="rating_5" name="rating_filter" value="5">
+                                <label for="rating_5">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">5 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="4">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>4 Star</span>
+                                <input type="radio" id="rating_4" name="rating_filter" value="4">
+                                <label for="rating_4">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">4 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="3">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>3 Star</span>
+                                <input type="radio" id="rating_3" name="rating_filter" value="3">
+                                <label for="rating_3">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">3 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="2">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>2 Star</span>
+                                <input type="radio" id="rating_2" name="rating_filter" value="2">
+                                <label for="rating_2">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">2 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="1">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>1 Star</span>
+                                <input type="radio" id="rating_1" name="rating_filter" value="1">
+                                <label for="rating_1">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">1 Star</span>
+                                </label>
                             </div>
                         </div>
                     </div>
 
-                    <!-- Price Range Filter -->
+                    <!-- Price Range -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Price Range</h6>
-                        <div class="price-range-container">
-                            <input type="range" class="price-slider" id="priceRange" min="0" max="5000" value="2500" step="10">
+                        <div class="price-slider-container">
+                            <div class="price-slider-track">
+                                <div class="price-slider-range" id="priceRange"></div>
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
+                            </div>
                             <div class="price-display">
-                                <span>GH₵ 0</span>
-                                <span>-</span>
-                                <span>GH₵ 500</span>
+                                <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
+                                <span class="price-separator">-</span>
+                                <span class="price-max" id="priceMaxDisplay">GH₵ 50,000</span>
                             </div>
                         </div>
                     </div>
@@ -818,9 +838,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Category</h6>
                         <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="">All</button>
-                            <button class="tag-btn" data-category="laptops">Laptops</button>
-                            <button class="tag-btn" data-category="desktops">Desktops</button>
+                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
+                            <?php foreach ($categories as $category): ?>
+                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
+                                    <?php echo htmlspecialchars($category['cat_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
@@ -828,19 +851,62 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
-                            <button class="tag-btn active" data-brand="">All</button>
-                            <button class="tag-btn" data-brand="acer_desktops">Acer Desktops</button>
-                            <button class="tag-btn" data-brand="acer_laptop">Acer Laptop</button>
-                            <button class="tag-btn" data-brand="apple">Apple</button>
-                            <button class="tag-btn" data-brand="apple_imac">Apple iMac</button>
-                            <button class="tag-btn" data-brand="apple_ipad">Apple iPad</button>
-                            <button class="tag-btn" data-brand="apple_mac">Apple Mac</button>
-                            <button class="tag-btn" data-brand="asus_desktop">Asus Desktop</button>
-                            <button class="tag-btn" data-brand="asus_laptop">Asus Laptop</button>
-                            <button class="tag-btn" data-brand="dell_desktop">Dell Desktop</button>
-                            <button class="tag-btn" data-brand="dell_laptops">Dell Laptops</button>
-                            <button class="tag-btn" data-brand="hp_desktops">HP Desktops</button>
-                            <button class="tag-btn" data-brand="hp_laptops">HP Laptops</button>
+                            <button class="tag-btn active" data-brand="" id="brand_all_btn">All</button>
+                            <?php foreach ($brands as $brand): ?>
+                                <button class="tag-btn" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
+                                    <?php echo htmlspecialchars($brand['brand_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Size -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Filter By Size</h6>
+                        <div class="size-filters">
+                            <button class="size-btn active" data-size="">All</button>
+                            <button class="size-btn" data-size="large">Large</button>
+                            <button class="size-btn" data-size="medium">Medium</button>
+                            <button class="size-btn" data-size="small">Small</button>
+                        </div>
+                    </div>
+
+                    <!-- Filter by Color -->
+                    <div class="filter-group">
+                        <h6 class="filter-subtitle">Filter By Color</h6>
+                        <div class="color-filters">
+                            <button class="color-btn active" data-color="" title="All Colors">
+                                <span class="color-circle all-colors"></span>
+                            </button>
+                            <button class="color-btn" data-color="blue" title="Blue">
+                                <span class="color-circle" style="background-color: #0066cc;"></span>
+                            </button>
+                            <button class="color-btn" data-color="gray" title="Gray">
+                                <span class="color-circle" style="background-color: #808080;"></span>
+                            </button>
+                            <button class="color-btn" data-color="green" title="Green">
+                                <span class="color-circle" style="background-color: #00aa00;"></span>
+                            </button>
+                            <button class="color-btn" data-color="red" title="Red">
+                                <span class="color-circle" style="background-color: #dd0000;"></span>
+                            </button>
+                            <button class="color-btn" data-color="yellow" title="Yellow">
+                                <span class="color-circle" style="background-color: #ffdd00;"></span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Apply/Clear Filters Buttons -->
+                    <div class="filter-actions">
+                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
+                        <button class="clear-filters-btn" id="clearFilters">
+                            <i class="fas fa-times"></i>
+                            Clear All Filters
+                        </button>
+                    </div>
                             <button class="tag-btn" data-brand="lenovo_desktop">Lenovo Desktop</button>
                             <button class="tag-btn" data-brand="lenovo_laptop">Lenovo Laptop</button>
                             <button class="tag-btn" data-brand="microsoft_desktops">Microsoft Desktops</button>
@@ -904,37 +970,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </button>
                 </div>
 
-        <!-- Products Grid -->
-        <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label">Category</label>
-                    <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
-                        <option value="all">All Computing</option>
-                        <?php foreach ($computing_cats as $cat): ?>
-                            <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo $category_filter === $cat ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars(ucfirst($cat)); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
+                <!-- Results Info -->
+                <div class="results-info" id="resultsInfo" style="display: none;">
+                    <span id="resultsText">Showing all products</span>
                 </div>
-                <div class="col-md-4">
-                    <label class="form-label">Brand</label>
-                    <select class="filter-select" id="brandFilter" onchange="applyFilters()">
-                        <option value="all">All Brands</option>
-                        <?php foreach ($computing_brands as $brand): ?>
-                            <option value="<?php echo $brand['brand_id']; ?>" <?php echo $brand_filter == $brand['brand_id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($brand['brand_name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <button class="clear-filters-btn w-100" onclick="clearFilters()">
-                        <i class="fas fa-times"></i> Clear Filters
-                    </button>
-                </div>
-            </div>
-        </div>
 
         <!-- Products Grid -->
         <?php if (empty($products_to_display)): ?>
@@ -1240,21 +1279,411 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             });
         }
 
-        function applyFilters() {
-            const category = document.getElementById('categoryFilter').value;
-            const brand = document.getElementById('brandFilter').value;
-            const search = '<?php echo addslashes($search_query); ?>';
+        // Advanced Filtering System
+        let currentFilters = {
+            search: '',
+            rating: '',
+            priceMin: 0,
+            priceMax: 10000,
+            categories: [],
+            brands: [],
+            sizes: [],
+            colors: []
+        };
 
-            const params = new URLSearchParams();
-            if (category !== 'all') params.append('category', category);
-            if (brand !== 'all') params.append('brand', brand);
-            if (search) params.append('search', search);
+        function executeFilters() {
+            // Show loading state
+            const productGrid = document.getElementById('productGrid');
+            if (productGrid) {
+                productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Loading products...</div>';
+            }
 
-            window.location.href = 'computing.php?' + params.toString();
+            // Apply filters via AJAX
+            applyFilters();
         }
 
-        function clearFilters() {
-            window.location.href = 'computing.php';
+        function applyFilters() {
+            const formData = new FormData();
+            formData.append('action', 'combined_filter');
+            formData.append('category_filter', 'Computing'); // Fixed category for computing page
+
+            // Add all filter values
+            if (currentFilters.search) formData.append('search_filter', currentFilters.search);
+            if (currentFilters.rating) formData.append('rating_filter', currentFilters.rating);
+            formData.append('price_min', currentFilters.priceMin);
+            formData.append('price_max', currentFilters.priceMax);
+            if (currentFilters.brands.length) formData.append('brand_filter', currentFilters.brands.join(','));
+            if (currentFilters.sizes.length) formData.append('size_filter', currentFilters.sizes.join(','));
+            if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
+
+            fetch('../actions/product_actions.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    updateProductGrid(data.products);
+                    updateResultsInfo(data.total_count);
+                } else {
+                    console.error('Filter error:', data.message);
+                }
+            })
+            .catch(error => {
+                console.error('Network error:', error);
+                const productGrid = document.getElementById('productGrid');
+                if (productGrid) {
+                    productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>Error loading products. Please try again.</div>';
+                }
+            });
+        }
+
+        function updateProductGrid(products) {
+            const productGrid = document.getElementById('productGrid');
+            if (!productGrid) return;
+
+            if (!products || products.length === 0) {
+                productGrid.innerHTML = `
+                    <div class="no-results">
+                        <i class="fas fa-laptop fa-4x mb-3" style="color: #cbd5e0;"></i>
+                        <h3>No Computing Products Found</h3>
+                        <p>Try adjusting your filters or search terms.</p>
+                        <button onclick="clearAllFilters()" class="btn btn-primary mt-3">
+                            <i class="fas fa-refresh"></i> Clear All Filters
+                        </button>
+                    </div>
+                `;
+                return;
+            }
+
+            const productsHtml = products.map(product => {
+                const discount = Math.floor(Math.random() * 16) + 10;
+                const originalPrice = parseFloat(product.product_price) * (1 + discount / 100);
+                const rating = (Math.random() * 1 + 4).toFixed(1);
+                const imageUrl = product.image_url || generatePlaceholderUrl(product.product_title || 'Product', '400x300');
+
+                return `
+                    <div class="modern-product-card" style="
+                        background: white;
+                        border-radius: 16px;
+                        border: 1px solid #e5e7eb;
+                        overflow: hidden;
+                        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                        cursor: pointer;
+                        position: relative;
+                        transform-origin: center;
+                    " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
+                       onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+
+                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                            -${discount}%
+                        </div>
+
+                        <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                            <button onclick="event.stopPropagation(); toggleWishlist(${product.product_id})"
+                                    style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                    onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                    onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                            </button>
+                        </div>
+
+                        <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                            <img src="${imageUrl}"
+                                alt="${product.product_title || 'Product'}"
+                                style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                onerror="this.src='${generatePlaceholderUrl(product.product_title || 'Product', '400x300')}'">
+                        </div>
+
+                        <div style="padding: 25px;">
+                            <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(${product.product_id})">
+                                ${product.product_title || 'Untitled Product'}
+                            </h3>
+
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="color: #fbbf24; margin-right: 8px;">
+                                    ${'★'.repeat(Math.floor(rating))}${'☆'.repeat(5 - Math.floor(rating))}
+                                </div>
+                                <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(${rating})</span>
+                            </div>
+
+                            <div style="margin-bottom: 12px;">
+                                <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
+                            </div>
+
+                            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px;">
+                                <div>
+                                    <span style="color: #6b7280; text-decoration: line-through; font-size: 1rem; margin-right: 8px;">
+                                        GH₵${originalPrice.toFixed(2)}
+                                    </span>
+                                    <span style="color: #ef4444; font-size: 1.4rem; font-weight: 800;">
+                                        GH₵${parseFloat(product.product_price).toFixed(2)}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <button class="add-to-cart-btn" onclick="addToCart(${product.product_id}, 1, this)"
+                                style="width: 100%; padding: 12px; background: linear-gradient(135deg, #008060, #006b4e); color: white; border: none; border-radius: 10px; font-weight: 600; cursor: pointer; transition: all 0.3s ease;">
+                                <i class="fas fa-shopping-cart"></i> Add to Cart
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+
+            productGrid.innerHTML = productsHtml;
+        }
+
+        function updateResultsInfo(totalCount) {
+            const resultsInfo = document.getElementById('resultsInfo');
+            const resultsText = document.getElementById('resultsText');
+
+            if (resultsInfo && resultsText) {
+                if (totalCount > 0) {
+                    resultsText.textContent = `Showing ${totalCount} computing products`;
+                    resultsInfo.style.display = 'block';
+                } else {
+                    resultsInfo.style.display = 'none';
+                }
+            }
+        }
+
+        // Filter interaction handlers
+        function setupFilterHandlers() {
+            // Search input
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', debounce(function() {
+                    currentFilters.search = this.value;
+                    executeFilters();
+                }, 500));
+            }
+
+            // Rating filters
+            document.querySelectorAll('.rating-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    currentFilters.rating = this.dataset.rating || '';
+                    executeFilters();
+                });
+            });
+
+            // Price sliders
+            const priceMin = document.getElementById('priceMin');
+            const priceMax = document.getElementById('priceMax');
+            const minDisplay = document.getElementById('minPriceDisplay');
+            const maxDisplay = document.getElementById('maxPriceDisplay');
+
+            if (priceMin && priceMax) {
+                function updatePriceDisplay() {
+                    const min = parseInt(priceMin.value);
+                    const max = parseInt(priceMax.value);
+
+                    if (min > max) {
+                        priceMin.value = max;
+                    }
+                    if (max < min) {
+                        priceMax.value = min;
+                    }
+
+                    currentFilters.priceMin = parseInt(priceMin.value);
+                    currentFilters.priceMax = parseInt(priceMax.value);
+
+                    if (minDisplay) minDisplay.textContent = `GH₵${currentFilters.priceMin}`;
+                    if (maxDisplay) maxDisplay.textContent = `GH₵${currentFilters.priceMax}`;
+                }
+
+                priceMin.addEventListener('input', debounce(function() {
+                    updatePriceDisplay();
+                    executeFilters();
+                }, 300));
+
+                priceMax.addEventListener('input', debounce(function() {
+                    updatePriceDisplay();
+                    executeFilters();
+                }, 300));
+
+                updatePriceDisplay();
+            }
+
+            // Category tags
+            document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const category = this.dataset.category;
+                    if (category === '') {
+                        // "All" button
+                        currentFilters.categories = [];
+                        document.querySelectorAll('#categoryTags .tag-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        // Toggle specific category
+                        const allBtn = document.querySelector('#categoryTags .tag-btn[data-category=""]');
+                        if (allBtn) allBtn.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.categories.indexOf(category);
+                        if (index > -1) {
+                            currentFilters.categories.splice(index, 1);
+                        } else {
+                            currentFilters.categories.push(category);
+                        }
+
+                        if (currentFilters.categories.length === 0) {
+                            if (allBtn) allBtn.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Brand tags
+            document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const brand = this.dataset.brand;
+                    if (brand === '') {
+                        currentFilters.brands = [];
+                        document.querySelectorAll('#brandTags .tag-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allBtn = document.querySelector('#brandTags .tag-btn[data-brand=""]');
+                        if (allBtn) allBtn.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.brands.indexOf(brand);
+                        if (index > -1) {
+                            currentFilters.brands.splice(index, 1);
+                        } else {
+                            currentFilters.brands.push(brand);
+                        }
+
+                        if (currentFilters.brands.length === 0) {
+                            if (allBtn) allBtn.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Size tags
+            document.querySelectorAll('#sizeTags .tag-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    const size = this.dataset.size;
+                    if (size === '') {
+                        currentFilters.sizes = [];
+                        document.querySelectorAll('#sizeTags .tag-btn').forEach(b => b.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allBtn = document.querySelector('#sizeTags .tag-btn[data-size=""]');
+                        if (allBtn) allBtn.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.sizes.indexOf(size);
+                        if (index > -1) {
+                            currentFilters.sizes.splice(index, 1);
+                        } else {
+                            currentFilters.sizes.push(size);
+                        }
+
+                        if (currentFilters.sizes.length === 0) {
+                            if (allBtn) allBtn.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Color filters
+            document.querySelectorAll('#colorTags .color-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    const color = this.dataset.color;
+                    if (color === '') {
+                        currentFilters.colors = [];
+                        document.querySelectorAll('#colorTags .color-option').forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                    } else {
+                        const allOption = document.querySelector('#colorTags .color-option[data-color=""]');
+                        if (allOption) allOption.classList.remove('active');
+
+                        this.classList.toggle('active');
+                        const index = currentFilters.colors.indexOf(color);
+                        if (index > -1) {
+                            currentFilters.colors.splice(index, 1);
+                        } else {
+                            currentFilters.colors.push(color);
+                        }
+
+                        if (currentFilters.colors.length === 0) {
+                            if (allOption) allOption.classList.add('active');
+                        }
+                    }
+                    executeFilters();
+                });
+            });
+
+            // Clear all filters
+            const clearAllBtn = document.getElementById('clearAllFilters');
+            if (clearAllBtn) {
+                clearAllBtn.addEventListener('click', clearAllFilters);
+            }
+
+            // Apply filters button
+            const applyFiltersBtn = document.getElementById('applyFilters');
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', executeFilters);
+            }
+        }
+
+        function clearAllFilters() {
+            // Reset filter state
+            currentFilters = {
+                search: '',
+                rating: '',
+                priceMin: 0,
+                priceMax: 10000,
+                categories: [],
+                brands: [],
+                sizes: [],
+                colors: []
+            };
+
+            // Reset UI elements
+            const searchInput = document.getElementById('searchInput');
+            if (searchInput) searchInput.value = '';
+
+            document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.rating-option[data-rating=""]')?.classList.add('active');
+
+            const priceMin = document.getElementById('priceMin');
+            const priceMax = document.getElementById('priceMax');
+            if (priceMin) priceMin.value = 0;
+            if (priceMax) priceMax.value = 10000;
+
+            document.getElementById('minPriceDisplay').textContent = 'GH₵0';
+            document.getElementById('maxPriceDisplay').textContent = 'GH₵10,000';
+
+            // Reset all tag filters
+            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelectorAll('.tag-btn[data-category=""], .tag-btn[data-brand=""], .tag-btn[data-size=""]').forEach(btn => btn.classList.add('active'));
+
+            // Reset color filters
+            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('.color-option[data-color=""]')?.classList.add('active');
+
+            // Apply cleared filters
+            executeFilters();
+        }
+
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
         }
 
 
@@ -1395,6 +1824,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             createFloatingBubbles();
+            setupFilterHandlers();
             // Images now load directly using get_product_image_url() helper function
         });
 

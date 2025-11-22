@@ -1640,7 +1640,7 @@ try {
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
 						 alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
-					<p class="welcome-message" id="welcomeMessage">Your one-stop shop for premium refurbished tech devices. Join thousands of satisfied customers who trust Gadget Garage for quality and value.</p>
+					<p class="welcome-message" id="welcomeMessage">Your one-stop shop for premium refurbished tech devices.</p>
 				</div>
 
 				<!-- Form Panel (White) -->
@@ -1654,7 +1654,7 @@ try {
 						<div class="form-toggle">
 							<div class="toggle-slider" id="toggleSlider"></div>
 							<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
-							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Sign Up</button>
+							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
 						</div>
 
 						<!-- Social Login Buttons -->
@@ -1984,7 +1984,7 @@ try {
 
 			// Update welcome panel content
 			welcomeTitle.textContent = 'Welcome Back!';
-			welcomeMessage.textContent = 'Your one-stop shop for premium refurbished tech devices. Join thousands of satisfied customers who trust Gadget Garage for quality and value.';
+			welcomeMessage.textContent = 'Your one-stop shop for premium refurbished tech devices.';
 
 			// Update form title
 			formTitle.textContent = 'Login With';
@@ -2016,11 +2016,11 @@ try {
 			toggleSlider.style.transform = 'translateX(100%)';
 
 			// Update welcome panel content
-			welcomeTitle.textContent = 'Hello';
-			welcomeMessage.textContent = 'Register to use all features in our site';
+			welcomeTitle.textContent = 'Join GadgetGarage!';
+			welcomeMessage.textContent = 'Join thousands of satisfied customers who trust Gadget Garage for quality and value.';
 
 			// Update form title
-			formTitle.textContent = 'Login With';
+			formTitle.textContent = 'Sign up With';
 		}
 	</script>
 </body>

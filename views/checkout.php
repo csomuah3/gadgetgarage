@@ -2595,7 +2595,7 @@ try {
 			});
 
 			// Initialize PayStack transaction
-			fetch('actions/paystack_init_transaction.php', {
+			fetch('../actions/paystack_init_transaction.php', {
 				method: 'POST',
 				headers: {
 					'Content-Type': 'application/json',

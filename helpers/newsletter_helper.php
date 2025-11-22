@@ -39,8 +39,9 @@ function should_show_newsletter_popup($customer_id) {
         error_log("Newsletter helper error: " . $e->getMessage());
         return false;
     } finally {
-        if (isset($db)) {
-            $db->db_close();
+        // Clean up - mysqli connections are automatically closed when script ends
+        if (isset($conn)) {
+            $conn->close();
         }
     }
 }

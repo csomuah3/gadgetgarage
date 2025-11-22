@@ -449,7 +449,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 						<div class="header-icon">
 							<a href="cart.php" style="color: inherit; text-decoration: none;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
 							</a>
 						</div>
 

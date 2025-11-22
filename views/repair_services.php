@@ -2,6 +2,16 @@
 session_start();
 require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../settings/db_class.php';
+require_once __DIR__ . '/../controllers/cart_controller.php';
+
+// Check user authentication
+$is_logged_in = check_login();
+$is_admin = $is_logged_in ? check_admin() : false;
+
+// Get cart count
+$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
+$ip_address = $_SERVER['REMOTE_ADDR'];
+$cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
 
 // Get repair issue types
 try {
@@ -1058,7 +1068,7 @@ try {
 						<div class="header-icon">
 							<a href="cart.php" style="color: inherit; text-decoration: none;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
 							</a>
 						</div>
 

@@ -47,6 +47,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="css/dark-mode.css" rel="stylesheet">
     <link href="includes/header-styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
@@ -475,6 +476,135 @@ try {
 
         .toggle-switch.active .toggle-slider {
             transform: translateX(20px);
+        }
+
+        /* Dark Mode Styles */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .promo-banner {
+            background: #0f1419 !important;
+        }
+
+        body.dark-mode .main-header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-bottom-color: #4a5568;
+        }
+
+        body.dark-mode .logo,
+        body.dark-mode .tech-revival-text,
+        body.dark-mode .contact-number {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .search-input {
+            background: #374151;
+            border-color: #4a5568;
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .search-input::placeholder {
+            color: #9ca3af;
+        }
+
+        body.dark-mode .search-input:focus {
+            background: #4a5568;
+            border-color: #60a5fa;
+        }
+
+        body.dark-mode .categories-button {
+            background: linear-gradient(135deg, #374151, #1f2937);
+        }
+
+        body.dark-mode .categories-button:hover {
+            background: linear-gradient(135deg, #4a5568, #374151);
+        }
+
+        body.dark-mode .brands-dropdown {
+            background: rgba(45, 55, 72, 0.95);
+            border-color: rgba(74, 85, 104, 0.5);
+        }
+
+        body.dark-mode .brands-dropdown h4 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .brands-dropdown a {
+            color: #cbd5e0;
+        }
+
+        body.dark-mode .brands-dropdown a:hover {
+            background: rgba(74, 85, 104, 0.3);
+            color: #60a5fa;
+        }
+
+        body.dark-mode .header-icon {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .header-icon:hover {
+            background: rgba(74, 85, 104, 0.3);
+        }
+
+        body.dark-mode .dropdown-menu-custom {
+            background: rgba(45, 55, 72, 0.95);
+            border-color: rgba(74, 85, 104, 0.5);
+        }
+
+        body.dark-mode .dropdown-item-custom {
+            color: #cbd5e0;
+        }
+
+        body.dark-mode .dropdown-item-custom:hover {
+            background: rgba(74, 85, 104, 0.3);
+            color: #60a5fa;
+        }
+
+        body.dark-mode .main-nav {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-bottom-color: #4a5568;
+        }
+
+        body.dark-mode .nav-item {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .nav-item:hover {
+            background: rgba(74, 85, 104, 0.3);
+            color: #60a5fa;
+        }
+
+        body.dark-mode .mega-dropdown {
+            background: rgba(45, 55, 72, 0.95);
+            border-color: rgba(74, 85, 104, 0.5);
+        }
+
+        body.dark-mode .dropdown-column h4 {
+            color: #e2e8f0;
+        }
+
+        body.dark-mode .dropdown-column ul li a {
+            color: #cbd5e0;
+        }
+
+        body.dark-mode .dropdown-column ul li a:hover {
+            color: #60a5fa;
+        }
+
+        body.dark-mode .simple-dropdown {
+            background: rgba(45, 55, 72, 0.95);
+            border-color: rgba(74, 85, 104, 0.5);
+        }
+
+        body.dark-mode .simple-dropdown ul li a {
+            color: #cbd5e0;
+        }
+
+        body.dark-mode .simple-dropdown ul li a:hover {
+            background: rgba(74, 85, 104, 0.3);
+            color: #60a5fa;
         }
 
         .language-selector {
@@ -1536,37 +1666,50 @@ try {
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="../js/header.js"></script>
     <script src="../js/dark-mode.js"></script>
     <script src="../js/cart.js"></script>
 
     <script>
-    // Header dropdown functionality
+    // User dropdown functionality - from login.php
     function toggleUserDropdown() {
         const dropdown = document.getElementById('userDropdownMenu');
         dropdown.classList.toggle('show');
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function closeDropdown(e) {
-            if (!e.target.closest('.user-dropdown')) {
-                dropdown.classList.remove('show');
-                document.removeEventListener('click', closeDropdown);
-            }
-        });
     }
 
-    // Brands dropdown
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('userDropdownMenu');
+        const avatar = document.querySelector('.user-avatar');
+
+        if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Brands dropdown - from login.php
+    let dropdownTimeout;
+
     function showDropdown() {
         const dropdown = document.getElementById('shopDropdown');
         if (dropdown) {
-            dropdown.classList.add('show');
+            clearTimeout(dropdownTimeout);
+            dropdown.style.opacity = '1';
+            dropdown.style.visibility = 'visible';
+            dropdown.style.transform = 'translateY(0)';
         }
     }
 
     function hideDropdown() {
         const dropdown = document.getElementById('shopDropdown');
         if (dropdown) {
-            dropdown.classList.remove('show');
+            clearTimeout(dropdownTimeout);
+            dropdownTimeout = setTimeout(() => {
+                dropdown.style.opacity = '0';
+                dropdown.style.visibility = 'hidden';
+                dropdown.style.transform = 'translateY(-10px)';
+            }, 300);
         }
     }
 
@@ -1832,6 +1975,112 @@ try {
             updateCartBadge();
         }
     });
+
+    // Timer functionality - from login.php
+    function updateTimer() {
+        const timerElement = document.getElementById('promoTimer');
+        if (timerElement) {
+            const now = new Date().getTime();
+            const nextDay = new Date();
+            nextDay.setDate(nextDay.getDate() + 1);
+            nextDay.setHours(0, 0, 0, 0);
+
+            const distance = nextDay.getTime() - now;
+
+            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            timerElement.innerHTML = days + "d:" +
+                                     (hours < 10 ? "0" : "") + hours + "h:" +
+                                     (minutes < 10 ? "0" : "") + minutes + "m:" +
+                                     (seconds < 10 ? "0" : "") + seconds + "s";
+        }
+    }
+
+    // Update timer every second
+    setInterval(updateTimer, 1000);
+    updateTimer(); // Initial call
+
+    // Account page navigation
+    function goToAccount() {
+        window.location.href = '../my_orders.php';
+    }
+
+    // Language change functionality
+    function changeLanguage(lang) {
+        // Language change functionality can be implemented here
+        console.log('Language changed to:', lang);
+    }
+
+    // Theme toggle functionality
+    function toggleTheme() {
+        const toggleSwitch = document.getElementById('themeToggle');
+        const body = document.body;
+
+        body.classList.toggle('dark-mode');
+        toggleSwitch.classList.toggle('active');
+
+        // Save theme preference to localStorage
+        const isDarkMode = body.classList.contains('dark-mode');
+        localStorage.setItem('darkMode', isDarkMode);
+    }
+
+    // Load theme preference on page load
+    document.addEventListener('DOMContentLoaded', function() {
+        const isDarkMode = localStorage.getItem('darkMode') === 'true';
+        const toggleSwitch = document.getElementById('themeToggle');
+
+        if (isDarkMode) {
+            document.body.classList.add('dark-mode');
+            if (toggleSwitch) {
+                toggleSwitch.classList.add('active');
+            }
+        }
+    });
+
+    // Shop Dropdown Functions
+    function showShopDropdown() {
+        const dropdown = document.getElementById('shopCategoryDropdown');
+        if (dropdown) {
+            clearTimeout(shopDropdownTimeout);
+            dropdown.classList.add('show');
+        }
+    }
+
+    function hideShopDropdown() {
+        const dropdown = document.getElementById('shopCategoryDropdown');
+        if (dropdown) {
+            clearTimeout(shopDropdownTimeout);
+            shopDropdownTimeout = setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        }
+    }
+
+    // More Dropdown Functions
+    function showMoreDropdown() {
+        const dropdown = document.getElementById('moreDropdown');
+        if (dropdown) {
+            clearTimeout(moreDropdownTimeout);
+            dropdown.classList.add('show');
+        }
+    }
+
+    function hideMoreDropdown() {
+        const dropdown = document.getElementById('moreDropdown');
+        if (dropdown) {
+            clearTimeout(moreDropdownTimeout);
+            moreDropdownTimeout = setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        }
+    }
+
+    // Timeout variables
+    let shopDropdownTimeout;
+    let moreDropdownTimeout;
     </script>
 
     <style>
@@ -2307,6 +2556,15 @@ try {
 
             // Add some celebration animation
             discountRow.style.animation = 'fadeInUp 0.5s ease-out';
+        }
+
+        // Proceed to checkout function
+        function proceedToCheckout() {
+            if (appliedPromo) {
+                // If promo is applied, store it in session or localStorage for checkout
+                localStorage.setItem('appliedPromo', JSON.stringify(appliedPromo));
+            }
+            window.location.href = 'checkout.php';
         }
 
         // Add CSS animation

@@ -58,21 +58,34 @@ function processCheckout() {
 }
 
 // Prompt for customer email before payment
-function promptForEmailAndPay() {
-    const email = prompt("Please enter your email address for payment confirmation:");
+async function promptForEmailAndPay() {
+    const { value: email } = await Swal.fire({
+        title: 'Complete Your Payment',
+        input: 'email',
+        inputLabel: 'Email Address',
+        inputPlaceholder: 'Enter your email for payment confirmation',
+        inputValidator: (value) => {
+            if (!value) {
+                return 'Email is required for payment processing!';
+            }
+            if (!isValidEmail(value)) {
+                return 'Please enter a valid email address!';
+            }
+        },
+        showCancelButton: true,
+        confirmButtonText: 'Proceed to Payment',
+        cancelButtonText: 'Cancel',
+        confirmButtonColor: '#28a745',
+        cancelButtonColor: '#6c757d',
+        customClass: {
+            popup: 'payment-email-modal'
+        }
+    });
 
-    if (!email) {
-        showNotification('Email is required for payment processing.', 'error');
-        return;
+    if (email) {
+        // Initialize PayStack payment
+        initializePayStackPayment(email);
     }
-
-    if (!isValidEmail(email)) {
-        showNotification('Please enter a valid email address.', 'error');
-        return;
-    }
-
-    // Initialize PayStack payment
-    initializePayStackPayment(email);
 }
 
 // Validate email format
@@ -90,15 +103,27 @@ function initializePayStackPayment(email) {
     confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Initializing Payment...';
     confirmBtn.disabled = true;
 
+    // Get final total (including any applied discounts)
+    const finalTotalElement = document.getElementById('finalTotal');
+    let finalTotal = null;
+    if (finalTotalElement) {
+        const totalText = finalTotalElement.textContent.replace(/[^\d.]/g, '');
+        finalTotal = parseFloat(totalText);
+    }
+
+    // Prepare request data
+    const requestData = { email: email };
+    if (finalTotal && finalTotal > 0) {
+        requestData.total_amount = finalTotal;
+    }
+
     // Call backend to initialize PayStack transaction
     fetch('actions/paystack_init_transaction.php', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',
         },
-        body: JSON.stringify({
-            email: email
-        })
+        body: JSON.stringify(requestData)
     })
     .then(response => response.json())
     .then(data => {
@@ -109,22 +134,40 @@ function initializePayStackPayment(email) {
             const paymentModal = bootstrap.Modal.getInstance(document.getElementById('paymentModal'));
             paymentModal.hide();
 
-            // Show redirecting message
-            showNotification('Redirecting to PayStack payment gateway...', 'info');
-
-            // Redirect to PayStack
-            setTimeout(() => {
-                window.location.href = data.authorization_url;
-            }, 1500);
+            // Show redirecting message with SweetAlert
+            Swal.fire({
+                title: 'Redirecting to PayStack',
+                text: 'Please wait while we redirect you to the secure payment gateway...',
+                icon: 'info',
+                showConfirmButton: false,
+                allowOutsideClick: false,
+                timer: 2000,
+                timerProgressBar: true,
+                didClose: () => {
+                    window.location.href = data.authorization_url;
+                }
+            });
         } else {
-            showNotification(data.message || 'Failed to initialize payment. Please try again.', 'error');
+            Swal.fire({
+                title: 'Payment Error',
+                text: data.message || 'Failed to initialize payment. Please try again.',
+                icon: 'error',
+                confirmButtonText: 'Try Again',
+                confirmButtonColor: '#dc3545'
+            });
             confirmBtn.innerHTML = originalText;
             confirmBtn.disabled = false;
         }
     })
     .catch(error => {
         console.error('Error initializing PayStack payment:', error);
-        showNotification('An error occurred while initializing payment.', 'error');
+        Swal.fire({
+            title: 'Connection Error',
+            text: 'An error occurred while initializing payment. Please check your connection and try again.',
+            icon: 'error',
+            confirmButtonText: 'Try Again',
+            confirmButtonColor: '#dc3545'
+        });
         confirmBtn.innerHTML = originalText;
         confirmBtn.disabled = false;
     });
@@ -340,13 +383,20 @@ function validateCheckoutForms() {
     });
 
     if (!isValid) {
-        showNotification('Please fill in all required fields before proceeding.', 'error');
-        // Scroll to first invalid field
-        const firstInvalid = document.querySelector('.is-invalid');
-        if (firstInvalid) {
-            firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            firstInvalid.focus();
-        }
+        Swal.fire({
+            title: 'Form Incomplete',
+            text: 'Please fill in all required fields before proceeding.',
+            icon: 'warning',
+            confirmButtonText: 'OK',
+            confirmButtonColor: '#ffc107'
+        }).then(() => {
+            // Scroll to first invalid field
+            const firstInvalid = document.querySelector('.is-invalid');
+            if (firstInvalid) {
+                firstInvalid.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                firstInvalid.focus();
+            }
+        });
     }
 
     return isValid;

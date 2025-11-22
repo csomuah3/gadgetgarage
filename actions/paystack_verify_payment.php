@@ -74,17 +74,22 @@ try {
         throw new Exception('Cart is empty');
     }
 
-    $cart_total = get_cart_total_ctr($customer_id, $ip_address);
+    // Use the session stored amount (includes any discounts)
+    $expected_amount = isset($_SESSION['paystack_amount']) ? $_SESSION['paystack_amount'] : get_cart_total_ctr($customer_id, $ip_address);
 
     // Verify amount matches (with 1 pesewa tolerance)
-    if (abs($amount_paid - $cart_total) > 0.01) {
+    if (abs($amount_paid - $expected_amount) > 0.01) {
         log_paystack_activity('error', 'Amount mismatch', [
-            'expected' => $cart_total,
+            'expected' => $expected_amount,
             'paid' => $amount_paid,
-            'reference' => $reference
+            'reference' => $reference,
+            'session_amount' => $_SESSION['paystack_amount'] ?? 'not set'
         ]);
         throw new Exception('Payment amount does not match order total');
     }
+
+    // Use the expected amount for further processing
+    $cart_total = $expected_amount;
 
     // Begin database transaction
     require_once __DIR__ . '/../settings/db_class.php';

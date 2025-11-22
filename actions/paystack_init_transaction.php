@@ -31,6 +31,7 @@ if (!$input) {
 }
 
 $customer_email = isset($input['email']) ? trim($input['email']) : '';
+$custom_total = isset($input['total_amount']) ? floatval($input['total_amount']) : null;
 
 // Validate email
 if (!$customer_email || !filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
@@ -45,8 +46,8 @@ try {
     $customer_id = $_SESSION['user_id'];
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
-    // Get cart total
-    $cart_total = get_cart_total_ctr($customer_id, $ip_address);
+    // Get cart total (use custom total if provided for promo discounts)
+    $cart_total = $custom_total ?: get_cart_total_ctr($customer_id, $ip_address);
 
     if ($cart_total <= 0) {
         echo json_encode([
@@ -65,6 +66,7 @@ try {
     log_paystack_activity('info', 'Initializing PayStack transaction', [
         'customer_id' => $customer_id,
         'amount_ghs' => $cart_total,
+        'custom_amount' => $custom_total,
         'amount_pesewas' => $amount_pesewas,
         'email' => $customer_email,
         'reference' => $reference
@@ -90,6 +92,7 @@ try {
         // Store transaction details in session for verification later
         $_SESSION['paystack_reference'] = $reference;
         $_SESSION['paystack_amount'] = $cart_total;
+        $_SESSION['paystack_original_amount'] = $custom_total ? get_cart_total_ctr($customer_id, $ip_address) : $cart_total;
         $_SESSION['paystack_email'] = $customer_email;
         $_SESSION['paystack_timestamp'] = time();
 

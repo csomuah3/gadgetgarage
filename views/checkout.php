@@ -52,6 +52,7 @@ try {
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 	<link href="css/dark-mode.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<style>
 		/* Import Google Fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -2090,8 +2091,51 @@ try {
 			localStorage.setItem('darkMode', isDark);
 		}
 
+		// Check for payment error messages on page load
+		function checkForPaymentErrors() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const error = urlParams.get('error');
+
+			if (error) {
+				let title = 'Payment Error';
+				let message = 'There was an issue with your payment.';
+
+				switch(error) {
+					case 'cancelled':
+						title = 'Payment Cancelled';
+						message = 'Your payment was cancelled. You can try again when ready.';
+						break;
+					case 'verification_failed':
+						title = 'Payment Verification Failed';
+						message = 'We could not verify your payment. Please try again or contact support.';
+						break;
+					case 'connection_error':
+						title = 'Connection Error';
+						message = 'There was a connection error while processing your payment. Please try again.';
+						break;
+					default:
+						message = decodeURIComponent(error);
+				}
+
+				Swal.fire({
+					title: title,
+					text: message,
+					icon: 'error',
+					confirmButtonText: 'Try Again',
+					confirmButtonColor: '#dc3545'
+				});
+
+				// Clean up URL without refreshing page
+				const newUrl = window.location.pathname;
+				history.replaceState(null, null, newUrl);
+			}
+		}
+
 		// Load saved preferences on page load
 		document.addEventListener('DOMContentLoaded', function() {
+			// Check for payment errors first
+			checkForPaymentErrors();
+
 			// Load saved language
 			const savedLanguage = localStorage.getItem('selectedLanguage');
 			if (savedLanguage) {
@@ -2110,7 +2154,38 @@ try {
 
 			// Create floating bubbles
 			createFloatingBubbles();
+
+			// Check for applied promo code from cart
+			checkAndApplyPromoFromCart();
 		});
+
+		// Check for and apply promo code from cart
+		function checkAndApplyPromoFromCart() {
+			const appliedPromo = localStorage.getItem('appliedPromo');
+			if (appliedPromo) {
+				try {
+					const promoData = JSON.parse(appliedPromo);
+
+					// Show discount in order summary
+					const discountRow = document.getElementById('discountRow');
+					if (discountRow) {
+						discountRow.style.display = 'flex';
+						document.getElementById('discountPercent').textContent = promoData.discount_value;
+						document.getElementById('discountAmount').textContent = '-GHS ' + promoData.discount_amount.toFixed(2);
+						document.getElementById('finalTotal').textContent = 'GHS ' + promoData.new_total.toFixed(2);
+					}
+
+					// Update subtotal display to show original amount
+					const subtotalElement = document.getElementById('subtotal');
+					if (subtotalElement) {
+						subtotalElement.textContent = 'GHS ' + promoData.original_total.toFixed(2);
+					}
+				} catch (error) {
+					console.error('Error applying promo from cart:', error);
+					localStorage.removeItem('appliedPromo');
+				}
+			}
+		}
 
 
 		// Create 40+ floating bubbles with different sizes and animations

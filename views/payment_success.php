@@ -31,6 +31,7 @@ include __DIR__ . '/../includes/header.php';
     <title>Payment Successful - Gadget Garage</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         body {
             background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
@@ -297,7 +298,29 @@ include __DIR__ . '/../includes/header.php';
         // Start confetti when page loads
         document.addEventListener('DOMContentLoaded', function() {
             setTimeout(createConfetti, 500);
+
+            // Show sweet alert success message
+            setTimeout(function() {
+                Swal.fire({
+                    title: 'Payment Successful!',
+                    text: 'Your order has been confirmed and will be processed shortly.',
+                    icon: 'success',
+                    confirmButtonText: 'Awesome!',
+                    confirmButtonColor: '#28a745',
+                    timer: 8000,
+                    timerProgressBar: true,
+                    showClass: {
+                        popup: 'animate__animated animate__bounceIn'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__bounceOut'
+                    }
+                });
+            }, 1000);
         });
+
+        // Clean up cart-related localStorage items
+        localStorage.removeItem('appliedPromo');
 
         // Optional: Store order data in localStorage for future reference
         if (typeof(Storage) !== "undefined") {

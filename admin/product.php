@@ -833,9 +833,8 @@ new Chart(ctx, {
         maintainAspectRatio: false,
         animation: {
             animateRotate: false,
-            animateScale: true,
-            duration: 1500,
-            easing: 'easeOutQuart'
+            animateScale: false,
+            duration: 0
         },
         hover: {
             mode: null,

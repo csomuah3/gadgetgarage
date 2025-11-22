@@ -2570,6 +2570,7 @@ try {
 		.promo-banner {
 			display: flex;
 			align-items: center;
+			max-height: 270px;
 			justify-content: space-between;
 			border-radius: 15px;
 			padding: 30px;
@@ -2590,14 +2591,14 @@ try {
 		}
 
 		.promo-banner h2 {
-			font-size: 2rem;
+			font-size: 3rem;
 			font-weight: 700;
 			margin-bottom: 10px;
 			line-height: 1.2;
 		}
 
 		.promo-banner p {
-			font-size: 1rem;
+			font-size: 1.5rem;
 			margin-bottom: 25px;
 			opacity: 0.9;
 			max-width: 42ch;

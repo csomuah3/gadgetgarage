@@ -2732,9 +2732,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <?php if (rand(1, 4) !== 1): // Show on 75% of cards ?>
                                     <div class="customer-activity-popup" style="
                                         position: absolute;
-                                        top: 50%;
-                                        left: 50%;
-                                        transform: translate(-50%, -50%);
+                                        bottom: 15px;
+                                        left: 15px;
                                         background: rgba(0,0,0,0.8);
                                         color: white;
                                         padding: 8px 12px;
@@ -2746,6 +2745,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         animation: popupFade 4s ease-in-out infinite;
                                         white-space: nowrap;
                                         pointer-events: none;
+                                        animation-delay: <?php echo rand(0, 30) / 10; ?>s;
                                     ">
                                         <?php
                                         $activities = [
@@ -2998,6 +2998,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     // Show success notification
                     showNotification(data.message, 'success');
+
+                    // Show cart sidebar after successful addition
+                    setTimeout(() => {
+                        if (window.showCartSidebar) {
+                            window.showCartSidebar();
+                        }
+                    }, 500);
                 } else {
                     button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
                     button.style.background = '#ef4444';
@@ -4177,14 +4184,45 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        // Add random delays to popup animations
+        // Initialize wishlist status
         document.addEventListener('DOMContentLoaded', function() {
+            // Add random delays to popup animations
             const popups = document.querySelectorAll('.customer-activity-popup');
             popups.forEach((popup, index) => {
                 const delay = Math.random() * 3; // Random delay between 0-3 seconds
                 popup.style.setProperty('--delay', delay + 's');
             });
+
+            // Load wishlist status
+            loadWishlistStatus();
         });
+
+        function loadWishlistStatus() {
+            fetch('../actions/get_wishlist_status.php')
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success && data.is_logged_in) {
+                        // Update wishlist badge
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            wishlistBadge.textContent = data.count;
+                            wishlistBadge.style.display = data.count > 0 ? 'flex' : 'none';
+                        }
+
+                        // Update wishlist heart buttons
+                        const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+                        wishlistButtons.forEach(button => {
+                            const productId = parseInt(button.getAttribute('onclick').match(/\d+/)[0]);
+                            if (data.wishlist_items.includes(productId)) {
+                                button.classList.add('active');
+                                const icon = button.querySelector('i');
+                                icon.className = 'fas fa-heart';
+                            }
+                        });
+                    }
+                })
+                .catch(error => console.error('Error loading wishlist status:', error));
+        }
     </script>
 
     <!-- Footer -->
@@ -4311,6 +4349,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             </div>
         </div>
     </div>
+
+    <?php include '../includes/cart_sidebar.php'; ?>
 
 </body>
 

@@ -774,18 +774,29 @@ function setupDropdown(dropdownId, optionsId, hiddenInputId, searchId) {
     const searchInput = document.getElementById(searchId);
 
     // Toggle dropdown
-    selected.addEventListener('click', () => {
+    selected.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
         const isActive = selected.classList.contains('active');
 
-        // Close all dropdowns first
+        // Close all OTHER dropdowns first (not this one)
         document.querySelectorAll('.dropdown-selected.active').forEach(sel => {
-            sel.classList.remove('active');
+            if (sel !== selected) {
+                sel.classList.remove('active');
+            }
         });
         document.querySelectorAll('.dropdown-options').forEach(opts => {
-            opts.style.display = 'none';
+            if (opts !== options) {
+                opts.style.display = 'none';
+            }
         });
 
-        if (!isActive) {
+        // Toggle current dropdown
+        if (isActive) {
+            selected.classList.remove('active');
+            options.style.display = 'none';
+        } else {
             selected.classList.add('active');
             options.style.display = 'block';
             searchInput.focus();
@@ -822,13 +833,9 @@ function setupDropdown(dropdownId, optionsId, hiddenInputId, searchId) {
         });
     });
 
-    // Close dropdown when clicking outside
-    document.addEventListener('click', (e) => {
-        if (!dropdown.contains(e.target)) {
-            selected.classList.remove('active');
-            options.style.display = 'none';
-        }
-    });
+    // Store dropdown elements for global click handler
+    dropdown._selected = selected;
+    dropdown._options = options;
 }
 
 // Wait for DOM to be fully loaded
@@ -838,6 +845,21 @@ document.addEventListener('DOMContentLoaded', function() {
     // Initialize dropdowns
     setupDropdown('categoryDropdown', 'category-options', 'product_cat', 'categorySearch');
     setupDropdown('brandDropdown', 'brand-options', 'product_brand', 'brandSearch');
+
+    // Global click handler to close dropdowns when clicking outside
+    document.addEventListener('click', function(e) {
+        const allDropdowns = document.querySelectorAll('.custom-dropdown');
+        allDropdowns.forEach(dropdown => {
+            if (!dropdown.contains(e.target)) {
+                const selected = dropdown._selected;
+                const options = dropdown._options;
+                if (selected && options) {
+                    selected.classList.remove('active');
+                    options.style.display = 'none';
+                }
+            }
+        });
+    });
 
 // Color selector functionality
 document.querySelectorAll('.color-option').forEach(option => {

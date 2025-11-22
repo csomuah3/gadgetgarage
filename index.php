@@ -2570,7 +2570,7 @@ try {
 		.promo-banner {
 			display: flex;
 			align-items: center;
-			height: 350px;
+			height: 400px;
 			justify-content: space-between;
 			border-radius: 15px;
 			padding: 30px;

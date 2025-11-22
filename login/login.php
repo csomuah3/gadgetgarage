@@ -7,34 +7,34 @@ $login_error = '';
 $login_success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+	$email = trim($_POST['email'] ?? '');
+	$password = $_POST['password'] ?? '';
 
-    if (empty($email) || empty($password)) {
-        $login_error = 'Please enter both email and password.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $login_error = 'Please enter a valid email address.';
-    } else {
-        $db = new db_connection();
+	if (empty($email) || empty($password)) {
+		$login_error = 'Please enter both email and password.';
+	} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$login_error = 'Please enter a valid email address.';
+	} else {
+		$db = new db_connection();
 
-        $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
-        $sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
+		$email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+		$sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
 
-        $user = $db->db_fetch_one($sql);
+		$user = $db->db_fetch_one($sql);
 
-        if ($user && password_verify($password, $user['customer_pass'])) {
-            $_SESSION['user_id'] = $user['customer_id'];
-            $_SESSION['user_name'] = $user['customer_name'];
-            $_SESSION['user_email'] = $user['customer_email'];
-            $_SESSION['email'] = $user['customer_email'];
-            $_SESSION['role'] = $user['user_role'];
-            $_SESSION['name'] = $user['customer_name'];
+		if ($user && password_verify($password, $user['customer_pass'])) {
+			$_SESSION['user_id'] = $user['customer_id'];
+			$_SESSION['user_name'] = $user['customer_name'];
+			$_SESSION['user_email'] = $user['customer_email'];
+			$_SESSION['email'] = $user['customer_email'];
+			$_SESSION['role'] = $user['user_role'];
+			$_SESSION['name'] = $user['customer_name'];
 
-            $login_success = true;
-        } else {
-            $login_error = 'Invalid email or password.';
-        }
-    }
+			$login_success = true;
+		} else {
+			$login_error = 'Invalid email or password.';
+		}
+	}
 }
 
 // Try to load categories and brands for navigation
@@ -42,17 +42,17 @@ $categories = [];
 $brands = [];
 
 try {
-    require_once('../controllers/category_controller.php');
-    $categories = get_all_categories_ctr();
+	require_once('../controllers/category_controller.php');
+	$categories = get_all_categories_ctr();
 } catch (Exception $e) {
-    error_log("Failed to load categories: " . $e->getMessage());
+	error_log("Failed to load categories: " . $e->getMessage());
 }
 
 try {
-    require_once('../controllers/brand_controller.php');
-    $brands = get_all_brands_ctr();
+	require_once('../controllers/brand_controller.php');
+	$brands = get_all_brands_ctr();
 } catch (Exception $e) {
-    error_log("Failed to load brands: " . $e->getMessage());
+	error_log("Failed to load brands: " . $e->getMessage());
 }
 
 // Get cart count - same as index.php
@@ -61,10 +61,10 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = 0;
 try {
-    require_once('../controllers/cart_controller.php');
-    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+	require_once('../controllers/cart_controller.php');
+	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 } catch (Exception $e) {
-    error_log("Failed to load cart count: " . $e->getMessage());
+	error_log("Failed to load cart count: " . $e->getMessage());
 }
 ?>
 
@@ -86,7 +86,7 @@ try {
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 	<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
 	<link href="../includes/chatbot-styles.css" rel="stylesheet">
-	<link href="../css/dark-mode.css" rel="stylesheet">
+	<link href="../css/dark-mode.css" relstylesheet">
 
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -836,8 +836,6 @@ try {
 			border-bottom-color: #4a5568;
 		}
 
-		/* Dark mode navigation styles removed - using external CSS */
-
 		body.dark-mode .logo,
 		body.dark-mode .tech-revival-text,
 		body.dark-mode .contact-number {
@@ -867,7 +865,6 @@ try {
 			background: linear-gradient(135deg, #4a5568, #374151);
 		}
 
-
 		body.dark-mode .brands-dropdown {
 			background: rgba(45, 55, 72, 0.95);
 			border-color: rgba(74, 85, 104, 0.5);
@@ -878,7 +875,7 @@ try {
 		}
 
 		body.dark-mode .brands-dropdown a {
-			color: #cbd5e0;
+			color: #cbd50e0;
 		}
 
 		body.dark-mode .brands-dropdown a:hover {
@@ -908,52 +905,6 @@ try {
 			color: #60a5fa;
 		}
 
-		/* Dark Mode Form Styles */
-		body.dark-mode .login-page-container {
-			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-		}
-
-		body.dark-mode .login-form-wrapper {
-			background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-			border: 1px solid #4a5568;
-		}
-
-		body.dark-mode .login-form-wrapper::before {
-			background: linear-gradient(90deg, #60a5fa, #3b82f6, #8b5cf6);
-		}
-
-		body.dark-mode .login-form-title {
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .login-form-subtitle {
-			color: #cbd5e0;
-		}
-
-		body.dark-mode .form-label {
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .form-control {
-			background: #374151;
-			border-color: #4a5568;
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .form-control::placeholder {
-			color: #9ca3af;
-		}
-
-		body.dark-mode .form-control:focus {
-			background: #4a5568;
-			border-color: #60a5fa;
-			box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
-		}
-
-		body.dark-mode .input-icon {
-			color: #cbd5e0;
-		}
-
 		body.dark-mode .alert-danger {
 			background: #374151;
 			border: 1px solid #ef4444;
@@ -966,201 +917,206 @@ try {
 			color: #86efac;
 		}
 
-		/* Login Form Container */
+
 		.login-page-container {
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			padding: 40px 20px;
 			min-height: calc(100vh - 200px);
-			background: transparent;
 		}
 
+		/* Outer rounded card */
 		.auth-container {
 			width: 100%;
-			max-width: 1200px;
-			height: 700px;
+			max-width: 1050px;
+			height: 560px;
 			position: relative;
-			border-radius: 25px;
+			border-radius: 30px;
 			overflow: hidden;
-			box-shadow: 0 25px 80px var(--shadow);
-			backdrop-filter: blur(15px);
-			border: 1px solid rgba(255, 255, 255, 0.2);
+			background: #ffffff;
+			box-shadow: 0 25px 60px rgba(0, 0, 0, 0.18);
 		}
 
+		/* Inner wrapper that slides */
 		.auth-panels {
-			display: flex;
-			height: 100%;
 			position: relative;
-			transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+			width: 200%;
+			height: 100%;
+			display: flex;
+			transition: transform 0.8s ease-in-out;
 		}
 
-		/* Welcome Panel - Blue Gradient */
-		.welcome-panel {
-			flex: 1;
-			background: var(--gradient-primary);
+		/* When in signup mode, slide everything to the left */
+		.auth-panels.signup-mode {
+			transform: translateX(-50%);
+		}
+
+		/* Each side = half of the card */
+		.welcome-panel,
+		.form-panel {
+			flex: 0 0 50%;
+			height: 100%;
 			display: flex;
 			flex-direction: column;
-			align-items: center;
 			justify-content: center;
-			color: white;
-			padding: 80px 60px;
-			text-align: center;
+			padding: 60px 60px;
 			position: relative;
-			overflow: hidden;
-			transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		}
 
-		.welcome-panel::before {
-			content: '';
+		/* Left teal panel (like video) */
+		.welcome-panel {
+			background: #0b4f60;
+			color: #ffffff;
+			text-align: center;
+		}
+
+		/* Big inner curve on the right side of teal panel */
+		.welcome-panel::after {
+			content: "";
 			position: absolute;
-			top: -50%;
-			left: -50%;
-			width: 200%;
+			top: -40px;
+			right: -70px;
+			width: 200px;
 			height: 200%;
-			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-			animation: float 6s ease-in-out infinite;
+			background: #0b4f60;
+			border-radius: 50%;
 		}
 
-		@keyframes float {
-			0%, 100% { transform: translateY(0) rotate(0deg); }
-			50% { transform: translateY(-20px) rotate(180deg); }
-		}
-
+		/* Logo + text inside teal panel */
 		.brand-logo {
-			width: 140px;
+			width: 130px;
 			height: auto;
-			margin-bottom: 40px;
+			margin-bottom: 30px;
 			filter: brightness(0) invert(1);
-			z-index: 2;
+			z-index: 1;
 			position: relative;
 		}
 
 		.welcome-title {
-			font-size: 2.8rem;
+			font-size: 2.4rem;
 			font-weight: 700;
-			margin-bottom: 20px;
-			z-index: 2;
-			position: relative;
+			margin-bottom: 15px;
+			z-index: 1;
 		}
 
 		.welcome-message {
-			font-size: 1.2rem;
+			font-size: 1.05rem;
 			line-height: 1.6;
+			max-width: 340px;
+			margin: 0 auto;
 			opacity: 0.95;
-			max-width: 350px;
-			z-index: 2;
-			position: relative;
+			z-index: 1;
 		}
 
-		/* Form Panel */
+		/* Right white form side */
 		.form-panel {
-			flex: 1;
-			background: rgba(255, 255, 255, 0.98);
-			backdrop-filter: blur(20px);
+			background: #ffffff;
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			padding: 80px 60px;
-			position: relative;
 		}
 
+		/* Make sure form card doesn’t sit too wide */
 		.form-container {
 			width: 100%;
-			max-width: 420px;
+			max-width: 380px;
 			margin: 0 auto;
 		}
 
+		/* Titles */
 		.form-header {
 			text-align: center;
-			margin-bottom: 50px;
+			margin-bottom: 35px;
 		}
 
 		.form-title {
-			font-size: 2.4rem;
+			font-size: 2rem;
 			font-weight: 700;
-			color: var(--text-dark);
-			margin-bottom: 12px;
+			color: #111827;
+			margin-bottom: 8px;
 		}
 
 		.form-subtitle {
-			color: var(--text-light);
-			font-size: 1.2rem;
+			color: #6b7280;
+			font-size: 1rem;
 		}
 
-		/* Toggle Buttons */
+		/* Top toggle (LOGIN / SIGNUP) */
 		.form-toggle {
-			display: flex;
-			background: #f8f9ff;
-			border-radius: 15px;
-			padding: 6px;
-			margin-bottom: 40px;
 			position: relative;
+			display: flex;
+			background: #f3f4f6;
+			border-radius: 999px;
+			padding: 4px;
+			margin-bottom: 25px;
+			overflow: hidden;
 		}
 
 		.toggle-btn {
 			flex: 1;
-			padding: 16px 25px;
-			background: transparent;
 			border: none;
-			border-radius: 12px;
+			background: transparent;
+			border-radius: 999px;
+			padding: 10px 0;
 			font-weight: 600;
-			font-size: 1.1rem;
-			color: var(--text-light);
-			transition: all 0.3s ease;
+			font-size: 0.95rem;
+			color: #6b7280;
 			cursor: pointer;
 			position: relative;
 			z-index: 2;
+			transition: color 0.25s ease;
 		}
 
 		.toggle-btn.active {
-			color: white;
+			color: #ffffff;
 		}
 
-		.toggle-slider {
+		/* Sliding pill under the active toggle */
+		#toggleSlider {
 			position: absolute;
-			top: 6px;
-			left: 6px;
-			width: calc(50% - 6px);
-			height: calc(100% - 12px);
-			background: var(--gradient-primary);
-			border-radius: 12px;
-			transition: transform 0.3s ease;
-			box-shadow: 0 4px 20px rgba(26, 115, 232, 0.3);
+			top: 4px;
+			left: 4px;
+			width: calc(50% - 4px);
+			height: calc(100% - 8px);
+			border-radius: 999px;
+			background: linear-gradient(135deg, #0b4f60, #0ea5e9);
+			box-shadow: 0 6px 18px rgba(15, 118, 110, 0.4);
+			transition: transform 0.25s ease;
 		}
 
-		/* Social Login Buttons */
+		/* Social icons + divider */
 		.social-login {
-			margin-bottom: 30px;
+			margin-bottom: 20px;
 		}
 
 		.social-login h4 {
 			text-align: center;
-			color: var(--text-dark);
-			font-size: 1.3rem;
+			color: #111827;
+			font-size: 1.05rem;
 			font-weight: 600;
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 		}
 
 		.social-buttons {
 			display: flex;
-			gap: 15px;
 			justify-content: center;
-			margin-bottom: 25px;
+			gap: 12px;
+			margin-bottom: 18px;
 		}
 
 		.social-btn {
-			width: 50px;
-			height: 50px;
-			border-radius: 12px;
-			border: 2px solid #e5e7eb;
-			background: white;
+			width: 42px;
+			height: 42px;
+			border-radius: 10px;
+			border: 1px solid #e5e7eb;
+			background: #ffffff;
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			font-size: 1.1rem;
 			cursor: pointer;
-			transition: all 0.3s ease;
-			font-size: 1.3rem;
+			transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 		}
 
 		.social-btn.google {
@@ -1181,32 +1137,35 @@ try {
 
 		.social-btn:hover {
 			transform: translateY(-2px);
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+			border-color: #0ea5e9;
+			box-shadow: 0 6px 18px rgba(15, 118, 110, 0.2);
 		}
 
 		.divider {
-			text-align: center;
 			position: relative;
-			margin: 25px 0;
+			text-align: center;
+			margin: 18px 0 22px;
 		}
 
 		.divider::before {
-			content: '';
+			content: "";
 			position: absolute;
-			top: 50%;
 			left: 0;
 			right: 0;
+			top: 50%;
 			height: 1px;
 			background: #e5e7eb;
 		}
 
 		.divider span {
-			background: rgba(255, 255, 255, 0.98);
-			padding: 0 20px;
-			color: var(--text-light);
-			font-size: 1.1rem;
-			font-weight: 500;
+			position: relative;
+			background: #ffffff;
+			padding: 0 16px;
+			font-size: 0.9rem;
+			color: #6b7280;
 		}
+
+		elliott
 
 		/* Sliding Animation States */
 		.auth-panels.signup-mode {
@@ -1229,120 +1188,8 @@ try {
 			margin-bottom: 30px;
 		}
 
-		.form-label {
-			display: block;
-			font-weight: 600;
-			color: var(--text-dark);
-			margin-bottom: 10px;
-			font-size: 1.1rem;
-		}
 
-		.form-control {
-			width: 100%;
-			padding: 18px 25px 18px 55px;
-			border: 2px solid var(--light-blue);
-			border-radius: 15px;
-			background: rgba(255, 255, 255, 0.9);
-			color: var(--text-dark);
-			font-size: 1.1rem;
-			transition: all 0.3s ease;
-			outline: none;
-		}
-
-		.form-control:focus {
-			border-color: var(--medium-blue);
-			background: white;
-			box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.1);
-		}
-
-		.input-group {
-			position: relative;
-		}
-
-		.input-icon {
-			position: absolute;
-			left: 18px;
-			top: 50%;
-			transform: translateY(-50%);
-			color: var(--medium-blue);
-			font-size: 1.2rem;
-			z-index: 2;
-		}
-
-		.ghana-flag {
-			position: absolute;
-			left: 18px;
-			top: 50%;
-			transform: translateY(-50%);
-			width: 24px;
-			height: 16px;
-			z-index: 2;
-		}
-
-		.form-control.with-icon {
-			padding-left: 55px;
-		}
-
-		.form-control.with-flag {
-			padding-left: 55px;
-		}
-
-		.submit-btn {
-			width: 100%;
-			background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
-			color: white;
-			border: none;
-			padding: 20px;
-			border-radius: 15px;
-			font-size: 1.3rem;
-			font-weight: 600;
-			cursor: pointer;
-			transition: all 0.3s ease;
-			position: relative;
-			overflow: hidden;
-			margin-top: 10px;
-		}
-
-		.submit-btn:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 15px 35px rgba(26, 115, 232, 0.4);
-		}
-
-		.submit-btn:active {
-			transform: translateY(0);
-		}
-
-		.form-links {
-			display: flex;
-			justify-content: center;
-			align-items: center;
-			margin-top: 25px;
-			gap: 30px;
-		}
-
-		.forgot-password {
-			color: var(--medium-blue);
-			text-decoration: none;
-			font-size: 1rem;
-			font-weight: 500;
-		}
-
-		.forgot-password:hover {
-			text-decoration: underline;
-		}
-
-		.signup-link {
-			color: var(--medium-blue);
-			text-decoration: none;
-			font-weight: 600;
-			font-size: 1rem;
-		}
-
-		.signup-link:hover {
-			text-decoration: underline;
-		}
-
-		/* Hide content initially */
+		/* Forms (login / signup) */
 		.form-content {
 			display: none;
 		}
@@ -1351,11 +1198,111 @@ try {
 			display: block;
 		}
 
+		.form-group {
+			margin-bottom: 18px;
+		}
+
+		.form-label {
+			display: block;
+			font-size: 0.95rem;
+			font-weight: 600;
+			color: #374151;
+			margin-bottom: 6px;
+		}
+
+		.input-group {
+			position: relative;
+		}
+
+		.input-icon {
+			position: absolute;
+			left: 16px;
+			top: 50%;
+			transform: translateY(-50%);
+			font-size: 1rem;
+			color: #0ea5e9;
+			z-index: 2;
+		}
+
+		.ghana-flag {
+			position: absolute;
+			left: 16px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 24px;
+			height: 16px;
+			z-index: 2;
+		}
+
+		.form-control {
+			width: 100%;
+			border-radius: 999px;
+			border: 1px solid #d1d5db;
+			padding: 11px 18px 11px 48px;
+			font-size: 0.95rem;
+			background: #f9fafb;
+			color: #111827;
+			transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+		}
+
+		.form-control:focus {
+			outline: none;
+			background: #ffffff;
+			border-color: #0ea5e9;
+			box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.25);
+		}
+
+		/* Submit button */
+		.submit-btn {
+			width: 100%;
+			margin-top: 8px;
+			border: none;
+			border-radius: 999px;
+			padding: 13px 0;
+			font-size: 1rem;
+			font-weight: 700;
+			letter-spacing: 0.05em;
+			text-transform: uppercase;
+			background: linear-gradient(135deg, #0b4f60, #0ea5e9);
+			color: #ffffff;
+			cursor: pointer;
+			transition: transform 0.2s ease, box-shadow 0.2s ease, filter 0.2s ease;
+		}
+
+		.submit-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 12px 30px rgba(15, 118, 110, 0.45);
+			filter: brightness(1.05);
+		}
+
+		/* Links under button */
+		.form-links {
+			display: flex;
+			justify-content: center;
+			gap: 20px;
+			margin-top: 18px;
+			font-size: 0.9rem;
+		}
+
+		.forgot-password,
+		.signup-link {
+			color: #0ea5e9;
+			text-decoration: none;
+			font-weight: 500;
+		}
+
+		.forgot-password:hover,
+		.signup-link:hover {
+			text-decoration: underline;
+		}
+
+		/* Alerts inside form */
 		.alert {
 			border-radius: 12px;
-			margin-bottom: 20px;
+			margin-bottom: 15px;
 			border: none;
-			padding: 15px 18px;
+			padding: 12px 14px;
+			font-size: 0.9rem;
 		}
 
 		.alert-danger {
@@ -1368,7 +1315,32 @@ try {
 			color: #059669;
 		}
 
-		/* Mobile Responsive */
+		/* === RESPONSIVE (STACK PANELS ON MOBILE) ======================= */
+
+		@media (max-width: 900px) {
+			.auth-container {
+				max-width: 100%;
+				height: auto;
+			}
+
+			.auth-panels {
+				width: 100%;
+				flex-direction: column;
+				transform: translateX(0) !important;
+			}
+
+			.welcome-panel,
+			.form-panel {
+				flex: 0 0 auto;
+				width: 100%;
+				padding: 35px 25px;
+			}
+
+			.welcome-panel::after {
+				display: none;
+			}
+		}
+
 		@media (max-width: 768px) {
 			.main-header .container-fluid {
 				padding: 0 20px !important;
@@ -1380,19 +1352,6 @@ try {
 
 			.tech-revival-section {
 				display: none;
-			}
-
-			.login-form-wrapper {
-				margin: 20px;
-			}
-
-			.login-form-header,
-			.login-form-body {
-				padding: 30px 25px;
-			}
-
-			.login-form-title {
-				font-size: 1.7rem;
 			}
 		}
 	</style>
@@ -1635,10 +1594,10 @@ try {
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 
-				<!-- Welcome Panel (Blue) -->
+				<!-- Welcome Panel (Teal) -->
 				<div class="welcome-panel">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
-						 alt="Gadget Garage Logo" class="brand-logo">
+						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
 					<p class="welcome-message" id="welcomeMessage">Your one-stop shop for premium refurbished tech devices.</p>
 				</div>
@@ -1653,8 +1612,8 @@ try {
 						<!-- Toggle Buttons -->
 						<div class="form-toggle">
 							<div class="toggle-slider" id="toggleSlider"></div>
-							<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
-							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
+							<button class="toggle-btn active" id="loginTab" type="button" onclick="switchToLogin()">Login</button>
+							<button class="toggle-btn" id="signupTab" type="button" onclick="switchToSignup()">Join GadgetGarage</button>
 						</div>
 
 						<!-- Social Login Buttons -->
@@ -1702,12 +1661,12 @@ try {
 										<div class="input-group">
 											<i class="fas fa-envelope input-icon"></i>
 											<input type="email"
-												   id="email"
-												   name="email"
-												   class="form-control with-icon"
-												   placeholder="Enter your email"
-												   value="<?php echo htmlspecialchars($email ?? ''); ?>"
-												   required>
+												id="email"
+												name="email"
+												class="form-control"
+												placeholder="Enter your email"
+												value="<?php echo htmlspecialchars($email ?? ''); ?>"
+												required>
 										</div>
 									</div>
 
@@ -1716,11 +1675,11 @@ try {
 										<div class="input-group">
 											<i class="fas fa-lock input-icon"></i>
 											<input type="password"
-												   id="password"
-												   name="password"
-												   class="form-control with-icon"
-												   placeholder="Enter your password"
-												   required>
+												id="password"
+												name="password"
+												class="form-control"
+												placeholder="Enter your password"
+												required>
 										</div>
 									</div>
 
@@ -1743,11 +1702,11 @@ try {
 									<div class="input-group">
 										<i class="fas fa-user input-icon"></i>
 										<input type="text"
-											   id="signup_name"
-											   name="name"
-											   class="form-control with-icon"
-											   placeholder="Enter your full name"
-											   required>
+											id="signup_name"
+											name="name"
+											class="form-control"
+											placeholder="Enter your full name"
+											required>
 									</div>
 								</div>
 
@@ -1756,11 +1715,11 @@ try {
 									<div class="input-group">
 										<i class="fas fa-envelope input-icon"></i>
 										<input type="email"
-											   id="signup_email"
-											   name="email"
-											   class="form-control with-icon"
-											   placeholder="Enter your email"
-											   required>
+											id="signup_email"
+											name="email"
+											class="form-control"
+											placeholder="Enter your email"
+											required>
 									</div>
 								</div>
 
@@ -1769,11 +1728,11 @@ try {
 									<div class="input-group">
 										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
 										<input type="tel"
-											   id="signup_phone"
-											   name="phone"
-											   class="form-control with-flag"
-											   placeholder="Enter your phone number"
-											   required>
+											id="signup_phone"
+											name="phone"
+											class="form-control"
+											placeholder="Enter your phone number"
+											required>
 									</div>
 								</div>
 
@@ -1782,11 +1741,11 @@ try {
 									<div class="input-group">
 										<i class="fas fa-lock input-icon"></i>
 										<input type="password"
-											   id="signup_password"
-											   name="password"
-											   class="form-control with-icon"
-											   placeholder="Create a password"
-											   required>
+											id="signup_password"
+											name="password"
+											class="form-control"
+											placeholder="Create a password"
+											required>
 									</div>
 								</div>
 
@@ -1804,6 +1763,7 @@ try {
 
 	<!-- Footer spacer -->
 	<div style="height: 100px;"></div>
+
 
 	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1851,9 +1811,9 @@ try {
 				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 				timerElement.innerHTML = days + "d:" +
-										 (hours < 10 ? "0" : "") + hours + "h:" +
-										 (minutes < 10 ? "0" : "") + minutes + "m:" +
-										 (seconds < 10 ? "0" : "") + seconds + "s";
+					(hours < 10 ? "0" : "") + hours + "h:" +
+					(minutes < 10 ? "0" : "") + minutes + "m:" +
+					(seconds < 10 ? "0" : "") + seconds + "s";
 			}
 		}
 
@@ -1884,7 +1844,6 @@ try {
 
 		// Language change functionality
 		function changeLanguage(lang) {
-			// Language change functionality can be implemented here
 			console.log('Language changed to:', lang);
 		}
 
@@ -1896,7 +1855,6 @@ try {
 			body.classList.toggle('dark-mode');
 			toggleSwitch.classList.toggle('active');
 
-			// Save theme preference to localStorage
 			const isDarkMode = body.classList.contains('dark-mode');
 			localStorage.setItem('darkMode', isDarkMode);
 		}
@@ -1915,6 +1873,8 @@ try {
 		});
 
 		// Shop Dropdown Functions
+		let shopDropdownTimeout;
+
 		function showShopDropdown() {
 			const dropdown = document.getElementById('shopCategoryDropdown');
 			if (dropdown) {
@@ -1934,6 +1894,8 @@ try {
 		}
 
 		// More Dropdown Functions
+		let moreDropdownTimeout;
+
 		function showMoreDropdown() {
 			const dropdown = document.getElementById('moreDropdown');
 			if (dropdown) {
@@ -1952,10 +1914,6 @@ try {
 			}
 		}
 
-		// Timeout variables
-		let shopDropdownTimeout;
-		let moreDropdownTimeout;
-
 		// Auth Panel Switching Functions
 		function switchToLogin() {
 			const authPanels = document.getElementById('authPanels');
@@ -1968,25 +1926,19 @@ try {
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
 
-			// Remove signup mode
 			authPanels.classList.remove('signup-mode');
 
-			// Update form visibility
 			loginForm.classList.add('active');
 			signupForm.classList.remove('active');
 
-			// Update toggle buttons
 			loginTab.classList.add('active');
 			signupTab.classList.remove('active');
 
-			// Move toggle slider
 			toggleSlider.style.transform = 'translateX(0)';
 
-			// Update welcome panel content
 			welcomeTitle.textContent = 'Welcome Back!';
 			welcomeMessage.textContent = 'Your one-stop shop for premium refurbished tech devices.';
 
-			// Update form title
 			formTitle.textContent = 'Login With';
 		}
 
@@ -2001,25 +1953,19 @@ try {
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
 
-			// Add signup mode for sliding animation
 			authPanels.classList.add('signup-mode');
 
-			// Update form visibility
 			loginForm.classList.remove('active');
 			signupForm.classList.add('active');
 
-			// Update toggle buttons
 			loginTab.classList.remove('active');
 			signupTab.classList.add('active');
 
-			// Move toggle slider
 			toggleSlider.style.transform = 'translateX(100%)';
 
-			// Update welcome panel content
 			welcomeTitle.textContent = 'Join GadgetGarage!';
 			welcomeMessage.textContent = 'Join thousands of satisfied customers who trust Gadget Garage for quality and value.';
 
-			// Update form title
 			formTitle.textContent = 'Sign up With';
 		}
 	</script>

@@ -2580,11 +2580,12 @@ try {
 			gap: 30px;
 			background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
 		}
+
 		/* main banner container */
 		.promo-banner {
 			display: flex;
 			align-items: center;
-			height: 400px;
+			height: 450px;
 			justify-content: space-between;
 			border-radius: 15px;
 			padding: 30px;
@@ -2600,7 +2601,7 @@ try {
 		/* text content */
 		.promo-content {
 			flex: 1;
-		;
+			;
 			min-width: 260px;
 			z-index: 1;
 		}
@@ -6029,21 +6030,21 @@ try {
 					hours: document.getElementById('hours1'),
 					minutes: document.getElementById('minutes1'),
 					seconds: document.getElementById('seconds1'),
-					endTime: new Date().getTime() + (335 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
+					endTime: new Date().getTime() + (12 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
 				},
 				{
 					days: document.getElementById('days2'),
 					hours: document.getElementById('hours2'),
 					minutes: document.getElementById('minutes2'),
 					seconds: document.getElementById('seconds2'),
-					endTime: new Date().getTime() + (335 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
+					endTime: new Date().getTime() + (12 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
 				},
 				{
 					days: document.getElementById('days3'),
 					hours: document.getElementById('hours3'),
 					minutes: document.getElementById('minutes3'),
 					seconds: document.getElementById('seconds3'),
-					endTime: new Date().getTime() + (427 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
+					endTime: new Date().getTime() + (12 * 24 * 60 * 60 * 1000) + (15 * 60 * 60 * 1000) + (35 * 60 * 1000) + (1 * 1000)
 				}
 			];
 

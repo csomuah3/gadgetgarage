@@ -2732,8 +2732,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <?php if (rand(1, 4) !== 1): // Show on 75% of cards ?>
                                     <div class="customer-activity-popup" style="
                                         position: absolute;
-                                        bottom: 15px;
-                                        left: 15px;
+                                        bottom: 8px;
+                                        left: 8px;
                                         background: rgba(0,0,0,0.8);
                                         color: white;
                                         padding: 8px 12px;
@@ -2745,7 +2745,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         animation: popupFade 4s ease-in-out infinite;
                                         white-space: nowrap;
                                         pointer-events: none;
-                                        animation-delay: <?php echo rand(0, 30) / 10; ?>s;
+                                        animation-delay: <?php echo (microtime(true) * 1000 + $product['product_id']) % 50 / 10; ?>s;
                                     ">
                                         <?php
                                         $activities = [

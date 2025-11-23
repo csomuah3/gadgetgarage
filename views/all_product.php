@@ -2953,21 +2953,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         };
 
 
-        // Add event listener for all View Details buttons
-        document.addEventListener('DOMContentLoaded', function() {
-            // Event delegation for View Details buttons
-            document.addEventListener('click', function(e) {
-                if (e.target.closest('button[data-product-id]')) {
-                    const button = e.target.closest('button');
-                    const productId = button.getAttribute('data-product-id');
-
-                    if (productId && productId > 0) {
-                        console.log('Event delegation: redirecting to product', productId);
-                        window.location.href = 'single_product.php?pid=' + productId;
-                    }
-                }
-            });
-        });
+        // Event delegation removed - using onclick handlers instead
 
         function selectCondition(element, price, condition) {
             // Remove active class from all condition options in this product

@@ -2480,9 +2480,10 @@ try {
                 return;
             }
 
-            // Use cart total or default value
+            // Use cart total or default value - always allow promo code attempts
             console.log('Cart total from PHP:', originalTotal, 'Type:', typeof originalTotal);
-            // Let backend handle validation and use default if needed
+            const useTotal = originalTotal && originalTotal > 0 ? originalTotal : 100; // Use 100 as fallback
+            console.log('Using cart total for promo:', useTotal);
 
             // Disable button during processing
             applyBtn.disabled = true;
@@ -2490,17 +2491,14 @@ try {
             console.log('Button disabled, making request...');
 
             try {
-                // Ensure cart_total is a valid number
-                const cartTotalValue = parseFloat(originalTotal) || 0;
-
+                // Use the calculated total (with fallback)
                 const requestData = {
                     promo_code: promoCode,
-                    cart_total: cartTotalValue
+                    cart_total: useTotal
                 };
 
                 console.log('Request data being sent:', requestData);
-                console.log('Original total value:', originalTotal);
-                console.log('Cart total value (parsed):', cartTotalValue);
+                console.log('Using total value:', useTotal);
                 console.log('Promo code value:', promoCode);
 
                 const jsonString = JSON.stringify(requestData);
@@ -2516,19 +2514,12 @@ try {
                     throw new Error('Invalid JSON being generated');
                 }
 
-                // Send JSON request to simple endpoint
-                console.log('Making request to: ../actions/validate_promo_code_simple.php');
-                console.log('Request headers:', {
-                    'Content-Type': 'application/json'
-                });
-                console.log('Request body:', jsonString);
+                // Send simple GET request to standalone endpoint
+                const url = `../test_standalone_promo.php?code=${encodeURIComponent(promoCode)}&total=${encodeURIComponent(useTotal)}`;
+                console.log('Making GET request to:', url);
 
-                const response = await fetch('../actions/validate_promo_code_simple.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: jsonString
+                const response = await fetch(url, {
+                    method: 'GET'
                 });
 
                 console.log('Response received:', {
@@ -2702,12 +2693,11 @@ try {
             console.log('JSON string:', JSON.stringify(testData));
 
             try {
-                const response = await fetch('../actions/validate_promo_code_simple.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(testData)
+                const url = `../test_standalone_promo.php?code=${encodeURIComponent(testData.promo_code)}&total=${encodeURIComponent(testData.cart_total)}`;
+                console.log('Manual test URL:', url);
+
+                const response = await fetch(url, {
+                    method: 'GET'
                 });
 
                 console.log('Response status:', response.status);

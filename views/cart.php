@@ -2467,6 +2467,22 @@ try {
                 return;
             }
 
+            // Validate originalTotal
+            if (originalTotal <= 0) {
+                console.error('Invalid cart total:', originalTotal);
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Empty Cart',
+                        text: 'Please add items to your cart before applying a promo code',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                } else {
+                    showPromoMessage('Please add items to your cart first', 'error');
+                }
+                return;
+            }
+
             // Disable button during processing
             applyBtn.disabled = true;
             applyBtn.textContent = 'Applying...';
@@ -2477,30 +2493,19 @@ try {
                     promo_code: promoCode,
                     cart_total: originalTotal
                 };
+
                 console.log('Request data being sent:', requestData);
+                console.log('Original total value:', originalTotal);
+                console.log('Promo code value:', promoCode);
 
-                // Try both JSON and FormData approaches
-                const formData = new FormData();
-                formData.append('promo_code', promoCode);
-                formData.append('cart_total', originalTotal);
-
-                console.log('Trying FormData approach first...');
-                let response = await fetch('../actions/validate_promo_code.php', {
+                // Send JSON request only
+                const response = await fetch('../actions/validate_promo_code.php', {
                     method: 'POST',
-                    body: formData
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(requestData)
                 });
-
-                // If FormData fails, try JSON
-                if (!response.ok) {
-                    console.log('FormData failed, trying JSON approach...');
-                    response = await fetch('../actions/validate_promo_code.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json',
-                        },
-                        body: JSON.stringify(requestData)
-                    });
-                }
 
                 console.log('Response status:', response.status);
                 console.log('Response ok:', response.ok);

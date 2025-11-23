@@ -2480,23 +2480,9 @@ try {
                 return;
             }
 
-            // Validate originalTotal
-            console.log('Validating cart total. originalTotal:', originalTotal, 'Type:', typeof originalTotal);
-
-            if (!originalTotal || originalTotal <= 0 || isNaN(originalTotal)) {
-                console.error('Invalid cart total:', originalTotal, 'Type:', typeof originalTotal);
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        title: 'Empty Cart',
-                        text: 'Please add items to your cart before applying a promo code',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
-                } else {
-                    showPromoMessage('Please add items to your cart first', 'error');
-                }
-                return;
-            }
+            // Use cart total or default value
+            console.log('Cart total from PHP:', originalTotal, 'Type:', typeof originalTotal);
+            // Let backend handle validation and use default if needed
 
             // Disable button during processing
             applyBtn.disabled = true;
@@ -2530,14 +2516,14 @@ try {
                     throw new Error('Invalid JSON being generated');
                 }
 
-                // Send JSON request to fixed endpoint
-                console.log('Making request to: ../actions/validate_promo_code_fixed.php');
+                // Send JSON request to simple endpoint
+                console.log('Making request to: ../actions/validate_promo_code_simple.php');
                 console.log('Request headers:', {
                     'Content-Type': 'application/json'
                 });
                 console.log('Request body:', jsonString);
 
-                const response = await fetch('../actions/validate_promo_code_fixed.php', {
+                const response = await fetch('../actions/validate_promo_code_simple.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2716,7 +2702,7 @@ try {
             console.log('JSON string:', JSON.stringify(testData));
 
             try {
-                const response = await fetch('../actions/validate_promo_code_fixed.php', {
+                const response = await fetch('../actions/validate_promo_code_simple.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

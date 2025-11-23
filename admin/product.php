@@ -763,10 +763,36 @@ if (isset($_SESSION['error_message'])) {
     transform: none !important;
 }
 
+/* Force static chart rendering */
+.chart-container canvas {
+    position: static !important;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
+/* Disable all possible chart interactions and animations */
+#categoryChart, #categoryChart canvas {
+    pointer-events: none !important;
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
 /* Override any sliding animations for charts */
 .admin-card.chart-container {
     animation: none !important;
     animation-delay: 0s !important;
+}
+
+/* Global Chart.js animation override */
+* .chart-container *,
+* #categoryChart *,
+* canvas {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+    transition-duration: 0s !important;
+    transition-delay: 0s !important;
 }
 </style>
 

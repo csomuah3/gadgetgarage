@@ -2760,23 +2760,24 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
 
                                         <!-- Customer Activity Popup - Now inside image frame -->
-                                        <?php if (rand(1, 4) !== 1): // Show on 75% of cards ?>
+                                        <?php if (rand(1, 3) === 1): // Show on 33% of cards only ?>
                                         <div class="customer-activity-popup" style="
                                             position: absolute;
-                                            bottom: 8px;
-                                            left: 8px;
-                                            background: rgba(0,0,0,0.8);
+                                            bottom: 12px;
+                                            left: 50%;
+                                            transform: translateX(-50%);
+                                            background: rgba(59, 130, 246, 0.9);
                                             color: white;
-                                            padding: 6px 10px;
-                                            border-radius: 15px;
+                                            padding: 8px 16px;
+                                            border-radius: 25px;
                                             font-size: 0.7rem;
                                             font-weight: 600;
                                             z-index: 20;
                                             opacity: 0;
-                                            animation: popupFade 4s ease-in-out infinite;
+                                            animation: popupFade 6s ease-in-out infinite;
                                             white-space: nowrap;
                                             pointer-events: none;
-                                            animation-delay: <?php echo (microtime(true) * 1000 + $product['product_id']) % 50 / 10; ?>s;
+                                            animation-delay: <?php echo rand(1, 15); ?>s;
                                         ">
                                             <?php
                                             $activities = [
@@ -2845,7 +2846,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                                     GH₵<?php echo number_format($original_price, 0); ?>
                                                 </span>
                                             </div>
-                                            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px; line-height: 1.4; word-wrap: break-word; overflow: visible; min-height: 18px;">
+                                            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px; line-height: 1.4; word-wrap: break-word; overflow: visible; min-height: 36px; white-space: normal; display: block; width: 100%;">
                                                 Limited time offer - While supplies last
                                             </div>
                                         </div>
@@ -2909,17 +2910,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             window.location.href = 'single_product.php?id=' + productId;
         }
 
-        window.viewProductDetails = function(productId) {
+        function viewProductDetails(productId) {
             console.log('viewProductDetails called with ID:', productId);
 
             if (!productId || productId === 0) {
                 console.error('Invalid product ID:', productId);
+                alert('Invalid product ID');
                 return;
             }
 
             // Navigate to single product page using 'pid' parameter
-            window.location.href = `single_product.php?pid=${productId}`;
-        };
+            window.location.href = 'single_product.php?pid=' + productId;
+        }
+
+        // Also assign to window for global access
+        window.viewProductDetails = viewProductDetails;
 
         window.showOutOfStockAlert = function() {
             Swal.fire({
@@ -4138,11 +4143,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Initialize wishlist status
         document.addEventListener('DOMContentLoaded', function() {
-            // Add random delays to popup animations
-            const popups = document.querySelectorAll('.customer-activity-popup');
-            popups.forEach((popup, index) => {
-                const delay = Math.random() * 3; // Random delay between 0-3 seconds
-                popup.style.setProperty('--delay', delay + 's');
+            // Popup animations now handled by PHP random delays
             });
 
             // Load wishlist status

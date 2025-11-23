@@ -1424,7 +1424,7 @@ $fairDiscount = $basePrice - $fairPrice;
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="../views/product_search_result.php">
+					<form class="search-container" method="GET" action="../product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
@@ -2714,6 +2714,15 @@ $fairDiscount = $basePrice - $fairPrice;
 
         // SweetAlert Cart Popup - positioned on right side under navbar
         function showSweetCartPopup(data) {
+            console.log('showSweetCartPopup called with data:', data);
+
+            // Check if SweetAlert is available
+            if (typeof Swal === 'undefined') {
+                console.error('SweetAlert2 is not loaded');
+                alert('Item added to cart successfully!'); // Fallback
+                return;
+            }
+
             // Get product image - try multiple methods
             let productImage = '';
 
@@ -2748,6 +2757,8 @@ $fairDiscount = $basePrice - $fairPrice;
                 productImage = generatePlaceholderUrl(productName, '60x60');
             }
 
+            console.log('Product image resolved to:', productImage);
+
             // Create cart state display
             const cartStateHTML = `
                 <div style="display: flex; gap: 12px; align-items: flex-start; text-align: left;">
@@ -2776,7 +2787,8 @@ $fairDiscount = $basePrice - $fairPrice;
                 </div>
             `;
 
-            Swal.fire({
+            try {
+                Swal.fire({
                 title: '<i class="fas fa-check-circle" style="color: #10b981;"></i> Added to Cart!',
                 html: cartStateHTML,
                 width: 420,
@@ -2851,7 +2863,27 @@ $fairDiscount = $basePrice - $fairPrice;
                     customStyle.remove();
                 }
             }, 10000);
+
+            } catch (error) {
+                console.error('Error showing SweetAlert popup:', error);
+                // Fallback notification
+                alert(`Added "${data.product_name}" to cart! Cart total: GH₵${parseFloat(data.cart_total || '0').toLocaleString()}`);
+            }
         }
+
+        // Test SweetAlert function for debugging
+        function testSweetAlert() {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire('Test', 'SweetAlert is working!', 'success');
+            } else {
+                console.error('SweetAlert not available');
+            }
+        }
+
+        // Test on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Page loaded, SweetAlert available:', typeof Swal !== 'undefined');
+        });
     </script>
 
     <style>

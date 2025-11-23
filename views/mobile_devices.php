@@ -1532,14 +1532,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                                <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                                <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                                <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                                <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                                <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                                <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                                <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                                <li><a href="../all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                                <li><a href="../all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                                <li><a href="../all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                                <li><a href="../all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                                <li><a href="../all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                                <li><a href="../all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                                <li><a href="../all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                                <li><a href="../all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>

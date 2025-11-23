@@ -536,7 +536,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
-				<a href="index.php" class="logo">
+				<a href="../index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
 					     alt="Gadget Garage"
 					     style="height: 40px; width: auto; object-fit: contain;">
@@ -545,7 +545,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="product_search_result.php">
+					<form class="search-container" method="GET" action="../product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
@@ -569,7 +569,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
 								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
@@ -577,7 +577,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+							<a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
 								<?php if ($cart_count > 0): ?>
 									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
@@ -654,7 +654,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
-                                    <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                    <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
@@ -663,7 +663,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="index.php" class="nav-item" data-translate="home">HOME</a>
+                <a href="../index.php" class="nav-item" data-translate="home">HOME</a>
 
                 <!-- Shop Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
@@ -722,8 +722,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="repair_services.php" class="nav-item" data-translate="repair_studio">REPAIR STUDIO</a>
-                <a href="device_drop.php" class="nav-item">DEVICE DROP</a>
+                <a href="../views/repair_services.php" class="nav-item" data-translate="repair_studio">REPAIR STUDIO</a>
+                <a href="../views/device_drop.php" class="nav-item">DEVICE DROP</a>
 
                 <!-- More Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">

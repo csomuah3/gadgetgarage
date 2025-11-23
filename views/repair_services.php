@@ -53,49 +53,83 @@ try {
 			overflow-x: hidden;
 		}
 
-		/* Promotional Banner Styles */
+		/* Promotional Banner Styles - Same as login */
 		.promo-banner {
-			background: linear-gradient(90deg, #16a085, #f39c12);
+			background: #001f3f !important;
 			color: white;
+			padding: 6px 15px;
 			text-align: center;
-			padding: 12px 20px;
-			font-size: 14px;
-			font-weight: 600;
+			font-size: 1rem;
+			font-weight: 400;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			height: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 15px;
+			max-width: 100%;
+		}
+
+		.promo-banner-left {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			flex: 0 0 auto;
+		}
+
+		.promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 10px;
-			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			gap: 20px;
+			flex: 1;
 		}
 
-		.promo-banner .fas {
-			font-size: 16px;
-			animation: bounce 2s infinite;
+		.promo-banner i {
+			font-size: 1rem;
 		}
 
-		@keyframes bounce {
-			0%, 20%, 50%, 80%, 100% {
-				transform: translateY(0);
-			}
-			40% {
-				transform: translateY(-5px);
-			}
-			60% {
-				transform: translateY(-3px);
-			}
+		.promo-banner .promo-text {
+			font-size: 1rem;
+			font-weight: 400;
+			letter-spacing: 0.5px;
 		}
 
-		/* Header Styles */
+		.promo-timer {
+			background: transparent;
+			padding: 0;
+			border-radius: 0;
+			font-size: 1.3rem;
+			font-weight: 500;
+			margin: 0;
+			border: none;
+		}
+
+		.promo-shop-link {
+			color: white;
+			text-decoration: underline;
+			font-weight: 700;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+			font-size: 1.2rem;
+			flex: 0 0 auto;
+		}
+
+		.promo-shop-link:hover {
+			opacity: 0.8;
+		}
+
+		/* Header Styles - Same as login */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 44px;
+			top: 38px;
 			z-index: 1000;
-			padding: 16px 0;
+			padding: 20px 0;
 			border-bottom: 1px solid #e5e7eb;
 		}
 
@@ -200,34 +234,42 @@ try {
 		.user-actions {
 			display: flex;
 			align-items: center;
-			gap: 12px;
+			gap: 11px;
 		}
 
 		.header-icon {
 			position: relative;
-			padding: 8px;
-			border-radius: 8px;
+			width: 48px;
+			height: 48px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #374151;
+			font-size: 1.3rem;
 			transition: all 0.3s ease;
-			color: #4b5563;
-			cursor: pointer;
+			border-radius: 50%;
 		}
 
 		.header-icon:hover {
-			background: rgba(0, 128, 96, 0.1);
-			color: #008060;
+			background: rgba(139, 95, 191, 0.1);
+			transform: scale(1.1);
 		}
 
+		.wishlist-badge,
 		.cart-badge {
 			position: absolute;
 			top: -2px;
 			right: -2px;
-			background: linear-gradient(135deg, #006b4e, #008060);
+			background: #ef4444;
 			color: white;
-			font-size: 0.75rem;
-			padding: 2px 6px;
-			border-radius: 10px;
-			min-width: 18px;
-			text-align: center;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.7rem;
+			font-weight: 600;
 		}
 
 		.login-btn {
@@ -253,8 +295,8 @@ try {
 		}
 
 		.user-avatar {
-			width: 36px;
-			height: 36px;
+			width: 48px;
+			height: 48px;
 			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
@@ -262,13 +304,14 @@ try {
 			justify-content: center;
 			color: white;
 			font-weight: 600;
+			font-size: 1.3rem;
 			cursor: pointer;
 			transition: all 0.3s ease;
 		}
 
 		.user-avatar:hover {
-			transform: scale(1.1);
-			box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
+			transform: scale(1.15);
+			box-shadow: 0 5px 15px rgba(0, 128, 96, 0.5);
 		}
 
 		.dropdown-menu-custom {
@@ -277,16 +320,16 @@ try {
 			right: 0;
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border: 1px solid rgba(0, 128, 96, 0.2);
+			border: 1px solid rgba(139, 95, 191, 0.2);
 			border-radius: 15px;
-			box-shadow: 0 8px 32px rgba(0, 128, 96, 0.15);
+			box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
 			padding: 15px 0;
 			min-width: 220px;
-			z-index: 1000;
 			opacity: 0;
 			visibility: hidden;
 			transform: translateY(-10px);
 			transition: all 0.3s ease;
+			z-index: 1000;
 		}
 
 		.dropdown-menu-custom.show {
@@ -311,7 +354,7 @@ try {
 		}
 
 		.dropdown-item-custom:hover {
-			background: rgba(0, 128, 96, 0.1);
+			background: rgba(139, 95, 191, 0.1);
 			color: #008060;
 			transform: translateX(3px);
 		}
@@ -324,7 +367,7 @@ try {
 
 		.dropdown-divider-custom {
 			height: 1px;
-			background: linear-gradient(90deg, transparent, rgba(0, 128, 96, 0.2), transparent);
+			background: linear-gradient(90deg, transparent, rgba(139, 95, 191, 0.2), transparent);
 			margin: 8px 0;
 		}
 
@@ -364,10 +407,12 @@ try {
 			transform: translateX(20px);
 		}
 
-		.language-selector {
+		.language-selector,
+		.theme-toggle {
 			display: flex;
 			align-items: center;
-			gap: 8px;
+			justify-content: space-between;
+			width: 100%;
 		}
 
 		/* Main Navigation */
@@ -1014,8 +1059,14 @@ try {
 <body>
     <!-- Promotional Banner -->
     <div class="promo-banner">
-        <i class="fas fa-shipping-fast"></i>
-        Free Next Day Delivery on Orders Above GH₵2,000!
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="promo-banner-center">
+            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="index.php#flash-deals" class="promo-shop-link">Shop Now</a>
     </div>
 
 	<!-- Floating Bubbles Background -->
@@ -1029,7 +1080,7 @@ try {
 				<a href="index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
 					     alt="Gadget Garage"
-					     style="height: 40px; width: auto; object-fit: contain;">
+					     style="height: 60px; width: auto; object-fit: contain;"
 				</a>
 
 				<!-- Center Content -->
@@ -1054,21 +1105,26 @@ try {
 				</div>
 
 				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-					<span style="color: #ddd;">|</span>
+				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
 					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
+								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
 						</div>
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none;">
+							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -1078,9 +1134,9 @@ try {
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
+								<button class="dropdown-item-custom" onclick="goToAccount()">
+									<i class="fas fa-user"></i>
+									<span>Account</span>
 								</button>
 								<div class="dropdown-divider-custom"></div>
 								<div class="dropdown-item-custom">
@@ -1105,11 +1161,6 @@ try {
 									</div>
 								</div>
 								<div class="dropdown-divider-custom"></div>
-								<a href="wishlist.php" class="dropdown-item-custom">
-									<i class="fas fa-heart"></i>
-									<span>Wishlist</span>
-								</a>
-								<div class="dropdown-divider-custom"></div>
 								<a href="login/logout.php" class="dropdown-item-custom">
 									<i class="fas fa-sign-out-alt"></i>
 									<span>Logout</span>
@@ -1117,11 +1168,12 @@ try {
 							</div>
 						</div>
 					<?php else: ?>
-						<!-- Not logged in: Register | Login -->
-						<a href="login/register.php" class="login-btn me-2">Register</a>
-						<a href="login/login.php" class="login-btn">Login</a>
+						<!-- Login Button -->
+						<a href="login/login.php" class="login-btn">
+							<i class="fas fa-user"></i>
+							Login
+						</a>
 					<?php endif; ?>
-
 				</div>
 			</div>
 		</div>
@@ -1616,6 +1668,38 @@ try {
 			if (selectedIssue) {
 				window.location.href = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
 			}
+		}
+
+		// Timer functionality for promo banner
+		function updateTimer() {
+			const timerElement = document.getElementById('promoTimer');
+			if (timerElement) {
+				const now = new Date().getTime();
+				const nextDay = new Date();
+				nextDay.setDate(nextDay.getDate() + 1);
+				nextDay.setHours(0, 0, 0, 0);
+
+				const distance = nextDay.getTime() - now;
+
+				const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+				const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+				timerElement.innerHTML = days + "d:" +
+								         (hours < 10 ? "0" : "") + hours + "h:" +
+								         (minutes < 10 ? "0" : "") + minutes + "m:" +
+								         (seconds < 10 ? "0" : "") + seconds + "s";
+			}
+		}
+
+		// Update timer every second
+		setInterval(updateTimer, 1000);
+		updateTimer(); // Initial call
+
+		// Account page navigation function from login.php
+		function goToAccount() {
+			window.location.href = 'my_orders.php';
 		}
 
 		// Add hover effects for repair cards

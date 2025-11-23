@@ -1268,7 +1268,7 @@ try {
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <!-- Wishlist Icon -->
                         <div class="header-icon">
-                            <a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-heart"></i>
                                 <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
                             </a>
@@ -1676,6 +1676,7 @@ try {
     <script src="../js/header.js"></script>
     <script src="../js/dark-mode.js"></script>
     <script src="../js/cart.js"></script>
+    <script src="../js/promo-code.js"></script>
 
     <script>
     // User dropdown functionality - from login.php

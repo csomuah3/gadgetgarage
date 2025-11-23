@@ -79,39 +79,73 @@ usort($flash_deal_products, function($a, $b) {
 			min-height: 100vh;
 		}
 
-		/* Promotional Banner Styles */
+		/* Promotional Banner Styles - Same as index */
 		.promo-banner {
-			background: linear-gradient(90deg, #16a085, #f39c12);
+			background: #001f3f !important;
 			color: white;
+			padding: 6px 15px;
 			text-align: center;
-			padding: 12px 20px;
-			font-size: 14px;
-			font-weight: 600;
+			font-size: 1rem;
+			font-weight: 400;
 			position: sticky;
 			top: 0;
 			z-index: 1001;
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			height: 32px;
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			gap: 15px;
+			max-width: 100%;
+		}
+
+		.promo-banner-left {
+			display: flex;
+			align-items: center;
+			gap: 15px;
+			flex: 0 0 auto;
+		}
+
+		.promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			gap: 10px;
-			box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+			gap: 20px;
+			flex: 1;
 		}
 
-		.promo-banner .fas {
-			font-size: 16px;
-			animation: bounce 2s infinite;
+		.promo-banner i {
+			font-size: 1rem;
 		}
 
-		@keyframes bounce {
-			0%, 20%, 50%, 80%, 100% {
-				transform: translateY(0);
-			}
-			40% {
-				transform: translateY(-5px);
-			}
-			60% {
-				transform: translateY(-3px);
-			}
+		.promo-banner .promo-text {
+			font-size: 1rem;
+			font-weight: 400;
+			letter-spacing: 0.5px;
+		}
+
+		.promo-timer {
+			background: transparent;
+			padding: 0;
+			border-radius: 0;
+			font-size: 1.3rem;
+			font-weight: 500;
+			margin: 0;
+			border: none;
+		}
+
+		.promo-shop-link {
+			color: white;
+			text-decoration: underline;
+			font-weight: 700;
+			cursor: pointer;
+			transition: opacity 0.3s ease;
+			font-size: 1.2rem;
+			flex: 0 0 auto;
+		}
+
+		.promo-shop-link:hover {
+			opacity: 0.8;
 		}
 
 		/* Header Styles */
@@ -639,11 +673,17 @@ usort($flash_deal_products, function($a, $b) {
 </head>
 
 <body>
-    <!-- Promotional Banner -->
-    <div class="promo-banner">
-        <i class="fas fa-shipping-fast"></i>
-        Free Next Day Delivery on Orders Above GH₵2,000!
-    </div>
+	<!-- Promotional Banner -->
+	<div class="promo-banner">
+		<div class="promo-banner-left">
+			<i class="fas fa-bolt"></i>
+		</div>
+		<div class="promo-banner-center">
+			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+		</div>
+		<a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
+	</div>
 
 	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container-fluid" style="padding: 0 40px;">

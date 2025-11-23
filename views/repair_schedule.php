@@ -30,6 +30,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
         $device_info = $_POST['device_info'] ?? '';
         $issue_description = $_POST['issue_description'] ?? '';
 
+        // Server-side validation: Check for Sunday appointments
+        $dateObj = DateTime::createFromFormat('Y-m-d', $appointment_date);
+        if ($dateObj && $dateObj->format('w') == 0) { // 0 = Sunday
+            throw new Exception('Appointments are not available on Sundays. Please select a weekday.');
+        }
+
+        // Server-side validation: Check for appointments after 5 PM
+        $timeObj = DateTime::createFromFormat('H:i:s', $appointment_time);
+        if ($timeObj && $timeObj->format('H') >= 17) { // 17:00 = 5:00 PM
+            throw new Exception('Appointments are not available after 5:00 PM. Please select an earlier time.');
+        }
+
         // Escape values for security
         $customer_id = $customer_id ? mysqli_real_escape_string($db->db_conn(), $customer_id) : 'NULL';
         $specialist_id = mysqli_real_escape_string($db->db_conn(), $specialist_id);
@@ -315,6 +327,35 @@ try {
             color: #047857;
         }
 
+        .time-slot.unavailable {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-color: #f87171;
+            color: #dc2626;
+            cursor: not-allowed;
+            opacity: 0.7;
+            position: relative;
+        }
+
+        .time-slot.unavailable:hover {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            border-color: #f87171;
+            color: #dc2626;
+            transform: none;
+        }
+
+        .time-slot.unavailable::after {
+            content: "Booked";
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            background: #dc2626;
+            color: white;
+            font-size: 0.65rem;
+            padding: 1px 4px;
+            border-radius: 3px;
+            font-weight: 600;
+        }
+
         .summary-item {
             display: flex;
             justify-content: space-between;
@@ -565,7 +606,6 @@ try {
                                 <div class="time-slot" data-time="14:00">2:00 PM</div>
                                 <div class="time-slot" data-time="15:00">3:00 PM</div>
                                 <div class="time-slot" data-time="16:00">4:00 PM</div>
-                                <div class="time-slot" data-time="17:00">5:00 PM</div>
                             </div>
                             <input type="hidden" id="appointment_time" name="appointment_time" required>
                         </div>
@@ -683,6 +723,7 @@ try {
     </section>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         let selectedDate = null;
         let selectedTime = null;
@@ -692,22 +733,79 @@ try {
             selectedDate = this.value;
             if (selectedDate) {
                 const dateObj = new Date(selectedDate);
-                const formattedDate = dateObj.toLocaleDateString('en-US', {
-                    weekday: 'long',
-                    year: 'numeric',
-                    month: 'long',
-                    day: 'numeric'
-                });
-                document.getElementById('selectedDate').textContent = formattedDate;
+                const dayOfWeek = dateObj.getDay(); // 0 = Sunday, 1 = Monday, etc.
+
+                // Check if selected date is a Sunday
+                if (dayOfWeek === 0) {
+                    // Sunday selected - show error and reset
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Sunday Not Available',
+                            text: 'Appointments are not available on Sundays. Please select a weekday.',
+                            icon: 'warning',
+                            confirmButtonColor: '#D19C97',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert('Appointments are not available on Sundays. Please select a weekday.');
+                    }
+                    this.value = ''; // Reset the date input
+                    selectedDate = null;
+                    document.getElementById('selectedDate').textContent = 'Not selected';
+                } else {
+                    const formattedDate = dateObj.toLocaleDateString('en-US', {
+                        weekday: 'long',
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric'
+                    });
+                    document.getElementById('selectedDate').textContent = formattedDate;
+                }
             } else {
                 document.getElementById('selectedDate').textContent = 'Not selected';
             }
             updateSubmitButton();
         });
 
+        // Randomly mark some time slots as unavailable
+        function markRandomSlotsUnavailable() {
+            const timeSlots = document.querySelectorAll('.time-slot');
+            const slotsToMakeUnavailable = Math.floor(Math.random() * 3) + 1; // 1-3 random slots
+            const unavailableSlots = [];
+
+            // Randomly select slots to make unavailable
+            while (unavailableSlots.length < slotsToMakeUnavailable) {
+                const randomIndex = Math.floor(Math.random() * timeSlots.length);
+                if (!unavailableSlots.includes(randomIndex)) {
+                    unavailableSlots.push(randomIndex);
+                }
+            }
+
+            // Mark selected slots as unavailable
+            unavailableSlots.forEach(index => {
+                timeSlots[index].classList.add('unavailable');
+            });
+        }
+
         // Handle time slot selection
         document.querySelectorAll('.time-slot').forEach(slot => {
             slot.addEventListener('click', function() {
+                // Check if slot is unavailable
+                if (this.classList.contains('unavailable')) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Time Slot Unavailable',
+                            text: 'This time slot is already booked. Please select another available time.',
+                            icon: 'warning',
+                            confirmButtonColor: '#D19C97',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert('This time slot is already booked. Please select another available time.');
+                    }
+                    return;
+                }
+
                 // Remove previous selection
                 document.querySelectorAll('.time-slot').forEach(s => s.classList.remove('selected'));
 
@@ -746,6 +844,9 @@ try {
             termsCheckboxes.forEach(checkbox => {
                 checkbox.addEventListener('change', updateSubmitButton);
             });
+
+            // Mark random time slots as unavailable when page loads
+            markRandomSlotsUnavailable();
         });
 
         // Form validation

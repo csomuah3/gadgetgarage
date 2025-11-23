@@ -53,9 +53,9 @@ try {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
-			top: 0;
+			top: 38px;
 			z-index: 1000;
-			padding: 16px 0;
+			padding: 20px 0;
 			border-bottom: 1px solid #e5e7eb;
 		}
 
@@ -67,6 +67,17 @@ try {
 			display: flex;
 			align-items: center;
 			gap: 8px;
+		}
+
+		.logo img {
+			height: 60px !important;
+			width: auto !important;
+			object-fit: contain;
+			transition: transform 0.3s ease;
+		}
+
+		.logo:hover img {
+			transform: scale(1.05);
 		}
 
 		.logo .garage {
@@ -907,6 +918,18 @@ try {
 </head>
 
 <body>
+	<!-- Promotional Banner -->
+	<div class="promo-banner">
+		<div class="promo-banner-left">
+			<i class="fas fa-bolt"></i>
+		</div>
+		<div class="promo-banner-center">
+			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+		</div>
+		<a href="index.php#flash-deals" class="promo-shop-link">Shop Now</a>
+	</div>
+
 	<!-- Floating Bubbles Background -->
 	<div class="floating-bubbles" id="floatingBubbles"></div>
 

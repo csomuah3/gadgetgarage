@@ -23,6 +23,17 @@ function should_show_newsletter_popup($customer_id) {
 
         $conn = $db->db_conn();
 
+        // First check if the newsletter_popup_shown column exists
+        $check_column_sql = "SHOW COLUMNS FROM customer LIKE 'newsletter_popup_shown'";
+        $column_result = $conn->query($check_column_sql);
+
+        if ($column_result->num_rows == 0) {
+            // Column doesn't exist, create it and return true to show popup
+            $add_column_sql = "ALTER TABLE customer ADD COLUMN newsletter_popup_shown TINYINT(1) DEFAULT 0";
+            $conn->query($add_column_sql);
+            return true; // Show popup for new column
+        }
+
         // Check if user has already seen the popup
         $stmt = $conn->prepare("SELECT newsletter_popup_shown FROM customer WHERE customer_id = ?");
         $stmt->bind_param('i', $customer_id);

@@ -2400,7 +2400,9 @@ try {
 
         // Promo Code Functionality
         let appliedPromo = null;
-        const originalTotal = <?php echo $cart_total; ?>;
+        const originalTotal = <?php echo $cart_total ?: 0; ?>;
+
+        console.log('Cart total from PHP:', originalTotal);
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOMContentLoaded event fired');
@@ -2475,15 +2477,30 @@ try {
                     promo_code: promoCode,
                     cart_total: originalTotal
                 };
-                console.log('Request data:', requestData);
+                console.log('Request data being sent:', requestData);
 
-                const response = await fetch('../actions/validate_promo_code.php', {
+                // Try both JSON and FormData approaches
+                const formData = new FormData();
+                formData.append('promo_code', promoCode);
+                formData.append('cart_total', originalTotal);
+
+                console.log('Trying FormData approach first...');
+                let response = await fetch('../actions/validate_promo_code.php', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify(requestData)
+                    body: formData
                 });
+
+                // If FormData fails, try JSON
+                if (!response.ok) {
+                    console.log('FormData failed, trying JSON approach...');
+                    response = await fetch('../actions/validate_promo_code.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(requestData)
+                    });
+                }
 
                 console.log('Response status:', response.status);
                 console.log('Response ok:', response.ok);

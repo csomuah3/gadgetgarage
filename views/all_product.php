@@ -1726,8 +1726,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 35px;
             margin-bottom: 50px;
             width: 100%;
         }
@@ -2210,8 +2210,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         @media (max-width: 768px) {
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 20px;
+                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                gap: 25px;
             }
 
             .filters-section {
@@ -2794,7 +2794,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     </div>
 
                                     <!-- Product Content -->
-                                    <div style="padding: 25px;">
+                                    <div style="padding: 28px 30px;">
                                         <!-- Product Title -->
                                         <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
                                             <?php echo htmlspecialchars($product['product_title']); ?>
@@ -2823,10 +2823,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
                                         </div>
 
-                                        <!-- Optional Status Text -->
-                                        <?php if (rand(1, 3) === 1): // Only show for some products ?>
+                                        <!-- Stock Status - Only show if out of stock -->
+                                        <?php
+                                        $stock_quantity = isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 10;
+                                        if ($stock_quantity <= 0):
+                                        ?>
                                             <div style="margin-bottom: 12px;">
-                                                <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
+                                                <span style="background: #ef4444; color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                                                    <i class="fas fa-times-circle" style="margin-right: 4px;"></i>Out of Stock
+                                                </span>
                                             </div>
                                         <?php endif; ?>
 
@@ -2846,12 +2851,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         </div>
 
                                         <!-- View Details Button -->
-                                        <button onclick="viewProductDetails(<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>)"
-                                                data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
-                                                style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                            <i class="fas fa-eye"></i>
-                                            View Details
-                                        </button>
+                                        <?php if ($stock_quantity > 0): ?>
+                                            <button onclick="viewProductDetails(<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>)"
+                                                    data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
+                                                    style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                                <i class="fas fa-eye"></i>
+                                                View Details
+                                            </button>
+                                        <?php else: ?>
+                                            <button onclick="showOutOfStockAlert()"
+                                                    disabled
+                                                    style="width: 100%; background: #94a3b8; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: not-allowed; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
+                                                <i class="fas fa-times-circle"></i>
+                                                Out of Stock
+                                            </button>
+                                        <?php endif; ?>
                                     </div>
                                 </div>
                             <?php endforeach; ?>
@@ -4211,17 +4225,40 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         window.viewProductDetails = function(productId) {
             console.log('viewProductDetails called with ID:', productId);
-            alert('viewProductDetails called with ID: ' + productId); // Visual debugging
 
             if (!productId || productId === 0) {
                 console.error('Invalid product ID:', productId);
-                alert('Invalid product ID: ' + productId);
                 return;
             }
 
-            // Navigate to single product page
-            console.log('Attempting to navigate to: single_product.php?product_id=' + productId);
-            window.location.href = `single_product.php?product_id=${productId}`;
+            // Navigate to single product page using 'pid' parameter
+            window.location.href = `single_product.php?pid=${productId}`;
+        };
+
+        window.showOutOfStockAlert = function() {
+            Swal.fire({
+                title: 'Out of Stock!',
+                text: 'This product is currently out of stock. Please check back later or browse our other available products.',
+                icon: 'warning',
+                iconColor: '#f59e0b',
+                confirmButtonText: 'Browse Other Products',
+                confirmButtonColor: '#4f46e5',
+                showCancelButton: true,
+                cancelButtonText: 'OK',
+                cancelButtonColor: '#6b7280',
+                background: '#ffffff',
+                color: '#1f2937',
+                customClass: {
+                    popup: 'swal-out-of-stock-popup-card',
+                    title: 'swal-out-of-stock-title-card',
+                    content: 'swal-out-of-stock-content-card'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Scroll to top of products or redirect to all products
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
         };
     </script>
 

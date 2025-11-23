@@ -350,10 +350,207 @@ try {
         .loading {
             animation: pulse 1.5s infinite;
         }
+
+        /* Promotional Banner Styles */
+        .promo-banner2 {
+            background: #001f3f !important;
+            color: white;
+            padding: 6px 15px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 500;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            max-width: 100%;
+        }
+
+        .promo-banner2 .promo-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 0 0 auto;
+        }
+
+        .promo-banner2 .promo-banner-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .promo-banner2 i {
+            font-size: 1rem;
+        }
+
+        .promo-banner2 .promo-text {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .promo-banner2 .promo-timer {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin: 0;
+            border: none;
+        }
+
+        .promo-banner2 .promo-shop-link {
+            color: white;
+            text-decoration: underline;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-size: 1.2rem;
+            flex: 0 0 auto;
+        }
+
+        .promo-banner2 .promo-shop-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Main Header Styles */
+        .main-header {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 38px;
+            z-index: 1000;
+            padding: 15px 0;
+        }
+
+        .header-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo img {
+            height: 45px;
+            width: auto;
+        }
+
+        .user-actions {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .header-icon {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(139, 95, 191, 0.1);
+            color: #8b5fbf;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .header-icon:hover {
+            background: rgba(139, 95, 191, 0.2);
+            transform: scale(1.1);
+        }
+
+        .cart-badge, .wishlist-badge {
+            position: absolute;
+            top: -2px;
+            right: -2px;
+            background: #ef4444;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Update account container to account for fixed header */
+        .account-container {
+            margin-top: 20px;
+        }
     </style>
 </head>
 
 <body>
+    <!-- Promotional Banner -->
+    <div class="promo-banner2">
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="promo-banner-center">
+            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="all_product.php" class="promo-shop-link">Shop Now</a>
+    </div>
+
+    <!-- Main Header -->
+    <header class="main-header">
+        <div class="header-container">
+            <!-- Logo - Left -->
+            <a href="index.php" class="logo">
+                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                     alt="Gadget Garage"
+                     style="height: 45px;">
+            </a>
+
+            <!-- User Actions - Right -->
+            <div class="user-actions">
+                <!-- Wishlist Icon -->
+                <div class="header-icon">
+                    <a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-heart"></i>
+                        <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
+                    </a>
+                </div>
+
+                <!-- Cart Icon -->
+                <div class="header-icon">
+                    <a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-shopping-cart"></i>
+                        <?php if ($cart_count > 0): ?>
+                            <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                        <?php else: ?>
+                            <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                        <?php endif; ?>
+                    </a>
+                </div>
+
+                <!-- User Dropdown -->
+                <div class="header-icon dropdown" style="background: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%); color: white;">
+                    <button class="dropdown-toggle" data-bs-toggle="dropdown" style="background: none; border: none; color: white; cursor: pointer;">
+                        <i class="fas fa-user"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="account.php">My Account</a></li>
+                        <li><a class="dropdown-item" href="my_orders.php">My Orders</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="../login/logout.php">Logout</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </header>
+
     <div class="account-container">
         <!-- Sidebar Navigation -->
         <nav class="account-sidebar">
@@ -483,6 +680,43 @@ try {
             // For now, keeping the empty state
             // You can integrate with your existing product viewing tracking
         }
+
+        // Countdown timer for promotional banner
+        function startPromoTimer() {
+            const timer = document.getElementById('promoTimer');
+            if (!timer) return;
+
+            // Set timer to end in 12 days from now
+            const endDate = new Date();
+            endDate.setDate(endDate.getDate() + 12);
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = endDate.getTime() - now;
+
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    timer.textContent = `${days}d:${String(hours).padStart(2, '0')}h:${String(minutes).padStart(2, '0')}m:${String(seconds).padStart(2, '0')}s`;
+                } else {
+                    timer.textContent = "00d:00h:00m:00s";
+                    clearInterval(timerInterval);
+                }
+            }
+
+            const timerInterval = setInterval(updateTimer, 1000);
+            updateTimer(); // Run immediately
+        }
+
+        // Start timer when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            loadWishlistItems();
+            loadViewedItems();
+            startPromoTimer();
+        });
     </script>
 </body>
 </html>

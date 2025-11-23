@@ -12,10 +12,30 @@ try {
         throw new Exception('Invalid request method');
     }
 
-    $input = json_decode(file_get_contents('php://input'), true);
+    // Try to get input from both JSON and POST data
+    $raw_input = file_get_contents('php://input');
+    $input = json_decode($raw_input, true);
+
+    // If JSON decode failed, try $_POST
+    if (!$input && !empty($_POST)) {
+        $input = $_POST;
+        error_log('Promo validation debug: Using POST data instead of JSON');
+    }
+
+    // Debug logging
+    error_log('Promo validation debug: Raw input = ' . $raw_input);
+    error_log('Promo validation debug: POST data = ' . json_encode($_POST));
+    error_log('Promo validation debug: Final input = ' . json_encode($input));
 
     if (!$input || !isset($input['promo_code']) || !isset($input['cart_total'])) {
-        throw new Exception('Missing required parameters');
+        $debug_info = [
+            'input_exists' => !empty($input),
+            'promo_code_exists' => isset($input['promo_code']),
+            'cart_total_exists' => isset($input['cart_total']),
+            'input_keys' => is_array($input) ? array_keys($input) : 'not_array'
+        ];
+        error_log('Promo validation debug: Missing parameters = ' . json_encode($debug_info));
+        throw new Exception('Missing required parameters: ' . json_encode($debug_info));
     }
 
     $promo_code = trim(strtoupper($input['promo_code']));

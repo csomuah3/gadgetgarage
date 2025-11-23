@@ -1,51 +1,58 @@
 <?php
-session_start();
 header('Content-Type: application/json');
+require_once(__DIR__ . '/../settings/core.php');
 
 try {
-    require_once('../settings/core.php');
-    require_once('../settings/db_class.php');
+    // Check if user is logged in
+    $is_logged_in = check_login();
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        throw new Exception('Invalid request method');
+    if (!$is_logged_in) {
+        echo json_encode([
+            'success' => false,
+            'message' => 'User not logged in'
+        ]);
+        exit;
     }
 
-    if (!check_login()) {
-        throw new Exception('User not logged in');
-    }
+    $customer_id = $_SESSION['user_id'];
 
-    $customer_id = get_user_id();
-
-    // Connect to database
+    require_once(__DIR__ . '/../settings/db_class.php');
     $db = new db_connection();
+
     if (!$db->db_connect()) {
         throw new Exception('Database connection failed');
     }
 
     $conn = $db->db_conn();
 
-    // Update user to mark newsletter popup as shown
+    // First, check if the newsletter_popup_shown column exists, if not create it
+    $check_column_sql = "SHOW COLUMNS FROM customer LIKE 'newsletter_popup_shown'";
+    $result = $conn->query($check_column_sql);
+
+    if ($result->num_rows == 0) {
+        // Column doesn't exist, create it
+        $add_column_sql = "ALTER TABLE customer ADD COLUMN newsletter_popup_shown TINYINT(1) DEFAULT 0";
+        $conn->query($add_column_sql);
+    }
+
+    // Update the user's newsletter popup status
     $stmt = $conn->prepare("UPDATE customer SET newsletter_popup_shown = 1 WHERE customer_id = ?");
     $stmt->bind_param('i', $customer_id);
 
     if ($stmt->execute()) {
         echo json_encode([
             'success' => true,
-            'message' => 'Popup status updated'
+            'message' => 'Newsletter popup marked as shown'
         ]);
     } else {
         throw new Exception('Failed to update popup status');
     }
 
 } catch (Exception $e) {
-    http_response_code(400);
+    error_log('Mark popup shown error: ' . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => $e->getMessage()
+        'message' => 'Failed to mark popup as shown: ' . $e->getMessage()
     ]);
-} finally {
-    if (isset($db)) {
-        $db->db_close();
-    }
 }
 ?>

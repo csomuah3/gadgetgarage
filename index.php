@@ -54,10 +54,17 @@ try {
 	if ($is_logged_in) {
 		try {
 			require_once(__DIR__ . '/helpers/newsletter_helper.php');
-			$show_newsletter_popup = is_new_login_session() && should_show_newsletter_popup($customer_id);
+			$is_new_session = is_new_login_session();
+			$should_show = should_show_newsletter_popup($customer_id);
+			$show_newsletter_popup = $is_new_session && $should_show;
+
+			// Debug logging
+			error_log("Newsletter debug - Customer ID: $customer_id, New session: " . ($is_new_session ? 'yes' : 'no') . ", Should show: " . ($should_show ? 'yes' : 'no') . ", Final show: " . ($show_newsletter_popup ? 'yes' : 'no'));
 		} catch (Exception $e) {
 			error_log("Newsletter popup error: " . $e->getMessage());
 		}
+	} else {
+		error_log("Newsletter debug - User not logged in");
 	}
 } catch (Exception $e) {
 	// If core fails, show error
@@ -6448,12 +6455,17 @@ try {
 
 		// Newsletter popup for new users
 		<?php if ($show_newsletter_popup): ?>
+		console.log('Newsletter popup should be shown!');
 		document.addEventListener('DOMContentLoaded', function() {
+			console.log('DOM loaded, showing newsletter popup...');
 			// Show newsletter popup after a short delay
 			setTimeout(function() {
+				console.log('Calling showNewsletterPopup()...');
 				showNewsletterPopup();
 			}, 2000); // 2 second delay after page loads
 		});
+		<?php else: ?>
+		console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
 		<?php endif; ?>
 	</script>
 

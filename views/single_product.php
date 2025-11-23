@@ -1799,6 +1799,7 @@ $fairDiscount = $basePrice - $fairPrice;
         let selectedCondition = 'excellent';
         let selectedPrice = <?php echo floatval($product['product_price']); ?>;
         let originalPrice = <?php echo floatval($product['product_price']); ?>;
+        let stockQuantity = <?php echo isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 0; ?>;
 
         // Price calculation data
         const priceData = {
@@ -1872,6 +1873,27 @@ $fairDiscount = $basePrice - $fairPrice;
         function initializeConditionSelection() {
             console.log('Initializing condition selection with prices:', priceData);
             selectCondition('excellent');
+            updateCartButtonState();
+        }
+
+        // Update cart button state based on stock
+        function updateCartButtonState() {
+            const btn = document.getElementById('addToCartBtn');
+            if (!btn) return;
+
+            if (stockQuantity <= 0) {
+                btn.innerHTML = '<i class="fas fa-times-circle"></i> Out of Stock';
+                btn.style.background = '#ef4444';
+                btn.style.color = 'white';
+                btn.style.cursor = 'not-allowed';
+                btn.style.opacity = '0.8';
+                btn.disabled = true;
+            } else if (stockQuantity <= 5) {
+                // Low stock warning
+                btn.innerHTML = `<i class="fas fa-shopping-cart"></i> Add to Cart (${stockQuantity} left) - GH₵<span id="cartButtonPrice"><?php echo number_format($product['product_price'], 0); ?></span>`;
+                btn.style.background = '#f59e0b';
+                btn.style.color = 'white';
+            }
         }
 
         // Enhanced Add to Cart Modal Function
@@ -2040,8 +2062,29 @@ $fairDiscount = $basePrice - $fairPrice;
             console.log('Add to cart called with:', {
                 productId: productId,
                 selectedCondition: selectedCondition,
-                selectedPrice: selectedPrice
+                selectedPrice: selectedPrice,
+                stockQuantity: stockQuantity
             });
+
+            // Check if product is out of stock
+            if (stockQuantity <= 0) {
+                Swal.fire({
+                    title: 'Out of Stock!',
+                    text: 'Sorry, this product is currently out of stock. Please check back later or contact us for availability.',
+                    icon: 'warning',
+                    iconColor: '#f59e0b',
+                    confirmButtonText: 'Understood',
+                    confirmButtonColor: '#4f46e5',
+                    background: '#ffffff',
+                    color: '#1f2937',
+                    customClass: {
+                        popup: 'swal-out-of-stock-popup',
+                        title: 'swal-out-of-stock-title',
+                        content: 'swal-out-of-stock-content'
+                    }
+                });
+                return;
+            }
 
             if (!selectedCondition || selectedPrice <= 0) {
                 console.error('Invalid selection:', { selectedCondition, selectedPrice });
@@ -2853,6 +2896,24 @@ $fairDiscount = $basePrice - $fairPrice;
                 }
                 .swal2-timer-progress-bar {
                     background: #4f46e5 !important;
+                }
+
+                /* Out of Stock Alert Styles */
+                .swal-out-of-stock-popup {
+                    border-radius: 20px !important;
+                    box-shadow: 0 25px 80px rgba(245, 158, 11, 0.15) !important;
+                    border: 2px solid #fbbf24 !important;
+                }
+                .swal-out-of-stock-title {
+                    font-size: 24px !important;
+                    font-weight: 700 !important;
+                    color: #92400e !important;
+                    margin-bottom: 20px !important;
+                }
+                .swal-out-of-stock-content {
+                    font-size: 16px !important;
+                    line-height: 1.6 !important;
+                    color: #374151 !important;
                 }
             `;
             document.head.appendChild(customStyle);

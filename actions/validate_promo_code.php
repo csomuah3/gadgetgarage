@@ -14,12 +14,34 @@ try {
 
     // Get JSON input
     $raw_input = file_get_contents('php://input');
+    error_log('Promo validation debug: Raw input length = ' . strlen($raw_input));
+    error_log('Promo validation debug: Raw input = ' . $raw_input);
+
+    // Try to decode JSON
     $input = json_decode($raw_input, true);
+    $json_error = json_last_error_msg();
 
     // Debug logging
-    error_log('Promo validation debug: Raw input = ' . $raw_input);
     error_log('Promo validation debug: Decoded input = ' . json_encode($input));
-    error_log('Promo validation debug: JSON decode error = ' . json_last_error_msg());
+    error_log('Promo validation debug: JSON decode error = ' . $json_error);
+
+    // If JSON decode failed, try alternative methods
+    if (!$input && !empty($_POST)) {
+        error_log('Promo validation debug: JSON failed, trying $_POST');
+        $input = $_POST;
+    }
+
+    // If still no input, try raw parse
+    if (!$input && !empty($raw_input)) {
+        error_log('Promo validation debug: Trying manual JSON parse');
+        // Remove any BOM or whitespace
+        $clean_input = trim($raw_input);
+        if (strpos($clean_input, "\xEF\xBB\xBF") === 0) {
+            $clean_input = substr($clean_input, 3);
+        }
+        $input = json_decode($clean_input, true);
+        error_log('Promo validation debug: Manual parse result = ' . json_encode($input));
+    }
 
     if (!$input || !isset($input['promo_code']) || !isset($input['cart_total'])) {
         $debug_info = [

@@ -2532,6 +2532,11 @@ try {
 
                 // Send JSON request only
                 console.log('Making request to: ../actions/validate_promo_code.php');
+                console.log('Request headers:', {
+                    'Content-Type': 'application/json'
+                });
+                console.log('Request body:', jsonString);
+
                 const response = await fetch('../actions/validate_promo_code.php', {
                     method: 'POST',
                     headers: {

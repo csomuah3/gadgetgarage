@@ -1,4 +1,5 @@
 <?php
+echo "<!-- PHP is working -->";
 try {
     require_once(__DIR__ . '/../settings/core.php');
     require_once(__DIR__ . '/../controllers/cart_controller.php');
@@ -1217,6 +1218,7 @@ try {
 </head>
 
 <body>
+<script>console.log('JavaScript is working - body loaded');</script>
     <!-- Promotional Banner -->
     <div class="promo-banner">
         <div class="promo-banner-left">

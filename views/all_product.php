@@ -2728,38 +2728,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 " onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
                                    onmouseout="this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
 
-                                    <!-- Customer Activity Popup -->
-                                    <?php if (rand(1, 4) !== 1): // Show on 75% of cards ?>
-                                    <div class="customer-activity-popup" style="
-                                        position: absolute;
-                                        bottom: 8px;
-                                        left: 8px;
-                                        background: rgba(0,0,0,0.8);
-                                        color: white;
-                                        padding: 8px 12px;
-                                        border-radius: 20px;
-                                        font-size: 0.75rem;
-                                        font-weight: 600;
-                                        z-index: 20;
-                                        opacity: 0;
-                                        animation: popupFade 4s ease-in-out infinite;
-                                        white-space: nowrap;
-                                        pointer-events: none;
-                                        animation-delay: <?php echo (microtime(true) * 1000 + $product['product_id']) % 50 / 10; ?>s;
-                                    ">
-                                        <?php
-                                        $activities = [
-                                            rand(2, 8) . ' customers viewing this',
-                                            rand(1, 5) . ' customers added to cart',
-                                            rand(3, 12) . ' customers wishlisted this',
-                                            rand(1, 4) . ' customers bought recently',
-                                            rand(5, 15) . ' customers interested',
-                                            rand(2, 6) . ' customers comparing this'
-                                        ];
-                                        echo $activities[array_rand($activities)];
-                                        ?>
-                                    </div>
-                                    <?php endif; ?>
 
                                     <!-- Discount Badge -->
                                     <?php if ($discount_percentage > 0): ?>
@@ -2780,7 +2748,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     </div>
 
                                     <!-- Product Image -->
-                                    <div class="product-image-container" style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden;">
+                                    <div class="product-image-container" style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden; position: relative;">
                                         <?php
                                         $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
                                         $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
@@ -2790,6 +2758,39 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             class="product-image"
                                             style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s ease;"
                                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
+
+                                        <!-- Customer Activity Popup - Now inside image frame -->
+                                        <?php if (rand(1, 4) !== 1): // Show on 75% of cards ?>
+                                        <div class="customer-activity-popup" style="
+                                            position: absolute;
+                                            bottom: 8px;
+                                            left: 8px;
+                                            background: rgba(0,0,0,0.8);
+                                            color: white;
+                                            padding: 6px 10px;
+                                            border-radius: 15px;
+                                            font-size: 0.7rem;
+                                            font-weight: 600;
+                                            z-index: 20;
+                                            opacity: 0;
+                                            animation: popupFade 4s ease-in-out infinite;
+                                            white-space: nowrap;
+                                            pointer-events: none;
+                                            animation-delay: <?php echo (microtime(true) * 1000 + $product['product_id']) % 50 / 10; ?>s;
+                                        ">
+                                            <?php
+                                            $activities = [
+                                                rand(2, 8) . ' customers viewing this',
+                                                rand(1, 5) . ' customers added to cart',
+                                                rand(3, 12) . ' customers wishlisted this',
+                                                rand(1, 4) . ' customers bought recently',
+                                                rand(5, 15) . ' customers interested',
+                                                rand(2, 6) . ' customers comparing this'
+                                            ];
+                                            echo $activities[array_rand($activities)];
+                                            ?>
+                                        </div>
+                                        <?php endif; ?>
                                     </div>
 
                                     <!-- Product Content -->
@@ -2893,35 +2894,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             window.location.href = 'single_product.php?id=' + productId;
         }
 
-        function viewProductDetails(productId) {
-            console.log('viewProductDetails called with ID:', productId);
-
-            // If productId is missing or invalid, try to get it from the button's data attribute
-            if (!productId || productId <= 0) {
-                const button = event.target.closest('button');
-                if (button) {
-                    productId = button.getAttribute('data-product-id');
-                    console.log('Got product ID from data attribute:', productId);
-                }
-            }
-
-            if (!productId || productId <= 0) {
-                console.error('Invalid product ID:', productId);
-                alert('Error: Invalid product ID. Please refresh the page and try again.');
-                return;
-            }
-
-            const url = 'single_product.php?pid=' + productId;
-            console.log('Redirecting to:', url);
-
-            try {
-                window.location.href = url;
-            } catch (error) {
-                console.error('Redirect failed:', error);
-                // Fallback: try opening in new tab
-                window.open(url, '_blank');
-            }
-        }
 
         // Add event listener for all View Details buttons
         document.addEventListener('DOMContentLoaded', function() {
@@ -4110,79 +4082,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         });
 
-        // Wishlist functionality
-        function toggleWishlist(productId, button) {
-            const icon = button.querySelector('i');
-            const isActive = button.classList.contains('active');
-
-            if (isActive) {
-                // Remove from wishlist
-                button.classList.remove('active');
-                icon.className = 'far fa-heart';
-
-                // Make AJAX call to remove from wishlist
-                fetch('../actions/remove_from_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update wishlist badge if exists
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count = Math.max(0, count - 1);
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
-                        }
-                    }
-                })
-                .catch(error => console.error('Error:', error));
-            } else {
-                // Add to wishlist
-                button.classList.add('active');
-                icon.className = 'fas fa-heart';
-
-                // Make AJAX call to add to wishlist
-                fetch('../actions/add_to_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update wishlist badge
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count++;
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = 'flex';
-                        }
-                    } else {
-                        // Revert button state if failed
-                        button.classList.remove('active');
-                        icon.className = 'far fa-heart';
-                        if (data.message) {
-                            alert(data.message);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Revert button state if failed
-                    button.classList.remove('active');
-                    icon.className = 'far fa-heart';
-                });
-            }
-        }
 
         // Initialize wishlist status
         document.addEventListener('DOMContentLoaded', function() {
@@ -4223,6 +4122,107 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 })
                 .catch(error => console.error('Error loading wishlist status:', error));
         }
+
+        // Global functions accessible from HTML onclick events
+        window.toggleWishlist = function(productId, button) {
+            console.log('toggleWishlist called with productId:', productId, 'button:', button);
+            const icon = button.querySelector('i');
+            const isActive = button.classList.contains('active');
+            console.log('Icon:', icon, 'IsActive:', isActive);
+
+            if (isActive) {
+                // Remove from wishlist
+                button.classList.remove('active');
+                icon.className = 'far fa-heart';
+
+                // Make AJAX call to remove from wishlist
+                fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge if exists
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count = Math.max(0, count - 1);
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    } else {
+                        // Revert if failed
+                        button.classList.add('active');
+                        icon.className = 'fas fa-heart';
+                        if (data.message) alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert if failed
+                    button.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                });
+            } else {
+                // Add to wishlist
+                button.classList.add('active');
+                icon.className = 'fas fa-heart';
+
+                // Make AJAX call to add to wishlist
+                fetch('../actions/add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count++;
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = 'flex';
+                        }
+                    } else {
+                        // Revert button state if failed
+                        button.classList.remove('active');
+                        icon.className = 'far fa-heart';
+                        if (data.message) {
+                            alert(data.message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert button state if failed
+                    button.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                });
+            }
+        };
+
+        window.viewProductDetails = function(productId) {
+            console.log('viewProductDetails called with ID:', productId);
+            alert('viewProductDetails called with ID: ' + productId); // Visual debugging
+
+            if (!productId || productId === 0) {
+                console.error('Invalid product ID:', productId);
+                alert('Invalid product ID: ' + productId);
+                return;
+            }
+
+            // Navigate to single product page
+            console.log('Attempting to navigate to: single_product.php?product_id=' + productId);
+            window.location.href = `single_product.php?product_id=${productId}`;
+        };
     </script>
 
     <!-- Footer -->

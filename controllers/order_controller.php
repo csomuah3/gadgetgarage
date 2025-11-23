@@ -49,6 +49,24 @@ function process_cart_to_order_ctr($customer_id, $ip_address = null)
     return $order->process_cart_to_order($customer_id, $ip_address);
 }
 
+function process_cart_to_order_without_payment_ctr($customer_id, $ip_address = null)
+{
+    $order = new Order();
+    return $order->process_cart_to_order_without_payment($customer_id, $ip_address);
+}
+
+function get_order_tracking_details($search_value)
+{
+    $order = new Order();
+    return $order->get_order_tracking_details($search_value);
+}
+
+function update_order_tracking_ctr($order_id, $status, $notes = null, $location = null, $updated_by = null)
+{
+    $order = new Order();
+    return $order->update_order_tracking($order_id, $status, $notes, $location, $updated_by);
+}
+
 function generate_invoice_number_ctr()
 {
     $order = new Order();

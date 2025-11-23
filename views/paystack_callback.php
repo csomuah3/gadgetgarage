@@ -148,9 +148,9 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                     // Store order details in sessionStorage for success page
                     sessionStorage.setItem('orderData', JSON.stringify(data));
 
-                    // Redirect to success page
+                    // Redirect to home page
                     setTimeout(() => {
-                        window.location.replace(`payment_success.php?order=${encodeURIComponent(data.order_id)}&ref=${encodeURIComponent(reference)}`);
+                        window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(data.order_id));
                     }, 1500);
 
                 } else {
@@ -158,10 +158,10 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                     const errorMsg = data.message || 'Payment verification failed';
                     showError(errorMsg);
 
-                    // Redirect to checkout after 5 seconds
+                    // Redirect to home page with error message after 3 seconds
                     setTimeout(() => {
-                        window.location.href = 'checkout.php?error=' + encodeURIComponent('verification_failed');
-                    }, 5000);
+                        window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
+                    }, 3000);
                 }
 
             } catch (error) {
@@ -169,10 +169,10 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                 document.getElementById('spinner').style.display = 'none';
                 showError('Connection error. Please refresh the page or contact support.');
 
-                // Redirect to checkout after 5 seconds
+                // Redirect to home page after 3 seconds
                 setTimeout(() => {
-                    window.location.href = 'checkout.php?error=' + encodeURIComponent('connection_error');
-                }, 5000);
+                    window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent('connection_error'));
+                }, 3000);
             }
         }
 

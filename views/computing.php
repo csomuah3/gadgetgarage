@@ -1096,6 +1096,16 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 <i class="fas fa-eye"></i>
                                 View Details
                             </button>
+
+                            <!-- Installment Payment Info -->
+                            <div style="margin-top: 12px; text-align: center;">
+                                <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
+                                    Pay in installment, with only your Ghana Card
+                                </p>
+                                <p style="font-size: 0.7rem; color: #9ca3af; margin: 4px 0; line-height: 1.3;">
+                                    Contact us to Enroll in GadgetGarage's installment Plans
+                                </p>
+                            </div>
                         </div>
                     </div>
                 <?php endforeach; ?>

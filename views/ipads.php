@@ -78,7 +78,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Products - Gadget Garage</title>
+    <title>iPads and Tablets - Gadget Garage</title>
     <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -2253,26 +2253,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             background: rgba(239, 68, 68, 0.1) !important;
         }
     </style>
-
-    <script>
-        // Define viewProductDetails function early to prevent reference errors
-        function viewProductDetails(productId) {
-            console.log('viewProductDetails called with ID:', productId);
-
-            if (!productId || productId === 0) {
-                console.error('Invalid product ID:', productId);
-                alert('Invalid product ID');
-                return;
-            }
-
-            // Navigate to single product page using 'pid' parameter
-            window.location.href = 'single_product.php?pid=' + productId;
-        }
-
-        // Make it globally accessible
-        window.viewProductDetails = viewProductDetails;
-        console.log('viewProductDetails function defined in head:', typeof window.viewProductDetails);
-    </script>
 </head>
 
 <body>
@@ -2513,7 +2493,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <!-- Page Title -->
     <div class="container-fluid">
         <div class="text-center py-3">
-            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">All Products</h1>
+            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">iPads and Tablets</h1>
         </div>
     </div>
 
@@ -2879,16 +2859,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                                 <i class="fas fa-eye"></i>
                                                 View Details
                                             </button>
-
-                                            <!-- Installment Payment Info -->
-                                            <div style="margin-top: 12px; text-align: center;">
-                                                <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
-                                                    Pay in installment, with only your Ghana Card
-                                                </p>
-                                                <p style="font-size: 0.7rem; color: #9ca3af; margin: 4px 0; line-height: 1.3;">
-                                                    Contact us to Enroll in GadgetGarage's installment Plans
-                                                </p>
-                                            </div>
                                         <?php else: ?>
                                             <button onclick="showOutOfStockAlert()"
                                                     disabled
@@ -2896,16 +2866,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                                 <i class="fas fa-times-circle"></i>
                                                 Out of Stock
                                             </button>
-
-                                            <!-- Installment Payment Info -->
-                                            <div style="margin-top: 12px; text-align: center;">
-                                                <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
-                                                    Pay in installment, with only your Ghana Card
-                                                </p>
-                                                <p style="font-size: 0.7rem; color: #9ca3af; margin: 4px 0; line-height: 1.3;">
-                                                    Contact us to Enroll in GadgetGarage's installment Plans
-                                                </p>
-                                            </div>
                                         <?php endif; ?>
                                     </div>
                                 </div>

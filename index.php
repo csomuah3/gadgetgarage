@@ -4238,7 +4238,7 @@ try {
 			<h2 class="section-title">SHOP BY CATEGORY</h2>
 			<div class="category-grid-container">
 				<!-- Large Category on Left -->
-				<div class="category-large">
+				<div class="category-large" onclick="window.location.href='views/flash_deals.php'" style="cursor: pointer;">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/black-friday-sale-offer-deals-background_1055-8959.avif" alt="Flash Deals">
 					<div class="category-large-overlay">
 						<h4>Flash Deals</h4>
@@ -4247,28 +4247,28 @@ try {
 
 				<!-- Grid of Smaller Categories on Right -->
 				<div class="category-grid-right">
-					<div class="category-small">
+					<div class="category-small" onclick="window.location.href='views/ipads.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads">
 						<div class="category-small-overlay">
 							<h4><span data-translate="ipads">IPads and Tablets</span></h4>
 							<p>From GH₵ 3000</p>
 						</div>
 					</div>
-					<div class="category-small">
+					<div class="category-small" onclick="window.location.href='views/smartphones.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/smartphones.webp" alt="Smartphones">
 						<div class="category-small-overlay">
 							<h4><span data-translate="smartphones">Smartphones</span></h4>
 							<p>From GH₵ 2500</p>
 						</div>
 					</div>
-					<div class="category-small">
+					<div class="category-small" onclick="window.location.href='views/laptops.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops">
 						<div class="category-small-overlay">
 							<h4><span data-translate="laptops">Laptops and Desktops</span></h4>
 							<p>From GH₵ 4000</p>
 						</div>
 					</div>
-					<div class="category-small">
+					<div class="category-small" onclick="window.location.href='views/photography_video.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography">
 						<div class="category-small-overlay">
 							<h4><span data-translate="photography">Photography and Video Equipment</span></h4>
@@ -6467,6 +6467,627 @@ try {
 		<?php else: ?>
 		console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
 		<?php endif; ?>
+
+		// Check for payment redirect
+		const urlParams = new URLSearchParams(window.location.search);
+		const paymentStatus = urlParams.get('payment');
+		if (paymentStatus === 'success' || paymentStatus === 'failed') {
+			document.addEventListener('DOMContentLoaded', function() {
+				const isSuccess = paymentStatus === 'success';
+				const orderId = urlParams.get('order');
+				const reason = urlParams.get('reason');
+
+				// Show alert based on payment status
+				const alertDiv = document.createElement('div');
+				alertDiv.className = `alert alert-${isSuccess ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
+				alertDiv.style.cssText = 'top: 100px; left: 50%; transform: translateX(-50%); z-index: 9999; min-width: 400px;';
+
+				if (isSuccess) {
+					alertDiv.innerHTML = `
+						<div class="d-flex align-items-center">
+							<i class="fas fa-check-circle me-3 text-success" style="font-size: 1.5rem;"></i>
+							<div>
+								<h6 class="mb-1">Payment Successful!</h6>
+								<small>Your order ${orderId ? '#' + orderId : ''} has been confirmed. Thank you for your purchase!</small>
+							</div>
+						</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					`;
+				} else {
+					alertDiv.innerHTML = `
+						<div class="d-flex align-items-center">
+							<i class="fas fa-exclamation-triangle me-3 text-danger" style="font-size: 1.5rem;"></i>
+							<div>
+								<h6 class="mb-1">Payment Failed</h6>
+								<small>${reason ? decodeURIComponent(reason) : 'There was an issue processing your payment. Please try again.'}</small>
+							</div>
+						</div>
+						<button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+					`;
+				}
+
+				document.body.appendChild(alertDiv);
+
+				// Auto-dismiss after 7 seconds for errors, 5 for success
+				setTimeout(() => {
+					if (alertDiv.parentNode) {
+						alertDiv.remove();
+					}
+				}, isSuccess ? 5000 : 7000);
+
+				// Clean URL by removing payment parameters
+				if (window.history && window.history.pushState) {
+					const newUrl = window.location.protocol + "//" + window.location.host + window.location.pathname;
+					window.history.pushState({path: newUrl}, '', newUrl);
+				}
+			});
+		}
+	</script>
+
+	<!-- Rating Popup -->
+	<div id="ratingPopup" class="rating-popup" style="display: none;">
+		<div class="popup-overlay" onclick="closeRatingPopup()"></div>
+		<div class="rating-popup-container">
+			<div class="rating-header">
+				<h3>Rate Your Experience</h3>
+				<button class="popup-close-btn" onclick="closeRatingPopup()" aria-label="Close popup">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+
+			<div class="rating-content">
+				<p>How was your shopping experience with us?</p>
+
+				<div class="star-rating">
+					<span class="star" data-rating="1">★</span>
+					<span class="star" data-rating="2">★</span>
+					<span class="star" data-rating="3">★</span>
+					<span class="star" data-rating="4">★</span>
+					<span class="star" data-rating="5">★</span>
+				</div>
+
+				<textarea id="ratingComment" placeholder="Tell us about your experience (optional)" rows="3"></textarea>
+
+				<div class="rating-buttons">
+					<button type="button" onclick="submitRating()" id="submitRatingBtn" disabled>
+						Submit Rating
+					</button>
+					<button type="button" onclick="closeRatingPopup()" class="skip-btn">
+						Skip
+					</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Flash Deals Popup -->
+	<div id="flashDealsPopup" class="flash-deals-popup" style="display: none;">
+		<div class="popup-overlay" onclick="closeFlashDealsPopup()"></div>
+		<div class="popup-container">
+			<!-- Close button -->
+			<button class="popup-close-btn" onclick="closeFlashDealsPopup()" aria-label="Close popup">
+				<i class="fas fa-times"></i>
+			</button>
+
+			<!-- Background image -->
+			<div class="popup-image-container">
+				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/SecondLife.FirstQuality..png" alt="Flash Deals Promotion" class="popup-background-image">
+			</div>
+
+			<!-- Shop Flash Deals Button -->
+			<button class="shop-flash-deals-btn" onclick="goToFlashDeals()">
+				<i class="fas fa-bolt"></i>
+				Shop Flash Deals
+			</button>
+		</div>
+	</div>
+
+	<style>
+		/* Rating Popup Styles */
+		.rating-popup {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10001;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+		.rating-popup.show {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.rating-popup-container {
+			background: white;
+			border-radius: 20px;
+			padding: 0;
+			max-width: 450px;
+			width: 90%;
+			margin: 20px;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			transform: scale(0.8);
+			transition: transform 0.3s ease;
+			overflow: hidden;
+		}
+
+		.rating-popup.show .rating-popup-container {
+			transform: scale(1);
+		}
+
+		.rating-header {
+			background: linear-gradient(135deg, #4f46e5, #3b82f6);
+			color: white;
+			padding: 20px 30px;
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+		}
+
+		.rating-header h3 {
+			margin: 0;
+			font-size: 1.5rem;
+			font-weight: 600;
+		}
+
+		.rating-header .popup-close-btn {
+			background: rgba(255, 255, 255, 0.2);
+			border: none;
+			color: white;
+			width: 35px;
+			height: 35px;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.3s ease;
+		}
+
+		.rating-header .popup-close-btn:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: scale(1.1);
+		}
+
+		.rating-content {
+			padding: 30px;
+			text-align: center;
+		}
+
+		.rating-content p {
+			margin: 0 0 25px 0;
+			font-size: 1.1rem;
+			color: #374151;
+		}
+
+		.star-rating {
+			display: flex;
+			justify-content: center;
+			gap: 8px;
+			margin-bottom: 25px;
+		}
+
+		.star {
+			font-size: 2.5rem;
+			color: #d1d5db;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			user-select: none;
+		}
+
+		.star:hover,
+		.star.active {
+			color: #fbbf24;
+			transform: scale(1.2);
+		}
+
+		.star.hover-effect {
+			color: #fbbf24;
+		}
+
+		#ratingComment {
+			width: 100%;
+			border: 2px solid #e5e7eb;
+			border-radius: 12px;
+			padding: 15px;
+			font-size: 1rem;
+			resize: vertical;
+			margin-bottom: 25px;
+			transition: border-color 0.3s ease;
+			font-family: inherit;
+		}
+
+		#ratingComment:focus {
+			outline: none;
+			border-color: #4f46e5;
+			box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+		}
+
+		.rating-buttons {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
+		}
+
+		.rating-buttons button {
+			padding: 12px 24px;
+			border-radius: 10px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border: none;
+		}
+
+		#submitRatingBtn {
+			background: linear-gradient(135deg, #10b981, #059669);
+			color: white;
+		}
+
+		#submitRatingBtn:enabled:hover {
+			background: linear-gradient(135deg, #059669, #047857);
+			transform: translateY(-2px);
+		}
+
+		#submitRatingBtn:disabled {
+			background: #d1d5db;
+			color: #9ca3af;
+			cursor: not-allowed;
+		}
+
+		.skip-btn {
+			background: #f3f4f6;
+			color: #6b7280;
+			border: 2px solid #e5e7eb;
+		}
+
+		.skip-btn:hover {
+			background: #e5e7eb;
+			color: #374151;
+		}
+
+		/* Mobile responsiveness */
+		@media (max-width: 600px) {
+			.rating-popup-container {
+				max-width: 350px;
+			}
+
+			.rating-header {
+				padding: 15px 20px;
+			}
+
+			.rating-header h3 {
+				font-size: 1.3rem;
+			}
+
+			.rating-content {
+				padding: 20px;
+			}
+
+			.star {
+				font-size: 2rem;
+			}
+
+			.rating-buttons {
+				flex-direction: column;
+			}
+		}
+
+		.flash-deals-popup {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			z-index: 10000;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 0;
+			visibility: hidden;
+			transition: all 0.3s ease;
+		}
+
+		.flash-deals-popup.show {
+			opacity: 1;
+			visibility: visible;
+		}
+
+		.popup-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.7);
+			backdrop-filter: blur(5px);
+		}
+
+		.popup-container {
+			position: relative;
+			max-width: 500px;
+			width: 90%;
+			margin: 20px;
+			border-radius: 20px;
+			overflow: hidden;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			transform: scale(0.8);
+			transition: transform 0.3s ease;
+		}
+
+		.flash-deals-popup.show .popup-container {
+			transform: scale(1);
+		}
+
+		.popup-close-btn {
+			position: absolute;
+			top: 15px;
+			right: 15px;
+			width: 40px;
+			height: 40px;
+			background: rgba(0, 0, 0, 0.7);
+			border: none;
+			border-radius: 50%;
+			color: white;
+			font-size: 18px;
+			cursor: pointer;
+			z-index: 10001;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.3s ease;
+		}
+
+		.popup-close-btn:hover {
+			background: rgba(0, 0, 0, 0.9);
+			transform: scale(1.1);
+		}
+
+		.popup-image-container {
+			position: relative;
+			width: 100%;
+		}
+
+		.popup-background-image {
+			width: 100%;
+			height: auto;
+			display: block;
+		}
+
+		.shop-flash-deals-btn {
+			position: absolute;
+			bottom: 30px;
+			left: 50%;
+			transform: translateX(-50%);
+			background: linear-gradient(135deg, #ff4757, #ff3838);
+			color: white;
+			border: none;
+			padding: 15px 30px;
+			border-radius: 50px;
+			font-size: 18px;
+			font-weight: 700;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			box-shadow: 0 8px 25px rgba(255, 71, 87, 0.4);
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			text-transform: uppercase;
+			letter-spacing: 1px;
+		}
+
+		.shop-flash-deals-btn:hover {
+			background: linear-gradient(135deg, #ff3838, #ff2828);
+			transform: translateX(-50%) translateY(-3px);
+			box-shadow: 0 12px 35px rgba(255, 71, 87, 0.6);
+		}
+
+		.shop-flash-deals-btn i {
+			font-size: 20px;
+			animation: flash 1.5s infinite;
+		}
+
+		@keyframes flash {
+			0%, 50% { opacity: 1; }
+			25%, 75% { opacity: 0.5; }
+		}
+
+		/* Mobile responsiveness */
+		@media (max-width: 600px) {
+			.popup-container {
+				max-width: 350px;
+				margin: 10px;
+			}
+
+			.shop-flash-deals-btn {
+				bottom: 20px;
+				padding: 12px 25px;
+				font-size: 16px;
+			}
+
+			.popup-close-btn {
+				top: 10px;
+				right: 10px;
+				width: 35px;
+				height: 35px;
+				font-size: 16px;
+			}
+		}
+	</style>
+
+	<script>
+		// Rating system variables
+		let selectedRating = 0;
+
+		function showRatingPopup() {
+			const popup = document.getElementById('ratingPopup');
+			if (popup) {
+				popup.style.display = 'flex';
+				setTimeout(() => {
+					popup.classList.add('show');
+				}, 10);
+			}
+		}
+
+		function closeRatingPopup() {
+			const popup = document.getElementById('ratingPopup');
+			if (popup) {
+				popup.classList.remove('show');
+				setTimeout(() => {
+					popup.style.display = 'none';
+					// Mark as seen so it doesn't show again soon
+					localStorage.setItem('ratingPopupSeen', Date.now().toString());
+				}, 300);
+			}
+		}
+
+		function setupStarRating() {
+			const stars = document.querySelectorAll('.star');
+			const submitBtn = document.getElementById('submitRatingBtn');
+
+			stars.forEach((star, index) => {
+				star.addEventListener('mouseover', () => {
+					highlightStars(index + 1);
+				});
+
+				star.addEventListener('mouseout', () => {
+					highlightStars(selectedRating);
+				});
+
+				star.addEventListener('click', () => {
+					selectedRating = index + 1;
+					highlightStars(selectedRating);
+					submitBtn.disabled = false;
+				});
+			});
+		}
+
+		function highlightStars(rating) {
+			const stars = document.querySelectorAll('.star');
+			stars.forEach((star, index) => {
+				if (index < rating) {
+					star.classList.add('active');
+				} else {
+					star.classList.remove('active');
+				}
+			});
+		}
+
+		function submitRating() {
+			const comment = document.getElementById('ratingComment').value;
+			const submitBtn = document.getElementById('submitRatingBtn');
+
+			if (selectedRating === 0) {
+				alert('Please select a star rating');
+				return;
+			}
+
+			// Disable submit button to prevent double submission
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = 'Submitting...';
+
+			// Send rating to server
+			fetch('actions/submit_rating_action.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					rating: selectedRating,
+					comment: comment
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					alert('Thank you for your feedback!');
+					closeRatingPopup();
+				} else {
+					alert('Error submitting rating. Please try again.');
+					submitBtn.disabled = false;
+					submitBtn.innerHTML = 'Submit Rating';
+				}
+			})
+			.catch(error => {
+				console.error('Error:', error);
+				alert('Error submitting rating. Please try again.');
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = 'Submit Rating';
+			});
+		}
+
+		// Initialize star rating when DOM loads
+		document.addEventListener('DOMContentLoaded', function() {
+			setupStarRating();
+
+			// Check if should show rating popup (post-payment)
+			const urlParams = new URLSearchParams(window.location.search);
+			const isPaymentSuccess = urlParams.get('payment') === 'success';
+			const lastRatingTime = localStorage.getItem('ratingPopupSeen');
+			const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+
+			// Show rating popup if coming from successful payment and hasn't rated in last 24 hours
+			if (isPaymentSuccess && <?php echo $is_logged_in ? 'true' : 'false'; ?>) {
+				if (!lastRatingTime || parseInt(lastRatingTime) < oneDayAgo) {
+					setTimeout(showRatingPopup, 2000);
+				}
+			}
+		});
+
+		function showFlashDealsPopup() {
+			const popup = document.getElementById('flashDealsPopup');
+			if (popup) {
+				popup.style.display = 'flex';
+				setTimeout(() => {
+					popup.classList.add('show');
+				}, 10);
+			}
+		}
+
+		function closeFlashDealsPopup() {
+			const popup = document.getElementById('flashDealsPopup');
+			if (popup) {
+				popup.classList.remove('show');
+				setTimeout(() => {
+					popup.style.display = 'none';
+					// Store the current timestamp when popup is closed
+					localStorage.setItem('flashDealsPopupLastSeen', Date.now().toString());
+				}, 300);
+			}
+		}
+
+		function goToFlashDeals() {
+			window.location.href = 'views/flash_deals.php';
+		}
+
+		// Show popup after login if user hasn't seen it in the last 12 hours
+		<?php if ($is_logged_in): ?>
+		document.addEventListener('DOMContentLoaded', function() {
+			// Check if user has seen the popup in the last 12 hours
+			const lastSeenTimestamp = localStorage.getItem('flashDealsPopupLastSeen');
+			const currentTime = Date.now();
+			const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
+
+			// Show popup if never seen before OR if 12+ hours have passed
+			if (!lastSeenTimestamp || (currentTime - parseInt(lastSeenTimestamp)) >= twelveHours) {
+				// Show popup after a short delay
+				setTimeout(showFlashDealsPopup, 1500);
+			}
+		});
+		<?php endif; ?>
+
+		// Close popup with Escape key
+		document.addEventListener('keydown', function(e) {
+			if (e.key === 'Escape') {
+				closeFlashDealsPopup();
+			}
+		});
 	</script>
 
 </body>

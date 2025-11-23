@@ -97,8 +97,8 @@ try {
     $db->db_connect();
 
     try {
-        // Process cart to order
-        $order_result = process_cart_to_order_ctr($customer_id, $ip_address);
+        // Process cart to order without recording payment
+        $order_result = process_cart_to_order_without_payment_ctr($customer_id, $ip_address);
 
         if (!$order_result) {
             throw new Exception('Failed to create order');
@@ -108,11 +108,10 @@ try {
 
         // Record payment with PayStack details
         $payment_id = record_payment_ctr(
-            $cart_total,
             $customer_id,
             $order_id,
+            $cart_total,
             'GHS',
-            date('Y-m-d'),
             'paystack',
             $reference,
             $authorization_code,
@@ -122,6 +121,9 @@ try {
         if (!$payment_id) {
             throw new Exception('Failed to record payment');
         }
+
+        // Update order status to completed after successful payment
+        update_order_status_ctr($order_id, 'completed');
 
         // Empty cart
         empty_cart_ctr($customer_id, $ip_address);

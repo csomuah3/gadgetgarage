@@ -200,13 +200,53 @@ class Order extends db_connection
             }
         }
 
-        // Record payment
-        if (!$this->record_payment($customer_id, $order_id, $total_amount)) {
+        return [
+            'order_id' => $order_id,
+            'total_amount' => $total_amount,
+            'order_reference' => $this->generate_order_reference()
+        ];
+    }
+
+    public function process_cart_to_order_without_payment($customer_id, $ip_address = null)
+    {
+        // Get cart items
+        if ($customer_id) {
+            $customer_id = mysqli_real_escape_string($this->db, $customer_id);
+            $cart_items_sql = "SELECT c.*, p.product_price FROM cart c JOIN products p ON c.p_id = p.product_id WHERE c.c_id = $customer_id";
+        } else {
+            $ip_address = mysqli_real_escape_string($this->db, $ip_address);
+            $cart_items_sql = "SELECT c.*, p.product_price FROM cart c JOIN products p ON c.p_id = p.product_id WHERE c.ip_add = '$ip_address'";
+        }
+
+        $cart_items = $this->db_fetch_all($cart_items_sql);
+
+        if (!$cart_items) {
             return false;
         }
 
-        // Update order status
-        $this->update_order_status($order_id, 'completed');
+        // Calculate total amount
+        $total_amount = 0;
+        foreach ($cart_items as $item) {
+            $total_amount += $item['qty'] * $item['product_price'];
+        }
+
+        // Create order
+        $order_id = $this->create_order($customer_id);
+        if (!$order_id) {
+            return false;
+        }
+
+        // Add order details for each cart item and reduce stock
+        foreach ($cart_items as $item) {
+            if (!$this->add_order_details($order_id, $item['p_id'], $item['qty'])) {
+                return false;
+            }
+
+            // Reduce stock quantity for the product
+            if (!$this->reduce_product_stock($item['p_id'], $item['qty'])) {
+                return false;
+            }
+        }
 
         return [
             'order_id' => $order_id,
@@ -235,6 +275,70 @@ class Order extends db_connection
                 ORDER BY o.order_date DESC";
 
         return $this->db_fetch_all($sql);
+    }
+
+    public function get_order_tracking_details($search_value)
+    {
+        $search_value = mysqli_real_escape_string($this->db, $search_value);
+
+        // First, try to find the order by order_id or tracking_number
+        $order_sql = "SELECT o.*,
+                             COALESCE(p.amt, 0) as total_amount,
+                             COUNT(od.product_id) as item_count
+                      FROM orders o
+                      LEFT JOIN payment p ON o.order_id = p.order_id
+                      LEFT JOIN orderdetails od ON o.order_id = od.order_id
+                      WHERE o.order_id = '$search_value'
+                         OR o.tracking_number = '$search_value'
+                         OR o.invoice_no = '$search_value'
+                      GROUP BY o.order_id";
+
+        $order = $this->db_fetch_one($order_sql);
+
+        if (!$order) {
+            return null;
+        }
+
+        // Get tracking history
+        $tracking_sql = "SELECT * FROM order_tracking
+                         WHERE order_id = '{$order['order_id']}'
+                         ORDER BY status_date ASC";
+
+        $tracking = $this->db_fetch_all($tracking_sql);
+
+        return [
+            'order' => $order,
+            'tracking' => $tracking
+        ];
+    }
+
+    public function update_order_tracking($order_id, $status, $notes = null, $location = null, $updated_by = null)
+    {
+        $order_id = mysqli_real_escape_string($this->db, $order_id);
+        $status = mysqli_real_escape_string($this->db, $status);
+        $notes = $notes ? "'" . mysqli_real_escape_string($this->db, $notes) . "'" : 'NULL';
+        $location = $location ? "'" . mysqli_real_escape_string($this->db, $location) . "'" : 'NULL';
+        $updated_by = $updated_by ? mysqli_real_escape_string($this->db, $updated_by) : 'NULL';
+
+        // Update order status
+        $update_order_sql = "UPDATE orders SET order_status = '$status' WHERE order_id = $order_id";
+        $this->db_write_query($update_order_sql);
+
+        // Add tracking entry
+        $tracking_sql = "INSERT INTO order_tracking (order_id, status, notes, location, updated_by)
+                         VALUES ($order_id, '$status', $notes, $location, $updated_by)";
+
+        return $this->db_write_query($tracking_sql);
+    }
+
+    public function generate_tracking_number()
+    {
+        $year = date('Y');
+        $month = date('m');
+        $day = date('d');
+        $random = str_pad(rand(1, 9999), 4, '0', STR_PAD_LEFT);
+
+        return 'GG' . $year . $month . $day . $random;
     }
 }
 ?>

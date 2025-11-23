@@ -452,9 +452,11 @@ try {
 			border: 1px solid rgba(255, 255, 255, 0.3);
 			overflow: hidden;
 			width: 100%;
-			max-width: 600px;
-			min-height: 750px;
+			max-width: 650px;
+			max-height: 85vh;
 			position: relative;
+			display: flex;
+			flex-direction: column;
 		}
 
 		.register-form-wrapper::before {
@@ -469,7 +471,8 @@ try {
 
 		.register-form-header {
 			text-align: center;
-			padding: 25px 40px 0;
+			padding: 25px 40px 15px;
+			flex-shrink: 0;
 		}
 
 		.register-form-header img {
@@ -491,22 +494,116 @@ try {
 		}
 
 		.register-form-body {
-			padding: 0 40px 40px;
+			padding: 0 40px 30px;
+			overflow-y: auto;
+			flex: 1;
+			max-height: calc(85vh - 180px);
+		}
+
+		.register-form-body::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		.register-form-body::-webkit-scrollbar-track {
+			background: rgba(0, 0, 0, 0.1);
+			border-radius: 4px;
+		}
+
+		.register-form-body::-webkit-scrollbar-thumb {
+			background: linear-gradient(135deg, #3b82f6, #1e40af);
+			border-radius: 4px;
+		}
+
+		.register-form-body::-webkit-scrollbar-thumb:hover {
+			background: linear-gradient(135deg, #1e40af, #3b82f6);
 		}
 
 		.form-row {
 			display: flex;
 			gap: 20px;
-			margin-bottom: 25px;
+			margin-bottom: 20px;
 		}
 
 		.form-group {
-			margin-bottom: 25px;
+			margin-bottom: 20px;
 			flex: 1;
 		}
 
 		.form-group.full-width {
 			flex: 1 1 100%;
+		}
+
+		.checkbox-group {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			margin-bottom: 25px;
+			padding: 15px;
+			background: rgba(59, 130, 246, 0.05);
+			border: 1px solid rgba(59, 130, 246, 0.1);
+			border-radius: 12px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.checkbox-group:hover {
+			background: rgba(59, 130, 246, 0.1);
+			border-color: rgba(59, 130, 246, 0.2);
+		}
+
+		.custom-checkbox {
+			width: 20px;
+			height: 20px;
+			border: 2px solid #d1d5db;
+			border-radius: 4px;
+			background: white;
+			position: relative;
+			transition: all 0.3s ease;
+			cursor: pointer;
+			flex-shrink: 0;
+		}
+
+		.custom-checkbox input {
+			opacity: 0;
+			position: absolute;
+			width: 100%;
+			height: 100%;
+			cursor: pointer;
+		}
+
+		.custom-checkbox input:checked + .checkbox-mark {
+			opacity: 1;
+			transform: scale(1);
+		}
+
+		.custom-checkbox input:checked ~ .custom-checkbox {
+			border-color: #3b82f6;
+			background: #3b82f6;
+		}
+
+		.checkbox-mark {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) scale(0);
+			opacity: 0;
+			color: white;
+			font-size: 12px;
+			transition: all 0.2s ease;
+			pointer-events: none;
+		}
+
+		.checkbox-group input:checked ~ .custom-checkbox {
+			border-color: #3b82f6;
+			background: #3b82f6;
+		}
+
+		.checkbox-label {
+			color: #374151;
+			font-size: 1rem;
+			font-weight: 500;
+			cursor: pointer;
+			user-select: none;
 		}
 
 		.form-label {
@@ -566,12 +663,19 @@ try {
 			overflow: hidden;
 		}
 
-		.register-btn:hover {
+		.register-btn:disabled {
+			background: linear-gradient(135deg, #9ca3af, #6b7280);
+			cursor: not-allowed;
+			transform: none;
+			box-shadow: none;
+		}
+
+		.register-btn:hover:not(:disabled) {
 			transform: translateY(-2px);
 			box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
 		}
 
-		.register-btn:active {
+		.register-btn:active:not(:disabled) {
 			transform: translateY(0);
 		}
 
@@ -986,6 +1090,26 @@ try {
 			border: 1px solid #10b981;
 			color: #86efac;
 		}
+
+		/* Dark Mode Checkbox Styles */
+		body.dark-mode .checkbox-group {
+			background: rgba(96, 165, 250, 0.05);
+			border-color: rgba(96, 165, 250, 0.1);
+		}
+
+		body.dark-mode .checkbox-group:hover {
+			background: rgba(96, 165, 250, 0.1);
+			border-color: rgba(96, 165, 250, 0.2);
+		}
+
+		body.dark-mode .custom-checkbox {
+			border-color: #4a5568;
+			background: #374151;
+		}
+
+		body.dark-mode .checkbox-label {
+			color: #e2e8f0;
+		}
 	</style>
 </head>
 
@@ -1344,10 +1468,22 @@ try {
 							</div>
 						</div>
 
+						<!-- Human Verification Checkbox -->
+						<div class="checkbox-group" onclick="toggleHumanVerification()">
+							<div class="custom-checkbox">
+								<input type="checkbox" id="humanVerification" name="humanVerification" required>
+								<i class="fas fa-check checkbox-mark"></i>
+							</div>
+							<label for="humanVerification" class="checkbox-label">
+								<i class="fas fa-shield-alt me-2" style="color: #10b981;"></i>
+								I verify that I am human
+							</label>
+						</div>
+
 						<!-- Hidden role field -->
 						<input type="hidden" name="role" value="1">
 
-						<button type="submit" class="register-btn">
+						<button type="submit" class="register-btn" id="submitBtn" disabled>
 							<i class="fas fa-user-plus me-2"></i>
 							Create Account
 						</button>
@@ -1516,6 +1652,53 @@ try {
 		// Timeout variables
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
+
+		// Human verification checkbox functionality
+		function toggleHumanVerification() {
+			const checkbox = document.getElementById('humanVerification');
+			const submitBtn = document.getElementById('submitBtn');
+
+			// Toggle the checkbox state
+			checkbox.checked = !checkbox.checked;
+
+			// Enable/disable submit button based on checkbox state
+			submitBtn.disabled = !checkbox.checked;
+
+			// Add visual feedback
+			const checkboxGroup = document.querySelector('.checkbox-group');
+			if (checkbox.checked) {
+				checkboxGroup.style.background = 'rgba(16, 185, 129, 0.1)';
+				checkboxGroup.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+			} else {
+				checkboxGroup.style.background = 'rgba(59, 130, 246, 0.05)';
+				checkboxGroup.style.borderColor = 'rgba(59, 130, 246, 0.1)';
+			}
+		}
+
+		// Initialize checkbox state on page load
+		document.addEventListener('DOMContentLoaded', function() {
+			const checkbox = document.getElementById('humanVerification');
+			const submitBtn = document.getElementById('submitBtn');
+
+			if (checkbox && submitBtn) {
+				// Ensure button is disabled by default
+				submitBtn.disabled = !checkbox.checked;
+
+				// Add event listener to checkbox for accessibility
+				checkbox.addEventListener('change', function() {
+					submitBtn.disabled = !this.checked;
+
+					const checkboxGroup = document.querySelector('.checkbox-group');
+					if (this.checked) {
+						checkboxGroup.style.background = 'rgba(16, 185, 129, 0.1)';
+						checkboxGroup.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+					} else {
+						checkboxGroup.style.background = 'rgba(59, 130, 246, 0.05)';
+						checkboxGroup.style.borderColor = 'rgba(59, 130, 246, 0.1)';
+					}
+				});
+			}
+		});
 	</script>
 </body>
 

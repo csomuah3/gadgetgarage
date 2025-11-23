@@ -2720,7 +2720,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     background: white;
                                     border-radius: 16px;
                                     border: 1px solid #e5e7eb;
-                                    overflow: hidden;
+                                    overflow: visible;
                                     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
                                     cursor: pointer;
                                     position: relative;
@@ -2794,7 +2794,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     </div>
 
                                     <!-- Product Content -->
-                                    <div style="padding: 28px 30px;">
+                                    <div style="padding: 28px 30px; min-height: 200px; overflow: visible;">
                                         <!-- Product Title -->
                                         <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
                                             <?php echo htmlspecialchars($product['product_title']); ?>
@@ -2845,7 +2845,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                                     GH₵<?php echo number_format($original_price, 0); ?>
                                                 </span>
                                             </div>
-                                            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px;">
+                                            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px; line-height: 1.4; word-wrap: break-word; overflow: visible; min-height: 18px;">
                                                 Limited time offer - While supplies last
                                             </div>
                                         </div>
@@ -2904,9 +2904,48 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <script src="../js/header.js"></script>
     <script src="../js/chatbot.js"></script>
     <script>
+        // Define functions first before DOM content loads
         function viewProduct(productId) {
             window.location.href = 'single_product.php?id=' + productId;
         }
+
+        window.viewProductDetails = function(productId) {
+            console.log('viewProductDetails called with ID:', productId);
+
+            if (!productId || productId === 0) {
+                console.error('Invalid product ID:', productId);
+                return;
+            }
+
+            // Navigate to single product page using 'pid' parameter
+            window.location.href = `single_product.php?pid=${productId}`;
+        };
+
+        window.showOutOfStockAlert = function() {
+            Swal.fire({
+                title: 'Out of Stock!',
+                text: 'This product is currently out of stock. Please check back later or browse our other available products.',
+                icon: 'warning',
+                iconColor: '#f59e0b',
+                confirmButtonText: 'Browse Other Products',
+                confirmButtonColor: '#4f46e5',
+                showCancelButton: true,
+                cancelButtonText: 'OK',
+                cancelButtonColor: '#6b7280',
+                background: '#ffffff',
+                color: '#1f2937',
+                customClass: {
+                    popup: 'swal-out-of-stock-popup-card',
+                    title: 'swal-out-of-stock-title-card',
+                    content: 'swal-out-of-stock-content-card'
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Scroll to top of products or redirect to all products
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                }
+            });
+        };
 
 
         // Add event listener for all View Details buttons
@@ -4221,44 +4260,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     icon.className = 'far fa-heart';
                 });
             }
-        };
-
-        window.viewProductDetails = function(productId) {
-            console.log('viewProductDetails called with ID:', productId);
-
-            if (!productId || productId === 0) {
-                console.error('Invalid product ID:', productId);
-                return;
-            }
-
-            // Navigate to single product page using 'pid' parameter
-            window.location.href = `single_product.php?pid=${productId}`;
-        };
-
-        window.showOutOfStockAlert = function() {
-            Swal.fire({
-                title: 'Out of Stock!',
-                text: 'This product is currently out of stock. Please check back later or browse our other available products.',
-                icon: 'warning',
-                iconColor: '#f59e0b',
-                confirmButtonText: 'Browse Other Products',
-                confirmButtonColor: '#4f46e5',
-                showCancelButton: true,
-                cancelButtonText: 'OK',
-                cancelButtonColor: '#6b7280',
-                background: '#ffffff',
-                color: '#1f2937',
-                customClass: {
-                    popup: 'swal-out-of-stock-popup-card',
-                    title: 'swal-out-of-stock-title-card',
-                    content: 'swal-out-of-stock-content-card'
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Scroll to top of products or redirect to all products
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                }
-            });
         };
     </script>
 

@@ -956,10 +956,13 @@ new Chart(ctx, {
         responsive: true,
         maintainAspectRatio: false,
         animation: false,
-        animations: {
-            colors: false,
-            radius: false,
-            rotation: false
+        animations: false,
+        transitions: {
+            active: {
+                animation: {
+                    duration: 0
+                }
+            }
         },
         hover: {
             mode: null,
@@ -980,10 +983,12 @@ new Chart(ctx, {
             }
         },
         interaction: {
-            intersect: false
+            intersect: false,
+            mode: null
         },
         onHover: null,
-        onResize: null
+        onResize: null,
+        events: []
     }
 });
 

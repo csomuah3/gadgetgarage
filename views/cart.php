@@ -2530,14 +2530,14 @@ try {
                     throw new Error('Invalid JSON being generated');
                 }
 
-                // Send JSON request only
-                console.log('Making request to: ../actions/validate_promo_code.php');
+                // Send JSON request to fixed endpoint
+                console.log('Making request to: ../actions/validate_promo_code_fixed.php');
                 console.log('Request headers:', {
                     'Content-Type': 'application/json'
                 });
                 console.log('Request body:', jsonString);
 
-                const response = await fetch('../actions/validate_promo_code.php', {
+                const response = await fetch('../actions/validate_promo_code_fixed.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
@@ -2716,7 +2716,7 @@ try {
             console.log('JSON string:', JSON.stringify(testData));
 
             try {
-                const response = await fetch('../actions/validate_promo_code.php', {
+                const response = await fetch('../actions/validate_promo_code_fixed.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',

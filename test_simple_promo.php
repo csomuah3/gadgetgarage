@@ -7,6 +7,7 @@
     <h1>Simple Promo Code Test</h1>
 
     <button onclick="testPromo()">Test BLACKFRIDAY20 with 100.00</button>
+    <button onclick="testDebug()">Test Debug Endpoint</button>
     <div id="result"></div>
 
     <script>
@@ -45,6 +46,47 @@
             } catch (error) {
                 console.error('Error:', error);
                 result.innerHTML = `<div style="color: red;">Request failed: ${error.message}</div>`;
+            }
+        }
+
+        async function testDebug() {
+            const result = document.getElementById('result');
+            result.innerHTML = '<p>Testing debug endpoint...</p>';
+
+            const data = {
+                promo_code: 'TEST123',
+                cart_total: 75.50
+            };
+
+            console.log('Sending to debug endpoint:', data);
+
+            try {
+                const response = await fetch('debug_promo.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(data)
+                });
+
+                console.log('Debug response status:', response.status);
+                const text = await response.text();
+                console.log('Debug response text:', text);
+
+                const responseData = JSON.parse(text);
+
+                result.innerHTML = `
+                    <h3>Debug Response:</h3>
+                    <div style="background: #f0f0f0; padding: 10px; border-radius: 5px;">
+                        <strong>Success:</strong> ${responseData.success}<br>
+                        <strong>Message:</strong> ${responseData.message}<br>
+                        <strong>Debug Info:</strong>
+                        <pre style="background: white; padding: 10px; margin: 10px 0; overflow: auto;">${JSON.stringify(responseData.debug, null, 2)}</pre>
+                    </div>
+                `;
+            } catch (error) {
+                console.error('Debug error:', error);
+                result.innerHTML = `<div style="color: red;">Debug request failed: ${error.message}</div>`;
             }
         }
     </script>

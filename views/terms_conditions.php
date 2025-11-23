@@ -324,19 +324,25 @@ $page_title = "Terms & Conditions - GadgetGarage";
             color: white;
             padding: 80px 0;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .terms-content {
             padding: 60px 0;
-            background: #f8f9fa;
+            background: rgba(248, 249, 250, 0.95);
+            position: relative;
+            z-index: 1;
         }
 
         .terms-section {
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 40px;
             margin-bottom: 30px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
         }
 
         .terms-section h2 {
@@ -407,16 +413,15 @@ $page_title = "Terms & Conditions - GadgetGarage";
 		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
-				<a href="index.php" class="logo">
+				<a href="../index.php" class="logo">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage"
-					     style="height: 40px; width: auto; object-fit: contain;">
+						 alt="Gadget Garage">
 				</a>
 
 				<!-- Center Content -->
 				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
 					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="views/product_search_result.php">
+					<form class="search-container" method="GET" action="product_search_result.php">
 						<i class="fas fa-search search-icon"></i>
 						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
 						<button type="submit" class="search-btn">
@@ -428,28 +433,33 @@ $page_title = "Terms & Conditions - GadgetGarage";
 					<div class="tech-revival-section">
 						<i class="fas fa-recycle tech-revival-icon"></i>
 						<div>
-							<p class="tech-revival-text">Bring Retired Tech</p>
+							<p class="tech-revival-text">Bring Retired Devices</p>
 							<p class="contact-number">055-138-7578</p>
 						</div>
 					</div>
 				</div>
 
 				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-					<span style="color: #ddd;">|</span>
-					<?php if ($is_logged_in): ?>
+				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
+					<?php if (isset($_SESSION['user_id'])): ?>
 						<!-- Wishlist Icon -->
 						<div class="header-icon">
-							<a href="wishlist.php" style="color: inherit; text-decoration: none;">
+							<a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-heart"></i>
+								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
 							</a>
 						</div>
 
 						<!-- Cart Icon -->
 						<div class="header-icon">
-							<a href="cart.php" style="color: inherit; text-decoration: none;">
+							<a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
 								<i class="fas fa-shopping-cart"></i>
-								<span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
+								<?php if ($cart_count > 0): ?>
+									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+								<?php else: ?>
+									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+								<?php endif; ?>
 							</a>
 						</div>
 
@@ -459,9 +469,9 @@ $page_title = "Terms & Conditions - GadgetGarage";
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
+								<button class="dropdown-item-custom" onclick="goToAccount()">
+									<i class="fas fa-user"></i>
+									<span>Account</span>
 								</button>
 								<div class="dropdown-divider-custom"></div>
 								<div class="dropdown-item-custom">
@@ -486,7 +496,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 									</div>
 								</div>
 								<div class="dropdown-divider-custom"></div>
-								<a href="login/logout.php" class="dropdown-item-custom">
+								<a href="../login/logout.php" class="dropdown-item-custom">
 									<i class="fas fa-sign-out-alt"></i>
 									<span>Logout</span>
 								</a>
@@ -494,7 +504,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 						</div>
 					<?php else: ?>
 						<!-- Login Button -->
-						<a href="login/login_view.php" class="login-btn">
+						<a href="../login/login.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
 						</a>
@@ -518,19 +528,25 @@ $page_title = "Terms & Conditions - GadgetGarage";
 					<div class="brands-dropdown" id="shopDropdown">
 						<h4>All Brands</h4>
 						<ul>
-							<li><a href="#"><i class="fas fa-tag"></i> Apple</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> Samsung</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> HP</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> Dell</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> Sony</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> Canon</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> Nikon</a></li>
-							<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+							<?php if (!empty($brands)): ?>
+								<?php foreach ($brands as $brand): ?>
+									<li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+								<?php endforeach; ?>
+							<?php else: ?>
+								<li><a href="all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+								<li><a href="all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+								<li><a href="all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+								<li><a href="all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+								<li><a href="all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+								<li><a href="all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+								<li><a href="all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+								<li><a href="all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+							<?php endif; ?>
 						</ul>
 					</div>
 				</div>
 
-				<a href="index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+				<a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
 				<!-- Shop Dropdown -->
 				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
@@ -547,8 +563,8 @@ $page_title = "Terms & Conditions - GadgetGarage";
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-									<li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+									<li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+									<li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
@@ -558,8 +574,8 @@ $page_title = "Terms & Conditions - GadgetGarage";
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-									<li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+									<li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+									<li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column">
@@ -569,8 +585,8 @@ $page_title = "Terms & Conditions - GadgetGarage";
 									</a>
 								</h4>
 								<ul>
-									<li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-									<li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+									<li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+									<li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
 								</ul>
 							</div>
 							<div class="dropdown-column featured">
@@ -580,7 +596,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
-										<a href="all_product.php" class="shop-now-btn">Shop Now</a>
+										<a href="all_product.php" class="shop-now-btn">Shop</a>
 									</div>
 								</div>
 							</div>
@@ -757,11 +773,62 @@ $page_title = "Terms & Conditions - GadgetGarage";
         </div>
     </section>
 
-    <!-- Bootstrap JS -->
+    <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <!-- Header JavaScript -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script>
+        // Dropdown functions
+        let dropdownTimeout;
+
+        function showDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.style.opacity = '1';
+                dropdown.style.visibility = 'visible';
+                dropdown.style.transform = 'translateY(0)';
+            }
+        }
+
+        function hideDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.style.opacity = '0';
+                    dropdown.style.visibility = 'hidden';
+                    dropdown.style.transform = 'translateY(-10px)';
+                }, 300);
+            }
+        }
+
+        // Timer functionality
+        function updateTimer() {
+            const timerElement = document.getElementById('promoTimer');
+            if (timerElement) {
+                const now = new Date().getTime();
+                const nextDay = new Date();
+                nextDay.setDate(nextDay.getDate() + 1);
+                nextDay.setHours(0, 0, 0, 0);
+
+                const distance = nextDay.getTime() - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerElement.innerHTML = days + "d:" +
+                                         (hours < 10 ? "0" : "") + hours + "h:" +
+                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
+                                         (seconds < 10 ? "0" : "") + seconds + "s";
+            }
+        }
+
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
         // User dropdown functionality
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
@@ -773,27 +840,89 @@ $page_title = "Terms & Conditions - GadgetGarage";
             const dropdown = document.getElementById('userDropdownMenu');
             const avatar = document.querySelector('.user-avatar');
 
-            if (!dropdown.contains(event.target) && !avatar.contains(event.target)) {
+            if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
                 dropdown.classList.remove('show');
             }
         });
 
-        function openProfilePictureModal() {
-            Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture functionality will be implemented', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+        // Account page navigation
+        function goToAccount() {
+            window.location.href = 'my_orders.php';
         }
 
-        function changeLanguage(language) {
-            localStorage.setItem('selectedLanguage', language);
-            console.log('Language changed to:', language);
+        // Language change functionality
+        function changeLanguage(lang) {
+            // Language change functionality can be implemented here
+            console.log('Language changed to:', lang);
         }
 
+        // Theme toggle functionality
         function toggleTheme() {
-            const toggle = document.getElementById('themeToggle');
+            const toggleSwitch = document.getElementById('themeToggle');
             const body = document.body;
 
-            toggle.classList.toggle('active');
             body.classList.toggle('dark-mode');
+            toggleSwitch.classList.toggle('active');
+
+            // Save theme preference to localStorage
+            const isDarkMode = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
         }
+
+        // Load theme preference on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            const toggleSwitch = document.getElementById('themeToggle');
+
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                if (toggleSwitch) {
+                    toggleSwitch.classList.add('active');
+                }
+            }
+        });
+
+        // Shop Dropdown Functions
+        function showShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // More Dropdown Functions
+        function showMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Timeout variables
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
     </script>
 </body>
 </html>

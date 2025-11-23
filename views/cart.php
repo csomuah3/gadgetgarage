@@ -10,8 +10,15 @@ try {
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
     $cart_items = get_user_cart_ctr($customer_id, $ip_address);
-    $cart_total = get_cart_total_ctr($customer_id, $ip_address) ?: 0;
+    $cart_total_raw = get_cart_total_ctr($customer_id, $ip_address);
+    $cart_total = $cart_total_raw ?: 0;
     $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
+
+    // Debug cart total
+    error_log("Cart debug - Customer ID: $customer_id, IP: $ip_address");
+    error_log("Cart debug - Raw cart total: " . var_export($cart_total_raw, true));
+    error_log("Cart debug - Final cart total: " . var_export($cart_total, true));
+    error_log("Cart debug - Cart count: " . var_export($cart_count, true));
 
     $categories = [];
     $brands = [];
@@ -2403,6 +2410,12 @@ try {
         const originalTotal = <?php echo $cart_total ?: 0; ?>;
 
         console.log('Cart total from PHP:', originalTotal);
+        console.log('Type of originalTotal:', typeof originalTotal);
+        console.log('Is originalTotal valid?', originalTotal > 0);
+        console.log('PHP cart_total raw value: <?php echo var_export($cart_total, true); ?>');
+        console.log('PHP cart_total_raw value: <?php echo var_export($cart_total_raw, true); ?>');
+        console.log('PHP customer_id: <?php echo var_export($customer_id, true); ?>');
+        console.log('PHP ip_address: <?php echo var_export($ip_address, true); ?>');
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOMContentLoaded event fired');
@@ -2468,8 +2481,10 @@ try {
             }
 
             // Validate originalTotal
-            if (originalTotal <= 0) {
-                console.error('Invalid cart total:', originalTotal);
+            console.log('Validating cart total. originalTotal:', originalTotal, 'Type:', typeof originalTotal);
+
+            if (!originalTotal || originalTotal <= 0 || isNaN(originalTotal)) {
+                console.error('Invalid cart total:', originalTotal, 'Type:', typeof originalTotal);
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
                         title: 'Empty Cart',
@@ -2489,22 +2504,47 @@ try {
             console.log('Button disabled, making request...');
 
             try {
+                // Ensure cart_total is a valid number
+                const cartTotalValue = parseFloat(originalTotal) || 0;
+
                 const requestData = {
                     promo_code: promoCode,
-                    cart_total: originalTotal
+                    cart_total: cartTotalValue
                 };
 
                 console.log('Request data being sent:', requestData);
                 console.log('Original total value:', originalTotal);
+                console.log('Cart total value (parsed):', cartTotalValue);
                 console.log('Promo code value:', promoCode);
 
+                const jsonString = JSON.stringify(requestData);
+                console.log('JSON string being sent:', jsonString);
+                console.log('JSON string length:', jsonString.length);
+
+                // Validate JSON before sending
+                try {
+                    const testParse = JSON.parse(jsonString);
+                    console.log('JSON validation successful:', testParse);
+                } catch (e) {
+                    console.error('JSON validation failed:', e);
+                    throw new Error('Invalid JSON being generated');
+                }
+
                 // Send JSON request only
+                console.log('Making request to: ../actions/validate_promo_code.php');
                 const response = await fetch('../actions/validate_promo_code.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify(requestData)
+                    body: jsonString
+                });
+
+                console.log('Response received:', {
+                    status: response.status,
+                    statusText: response.statusText,
+                    ok: response.ok,
+                    headers: Object.fromEntries(response.headers.entries())
                 });
 
                 console.log('Response status:', response.status);
@@ -2649,6 +2689,53 @@ try {
             }
         `;
         document.head.appendChild(style);
+
+        // Manual test function for debugging - call from browser console
+        window.testPromoManual = async function(testTotal = null) {
+            console.log('=== MANUAL PROMO TEST ===');
+            const total = testTotal || originalTotal;
+            const cartTotalValue = parseFloat(total) || 0;
+            console.log('Testing with total:', total, 'Parsed:', cartTotalValue);
+
+            if (cartTotalValue <= 0) {
+                console.error('Cannot test with invalid cart total:', cartTotalValue);
+                return;
+            }
+
+            const testData = {
+                promo_code: 'BLACKFRIDAY20',
+                cart_total: cartTotalValue
+            };
+
+            console.log('Test data:', testData);
+            console.log('JSON string:', JSON.stringify(testData));
+
+            try {
+                const response = await fetch('../actions/validate_promo_code.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(testData)
+                });
+
+                console.log('Response status:', response.status);
+                const responseText = await response.text();
+                console.log('Response text:', responseText);
+
+                try {
+                    const data = JSON.parse(responseText);
+                    console.log('Parsed response:', data);
+                    return data;
+                } catch (e) {
+                    console.error('Failed to parse JSON:', e);
+                    return { error: 'Invalid JSON response', raw: responseText };
+                }
+            } catch (e) {
+                console.error('Request failed:', e);
+                return { error: e.message };
+            }
+        };
     </script>
 
     <!-- Footer -->

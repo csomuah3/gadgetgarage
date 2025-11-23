@@ -30,7 +30,10 @@ try {
             'input_keys' => is_array($input) ? array_keys($input) : 'not_array',
             'input_values' => is_array($input) ? array_values($input) : 'not_array',
             'raw_input_length' => strlen($raw_input),
-            'json_last_error' => json_last_error_msg()
+            'json_last_error' => json_last_error_msg(),
+            'raw_input_preview' => substr($raw_input, 0, 200),
+            'php_input_method' => $_SERVER['REQUEST_METHOD'],
+            'content_type' => $_SERVER['CONTENT_TYPE'] ?? 'not_set'
         ];
         error_log('Promo validation debug: Missing parameters = ' . json_encode($debug_info));
 
@@ -38,8 +41,23 @@ try {
         http_response_code(400);
         echo json_encode([
             'success' => false,
-            'message' => 'Missing required parameters',
+            'message' => 'Missing required parameters. Check that both promo_code and cart_total are being sent.',
             'debug' => $debug_info
+        ]);
+        exit;
+    }
+
+    // Additional validation for cart_total value
+    if (isset($input['cart_total']) && ($input['cart_total'] === null || $input['cart_total'] === '')) {
+        error_log('Promo validation debug: cart_total is null or empty');
+        http_response_code(400);
+        echo json_encode([
+            'success' => false,
+            'message' => 'Cart total is empty. Please add items to your cart first.',
+            'debug' => [
+                'cart_total_value' => $input['cart_total'],
+                'cart_total_type' => gettype($input['cart_total'])
+            ]
         ]);
         exit;
     }

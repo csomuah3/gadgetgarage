@@ -1033,65 +1033,118 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
     </style>
 </head>
 <body>
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>
+    <!-- Promotional Banner -->
+    <div class="promo-banner">
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="promo-banner-center">
+            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
+    </div>
 
     <!-- Main Header -->
-    <header class="main-header">
-        <div class="container">
-            <div class="d-flex align-items-center justify-content-between">
-                <a href="index.php" class="logo">
-                    <span>Gadget</span>
-                    <span class="garage">Garage</span>
+    <header class="main-header animate__animated animate__fadeInDown">
+        <div class="container-fluid" style="padding: 0 40px;">
+            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+                <!-- Logo - Far Left -->
+                <a href="../index.php" class="logo">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                        alt="Gadget Garage">
                 </a>
 
-                <div class="search-container">
-                    <form action="views/product_search_result.php" method="GET" class="position-relative">
+                <!-- Center Content -->
+                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                    <!-- Search Bar -->
+                    <form class="search-container" method="GET" action="product_search_result.php">
                         <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="query" class="search-input" placeholder="Search for refurbished devices, parts, or repair services..." value="<?php echo htmlspecialchars($search_query); ?>">
-                        <button type="submit" class="search-btn">Search</button>
+                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." value="<?php echo htmlspecialchars($search_query); ?>" required>
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
                     </form>
-                </div>
 
-                <div class="tech-revival-section">
-                    <i class="fas fa-recycle tech-revival-icon"></i>
-                    <div>
-                        <p class="tech-revival-text mb-0">Tech Revival Hub</p>
-                        <p class="contact-number mb-0">Call: (555) 123-TECH</p>
+                    <!-- Tech Revival Section -->
+                    <div class="tech-revival-section">
+                        <i class="fas fa-recycle tech-revival-icon"></i>
+                        <div>
+                            <p class="tech-revival-text">Bring Retired Devices</p>
+                            <p class="contact-number">055-138-7578</p>
+                        </div>
                     </div>
                 </div>
 
-                <div class="user-actions">
-                    <a href="cart.php" class="header-icon" title="Cart">
-                        <i class="fas fa-shopping-cart fa-lg"></i>
-                        <?php if ($cart_count > 0): ?>
-                            <span class="cart-badge"><?php echo $cart_count; ?></span>
-                        <?php endif; ?>
-                    </a>
-
-                    <a href="#" class="header-icon" title="Wishlist">
-                        <i class="fas fa-heart fa-lg"></i>
-                    </a>
-
+                <!-- User Actions - Far Right -->
+                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
                     <?php if ($is_logged_in): ?>
+                        <!-- Wishlist Icon -->
+                        <div class="header-icon">
+                            <a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-heart"></i>
+                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
+                            </a>
+                        </div>
+
+                        <!-- Cart Icon -->
+                        <div class="header-icon">
+                            <a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shopping-cart"></i>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php else: ?>
+                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php endif; ?>
+                            </a>
+                        </div>
+
+                        <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" onclick="toggleUserDropdown()">
-                                <i class="fas fa-user"></i>
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
-                            <div class="dropdown-menu-custom" id="userDropdown">
-                                <a href="profile.php" class="dropdown-item-custom">
-                                    <i class="fas fa-user-cog"></i>
-                                    Profile Settings
-                                </a>
-                                <div class="dropdown-divider-custom"></div>
-                                <button onclick="confirmLogout()" class="dropdown-item-custom">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    Logout
+                            <div class="dropdown-menu-custom" id="userDropdownMenu">
+                                <button class="dropdown-item-custom" onclick="goToAccount()">
+                                    <i class="fas fa-user"></i>
+                                    <span>Account</span>
                                 </button>
+                                <div class="dropdown-divider-custom"></div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-globe"></i>
+                                    <div class="language-selector">
+                                        <span>Language</span>
+                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+                                            <option value="en">🇬🇧 EN</option>
+                                            <option value="es">🇪🇸 ES</option>
+                                            <option value="fr">🇫🇷 FR</option>
+                                            <option value="de">🇩🇪 DE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-moon"></i>
+                                    <div class="theme-toggle">
+                                        <span>Dark Mode</span>
+                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+                                            <div class="toggle-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider-custom"></div>
+                                <a href="../login/logout.php" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
                             </div>
                         </div>
                     <?php else: ?>
-                        <a href="login/login.php" class="login-btn">Sign In</a>
+                        <!-- Login Button -->
+                        <a href="../login/login.php" class="login-btn">
+                            <i class="fas fa-user"></i>
+                            Login
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1100,110 +1153,113 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
     <!-- Main Navigation -->
     <nav class="main-nav">
-        <div class="container">
+        <div class="container-fluid px-0">
             <div class="nav-menu">
-                <div class="shop-categories-btn">
-                    <button class="categories-button" onclick="toggleMegaDropdown()">
-                        <i class="fas fa-bars"></i>
-                        Shop Categories
+                <!-- Shop by Brands Button -->
+                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+                    <button class="categories-button">
+                        <i class="fas fa-tags"></i>
+                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
+                        <i class="fas fa-chevron-down"></i>
                     </button>
-                    <div class="mega-dropdown" id="megaDropdown">
+                    <div class="brands-dropdown" id="shopDropdown">
+                        <h4>All Brands</h4>
+                        <ul>
+                            <?php if (!empty($brands)): ?>
+                                <?php foreach ($brands as $brand): ?>
+                                    <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li><a href="all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                                <li><a href="all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                                <li><a href="all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                                <li><a href="all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                                <li><a href="all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                                <li><a href="all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                                <li><a href="all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                                <li><a href="all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+
+                <!-- Shop Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+                    <a href="#" class="nav-item">
+                        <span data-translate="shop">SHOP</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="mega-dropdown" id="shopCategoryDropdown">
                         <div class="dropdown-content">
                             <div class="dropdown-column">
-                                <h4>Mobile Devices</h4>
+                                <h4>
+                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="mobile_devices">Mobile Devices</span>
+                                    </a>
+                                </h4>
                                 <ul>
-                                    <li><a href="all_product.php?cat=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-                                    <li><a href="all_product.php?cat=tablets"><i class="fas fa-tablet-alt"></i> Tablets</a></li>
-                                    <li><a href="all_product.php?cat=accessories"><i class="fas fa-headphones"></i> Accessories</a></li>
+                                    <li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
-                                <h4>Computing</h4>
+                                <h4>
+                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="computing">Computing</span>
+                                    </a>
+                                </h4>
                                 <ul>
-                                    <li><a href="all_product.php?cat=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-                                    <li><a href="all_product.php?cat=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
-                                    <li><a href="all_product.php?cat=components"><i class="fas fa-microchip"></i> Components</a></li>
+                                    <li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
-                                <h4>Gaming</h4>
+                                <h4>
+                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="photography_video">Photography & Video</span>
+                                    </a>
+                                </h4>
                                 <ul>
-                                    <li><a href="all_product.php?cat=consoles"><i class="fas fa-gamepad"></i> Consoles</a></li>
-                                    <li><a href="all_product.php?cat=controllers"><i class="fas fa-play"></i> Controllers</a></li>
-                                    <li><a href="all_product.php?cat=games"><i class="fas fa-compact-disc"></i> Games</a></li>
+                                    <li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                                 </ul>
                             </div>
-                            <div class="dropdown-column">
-                                <h4>Audio & Video</h4>
-                                <ul>
-                                    <li><a href="all_product.php?cat=headphones"><i class="fas fa-headphones"></i> Headphones</a></li>
-                                    <li><a href="all_product.php?cat=speakers"><i class="fas fa-volume-up"></i> Speakers</a></li>
-                                    <li><a href="all_product.php?cat=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-                                </ul>
+                            <div class="dropdown-column featured">
+                                <h4>Shop All</h4>
+                                <div class="featured-item">
+                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+                                    <div class="featured-text">
+                                        <strong>New Arrivals</strong>
+                                        <p>Latest tech gadgets</p>
+                                        <a href="all_product.php" class="shop-now-btn">Shop</a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
 
-                <div>
-                    <a href="all_product.php" class="nav-item">
-                        <i class="fas fa-mobile-alt"></i>
-                        All Products
-                    </a>
-                </div>
+                <a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+                <a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
-                <div class="position-relative">
-                    <a href="#" class="nav-item" onclick="toggleBrandsDropdown()">
-                        <i class="fas fa-tags"></i>
-                        Brands
-                        <i class="fas fa-chevron-down ms-1"></i>
+                <!-- More Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+                    <a href="#" class="nav-item">
+                        <span data-translate="more">MORE</span>
+                        <i class="fas fa-chevron-down"></i>
                     </a>
-                    <div class="brands-dropdown" id="brandsDropdown">
-                        <h4>Popular Brands</h4>
+                    <div class="simple-dropdown" id="moreDropdown">
                         <ul>
-                            <?php foreach ($brands as $brand): ?>
-                                <li><a href="all_product.php?brand=<?php echo $brand['brand_id']; ?>"><?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
-                            <?php endforeach; ?>
+                            <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>
 
-                <div>
-                    <a href="repair_services.php" class="nav-item">
-                        <i class="fas fa-tools"></i>
-                        Repair Services
-                    </a>
-                </div>
-
-                <div>
-                    <a href="#" class="nav-item flash-deal">
-                        <i class="fas fa-bolt"></i>
-                        Flash Deals
-                    </a>
-                </div>
-
-                <div>
-                    <a href="about.php" class="nav-item">
-                        <i class="fas fa-info-circle"></i>
-                        About Us
-                    </a>
-                </div>
-
-                <div class="position-relative">
-                    <a href="#" class="nav-item" onclick="toggleHelpDropdown()">
-                        <i class="fas fa-question-circle"></i>
-                        Help
-                        <i class="fas fa-chevron-down ms-1"></i>
-                    </a>
-                    <div class="simple-dropdown" id="helpDropdown">
-                        <ul>
-                            <li><a href="contact.php"><i class="fas fa-envelope"></i> Contact Us</a></li>
-                            <li><a href="faq.php"><i class="fas fa-question"></i> FAQ</a></li>
-                            <li><a href="shipping.php"><i class="fas fa-truck"></i> Shipping Info</a></li>
-                            <li><a href="returns.php"><i class="fas fa-undo"></i> Returns</a></li>
-                        </ul>
-                    </div>
-                </div>
+                <!-- Flash Deal positioned at far right -->
+                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
             </div>
         </div>
     </nav>
@@ -1232,7 +1288,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         </div>
 
         <div class="search-header">
-            <form method="GET" action="views/product_search_result.php">
+            <form method="GET" action="product_search_result.php">
                 <div class="search-input-container">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" name="query" class="search-input"
@@ -1568,70 +1624,152 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
         }
 
-        // Dropdown Functions
-        function toggleMegaDropdown() {
-            const dropdown = document.getElementById('megaDropdown');
-            dropdown.classList.toggle('show');
+        // Dropdown functions
+        let dropdownTimeout;
 
-            // Close other dropdowns
-            closeAllDropdowns(['megaDropdown']);
+        function showDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.style.opacity = '1';
+                dropdown.style.visibility = 'visible';
+                dropdown.style.transform = 'translateY(0)';
+            }
         }
 
-        function toggleBrandsDropdown() {
-            const dropdown = document.getElementById('brandsDropdown');
-            dropdown.classList.toggle('show');
-
-            // Close other dropdowns
-            closeAllDropdowns(['brandsDropdown']);
+        function hideDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.style.opacity = '0';
+                    dropdown.style.visibility = 'hidden';
+                    dropdown.style.transform = 'translateY(-10px)';
+                }, 300);
+            }
         }
 
-        function toggleHelpDropdown() {
-            const dropdown = document.getElementById('helpDropdown');
-            dropdown.classList.toggle('show');
+        // Timer functionality
+        function updateTimer() {
+            const timerElement = document.getElementById('promoTimer');
+            if (timerElement) {
+                const now = new Date().getTime();
+                const nextDay = new Date();
+                nextDay.setDate(nextDay.getDate() + 1);
+                nextDay.setHours(0, 0, 0, 0);
 
-            // Close other dropdowns
-            closeAllDropdowns(['helpDropdown']);
+                const distance = nextDay.getTime() - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                timerElement.innerHTML = days + "d:" +
+                                         (hours < 10 ? "0" : "") + hours + "h:" +
+                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
+                                         (seconds < 10 ? "0" : "") + seconds + "s";
+            }
         }
 
+        // Update timer every second
+        setInterval(updateTimer, 1000);
+        updateTimer(); // Initial call
+
+        // User dropdown functionality
         function toggleUserDropdown() {
-            const dropdown = document.getElementById('userDropdown');
+            const dropdown = document.getElementById('userDropdownMenu');
             dropdown.classList.toggle('show');
-
-            // Close other dropdowns
-            closeAllDropdowns(['userDropdown']);
         }
 
-        function closeAllDropdowns(except = []) {
-            const dropdowns = ['megaDropdown', 'brandsDropdown', 'helpDropdown', 'userDropdown'];
-            dropdowns.forEach(id => {
-                if (!except.includes(id)) {
-                    const dropdown = document.getElementById(id);
-                    if (dropdown) {
-                        dropdown.classList.remove('show');
-                    }
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdownMenu');
+            const avatar = document.querySelector('.user-avatar');
+
+            if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Account page navigation
+        function goToAccount() {
+            window.location.href = '../my_orders.php';
+        }
+
+        // Language change functionality
+        function changeLanguage(lang) {
+            // Language change functionality can be implemented here
+            console.log('Language changed to:', lang);
+        }
+
+        // Theme toggle functionality
+        function toggleTheme() {
+            const toggleSwitch = document.getElementById('themeToggle');
+            const body = document.body;
+
+            body.classList.toggle('dark-mode');
+            toggleSwitch.classList.toggle('active');
+
+            // Save theme preference to localStorage
+            const isDarkMode = body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        }
+
+        // Load theme preference on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            const toggleSwitch = document.getElementById('themeToggle');
+
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+                if (toggleSwitch) {
+                    toggleSwitch.classList.add('active');
                 }
-            });
+            }
+        });
+
+        // Shop Dropdown Functions
+        function showShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
-        function confirmLogout() {
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: 'Logout',
-                    text: 'Are you sure you want to logout?',
-                    icon: 'question',
-                    showCancelButton: true,
-                    confirmButtonColor: '#D19C97',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, Logout',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        window.location.href = 'login/logout.php';
-                    }
-                });
-            }
+        function hideShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
             }
         }
+
+        // More Dropdown Functions
+        function showMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Timeout variables
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
 
         // Floating Bubbles Animation
         function createFloatingBubbles() {

@@ -2515,7 +2515,7 @@ try {
                 }
 
                 // Send simple GET request to standalone endpoint
-                const url = `../test_standalone_promo.php?code=${encodeURIComponent(promoCode)}&total=${encodeURIComponent(useTotal)}`;
+                const url = `/Ecommerce_Final/test_standalone_promo.php?code=${encodeURIComponent(promoCode)}&total=${encodeURIComponent(useTotal)}`;
                 console.log('Making GET request to:', url);
 
                 const response = await fetch(url, {
@@ -2693,7 +2693,7 @@ try {
             console.log('JSON string:', JSON.stringify(testData));
 
             try {
-                const url = `../test_standalone_promo.php?code=${encodeURIComponent(testData.promo_code)}&total=${encodeURIComponent(testData.cart_total)}`;
+                const url = `/Ecommerce_Final/test_standalone_promo.php?code=${encodeURIComponent(testData.promo_code)}&total=${encodeURIComponent(testData.cart_total)}`;
                 console.log('Manual test URL:', url);
 
                 const response = await fetch(url, {

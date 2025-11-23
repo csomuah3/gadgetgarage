@@ -756,6 +756,13 @@ if (isset($_SESSION['error_message'])) {
     transform: none !important;
 }
 
+/* Disable all Chart.js animations */
+#categoryChart * {
+    animation: none !important;
+    transition: none !important;
+    transform: none !important;
+}
+
 /* Override any sliding animations for charts */
 .admin-card.chart-container {
     animation: none !important;
@@ -948,10 +955,11 @@ new Chart(ctx, {
     options: {
         responsive: true,
         maintainAspectRatio: false,
-        animation: {
-            animateRotate: false,
-            animateScale: false,
-            duration: 0
+        animation: false,
+        animations: {
+            colors: false,
+            radius: false,
+            rotation: false
         },
         hover: {
             mode: null,
@@ -973,7 +981,9 @@ new Chart(ctx, {
         },
         interaction: {
             intersect: false
-        }
+        },
+        onHover: null,
+        onResize: null
     }
 });
 

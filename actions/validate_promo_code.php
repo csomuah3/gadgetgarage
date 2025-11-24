@@ -128,6 +128,12 @@ try {
                     $use_fallback = true;
                 } else {
                     $promo = $result->fetch_assoc();
+
+                    // Check if the database promo has expired - if so, use fallback
+                    if ($promo['end_date'] && strtotime($promo['end_date']) < time()) {
+                        $use_fallback = true;
+                        $promo = null;
+                    }
                 }
             }
         }

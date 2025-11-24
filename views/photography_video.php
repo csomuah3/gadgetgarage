@@ -1511,42 +1511,58 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="search-container">
                             <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
+                            <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                         </div>
                     </div>
 
                     <!-- Rating Filter -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Rating</h6>
-                        <div class="rating-filters">
+                        <div class="rating-filter">
                             <div class="rating-option" data-rating="5">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                                </div>
-                                <span>5 Star</span>
+                                <input type="radio" id="rating_5" name="rating_filter" value="5">
+                                <label for="rating_5">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">5 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="4">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>4 Star</span>
+                                <input type="radio" id="rating_4" name="rating_filter" value="4">
+                                <label for="rating_4">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">4 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="3">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>3 Star</span>
+                                <input type="radio" id="rating_3" name="rating_filter" value="3">
+                                <label for="rating_3">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">3 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="2">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>2 Star</span>
+                                <input type="radio" id="rating_2" name="rating_filter" value="2">
+                                <label for="rating_2">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">2 Star</span>
+                                </label>
                             </div>
                             <div class="rating-option" data-rating="1">
-                                <div class="stars">
-                                    <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
-                                </div>
-                                <span>1 Star</span>
+                                <input type="radio" id="rating_1" name="rating_filter" value="1">
+                                <label for="rating_1">
+                                    <div class="stars">
+                                        <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
+                                    </div>
+                                    <span class="rating-text">1 Star</span>
+                                </label>
                             </div>
                         </div>
                     </div>
@@ -1568,8 +1584,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Category</h6>
                         <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="">All</button>
-                            <button class="tag-btn" data-category="cameras">Cameras and Video Devices</button>
+                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
+                            <?php foreach ($categories as $category): ?>
+                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
+                                    <?php echo htmlspecialchars($category['cat_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
@@ -1577,60 +1597,58 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
-                            <button class="tag-btn active" data-brand="">All</button>
-                            <button class="tag-btn" data-brand="canon_cameras">Canon Cameras</button>
-                            <button class="tag-btn" data-brand="canon_video_equipment">Canon Video Equipment</button>
-                            <button class="tag-btn" data-brand="dji_cameras">DJI Cameras</button>
-                            <button class="tag-btn" data-brand="dji_video_equipment">DJI Video Equipment</button>
-                            <button class="tag-btn" data-brand="fujifilm_cameras">FujiFilm Cameras</button>
-                            <button class="tag-btn" data-brand="gopro_cameras">GoPro Cameras</button>
-                            <button class="tag-btn" data-brand="nikon_cameras">Nikon Cameras</button>
-                            <button class="tag-btn" data-brand="nikon_video_equipment">Nikon Video Equipment</button>
-                            <button class="tag-btn" data-brand="panasonic_cameras">Panasonic Cameras</button>
-                            <button class="tag-btn" data-brand="sony_cameras">Sony Cameras</button>
-                            <button class="tag-btn" data-brand="sony_video_equipment">Sony Video Equipment</button>
+                            <button class="tag-btn active" data-brand="" id="brand_all_btn">All</button>
+                            <?php foreach ($brands as $brand): ?>
+                                <button class="tag-btn" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
+                                    <?php echo htmlspecialchars($brand['brand_name']); ?>
+                                </button>
+                            <?php endforeach; ?>
                         </div>
                     </div>
 
                     <!-- Filter by Size -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="tag-filters" id="sizeTags">
-                            <button class="tag-btn active" data-size="">All</button>
-                            <button class="tag-btn" data-size="large">Large</button>
-                            <button class="tag-btn" data-size="medium">Medium</button>
-                            <button class="tag-btn" data-size="small">Small</button>
+                        <div class="size-filters">
+                            <button class="size-btn active" data-size="">All</button>
+                            <button class="size-btn" data-size="large">Large</button>
+                            <button class="size-btn" data-size="medium">Medium</button>
+                            <button class="size-btn" data-size="small">Small</button>
                         </div>
                     </div>
 
                     <!-- Filter by Color -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Color</h6>
-                        <div class="color-filters" id="colorTags">
-                            <div class="color-option active" data-color="">
-                                <div class="color-circle" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);"></div>
-                            </div>
-                            <div class="color-option" data-color="blue">
-                                <div class="color-circle" style="background: #3b82f6;"></div>
-                            </div>
-                            <div class="color-option" data-color="gray">
-                                <div class="color-circle" style="background: #6b7280;"></div>
-                            </div>
-                            <div class="color-option" data-color="green">
-                                <div class="color-circle" style="background: #10b981;"></div>
-                            </div>
-                            <div class="color-option" data-color="red">
-                                <div class="color-circle" style="background: #ef4444;"></div>
-                            </div>
-                            <div class="color-option" data-color="yellow">
-                                <div class="color-circle" style="background: #f59e0b;"></div>
-                            </div>
+                        <div class="color-filters">
+                            <button class="color-btn active" data-color="" title="All Colors">
+                                <span class="color-circle all-colors"></span>
+                            </button>
+                            <button class="color-btn" data-color="blue" title="Blue">
+                                <span class="color-circle" style="background-color: #0066cc;"></span>
+                            </button>
+                            <button class="color-btn" data-color="gray" title="Gray">
+                                <span class="color-circle" style="background-color: #808080;"></span>
+                            </button>
+                            <button class="color-btn" data-color="green" title="Green">
+                                <span class="color-circle" style="background-color: #00aa00;"></span>
+                            </button>
+                            <button class="color-btn" data-color="red" title="Red">
+                                <span class="color-circle" style="background-color: #dd0000;"></span>
+                            </button>
+                            <button class="color-btn" data-color="yellow" title="Yellow">
+                                <span class="color-circle" style="background-color: #ffdd00;"></span>
+                            </button>
                         </div>
                     </div>
 
-                    <!-- Clear All Filters Button -->
+                    <!-- Apply/Clear Filters Buttons -->
                     <div class="filter-actions">
-                        <button class="clear-all-filters-btn" id="clearAllFilters">
+                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
+                        <button class="clear-filters-btn" id="clearFilters">
                             <i class="fas fa-times"></i>
                             Clear All Filters
                         </button>

@@ -467,6 +467,150 @@ function send_welcome_registration_sms($customer_id, $customer_name, $phone_numb
 }
 
 /**
+ * Send order status update SMS notification
+ * @param int $order_id
+ * @param string $status
+ * @return bool
+ */
+function send_order_status_update_sms($order_id, $status) {
+    try {
+        global $sms_urls;
+
+        // Get order and customer details
+        require_once __DIR__ . '/../controllers/order_controller.php';
+        $tracking_data = get_order_tracking_details($order_id);
+
+        if (!$tracking_data || !isset($tracking_data['order'])) {
+            log_sms_activity('error', 'Order not found for SMS notification', [
+                'order_id' => $order_id,
+                'status' => $status
+            ]);
+            return false;
+        }
+
+        $order = $tracking_data['order'];
+
+        // Get customer details
+        require_once __DIR__ . '/../settings/db_class.php';
+        $db = new db_connection();
+        $customer_query = "SELECT customer_name, customer_contact FROM customer WHERE customer_id = ?";
+        $customer = $db->db_fetch_one($customer_query, [$order['customer_id']]);
+
+        if (!$customer || !$customer['customer_contact']) {
+            log_sms_activity('error', 'Customer contact not found for SMS notification', [
+                'order_id' => $order_id,
+                'customer_id' => $order['customer_id']
+            ]);
+            return false;
+        }
+
+        $phone = format_phone_number($customer['customer_contact']);
+        if (!$phone) {
+            log_sms_activity('error', 'Invalid phone number for order status SMS', [
+                'order_id' => $order_id,
+                'phone' => $customer['customer_contact']
+            ]);
+            return false;
+        }
+
+        // Get appropriate SMS template based on status
+        $template_type = get_status_sms_template_type($status);
+        $template = get_sms_template($template_type, 'en');
+
+        if (!$template) {
+            log_sms_activity('error', 'SMS template not found for status', [
+                'order_id' => $order_id,
+                'status' => $status,
+                'template_type' => $template_type
+            ]);
+            return false;
+        }
+
+        // Create tracking URL
+        $tracking_url = $sms_urls['tracking_base'] . urlencode($order['tracking_number'] ?? $order_id);
+
+        // Prepare template variables
+        $variables = [
+            'name' => $customer['customer_name'],
+            'order_id' => $order_id,
+            'tracking_number' => $order['tracking_number'] ?? 'N/A',
+            'amount' => number_format($order['total_amount'], 2),
+            'delivery_date' => get_estimated_delivery_date($status),
+            'tracking_url' => $tracking_url,
+            'website_url' => $sms_urls['website_url']
+        ];
+
+        // Process template
+        $message = process_sms_template($template, $variables);
+
+        $sms = new SMSService();
+        $result = $sms->send_sms($phone, $message, $template_type);
+
+        if ($result) {
+            log_sms_activity('info', 'Order status SMS sent successfully', [
+                'order_id' => $order_id,
+                'status' => $status,
+                'phone' => $phone
+            ]);
+        }
+
+        return $result;
+
+    } catch (Exception $e) {
+        log_sms_activity('error', 'Failed to send order status SMS', [
+            'order_id' => $order_id,
+            'status' => $status,
+            'error' => $e->getMessage()
+        ]);
+        return false;
+    }
+}
+
+/**
+ * Get SMS template type based on order status
+ * @param string $status
+ * @return string
+ */
+function get_status_sms_template_type($status) {
+    $template_mapping = [
+        'pending' => SMS_TYPE_ORDER_CONFIRMATION,
+        'processing' => SMS_TYPE_ORDER_CONFIRMATION,
+        'shipped' => SMS_TYPE_ORDER_SHIPPED,
+        'out_for_delivery' => SMS_TYPE_ORDER_SHIPPED,
+        'delivered' => SMS_TYPE_ORDER_DELIVERED,
+        'cancelled' => SMS_TYPE_ORDER_CONFIRMATION
+    ];
+
+    return $template_mapping[$status] ?? SMS_TYPE_ORDER_CONFIRMATION;
+}
+
+/**
+ * Get estimated delivery date based on status
+ * @param string $status
+ * @return string
+ */
+function get_estimated_delivery_date($status) {
+    $delivery_estimates = [
+        'pending' => '+3 days',
+        'processing' => '+2 days',
+        'shipped' => '+1 day',
+        'out_for_delivery' => 'today',
+        'delivered' => 'completed',
+        'cancelled' => 'cancelled'
+    ];
+
+    $estimate = $delivery_estimates[$status] ?? '+3 days';
+
+    if ($estimate === 'today') {
+        return date('M j, Y') . ' (Today)';
+    } elseif ($estimate === 'completed' || $estimate === 'cancelled') {
+        return ucfirst($estimate);
+    } else {
+        return date('M j, Y', strtotime($estimate));
+    }
+}
+
+/**
  * Clean old SMS logs
  * @param int $days_to_keep
  * @return bool

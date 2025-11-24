@@ -1437,6 +1437,11 @@ try {
                     <span>My orders</span>
                 </a>
 
+                <a href="../track_order.php" class="nav-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Track Orders</span>
+                </a>
+
                 <a href="#" class="nav-item" onclick="showSection('my-info')">
                     <i class="fas fa-edit"></i>
                     <span>My Info</span>

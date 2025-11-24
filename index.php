@@ -3958,6 +3958,10 @@ try {
 									<i class="fas fa-shopping-bag"></i>
 									<span data-translate="my_orders">My Orders</span>
 								</a>
+								<a href="track_order.php" class="dropdown-item-custom">
+									<i class="fas fa-truck"></i>
+									<span data-translate="track_orders">Track Orders</span>
+								</a>
 								<a href="views/notifications.php" class="dropdown-item-custom">
 									<i class="fas fa-bell"></i>
 									<span>Notifications</span>

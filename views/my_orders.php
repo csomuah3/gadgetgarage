@@ -782,6 +782,9 @@ try {
                             <div class="dropdown-menu">
                                 <a href="../views/account.php" class="dropdown-item">My Profile</a>
                                 <a href="../views/my_orders.php" class="dropdown-item">My Orders</a>
+                                <a href="../track_order.php" class="dropdown-item">
+                                    <i class="fas fa-truck me-2"></i>Track Orders
+                                </a>
                                 <a href="../views/notifications.php" class="dropdown-item">Notifications</a>
                                 <?php if ($is_admin): ?>
                                     <a href="../admin/dashboard.php" class="dropdown-item">Admin Panel</a>

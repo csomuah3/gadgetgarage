@@ -11,15 +11,29 @@ require_once __DIR__ . '/../controllers/order_controller.php';
 
 $page_title = "Manage Orders";
 
-// Handle status update
-if (isset($_POST['update_status'])) {
+// Handle tracking update
+if (isset($_POST['update_tracking'])) {
     $order_id = intval($_POST['order_id']);
     $new_status = $_POST['status'];
+    $notes = trim($_POST['notes'] ?? '');
+    $location = trim($_POST['location'] ?? '');
+    $updated_by = $_SESSION['user_id'];
 
-    if (update_order_status_ctr($order_id, $new_status)) {
-        $success_message = "Order status updated successfully!";
+    if (update_order_tracking_ctr($order_id, $new_status, $notes, $location, $updated_by)) {
+        $success_message = "Order tracking updated successfully!";
+
+        // Send SMS notification if enabled
+        try {
+            require_once __DIR__ . '/../helpers/sms_helper.php';
+            if (defined('SMS_ENABLED') && SMS_ENABLED) {
+                send_order_status_update_sms($order_id, $new_status);
+            }
+        } catch (Exception $sms_error) {
+            // Log SMS error but don't fail the update
+            error_log('SMS notification error: ' . $sms_error->getMessage());
+        }
     } else {
-        $error_message = "Failed to update order status.";
+        $error_message = "Failed to update order tracking.";
     }
 }
 
@@ -211,6 +225,7 @@ try {
                             <th>Order ID</th>
                             <th>Customer</th>
                             <th>Date</th>
+                            <th>Tracking #</th>
                             <th>Items</th>
                             <th>Total</th>
                             <th>Status</th>
@@ -241,6 +256,17 @@ try {
                                     </div>
                                 </td>
                                 <td>
+                                    <div>
+                                        <code class="tracking-code"><?= htmlspecialchars($order['tracking_number'] ?? 'N/A') ?></code><br>
+                                        <small class="text-muted">
+                                            <a href="../track_order.php?order=<?= urlencode($order['tracking_number'] ?? $order['order_id']) ?>"
+                                               target="_blank" class="text-decoration-none">
+                                                <i class="fas fa-external-link-alt"></i> View
+                                            </a>
+                                        </small>
+                                    </div>
+                                </td>
+                                <td>
                                     <span class="badge bg-primary rounded-pill">
                                         <?= htmlspecialchars($order['item_count'] ?? '0') ?> items
                                     </span>
@@ -256,9 +282,9 @@ try {
                                 <td>
                                     <div class="btn-group" role="group">
                                         <button class="btn btn-sm btn-outline-primary"
-                                                onclick="updateStatus(<?= $order['order_id'] ?>)"
-                                                title="Update Status">
-                                            <i class="fas fa-edit"></i>
+                                                onclick="updateTracking(<?= $order['order_id'] ?>)"
+                                                title="Update Tracking">
+                                            <i class="fas fa-truck"></i>
                                         </button>
                                         <button class="btn btn-sm btn-outline-info"
                                                 onclick="viewOrder(<?= $order['order_id'] ?>)"
@@ -344,6 +370,16 @@ try {
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+}
+
+.tracking-code {
+    background: #f8fafc;
+    color: #1f2937;
+    padding: 2px 8px;
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    border: 1px solid #e5e7eb;
 }
 
 .status-pending {
@@ -509,51 +545,75 @@ function animateCounters() {
 }
 
 // Order Management Functions
-function updateStatus(orderId) {
-    const statuses = [
-        { value: 'pending', label: 'Pending' },
-        { value: 'processing', label: 'Processing' },
-        { value: 'completed', label: 'Completed' },
-        { value: 'cancelled', label: 'Cancelled' }
-    ];
-
+function updateTracking(orderId) {
     if (typeof Swal !== 'undefined') {
         Swal.fire({
-            title: 'Update Order Status',
-            input: 'select',
-            inputOptions: {
-                'pending': 'Pending',
-                'processing': 'Processing',
-                'completed': 'Completed',
-                'cancelled': 'Cancelled'
-            },
-            inputPlaceholder: 'Select new status',
+            title: 'Update Order Tracking',
+            html: `
+                <div class="text-start">
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Status</label>
+                        <select id="tracking-status" class="form-select">
+                            <option value="">Select Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="processing">Processing</option>
+                            <option value="shipped">Shipped</option>
+                            <option value="out_for_delivery">Out for Delivery</option>
+                            <option value="delivered">Delivered</option>
+                            <option value="cancelled">Cancelled</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Location</label>
+                        <input type="text" id="tracking-location" class="form-control" placeholder="e.g., Accra Distribution Center">
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label fw-bold">Notes</label>
+                        <textarea id="tracking-notes" class="form-control" rows="3" placeholder="Additional tracking information..."></textarea>
+                    </div>
+                </div>
+            `,
             showCancelButton: true,
-            confirmButtonColor: '#D19C97',
+            confirmButtonColor: '#3b82f6',
             cancelButtonColor: '#6c757d',
-            confirmButtonText: 'Update',
-            cancelButtonText: 'Cancel'
+            confirmButtonText: 'Update Tracking',
+            cancelButtonText: 'Cancel',
+            preConfirm: () => {
+                const status = document.getElementById('tracking-status').value;
+                const location = document.getElementById('tracking-location').value;
+                const notes = document.getElementById('tracking-notes').value;
+
+                if (!status) {
+                    Swal.showValidationMessage('Please select a status');
+                    return false;
+                }
+
+                return { status, location, notes };
+            }
         }).then((result) => {
-            if (result.isConfirmed && result.value) {
-                performStatusUpdate(orderId, result.value);
+            if (result.isConfirmed) {
+                performTrackingUpdate(orderId, result.value);
             }
         });
     } else {
-        let options = statuses.map(s => `${s.value}: ${s.label}`).join('\n');
-        const newStatus = prompt(`Select new status:\n${options}\n\nEnter status:`);
-        if (newStatus && ['pending', 'processing', 'completed', 'cancelled'].includes(newStatus.toLowerCase())) {
-            performStatusUpdate(orderId, newStatus.toLowerCase());
+        const newStatus = prompt('Enter new status (pending/processing/shipped/out_for_delivery/delivered/cancelled):');
+        if (newStatus && ['pending', 'processing', 'shipped', 'out_for_delivery', 'delivered', 'cancelled'].includes(newStatus.toLowerCase())) {
+            const location = prompt('Enter location (optional):') || '';
+            const notes = prompt('Enter notes (optional):') || '';
+            performTrackingUpdate(orderId, { status: newStatus.toLowerCase(), location, notes });
         }
     }
 }
 
-function performStatusUpdate(orderId, newStatus) {
+function performTrackingUpdate(orderId, trackingData) {
     const form = document.createElement('form');
     form.method = 'POST';
     form.innerHTML = `
-        <input type="hidden" name="update_status" value="1">
+        <input type="hidden" name="update_tracking" value="1">
         <input type="hidden" name="order_id" value="${orderId}">
-        <input type="hidden" name="status" value="${newStatus}">
+        <input type="hidden" name="status" value="${trackingData.status}">
+        <input type="hidden" name="location" value="${trackingData.location || ''}">
+        <input type="hidden" name="notes" value="${trackingData.notes || ''}">
     `;
     document.body.appendChild(form);
     form.submit();

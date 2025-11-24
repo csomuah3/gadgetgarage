@@ -208,16 +208,24 @@ try {
     // Calculate discount
     $discount_amount = 0;
 
+    // Debug logging
+    error_log("Promo calculation debug - Cart total: $cart_total, Discount type: {$promo['discount_type']}, Discount value: {$promo['discount_value']}");
+
     if ($promo['discount_type'] === 'percentage') {
         $discount_amount = ($cart_total * $promo['discount_value']) / 100;
+        error_log("Promo calculation debug - Percentage calculation: ($cart_total * {$promo['discount_value']}) / 100 = $discount_amount");
 
         // Apply maximum discount limit if specified
         if ($promo['max_discount_amount'] && $discount_amount > $promo['max_discount_amount']) {
+            error_log("Promo calculation debug - Applying max discount cap: $discount_amount > {$promo['max_discount_amount']}, capping to {$promo['max_discount_amount']}");
             $discount_amount = $promo['max_discount_amount'];
         }
     } else if ($promo['discount_type'] === 'fixed') {
         $discount_amount = min($promo['discount_value'], $cart_total);
+        error_log("Promo calculation debug - Fixed discount: min({$promo['discount_value']}, $cart_total) = $discount_amount");
     }
+
+    error_log("Promo calculation debug - Final discount amount: $discount_amount");
 
     // Calculate new total
     $new_total = max(0, $cart_total - $discount_amount);
@@ -225,7 +233,7 @@ try {
     // Return success response
     echo json_encode([
         'success' => true,
-        'message' => 'Promo code applied successfully!',
+        'message' => sprintf('Promo code "%s" applied! You saved GH₵ %.2f', $promo['promo_code'], $discount_amount),
         'promo_code' => $promo['promo_code'],
         'description' => $promo['promo_description'],
         'discount_type' => $promo['discount_type'],

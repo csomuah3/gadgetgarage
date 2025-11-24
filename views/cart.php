@@ -2649,11 +2649,17 @@ try {
         }
 
         function updateOrderSummary(promoData) {
+            console.log('UpdateOrderSummary called with data:', promoData);
+
             // Show discount row
             const discountRow = document.getElementById('discountRow');
             discountRow.style.display = 'flex';
 
             // Update discount details
+            console.log('Updating discount percent to:', promoData.discount_value);
+            console.log('Updating discount amount to:', promoData.discount_amount);
+            console.log('Updating new total to:', promoData.new_total);
+
             document.getElementById('discountPercent').textContent = promoData.discount_value;
             document.getElementById('discountAmount').textContent = '-GH₵ ' + promoData.discount_amount.toFixed(2);
             document.getElementById('cartTotal').textContent = 'GH₵ ' + promoData.new_total.toFixed(2);

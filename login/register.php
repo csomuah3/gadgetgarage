@@ -498,6 +498,7 @@ try {
 			overflow-y: auto;
 			flex: 1;
 			max-height: calc(85vh - 180px);
+			scroll-behavior: smooth;
 		}
 
 		.register-form-body::-webkit-scrollbar {
@@ -604,6 +605,40 @@ try {
 			font-weight: 500;
 			cursor: pointer;
 			user-select: none;
+		}
+
+		/* Enhanced Verification Section */
+		.verification-section {
+			margin-bottom: 25px;
+			padding: 20px;
+			background: linear-gradient(135deg, rgba(59, 130, 246, 0.03), rgba(16, 185, 129, 0.03));
+			border: 1px solid rgba(59, 130, 246, 0.1);
+			border-radius: 16px;
+			transition: all 0.3s ease;
+		}
+
+		.verification-section:hover {
+			border-color: rgba(59, 130, 246, 0.2);
+			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+		}
+
+		.verification-header {
+			display: flex;
+			align-items: center;
+			font-weight: 600;
+			color: #374151;
+			margin-bottom: 15px;
+			font-size: 1.1rem;
+		}
+
+		/* Dark mode styles for verification */
+		body.dark-mode .verification-section {
+			background: linear-gradient(135deg, rgba(96, 165, 250, 0.05), rgba(34, 197, 94, 0.05));
+			border-color: rgba(96, 165, 250, 0.1);
+		}
+
+		body.dark-mode .verification-header {
+			color: #e5e7eb;
 		}
 
 		.form-label {
@@ -1468,16 +1503,24 @@ try {
 							</div>
 						</div>
 
-						<!-- Human Verification Checkbox -->
-						<div class="checkbox-group" onclick="toggleHumanVerification()">
-							<div class="custom-checkbox">
-								<input type="checkbox" id="humanVerification" name="humanVerification" required>
-								<i class="fas fa-check checkbox-mark"></i>
+						<!-- Human Verification Section -->
+						<div class="verification-section">
+							<div class="verification-header">
+								<i class="fas fa-shield-halved me-2" style="color: #3b82f6;"></i>
+								<span>Verification Required</span>
 							</div>
-							<label for="humanVerification" class="checkbox-label">
-								<i class="fas fa-shield-alt me-2" style="color: #10b981;"></i>
-								I verify that I am human
-							</label>
+
+							<!-- Simple Human Verification Checkbox -->
+							<div class="checkbox-group" onclick="toggleHumanVerification()">
+								<div class="custom-checkbox">
+									<input type="checkbox" id="humanVerification" name="humanVerification" required>
+									<i class="fas fa-check checkbox-mark"></i>
+								</div>
+								<label for="humanVerification" class="checkbox-label">
+									<i class="fas fa-user-check me-2" style="color: #10b981;"></i>
+									I confirm that I am human and ready to create my account
+								</label>
+							</div>
 						</div>
 
 						<!-- Hidden role field -->
@@ -1576,7 +1619,7 @@ try {
 
 		// Account page navigation
 		function goToAccount() {
-			window.location.href = '../my_orders.php';
+			window.location.href = '../views/my_orders.php';
 		}
 
 		// Language change functionality
@@ -1653,32 +1696,77 @@ try {
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
 
-		// Human verification checkbox functionality
+		// Simple human verification checkbox functionality
 		function toggleHumanVerification() {
 			const checkbox = document.getElementById('humanVerification');
 			const submitBtn = document.getElementById('submitBtn');
+			const checkboxGroup = document.querySelector('.checkbox-group');
 
 			// Toggle the checkbox state
 			checkbox.checked = !checkbox.checked;
 
-			// Enable/disable submit button based on checkbox state
-			submitBtn.disabled = !checkbox.checked;
-
-			// Add visual feedback
-			const checkboxGroup = document.querySelector('.checkbox-group');
+			// Update button and visual state
 			if (checkbox.checked) {
 				checkboxGroup.style.background = 'rgba(16, 185, 129, 0.1)';
 				checkboxGroup.style.borderColor = 'rgba(16, 185, 129, 0.3)';
+				submitBtn.disabled = false;
+				submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+				submitBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Create Account';
 			} else {
 				checkboxGroup.style.background = 'rgba(59, 130, 246, 0.05)';
 				checkboxGroup.style.borderColor = 'rgba(59, 130, 246, 0.1)';
+				submitBtn.disabled = true;
+				submitBtn.style.background = 'linear-gradient(135deg, #6b7280, #4b5563)';
+				submitBtn.innerHTML = '<i class="fas fa-shield-alt me-2"></i>Verify Identity';
 			}
 		}
+
+		// Enhanced Form Navigation and Error Scrolling
+		function scrollToElement(element, offset = 100) {
+			const formBody = document.querySelector('.register-form-body');
+			if (!formBody || !element) return;
+
+			const elementTop = element.offsetTop - offset;
+			formBody.scrollTo({
+				top: elementTop,
+				behavior: 'smooth'
+			});
+		}
+
+		function scrollToFirstError() {
+			const firstInvalidInput = document.querySelector('.form-group input:invalid, .form-group select:invalid');
+			if (firstInvalidInput) {
+				scrollToElement(firstInvalidInput.closest('.form-group'));
+				firstInvalidInput.focus();
+			}
+		}
+
+		function highlightErrorField(input) {
+			const formGroup = input.closest('.form-group');
+			if (formGroup) {
+				formGroup.style.animation = 'shake 0.5s ease-in-out';
+				setTimeout(() => {
+					formGroup.style.animation = '';
+				}, 500);
+			}
+		}
+
+		// Add shake animation for error highlighting
+		const style = document.createElement('style');
+		style.textContent = `
+			@keyframes shake {
+				0%, 100% { transform: translateX(0); }
+				25% { transform: translateX(-5px); }
+				75% { transform: translateX(5px); }
+			}
+		`;
+		document.head.appendChild(style);
 
 		// Initialize checkbox state on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			const checkbox = document.getElementById('humanVerification');
 			const submitBtn = document.getElementById('submitBtn');
+			const form = document.querySelector('form');
 
 			if (checkbox && submitBtn) {
 				// Ensure button is disabled by default
@@ -1697,6 +1785,42 @@ try {
 						checkboxGroup.style.borderColor = 'rgba(59, 130, 246, 0.1)';
 					}
 				});
+			}
+
+			// Add form validation with smooth scrolling
+			if (form) {
+				form.addEventListener('submit', function(e) {
+					const invalidInputs = form.querySelectorAll('input:invalid, select:invalid');
+					if (invalidInputs.length > 0) {
+						e.preventDefault();
+						scrollToFirstError();
+						invalidInputs.forEach(highlightErrorField);
+					}
+				});
+
+				// Add real-time validation with smooth focus
+				const inputs = form.querySelectorAll('input, select');
+				inputs.forEach(input => {
+					input.addEventListener('invalid', function() {
+						setTimeout(() => {
+							scrollToElement(this.closest('.form-group'));
+							highlightErrorField(this);
+						}, 100);
+					});
+
+					// Smooth scroll on focus for better UX
+					input.addEventListener('focus', function() {
+						scrollToElement(this.closest('.form-group'), 50);
+					});
+				});
+			}
+
+			// Auto-scroll to error messages if present
+			const errorAlert = document.querySelector('.alert-danger');
+			if (errorAlert) {
+				setTimeout(() => {
+					scrollToElement(errorAlert);
+				}, 300);
 			}
 		});
 	</script>

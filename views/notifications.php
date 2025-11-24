@@ -1468,7 +1468,7 @@ $page_title = "Notifications - GadgetGarage";
 
         // Account page navigation
         function goToAccount() {
-            window.location.href = '../my_orders.php';
+            window.location.href = 'my_orders.php';
         }
 
         // Language change functionality

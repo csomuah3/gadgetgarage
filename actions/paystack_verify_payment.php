@@ -10,9 +10,15 @@ require_once __DIR__ . '/../helpers/sms_helper.php';
 
 // Check if user is logged in
 if (!check_login()) {
+    log_paystack_activity('error', 'Session expired during payment verification', [
+        'reference' => $reference ?? 'unknown',
+        'session_user_id' => $_SESSION['user_id'] ?? 'not_set',
+        'session_email' => $_SESSION['email'] ?? 'not_set'
+    ]);
     echo json_encode([
         'status' => 'error',
-        'message' => 'Session expired. Please login again.'
+        'verified' => false,
+        'message' => 'Session expired. Please login again to complete your order.'
     ]);
     exit();
 }

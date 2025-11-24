@@ -1694,7 +1694,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         // Account page navigation
         function goToAccount() {
-            window.location.href = '../my_orders.php';
+            window.location.href = 'my_orders.php';
         }
 
         // Language change functionality

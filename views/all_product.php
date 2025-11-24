@@ -4127,7 +4127,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Account page navigation
         function goToAccount() {
-            window.location.href = '../my_orders.php';
+            window.location.href = 'my_orders.php';
         }
 
         // Theme toggle functionality

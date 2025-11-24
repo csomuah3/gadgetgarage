@@ -6481,6 +6481,17 @@ try {
 				const orderId = urlParams.get('order');
 				const reason = urlParams.get('reason');
 
+				// Check for rating popup BEFORE showing alert and cleaning URL
+				if (isSuccess && <?php echo $is_logged_in ? 'true' : 'false'; ?>) {
+					const lastRatingTime = localStorage.getItem('ratingPopupSeen');
+					const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
+
+					if (!lastRatingTime || parseInt(lastRatingTime) < oneDayAgo) {
+						// Schedule rating popup to show after payment alert
+						setTimeout(showRatingPopup, 6000); // Show after 6 seconds (after alert auto-dismiss)
+					}
+				}
+
 				// Show alert based on payment status
 				const alertDiv = document.createElement('div');
 				alertDiv.className = `alert alert-${isSuccess ? 'success' : 'danger'} alert-dismissible fade show position-fixed`;
@@ -6815,12 +6826,12 @@ try {
 
 		.popup-container {
 			position: relative;
-			max-width: 500px;
-			width: 90%;
-			margin: 20px;
-			border-radius: 20px;
+			max-width: 900px;
+			width: 95%;
+			margin: 10px;
+			border-radius: 30px;
 			overflow: hidden;
-			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			box-shadow: 0 30px 80px rgba(0, 0, 0, 0.4);
 			transform: scale(0.8);
 			transition: transform 0.3s ease;
 		}
@@ -6905,8 +6916,9 @@ try {
 		/* Mobile responsiveness */
 		@media (max-width: 600px) {
 			.popup-container {
-				max-width: 350px;
-				margin: 10px;
+				max-width: 95%;
+				margin: 5px;
+				width: 95%;
 			}
 
 			.shop-flash-deals-btn {
@@ -7029,19 +7041,6 @@ try {
 		// Initialize star rating when DOM loads
 		document.addEventListener('DOMContentLoaded', function() {
 			setupStarRating();
-
-			// Check if should show rating popup (post-payment)
-			const urlParams = new URLSearchParams(window.location.search);
-			const isPaymentSuccess = urlParams.get('payment') === 'success';
-			const lastRatingTime = localStorage.getItem('ratingPopupSeen');
-			const oneDayAgo = Date.now() - (24 * 60 * 60 * 1000);
-
-			// Show rating popup if coming from successful payment and hasn't rated in last 24 hours
-			if (isPaymentSuccess && <?php echo $is_logged_in ? 'true' : 'false'; ?>) {
-				if (!lastRatingTime || parseInt(lastRatingTime) < oneDayAgo) {
-					setTimeout(showRatingPopup, 2000);
-				}
-			}
 		});
 
 		function showFlashDealsPopup() {
@@ -7070,19 +7069,11 @@ try {
 			window.location.href = 'views/flash_deals.php';
 		}
 
-		// Show popup after login if user hasn't seen it in the last 12 hours
+		// Show popup every time user logs in
 		<?php if ($is_logged_in): ?>
 		document.addEventListener('DOMContentLoaded', function() {
-			// Check if user has seen the popup in the last 12 hours
-			const lastSeenTimestamp = localStorage.getItem('flashDealsPopupLastSeen');
-			const currentTime = Date.now();
-			const twelveHours = 12 * 60 * 60 * 1000; // 12 hours in milliseconds
-
-			// Show popup if never seen before OR if 12+ hours have passed
-			if (!lastSeenTimestamp || (currentTime - parseInt(lastSeenTimestamp)) >= twelveHours) {
-				// Show popup after a short delay
-				setTimeout(showFlashDealsPopup, 1500);
-			}
+			// Always show popup for logged-in users
+			setTimeout(showFlashDealsPopup, 1500);
 		});
 		<?php endif; ?>
 

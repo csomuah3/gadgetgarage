@@ -3,11 +3,9 @@ session_start();
 require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../settings/paystack_config.php';
 
-// Check if user is logged in
-if (!check_login()) {
-    header('Location: ../login/login.php');
-    exit();
-}
+// Check if user is logged in - if not, we'll handle this in JavaScript after verification attempt
+$user_logged_in = check_login();
+$user_id = $user_logged_in ? $_SESSION['user_id'] : null;
 
 // Get reference from URL
 $reference = isset($_GET['reference']) ? trim($_GET['reference']) : null;
@@ -20,7 +18,8 @@ if (!$reference) {
 
 log_paystack_activity('info', 'PayStack callback accessed', [
     'reference' => $reference,
-    'user_id' => $_SESSION['user_id'] ?? null
+    'user_id' => $user_id,
+    'session_active' => $user_logged_in ? 'yes' : 'no'
 ]);
 ?>
 <!DOCTYPE html>
@@ -125,7 +124,8 @@ log_paystack_activity('info', 'PayStack callback accessed', [
             try {
                 console.log('Verifying payment with reference:', reference);
 
-                const response = await fetch('../actions/paystack_verify_payment.php', {
+                // First, try the payment completion endpoint which handles expired sessions
+                const completionResponse = await fetch('../actions/complete_payment.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -135,30 +135,76 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                     })
                 });
 
-                const data = await response.json();
-                console.log('Verification response:', data);
+                const completionData = await completionResponse.json();
+                console.log('Payment completion response:', completionData);
 
-                // Hide spinner
-                document.getElementById('spinner').style.display = 'none';
-
-                if (data.status === 'success' && data.verified) {
-                    // Payment verified successfully
+                if (completionData.status === 'success' && completionData.already_processed) {
+                    // Payment already processed successfully
+                    document.getElementById('spinner').style.display = 'none';
                     document.getElementById('successBox').classList.remove('d-none');
 
-                    // Store order details in sessionStorage for success page
-                    sessionStorage.setItem('orderData', JSON.stringify(data));
-
-                    // Redirect to home page
                     setTimeout(() => {
-                        window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(data.order_id));
+                        window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(completionData.order_id));
                     }, 1500);
+                    return;
+                }
 
+                if (completionData.requires_login) {
+                    // Session expired, redirect to login
+                    document.getElementById('spinner').style.display = 'none';
+                    showError('Your session has expired. Redirecting to login...');
+                    setTimeout(() => {
+                        window.location.replace('../login/login.php?return_url=' + encodeURIComponent('../index.php?payment=failed&reason=session_expired'));
+                    }, 2000);
+                    return;
+                }
+
+                if (completionData.redirect_to_verify || (completionData.status === 'success' && completionData.verified)) {
+                    // Payment verified by PayStack, now process the full order
+                    const response = await fetch('../actions/paystack_verify_payment.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            reference: reference
+                        })
+                    });
+
+                    const data = await response.json();
+                    console.log('Full verification response:', data);
+
+                    // Hide spinner
+                    document.getElementById('spinner').style.display = 'none';
+
+                    if (data.status === 'success' && data.verified) {
+                        // Payment verified successfully
+                        document.getElementById('successBox').classList.remove('d-none');
+
+                        // Store order details in sessionStorage for success page
+                        sessionStorage.setItem('orderData', JSON.stringify(data));
+
+                        // Redirect to home page
+                        setTimeout(() => {
+                            window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(data.order_id));
+                        }, 1500);
+
+                    } else {
+                        // Payment verification failed
+                        const errorMsg = data.message || 'Payment verification failed';
+                        showError(errorMsg);
+
+                        // Redirect to home page with error message after 3 seconds
+                        setTimeout(() => {
+                            window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
+                        }, 3000);
+                    }
                 } else {
-                    // Payment verification failed
-                    const errorMsg = data.message || 'Payment verification failed';
+                    // Initial payment completion failed
+                    document.getElementById('spinner').style.display = 'none';
+                    const errorMsg = completionData.message || 'Payment verification failed';
                     showError(errorMsg);
 
-                    // Redirect to home page with error message after 3 seconds
                     setTimeout(() => {
                         window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
                     }, 3000);

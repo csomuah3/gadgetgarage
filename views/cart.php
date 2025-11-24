@@ -2023,7 +2023,7 @@ try {
 
     // Account page navigation
     function goToAccount() {
-        window.location.href = '../my_orders.php';
+        window.location.href = 'my_orders.php';
     }
 
     // Language change functionality
@@ -2518,12 +2518,20 @@ try {
                     throw new Error('Invalid JSON being generated');
                 }
 
-                // Send simple GET request to standalone endpoint
-                const url = `/Ecommerce_Final/test_standalone_promo.php?code=${encodeURIComponent(promoCode)}&total=${encodeURIComponent(useTotal)}`;
-                console.log('Making GET request to:', url);
+                // Send POST request to validate promo code
+                const requestData = {
+                    promo_code: promoCode,
+                    cart_total: useTotal
+                };
 
-                const response = await fetch(url, {
-                    method: 'GET'
+                console.log('Making POST request to validate promo code with data:', requestData);
+
+                const response = await fetch('../actions/validate_promo_code.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(requestData)
                 });
 
                 console.log('Response received:', {
@@ -2697,11 +2705,14 @@ try {
             console.log('JSON string:', JSON.stringify(testData));
 
             try {
-                const url = `/Ecommerce_Final/test_standalone_promo.php?code=${encodeURIComponent(testData.promo_code)}&total=${encodeURIComponent(testData.cart_total)}`;
-                console.log('Manual test URL:', url);
+                console.log('Testing promo code with data:', testData);
 
-                const response = await fetch(url, {
-                    method: 'GET'
+                const response = await fetch('../actions/validate_promo_code.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify(testData)
                 });
 
                 console.log('Response status:', response.status);

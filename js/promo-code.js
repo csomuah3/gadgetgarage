@@ -61,8 +61,29 @@ async function applyPromoCode() {
         return;
     }
 
+    // Get cart total from the page
+    const cartTotalElement = document.querySelector('.total-amount, [data-original-total]');
+    let cartTotal = 0;
+
+    if (cartTotalElement) {
+        // Try to get from data attribute first
+        cartTotal = parseFloat(cartTotalElement.getAttribute('data-original-total')) || 0;
+
+        // If no data attribute, try to parse the text content
+        if (cartTotal === 0) {
+            const totalText = cartTotalElement.textContent.replace(/[^0-9.]/g, '');
+            cartTotal = parseFloat(totalText) || 0;
+        }
+    }
+
+    // Fallback to a minimum amount if no total found
+    if (cartTotal <= 0) {
+        cartTotal = 1; // Use 1 as minimum to allow promo code testing
+    }
+
     const requestData = {
-        promo_code: promoCode
+        promo_code: promoCode,
+        cart_total: cartTotal
     };
 
     console.log('Request data:', requestData);

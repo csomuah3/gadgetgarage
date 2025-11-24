@@ -95,31 +95,94 @@ try {
         throw new Exception('Invalid cart total');
     }
 
-    // Validate promo code against database
-    $db = new db_connection();
-    if (!$db->db_connect()) {
-        throw new Exception('Database connection failed');
+    // First try database validation, fall back to hardcoded if database unavailable
+    $promo = null;
+    $use_fallback = false;
+
+    try {
+        // Validate promo code against database
+        $db = new db_connection();
+        if (!$db->db_connect()) {
+            $use_fallback = true;
+        } else {
+            $conn = $db->db_conn();
+
+            // Check if promo codes table exists
+            $table_check = $conn->query("SHOW TABLES LIKE 'promo_codes'");
+            if ($table_check->num_rows === 0) {
+                $use_fallback = true;
+            } else {
+                // Check if promo code exists and is valid
+                $stmt = $conn->prepare("
+                    SELECT promo_id, promo_code, promo_description, discount_type, discount_value,
+                           min_order_amount, max_discount_amount, end_date, usage_limit, used_count, is_active
+                    FROM promo_codes
+                    WHERE promo_code = ? AND is_active = 1
+                ");
+
+                $stmt->bind_param('s', $promo_code);
+                $stmt->execute();
+                $result = $stmt->get_result();
+
+                if ($result->num_rows === 0) {
+                    $use_fallback = true;
+                } else {
+                    $promo = $result->fetch_assoc();
+                }
+            }
+        }
+    } catch (Exception $db_error) {
+        error_log('Database error in promo validation, using fallback: ' . $db_error->getMessage());
+        $use_fallback = true;
     }
 
-    $conn = $db->db_conn();
+    // Fallback to hardcoded promo codes if database is unavailable
+    if ($use_fallback) {
+        $hardcoded_promos = [
+            'BLACKFRIDAY20' => [
+                'promo_code' => 'BLACKFRIDAY20',
+                'promo_description' => 'Black Friday 20% Off',
+                'discount_type' => 'percentage',
+                'discount_value' => 20,
+                'min_order_amount' => 50,
+                'max_discount_amount' => 100,
+                'end_date' => '2025-12-31 23:59:59',
+                'usage_limit' => null,
+                'used_count' => 0,
+                'is_active' => 1
+            ],
+            'SAVE10' => [
+                'promo_code' => 'SAVE10',
+                'promo_description' => 'Save 10% Off',
+                'discount_type' => 'percentage',
+                'discount_value' => 10,
+                'min_order_amount' => 0,
+                'max_discount_amount' => null,
+                'end_date' => '2025-12-31 23:59:59',
+                'usage_limit' => null,
+                'used_count' => 0,
+                'is_active' => 1
+            ],
+            'WELCOME15' => [
+                'promo_code' => 'WELCOME15',
+                'promo_description' => 'Welcome 15% Off',
+                'discount_type' => 'percentage',
+                'discount_value' => 15,
+                'min_order_amount' => 25,
+                'max_discount_amount' => 50,
+                'end_date' => '2025-12-31 23:59:59',
+                'usage_limit' => null,
+                'used_count' => 0,
+                'is_active' => 1
+            ]
+        ];
 
-    // Check if promo code exists and is valid
-    $stmt = $conn->prepare("
-        SELECT promo_id, promo_code, promo_description, discount_type, discount_value,
-               min_order_amount, max_discount_amount, end_date, usage_limit, used_count, is_active
-        FROM promo_codes
-        WHERE promo_code = ? AND is_active = 1
-    ");
+        if (!isset($hardcoded_promos[$promo_code])) {
+            throw new Exception('Invalid promo code');
+        }
 
-    $stmt->bind_param('s', $promo_code);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows === 0) {
-        throw new Exception('Invalid promo code');
+        $promo = $hardcoded_promos[$promo_code];
     }
-
-    $promo = $result->fetch_assoc();
 
     // Check if promo code has expired
     if ($promo['end_date'] && strtotime($promo['end_date']) < time()) {

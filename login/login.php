@@ -92,18 +92,19 @@ try {
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-		/* Color Scheme Variables */
+		/* Color Scheme Variables - GadgetGarage Colors */
 		:root {
-			--light-blue: #E8F0FE;
-			--medium-blue: #4285F4;
-			--dark-blue: #1A73E8;
-			--navy-blue: #0D47A1;
+			--gg-teal: #008060;
+			--gg-teal-dark: #006b4e;
+			--gg-teal-light: #00a67e;
+			--gg-green: #10b981;
+			--gg-green-dark: #059669;
 			--off-white: #FAFAFA;
 			--text-dark: #1F2937;
 			--text-light: #6B7280;
-			--shadow: rgba(26, 115, 232, 0.1);
-			--gradient-primary: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-blue) 50%, var(--medium-blue) 100%);
-			--gradient-light: linear-gradient(135deg, var(--light-blue) 0%, var(--off-white) 100%);
+			--shadow: rgba(0, 128, 96, 0.15);
+			--gradient-primary: linear-gradient(135deg, var(--gg-teal-dark) 0%, var(--gg-teal) 50%, var(--gg-teal-light) 100%);
+			--gradient-light: linear-gradient(135deg, rgba(0, 128, 96, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
 		}
 
 		/* Reset and Base Styles */
@@ -979,8 +980,8 @@ try {
 
 		.auth-container {
 			width: 100%;
-			max-width: 1200px;
-			height: 700px;
+			max-width: 1000px;
+			height: 650px;
 			position: relative;
 			border-radius: 25px;
 			overflow: hidden;
@@ -992,13 +993,18 @@ try {
 		.auth-panels {
 			display: flex;
 			height: 100%;
+			width: 200%;
 			position: relative;
-			transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+			transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		}
 
-		/* Welcome Panel - Blue Gradient */
+		.auth-panels.signup-mode {
+			transform: translateX(-50%);
+		}
+
+		/* Welcome Panel - GadgetGarage Teal/Green Gradient */
 		.welcome-panel {
-			flex: 1;
+			flex: 0 0 50%;
 			background: var(--gradient-primary);
 			display: flex;
 			flex-direction: column;
@@ -1009,7 +1015,6 @@ try {
 			text-align: center;
 			position: relative;
 			overflow: hidden;
-			transition: all 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		}
 
 		.welcome-panel::before {
@@ -1057,20 +1062,57 @@ try {
 			line-height: 1.6;
 			opacity: 0.95;
 			max-width: 350px;
+			margin-bottom: 40px;
 			z-index: 2;
 			position: relative;
 		}
 
+		.welcome-signup-btn {
+			background: transparent;
+			border: 2px solid white;
+			color: white;
+			padding: 16px 40px;
+			border-radius: 12px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			z-index: 2;
+			position: relative;
+		}
+
+		.welcome-signup-btn:hover {
+			background: white;
+			color: var(--gg-teal);
+			transform: translateY(-2px);
+			box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+		}
+
 		/* Form Panel */
 		.form-panel {
-			flex: 1;
+			flex: 0 0 50%;
 			background: rgba(255, 255, 255, 0.98);
 			backdrop-filter: blur(20px);
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			padding: 80px 60px;
+			padding: 60px 50px;
 			position: relative;
+			overflow-y: auto;
+			max-height: 100%;
+		}
+
+		.form-panel::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		.form-panel::-webkit-scrollbar-track {
+			background: rgba(0, 0, 0, 0.05);
+		}
+
+		.form-panel::-webkit-scrollbar-thumb {
+			background: var(--gg-teal);
+			border-radius: 4px;
 		}
 
 		.form-container {
@@ -1085,15 +1127,18 @@ try {
 		}
 
 		.form-title {
-			font-size: 2.4rem;
+			font-size: 2rem;
 			font-weight: 700;
 			color: var(--text-dark);
-			margin-bottom: 12px;
+			margin-bottom: 8px;
+			text-align: center;
 		}
 
 		.form-subtitle {
 			color: var(--text-light);
-			font-size: 1.2rem;
+			font-size: 1rem;
+			text-align: center;
+			margin-bottom: 30px;
 		}
 
 		/* Toggle Buttons */
@@ -1134,7 +1179,7 @@ try {
 			background: var(--gradient-primary);
 			border-radius: 12px;
 			transition: transform 0.3s ease;
-			box-shadow: 0 4px 20px rgba(26, 115, 232, 0.3);
+			box-shadow: 0 4px 20px rgba(0, 128, 96, 0.3);
 		}
 
 		/* Social Login Buttons */
@@ -1145,7 +1190,7 @@ try {
 		.social-login h4 {
 			text-align: center;
 			color: var(--text-dark);
-			font-size: 1.3rem;
+			font-size: 1.1rem;
 			font-weight: 600;
 			margin-bottom: 20px;
 		}
@@ -1218,30 +1263,34 @@ try {
 
 
 
+		.form-group {
+			margin-bottom: 20px;
+		}
+
 		.form-label {
 			display: block;
 			font-weight: 600;
 			color: var(--text-dark);
 			margin-bottom: 10px;
-			font-size: 1.1rem;
+			font-size: 1rem;
 		}
 
 		.form-control {
 			width: 100%;
-			padding: 18px 25px 18px 55px;
-			border: 2px solid var(--light-blue);
-			border-radius: 15px;
-			background: rgba(255, 255, 255, 0.9);
+			padding: 16px 20px 16px 50px;
+			border: 2px solid #e5e7eb;
+			border-radius: 12px;
+			background: #f8fafc;
 			color: var(--text-dark);
-			font-size: 1.1rem;
+			font-size: 1rem;
 			transition: all 0.3s ease;
 			outline: none;
 		}
 
 		.form-control:focus {
-			border-color: var(--medium-blue);
+			border-color: var(--gg-teal);
 			background: white;
-			box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.1);
+			box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
 		}
 
 		.input-group {
@@ -1253,8 +1302,8 @@ try {
 			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
-			color: var(--medium-blue);
-			font-size: 1.2rem;
+			color: var(--gg-teal);
+			font-size: 1.1rem;
 			z-index: 2;
 		}
 
@@ -1278,12 +1327,12 @@ try {
 
 		.submit-btn {
 			width: 100%;
-			background: linear-gradient(135deg, var(--medium-blue), var(--dark-blue));
+			background: var(--gradient-primary);
 			color: white;
 			border: none;
-			padding: 20px;
-			border-radius: 15px;
-			font-size: 1.3rem;
+			padding: 18px;
+			border-radius: 12px;
+			font-size: 1.1rem;
 			font-weight: 600;
 			cursor: pointer;
 			transition: all 0.3s ease;
@@ -1293,8 +1342,8 @@ try {
 		}
 
 		.submit-btn:hover {
-			transform: translateY(-3px);
-			box-shadow: 0 15px 35px rgba(26, 115, 232, 0.4);
+			transform: translateY(-2px);
+			box-shadow: 0 12px 30px rgba(0, 128, 96, 0.4);
 		}
 
 		.submit-btn:active {
@@ -1310,7 +1359,7 @@ try {
 		}
 
 		.forgot-password {
-			color: var(--medium-blue);
+			color: var(--gg-teal);
 			text-decoration: none;
 			font-size: 1rem;
 			font-weight: 500;
@@ -1321,7 +1370,7 @@ try {
 		}
 
 		.signup-link {
-			color: var(--medium-blue);
+			color: var(--gg-teal);
 			text-decoration: none;
 			font-weight: 600;
 			font-size: 1rem;
@@ -1371,16 +1420,41 @@ try {
 				display: none;
 			}
 
-			.login-form-wrapper {
+			.auth-container {
+				height: auto;
+				min-height: 600px;
 				margin: 20px;
 			}
 
-			.login-form-header,
-			.login-form-body {
-				padding: 30px 25px;
+			.auth-panels {
+				width: 200%;
+				height: auto;
+				min-height: 600px;
 			}
 
-			.login-form-title {
+			.auth-panels.signup-mode {
+				transform: translateX(-50%);
+			}
+
+			.welcome-panel,
+			.form-panel {
+				flex: 0 0 50%;
+				min-height: 600px;
+			}
+
+			.welcome-panel {
+				padding: 50px 30px;
+			}
+
+			.form-panel {
+				padding: 40px 30px;
+			}
+
+			.welcome-title {
+				font-size: 2rem;
+			}
+
+			.form-title {
 				font-size: 1.7rem;
 			}
 		}
@@ -1624,19 +1698,21 @@ try {
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 
-				<!-- Welcome Panel (Blue) -->
+				<!-- Welcome Panel (Teal/Green) -->
 				<div class="welcome-panel">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
 						alt="Gadget Garage Logo" class="brand-logo">
-					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
-					<p class="welcome-message" id="welcomeMessage">Your one-stop shop for premium refurbished tech devices.</p>
+					<h1 class="welcome-title" id="welcomeTitle">Hello!</h1>
+					<p class="welcome-message" id="welcomeMessage">Register to use all features in our site</p>
+					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">SIGN UP</button>
 				</div>
 
 				<!-- Form Panel (White) -->
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
-
+							<h2 class="form-title" id="formTitle">Login With</h2>
+							<p class="form-subtitle" id="formSubtitle">Login With Your Email & Password</p>
 						</div>
 
 						<!-- Toggle Buttons -->
@@ -1650,16 +1726,16 @@ try {
 						<div class="social-login">
 							<div class="social-buttons">
 								<div class="social-btn google">
-									<i class="fab fa-google"></i>
+									<span style="font-weight: 700; color: #ea4335;">G</span>
 								</div>
 								<div class="social-btn facebook">
-									<i class="fab fa-facebook-f"></i>
+									<span style="font-weight: 700; color: #1877f2;">f</span>
 								</div>
 								<div class="social-btn pinterest">
-									<i class="fab fa-pinterest"></i>
+									<span style="font-weight: 700; color: #bd081c;">P</span>
 								</div>
 								<div class="social-btn linkedin">
-									<i class="fab fa-linkedin-in"></i>
+									<span style="font-weight: 700; color: #0077b5;">in</span>
 								</div>
 							</div>
 							<div class="divider">
@@ -1726,7 +1802,7 @@ try {
 
 						<!-- Sign Up Form -->
 						<div id="signupForm" class="form-content">
-							<form id="actualSignupForm">
+							<form id="actualSignupForm" method="POST" action="register.php">
 								<div class="form-group">
 									<label for="signup_name" class="form-label">Full Name</label>
 									<div class="input-group">
@@ -1759,9 +1835,9 @@ try {
 										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
 										<input type="tel"
 											id="signup_phone"
-											name="phone"
+											name="phone_number"
 											class="form-control with-flag"
-											placeholder="Enter your phone number"
+											placeholder="your phone number"
 											required>
 									</div>
 								</div>
@@ -1956,8 +2032,9 @@ try {
 			const welcomeTitle = document.getElementById('welcomeTitle');
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
+			const formSubtitle = document.getElementById('formSubtitle');
 
-			// Remove signup mode
+			// Remove signup mode - slide back to login
 			authPanels.classList.remove('signup-mode');
 
 			// Update form visibility
@@ -1968,15 +2045,16 @@ try {
 			loginTab.classList.add('active');
 			signupTab.classList.remove('active');
 
-			// Move toggle slider
+			// Move toggle slider to left
 			toggleSlider.style.transform = 'translateX(0)';
 
 			// Update welcome panel content
-			welcomeTitle.textContent = 'Welcome Back!';
-			welcomeMessage.textContent = 'Your one-stop shop for premium refurbished tech devices.';
+			welcomeTitle.textContent = 'Hello!';
+			welcomeMessage.textContent = 'Register to use all features in our site';
 
-			// Update form title
+			// Update form title and subtitle
 			formTitle.textContent = 'Login With';
+			formSubtitle.textContent = 'Login With Your Email & Password';
 		}
 
 		function switchToSignup() {
@@ -1989,8 +2067,9 @@ try {
 			const welcomeTitle = document.getElementById('welcomeTitle');
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
+			const formSubtitle = document.getElementById('formSubtitle');
 
-			// Add signup mode for sliding animation
+			// Add signup mode for sliding animation - slide to signup
 			authPanels.classList.add('signup-mode');
 
 			// Update form visibility
@@ -2001,15 +2080,16 @@ try {
 			loginTab.classList.remove('active');
 			signupTab.classList.add('active');
 
-			// Move toggle slider
+			// Move toggle slider to right
 			toggleSlider.style.transform = 'translateX(100%)';
 
 			// Update welcome panel content
-			welcomeTitle.textContent = 'Join GadgetGarage!';
-			welcomeMessage.textContent = 'Join thousands of satisfied customers who trust Gadget Garage for quality and value.';
+			welcomeTitle.textContent = 'Welcome Back!';
+			welcomeMessage.textContent = 'Provide your personal details to use all features';
 
-			// Update form title
-			formTitle.textContent = 'Sign up With';
+			// Update form title and subtitle
+			formTitle.textContent = 'Register With';
+			formSubtitle.textContent = 'Fill Out The Following Info For Registration';
 		}
 	</script>
 </body>

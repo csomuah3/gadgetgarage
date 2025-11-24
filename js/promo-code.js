@@ -126,7 +126,12 @@ async function applyPromoCode() {
         console.log('PROMO-CODE.JS DEBUG: result.discount_amount:', result.discount_amount);
 
         if (result.success) {
-            appliedPromo = result.promo;
+            appliedPromo = result;
+
+            // Store original total for removal
+            if (result.original_total) {
+                window.originalTotal = result.original_total;
+            }
 
             // Update UI with success message
             promoMessage.innerHTML = `<div class="text-success">
@@ -148,10 +153,16 @@ async function applyPromoCode() {
                     </div>
                 `;
                 appliedPromoDiv.style.display = 'block';
+                
+                // Re-attach remove button event listener
+                const removeBtn = document.getElementById('removePromoBtn');
+                if (removeBtn) {
+                    removeBtn.addEventListener('click', removePromoCode);
+                }
             }
 
-            // Update totals
-            updateCartTotals(result.new_total, result.discount_amount);
+            // Update totals - pass original_total, new_total, and discount_amount
+            updateCartTotals(result.original_total || cartTotal, result.new_total, result.discount_amount);
 
             // Clear input
             promoInput.value = '';
@@ -194,44 +205,58 @@ function removePromoCode() {
         promoMessage.style.display = 'none';
     }
 
-    // Reset totals - you'll need to get the original total from PHP
-    const originalTotal = parseFloat(document.querySelector('[data-original-total]')?.getAttribute('data-original-total') || '0');
-    updateCartTotals(originalTotal, 0);
+    // Reset totals - use stored original total or get from page
+    const originalTotal = window.originalTotal || parseFloat(document.querySelector('[data-original-total]')?.getAttribute('data-original-total') || '0');
+    
+    // If still no total, try to get from cartSubtotal element
+    if (originalTotal === 0) {
+        const subtotalElement = document.getElementById('cartSubtotal');
+        if (subtotalElement) {
+            const subtotalText = subtotalElement.textContent.replace(/[^0-9.]/g, '');
+            const parsedTotal = parseFloat(subtotalText);
+            if (!isNaN(parsedTotal) && parsedTotal > 0) {
+                updateCartTotals(parsedTotal, parsedTotal, 0);
+                return;
+            }
+        }
+    }
+    
+    updateCartTotals(originalTotal, originalTotal, 0);
 }
 
-function updateCartTotals(newTotal, discountAmount) {
-    console.log('PROMO-CODE.JS DEBUG: updateCartTotals called with newTotal:', newTotal, 'discountAmount:', discountAmount);
+function updateCartTotals(originalTotal, newTotal, discountAmount) {
+    console.log('PROMO-CODE.JS DEBUG: updateCartTotals called with originalTotal:', originalTotal, 'newTotal:', newTotal, 'discountAmount:', discountAmount);
 
-    // Update cart total display on cart page
+    // Update subtotal to show original cart total (unchanged)
+    const cartSubtotalElement = document.getElementById('cartSubtotal');
+    if (cartSubtotalElement) {
+        cartSubtotalElement.textContent = `GH₵ ${originalTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+        console.log('PROMO-CODE.JS DEBUG: Updated cartSubtotal element to:', cartSubtotalElement.textContent);
+    }
+
+    // Update cart total display (final total after discount)
     const cartTotalElement = document.getElementById('cartTotal');
     if (cartTotalElement) {
-        cartTotalElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
+        cartTotalElement.textContent = `GH₵ ${newTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         console.log('PROMO-CODE.JS DEBUG: Updated cartTotal element to:', cartTotalElement.textContent);
     }
 
-    // Show discount row if it exists
+    // Show/hide discount row based on discount amount
     const discountRow = document.getElementById('discountRow');
     if (discountRow) {
-        discountRow.style.display = 'flex';
-        console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+        if (discountAmount > 0) {
+            discountRow.style.display = 'flex';
+            console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+        } else {
+            discountRow.style.display = 'none';
+            console.log('PROMO-CODE.JS DEBUG: Hid discount row');
+        }
     }
 
     // Update discount amount display
     const discountAmountElement = document.getElementById('discountAmount');
     if (discountAmountElement) {
-        discountAmountElement.textContent = `-GH₵ ${discountAmount.toFixed(2)}`;
+        discountAmountElement.textContent = `-GH₵ ${discountAmount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
         console.log('PROMO-CODE.JS DEBUG: Updated discount amount to:', discountAmountElement.textContent);
-    }
-
-    // Update subtotal display (fallback)
-    const subtotalElement = document.querySelector('.subtotal-amount');
-    if (subtotalElement) {
-        subtotalElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
-    }
-
-    // Update total display (fallback)
-    const totalElement = document.querySelector('.total-amount');
-    if (totalElement) {
-        totalElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
     }
 }

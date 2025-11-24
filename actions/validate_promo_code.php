@@ -147,11 +147,11 @@ try {
         $hardcoded_promos = [
             'BLACKFRIDAY20' => [
                 'promo_code' => 'BLACKFRIDAY20',
-                'promo_description' => 'Black Friday 20% Off',
-                'discount_type' => 'percentage',
-                'discount_value' => 20,
-                'min_order_amount' => 50,
-                'max_discount_amount' => 100,
+                'promo_description' => 'Get GH₵ 1,200 Off Orders Above GH₵ 2,000',
+                'discount_type' => 'fixed',
+                'discount_value' => 1200,
+                'min_order_amount' => 2000,
+                'max_discount_amount' => null,
                 'end_date' => '2025-12-31 23:59:59',
                 'usage_limit' => null,
                 'used_count' => 0,
@@ -202,7 +202,7 @@ try {
 
     // Check minimum order amount
     if ($cart_total < $promo['min_order_amount']) {
-        throw new Exception('Minimum order amount of GHS ' . number_format($promo['min_order_amount'], 2) . ' required for this promo code');
+        throw new Exception('Minimum order amount of GH₵ ' . number_format($promo['min_order_amount'], 2) . ' required for this promo code');
     }
 
     // Calculate discount

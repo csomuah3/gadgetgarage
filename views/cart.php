@@ -1613,7 +1613,7 @@ try {
                     <div class="promo-section-redesign">
                         <!-- Promotional Banner -->
                         <div class="promo-banner-card">
-                            <span class="promo-banner-text">Get 20% Off On Orders! Use Code:</span>
+                            <span class="promo-banner-text">Get GH₵ 1,200 Off On Orders Above GH₵ 2,000! Use Code:</span>
                             <span class="promo-code-pill">BLACKFRIDAY20</span>
                         </div>
 
@@ -1652,7 +1652,7 @@ try {
                         <div class="d-flex justify-content-between mb-3 discount-row" id="discountRow" style="display: none;">
                             <span class="text-success">
                                 <i class="fas fa-tag me-1"></i>
-                                Discount (<span id="discountPercent">20</span>%):
+                                Discount:
                             </span>
                             <span class="text-success fw-bold" id="discountAmount">-GH₵ 0.00</span>
                         </div>
@@ -2638,7 +2638,10 @@ try {
 
             // Hide discount row and reset totals
             document.getElementById('discountRow').style.display = 'none';
-            document.getElementById('cartTotal').textContent = 'GH₵ ' + originalTotal.toFixed(2);
+            const cartTotalElement = document.getElementById('cartTotal');
+            if (cartTotalElement) {
+                cartTotalElement.textContent = 'GH₵ ' + originalTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
         }
 
         function showPromoMessage(message, type) {
@@ -2662,14 +2665,28 @@ try {
             const discountRow = document.getElementById('discountRow');
             discountRow.style.display = 'flex';
 
-            // Update discount details
-            console.log('Updating discount percent to:', promoData.discount_value);
+            // Update discount details (fixed amount, not percentage)
             console.log('Updating discount amount to:', promoData.discount_amount);
             console.log('Updating new total to:', promoData.new_total);
+            console.log('Original total:', promoData.original_total);
 
-            document.getElementById('discountPercent').textContent = promoData.discount_value;
-            document.getElementById('discountAmount').textContent = '-GH₵ ' + promoData.discount_amount.toFixed(2);
-            document.getElementById('cartTotal').textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+            // Update discount amount display
+            const discountAmountElement = document.getElementById('discountAmount');
+            if (discountAmountElement) {
+                discountAmountElement.textContent = '-GH₵ ' + promoData.discount_amount.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+
+            // Update cart total (final total after discount)
+            const cartTotalElement = document.getElementById('cartTotal');
+            if (cartTotalElement) {
+                cartTotalElement.textContent = 'GH₵ ' + promoData.new_total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
+
+            // Keep subtotal as original total (don't change it)
+            const cartSubtotalElement = document.getElementById('cartSubtotal');
+            if (cartSubtotalElement && promoData.original_total) {
+                cartSubtotalElement.textContent = 'GH₵ ' + promoData.original_total.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2});
+            }
 
             // Add some celebration animation
             discountRow.style.animation = 'fadeInUp 0.5s ease-out';

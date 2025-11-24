@@ -1633,158 +1633,162 @@ try {
 				</div>
 
 				<!-- Form Panel (White) -->
+				<div class="form-panel">
+					<div class="form-container">
+						<div class="form-header">
 
+						</div>
 
-				<!-- Toggle Buttons -->
-				<div class="form-toggle">
-					<div class="toggle-slider" id="toggleSlider"></div>
-					<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
-					<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
-				</div>
+						<!-- Toggle Buttons -->
+						<div class="form-toggle">
+							<div class="toggle-slider" id="toggleSlider"></div>
+							<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
+							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
+						</div>
 
-				<!-- Social Login Buttons -->
-				<div class="social-login">
-					<div class="social-buttons">
-						<div class="social-btn google">
-							<i class="fab fa-google"></i>
-						</div>
-						<div class="social-btn facebook">
-							<i class="fab fa-facebook-f"></i>
-						</div>
-						<div class="social-btn pinterest">
-							<i class="fab fa-pinterest"></i>
-						</div>
-						<div class="social-btn linkedin">
-							<i class="fab fa-linkedin-in"></i>
-						</div>
-					</div>
-					<div class="divider">
-						<span>OR</span>
-					</div>
-				</div>
-
-				<!-- Login Form -->
-				<div id="loginForm" class="form-content active">
-					<?php if ($login_error): ?>
-						<div class="alert alert-danger">
-							<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
-						</div>
-					<?php endif; ?>
-
-					<?php if ($login_success): ?>
-						<div class="alert alert-success animate__animated animate__fadeInUp">
-							<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
-						</div>
-						<script>
-							setTimeout(function() {
-								window.location.href = '../index.php';
-							}, 1500);
-						</script>
-					<?php else: ?>
-						<form method="POST" id="actualLoginForm">
-							<div class="form-group">
-								<label for="email" class="form-label">Email</label>
-								<div class="input-group">
-									<i class="fas fa-envelope input-icon"></i>
-									<input type="email"
-										id="email"
-										name="email"
-										class="form-control with-icon"
-										placeholder="Enter your email"
-										value="<?php echo htmlspecialchars($email ?? ''); ?>"
-										required>
+						<!-- Social Login Buttons -->
+						<div class="social-login">
+							<div class="social-buttons">
+								<div class="social-btn google">
+									<i class="fab fa-google"></i>
+								</div>
+								<div class="social-btn facebook">
+									<i class="fab fa-facebook-f"></i>
+								</div>
+								<div class="social-btn pinterest">
+									<i class="fab fa-pinterest"></i>
+								</div>
+								<div class="social-btn linkedin">
+									<i class="fab fa-linkedin-in"></i>
 								</div>
 							</div>
+							<div class="divider">
+								<span>OR</span>
+							</div>
+						</div>
 
-							<div class="form-group">
-								<label for="password" class="form-label">Password</label>
-								<div class="input-group">
-									<i class="fas fa-lock input-icon"></i>
-									<input type="password"
-										id="password"
-										name="password"
-										class="form-control with-icon"
-										placeholder="Enter your password"
-										required>
+						<!-- Login Form -->
+						<div id="loginForm" class="form-content active">
+							<?php if ($login_error): ?>
+								<div class="alert alert-danger">
+									<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
 								</div>
-							</div>
+							<?php endif; ?>
 
-							<button type="submit" class="submit-btn">
-								LOGIN
-							</button>
+							<?php if ($login_success): ?>
+								<div class="alert alert-success animate__animated animate__fadeInUp">
+									<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
+								</div>
+								<script>
+									setTimeout(function() {
+										window.location.href = '../index.php';
+									}, 1500);
+								</script>
+							<?php else: ?>
+								<form method="POST" id="actualLoginForm">
+									<div class="form-group">
+										<label for="email" class="form-label">Email</label>
+										<div class="input-group">
+											<i class="fas fa-envelope input-icon"></i>
+											<input type="email"
+												id="email"
+												name="email"
+												class="form-control with-icon"
+												placeholder="Enter your email"
+												value="<?php echo htmlspecialchars($email ?? ''); ?>"
+												required>
+										</div>
+									</div>
 
-							<div class="form-links">
-								<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
-							</div>
-						</form>
-					<?php endif; ?>
+									<div class="form-group">
+										<label for="password" class="form-label">Password</label>
+										<div class="input-group">
+											<i class="fas fa-lock input-icon"></i>
+											<input type="password"
+												id="password"
+												name="password"
+												class="form-control with-icon"
+												placeholder="Enter your password"
+												required>
+										</div>
+									</div>
+
+									<button type="submit" class="submit-btn">
+										LOGIN
+									</button>
+
+									<div class="form-links">
+										<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
+									</div>
+								</form>
+							<?php endif; ?>
+						</div>
+
+						<!-- Sign Up Form -->
+						<div id="signupForm" class="form-content">
+							<form id="actualSignupForm">
+								<div class="form-group">
+									<label for="signup_name" class="form-label">Full Name</label>
+									<div class="input-group">
+										<i class="fas fa-user input-icon"></i>
+										<input type="text"
+											id="signup_name"
+											name="name"
+											class="form-control with-icon"
+											placeholder="Enter your full name"
+											required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_email" class="form-label">Email</label>
+									<div class="input-group">
+										<i class="fas fa-envelope input-icon"></i>
+										<input type="email"
+											id="signup_email"
+											name="email"
+											class="form-control with-icon"
+											placeholder="Enter your email"
+											required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_phone" class="form-label">Phone Number</label>
+									<div class="input-group">
+										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
+										<input type="tel"
+											id="signup_phone"
+											name="phone"
+											class="form-control with-flag"
+											placeholder="Enter your phone number"
+											required>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_password" class="form-label">Password</label>
+									<div class="input-group">
+										<i class="fas fa-lock input-icon"></i>
+										<input type="password"
+											id="signup_password"
+											name="password"
+											class="form-control with-icon"
+											placeholder="Create a password"
+											required>
+									</div>
+								</div>
+
+								<button type="submit" class="submit-btn">
+									SIGN UP
+								</button>
+							</form>
+						</div>
+
+					</div>
 				</div>
-
-				<!-- Sign Up Form -->
-				<div id="signupForm" class="form-content">
-					<form id="actualSignupForm">
-						<div class="form-group">
-							<label for="signup_name" class="form-label">Full Name</label>
-							<div class="input-group">
-								<i class="fas fa-user input-icon"></i>
-								<input type="text"
-									id="signup_name"
-									name="name"
-									class="form-control with-icon"
-									placeholder="Enter your full name"
-									required>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="signup_email" class="form-label">Email</label>
-							<div class="input-group">
-								<i class="fas fa-envelope input-icon"></i>
-								<input type="email"
-									id="signup_email"
-									name="email"
-									class="form-control with-icon"
-									placeholder="Enter your email"
-									required>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="signup_phone" class="form-label">Phone Number</label>
-							<div class="input-group">
-								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
-								<input type="tel"
-									id="signup_phone"
-									name="phone"
-									class="form-control with-flag"
-									placeholder="Enter your phone number"
-									required>
-							</div>
-						</div>
-
-						<div class="form-group">
-							<label for="signup_password" class="form-label">Password</label>
-							<div class="input-group">
-								<i class="fas fa-lock input-icon"></i>
-								<input type="password"
-									id="signup_password"
-									name="password"
-									class="form-control with-icon"
-									placeholder="Create a password"
-									required>
-							</div>
-						</div>
-
-						<button type="submit" class="submit-btn">
-							SIGN UP
-						</button>
-					</form>
-				</div>
-
 			</div>
 		</div>
-	</div>
-	</div>
 	</div>
 
 	<!-- Footer spacer -->

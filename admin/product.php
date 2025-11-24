@@ -1118,6 +1118,214 @@ function deleteProduct(productId, productName) {
     });
 }
 
+// Edit product function
+function editProduct(productId) {
+    // Fetch product data first
+    fetch('../actions/get_product_action.php?id=' + productId, {
+        method: 'GET'
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'error') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error!',
+                text: data.message
+            });
+            return;
+        }
+
+        const product = data.product;
+
+        // Create edit form HTML
+        const editFormHTML = `
+            <div class="edit-product-form">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Product Title:</label>
+                        <input type="text" id="edit-title" class="swal2-input" value="${product.product_title}" placeholder="Product Title">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Price (GHS):</label>
+                        <input type="number" id="edit-price" class="swal2-input" value="${product.product_price}" placeholder="Price" min="0" step="0.01">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Description:</label>
+                        <textarea id="edit-description" class="swal2-textarea" placeholder="Product Description">${product.product_desc}</textarea>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Keywords:</label>
+                        <input type="text" id="edit-keywords" class="swal2-input" value="${product.product_keywords}" placeholder="Keywords (comma separated)">
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Category:</label>
+                        <select id="edit-category" class="swal2-input">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Brand:</label>
+                        <select id="edit-brand" class="swal2-input">
+                            <option value="">Select Brand</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        Swal.fire({
+            title: 'Edit Product',
+            html: editFormHTML,
+            showCancelButton: true,
+            confirmButtonText: 'Update Product',
+            cancelButtonText: 'Cancel',
+            width: '600px',
+            preConfirm: () => {
+                const title = document.getElementById('edit-title').value.trim();
+                const price = document.getElementById('edit-price').value.trim();
+                const description = document.getElementById('edit-description').value.trim();
+                const keywords = document.getElementById('edit-keywords').value.trim();
+                const categoryId = document.getElementById('edit-category').value;
+                const brandId = document.getElementById('edit-brand').value;
+
+                if (!title) {
+                    Swal.showValidationMessage('Please enter a product title');
+                    return false;
+                }
+                if (!price || parseFloat(price) <= 0) {
+                    Swal.showValidationMessage('Please enter a valid price');
+                    return false;
+                }
+                if (!description) {
+                    Swal.showValidationMessage('Please enter a product description');
+                    return false;
+                }
+                if (!categoryId) {
+                    Swal.showValidationMessage('Please select a category');
+                    return false;
+                }
+                if (!brandId) {
+                    Swal.showValidationMessage('Please select a brand');
+                    return false;
+                }
+
+                return {
+                    product_id: productId,
+                    title: title,
+                    price: parseFloat(price),
+                    description: description,
+                    keywords: keywords,
+                    category_id: parseInt(categoryId),
+                    brand_id: parseInt(brandId)
+                };
+            }
+        }).then((result) => {
+            if (result.isConfirmed && result.value) {
+                // Submit the update
+                const formData = new FormData();
+                formData.append('product_id', result.value.product_id);
+                formData.append('product_title', result.value.title);
+                formData.append('product_price', result.value.price);
+                formData.append('product_desc', result.value.description);
+                formData.append('product_keywords', result.value.keywords);
+                formData.append('category_id', result.value.category_id);
+                formData.append('brand_id', result.value.brand_id);
+
+                fetch('../actions/edit_product_action.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Updated!',
+                            text: data.message,
+                            showConfirmButton: false,
+                            timer: 1500
+                        }).then(() => {
+                            location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'An error occurred while updating the product'
+                    });
+                });
+            }
+        });
+
+        // Load categories and brands for the dropdowns
+        loadEditDropdowns(product.product_cat, product.product_brand);
+    })
+    .catch(error => {
+        Swal.fire({
+            icon: 'error',
+            title: 'Error!',
+            text: 'Failed to load product data'
+        });
+    });
+}
+
+// Load categories and brands for edit form
+function loadEditDropdowns(selectedCategoryId, selectedBrandId) {
+    // Load categories
+    fetch('../actions/get_categories_action.php')
+        .then(response => response.json())
+        .then(categories => {
+            const categorySelect = document.getElementById('edit-category');
+            if (categorySelect && categories.length > 0) {
+                categories.forEach(category => {
+                    const option = document.createElement('option');
+                    option.value = category.category_id;
+                    option.textContent = category.category_name;
+                    if (category.category_id == selectedCategoryId) {
+                        option.selected = true;
+                    }
+                    categorySelect.appendChild(option);
+                });
+            }
+        });
+
+    // Load brands
+    fetch('../actions/get_brands_action.php')
+        .then(response => response.json())
+        .then(brands => {
+            const brandSelect = document.getElementById('edit-brand');
+            if (brandSelect && brands.length > 0) {
+                brands.forEach(brand => {
+                    const option = document.createElement('option');
+                    option.value = brand.brand_id;
+                    option.textContent = brand.brand_name;
+                    if (brand.brand_id == selectedBrandId) {
+                        option.selected = true;
+                    }
+                    brandSelect.appendChild(option);
+                });
+            }
+        });
+}
+
 // Counter animation
 function animateCounters() {
     document.querySelectorAll('.counter').forEach(counter => {

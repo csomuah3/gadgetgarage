@@ -2504,7 +2504,9 @@ try {
                     cart_total: useTotal
                 };
 
-                console.log('Request data being sent:', requestData);
+                console.log('PROMO DEBUG: Request data being sent:', requestData);
+                console.log('PROMO DEBUG: originalTotal from PHP:', originalTotal);
+                console.log('PROMO DEBUG: useTotal calculated:', useTotal);
                 console.log('Using total value:', useTotal);
                 console.log('Promo code value:', promoCode);
 
@@ -2564,6 +2566,11 @@ try {
                 }
 
                 if (data.success) {
+                    console.log('PROMO DEBUG: Server response data:', data);
+                    console.log('PROMO DEBUG: discount_amount:', data.discount_amount);
+                    console.log('PROMO DEBUG: new_total:', data.new_total);
+                    console.log('PROMO DEBUG: original_total:', data.original_total);
+
                     // Store applied promo data
                     appliedPromo = data;
 

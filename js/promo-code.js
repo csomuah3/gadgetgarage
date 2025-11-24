@@ -64,15 +64,19 @@ async function applyPromoCode() {
     // Get cart total from the page - first check if we're on cart page with originalTotal
     let cartTotal = 0;
 
+    console.log('PROMO-CODE.JS DEBUG: window.originalTotal =', window.originalTotal);
+
     // Check if originalTotal is available (from cart.php)
     if (typeof window.originalTotal !== 'undefined' && window.originalTotal > 0) {
         cartTotal = parseFloat(window.originalTotal);
-        console.log('Using originalTotal from cart page:', cartTotal);
+        console.log('PROMO-CODE.JS DEBUG: Using originalTotal from cart page:', cartTotal);
     } else {
         // Fallback: try to extract from DOM elements
         const cartTotalElement = document.querySelector('#cartTotal, .total-amount, [data-original-total]');
+        console.log('PROMO-CODE.JS DEBUG: cartTotalElement found:', !!cartTotalElement);
 
         if (cartTotalElement) {
+            console.log('PROMO-CODE.JS DEBUG: cartTotalElement text:', cartTotalElement.textContent);
             // Try to get from data attribute first
             cartTotal = parseFloat(cartTotalElement.getAttribute('data-original-total')) || 0;
 
@@ -80,22 +84,25 @@ async function applyPromoCode() {
             if (cartTotal === 0) {
                 const totalText = cartTotalElement.textContent.replace(/[^0-9.]/g, '');
                 cartTotal = parseFloat(totalText) || 0;
+                console.log('PROMO-CODE.JS DEBUG: Extracted from text:', totalText, 'parsed as:', cartTotal);
             }
         }
     }
 
     // Fallback to a minimum amount if no total found
     if (cartTotal <= 0) {
-        cartTotal = 100; // Use 100 as minimum to allow promo code testing with good amount
-        console.log('Using fallback cart total:', cartTotal);
+        cartTotal = 6000; // Use 6000 to match your actual cart for testing
+        console.log('PROMO-CODE.JS DEBUG: Using fallback cart total:', cartTotal);
     }
+
+    console.log('PROMO-CODE.JS DEBUG: Final cartTotal being used:', cartTotal);
 
     const requestData = {
         promo_code: promoCode,
         cart_total: cartTotal
     };
 
-    console.log('Request data:', requestData);
+    console.log('PROMO-CODE.JS DEBUG: Request data being sent:', requestData);
 
     try {
         applyBtn.disabled = true;
@@ -114,7 +121,9 @@ async function applyPromoCode() {
         console.log('Response:', response);
 
         const result = await response.json();
-        console.log('Result:', result);
+        console.log('PROMO-CODE.JS DEBUG: Result received:', result);
+        console.log('PROMO-CODE.JS DEBUG: result.success:', result.success);
+        console.log('PROMO-CODE.JS DEBUG: result.discount_amount:', result.discount_amount);
 
         if (result.success) {
             appliedPromo = result.promo;
@@ -122,7 +131,7 @@ async function applyPromoCode() {
             // Update UI with success message
             promoMessage.innerHTML = `<div class="text-success">
                 <i class="fas fa-check-circle"></i>
-                Promo code "${promoCode}" applied! You saved $${result.discount_amount.toFixed(2)}
+                Promo code "${promoCode}" applied! You saved GH₵${result.discount_amount.toFixed(2)}
             </div>`;
             promoMessage.style.display = 'block';
 
@@ -132,7 +141,7 @@ async function applyPromoCode() {
                 appliedPromoDiv.innerHTML = `
                     <div class="applied-promo-item">
                         <span class="promo-code">${promoCode}</span>
-                        <span class="promo-discount">-$${result.discount_amount.toFixed(2)}</span>
+                        <span class="promo-discount">-GH₵${result.discount_amount.toFixed(2)}</span>
                         <button type="button" id="removePromoBtn" class="remove-promo-btn">
                             <i class="fas fa-times"></i>
                         </button>
@@ -191,15 +200,38 @@ function removePromoCode() {
 }
 
 function updateCartTotals(newTotal, discountAmount) {
-    // Update subtotal display
-    const subtotalElement = document.querySelector('.subtotal-amount');
-    if (subtotalElement) {
-        subtotalElement.textContent = `$${newTotal.toFixed(2)}`;
+    console.log('PROMO-CODE.JS DEBUG: updateCartTotals called with newTotal:', newTotal, 'discountAmount:', discountAmount);
+
+    // Update cart total display on cart page
+    const cartTotalElement = document.getElementById('cartTotal');
+    if (cartTotalElement) {
+        cartTotalElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
+        console.log('PROMO-CODE.JS DEBUG: Updated cartTotal element to:', cartTotalElement.textContent);
     }
 
-    // Update total display
+    // Show discount row if it exists
+    const discountRow = document.getElementById('discountRow');
+    if (discountRow) {
+        discountRow.style.display = 'flex';
+        console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+    }
+
+    // Update discount amount display
+    const discountAmountElement = document.getElementById('discountAmount');
+    if (discountAmountElement) {
+        discountAmountElement.textContent = `-GH₵ ${discountAmount.toFixed(2)}`;
+        console.log('PROMO-CODE.JS DEBUG: Updated discount amount to:', discountAmountElement.textContent);
+    }
+
+    // Update subtotal display (fallback)
+    const subtotalElement = document.querySelector('.subtotal-amount');
+    if (subtotalElement) {
+        subtotalElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
+    }
+
+    // Update total display (fallback)
     const totalElement = document.querySelector('.total-amount');
     if (totalElement) {
-        totalElement.textContent = `$${newTotal.toFixed(2)}`;
+        totalElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
     }
 }

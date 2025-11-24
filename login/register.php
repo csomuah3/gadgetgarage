@@ -453,7 +453,7 @@ try {
 			overflow: hidden;
 			width: 100%;
 			max-width: 650px;
-			max-height: 85vh;
+			max-height: 95vh;
 			position: relative;
 			display: flex;
 			flex-direction: column;
@@ -497,26 +497,49 @@ try {
 			padding: 0 40px 30px;
 			overflow-y: auto;
 			flex: 1;
-			max-height: calc(85vh - 180px);
+			max-height: calc(95vh - 160px);
 			scroll-behavior: smooth;
+			position: relative;
+		}
+
+		/* Visual indicator for scrollable content */
+		.register-form-body:not(:hover)::after {
+			content: '';
+			position: absolute;
+			bottom: 0;
+			left: 0;
+			right: 0;
+			height: 20px;
+			background: linear-gradient(transparent, rgba(0, 0, 0, 0.1));
+			pointer-events: none;
+			opacity: 0.7;
+			transition: opacity 0.3s ease;
+		}
+
+		.register-form-body:hover::after {
+			opacity: 0.3;
 		}
 
 		.register-form-body::-webkit-scrollbar {
-			width: 8px;
+			width: 12px;
 		}
 
 		.register-form-body::-webkit-scrollbar-track {
 			background: rgba(0, 0, 0, 0.1);
-			border-radius: 4px;
+			border-radius: 6px;
+			margin: 5px;
 		}
 
 		.register-form-body::-webkit-scrollbar-thumb {
 			background: linear-gradient(135deg, #3b82f6, #1e40af);
-			border-radius: 4px;
+			border-radius: 6px;
+			border: 2px solid transparent;
+			background-clip: content-box;
 		}
 
 		.register-form-body::-webkit-scrollbar-thumb:hover {
 			background: linear-gradient(135deg, #1e40af, #3b82f6);
+			background-clip: content-box;
 		}
 
 		.form-row {
@@ -765,12 +788,17 @@ try {
 			}
 
 			.register-form-wrapper {
-				margin: 20px;
+				margin: 10px;
+				max-height: 98vh;
 			}
 
 			.register-form-header,
 			.register-form-body {
-				padding: 30px 25px;
+				padding: 20px 25px;
+			}
+
+			.register-form-body {
+				max-height: calc(98vh - 140px);
 			}
 
 			.register-form-title {

@@ -61,24 +61,33 @@ async function applyPromoCode() {
         return;
     }
 
-    // Get cart total from the page
-    const cartTotalElement = document.querySelector('.total-amount, [data-original-total]');
+    // Get cart total from the page - first check if we're on cart page with originalTotal
     let cartTotal = 0;
 
-    if (cartTotalElement) {
-        // Try to get from data attribute first
-        cartTotal = parseFloat(cartTotalElement.getAttribute('data-original-total')) || 0;
+    // Check if originalTotal is available (from cart.php)
+    if (typeof window.originalTotal !== 'undefined' && window.originalTotal > 0) {
+        cartTotal = parseFloat(window.originalTotal);
+        console.log('Using originalTotal from cart page:', cartTotal);
+    } else {
+        // Fallback: try to extract from DOM elements
+        const cartTotalElement = document.querySelector('#cartTotal, .total-amount, [data-original-total]');
 
-        // If no data attribute, try to parse the text content
-        if (cartTotal === 0) {
-            const totalText = cartTotalElement.textContent.replace(/[^0-9.]/g, '');
-            cartTotal = parseFloat(totalText) || 0;
+        if (cartTotalElement) {
+            // Try to get from data attribute first
+            cartTotal = parseFloat(cartTotalElement.getAttribute('data-original-total')) || 0;
+
+            // If no data attribute, try to parse the text content
+            if (cartTotal === 0) {
+                const totalText = cartTotalElement.textContent.replace(/[^0-9.]/g, '');
+                cartTotal = parseFloat(totalText) || 0;
+            }
         }
     }
 
     // Fallback to a minimum amount if no total found
     if (cartTotal <= 0) {
-        cartTotal = 1; // Use 1 as minimum to allow promo code testing
+        cartTotal = 100; // Use 100 as minimum to allow promo code testing with good amount
+        console.log('Using fallback cart total:', cartTotal);
     }
 
     const requestData = {

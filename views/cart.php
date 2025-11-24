@@ -2413,6 +2413,9 @@ try {
         let appliedPromo = null;
         const originalTotal = <?php echo $cart_total ?: 0; ?>;
 
+        // Make originalTotal globally accessible for promo-code.js
+        window.originalTotal = originalTotal;
+
         console.log('Cart total from PHP:', originalTotal);
         console.log('Type of originalTotal:', typeof originalTotal);
         console.log('Is originalTotal valid?', originalTotal > 0);

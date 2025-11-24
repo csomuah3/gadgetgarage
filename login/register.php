@@ -438,10 +438,11 @@ try {
 		.register-page-container {
 			min-height: calc(100vh - 200px);
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
 			justify-content: center;
-			padding: 50px 20px;
+			padding: 30px 20px;
 			background: transparent;
+			overflow-y: auto;
 		}
 
 		.register-form-wrapper {
@@ -453,8 +454,9 @@ try {
 			overflow: hidden;
 			width: 100%;
 			max-width: 650px;
-			height: 90vh;
 			max-height: 90vh;
+			height: auto;
+			min-height: 500px;
 			position: relative;
 			display: flex;
 			flex-direction: column;
@@ -496,41 +498,46 @@ try {
 
 		.register-form-body {
 			padding: 0 40px 30px;
-			overflow-y: scroll !important;
+			overflow-y: auto !important;
 			overflow-x: hidden;
 			flex: 1;
-			height: calc(90vh - 150px);
-			max-height: calc(90vh - 150px);
+			min-height: 0;
 			scroll-behavior: smooth;
 			position: relative;
+			-webkit-overflow-scrolling: touch;
 		}
 
 		.register-form-body::-webkit-scrollbar {
-			width: 16px;
+			width: 12px;
 			background: rgba(0, 0, 0, 0.05);
 		}
 
 		.register-form-body::-webkit-scrollbar-track {
-			background: rgba(0, 0, 0, 0.1);
-			border-radius: 8px;
-			margin: 2px;
-			border: 1px solid rgba(0, 0, 0, 0.05);
+			background: rgba(0, 0, 0, 0.05);
+			border-radius: 10px;
+			margin: 5px;
 		}
 
 		.register-form-body::-webkit-scrollbar-thumb {
 			background: linear-gradient(135deg, #3b82f6, #1e40af);
-			border-radius: 8px;
-			border: 1px solid rgba(255, 255, 255, 0.3);
+			border-radius: 10px;
+			border: 2px solid rgba(255, 255, 255, 0.5);
 			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 		}
 
 		.register-form-body::-webkit-scrollbar-thumb:hover {
 			background: linear-gradient(135deg, #1e40af, #3b82f6);
-			box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+			box-shadow: 0 2px 8px rgba(59, 130, 246, 0.4);
 		}
 
 		.register-form-body::-webkit-scrollbar-thumb:active {
 			background: #1e40af;
+		}
+
+		/* Firefox scrollbar */
+		.register-form-body {
+			scrollbar-width: thin;
+			scrollbar-color: #3b82f6 rgba(0, 0, 0, 0.05);
 		}
 
 		.form-row {
@@ -790,9 +797,9 @@ try {
 			}
 
 			.register-form-body {
-				height: calc(95vh - 120px);
 				max-height: calc(95vh - 120px);
-				overflow-y: scroll !important;
+				overflow-y: auto !important;
+				-webkit-overflow-scrolling: touch;
 			}
 
 			.register-form-title {

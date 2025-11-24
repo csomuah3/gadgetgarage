@@ -7,35 +7,35 @@ $login_error = '';
 $login_success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
+	$email = trim($_POST['email'] ?? '');
+	$password = $_POST['password'] ?? '';
 
-    if (empty($email) || empty($password)) {
-        $login_error = 'Please enter both email and password.';
-    } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
-        $login_error = 'Please enter a valid email address.';
-    } else {
-        $db = new db_connection();
+	if (empty($email) || empty($password)) {
+		$login_error = 'Please enter both email and password.';
+	} elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+		$login_error = 'Please enter a valid email address.';
+	} else {
+		$db = new db_connection();
 
-        $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
-        $sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
+		$email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+		$sql = "SELECT * FROM customer WHERE customer_email = '$email_escaped'";
 
-        $user = $db->db_fetch_one($sql);
+		$user = $db->db_fetch_one($sql);
 
-        if ($user && password_verify($password, $user['customer_pass'])) {
-            $_SESSION['user_id'] = $user['customer_id'];
-            $_SESSION['user_name'] = $user['customer_name'];
-            $_SESSION['user_email'] = $user['customer_email'];
-            $_SESSION['email'] = $user['customer_email'];
-            $_SESSION['role'] = $user['user_role'];
-            $_SESSION['name'] = $user['customer_name'];
-            $_SESSION['just_logged_in'] = true; // Flag for newsletter popup
+		if ($user && password_verify($password, $user['customer_pass'])) {
+			$_SESSION['user_id'] = $user['customer_id'];
+			$_SESSION['user_name'] = $user['customer_name'];
+			$_SESSION['user_email'] = $user['customer_email'];
+			$_SESSION['email'] = $user['customer_email'];
+			$_SESSION['role'] = $user['user_role'];
+			$_SESSION['name'] = $user['customer_name'];
+			$_SESSION['just_logged_in'] = true; // Flag for newsletter popup
 
-            $login_success = true;
-        } else {
-            $login_error = 'Invalid email or password.';
-        }
-    }
+			$login_success = true;
+		} else {
+			$login_error = 'Invalid email or password.';
+		}
+	}
 }
 
 // Try to load categories and brands for navigation
@@ -43,17 +43,17 @@ $categories = [];
 $brands = [];
 
 try {
-    require_once('../controllers/category_controller.php');
-    $categories = get_all_categories_ctr();
+	require_once('../controllers/category_controller.php');
+	$categories = get_all_categories_ctr();
 } catch (Exception $e) {
-    error_log("Failed to load categories: " . $e->getMessage());
+	error_log("Failed to load categories: " . $e->getMessage());
 }
 
 try {
-    require_once('../controllers/brand_controller.php');
-    $brands = get_all_brands_ctr();
+	require_once('../controllers/brand_controller.php');
+	$brands = get_all_brands_ctr();
 } catch (Exception $e) {
-    error_log("Failed to load brands: " . $e->getMessage());
+	error_log("Failed to load brands: " . $e->getMessage());
 }
 
 // Get cart count - same as index.php
@@ -62,10 +62,10 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = 0;
 try {
-    require_once('../controllers/cart_controller.php');
-    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+	require_once('../controllers/cart_controller.php');
+	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 } catch (Exception $e) {
-    error_log("Failed to load cart count: " . $e->getMessage());
+	error_log("Failed to load cart count: " . $e->getMessage());
 }
 ?>
 
@@ -1019,13 +1019,20 @@ try {
 			left: -50%;
 			width: 200%;
 			height: 200%;
-			background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+			background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
 			animation: float 6s ease-in-out infinite;
 		}
 
 		@keyframes float {
-			0%, 100% { transform: translateY(0) rotate(0deg); }
-			50% { transform: translateY(-20px) rotate(180deg); }
+
+			0%,
+			100% {
+				transform: translateY(0) rotate(0deg);
+			}
+
+			50% {
+				transform: translateY(-20px) rotate(180deg);
+			}
 		}
 
 		.brand-logo {
@@ -1209,7 +1216,7 @@ try {
 			font-weight: 500;
 		}
 
-		
+
 
 		.form-label {
 			display: block;
@@ -1620,168 +1627,164 @@ try {
 				<!-- Welcome Panel (Blue) -->
 				<div class="welcome-panel">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
-						 alt="Gadget Garage Logo" class="brand-logo">
+						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
 					<p class="welcome-message" id="welcomeMessage">Your one-stop shop for premium refurbished tech devices.</p>
 				</div>
 
 				<!-- Form Panel (White) -->
-				<div class="form-panel">
-					<div class="form-container">
-						<div class="form-header">
-							<h2 class="form-title" id="formTitle">Login With</h2>
+
+
+				<!-- Toggle Buttons -->
+				<div class="form-toggle">
+					<div class="toggle-slider" id="toggleSlider"></div>
+					<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
+					<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
+				</div>
+
+				<!-- Social Login Buttons -->
+				<div class="social-login">
+					<div class="social-buttons">
+						<div class="social-btn google">
+							<i class="fab fa-google"></i>
 						</div>
-
-						<!-- Toggle Buttons -->
-						<div class="form-toggle">
-							<div class="toggle-slider" id="toggleSlider"></div>
-							<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
-							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
+						<div class="social-btn facebook">
+							<i class="fab fa-facebook-f"></i>
 						</div>
-
-						<!-- Social Login Buttons -->
-						<div class="social-login">
-							<div class="social-buttons">
-								<div class="social-btn google">
-									<i class="fab fa-google"></i>
-								</div>
-								<div class="social-btn facebook">
-									<i class="fab fa-facebook-f"></i>
-								</div>
-								<div class="social-btn pinterest">
-									<i class="fab fa-pinterest"></i>
-								</div>
-								<div class="social-btn linkedin">
-									<i class="fab fa-linkedin-in"></i>
-								</div>
-							</div>
-							<div class="divider">
-								<span>OR</span>
-							</div>
+						<div class="social-btn pinterest">
+							<i class="fab fa-pinterest"></i>
 						</div>
-
-						<!-- Login Form -->
-						<div id="loginForm" class="form-content active">
-							<?php if ($login_error): ?>
-								<div class="alert alert-danger">
-									<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
-								</div>
-							<?php endif; ?>
-
-							<?php if ($login_success): ?>
-								<div class="alert alert-success animate__animated animate__fadeInUp">
-									<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
-								</div>
-								<script>
-									setTimeout(function() {
-										window.location.href = '../index.php';
-									}, 1500);
-								</script>
-							<?php else: ?>
-								<form method="POST" id="actualLoginForm">
-									<div class="form-group">
-										<label for="email" class="form-label">Email</label>
-										<div class="input-group">
-											<i class="fas fa-envelope input-icon"></i>
-											<input type="email"
-												   id="email"
-												   name="email"
-												   class="form-control with-icon"
-												   placeholder="Enter your email"
-												   value="<?php echo htmlspecialchars($email ?? ''); ?>"
-												   required>
-										</div>
-									</div>
-
-									<div class="form-group">
-										<label for="password" class="form-label">Password</label>
-										<div class="input-group">
-											<i class="fas fa-lock input-icon"></i>
-											<input type="password"
-												   id="password"
-												   name="password"
-												   class="form-control with-icon"
-												   placeholder="Enter your password"
-												   required>
-										</div>
-									</div>
-
-									<button type="submit" class="submit-btn">
-										LOGIN
-									</button>
-
-									<div class="form-links">
-										<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
-									</div>
-								</form>
-							<?php endif; ?>
+						<div class="social-btn linkedin">
+							<i class="fab fa-linkedin-in"></i>
 						</div>
-
-						<!-- Sign Up Form -->
-						<div id="signupForm" class="form-content">
-							<form id="actualSignupForm">
-								<div class="form-group">
-									<label for="signup_name" class="form-label">Full Name</label>
-									<div class="input-group">
-										<i class="fas fa-user input-icon"></i>
-										<input type="text"
-											   id="signup_name"
-											   name="name"
-											   class="form-control with-icon"
-											   placeholder="Enter your full name"
-											   required>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_email" class="form-label">Email</label>
-									<div class="input-group">
-										<i class="fas fa-envelope input-icon"></i>
-										<input type="email"
-											   id="signup_email"
-											   name="email"
-											   class="form-control with-icon"
-											   placeholder="Enter your email"
-											   required>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_phone" class="form-label">Phone Number</label>
-									<div class="input-group">
-										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
-										<input type="tel"
-											   id="signup_phone"
-											   name="phone"
-											   class="form-control with-flag"
-											   placeholder="Enter your phone number"
-											   required>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_password" class="form-label">Password</label>
-									<div class="input-group">
-										<i class="fas fa-lock input-icon"></i>
-										<input type="password"
-											   id="signup_password"
-											   name="password"
-											   class="form-control with-icon"
-											   placeholder="Create a password"
-											   required>
-									</div>
-								</div>
-
-								<button type="submit" class="submit-btn">
-									SIGN UP
-								</button>
-							</form>
-						</div>
-
+					</div>
+					<div class="divider">
+						<span>OR</span>
 					</div>
 				</div>
+
+				<!-- Login Form -->
+				<div id="loginForm" class="form-content active">
+					<?php if ($login_error): ?>
+						<div class="alert alert-danger">
+							<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
+						</div>
+					<?php endif; ?>
+
+					<?php if ($login_success): ?>
+						<div class="alert alert-success animate__animated animate__fadeInUp">
+							<i class="fas fa-check-circle me-2"></i>Login successful! Redirecting...
+						</div>
+						<script>
+							setTimeout(function() {
+								window.location.href = '../index.php';
+							}, 1500);
+						</script>
+					<?php else: ?>
+						<form method="POST" id="actualLoginForm">
+							<div class="form-group">
+								<label for="email" class="form-label">Email</label>
+								<div class="input-group">
+									<i class="fas fa-envelope input-icon"></i>
+									<input type="email"
+										id="email"
+										name="email"
+										class="form-control with-icon"
+										placeholder="Enter your email"
+										value="<?php echo htmlspecialchars($email ?? ''); ?>"
+										required>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="password" class="form-label">Password</label>
+								<div class="input-group">
+									<i class="fas fa-lock input-icon"></i>
+									<input type="password"
+										id="password"
+										name="password"
+										class="form-control with-icon"
+										placeholder="Enter your password"
+										required>
+								</div>
+							</div>
+
+							<button type="submit" class="submit-btn">
+								LOGIN
+							</button>
+
+							<div class="form-links">
+								<a href="forgot_password.php" class="forgot-password">Forgot Password?</a>
+							</div>
+						</form>
+					<?php endif; ?>
+				</div>
+
+				<!-- Sign Up Form -->
+				<div id="signupForm" class="form-content">
+					<form id="actualSignupForm">
+						<div class="form-group">
+							<label for="signup_name" class="form-label">Full Name</label>
+							<div class="input-group">
+								<i class="fas fa-user input-icon"></i>
+								<input type="text"
+									id="signup_name"
+									name="name"
+									class="form-control with-icon"
+									placeholder="Enter your full name"
+									required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="signup_email" class="form-label">Email</label>
+							<div class="input-group">
+								<i class="fas fa-envelope input-icon"></i>
+								<input type="email"
+									id="signup_email"
+									name="email"
+									class="form-control with-icon"
+									placeholder="Enter your email"
+									required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="signup_phone" class="form-label">Phone Number</label>
+							<div class="input-group">
+								<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
+								<input type="tel"
+									id="signup_phone"
+									name="phone"
+									class="form-control with-flag"
+									placeholder="Enter your phone number"
+									required>
+							</div>
+						</div>
+
+						<div class="form-group">
+							<label for="signup_password" class="form-label">Password</label>
+							<div class="input-group">
+								<i class="fas fa-lock input-icon"></i>
+								<input type="password"
+									id="signup_password"
+									name="password"
+									class="form-control with-icon"
+									placeholder="Create a password"
+									required>
+							</div>
+						</div>
+
+						<button type="submit" class="submit-btn">
+							SIGN UP
+						</button>
+					</form>
+				</div>
+
 			</div>
 		</div>
+	</div>
+	</div>
 	</div>
 
 	<!-- Footer spacer -->
@@ -1833,9 +1836,9 @@ try {
 				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 				timerElement.innerHTML = days + "d:" +
-										 (hours < 10 ? "0" : "") + hours + "h:" +
-										 (minutes < 10 ? "0" : "") + minutes + "m:" +
-										 (seconds < 10 ? "0" : "") + seconds + "s";
+					(hours < 10 ? "0" : "") + hours + "h:" +
+					(minutes < 10 ? "0" : "") + minutes + "m:" +
+					(seconds < 10 ? "0" : "") + seconds + "s";
 			}
 		}
 

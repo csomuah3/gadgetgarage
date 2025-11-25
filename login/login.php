@@ -988,14 +988,18 @@ try {
 			box-shadow: 0 25px 80px var(--shadow);
 			backdrop-filter: blur(15px);
 			border: 1px solid rgba(255, 255, 255, 0.2);
-			display: flex;
 		}
 
 		.auth-panels {
 			display: flex;
 			height: 100%;
-			width: 100%;
+			width: 200%;
 			position: relative;
+			transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+		}
+
+		.auth-panels.signup-mode {
+			transform: translateX(-50%);
 		}
 
 		/* Welcome Panel - GadgetGarage Teal/Green Gradient - RIGHT SIDE */
@@ -1060,7 +1064,7 @@ try {
 			line-height: 1.6;
 			opacity: 0.95;
 			max-width: 350px;
-			margin-bottom: 40px;
+			margin-bottom: 30px;
 			z-index: 2;
 			position: relative;
 		}
@@ -1079,6 +1083,7 @@ try {
 			z-index: 2;
 			position: relative;
 			text-transform: uppercase;
+			margin-bottom: 20px;
 		}
 
 		.welcome-signup-btn:hover,
@@ -1087,6 +1092,16 @@ try {
 			color: var(--gg-teal);
 			transform: translateY(-2px);
 			box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+		}
+
+		.welcome-button-message {
+			font-size: 0.95rem;
+			line-height: 1.5;
+			opacity: 0.9;
+			max-width: 320px;
+			z-index: 2;
+			position: relative;
+			margin-top: 10px;
 		}
 
 		/* Form Panel - LEFT SIDE */
@@ -1428,19 +1443,30 @@ try {
 			}
 
 			.auth-container {
-				flex-direction: column;
+				height: auto;
+				min-height: 600px;
+			}
+
+			.auth-panels {
+				width: 200%;
+				height: auto;
+				min-height: 600px;
+			}
+
+			.auth-panels.signup-mode {
+				transform: translateX(-50%);
 			}
 
 			.welcome-panel,
 			.form-panel {
-				flex: 0 0 100%;
-				min-height: 500px;
+				flex: 0 0 50%;
+				min-height: 600px;
 			}
 
 			.welcome-panel {
 				border-top-left-radius: 25px;
 				border-top-right-radius: 25px;
-				border-bottom-left-radius: 0;
+				border-bottom-left-radius: 25px;
 			}
 
 			.welcome-panel {
@@ -1705,8 +1731,9 @@ try {
 						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
 					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
-					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">SIGN IN</button>
-					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">SIGN UP</button>
+					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">Log In</button>
+					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">Join GadgetGarage</button>
+					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
 
 				<!-- Form Panel (White) -->
@@ -1715,13 +1742,6 @@ try {
 						<div class="form-header">
 							<h2 class="form-title" id="formTitle">Login With</h2>
 							<p class="form-subtitle" id="formSubtitle">Login With Your Email & Password</p>
-						</div>
-
-						<!-- Toggle Buttons -->
-						<div class="form-toggle">
-							<div class="toggle-slider" id="toggleSlider"></div>
-							<button class="toggle-btn active" id="loginTab" onclick="switchToLogin()">Login</button>
-							<button class="toggle-btn" id="signupTab" onclick="switchToSignup()">Join GadgetGarage</button>
 						</div>
 
 						<!-- Social Login Buttons -->
@@ -2060,34 +2080,31 @@ try {
 
 		// Auth Panel Switching Functions
 		function switchToLogin() {
+			const authPanels = document.getElementById('authPanels');
 			const loginForm = document.getElementById('loginForm');
 			const signupForm = document.getElementById('signupForm');
-			const loginTab = document.getElementById('loginTab');
-			const signupTab = document.getElementById('signupTab');
-			const toggleSlider = document.getElementById('toggleSlider');
 			const welcomeTitle = document.getElementById('welcomeTitle');
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
 			const formSubtitle = document.getElementById('formSubtitle');
 			const welcomeSigninBtn = document.getElementById('welcomeSigninBtn');
 			const welcomeSignupBtn = document.getElementById('welcomeSignupBtn');
+			const welcomeButtonMessage = document.getElementById('welcomeButtonMessage');
+
+			// Remove signup mode - slide back to login (panels slide right)
+			authPanels.classList.remove('signup-mode');
 
 			// Update form visibility
 			loginForm.classList.add('active');
 			signupForm.classList.remove('active');
 
-			// Update toggle buttons
-			loginTab.classList.add('active');
-			signupTab.classList.remove('active');
-
-			// Move toggle slider to left
-			toggleSlider.style.transform = 'translateX(0)';
-
 			// Update welcome panel content for LOGIN view
 			welcomeTitle.textContent = 'Welcome Back!';
 			welcomeMessage.textContent = 'Provide your personal details to use all features';
-			welcomeSigninBtn.style.display = 'block';
-			welcomeSignupBtn.style.display = 'none';
+			welcomeSigninBtn.style.display = 'none';
+			welcomeSignupBtn.style.display = 'block';
+			welcomeSignupBtn.textContent = 'Join GadgetGarage';
+			welcomeButtonMessage.textContent = "Join 1000's of customers that buy smart tech with smarter spending.";
 
 			// Update form title and subtitle
 			formTitle.textContent = 'Login With';
@@ -2095,34 +2112,31 @@ try {
 		}
 
 		function switchToSignup() {
+			const authPanels = document.getElementById('authPanels');
 			const loginForm = document.getElementById('loginForm');
 			const signupForm = document.getElementById('signupForm');
-			const loginTab = document.getElementById('loginTab');
-			const signupTab = document.getElementById('signupTab');
-			const toggleSlider = document.getElementById('toggleSlider');
 			const welcomeTitle = document.getElementById('welcomeTitle');
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
 			const formSubtitle = document.getElementById('formSubtitle');
 			const welcomeSigninBtn = document.getElementById('welcomeSigninBtn');
 			const welcomeSignupBtn = document.getElementById('welcomeSignupBtn');
+			const welcomeButtonMessage = document.getElementById('welcomeButtonMessage');
+
+			// Add signup mode - slide to signup (panels slide left)
+			authPanels.classList.add('signup-mode');
 
 			// Update form visibility
 			loginForm.classList.remove('active');
 			signupForm.classList.add('active');
 
-			// Update toggle buttons
-			loginTab.classList.remove('active');
-			signupTab.classList.add('active');
-
-			// Move toggle slider to right
-			toggleSlider.style.transform = 'translateX(100%)';
-
 			// Update welcome panel content for SIGNUP view
 			welcomeTitle.textContent = 'Hello!';
 			welcomeMessage.textContent = 'Register to use all features in our site';
-			welcomeSigninBtn.style.display = 'none';
-			welcomeSignupBtn.style.display = 'block';
+			welcomeSigninBtn.style.display = 'block';
+			welcomeSignupBtn.style.display = 'none';
+			welcomeSigninBtn.textContent = 'Log In';
+			welcomeButtonMessage.textContent = 'Log in to your existing account.';
 
 			// Update form title and subtitle
 			formTitle.textContent = 'Register With';

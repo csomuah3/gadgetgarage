@@ -1107,8 +1107,8 @@ try {
 			backdrop-filter: blur(20px);
 			display: flex;
 			flex-direction: column;
-			justify-content: center;
-			padding: 60px 50px;
+			justify-content: flex-start;
+			padding: 40px 50px;
 			position: relative;
 			overflow-y: auto;
 			max-height: 100%;
@@ -1131,11 +1131,12 @@ try {
 			width: 100%;
 			max-width: 420px;
 			margin: 0 auto;
+			padding-top: 20px;
 		}
 
 		.form-header {
 			text-align: center;
-			margin-bottom: 50px;
+			margin-bottom: 30px;
 		}
 
 		.form-title {

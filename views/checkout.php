@@ -1226,7 +1226,7 @@ try {
 
 <body>
     <!-- Promotional Banner -->
-	<div class="promo-banner">
+    <div class="promo-banner2">
 		<div class="promo-banner-left">
 			<i class="fas fa-bolt"></i>
 		</div>

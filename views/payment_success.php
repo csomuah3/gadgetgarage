@@ -650,7 +650,7 @@ if ($order_id) {
 
 <body>
     <!-- Promo Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <div class="container">
             <div class="promo-text">
                 <i class="fas fa-bolt"></i>

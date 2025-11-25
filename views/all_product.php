@@ -90,18 +90,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
-        /* Color Scheme Variables */
+        /* Color Scheme Variables - Bright Professional Theme */
         :root {
-            --light-blue: #E8F0FE;
-            --medium-blue: #4285F4;
-            --dark-blue: #1A73E8;
-            --navy-blue: #0D47A1;
-            --off-white: #FAFAFA;
-            --text-dark: #1F2937;
-            --text-light: #6B7280;
-            --shadow: rgba(26, 115, 232, 0.1);
-            --gradient-primary: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-blue) 50%, var(--medium-blue) 100%);
-            --gradient-light: linear-gradient(135deg, var(--light-blue) 0%, var(--off-white) 100%);
+            --pale-blue: #E8F0F5;        /* Very light blue-gray from image */
+            --navy-blue: #1E3A5F;        /* Deep navy blue from image */
+            --royal-blue: #2563EB;      /* Vibrant royal blue from image */
+            --pure-white: #FFFFFF;      /* Pure white from image */
+            --text-dark: #1F2937;        /* Dark gray for headings */
+            --text-body: #374151;        /* Medium gray for body text */
+            --text-light: #6B7280;       /* Light gray for secondary text */
+            --border-light: #E5E7EB;     /* Light gray borders */
+            --bg-subtle: #F8FAFC;        /* Subtle background tint */
+            --shadow: rgba(30, 58, 95, 0.08);
+            --shadow-hover: rgba(30, 58, 95, 0.12);
+            --gradient-primary: linear-gradient(135deg, var(--navy-blue) 0%, var(--royal-blue) 100%);
+            --gradient-subtle: linear-gradient(135deg, var(--pale-blue) 0%, var(--pure-white) 100%);
         }
 
         /* Reset and Base Styles */
@@ -113,8 +116,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         body {
             font-family: "Times New Roman", Times, serif;
-            background-color: #ffffff;
-            color: #1a1a1a;
+            background-color: var(--pure-white);
+            color: var(--text-body);
             overflow-x: hidden;
         }
 
@@ -205,8 +208,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         /* Header Styles - Same as index */
         .main-header {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            background: var(--pure-white);
+            box-shadow: 0 2px 8px var(--shadow);
             position: sticky;
             top: 38px;
             z-index: 1000;
@@ -282,7 +285,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             right: 8px;
             top: 50%;
             transform: translateY(-50%);
-            background: linear-gradient(135deg, #3b82f6, #1e40af);
+            background: var(--gradient-primary);
             color: white;
             border: none;
             border-radius: 50%;
@@ -345,7 +348,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .nav-item {
-            color: #1f2937;
+            color: var(--text-dark);
             text-decoration: none;
             font-weight: 600;
             padding: 16px 20px;
@@ -359,8 +362,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .nav-item:hover {
-            background: rgba(0, 128, 96, 0.1);
-            color: #008060;
+            background: rgba(37, 99, 235, 0.08);
+            color: var(--royal-blue);
             transform: translateY(-2px);
         }
 
@@ -473,7 +476,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .dropdown-column ul li a:hover {
-            color: #008060;
+            color: var(--royal-blue);
             transform: translateX(4px);
         }
 
@@ -696,9 +699,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             right: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 95, 191, 0.2);
+            border: 1px solid rgba(37, 99, 235, 0.2);
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
             padding: 15px 0;
             min-width: 220px;
             opacity: 0;
@@ -729,7 +732,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .dropdown-item-custom:hover {
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(37, 99, 235, 0.1);
             color: #008060;
             transform: translateX(3px);
         }
@@ -742,7 +745,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .dropdown-divider-custom {
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(139, 95, 191, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
             margin: 8px 0;
         }
 
@@ -760,7 +763,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .header-icon:hover {
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(37, 99, 235, 0.1);
             transform: scale(1.1);
         }
 
@@ -801,7 +804,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .toggle-switch.active {
-            background: #008060;
+            background: var(--royal-blue);
         }
 
         .toggle-slider {
@@ -882,11 +885,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         /* Sidebar Layout Styles */
         .filters-sidebar {
-            background: #ffffff;
+            background: var(--pure-white);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border-light);
             position: sticky;
             top: 20px;
             max-height: calc(100vh - 40px);
@@ -903,7 +906,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .filter-title {
-            color: #1f2937;
+            color: var(--text-dark);
             font-weight: 700;
             font-size: 1.2rem;
             margin: 0;
@@ -929,7 +932,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .filter-subtitle {
-            color: #333;
+            color: var(--text-dark);
             font-weight: 600;
             font-size: 0.95rem;
             margin-bottom: 12px;
@@ -964,9 +967,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .search-input:focus {
             outline: none;
-            border-color: #000000;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+            border-color: var(--royal-blue);
+            background: var(--pure-white);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .search-icon {
@@ -1050,15 +1053,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .filter-actions {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid rgba(0, 128, 96, 0.1);
+            border-top: 2px solid rgba(37, 99, 235, 0.1);
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
         .apply-filters-btn {
-            background: #000000;
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--pure-white);
             border: none;
             padding: 12px 20px;
             border-radius: 12px;
@@ -1072,12 +1075,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.9rem;
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .apply-filters-btn:hover {
-            background: #374151;
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--navy-blue) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px var(--shadow-hover);
         }
 
         /* Mobile Styles */
@@ -1149,12 +1153,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .rating-option label:hover {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(37, 99, 235, 0.08);
         }
 
         .rating-option input[type="radio"]:checked+label {
-            background: rgba(0, 0, 0, 0.2);
-            color: #000000;
+            background: rgba(37, 99, 235, 0.12);
+            color: var(--navy-blue);
         }
 
         .stars {
@@ -1211,23 +1215,23 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             appearance: none;
             width: 18px;
             height: 18px;
-            background: #000000;
+            background: var(--royal-blue);
             border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
             border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
-            background: #000000;
+            background: var(--royal-blue);
             border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
             border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-display {
@@ -1235,7 +1239,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
-            color: #000000;
+            color: var(--text-dark);
         }
 
         .price-separator {
@@ -1509,15 +1513,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .tag-btn:hover {
-            background: rgba(0, 128, 96, 0.1);
-            border-color: #008060;
-            color: #008060;
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--royal-blue);
+            color: var(--royal-blue);
         }
 
         .tag-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
+            background: var(--gradient-primary);
+            border-color: var(--navy-blue);
+            color: var(--pure-white);
         }
 
         /* Size Filter Styles */
@@ -1541,15 +1545,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .size-btn:hover {
-            background: rgba(0, 128, 96, 0.1);
-            border-color: #008060;
-            color: #008060;
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--royal-blue);
+            color: var(--royal-blue);
         }
 
         .size-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
+            background: var(--gradient-primary);
+            border-color: var(--navy-blue);
+            color: var(--pure-white);
         }
 
         /* Color Filter Styles */
@@ -1574,13 +1578,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .color-btn:hover {
-            border-color: #008060;
+            border-color: var(--royal-blue);
             transform: scale(1.1);
         }
 
         .color-btn.active {
-            border-color: #008060;
-            background: rgba(0, 128, 96, 0.1);
+            border-color: var(--royal-blue);
+            background: rgba(37, 99, 235, 0.1);
         }
 
         .color-circle {
@@ -1684,12 +1688,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .stats-bar {
-            background: rgba(255, 255, 255, 0.9);
+            background: var(--pure-white);
             backdrop-filter: blur(20px);
             padding: 20px 30px;
             border-radius: 20px;
             margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0, 128, 96, 0.1);
+            box-shadow: 0 4px 20px var(--shadow);
+            border: 1px solid var(--border-light);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1737,14 +1742,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .product-card {
-            background: rgba(255, 255, 255, 0.95);
+            background: var(--pure-white);
             backdrop-filter: blur(20px);
             border-radius: 20px;
             overflow: hidden;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 4px 16px var(--shadow);
             transition: all 0.4s ease;
             cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid var(--border-light);
             position: relative;
             width: 100%;
             max-width: none;
@@ -1753,8 +1758,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .product-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(139, 95, 191, 0.25);
-            border-color: rgba(139, 95, 191, 0.4);
+            box-shadow: 0 12px 32px var(--shadow-hover);
+            border-color: var(--royal-blue);
         }
 
         .product-card::before {
@@ -1764,14 +1769,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.05), rgba(240, 147, 251, 0.05));
+            background: linear-gradient(135deg, rgba(37, 99, 235, 0.05), rgba(232, 240, 245, 0.05));
             opacity: 0;
             transition: all 0.3s ease;
         }
 
         .product-card:hover {
             transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 16px 48px rgba(139, 95, 191, 0.25);
+            box-shadow: 0 16px 48px rgba(37, 99, 235, 0.25);
         }
 
         .product-card:hover::before {
@@ -1801,13 +1806,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             position: absolute;
             top: 15px;
             right: 15px;
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--pure-white);
             padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.8rem;
             font-weight: 600;
             text-transform: uppercase;
+            box-shadow: 0 2px 8px var(--shadow);
         }
 
         .product-content {
@@ -1858,8 +1864,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .add-to-cart-btn {
             width: 100%;
             padding: 15px;
-            background: #000000;
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--pure-white);
             border: none;
             border-radius: 15px;
             font-weight: 700;
@@ -1872,12 +1878,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             gap: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px var(--shadow);
         }
 
         .add-to-cart-btn:hover {
-            background: #374151;
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--navy-blue) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 8px 20px var(--shadow-hover);
         }
 
         .pagination {
@@ -1936,14 +1943,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             font-weight: 700;
             transition: all 0.3s ease;
             margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.3);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
         }
 
         .back-btn:hover {
             background: linear-gradient(135deg, #006b4e, #008060);
             color: white;
             transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.4);
         }
 
         /* Main Navigation */
@@ -2024,7 +2031,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
             z-index: 1000;
             max-height: 300px;
             overflow-y: auto;
@@ -2102,7 +2109,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             background: white;
             border: 1px solid #e2e8f0;
             border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.15);
             z-index: 1000;
             max-height: 250px;
             overflow-y: auto;
@@ -2160,7 +2167,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .bubble {
             position: absolute;
             border-radius: 50%;
-            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(240, 147, 251, 0.1));
+            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(232, 240, 245, 0.1));
             animation: float 6s ease-in-out infinite;
         }
 
@@ -2277,7 +2284,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <!-- Promotional Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <div class="promo-banner-left">
             <i class="fas fa-bolt"></i>
         </div>
@@ -3240,6 +3247,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         function performInstantSearch() {
             applyFilters();
+        }
+
+        // Alias function for applyFilters to call executeFilters
+        function applyFilters() {
+            executeFilters();
         }
 
         // Hide suggestions when clicking outside

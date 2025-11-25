@@ -1399,8 +1399,8 @@ $fairDiscount = $basePrice - $fairPrice;
 </head>
 
 <body>
-	<!-- Promotional Banner -->
-	<div class="promo-banner">
+    <!-- Promotional Banner -->
+    <div class="promo-banner2">
 		<div class="promo-banner-left">
 			<i class="fas fa-bolt"></i>
 		</div>

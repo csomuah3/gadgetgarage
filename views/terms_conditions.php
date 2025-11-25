@@ -403,7 +403,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 </head>
 <body>
     <!-- Promotional Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <i class="fas fa-shipping-fast"></i>
         Free Next Day Delivery on Orders Above GH₵2,000!
     </div>

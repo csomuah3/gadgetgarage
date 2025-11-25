@@ -524,7 +524,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <!-- Promotional Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <i class="fas fa-shipping-fast"></i>
         <span data-translate="free_next_day_delivery">Free Next Day Delivery on Orders Above GH₵2,000!</span>
     </div>

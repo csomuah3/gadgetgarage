@@ -2257,7 +2257,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <!-- Promotional Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <div class="promo-banner-left">
             <i class="fas fa-bolt"></i>
         </div>
@@ -3200,6 +3200,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         function performInstantSearch() {
             applyFilters();
+        }
+
+        // Alias function for applyFilters to call executeFilters
+        function applyFilters() {
+            executeFilters();
         }
 
         // Hide suggestions when clicking outside

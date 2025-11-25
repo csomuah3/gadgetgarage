@@ -740,7 +740,7 @@ if ($_POST && isset($_POST['send_message'])) {
 
 <body>
     <!-- Promotional Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <i class="fas fa-shipping-fast"></i>
         Free Next Day Delivery on Orders Above GH₵2,000!
     </div>

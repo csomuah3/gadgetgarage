@@ -858,26 +858,227 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        .page-title {
-            color: #1f2937;
-            background-clip: text;
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-align: center;
-            margin: 30px 0;
+        /* Flash Deals Hero Section */
+        .flash-deals-hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            padding: 60px 20px;
+            margin: 20px 0 40px;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             position: relative;
+            overflow: hidden;
         }
 
-        .page-title::after {
+        .flash-deals-hero::before {
             content: '';
             position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: #000000;
-            border-radius: 2px;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .flash-hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .flash-hero-text {
+            text-align: center;
+        }
+
+        .flash-main-title {
+            font-size: 4rem;
+            font-weight: 900;
+            color: #ffffff;
+            margin-bottom: 15px;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            text-shadow: 0 4px 20px rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .flash-main-title i {
+            color: #ffd700;
+            animation: flash 2s ease-in-out infinite;
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.8));
+        }
+
+        @keyframes flash {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.1); }
+        }
+
+        .flash-subtitle {
+            font-size: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 500;
+            letter-spacing: 1px;
+        }
+
+        /* Large Countdown Timer */
+        .flash-countdown-large {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+            border-radius: 25px;
+            padding: 50px 80px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3), inset 0 0 30px rgba(255, 255, 255, 0.1);
+        }
+
+        .countdown-label-large {
+            text-align: center;
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 30px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .countdown-display-large {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 25px;
+        }
+
+        .countdown-item-large {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: 15px;
+            padding: 30px 40px;
+            min-width: 140px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .countdown-item-large:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.3);
+        }
+
+        .countdown-number-large {
+            font-size: 4.5rem;
+            font-weight: 900;
+            color: #ffffff;
+            line-height: 1;
+            margin-bottom: 10px;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+            font-family: 'Inter', sans-serif;
+        }
+
+        .countdown-text-large {
+            font-size: 0.9rem;
+            color: rgba(255, 255, 255, 0.9);
+            font-weight: 600;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .countdown-separator {
+            font-size: 3rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin: 0 5px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.8);
+            animation: blink 1s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        @media (max-width: 992px) {
+            .flash-main-title {
+                font-size: 2.5rem;
+            }
+
+            .flash-countdown-large {
+                padding: 40px 30px;
+            }
+
+            .countdown-display-large {
+                gap: 15px;
+            }
+
+            .countdown-item-large {
+                padding: 20px 25px;
+                min-width: 100px;
+            }
+
+            .countdown-number-large {
+                font-size: 3rem;
+            }
+
+            .countdown-separator {
+                font-size: 2rem;
+                margin: 0 3px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .flash-deals-hero {
+                padding: 40px 15px;
+            }
+
+            .flash-main-title {
+                font-size: 2rem;
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .flash-subtitle {
+                font-size: 1.1rem;
+            }
+
+            .flash-countdown-large {
+                padding: 30px 20px;
+            }
+
+            .countdown-display-large {
+                flex-wrap: wrap;
+                gap: 10px;
+            }
+
+            .countdown-item-large {
+                padding: 15px 20px;
+                min-width: 80px;
+            }
+
+            .countdown-number-large {
+                font-size: 2.5rem;
+            }
+
+            .countdown-text-large {
+                font-size: 0.7rem;
+            }
+
+            .countdown-separator {
+                font-size: 1.5rem;
+            }
         }
 
         /* Sidebar Layout Styles */
@@ -2257,7 +2458,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <!-- Promotional Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <div class="promo-banner-left">
             <i class="fas fa-bolt"></i>
         </div>
@@ -2490,10 +2691,40 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         </div>
     </nav>
 
-    <!-- Page Title -->
-    <div class="container-fluid">
-        <div class="text-center py-3">
-            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Flash Deals</h1>
+    <!-- Flash Deals Hero Section with Large Countdown Timer -->
+    <div class="flash-deals-hero">
+        <div class="flash-hero-content">
+            <div class="flash-hero-text">
+                <h1 class="flash-main-title">
+                    <i class="fas fa-bolt"></i>
+                    FLASH DEALS
+                </h1>
+                <p class="flash-subtitle">Limited Time Offers - Don't Miss Out!</p>
+            </div>
+            <div class="flash-countdown-large">
+                <div class="countdown-label-large">Deal Ends In</div>
+                <div class="countdown-display-large">
+                    <div class="countdown-item-large">
+                        <div class="countdown-number-large" id="flashDays">10</div>
+                        <div class="countdown-text-large">DAYS</div>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-item-large">
+                        <div class="countdown-number-large" id="flashHours">00</div>
+                        <div class="countdown-text-large">HOURS</div>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-item-large">
+                        <div class="countdown-number-large" id="flashMinutes">00</div>
+                        <div class="countdown-text-large">MINUTES</div>
+                    </div>
+                    <div class="countdown-separator">:</div>
+                    <div class="countdown-item-large">
+                        <div class="countdown-number-large" id="flashSeconds">00</div>
+                        <div class="countdown-text-large">SECONDS</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -3220,6 +3451,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         function performInstantSearch() {
             applyFilters();
+        }
+
+        // Alias function for applyFilters to call executeFilters
+        function applyFilters() {
+            executeFilters();
         }
 
         // Hide suggestions when clicking outside
@@ -4134,7 +4370,51 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     toggleSwitch.classList.add('active');
                 }
             }
+
+            // Initialize Flash Deals Countdown Timer (10 days)
+            initFlashDealsCountdown();
         });
+
+        // Flash Deals Large Countdown Timer (10 days)
+        function initFlashDealsCountdown() {
+            const daysEl = document.getElementById('flashDays');
+            const hoursEl = document.getElementById('flashHours');
+            const minutesEl = document.getElementById('flashMinutes');
+            const secondsEl = document.getElementById('flashSeconds');
+
+            if (!daysEl || !hoursEl || !minutesEl || !secondsEl) return;
+
+            // Set end time to 10 days from now
+            const endTime = new Date().getTime() + (10 * 24 * 60 * 60 * 1000);
+
+            function updateCountdown() {
+                const now = new Date().getTime();
+                const distance = endTime - now;
+
+                if (distance > 0) {
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    daysEl.textContent = days.toString().padStart(2, '0');
+                    hoursEl.textContent = hours.toString().padStart(2, '0');
+                    minutesEl.textContent = minutes.toString().padStart(2, '0');
+                    secondsEl.textContent = seconds.toString().padStart(2, '0');
+                } else {
+                    daysEl.textContent = '00';
+                    hoursEl.textContent = '00';
+                    minutesEl.textContent = '00';
+                    secondsEl.textContent = '00';
+                }
+            }
+
+            // Update immediately
+            updateCountdown();
+
+            // Update every second
+            setInterval(updateCountdown, 1000);
+        }
 
         // Close dropdowns when clicking outside
         document.addEventListener('click', function(event) {
@@ -4151,8 +4431,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Initialize wishlist status
         document.addEventListener('DOMContentLoaded', function() {
             // Popup animations now handled by PHP random delays
-            });
-
+            
             // Load wishlist status
             loadWishlistStatus();
         });

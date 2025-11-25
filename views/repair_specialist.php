@@ -876,7 +876,7 @@ try {
     <div class="bg-decoration bg-decoration-2"></div>
 
     <!-- Promo Banner -->
-    <div class="promo-banner">
+    <div class="promo-banner2">
         <div class="container">
             <div class="promo-text">
                 <i class="fas fa-bolt"></i>

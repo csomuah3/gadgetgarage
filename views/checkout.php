@@ -2441,6 +2441,10 @@ try {
 			}
 		}
 
+		// Set base path for API calls (similar to cart.php)
+		const BASE_PATH = '<?php echo dirname($_SERVER['PHP_SELF']); ?>';
+		const ACTIONS_PATH = BASE_PATH.replace('/views', '') + '/actions/';
+		
 		// Load saved preferences on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			// Check for payment status (success or error) first

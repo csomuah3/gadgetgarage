@@ -125,7 +125,11 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                 console.log('Processing dummy payment with reference:', reference);
 
                 // For dummy payment, directly process the order without PayStack verification
-                const response = await fetch('../actions/process_dummy_payment.php', {
+                // Calculate correct path - callback is in views/, so ../actions/ is correct
+                const processUrl = '../actions/process_dummy_payment.php';
+                console.log('Processing dummy payment, URL:', processUrl);
+                
+                const response = await fetch(processUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'

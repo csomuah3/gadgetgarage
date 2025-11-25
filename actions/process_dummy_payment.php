@@ -63,11 +63,24 @@ try {
     $db->db_connect();
 
     try {
+        // Verify cart still has items before processing
+        if (empty($cart_items) || count($cart_items) == 0) {
+            throw new Exception('Cart is empty. Cannot create order.');
+        }
+
         // Process cart to order without payment verification (dummy payment)
         $order_result = process_cart_to_order_without_payment_ctr($customer_id, $ip_address);
 
         if (!$order_result) {
-            throw new Exception('Failed to create order');
+            // More detailed error message
+            $error_details = [
+                'customer_id' => $customer_id,
+                'ip_address' => $ip_address,
+                'cart_items_count' => count($cart_items),
+                'cart_total' => $cart_total
+            ];
+            error_log('Order creation failed. Details: ' . json_encode($error_details));
+            throw new Exception('Failed to create order. Please ensure your cart has valid items and try again.');
         }
 
         $order_id = $order_result['order_id'];

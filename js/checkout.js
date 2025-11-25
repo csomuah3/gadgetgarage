@@ -118,7 +118,12 @@ function initializePayStackPayment(email) {
     }
 
     // Call backend to initialize PayStack transaction
-    fetch('actions/paystack_init_transaction.php', {
+    // Use ACTIONS_PATH if defined (from checkout.php), otherwise use relative path
+    const initUrl = (typeof ACTIONS_PATH !== 'undefined' ? ACTIONS_PATH : '../actions/') + 'paystack_init_transaction.php';
+    
+    console.log('Initializing PayStack payment, URL:', initUrl);
+    
+    fetch(initUrl, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json',

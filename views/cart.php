@@ -1932,6 +1932,9 @@ try {
     <script src="../js/promo-code.js"></script>
 
     <script>
+    // Set base path for API calls
+    const BASE_PATH = '<?php echo dirname($_SERVER['PHP_SELF']); ?>';
+    const ACTIONS_PATH = BASE_PATH.replace('/views', '') + '/actions/';
     // User dropdown functionality - from login.php
     function toggleUserDropdown() {
         const dropdown = document.getElementById('userDropdownMenu');
@@ -2089,22 +2092,45 @@ try {
         formData.append('product_id', productId);
         formData.append('quantity', quantity);
 
-        fetch('../actions/update_quantity_action.php', {
+        // Use the PHP-generated actions path
+        const updateUrl = ACTIONS_PATH + 'update_quantity_action.php';
+        
+        console.log('Fetching from URL:', updateUrl);
+        
+        fetch(updateUrl, {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            // Check if response is ok
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
             console.log('Server response:', data);
 
             if (data.success) {
                 // Update cart badge and overall totals
-                updateCartBadge(data.cart_count);
-                updateCartTotals(data.cart_total);
+                if (typeof updateCartBadge === 'function') {
+                    updateCartBadge(data.cart_count);
+                }
+                if (typeof updateCartTotals === 'function') {
+                    updateCartTotals(data.cart_total);
+                }
                 console.log('Server update successful');
 
-                // Show SweetAlert success
-                if (typeof Swal !== 'undefined') {
+                // Show SweetAlert success (only if not already showing)
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Cart Updated',
                         text: 'Quantity updated successfully',
@@ -2115,29 +2141,32 @@ try {
                 }
             } else {
                 console.error('Server update failed:', data.message);
-                if (typeof Swal !== 'undefined') {
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Update Failed',
                         text: data.message || 'Failed to update cart',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
-                } else {
+                } else if (typeof showNotification === 'function') {
                     showNotification(data.message || 'Failed to update cart', 'error');
                 }
             }
         })
         .catch(error => {
             console.error('Network error updating cart:', error);
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: 'Network Error',
-                    text: 'Changes may not be saved',
-                    icon: 'warning',
-                    confirmButtonText: 'OK'
-                });
-            } else {
-                showNotification('Network error - changes may not be saved', 'warning');
+            // Only show error if it's a real network error, not a validation error
+            if (error.message && !error.message.includes('HTTP error')) {
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
+                    Swal.fire({
+                        title: 'Network Error',
+                        text: 'Unable to connect to server. Please check your connection and try again.',
+                        icon: 'warning',
+                        confirmButtonText: 'OK'
+                    });
+                } else if (typeof showNotification === 'function') {
+                    showNotification('Network error - changes may not be saved', 'warning');
+                }
             }
         });
     };
@@ -2147,14 +2176,32 @@ try {
         const formData = new FormData();
         formData.append('product_id', productId);
 
-        fetch('../actions/remove_from_cart_action.php', {
+        const removeUrl = ACTIONS_PATH + 'remove_from_cart_action.php';
+        console.log('Removing item from cart, URL:', removeUrl);
+
+        fetch(removeUrl, {
             method: 'POST',
             body: formData
         })
-        .then(response => response.json())
+        .then(response => {
+            // Check if response is ok
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Remove from cart response:', data);
             if (data.success) {
-                if (typeof Swal !== 'undefined') {
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Item Removed',
                         text: 'Item removed from cart successfully',
@@ -2162,7 +2209,7 @@ try {
                         timer: 2000,
                         showConfirmButton: false
                     });
-                } else {
+                } else if (typeof showNotification === 'function') {
                     showNotification('Item removed from cart', 'success');
                 }
 
@@ -2175,37 +2222,45 @@ try {
 
                     setTimeout(() => {
                         cartItem.remove();
-                        checkEmptyCart();
+                        if (typeof checkEmptyCart === 'function') {
+                            checkEmptyCart();
+                        }
                     }, 300);
                 } else {
                     console.log('Cart item not found in DOM for cart ID:', cartItemId);
+                    // Reload if DOM element not found
+                    location.reload();
                 }
 
-                updateCartBadge(data.cart_count);
-                updateCartTotals(data.cart_total);
+                if (typeof updateCartBadge === 'function') {
+                    updateCartBadge(data.cart_count);
+                }
+                if (typeof updateCartTotals === 'function') {
+                    updateCartTotals(data.cart_total);
+                }
             } else {
-                if (typeof Swal !== 'undefined') {
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Error',
                         text: data.message || 'Failed to remove item from cart',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
-                } else {
+                } else if (typeof showNotification === 'function') {
                     showNotification(data.message || 'Failed to remove item from cart', 'error');
                 }
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            if (typeof Swal !== 'undefined') {
+            console.error('Error removing from cart:', error);
+            if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                 Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred. Please try again.',
+                    title: 'Network Error',
+                    text: 'Unable to connect to server. Please check your connection and try again.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } else {
+            } else if (typeof showNotification === 'function') {
                 showNotification('An error occurred. Please try again.', 'error');
             }
         });
@@ -2213,13 +2268,31 @@ try {
 
     // Override empty cart function
     window.performEmptyCart = function() {
-        fetch('../actions/empty_cart_action.php', {
+        const emptyUrl = ACTIONS_PATH + 'empty_cart_action.php';
+        console.log('Emptying cart, URL:', emptyUrl);
+
+        fetch(emptyUrl, {
             method: 'POST'
         })
-        .then(response => response.json())
+        .then(response => {
+            // Check if response is ok
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
+                });
+            }
+            return response.json();
+        })
         .then(data => {
+            console.log('Empty cart response:', data);
             if (data.success) {
-                if (typeof Swal !== 'undefined') {
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Cart Emptied',
                         text: 'Your cart has been emptied successfully',
@@ -2229,12 +2302,16 @@ try {
                     }).then(() => {
                         location.reload();
                     });
-                } else {
+                } else if (typeof showNotification === 'function') {
                     showNotification('Cart emptied successfully', 'success');
                 }
 
-                updateCartBadge(0);
-                updateCartTotals('0.00');
+                if (typeof updateCartBadge === 'function') {
+                    updateCartBadge(0);
+                }
+                if (typeof updateCartTotals === 'function') {
+                    updateCartTotals('0.00');
+                }
 
                 // Hide cart items and show empty state
                 const cartContainer = document.getElementById('cartItemsContainer');
@@ -2245,30 +2322,35 @@ try {
                     setTimeout(() => {
                         location.reload();
                     }, 500);
+                } else {
+                    // If container not found, reload immediately
+                    setTimeout(() => {
+                        location.reload();
+                    }, 500);
                 }
             } else {
-                if (typeof Swal !== 'undefined') {
+                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Error',
                         text: data.message || 'Failed to empty cart',
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
-                } else {
+                } else if (typeof showNotification === 'function') {
                     showNotification(data.message || 'Failed to empty cart', 'error');
                 }
             }
         })
         .catch(error => {
-            console.error('Error:', error);
-            if (typeof Swal !== 'undefined') {
+            console.error('Error emptying cart:', error);
+            if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                 Swal.fire({
-                    title: 'Error',
-                    text: 'An error occurred. Please try again.',
+                    title: 'Network Error',
+                    text: 'Unable to connect to server. Please check your connection and try again.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } else {
+            } else if (typeof showNotification === 'function') {
                 showNotification('An error occurred. Please try again.', 'error');
             }
         });

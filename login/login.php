@@ -998,7 +998,7 @@ try {
 			position: relative;
 		}
 
-		/* Welcome Panel - GadgetGarage Teal/Green Gradient - RIGHT SIDE */
+		/* Welcome Panel - GadgetGarage Teal/Green Gradient - LEFT SIDE */
 		.welcome-panel {
 			flex: 0 0 50%;
 			background: var(--gradient-primary);
@@ -1011,8 +1011,8 @@ try {
 			text-align: center;
 			position: relative;
 			overflow: hidden;
-			border-top-left-radius: 50px;
-			border-bottom-left-radius: 50px;
+			border-top-right-radius: 50px;
+			border-bottom-right-radius: 50px;
 		}
 
 		.welcome-panel::before {
@@ -1100,7 +1100,7 @@ try {
 			margin-top: 10px;
 		}
 
-		/* Form Panel - LEFT SIDE */
+		/* Form Panel - RIGHT SIDE */
 		.form-panel {
 			flex: 0 0 50%;
 			background: rgba(255, 255, 255, 0.98);
@@ -1458,8 +1458,8 @@ try {
 			}
 
 			.welcome-panel {
-				border-top-left-radius: 0;
-				border-top-right-radius: 25px;
+				border-top-left-radius: 25px;
+				border-top-right-radius: 0;
 				border-bottom-left-radius: 25px;
 				border-bottom-right-radius: 25px;
 			}
@@ -1720,7 +1720,18 @@ try {
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 
-				<!-- Form Panel (White) - LEFT SIDE -->
+				<!-- Welcome Panel (Teal/Green) - LEFT SIDE -->
+				<div class="welcome-panel">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
+						alt="Gadget Garage Logo" class="brand-logo">
+					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
+					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
+					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">Log In</button>
+					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">Join GadgetGarage</button>
+					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
+				</div>
+
+				<!-- Form Panel (White) - RIGHT SIDE -->
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
@@ -1900,17 +1911,6 @@ try {
 						</div>
 
 					</div>
-				</div>
-
-				<!-- Welcome Panel (Teal/Green) - RIGHT SIDE -->
-				<div class="welcome-panel">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
-						alt="Gadget Garage Logo" class="brand-logo">
-					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
-					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
-					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">Log In</button>
-					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">Join GadgetGarage</button>
-					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
 			</div>
 		</div>

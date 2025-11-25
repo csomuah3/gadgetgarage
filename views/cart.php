@@ -1932,9 +1932,26 @@ try {
     <script src="../js/promo-code.js"></script>
 
     <script>
-    // Set base path for API calls
-    const BASE_PATH = '<?php echo dirname($_SERVER['PHP_SELF']); ?>';
-    const ACTIONS_PATH = BASE_PATH.replace('/views', '') + '/actions/';
+    // Set base path for API calls using PHP to generate absolute URL
+    (function() {
+        // Use PHP to generate the correct base URL
+        const baseUrl = '<?php 
+            $protocol = isset($_SERVER["HTTPS"]) && $_SERVER["HTTPS"] === "on" ? "https" : "http";
+            $host = $_SERVER["HTTP_HOST"] ?? "";
+            $scriptPath = dirname($_SERVER["PHP_SELF"]);
+            // Remove /views from path if it exists
+            $scriptPath = str_replace("/views", "", $scriptPath);
+            $scriptPath = rtrim($scriptPath, "/");
+            echo $protocol . "://" . $host . $scriptPath;
+        ?>';
+        
+        // Set ACTIONS_PATH to absolute URL
+        window.ACTIONS_PATH = baseUrl + '/actions/';
+        
+        console.log('Base URL:', baseUrl);
+        console.log('ACTIONS_PATH set to:', window.ACTIONS_PATH);
+        console.log('Current pathname:', window.location.pathname);
+    })();
     // User dropdown functionality - from login.php
     function toggleUserDropdown() {
         const dropdown = document.getElementById('userDropdownMenu');
@@ -2092,8 +2109,8 @@ try {
         formData.append('product_id', productId);
         formData.append('quantity', quantity);
 
-        // Use the PHP-generated actions path
-        const updateUrl = ACTIONS_PATH + 'update_quantity_action.php';
+        // Use the actions path (use window.ACTIONS_PATH if available, otherwise default)
+        const updateUrl = (window.ACTIONS_PATH || '../actions/') + 'update_quantity_action.php';
         
         console.log('Fetching from URL:', updateUrl);
         
@@ -2123,10 +2140,31 @@ try {
                 // Update cart badge and overall totals
                 if (typeof updateCartBadge === 'function') {
                     updateCartBadge(data.cart_count);
+                } else {
+                    console.warn('updateCartBadge function not found');
                 }
+                
                 if (typeof updateCartTotals === 'function') {
                     updateCartTotals(data.cart_total);
+                } else {
+                    console.warn('updateCartTotals function not found');
+                    // Fallback: manually update the totals
+                    const cartSubtotal = document.getElementById('cartSubtotal');
+                    const cartTotal = document.getElementById('cartTotal');
+                    if (cartSubtotal) {
+                        cartSubtotal.textContent = 'GH₵ ' + data.cart_total;
+                    }
+                    if (cartTotal) {
+                        cartTotal.textContent = 'GH₵ ' + data.cart_total;
+                    }
                 }
+                
+                // Also update the quantity input value to reflect the change
+                const quantityInput = document.getElementById(`qty-${productId}`);
+                if (quantityInput) {
+                    quantityInput.value = quantity;
+                }
+                
                 console.log('Server update successful');
 
                 // Show SweetAlert success (only if not already showing)
@@ -2154,19 +2192,24 @@ try {
             }
         })
         .catch(error => {
-            console.error('Network error updating cart:', error);
-            // Only show error if it's a real network error, not a validation error
-            if (error.message && !error.message.includes('HTTP error')) {
-                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
-                    Swal.fire({
-                        title: 'Network Error',
-                        text: 'Unable to connect to server. Please check your connection and try again.',
-                        icon: 'warning',
-                        confirmButtonText: 'OK'
-                    });
-                } else if (typeof showNotification === 'function') {
-                    showNotification('Network error - changes may not be saved', 'warning');
-                }
+            console.error('Error updating cart:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                url: updateUrl
+            });
+            
+            // Show error to user
+            const errorMessage = error.message || 'An error occurred while updating the cart';
+            if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
+                Swal.fire({
+                    title: 'Update Error',
+                    text: errorMessage + '. Please try again or refresh the page.',
+                    icon: 'error',
+                    confirmButtonText: 'OK'
+                });
+            } else if (typeof showNotification === 'function') {
+                showNotification('Network error - changes may not be saved', 'warning');
             }
         });
     };
@@ -2176,7 +2219,7 @@ try {
         const formData = new FormData();
         formData.append('product_id', productId);
 
-        const removeUrl = ACTIONS_PATH + 'remove_from_cart_action.php';
+        const removeUrl = (window.ACTIONS_PATH || '../actions/') + 'remove_from_cart_action.php';
         console.log('Removing item from cart, URL:', removeUrl);
 
         fetch(removeUrl, {
@@ -2234,9 +2277,31 @@ try {
 
                 if (typeof updateCartBadge === 'function') {
                     updateCartBadge(data.cart_count);
+                } else {
+                    // Fallback: manually update badge
+                    const cartBadge = document.getElementById('cartBadge');
+                    if (cartBadge) {
+                        if (data.cart_count > 0) {
+                            cartBadge.textContent = data.cart_count;
+                            cartBadge.style.display = 'flex';
+                        } else {
+                            cartBadge.style.display = 'none';
+                        }
+                    }
                 }
+                
                 if (typeof updateCartTotals === 'function') {
                     updateCartTotals(data.cart_total);
+                } else {
+                    // Fallback: manually update totals
+                    const cartSubtotal = document.getElementById('cartSubtotal');
+                    const cartTotal = document.getElementById('cartTotal');
+                    if (cartSubtotal) {
+                        cartSubtotal.textContent = 'GH₵ ' + data.cart_total;
+                    }
+                    if (cartTotal) {
+                        cartTotal.textContent = 'GH₵ ' + data.cart_total;
+                    }
                 }
             } else {
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
@@ -2253,10 +2318,17 @@ try {
         })
         .catch(error => {
             console.error('Error removing from cart:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                url: removeUrl
+            });
+            
+            const errorMessage = error.message || 'An error occurred while removing the item';
             if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                 Swal.fire({
-                    title: 'Network Error',
-                    text: 'Unable to connect to server. Please check your connection and try again.',
+                    title: 'Remove Error',
+                    text: errorMessage + '. Please try again or refresh the page.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
@@ -2268,7 +2340,7 @@ try {
 
     // Override empty cart function
     window.performEmptyCart = function() {
-        const emptyUrl = ACTIONS_PATH + 'empty_cart_action.php';
+        const emptyUrl = (window.ACTIONS_PATH || '../actions/') + 'empty_cart_action.php';
         console.log('Emptying cart, URL:', emptyUrl);
 
         fetch(emptyUrl, {
@@ -2343,10 +2415,17 @@ try {
         })
         .catch(error => {
             console.error('Error emptying cart:', error);
+            console.error('Error details:', {
+                message: error.message,
+                stack: error.stack,
+                url: emptyUrl
+            });
+            
+            const errorMessage = error.message || 'An error occurred while emptying the cart';
             if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                 Swal.fire({
-                    title: 'Network Error',
-                    text: 'Unable to connect to server. Please check your connection and try again.',
+                    title: 'Empty Cart Error',
+                    text: errorMessage + '. Please try again or refresh the page.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });

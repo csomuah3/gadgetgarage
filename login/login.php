@@ -1730,7 +1730,7 @@ try {
 						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
 					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
-					<button type="button" class="welcome-signup-btn" id="welcomeSignupBtn" onclick="alert('Button clicked!'); window.location.href='register.php';">Join GadgetGarage</button>
+					<button type="button" class="welcome-signup-btn" id="welcomeSignupBtn" onclick="window.location.href='register.php';">Join GadgetGarage</button>
 					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
 

@@ -3,21 +3,33 @@ require_once __DIR__ . '/../classes/product_class.php';
 
 // Add product
 function add_product_ctr($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity = 10) {
-    $product = new Product();
+    try {
+        $product = new Product();
 
-    // Check if product title already exists
-    $existing = $product->check_product_exists($product_title);
-    if ($existing) {
-        return ['status' => 'error', 'message' => 'Product title already exists'];
-    }
+        // Check if product title already exists
+        $existing = $product->check_product_exists($product_title);
+        if ($existing) {
+            return ['status' => 'error', 'message' => 'Product title already exists'];
+        }
 
-    $result = $product->add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
-    if ($result) {
-        // Get the inserted product ID
-        $product_id = $product->get_last_inserted_id();
-        return ['status' => 'success', 'message' => 'Product added successfully', 'product_id' => $product_id];
-    } else {
-        return ['status' => 'error', 'message' => 'Failed to add product'];
+        $result = $product->add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
+        if ($result) {
+            // Get the inserted product ID
+            $product_id = $product->get_last_inserted_id();
+            if ($product_id > 0) {
+                return ['status' => 'success', 'message' => 'Product added successfully', 'product_id' => $product_id];
+            } else {
+                error_log("Add product warning: Product added but could not retrieve product_id");
+                return ['status' => 'success', 'message' => 'Product added successfully (ID retrieval failed)'];
+            }
+        } else {
+            error_log("Add product failed: add_product returned false");
+            return ['status' => 'error', 'message' => 'Failed to add product. Please check server logs for details.'];
+        }
+    } catch (Exception $e) {
+        error_log("Add product controller error: " . $e->getMessage());
+        error_log("Stack trace: " . $e->getTraceAsString());
+        return ['status' => 'error', 'message' => 'Failed to add product: ' . $e->getMessage()];
     }
 }
 
@@ -46,7 +58,7 @@ function get_product_by_id_ctr($product_id) {
 }
 
 // Update product
-function update_product_ctr($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id) {
+function update_product_ctr($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $product_color = '', $stock_quantity = null) {
     $product = new Product();
 
     // Check if product title already exists (excluding current product)
@@ -55,7 +67,13 @@ function update_product_ctr($product_id, $product_title, $product_price, $produc
         return ['status' => 'error', 'message' => 'Product title already exists'];
     }
 
-    $result = $product->update_product($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id);
+    // Get existing product to preserve stock_quantity if not provided
+    if ($stock_quantity === null) {
+        $existing_product = $product->get_product_by_id($product_id);
+        $stock_quantity = $existing_product ? ($existing_product['stock_quantity'] ?? 0) : 0;
+    }
+
+    $result = $product->update_product($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
     if ($result) {
         return ['status' => 'success', 'message' => 'Product updated successfully'];
     } else {
@@ -65,16 +83,22 @@ function update_product_ctr($product_id, $product_title, $product_price, $produc
 
 // Delete product
 function delete_product_ctr($product_id) {
-    $product = new Product();
-    $result = $product->force_delete_product($product_id);
+    try {
+        $product = new Product();
+        // Use force_delete to remove all dependencies
+        $result = $product->force_delete_product($product_id);
 
-    // Check if result is an array (new detailed response) or boolean (old response)
-    if (is_array($result)) {
-        return $result; // Return the detailed response from the product class
-    } else if ($result) {
-        return ['status' => 'success', 'message' => 'Product deleted successfully'];
-    } else {
-        return ['status' => 'error', 'message' => 'Failed to delete product'];
+        // Check if result is an array (new detailed response) or boolean (old response)
+        if (is_array($result)) {
+            return $result; // Return the detailed response from the product class
+        } else if ($result === true) {
+            return ['status' => 'success', 'message' => 'Product deleted successfully'];
+        } else {
+            return ['status' => 'error', 'message' => 'Failed to delete product. Please check server logs for details.'];
+        }
+    } catch (Exception $e) {
+        error_log("Delete product controller error: " . $e->getMessage());
+        return ['status' => 'error', 'message' => 'Failed to delete product: ' . $e->getMessage()];
     }
 }
 

@@ -64,6 +64,8 @@ try {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Register - Gadget Garage</title>
 	<meta name="description" content="Create your Gadget Garage account to access premium tech devices and exclusive deals.">
+	<link href="../includes/chatbot-styles.css" rel="stylesheet">
+	<link href="../css/dark-mode.css" rel="stylesheet">
 
 	<!-- Favicon -->
 	<link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
@@ -76,6 +78,21 @@ try {
 
 	<style>
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+		/* Color Scheme Variables - GadgetGarage Colors */
+		:root {
+			--gg-teal: #008060;
+			--gg-teal-dark: #006b4e;
+			--gg-teal-light: #00a67e;
+			--gg-green: #10b981;
+			--gg-green-dark: #059669;
+			--off-white: #FAFAFA;
+			--text-dark: #1F2937;
+			--text-light: #6B7280;
+			--shadow: rgba(0, 128, 96, 0.15);
+			--gradient-primary: linear-gradient(135deg, var(--gg-teal-dark) 0%, var(--gg-teal) 50%, var(--gg-teal-light) 100%);
+			--gradient-light: linear-gradient(135deg, rgba(0, 128, 96, 0.1) 0%, rgba(16, 185, 129, 0.05) 100%);
+		}
 
 		/* Reset and Base Styles */
 		* {
@@ -434,69 +451,376 @@ try {
 			color: #3b82f6;
 		}
 
-		/* Register Form Container */
-		.register-page-container {
-			min-height: calc(100vh - 200px);
+		/* Login Form Container */
+		.login-page-container {
 			display: flex;
-			align-items: flex-start;
+			align-items: center;
 			justify-content: center;
-			padding: 30px 20px;
+			padding: 40px 20px;
+			min-height: calc(100vh - 200px);
 			background: transparent;
-			overflow-y: auto;
 		}
 
-		.register-form-wrapper {
-			background: rgba(255, 255, 255, 0.65);
-			border-radius: 20px;
-			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
-			backdrop-filter: blur(8px);
-			border: 1px solid rgba(255, 255, 255, 0.3);
-			overflow: hidden;
+		.auth-container {
 			width: 100%;
-			max-width: 650px;
-			max-height: 90vh;
-			height: auto;
-			min-height: 500px;
+			max-width: 1000px;
+			height: 650px;
 			position: relative;
+			border-radius: 25px;
+			overflow: hidden;
+			box-shadow: 0 25px 80px var(--shadow);
+			backdrop-filter: blur(15px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			display: flex;
+		}
+
+		.auth-panels {
+			display: flex;
+			height: 100%;
+			width: 100%;
+			position: relative;
+		}
+
+		/* Welcome Panel - GadgetGarage Teal/Green Gradient - LEFT SIDE */
+		.welcome-panel {
+			flex: 0 0 50%;
+			background: var(--gradient-primary);
 			display: flex;
 			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			color: white;
+			padding: 80px 60px;
+			text-align: center;
+			position: relative;
+			overflow: hidden;
+			border-top-right-radius: 50px;
+			border-bottom-right-radius: 50px;
 		}
 
-		.register-form-wrapper::before {
+		.welcome-panel::before {
 			content: '';
 			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 6px;
-			background: linear-gradient(90deg, #3b82f6, #1e40af, #7c3aed);
+			top: -50%;
+			left: -50%;
+			width: 200%;
+			height: 200%;
+			background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
+			animation: float 6s ease-in-out infinite;
 		}
 
-		.register-form-header {
-			text-align: center;
-			padding: 25px 40px 15px;
-			flex-shrink: 0;
+		@keyframes float {
+
+			0%,
+			100% {
+				transform: translateY(0) rotate(0deg);
+			}
+
+			50% {
+				transform: translateY(-20px) rotate(180deg);
+			}
 		}
 
-		.register-form-header img {
-			height: 80px;
-			margin-bottom: 15px;
+		.brand-logo {
+			width: 140px;
+			height: auto;
+			margin-bottom: 40px;
+			filter: brightness(0) invert(1);
+			z-index: 2;
+			position: relative;
 		}
 
-		.register-form-title {
-			font-size: 2.4rem;
+		.welcome-title {
+			font-size: 2.8rem;
 			font-weight: 700;
-			color: #1a1a1a;
-			margin-bottom: 8px;
+			margin-bottom: 20px;
+			z-index: 2;
+			position: relative;
 		}
 
-		.register-form-subtitle {
-			color: #6b7280;
+		.welcome-message {
 			font-size: 1.2rem;
+			line-height: 1.6;
+			opacity: 0.95;
+			max-width: 350px;
+			margin-bottom: 30px;
+			z-index: 2;
+			position: relative;
+		}
+
+		.welcome-signup-btn,
+		.welcome-signin-btn {
+			background: transparent;
+			border: 2px solid white;
+			color: white;
+			text-decoration: none;
+			display: inline-block;
+			padding: 16px 40px;
+			border-radius: 12px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			z-index: 2;
+			position: relative;
+			text-transform: uppercase;
+			margin-bottom: 20px;
+		}
+
+		.welcome-signup-btn:hover,
+		.welcome-signin-btn:hover {
+			background: white;
+			color: var(--gg-teal);
+			transform: translateY(-2px);
+			box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+		}
+
+		.welcome-button-message {
+			font-size: 0.95rem;
+			line-height: 1.5;
+			opacity: 0.9;
+			max-width: 320px;
+			z-index: 2;
+			position: relative;
+			margin-top: 10px;
+		}
+
+		/* Form Panel - RIGHT SIDE */
+		.form-panel {
+			flex: 0 0 50%;
+			background: rgba(255, 255, 255, 0.98);
+			backdrop-filter: blur(20px);
+			display: flex;
+			flex-direction: column;
+			justify-content: flex-start;
+			padding: 40px 50px;
+			position: relative;
+			overflow-y: auto;
+			max-height: 100%;
+		}
+
+		.form-panel::-webkit-scrollbar {
+			width: 8px;
+		}
+
+		.form-panel::-webkit-scrollbar-track {
+			background: rgba(0, 0, 0, 0.05);
+		}
+
+		.form-panel::-webkit-scrollbar-thumb {
+			background: var(--gg-teal);
+			border-radius: 4px;
+		}
+
+		.form-container {
+			width: 100%;
+			max-width: 420px;
+			margin: 0 auto;
+			padding-top: 20px;
+		}
+
+		.form-header {
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		.form-title {
+			font-size: 2rem;
+			font-weight: 700;
+			color: var(--text-dark);
+			margin-bottom: 8px;
+			text-align: center;
+		}
+
+		.form-subtitle {
+			color: var(--text-light);
+			font-size: 1rem;
+			text-align: center;
+			margin-bottom: 30px;
+		}
+
+		/* Social Login Buttons */
+		.social-login {
+			margin-bottom: 30px;
+		}
+
+		.social-buttons {
+			display: flex;
+			gap: 15px;
+			justify-content: center;
 			margin-bottom: 25px;
 		}
 
-		.register-form-body {
+		.social-btn {
+			width: 50px;
+			height: 50px;
+			border-radius: 12px;
+			border: 2px solid #e5e7eb;
+			background: white;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			font-size: 1.3rem;
+		}
+
+		.social-btn.google {
+			color: #ea4335;
+		}
+
+		.social-btn.facebook {
+			color: #1877f2;
+		}
+
+		.social-btn.pinterest {
+			color: #bd081c;
+		}
+
+		.social-btn.linkedin {
+			color: #0077b5;
+		}
+
+		.social-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+		}
+
+		.divider {
+			text-align: center;
+			position: relative;
+			margin: 25px 0;
+		}
+
+		.divider::before {
+			content: '';
+			position: absolute;
+			top: 50%;
+			left: 0;
+			right: 0;
+			height: 1px;
+			background: #e5e7eb;
+		}
+
+		.divider span {
+			background: rgba(255, 255, 255, 0.98);
+			padding: 0 20px;
+			color: var(--text-light);
+			font-size: 1.1rem;
+			font-weight: 500;
+		}
+
+		.form-group {
+			margin-bottom: 20px;
+		}
+
+		.form-label {
+			display: block;
+			font-weight: 600;
+			color: var(--text-dark);
+			margin-bottom: 10px;
+			font-size: 1rem;
+		}
+
+		.form-control {
+			width: 100%;
+			padding: 16px 20px 16px 50px;
+			border: 2px solid #e5e7eb;
+			border-radius: 12px;
+			background: #f8fafc;
+			color: var(--text-dark);
+			font-size: 1rem;
+			transition: all 0.3s ease;
+			outline: none;
+		}
+
+		.form-control:focus {
+			border-color: var(--gg-teal);
+			background: white;
+			box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+		}
+
+		.input-group {
+			position: relative;
+		}
+
+		.input-icon {
+			position: absolute;
+			left: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: var(--gg-teal);
+			font-size: 1.1rem;
+			z-index: 2;
+		}
+
+		.ghana-flag {
+			position: absolute;
+			left: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			width: 24px;
+			height: 16px;
+			z-index: 2;
+		}
+
+		.form-control.with-icon {
+			padding-left: 55px;
+		}
+
+		.form-control.with-flag {
+			padding-left: 55px;
+		}
+
+		.submit-btn {
+			width: 100%;
+			background: var(--gradient-primary);
+			color: white;
+			border: none;
+			padding: 18px;
+			border-radius: 12px;
+			font-size: 1.1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			position: relative;
+			overflow: hidden;
+			margin-top: 10px;
+		}
+
+		.submit-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 12px 30px rgba(0, 128, 96, 0.4);
+		}
+
+		.submit-btn:active {
+			transform: translateY(0);
+		}
+
+		.form-content {
+			display: none;
+		}
+
+		.form-content.active {
+			display: block;
+		}
+
+		.alert {
+			border-radius: 12px;
+			margin-bottom: 20px;
+			border: none;
+			padding: 15px 18px;
+		}
+
+		.alert-danger {
+			background: #fee2e2;
+			color: #dc2626;
+		}
+
+		.alert-success {
+			background: #d1fae5;
+			color: #059669;
+		}
 			padding: 0 40px 30px;
 			overflow-y: auto !important;
 			overflow-x: hidden;
@@ -785,30 +1109,44 @@ try {
 				display: none;
 			}
 
-			.register-form-wrapper {
-				margin: 10px;
-				height: 95vh;
-				max-height: 95vh;
-			}
-
-			.register-form-header,
-			.register-form-body {
-				padding: 15px 20px;
-			}
-
-			.register-form-body {
-				max-height: calc(95vh - 120px);
-				overflow-y: auto !important;
-				-webkit-overflow-scrolling: touch;
-			}
-
-			.register-form-title {
-				font-size: 1.7rem;
-			}
-
-			.form-row {
+			.auth-container {
+				height: auto;
+				min-height: 600px;
+				margin: 20px;
 				flex-direction: column;
-				gap: 0;
+			}
+
+			.auth-panels {
+				width: 100%;
+				height: auto;
+				min-height: 600px;
+				flex-direction: column;
+			}
+
+			.welcome-panel,
+			.form-panel {
+				flex: 0 0 100%;
+				min-height: 500px;
+			}
+
+			.welcome-panel {
+				border-top-left-radius: 25px;
+				border-top-right-radius: 0;
+				border-bottom-left-radius: 25px;
+				border-bottom-right-radius: 25px;
+				padding: 50px 30px;
+			}
+
+			.form-panel {
+				padding: 40px 30px;
+			}
+
+			.welcome-title {
+				font-size: 2rem;
+			}
+
+			.form-title {
+				font-size: 1.7rem;
 			}
 
 			.nav-items {
@@ -1098,24 +1436,31 @@ try {
 		}
 
 		/* Dark Mode Form Styles */
-		body.dark-mode .register-page-container {
+		body.dark-mode .login-page-container {
 			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
 		}
 
-		body.dark-mode .register-form-wrapper {
-			background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-			border: 1px solid #4a5568;
-		}
-
-		body.dark-mode .register-form-wrapper::before {
-			background: linear-gradient(90deg, #60a5fa, #3b82f6, #8b5cf6);
-		}
-
-		body.dark-mode .register-form-title {
+		body.dark-mode .form-label {
 			color: #e2e8f0;
 		}
 
-		body.dark-mode .register-form-subtitle {
+		body.dark-mode .form-control {
+			background: #374151;
+			border-color: #4a5568;
+			color: #e2e8f0;
+		}
+
+		body.dark-mode .form-control::placeholder {
+			color: #9ca3af;
+		}
+
+		body.dark-mode .form-control:focus {
+			background: #4a5568;
+			border-color: #60a5fa;
+			box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+		}
+
+		body.dark-mode .input-icon {
 			color: #cbd5e0;
 		}
 
@@ -1410,162 +1755,164 @@ try {
 	</nav>
 
 	<!-- Register Form Section -->
-	<div class="register-page-container">
-		<div class="register-form-wrapper">
-			<div class="register-form-header">
-				<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
-				<h1 class="register-form-title">Create Account</h1>
-				<p class="register-form-subtitle">Join Gadget Garage today and unlock exclusive deals</p>
-			</div>
+	<div class="login-page-container">
+		<div class="auth-container">
+			<div class="auth-panels" id="authPanels">
 
-			<div class="register-form-body">
-				<?php if ($reg_error): ?>
-					<div class="alert alert-danger">
-						<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($reg_error); ?>
+				<!-- Welcome Panel (Teal/Green) - LEFT SIDE -->
+				<div class="welcome-panel">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
+						alt="Gadget Garage Logo" class="brand-logo">
+					<h1 class="welcome-title" id="welcomeTitle">Hello!</h1>
+					<p class="welcome-message" id="welcomeMessage">Register to use all features in our site</p>
+					<a href="login.php" class="welcome-signin-btn" id="welcomeSigninBtn">Log In</a>
+					<p class="welcome-button-message" id="welcomeButtonMessage">Log in to your existing account.</p>
+				</div>
+
+				<!-- Form Panel (White) - RIGHT SIDE -->
+				<div class="form-panel">
+					<div class="form-container">
+						<div class="form-header">
+							<h2 class="form-title" id="formTitle">Register With</h2>
+							<p class="form-subtitle" id="formSubtitle">Fill Out The Following Info For Registration</p>
+						</div>
+
+						<!-- Social Login Buttons -->
+						<div class="social-login">
+							<div class="social-buttons">
+								<div class="social-btn google">
+									<span style="font-weight: 700; color: #ea4335;">G</span>
+								</div>
+								<div class="social-btn facebook">
+									<span style="font-weight: 700; color: #1877f2;">f</span>
+								</div>
+								<div class="social-btn pinterest">
+									<span style="font-weight: 700; color: #bd081c;">P</span>
+								</div>
+								<div class="social-btn linkedin">
+									<span style="font-weight: 700; color: #0077b5;">in</span>
+								</div>
+							</div>
+							<div class="divider">
+								<span>OR</span>
+							</div>
+						</div>
+
+						<!-- Signup Form -->
+						<div id="signupForm" class="form-content" style="display: block;">
+							<?php if ($reg_error): ?>
+								<div class="alert alert-danger">
+									<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($reg_error); ?>
+								</div>
+							<?php endif; ?>
+
+							<?php if ($reg_success): ?>
+								<div class="alert alert-success animate__animated animate__fadeInUp">
+									<i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($reg_success); ?>
+								</div>
+								<script>
+									setTimeout(function() {
+										window.location.href = 'login.php';
+									}, 2000);
+								</script>
+							<?php else: ?>
+								<form method="POST" id="registerForm" action="../actions/register_user_action.php">
+									<div class="form-group">
+										<label for="name" class="form-label">Full Name</label>
+										<div class="input-group">
+											<i class="fas fa-user input-icon"></i>
+											<input type="text"
+												id="name"
+												name="name"
+												class="form-control with-icon"
+												placeholder="Enter your full name"
+												value="<?php echo htmlspecialchars($name ?? ''); ?>"
+												required>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="email" class="form-label">Email</label>
+										<div class="input-group">
+											<i class="fas fa-envelope input-icon"></i>
+											<input type="email"
+												id="email"
+												name="email"
+												class="form-control with-icon"
+												placeholder="Enter your email"
+												value="<?php echo htmlspecialchars($email ?? ''); ?>"
+												required>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="phone_number" class="form-label">Phone Number</label>
+										<div class="input-group">
+											<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
+											<input type="tel"
+												id="phone_number"
+												name="phone_number"
+												class="form-control with-flag"
+												placeholder="your phone number"
+												value="<?php echo htmlspecialchars($phone_number ?? ''); ?>"
+												required>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="country" class="form-label">Country</label>
+										<div class="input-group">
+											<i class="fas fa-globe input-icon"></i>
+											<select id="country" name="country" class="form-control with-icon" required>
+												<option value="">Select Country</option>
+												<option value="Ghana" <?php echo (isset($country) && $country === 'Ghana') ? 'selected' : 'selected'; ?>>Ghana</option>
+												<option value="Nigeria" <?php echo (isset($country) && $country === 'Nigeria') ? 'selected' : ''; ?>>Nigeria</option>
+												<option value="USA" <?php echo (isset($country) && $country === 'USA') ? 'selected' : ''; ?>>United States</option>
+												<option value="UK" <?php echo (isset($country) && $country === 'UK') ? 'selected' : ''; ?>>United Kingdom</option>
+												<option value="Canada" <?php echo (isset($country) && $country === 'Canada') ? 'selected' : ''; ?>>Canada</option>
+												<option value="Australia" <?php echo (isset($country) && $country === 'Australia') ? 'selected' : ''; ?>>Australia</option>
+											</select>
+										</div>
+									</div>
+
+									<div class="form-group">
+										<label for="city" class="form-label">City</label>
+										<div class="input-group">
+											<i class="fas fa-map-marker-alt input-icon"></i>
+											<input type="text"
+												id="city"
+												name="city"
+												class="form-control with-icon"
+												placeholder="Enter your city"
+												value="<?php echo htmlspecialchars($city ?? ''); ?>"
+												required>
+										</div>
+									</div>
+
+									<input type="hidden" name="role" value="1">
+
+									<div class="form-group">
+										<label for="password" class="form-label">Password</label>
+										<div class="input-group">
+											<i class="fas fa-lock input-icon"></i>
+											<input type="password"
+												id="password"
+												name="password"
+												class="form-control with-icon"
+												placeholder="Create a password"
+												required>
+										</div>
+									</div>
+
+									<button type="submit" class="submit-btn">
+										SIGN UP
+									</button>
+								</form>
+							<?php endif; ?>
+						</div>
+
 					</div>
-				<?php endif; ?>
-
-				<?php if ($reg_success): ?>
-					<div class="alert alert-success animate__animated animate__fadeInUp">
-						<i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($reg_success); ?>
-					</div>
-					<script>
-						// Add fly-up animation to the entire form
-						document.querySelector('.register-form-wrapper').classList.add('animate__animated', 'animate__fadeOutUp');
-						setTimeout(function() {
-							window.location.href = 'login.php';
-						}, 2000);
-					</script>
-				<?php else: ?>
-					<form method="POST" id="registerForm">
-						<!-- Name and Email Row -->
-						<div class="form-row">
-							<div class="form-group">
-								<label for="name" class="form-label">Full Name</label>
-								<div class="input-group">
-									<i class="fas fa-user input-icon"></i>
-									<input type="text"
-										   id="name"
-										   name="name"
-										   class="form-control with-icon"
-										   placeholder="Enter your full name"
-										   value="<?php echo htmlspecialchars($name ?? ''); ?>"
-										   required>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="email" class="form-label">Email Address</label>
-								<div class="input-group">
-									<i class="fas fa-envelope input-icon"></i>
-									<input type="email"
-										   id="email"
-										   name="email"
-										   class="form-control with-icon"
-										   placeholder="Enter your email"
-										   value="<?php echo htmlspecialchars($email ?? ''); ?>"
-										   required>
-								</div>
-							</div>
-						</div>
-
-						<!-- Phone and Password Row -->
-						<div class="form-row">
-							<div class="form-group">
-								<label for="phone_number" class="form-label">Phone Number</label>
-								<div class="input-group">
-									<i class="fas fa-phone input-icon"></i>
-									<input type="tel"
-										   id="phone_number"
-										   name="phone_number"
-										   class="form-control with-icon"
-										   placeholder="Enter phone number"
-										   value="<?php echo htmlspecialchars($phone_number ?? ''); ?>"
-										   required>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="password" class="form-label">Password</label>
-								<div class="input-group">
-									<i class="fas fa-lock input-icon"></i>
-									<input type="password"
-										   id="password"
-										   name="password"
-										   class="form-control with-icon"
-										   placeholder="Create password"
-										   required>
-								</div>
-							</div>
-						</div>
-
-						<!-- Country and City Row -->
-						<div class="form-row">
-							<div class="form-group">
-								<label for="country" class="form-label">Country</label>
-								<div class="input-group">
-									<i class="fas fa-globe input-icon"></i>
-									<select id="country" name="country" class="form-control with-icon" required>
-										<option value="">Select Country</option>
-										<option value="Ghana" <?php echo (isset($country) && $country === 'Ghana') ? 'selected' : ''; ?>>Ghana</option>
-										<option value="Nigeria" <?php echo (isset($country) && $country === 'Nigeria') ? 'selected' : ''; ?>>Nigeria</option>
-										<option value="USA" <?php echo (isset($country) && $country === 'USA') ? 'selected' : ''; ?>>United States</option>
-										<option value="UK" <?php echo (isset($country) && $country === 'UK') ? 'selected' : ''; ?>>United Kingdom</option>
-										<option value="Canada" <?php echo (isset($country) && $country === 'Canada') ? 'selected' : ''; ?>>Canada</option>
-										<option value="Australia" <?php echo (isset($country) && $country === 'Australia') ? 'selected' : ''; ?>>Australia</option>
-									</select>
-								</div>
-							</div>
-
-							<div class="form-group">
-								<label for="city" class="form-label">City</label>
-								<div class="input-group">
-									<i class="fas fa-map-marker-alt input-icon"></i>
-									<input type="text"
-										   id="city"
-										   name="city"
-										   class="form-control with-icon"
-										   placeholder="Enter your city"
-										   value="<?php echo htmlspecialchars($city ?? ''); ?>"
-										   required>
-								</div>
-							</div>
-						</div>
-
-						<!-- Human Verification Section -->
-						<div class="verification-section">
-							<div class="verification-header">
-								<i class="fas fa-shield-halved me-2" style="color: #3b82f6;"></i>
-								<span>Verification Required</span>
-							</div>
-
-							<!-- Simple Human Verification Checkbox -->
-							<div class="checkbox-group" onclick="toggleHumanVerification()">
-								<div class="custom-checkbox">
-									<input type="checkbox" id="humanVerification" name="humanVerification" required>
-									<i class="fas fa-check checkbox-mark"></i>
-								</div>
-								<label for="humanVerification" class="checkbox-label">
-									<i class="fas fa-user-check me-2" style="color: #10b981;"></i>
-									I confirm that I am human and ready to create my account
-								</label>
-							</div>
-						</div>
-
-						<!-- Hidden role field -->
-						<input type="hidden" name="role" value="1">
-
-						<button type="submit" class="register-btn" id="submitBtn" disabled>
-							<i class="fas fa-user-plus me-2"></i>
-							Create Account
-						</button>
-
-						<div class="form-links">
-							<span>Already have an account? </span>
-							<a href="login.php" class="login-link">Sign In</a>
-						</div>
-					</form>
-				<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -1576,7 +1923,6 @@ try {
 	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
-	<script src="../js/register.js"></script>
 	<script>
 		// Dropdown functions
 		let dropdownTimeout;
@@ -1725,131 +2071,61 @@ try {
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
 
-		// Simple human verification checkbox functionality
-		function toggleHumanVerification() {
-			const checkbox = document.getElementById('humanVerification');
-			const submitBtn = document.getElementById('submitBtn');
-			const checkboxGroup = document.querySelector('.checkbox-group');
-
-			// Toggle the checkbox state
-			checkbox.checked = !checkbox.checked;
-
-			// Update button and visual state
-			if (checkbox.checked) {
-				checkboxGroup.style.background = 'rgba(16, 185, 129, 0.1)';
-				checkboxGroup.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-				submitBtn.disabled = false;
-				submitBtn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
-				submitBtn.innerHTML = '<i class="fas fa-user-plus me-2"></i>Create Account';
-			} else {
-				checkboxGroup.style.background = 'rgba(59, 130, 246, 0.05)';
-				checkboxGroup.style.borderColor = 'rgba(59, 130, 246, 0.1)';
-				submitBtn.disabled = true;
-				submitBtn.style.background = 'linear-gradient(135deg, #6b7280, #4b5563)';
-				submitBtn.innerHTML = '<i class="fas fa-shield-alt me-2"></i>Verify Identity';
-			}
-		}
-
-		// Enhanced Form Navigation and Error Scrolling
-		function scrollToElement(element, offset = 100) {
-			const formBody = document.querySelector('.register-form-body');
-			if (!formBody || !element) return;
-
-			const elementTop = element.offsetTop - offset;
-			formBody.scrollTo({
-				top: elementTop,
-				behavior: 'smooth'
-			});
-		}
-
-		function scrollToFirstError() {
-			const firstInvalidInput = document.querySelector('.form-group input:invalid, .form-group select:invalid');
-			if (firstInvalidInput) {
-				scrollToElement(firstInvalidInput.closest('.form-group'));
-				firstInvalidInput.focus();
-			}
-		}
-
-		function highlightErrorField(input) {
-			const formGroup = input.closest('.form-group');
-			if (formGroup) {
-				formGroup.style.animation = 'shake 0.5s ease-in-out';
-				setTimeout(() => {
-					formGroup.style.animation = '';
-				}, 500);
-			}
-		}
-
-		// Add shake animation for error highlighting
-		const style = document.createElement('style');
-		style.textContent = `
-			@keyframes shake {
-				0%, 100% { transform: translateX(0); }
-				25% { transform: translateX(-5px); }
-				75% { transform: translateX(5px); }
-			}
-		`;
-		document.head.appendChild(style);
-
-		// Initialize checkbox state on page load
+		// Handle signup form submission
 		document.addEventListener('DOMContentLoaded', function() {
-			const checkbox = document.getElementById('humanVerification');
-			const submitBtn = document.getElementById('submitBtn');
-			const form = document.querySelector('form');
+			const signupForm = document.getElementById('registerForm');
+			const signupAlert = document.querySelector('.alert-danger, .alert-success');
 
-			if (checkbox && submitBtn) {
-				// Ensure button is disabled by default
-				submitBtn.disabled = !checkbox.checked;
+			if (signupForm) {
+				signupForm.addEventListener('submit', async function(e) {
+					e.preventDefault();
 
-				// Add event listener to checkbox for accessibility
-				checkbox.addEventListener('change', function() {
-					submitBtn.disabled = !this.checked;
+					const formData = new FormData(signupForm);
+					const submitBtn = signupForm.querySelector('.submit-btn');
+					const originalBtnText = submitBtn.textContent;
 
-					const checkboxGroup = document.querySelector('.checkbox-group');
-					if (this.checked) {
-						checkboxGroup.style.background = 'rgba(16, 185, 129, 0.1)';
-						checkboxGroup.style.borderColor = 'rgba(16, 185, 129, 0.3)';
-					} else {
-						checkboxGroup.style.background = 'rgba(59, 130, 246, 0.05)';
-						checkboxGroup.style.borderColor = 'rgba(59, 130, 246, 0.1)';
+					// Disable button
+					submitBtn.disabled = true;
+					submitBtn.textContent = 'Signing Up...';
+
+					try {
+						const response = await fetch('../actions/register_user_action.php', {
+							method: 'POST',
+							body: formData
+						});
+
+						const result = await response.json();
+
+						if (result.status === 'success') {
+							// Show success message
+							const alertDiv = document.createElement('div');
+							alertDiv.className = 'alert alert-success';
+							alertDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + result.message;
+							signupForm.parentNode.insertBefore(alertDiv, signupForm);
+
+							// Redirect to login after 2 seconds
+							setTimeout(() => {
+								window.location.href = 'login.php';
+							}, 2000);
+						} else {
+							// Show error message
+							const alertDiv = document.createElement('div');
+							alertDiv.className = 'alert alert-danger';
+							alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (result.message || 'Registration failed');
+							signupForm.parentNode.insertBefore(alertDiv, signupForm);
+							submitBtn.disabled = false;
+							submitBtn.textContent = originalBtnText;
+						}
+					} catch (error) {
+						const alertDiv = document.createElement('div');
+						alertDiv.className = 'alert alert-danger';
+						alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.';
+						signupForm.parentNode.insertBefore(alertDiv, signupForm);
+						submitBtn.disabled = false;
+						submitBtn.textContent = originalBtnText;
+						console.error('Signup error:', error);
 					}
 				});
-			}
-
-			// Add form validation with smooth scrolling
-			if (form) {
-				form.addEventListener('submit', function(e) {
-					const invalidInputs = form.querySelectorAll('input:invalid, select:invalid');
-					if (invalidInputs.length > 0) {
-						e.preventDefault();
-						scrollToFirstError();
-						invalidInputs.forEach(highlightErrorField);
-					}
-				});
-
-				// Add real-time validation with smooth focus
-				const inputs = form.querySelectorAll('input, select');
-				inputs.forEach(input => {
-					input.addEventListener('invalid', function() {
-						setTimeout(() => {
-							scrollToElement(this.closest('.form-group'));
-							highlightErrorField(this);
-						}, 100);
-					});
-
-					// Smooth scroll on focus for better UX
-					input.addEventListener('focus', function() {
-						scrollToElement(this.closest('.form-group'), 50);
-					});
-				});
-			}
-
-			// Auto-scroll to error messages if present
-			const errorAlert = document.querySelector('.alert-danger');
-			if (errorAlert) {
-				setTimeout(() => {
-					scrollToElement(errorAlert);
-				}, 300);
 			}
 		});
 	</script>

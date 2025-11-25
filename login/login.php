@@ -1070,6 +1070,8 @@ try {
 			background: transparent;
 			border: 2px solid white;
 			color: white;
+			text-decoration: none;
+			display: inline-block;
 			padding: 16px 40px;
 			border-radius: 12px;
 			font-size: 1.1rem;
@@ -1727,8 +1729,7 @@ try {
 						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
 					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
-					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">Log In</button>
-					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">Join GadgetGarage</button>
+					<a href="register.php" class="welcome-signup-btn" id="welcomeSignupBtn">Join GadgetGarage</a>
 					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
 
@@ -1762,7 +1763,7 @@ try {
 						</div>
 
 						<!-- Login Form -->
-						<div id="loginForm" class="form-content active">
+						<div id="loginForm" class="form-content" style="display: block;">
 							<?php if ($login_error): ?>
 								<div class="alert alert-danger">
 									<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($login_error); ?>
@@ -1818,98 +1819,6 @@ try {
 							<?php endif; ?>
 						</div>
 
-						<!-- Sign Up Form -->
-						<div id="signupForm" class="form-content">
-							<div id="signupAlert" style="display: none;"></div>
-							<form id="actualSignupForm" method="POST" action="../actions/register_user_action.php">
-								<div class="form-group">
-									<label for="signup_name" class="form-label">Full Name</label>
-									<div class="input-group">
-										<i class="fas fa-user input-icon"></i>
-										<input type="text"
-											id="signup_name"
-											name="name"
-											class="form-control with-icon"
-											placeholder="Enter your full name"
-											required>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_email" class="form-label">Email</label>
-									<div class="input-group">
-										<i class="fas fa-envelope input-icon"></i>
-										<input type="email"
-											id="signup_email"
-											name="email"
-											class="form-control with-icon"
-											placeholder="Enter your email"
-											required>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_phone" class="form-label">Phone Number</label>
-									<div class="input-group">
-										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
-										<input type="tel"
-											id="signup_phone"
-											name="phone_number"
-											class="form-control with-flag"
-											placeholder="your phone number"
-											required>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_country" class="form-label">Country</label>
-									<div class="input-group">
-										<i class="fas fa-globe input-icon"></i>
-										<select id="signup_country" name="country" class="form-control with-icon" required>
-											<option value="">Select Country</option>
-											<option value="Ghana" selected>Ghana</option>
-											<option value="Nigeria">Nigeria</option>
-											<option value="USA">United States</option>
-											<option value="UK">United Kingdom</option>
-											<option value="Canada">Canada</option>
-											<option value="Australia">Australia</option>
-										</select>
-									</div>
-								</div>
-
-								<div class="form-group">
-									<label for="signup_city" class="form-label">City</label>
-									<div class="input-group">
-										<i class="fas fa-map-marker-alt input-icon"></i>
-										<input type="text"
-											id="signup_city"
-											name="city"
-											class="form-control with-icon"
-											placeholder="Enter your city"
-											required>
-									</div>
-								</div>
-
-								<input type="hidden" name="role" value="1">
-
-								<div class="form-group">
-									<label for="signup_password" class="form-label">Password</label>
-									<div class="input-group">
-										<i class="fas fa-lock input-icon"></i>
-										<input type="password"
-											id="signup_password"
-											name="password"
-											class="form-control with-icon"
-											placeholder="Create a password"
-											required>
-									</div>
-								</div>
-
-								<button type="submit" class="submit-btn">
-									SIGN UP
-								</button>
-							</form>
-						</div>
 
 					</div>
 				</div>
@@ -2028,8 +1937,11 @@ try {
 				}
 			}
 
-			// Initialize login view on page load
-			switchToLogin();
+			// Show login form on page load
+			const loginForm = document.getElementById('loginForm');
+			if (loginForm) {
+				loginForm.style.display = 'block';
+			}
 		});
 
 		// Shop Dropdown Functions
@@ -2073,130 +1985,6 @@ try {
 		// Timeout variables
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
-
-		// Auth Panel Switching Functions
-		function switchToLogin() {
-			const authPanels = document.getElementById('authPanels');
-			const loginForm = document.getElementById('loginForm');
-			const signupForm = document.getElementById('signupForm');
-			const welcomeTitle = document.getElementById('welcomeTitle');
-			const welcomeMessage = document.getElementById('welcomeMessage');
-			const formTitle = document.getElementById('formTitle');
-			const formSubtitle = document.getElementById('formSubtitle');
-			const welcomeSigninBtn = document.getElementById('welcomeSigninBtn');
-			const welcomeSignupBtn = document.getElementById('welcomeSignupBtn');
-			const welcomeButtonMessage = document.getElementById('welcomeButtonMessage');
-
-			// Remove signup mode - slide back to login (panels slide right)
-			authPanels.classList.remove('signup-mode');
-
-			// Update form visibility
-			loginForm.classList.add('active');
-			signupForm.classList.remove('active');
-
-			// Update welcome panel content for LOGIN view
-			welcomeTitle.textContent = 'Welcome Back!';
-			welcomeMessage.textContent = 'Provide your personal details to use all features';
-			welcomeSigninBtn.style.display = 'none';
-			welcomeSignupBtn.style.display = 'block';
-			welcomeSignupBtn.textContent = 'Join GadgetGarage';
-			welcomeButtonMessage.textContent = "Join 1000's of customers that buy smart tech with smarter spending.";
-
-			// Update form title and subtitle
-			formTitle.textContent = 'Login With';
-			formSubtitle.textContent = 'Login With Your Email & Password';
-		}
-
-		function switchToSignup() {
-			const authPanels = document.getElementById('authPanels');
-			const loginForm = document.getElementById('loginForm');
-			const signupForm = document.getElementById('signupForm');
-			const welcomeTitle = document.getElementById('welcomeTitle');
-			const welcomeMessage = document.getElementById('welcomeMessage');
-			const formTitle = document.getElementById('formTitle');
-			const formSubtitle = document.getElementById('formSubtitle');
-			const welcomeSigninBtn = document.getElementById('welcomeSigninBtn');
-			const welcomeSignupBtn = document.getElementById('welcomeSignupBtn');
-			const welcomeButtonMessage = document.getElementById('welcomeButtonMessage');
-
-			// Add signup mode - slide to signup (panels slide left)
-			authPanels.classList.add('signup-mode');
-
-			// Update form visibility
-			loginForm.classList.remove('active');
-			signupForm.classList.add('active');
-
-			// Update welcome panel content for SIGNUP view
-			welcomeTitle.textContent = 'Hello!';
-			welcomeMessage.textContent = 'Register to use all features in our site';
-			welcomeSigninBtn.style.display = 'block';
-			welcomeSignupBtn.style.display = 'none';
-			welcomeSigninBtn.textContent = 'Log In';
-			welcomeButtonMessage.textContent = 'Log in to your existing account.';
-
-			// Update form title and subtitle
-			formTitle.textContent = 'Register With';
-			formSubtitle.textContent = 'Fill Out The Following Info For Registration';
-		}
-
-		// Handle signup form submission
-		document.addEventListener('DOMContentLoaded', function() {
-			const signupForm = document.getElementById('actualSignupForm');
-			const signupAlert = document.getElementById('signupAlert');
-
-			if (signupForm) {
-				signupForm.addEventListener('submit', async function(e) {
-					e.preventDefault();
-
-					const formData = new FormData(signupForm);
-					const submitBtn = signupForm.querySelector('.submit-btn');
-					const originalBtnText = submitBtn.textContent;
-
-					// Disable button
-					submitBtn.disabled = true;
-					submitBtn.textContent = 'Signing Up...';
-
-					// Hide previous alerts
-					signupAlert.style.display = 'none';
-
-					try {
-						const response = await fetch('../actions/register_user_action.php', {
-							method: 'POST',
-							body: formData
-						});
-
-						const result = await response.json();
-
-						if (result.status === 'success') {
-							signupAlert.className = 'alert alert-success';
-							signupAlert.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + result.message;
-							signupAlert.style.display = 'block';
-
-							// Switch to login view after 2 seconds
-							setTimeout(() => {
-								switchToLogin();
-								signupAlert.style.display = 'none';
-								// Clear the form
-								signupForm.reset();
-							}, 2000);
-						} else {
-							signupAlert.className = 'alert alert-danger';
-							signupAlert.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (result.message || 'Registration failed');
-							signupAlert.style.display = 'block';
-							submitBtn.disabled = false;
-							submitBtn.textContent = originalBtnText;
-						}
-					} catch (error) {
-						signupAlert.className = 'alert alert-danger';
-						signupAlert.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.';
-						signupAlert.style.display = 'block';
-						submitBtn.disabled = false;
-						submitBtn.textContent = originalBtnText;
-						console.error('Signup error:', error);
-					}
-				});
-			}
-		});
 	</script>
 </body>
 

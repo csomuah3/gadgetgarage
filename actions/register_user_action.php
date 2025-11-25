@@ -114,16 +114,25 @@ if ($isLogin) {
                 if (defined('SMS_ENABLED') && SMS_ENABLED) {
                     require_once __DIR__ . '/../helpers/sms_helper.php';
 
-                    // Get the newly created customer ID from the User class
-                    // We need to get this from the database since createUser doesn't return it
-                    require_once __DIR__ . '/../settings/db_class.php';
-                    $db = new db_connection();
-                    $customer_query = "SELECT customer_id FROM customer WHERE customer_email = ? ORDER BY customer_id DESC LIMIT 1";
-                    $customer_result = $db->db_fetch_one($customer_query, [$email]);
+                    // Get the customer ID from the registration result
+                    $customer_id = $res['user_id'] ?? null;
 
-                    if ($customer_result) {
-                        $customer_id = $customer_result['customer_id'];
+                    // If user_id not in result, query database
+                    if (!$customer_id) {
+                        require_once __DIR__ . '/../settings/db_class.php';
+                        $db = new db_connection();
+                        if ($db->db_connect()) {
+                            $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+                            $customer_query = "SELECT customer_id FROM customer WHERE customer_email = '$email_escaped' ORDER BY customer_id DESC LIMIT 1";
+                            $customer_result = $db->db_fetch_one($customer_query);
+                            
+                            if ($customer_result) {
+                                $customer_id = $customer_result['customer_id'];
+                            }
+                        }
+                    }
 
+                    if ($customer_id) {
                         $sms_sent = send_welcome_registration_sms(
                             $customer_id,
                             $name,
@@ -131,10 +140,12 @@ if ($isLogin) {
                         );
 
                         if ($sms_sent) {
-                            error_log('Welcome SMS sent successfully to new user: ' . $email);
+                            error_log('Welcome SMS sent successfully to new user: ' . $email . ' (ID: ' . $customer_id . ')');
                         } else {
-                            error_log('Welcome SMS failed for new user: ' . $email);
+                            error_log('Welcome SMS failed for new user: ' . $email . ' (ID: ' . $customer_id . ')');
                         }
+                    } else {
+                        error_log('Welcome SMS skipped - could not get customer_id for: ' . $email);
                     }
                 }
             } catch (Exception $sms_error) {

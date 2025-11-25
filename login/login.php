@@ -988,21 +988,17 @@ try {
 			box-shadow: 0 25px 80px var(--shadow);
 			backdrop-filter: blur(15px);
 			border: 1px solid rgba(255, 255, 255, 0.2);
+			display: flex;
 		}
 
 		.auth-panels {
 			display: flex;
 			height: 100%;
-			width: 200%;
+			width: 100%;
 			position: relative;
-			transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
 		}
 
-		.auth-panels.signup-mode {
-			transform: translateX(-50%);
-		}
-
-		/* Welcome Panel - GadgetGarage Teal/Green Gradient */
+		/* Welcome Panel - GadgetGarage Teal/Green Gradient - RIGHT SIDE */
 		.welcome-panel {
 			flex: 0 0 50%;
 			background: var(--gradient-primary);
@@ -1015,6 +1011,8 @@ try {
 			text-align: center;
 			position: relative;
 			overflow: hidden;
+			border-top-left-radius: 50px;
+			border-bottom-left-radius: 50px;
 		}
 
 		.welcome-panel::before {
@@ -1067,7 +1065,8 @@ try {
 			position: relative;
 		}
 
-		.welcome-signup-btn {
+		.welcome-signup-btn,
+		.welcome-signin-btn {
 			background: transparent;
 			border: 2px solid white;
 			color: white;
@@ -1079,16 +1078,18 @@ try {
 			transition: all 0.3s ease;
 			z-index: 2;
 			position: relative;
+			text-transform: uppercase;
 		}
 
-		.welcome-signup-btn:hover {
+		.welcome-signup-btn:hover,
+		.welcome-signin-btn:hover {
 			background: white;
 			color: var(--gg-teal);
 			transform: translateY(-2px);
 			box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
 		}
 
-		/* Form Panel */
+		/* Form Panel - LEFT SIDE */
 		.form-panel {
 			flex: 0 0 50%;
 			background: rgba(255, 255, 255, 0.98);
@@ -1426,20 +1427,20 @@ try {
 				margin: 20px;
 			}
 
-			.auth-panels {
-				width: 200%;
-				height: auto;
-				min-height: 600px;
-			}
-
-			.auth-panels.signup-mode {
-				transform: translateX(-50%);
+			.auth-container {
+				flex-direction: column;
 			}
 
 			.welcome-panel,
 			.form-panel {
-				flex: 0 0 50%;
-				min-height: 600px;
+				flex: 0 0 100%;
+				min-height: 500px;
+			}
+
+			.welcome-panel {
+				border-top-left-radius: 25px;
+				border-top-right-radius: 25px;
+				border-bottom-left-radius: 0;
 			}
 
 			.welcome-panel {
@@ -1698,12 +1699,13 @@ try {
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 
-				<!-- Welcome Panel (Teal/Green) -->
+				<!-- Welcome Panel (Teal/Green) - RIGHT SIDE -->
 				<div class="welcome-panel">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
 						alt="Gadget Garage Logo" class="brand-logo">
-					<h1 class="welcome-title" id="welcomeTitle">Hello!</h1>
-					<p class="welcome-message" id="welcomeMessage">Register to use all features in our site</p>
+					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
+					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
+					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">SIGN IN</button>
 					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">SIGN UP</button>
 				</div>
 
@@ -1802,7 +1804,8 @@ try {
 
 						<!-- Sign Up Form -->
 						<div id="signupForm" class="form-content">
-							<form id="actualSignupForm" method="POST" action="register.php">
+							<div id="signupAlert" style="display: none;"></div>
+							<form id="actualSignupForm" method="POST" action="../actions/register_user_action.php">
 								<div class="form-group">
 									<label for="signup_name" class="form-label">Full Name</label>
 									<div class="input-group">
@@ -1841,6 +1844,37 @@ try {
 											required>
 									</div>
 								</div>
+
+								<div class="form-group">
+									<label for="signup_country" class="form-label">Country</label>
+									<div class="input-group">
+										<i class="fas fa-globe input-icon"></i>
+										<select id="signup_country" name="country" class="form-control with-icon" required>
+											<option value="">Select Country</option>
+											<option value="Ghana" selected>Ghana</option>
+											<option value="Nigeria">Nigeria</option>
+											<option value="USA">United States</option>
+											<option value="UK">United Kingdom</option>
+											<option value="Canada">Canada</option>
+											<option value="Australia">Australia</option>
+										</select>
+									</div>
+								</div>
+
+								<div class="form-group">
+									<label for="signup_city" class="form-label">City</label>
+									<div class="input-group">
+										<i class="fas fa-map-marker-alt input-icon"></i>
+										<input type="text"
+											id="signup_city"
+											name="city"
+											class="form-control with-icon"
+											placeholder="Enter your city"
+											required>
+									</div>
+								</div>
+
+								<input type="hidden" name="role" value="1">
 
 								<div class="form-group">
 									<label for="signup_password" class="form-label">Password</label>
@@ -1977,6 +2011,9 @@ try {
 					toggleSwitch.classList.add('active');
 				}
 			}
+
+			// Initialize login view on page load
+			switchToLogin();
 		});
 
 		// Shop Dropdown Functions
@@ -2023,7 +2060,6 @@ try {
 
 		// Auth Panel Switching Functions
 		function switchToLogin() {
-			const authPanels = document.getElementById('authPanels');
 			const loginForm = document.getElementById('loginForm');
 			const signupForm = document.getElementById('signupForm');
 			const loginTab = document.getElementById('loginTab');
@@ -2033,9 +2069,8 @@ try {
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
 			const formSubtitle = document.getElementById('formSubtitle');
-
-			// Remove signup mode - slide back to login
-			authPanels.classList.remove('signup-mode');
+			const welcomeSigninBtn = document.getElementById('welcomeSigninBtn');
+			const welcomeSignupBtn = document.getElementById('welcomeSignupBtn');
 
 			// Update form visibility
 			loginForm.classList.add('active');
@@ -2048,9 +2083,11 @@ try {
 			// Move toggle slider to left
 			toggleSlider.style.transform = 'translateX(0)';
 
-			// Update welcome panel content
-			welcomeTitle.textContent = 'Hello!';
-			welcomeMessage.textContent = 'Register to use all features in our site';
+			// Update welcome panel content for LOGIN view
+			welcomeTitle.textContent = 'Welcome Back!';
+			welcomeMessage.textContent = 'Provide your personal details to use all features';
+			welcomeSigninBtn.style.display = 'block';
+			welcomeSignupBtn.style.display = 'none';
 
 			// Update form title and subtitle
 			formTitle.textContent = 'Login With';
@@ -2058,7 +2095,6 @@ try {
 		}
 
 		function switchToSignup() {
-			const authPanels = document.getElementById('authPanels');
 			const loginForm = document.getElementById('loginForm');
 			const signupForm = document.getElementById('signupForm');
 			const loginTab = document.getElementById('loginTab');
@@ -2068,9 +2104,8 @@ try {
 			const welcomeMessage = document.getElementById('welcomeMessage');
 			const formTitle = document.getElementById('formTitle');
 			const formSubtitle = document.getElementById('formSubtitle');
-
-			// Add signup mode for sliding animation - slide to signup
-			authPanels.classList.add('signup-mode');
+			const welcomeSigninBtn = document.getElementById('welcomeSigninBtn');
+			const welcomeSignupBtn = document.getElementById('welcomeSignupBtn');
 
 			// Update form visibility
 			loginForm.classList.remove('active');
@@ -2083,14 +2118,72 @@ try {
 			// Move toggle slider to right
 			toggleSlider.style.transform = 'translateX(100%)';
 
-			// Update welcome panel content
-			welcomeTitle.textContent = 'Welcome Back!';
-			welcomeMessage.textContent = 'Provide your personal details to use all features';
+			// Update welcome panel content for SIGNUP view
+			welcomeTitle.textContent = 'Hello!';
+			welcomeMessage.textContent = 'Register to use all features in our site';
+			welcomeSigninBtn.style.display = 'none';
+			welcomeSignupBtn.style.display = 'block';
 
 			// Update form title and subtitle
 			formTitle.textContent = 'Register With';
 			formSubtitle.textContent = 'Fill Out The Following Info For Registration';
 		}
+
+		// Handle signup form submission
+		document.addEventListener('DOMContentLoaded', function() {
+			const signupForm = document.getElementById('actualSignupForm');
+			const signupAlert = document.getElementById('signupAlert');
+
+			if (signupForm) {
+				signupForm.addEventListener('submit', async function(e) {
+					e.preventDefault();
+
+					const formData = new FormData(signupForm);
+					const submitBtn = signupForm.querySelector('.submit-btn');
+					const originalBtnText = submitBtn.textContent;
+
+					// Disable button
+					submitBtn.disabled = true;
+					submitBtn.textContent = 'Signing Up...';
+
+					// Hide previous alerts
+					signupAlert.style.display = 'none';
+
+					try {
+						const response = await fetch('../actions/register_user_action.php', {
+							method: 'POST',
+							body: formData
+						});
+
+						const result = await response.json();
+
+						if (result.status === 'success') {
+							signupAlert.className = 'alert alert-success';
+							signupAlert.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + result.message;
+							signupAlert.style.display = 'block';
+
+							// Redirect to login after 2 seconds
+							setTimeout(() => {
+								window.location.href = 'login.php';
+							}, 2000);
+						} else {
+							signupAlert.className = 'alert alert-danger';
+							signupAlert.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (result.message || 'Registration failed');
+							signupAlert.style.display = 'block';
+							submitBtn.disabled = false;
+							submitBtn.textContent = originalBtnText;
+						}
+					} catch (error) {
+						signupAlert.className = 'alert alert-danger';
+						signupAlert.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.';
+						signupAlert.style.display = 'block';
+						submitBtn.disabled = false;
+						submitBtn.textContent = originalBtnText;
+						console.error('Signup error:', error);
+					}
+				});
+			}
+		});
 	</script>
 </body>
 

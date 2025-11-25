@@ -988,18 +988,14 @@ try {
 			box-shadow: 0 25px 80px var(--shadow);
 			backdrop-filter: blur(15px);
 			border: 1px solid rgba(255, 255, 255, 0.2);
+			display: flex;
 		}
 
 		.auth-panels {
 			display: flex;
 			height: 100%;
-			width: 200%;
+			width: 100%;
 			position: relative;
-			transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-		}
-
-		.auth-panels.signup-mode {
-			transform: translateX(-50%);
 		}
 
 		/* Welcome Panel - GadgetGarage Teal/Green Gradient - RIGHT SIDE */
@@ -1445,28 +1441,27 @@ try {
 			.auth-container {
 				height: auto;
 				min-height: 600px;
+				flex-direction: column;
 			}
 
 			.auth-panels {
-				width: 200%;
+				width: 100%;
 				height: auto;
 				min-height: 600px;
-			}
-
-			.auth-panels.signup-mode {
-				transform: translateX(-50%);
+				flex-direction: column;
 			}
 
 			.welcome-panel,
 			.form-panel {
-				flex: 0 0 50%;
-				min-height: 600px;
+				flex: 0 0 100%;
+				min-height: 500px;
 			}
 
 			.welcome-panel {
-				border-top-left-radius: 25px;
+				border-top-left-radius: 0;
 				border-top-right-radius: 25px;
 				border-bottom-left-radius: 25px;
+				border-bottom-right-radius: 25px;
 			}
 
 			.welcome-panel {

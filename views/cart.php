@@ -73,7 +73,8 @@ try {
         }
 
         /* Promotional Banner Styles */
-        .promo-banner {
+        .promo-banner,
+        .promo-banner2 {
             background: #001f3f !important;
             color: white;
             padding: 6px 15px;
@@ -92,14 +93,18 @@ try {
             max-width: 100%;
         }
 
-        .promo-banner-left {
+        .promo-banner-left,
+        .promo-banner2 .promo-banner-left,
+        .promo-banner2 .promo-banner-left {
             display: flex;
             align-items: center;
             gap: 15px;
             flex: 0 0 auto;
         }
 
-        .promo-banner-center {
+        .promo-banner-center,
+        .promo-banner2 .promo-banner-center,
+        .promo-banner2 .promo-banner-center {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -107,11 +112,13 @@ try {
             flex: 1;
         }
 
-        .promo-banner i {
+        .promo-banner i,
+        .promo-banner2 i {
             font-size: 1rem;
         }
 
-        .promo-banner .promo-text {
+        .promo-banner .promo-text,
+        .promo-banner2 .promo-text {
             font-size: 1rem;
             font-weight: 400;
             letter-spacing: 0.5px;

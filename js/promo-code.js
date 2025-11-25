@@ -133,6 +133,17 @@ async function applyPromoCode() {
                 window.originalTotal = result.original_total;
             }
 
+            // Store promo code info in localStorage for checkout page
+            localStorage.setItem('appliedPromo', JSON.stringify({
+                promo_code: result.promo_code,
+                discount_type: result.discount_type,
+                discount_value: result.discount_value,
+                discount_amount: result.discount_amount,
+                original_total: result.original_total,
+                new_total: result.new_total,
+                description: result.description || ''
+            }));
+
             // Update UI with success message
             promoMessage.innerHTML = `<div class="text-success">
                 <i class="fas fa-check-circle"></i>
@@ -192,6 +203,9 @@ function removePromoCode() {
     console.log('RemovePromoCode function called');
 
     appliedPromo = null;
+
+    // Remove promo code from localStorage
+    localStorage.removeItem('appliedPromo');
 
     // Hide applied promo section
     const appliedPromoDiv = document.getElementById('appliedPromo');

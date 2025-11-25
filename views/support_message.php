@@ -74,7 +74,8 @@ if ($_POST && isset($_POST['send_message'])) {
         }
 
         /* Promo Banner */
-        .promo-banner {
+        .promo-banner,
+        .promo-banner2 {
             background: #001f3f !important;
             color: white;
             text-align: center;

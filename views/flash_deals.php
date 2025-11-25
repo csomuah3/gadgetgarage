@@ -36,19 +36,44 @@ try {
 
 // Products and categories fetched from database above
 
-// Filter products based on URL parameters
-$category_filter = $_GET['category'] ?? 'all';
+// Filter products to ONLY show Flash Deals category
+// First, find the Flash Deals category
+$flash_deals_category = null;
+foreach ($categories as $cat) {
+    if (stripos($cat['cat_name'], 'flash') !== false || stripos($cat['cat_name'], 'deal') !== false) {
+        $flash_deals_category = $cat['cat_name'];
+        break;
+    }
+}
+
+// If no "Flash Deals" category found, try common variations
+if (!$flash_deals_category) {
+    $possible_names = ['Flash Deals', 'flash_deals', 'FlashDeals', 'flash deals', 'Flash Deal'];
+    foreach ($possible_names as $name) {
+        foreach ($categories as $cat) {
+            if (strtolower(trim($cat['cat_name'])) === strtolower(trim($name))) {
+                $flash_deals_category = $cat['cat_name'];
+                break 2;
+            }
+        }
+    }
+}
+
+// Filter products to ONLY show Flash Deals category products
+$filtered_products = [];
+if ($flash_deals_category) {
+    $filtered_products = array_filter($all_products, function($product) use ($flash_deals_category) {
+        return $product['cat_name'] === $flash_deals_category;
+    });
+} else {
+    // If category not found, show all products (fallback)
+    $filtered_products = $all_products;
+}
+
+// Additional filters based on URL parameters
 $brand_filter = $_GET['brand'] ?? 'all';
 $condition_filter = $_GET['condition'] ?? 'all';
 $search_query = $_GET['search'] ?? '';
-
-$filtered_products = $all_products;
-
-if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
-        return $product['cat_name'] === $category_filter;
-    });
-}
 
 if ($brand_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
@@ -135,7 +160,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         /* Promotional Banner Styles - Same as index */
-        .promo-banner {
+        .promo-banner,
+        .promo-banner2 {
             background: #001f3f !important;
             color: white;
             padding: 6px 15px;
@@ -154,14 +180,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             max-width: 100%;
         }
 
-        .promo-banner-left {
+        .promo-banner-left,
+        .promo-banner2 .promo-banner-left,
+        .promo-banner2 .promo-banner-left {
             display: flex;
             align-items: center;
             gap: 15px;
             flex: 0 0 auto;
         }
 
-        .promo-banner-center {
+        .promo-banner-center,
+        .promo-banner2 .promo-banner-center,
+        .promo-banner2 .promo-banner-center {
             display: flex;
             align-items: center;
             justify-content: center;
@@ -169,11 +199,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             flex: 1;
         }
 
-        .promo-banner i {
+        .promo-banner i,
+        .promo-banner2 i {
             font-size: 1rem;
         }
 
-        .promo-banner .promo-text {
+        .promo-banner .promo-text,
+        .promo-banner2 .promo-text {
             font-size: 1rem;
             font-weight: 400;
             letter-spacing: 0.5px;

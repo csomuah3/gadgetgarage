@@ -89,7 +89,8 @@ try {
 		}
 
 		/* Promotional Banner Styles - Same as index */
-		.promo-banner {
+		.promo-banner,
+		.promo-banner2 {
 			background: #001f3f !important;
 			color: white;
 			padding: 6px 15px;
@@ -108,14 +109,18 @@ try {
 			max-width: 100%;
 		}
 
-		.promo-banner-left {
+		.promo-banner-left,
+		.promo-banner2 .promo-banner-left,
+        .promo-banner2 .promo-banner-left {
 			display: flex;
 			align-items: center;
 			gap: 15px;
 			flex: 0 0 auto;
 		}
 
-		.promo-banner-center {
+		.promo-banner-center,
+		.promo-banner2 .promo-banner-center,
+        .promo-banner2 .promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -123,11 +128,13 @@ try {
 			flex: 1;
 		}
 
-		.promo-banner i {
+		.promo-banner i,
+		.promo-banner2 i {
 			font-size: 1rem;
 		}
 
-		.promo-banner .promo-text {
+		.promo-banner .promo-text,
+		.promo-banner2 .promo-text {
 			font-size: 1rem;
 			font-weight: 400;
 			letter-spacing: 0.5px;
@@ -1730,7 +1737,7 @@ try {
                     </a>
                     <button type="button" class="btn btn-primary flex-fill" id="simulatePaymentBtn">
                         <i class="fas fa-lock me-2"></i>
-                        Complete Order - GHS <?php echo number_format($cart_total, 2); ?>
+                        Complete Order - GH₵ <?php echo number_format($cart_total, 2); ?>
                     </button>
                 </div>
             </div>
@@ -1741,7 +1748,7 @@ try {
 
                     <div class="summary-row">
                         <span>Subtotal (<?php echo $cart_count; ?> items):</span>
-                        <span class="ms-auto" id="subtotal">GHS <?php echo number_format($cart_total, 2); ?></span>
+                        <span class="ms-auto" id="subtotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
                     </div>
 
                     <div class="summary-row">
@@ -1766,7 +1773,7 @@ try {
 
                     <div class="summary-row total">
                         <span>Total:</span>
-                        <span class="ms-auto" id="finalTotal">GHS <?php echo number_format($cart_total, 2); ?></span>
+                        <span class="ms-auto" id="finalTotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
                     </div>
 
                     <div class="mt-4">
@@ -1801,8 +1808,8 @@ try {
                 </div>
                 <div class="modal-body text-center">
                     <div class="mb-4">
-                        <div class="fs-2 fw-bold text-primary mb-2">
-                            GHS <?php echo number_format($cart_total, 2); ?>
+                        <div class="fs-2 fw-bold text-primary mb-2" id="checkoutTotalDisplay">
+                            GH₵ <?php echo number_format($cart_total, 2); ?>
                         </div>
                         <p class="text-muted">
                             You'll be redirected to PayStack's secure payment page where you can choose from Mobile Money, Cards, or Bank Transfer options.
@@ -2404,21 +2411,63 @@ try {
 			if (appliedPromo) {
 				try {
 					const promoData = JSON.parse(appliedPromo);
+					console.log('Promo data from cart:', promoData);
 
 					// Show discount in order summary
 					const discountRow = document.getElementById('discountRow');
 					if (discountRow) {
 						discountRow.style.display = 'flex';
-						document.getElementById('discountPercent').textContent = promoData.discount_value;
-						document.getElementById('discountAmount').textContent = '-GHS ' + promoData.discount_amount.toFixed(2);
-						document.getElementById('finalTotal').textContent = 'GHS ' + promoData.new_total.toFixed(2);
+						
+						// Update discount display based on discount type
+						const discountLabel = document.getElementById('discountLabel');
+						if (discountLabel) {
+							if (promoData.discount_type === 'fixed') {
+								// For fixed discounts, show the promo code name
+								discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>Discount (' + (promoData.promo_code || 'Discount') + '):';
+							} else {
+								// For percentage discounts, show the percentage
+								discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>Discount (' + promoData.discount_value + '%):';
+							}
+						}
+						
+						const discountAmountElement = document.getElementById('discountAmount');
+						if (discountAmountElement) {
+							discountAmountElement.textContent = '-GH₵ ' + promoData.discount_amount.toFixed(2);
+						}
+						
+						const finalTotalElement = document.getElementById('finalTotal');
+						if (finalTotalElement) {
+							finalTotalElement.textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+						}
 					}
 
 					// Update subtotal display to show original amount
 					const subtotalElement = document.getElementById('subtotal');
 					if (subtotalElement) {
-						subtotalElement.textContent = 'GHS ' + promoData.original_total.toFixed(2);
+						subtotalElement.textContent = 'GH₵ ' + promoData.original_total.toFixed(2);
 					}
+
+					// Update the "Complete Order" button to show discounted total
+					const completeOrderBtn = document.getElementById('simulatePaymentBtn');
+					if (completeOrderBtn) {
+						completeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Complete Order - GH₵ ' + promoData.new_total.toFixed(2);
+					}
+
+					// Update the large total display
+					const checkoutTotalDisplay = document.getElementById('checkoutTotalDisplay');
+					if (checkoutTotalDisplay) {
+						checkoutTotalDisplay.textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+					}
+
+					// Update the total amount variable used for payment processing
+					if (typeof window !== 'undefined') {
+						window.discountedTotal = promoData.new_total;
+						window.originalTotal = promoData.original_total;
+						window.discountAmount = promoData.discount_amount;
+						window.appliedPromoCode = promoData.promo_code;
+					}
+
+					console.log('Promo applied successfully. New total:', promoData.new_total);
 				} catch (error) {
 					console.error('Error applying promo from cart:', error);
 					localStorage.removeItem('appliedPromo');

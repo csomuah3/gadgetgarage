@@ -56,7 +56,8 @@ if ($order_id) {
         }
 
         /* Promo Banner */
-        .promo-banner {
+        .promo-banner,
+        .promo-banner2 {
             background: #001f3f !important;
             color: white;
             text-align: center;

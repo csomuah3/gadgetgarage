@@ -115,7 +115,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Promo Banner */
-        .promo-banner {
+        .promo-banner,
+        .promo-banner2 {
             background: #001f3f !important;
             color: white;
             text-align: center;

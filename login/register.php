@@ -2,28 +2,7 @@
 session_start();
 require_once __DIR__ . '/../controllers/user_controller.php';
 
-$reg_success = '';
-$reg_error = '';
-
-if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    // read posted fields
-    $name = trim($_POST['name'] ?? '');
-    $email = trim($_POST['email'] ?? '');
-    $password = $_POST['password'] ?? '';
-    $phone_number = trim($_POST['phone_number'] ?? '');
-    $country = trim($_POST['country'] ?? '');
-    $city = trim($_POST['city'] ?? '');
-    $role = (int)($_POST['role'] ?? 1);
-
-    // call your existing controller
-    $res = register_user_ctr($name, $email, $password, $phone_number, $country, $city, $role);
-
-    if (is_array($res) && ($res['status'] ?? '') === 'success') {
-        $reg_success = $res['message'] ?? 'Registration successful. You can now log in.';
-    } else {
-        $reg_error = is_array($res) ? ($res['message'] ?? 'Registration failed') : 'Registration failed';
-    }
-}
+// No PHP form processing here - we're using AJAX for form submission
 
 // Try to load categories and brands for navigation
 $categories = [];
@@ -2013,23 +1992,7 @@ try {
 
 						<!-- Signup Form -->
 						<div id="signupForm" class="form-content" style="display: block;">
-							<?php if ($reg_error): ?>
-								<div class="alert alert-danger">
-									<i class="fas fa-exclamation-circle me-2"></i><?php echo htmlspecialchars($reg_error); ?>
-								</div>
-							<?php endif; ?>
-
-							<?php if ($reg_success): ?>
-								<div class="alert alert-success animate__animated animate__fadeInUp">
-									<i class="fas fa-check-circle me-2"></i><?php echo htmlspecialchars($reg_success); ?>
-								</div>
-								<script>
-									setTimeout(function() {
-										window.location.href = 'login.php';
-									}, 2000);
-								</script>
-							<?php else: ?>
-								<form method="POST" id="registerForm" action="../actions/register_user_action.php">
+							<form method="POST" id="registerForm">
 									<div class="form-group">
 										<label for="name" class="form-label">Full Name</label>
 										<div class="input-group">
@@ -2287,11 +2250,14 @@ try {
 		// Handle signup form submission
 		document.addEventListener('DOMContentLoaded', function() {
 			const signupForm = document.getElementById('registerForm');
-			const signupAlert = document.querySelector('.alert-danger, .alert-success');
 
 			if (signupForm) {
 				signupForm.addEventListener('submit', async function(e) {
 					e.preventDefault();
+
+					// Remove any existing error/success messages
+					const existingAlerts = signupForm.parentNode.querySelectorAll('.alert');
+					existingAlerts.forEach(alert => alert.remove());
 
 					const formData = new FormData(signupForm);
 					const submitBtn = signupForm.querySelector('.submit-btn');
@@ -2312,7 +2278,7 @@ try {
 						if (result.status === 'success') {
 							// Show success message
 							const alertDiv = document.createElement('div');
-							alertDiv.className = 'alert alert-success';
+							alertDiv.className = 'alert alert-success animate__animated animate__fadeInUp';
 							alertDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + result.message;
 							signupForm.parentNode.insertBefore(alertDiv, signupForm);
 
@@ -2321,10 +2287,10 @@ try {
 								window.location.href = 'login.php';
 							}, 2000);
 						} else {
-							// Show error message
+							// Show error message (only one)
 							const alertDiv = document.createElement('div');
 							alertDiv.className = 'alert alert-danger';
-							alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (result.message || 'Registration failed');
+							alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (result.message || 'Registration failed. Please try again.');
 							signupForm.parentNode.insertBefore(alertDiv, signupForm);
 							submitBtn.disabled = false;
 							submitBtn.textContent = originalBtnText;

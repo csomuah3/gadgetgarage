@@ -2172,9 +2172,12 @@ try {
 							signupAlert.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + result.message;
 							signupAlert.style.display = 'block';
 
-							// Redirect to login after 2 seconds
+							// Switch to login view after 2 seconds
 							setTimeout(() => {
-								window.location.href = 'login.php';
+								switchToLogin();
+								signupAlert.style.display = 'none';
+								// Clear the form
+								signupForm.reset();
 							}, 2000);
 						} else {
 							signupAlert.className = 'alert alert-danger';

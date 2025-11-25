@@ -138,12 +138,13 @@ function send_order_confirmation_sms($order_id) {
 
         // Get order with customer information
         $db = new db_connection();
+        $order_id = (int)$order_id;
         $sql = "SELECT o.*, c.customer_name as customer_name, c.customer_contact as phone, py.amt as total_amount
                 FROM orders o
                 JOIN customer c ON o.customer_id = c.customer_id
                 LEFT JOIN payment py ON o.order_id = py.order_id
-                WHERE o.order_id = ?";
-        $order = $db->db_fetch_one($sql, [$order_id]);
+                WHERE o.order_id = $order_id";
+        $order = $db->db_fetch_one($sql);
 
         if (!$order) {
             log_sms_activity('error', 'Order not found for SMS', ['order_id' => $order_id]);

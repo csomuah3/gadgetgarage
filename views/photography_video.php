@@ -971,6 +971,30 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             pointer-events: none;
         }
 
+        .search-clear-btn {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #ef4444;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .search-clear-btn:hover {
+            background: #dc2626;
+            transform: translateY(-50%) scale(1.1);
+        }
+
         .rating-filters {
             display: flex;
             flex-direction: column;
@@ -1011,17 +1035,38 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .price-range-container {
-            padding: 10px 0;
+            padding: 15px 0;
+            position: relative;
+        }
+
+        .price-slider-track {
+            position: relative;
+            height: 6px;
+            background: #e5e7eb;
+            border-radius: 3px;
+            margin: 20px 0;
+        }
+
+        .price-slider-range {
+            position: absolute;
+            height: 100%;
+            background: linear-gradient(135deg, #059669, #047857);
+            border-radius: 3px;
+            left: 0%;
+            width: 100%;
         }
 
         .price-slider {
+            position: absolute;
+            top: -7px;
+            left: 0;
             width: 100%;
             height: 6px;
             border-radius: 3px;
-            background: #e5e7eb;
+            background: transparent;
             outline: none;
             -webkit-appearance: none;
-            margin-bottom: 15px;
+            pointer-events: none;
         }
 
         .price-slider::-webkit-slider-thumb {
@@ -1033,6 +1078,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             background: #059669;
             cursor: pointer;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            pointer-events: all;
+            transition: all 0.2s ease;
+        }
+
+        .price-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.1);
+            background: #047857;
         }
 
         .price-slider::-moz-range-thumb {
@@ -1043,6 +1095,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             cursor: pointer;
             border: none;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            pointer-events: all;
         }
 
         .price-display {
@@ -1247,6 +1300,17 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .clear-filters-btn:hover {
             background: #cbd5e0;
             color: #2d3748;
+        }
+
+        .apply-filters-btn:hover {
+            background: linear-gradient(135deg, #16a34a, #22c55e) !important;
+            transform: scale(1.03) !important;
+        }
+
+        .apply-filters-btn.has-changes {
+            background: linear-gradient(135deg, #22c55e, #16a34a) !important;
+            transform: scale(1.02);
+            box-shadow: 0 4px 12px rgba(34, 197, 94, 0.3);
         }
 
         .results-info {
@@ -1516,6 +1580,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="search-container">
                             <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
+                            <button type="button" class="search-clear-btn" id="searchClearBtn" style="display: none;" onclick="clearSearch()">
+                                <i class="fas fa-times"></i>
+                            </button>
                             <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                         </div>
                     </div>
@@ -1576,11 +1643,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Price Range</h6>
                         <div class="price-range-container">
-                            <input type="range" class="price-slider" id="priceRange" min="0" max="5000" value="2500" step="10">
+                            <div class="price-slider-track">
+                                <div class="price-slider-range" id="priceRange"></div>
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100" oninput="updatePriceDisplay()">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100" oninput="updatePriceDisplay()">
+                            </div>
                             <div class="price-display">
-                                <span>GH₵ 0</span>
-                                <span>-</span>
-                                <span>GH₵ 500</span>
+                                <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
+                                <span class="price-separator">-</span>
+                                <span class="price-max" id="priceMaxDisplay">GH₵ 50,000</span>
                             </div>
                         </div>
                     </div>
@@ -1648,12 +1719,39 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
 
                     <!-- Apply/Clear Filters Buttons -->
-                    <div class="filter-actions">
-                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
-                            <i class="fas fa-check"></i>
+                    <div class="filter-actions" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
+                        <button class="apply-filters-btn" id="applyFilters" onclick="applyAllFilters()" style="
+                            background: linear-gradient(135deg, #22c55e, #16a34a);
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            padding: 12px 20px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+                            opacity: 1;
+                        ">
+                            <i class="fas fa-filter"></i>
                             Apply Filters
                         </button>
-                        <button class="clear-filters-btn" id="clearFilters">
+                        <button class="clear-filters-btn" id="clearFilters" onclick="clearAllFilters()" style="
+                            background: #ef4444;
+                            color: white;
+                            border: none;
+                            border-radius: 8px;
+                            padding: 12px 20px;
+                            font-weight: 600;
+                            cursor: pointer;
+                            transition: all 0.3s ease;
+                            display: flex;
+                            align-items: center;
+                            justify-content: center;
+                            gap: 8px;
+                        ">
                             <i class="fas fa-times"></i>
                             Clear All Filters
                         </button>
@@ -1863,6 +1961,130 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             initCategoryFilter();
             initBrandFilter();
             initMobileFilterToggle();
+            initPriceSlider();
+            initSearchFeatures();
+        }
+
+        // Initialize price slider with real-time updates
+        function initPriceSlider() {
+            const minSlider = document.getElementById('minPriceSlider');
+            const maxSlider = document.getElementById('maxPriceSlider');
+            const minDisplay = document.getElementById('priceMinDisplay');
+            const maxDisplay = document.getElementById('priceMaxDisplay');
+            const priceRange = document.getElementById('priceRange');
+
+            if (minSlider && maxSlider && minDisplay && maxDisplay) {
+                // Update display on input
+                function updatePriceDisplay() {
+                    let minVal = parseInt(minSlider.value);
+                    let maxVal = parseInt(maxSlider.value);
+
+                    // Ensure min doesn't exceed max
+                    if (minVal >= maxVal) {
+                        minVal = maxVal - 100;
+                        minSlider.value = minVal;
+                    }
+
+                    // Ensure max doesn't go below min
+                    if (maxVal <= minVal) {
+                        maxVal = minVal + 100;
+                        maxSlider.value = maxVal;
+                    }
+
+                    // Update display text with Ghana Cedis
+                    minDisplay.textContent = 'GH₵ ' + minVal.toLocaleString();
+                    maxDisplay.textContent = 'GH₵ ' + maxVal.toLocaleString();
+
+                    // Update slider range visualization
+                    if (priceRange) {
+                        const minPercent = (minVal / 50000) * 100;
+                        const maxPercent = (maxVal / 50000) * 100;
+                        priceRange.style.left = minPercent + '%';
+                        priceRange.style.width = (maxPercent - minPercent) + '%';
+                    }
+
+                    showApplyButtonWithChanges();
+                }
+
+                // Attach event listeners
+                minSlider.addEventListener('input', updatePriceDisplay);
+                maxSlider.addEventListener('input', updatePriceDisplay);
+
+                // Initial call
+                updatePriceDisplay();
+            }
+        }
+
+        // Global function for HTML oninput calls
+        function updatePriceDisplay() {
+            const minSlider = document.getElementById('minPriceSlider');
+            const maxSlider = document.getElementById('maxPriceSlider');
+            const minDisplay = document.getElementById('priceMinDisplay');
+            const maxDisplay = document.getElementById('priceMaxDisplay');
+            const priceRange = document.getElementById('priceRange');
+
+            if (minSlider && maxSlider && minDisplay && maxDisplay) {
+                let minVal = parseInt(minSlider.value);
+                let maxVal = parseInt(maxSlider.value);
+
+                // Ensure min doesn't exceed max
+                if (minVal >= maxVal) {
+                    minVal = maxVal - 100;
+                    minSlider.value = minVal;
+                }
+
+                // Ensure max doesn't go below min
+                if (maxVal <= minVal) {
+                    maxVal = minVal + 100;
+                    maxSlider.value = maxVal;
+                }
+
+                // Update display text with Ghana Cedis
+                minDisplay.textContent = 'GH₵ ' + minVal.toLocaleString();
+                maxDisplay.textContent = 'GH₵ ' + maxVal.toLocaleString();
+
+                // Update slider range visualization
+                if (priceRange) {
+                    const minPercent = (minVal / 50000) * 100;
+                    const maxPercent = (maxVal / 50000) * 100;
+                    priceRange.style.left = minPercent + '%';
+                    priceRange.style.width = (maxPercent - minPercent) + '%';
+                }
+
+                showApplyButtonWithChanges();
+            }
+        }
+
+        function initSearchFeatures() {
+            const searchInput = document.getElementById('searchInput');
+            const searchClearBtn = document.getElementById('searchClearBtn');
+
+            if (searchInput && searchClearBtn) {
+                searchInput.addEventListener('input', function() {
+                    if (this.value.length > 0) {
+                        searchClearBtn.style.display = 'flex';
+                    } else {
+                        searchClearBtn.style.display = 'none';
+                    }
+                    showApplyButtonWithChanges();
+                });
+
+                searchClearBtn.addEventListener('click', function() {
+                    searchInput.value = '';
+                    this.style.display = 'none';
+                    searchInput.focus();
+                    showApplyButtonWithChanges();
+                });
+            }
+        }
+
+        function clearSearch() {
+            const searchInput = document.getElementById('searchInput');
+            const searchClearBtn = document.getElementById('searchClearBtn');
+
+            if (searchInput) searchInput.value = '';
+            if (searchClearBtn) searchClearBtn.style.display = 'none';
+            showApplyButtonWithChanges();
         }
 
         function initCategoryFilter() {
@@ -1871,7 +2093,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 btn.addEventListener('click', function() {
                     categoryBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    showApplyButton();
+                    showApplyButtonWithChanges();
                 });
             });
         }
@@ -1882,7 +2104,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 btn.addEventListener('click', function() {
                     brandBtns.forEach(b => b.classList.remove('active'));
                     this.classList.add('active');
-                    showApplyButton();
+                    showApplyButtonWithChanges();
                 });
             });
         }
@@ -1905,23 +2127,53 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        function showApplyButton() {
-            if (!filtersChanged) {
-                filtersChanged = true;
-                const applyBtn = document.getElementById('applyFilters');
-                if (applyBtn) applyBtn.style.display = 'flex';
+        function showApplyButtonWithChanges() {
+            const applyBtn = document.getElementById('applyFilters');
+            if (applyBtn) {
+                applyBtn.classList.add('has-changes');
+                applyBtn.style.background = 'linear-gradient(135deg, #22c55e, #16a34a)';
+                applyBtn.style.transform = 'scale(1.02)';
+                applyBtn.style.boxShadow = '0 4px 12px rgba(34, 197, 94, 0.3)';
             }
         }
 
-        // Clear filters function
-        document.getElementById('clearAllFilters')?.addEventListener('click', function() {
-            window.location.href = 'photography_video.php';
-        });
+        function showApplyButton() {
+            showApplyButtonWithChanges();
+        }
 
-        // Search input functionality
-        document.getElementById('searchInput')?.addEventListener('input', function() {
-            showApplyButton();
-        });
+        // Apply all filters function
+        function applyAllFilters() {
+            const categoryBtn = document.querySelector('#categoryTags .tag-btn.active');
+            const brandBtn = document.querySelector('#brandTags .tag-btn.active');
+            const searchInput = document.getElementById('searchInput');
+            const minPrice = document.getElementById('minPriceSlider').value;
+            const maxPrice = document.getElementById('maxPriceSlider').value;
+
+            const params = new URLSearchParams();
+
+            if (categoryBtn && categoryBtn.dataset.category) {
+                params.append('category', categoryBtn.dataset.category);
+            }
+            if (brandBtn && brandBtn.dataset.brand) {
+                params.append('brand', brandBtn.dataset.brand);
+            }
+            if (searchInput && searchInput.value) {
+                params.append('search', searchInput.value);
+            }
+            if (minPrice !== '0') {
+                params.append('min_price', minPrice);
+            }
+            if (maxPrice !== '50000') {
+                params.append('max_price', maxPrice);
+            }
+
+            window.location.href = 'photography_video.php?' + params.toString();
+        }
+
+        // Clear all filters function
+        function clearAllFilters() {
+            window.location.href = 'photography_video.php';
+        }
 
         // Initialize filters on page load
         document.addEventListener('DOMContentLoaded', function() {

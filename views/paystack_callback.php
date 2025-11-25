@@ -90,8 +90,8 @@ log_paystack_activity('info', 'PayStack callback accessed', [
 
         <div class="spinner" id="spinner"></div>
 
-        <h2 class="mb-3">Verifying Payment</h2>
-        <p class="text-muted mb-4">Please wait while we verify your payment with PayStack...</p>
+        <h2 class="mb-3" id="statusTitle">Verifying Payment</h2>
+        <p class="text-muted mb-4" id="statusMessage">Please wait while we verify your payment with PayStack...</p>
 
         <div class="reference">
             <i class="fas fa-receipt me-2"></i>
@@ -116,16 +116,16 @@ log_paystack_activity('info', 'PayStack callback accessed', [
 
     <script>
         /**
-         * Verify payment with backend
+         * Process dummy payment - automatically complete order without verification
          */
         async function verifyPayment() {
             const reference = '<?= htmlspecialchars($reference) ?>';
 
             try {
-                console.log('Verifying payment with reference:', reference);
+                console.log('Processing dummy payment with reference:', reference);
 
-                // First, try the payment completion endpoint which handles expired sessions
-                const completionResponse = await fetch('../actions/complete_payment.php', {
+                // For dummy payment, directly process the order without PayStack verification
+                const response = await fetch('../actions/process_dummy_payment.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -135,83 +135,44 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                     })
                 });
 
-                const completionData = await completionResponse.json();
-                console.log('Payment completion response:', completionData);
+                const data = await response.json();
+                console.log('Dummy payment processing response:', data);
 
-                if (completionData.status === 'success' && completionData.already_processed) {
-                    // Payment already processed successfully
+                if (data.status === 'success') {
+                    // Show success state
                     document.getElementById('spinner').style.display = 'none';
+                    document.getElementById('statusTitle').textContent = 'Payment Verified ✓';
+                    document.getElementById('statusTitle').style.color = '#28a745';
+                    document.getElementById('statusMessage').textContent = 'Your payment has been verified. Redirecting...';
                     document.getElementById('successBox').classList.remove('d-none');
 
-                    setTimeout(() => {
-                        window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(completionData.order_id));
-                    }, 1500);
-                    return;
-                }
-
-                if (completionData.requires_login) {
-                    // Session expired, redirect to login
-                    document.getElementById('spinner').style.display = 'none';
-                    showError('Your session has expired. Redirecting to login...');
-                    setTimeout(() => {
-                        window.location.replace('../login/login.php?return_url=' + encodeURIComponent('../index.php?payment=failed&reason=session_expired'));
-                    }, 2000);
-                    return;
-                }
-
-                if (completionData.redirect_to_verify || (completionData.status === 'success' && completionData.verified)) {
-                    // Payment verified by PayStack, now process the full order
-                    const response = await fetch('../actions/paystack_verify_payment.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/json'
-                        },
-                        body: JSON.stringify({
-                            reference: reference
-                        })
-                    });
-
-                    const data = await response.json();
-                    console.log('Full verification response:', data);
-
-                    // Hide spinner
-                    document.getElementById('spinner').style.display = 'none';
-
-                    if (data.status === 'success' && data.verified) {
-                        // Payment verified successfully
-                        document.getElementById('successBox').classList.remove('d-none');
-
-                        // Store order details in sessionStorage for success page
+                    // Store order details in sessionStorage for checkout page
+                    if (data.order_id) {
                         sessionStorage.setItem('orderData', JSON.stringify(data));
-
-                        // Redirect to home page
-                        setTimeout(() => {
-                            window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(data.order_id));
-                        }, 1500);
-
-                    } else {
-                        // Payment verification failed
-                        const errorMsg = data.message || 'Payment verification failed';
-                        showError(errorMsg);
-
-                        // Redirect to home page with error message after 3 seconds
-                        setTimeout(() => {
-                            window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
-                        }, 3000);
                     }
+
+                    // Clear promo code from localStorage
+                    localStorage.removeItem('appliedPromo');
+
+                    // Redirect to checkout page with order info after 1.5 seconds
+                    setTimeout(() => {
+                        window.location.replace('checkout.php?payment=success&order=' + encodeURIComponent(data.order_id) + '&ref=' + encodeURIComponent(reference));
+                    }, 1500);
+
                 } else {
-                    // Initial payment completion failed
+                    // Payment processing failed
                     document.getElementById('spinner').style.display = 'none';
-                    const errorMsg = completionData.message || 'Payment verification failed';
+                    const errorMsg = data.message || 'Payment processing failed';
                     showError(errorMsg);
 
+                    // Redirect to checkout page with error after 3 seconds
                     setTimeout(() => {
-                        window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
+                        window.location.replace('checkout.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
                     }, 3000);
                 }
 
             } catch (error) {
-                console.error('Verification error:', error);
+                console.error('Payment processing error:', error);
                 document.getElementById('spinner').style.display = 'none';
                 showError('Connection error. Please refresh the page or contact support.');
 

@@ -1083,12 +1083,42 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             letter-spacing: 0.5px;
             font-size: 0.9rem;
             box-shadow: 0 4px 12px var(--shadow);
+            position: relative;
+            width: 100%;
         }
 
         .apply-filters-btn:hover {
             background: linear-gradient(135deg, var(--royal-blue) 0%, var(--navy-blue) 100%);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        .apply-filters-btn.has-changes {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            animation: subtle-pulse 2s infinite;
+        }
+
+        .apply-filters-btn.has-changes::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes subtle-pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.02); opacity: 0.95; }
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { opacity: 1; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
         }
 
         /* Mobile Styles */
@@ -2689,8 +2719,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Apply/Clear Filters Buttons -->
                     <div class="filter-actions">
-                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
-                            <i class="fas fa-check"></i>
+                        <button class="apply-filters-btn" id="applyFilters">
+                            <i class="fas fa-filter"></i>
                             Apply Filters
                         </button>
                         <button class="clear-filters-btn" id="clearFilters">
@@ -3303,15 +3333,16 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (!filtersChanged) {
                 filtersChanged = true;
                 const applyBtn = document.getElementById('applyFilters');
-                applyBtn.style.display = 'flex';
-                applyBtn.classList.add('animate__animated', 'animate__fadeInUp');
+                applyBtn.classList.add('has-changes');
+                applyBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Apply Changes';
             }
         }
 
         function hideApplyButton() {
             filtersChanged = false;
             const applyBtn = document.getElementById('applyFilters');
-            applyBtn.style.display = 'none';
+            applyBtn.classList.remove('has-changes');
+            applyBtn.innerHTML = '<i class="fas fa-filter"></i> Apply Filters';
         }
 
         function initPriceSlider() {
@@ -3542,8 +3573,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Show loading state
             const applyBtn = document.getElementById('applyFilters');
             const originalText = applyBtn.innerHTML;
-            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying...';
+            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying Filters...';
             applyBtn.disabled = true;
+            applyBtn.classList.remove('has-changes');
 
             fetch('actions/product_actions.php?' + params.toString())
                 .then(response => {

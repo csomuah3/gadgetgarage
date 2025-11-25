@@ -259,8 +259,8 @@ function updateCartTotals(originalTotal, newTotal, discountAmount) {
     const discountRow = document.getElementById('discountRow');
     if (discountRow) {
         if (discountAmount > 0) {
-            discountRow.style.display = 'flex';
-            console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+        discountRow.style.display = 'flex';
+        console.log('PROMO-CODE.JS DEBUG: Showed discount row');
         } else {
             discountRow.style.display = 'none';
             console.log('PROMO-CODE.JS DEBUG: Hid discount row');

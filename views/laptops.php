@@ -2523,6 +2523,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="search-container">
                             <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
                             <i class="fas fa-search search-icon"></i>
+                            <button type="button" class="search-clear-btn" id="searchClearBtn" style="display: none;" onclick="clearSearch()">
+                                <i class="fas fa-times"></i>
+                            </button>
                             <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                         </div>
                     </div>
@@ -2585,8 +2588,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-slider-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100" oninput="updatePriceDisplay()">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100" oninput="updatePriceDisplay()">
                             </div>
                             <div class="price-display">
                                 <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
@@ -2660,8 +2663,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Apply/Clear Filters Buttons -->
                     <div class="filter-actions">
-                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
-                            <i class="fas fa-check"></i>
+                        <button class="apply-filters-btn" id="applyFilters">
+                            <i class="fas fa-filter"></i>
                             Apply Filters
                         </button>
                         <button class="clear-filters-btn" id="clearFilters">

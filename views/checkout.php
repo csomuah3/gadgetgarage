@@ -1763,11 +1763,11 @@ try {
 
                     <!-- Discount Row (hidden by default) -->
                     <div class="summary-row discount-row" id="discountRow" style="display: none;">
-                        <span class="text-success">
+                        <span class="text-success" id="discountLabel">
                             <i class="fas fa-tag me-1"></i>
                             Discount (<span id="discountPercent">20</span>%):
                         </span>
-                        <span class="ms-auto text-success" id="discountAmount">-GHS 0.00</span>
+                        <span class="ms-auto text-success" id="discountAmount">-GH₵ 0.00</span>
                     </div>
 
 
@@ -2337,30 +2337,94 @@ try {
 			localStorage.setItem('darkMode', isDark);
 		}
 
-		// Check for payment error messages on page load
-		function checkForPaymentErrors() {
+		// Check for payment success or error messages on page load
+		function checkForPaymentStatus() {
 			const urlParams = new URLSearchParams(window.location.search);
+			const paymentStatus = urlParams.get('payment');
+			const orderId = urlParams.get('order');
 			const error = urlParams.get('error');
+			const reason = urlParams.get('reason');
 
-			if (error) {
+			// Check for payment success
+			if (paymentStatus === 'success' && orderId) {
+				// Get order data from sessionStorage
+				const orderData = sessionStorage.getItem('orderData');
+				let orderInfo = null;
+				
+				if (orderData) {
+					try {
+						orderInfo = JSON.parse(orderData);
+					} catch (e) {
+						console.error('Error parsing order data:', e);
+					}
+				}
+
+				// Show success SweetAlert
+				Swal.fire({
+					title: 'Order Placed Successfully! 🎉',
+					html: `
+						<div style="text-align: left;">
+							<p style="font-size: 16px; margin-bottom: 15px;">
+								<strong>Your order has been confirmed!</strong>
+							</p>
+							<p style="margin-bottom: 10px;">
+								<strong>Order Number:</strong> ${orderInfo?.order_reference || orderId}
+							</p>
+							<p style="margin-bottom: 10px;">
+								<strong>Total Amount:</strong> GH₵ ${orderInfo?.total_amount || '0.00'}
+							</p>
+							<p style="margin-bottom: 10px;">
+								<strong>Payment Method:</strong> ${orderInfo?.payment_method || 'PayStack'}
+							</p>
+							<p style="margin-top: 15px; color: #28a745; font-weight: 600;">
+								✓ Your order will be delivered within 3-5 business days
+							</p>
+							<p style="margin-top: 10px; font-size: 14px; color: #6c757d;">
+								You will receive an SMS confirmation shortly.
+							</p>
+						</div>
+					`,
+					icon: 'success',
+					confirmButtonText: 'Continue Shopping',
+					confirmButtonColor: '#28a745',
+					allowOutsideClick: false,
+					allowEscapeKey: false
+				}).then((result) => {
+					// Clear order data from sessionStorage
+					sessionStorage.removeItem('orderData');
+					
+					// Clean up URL
+					const newUrl = window.location.pathname;
+					history.replaceState(null, null, newUrl);
+					
+					// Redirect to index page
+					window.location.replace('../index.php');
+				});
+				return;
+			}
+
+			// Check for payment errors
+			if (error || (paymentStatus === 'failed')) {
 				let title = 'Payment Error';
-				let message = 'There was an issue with your payment.';
+				let message = reason ? decodeURIComponent(reason) : 'There was an issue with your payment.';
 
-				switch(error) {
-					case 'cancelled':
-						title = 'Payment Cancelled';
-						message = 'Your payment was cancelled. You can try again when ready.';
-						break;
-					case 'verification_failed':
-						title = 'Payment Verification Failed';
-						message = 'We could not verify your payment. Please try again or contact support.';
-						break;
-					case 'connection_error':
-						title = 'Connection Error';
-						message = 'There was a connection error while processing your payment. Please try again.';
-						break;
-					default:
-						message = decodeURIComponent(error);
+				if (error) {
+					switch(error) {
+						case 'cancelled':
+							title = 'Payment Cancelled';
+							message = 'Your payment was cancelled. You can try again when ready.';
+							break;
+						case 'verification_failed':
+							title = 'Payment Verification Failed';
+							message = 'We could not verify your payment. Please try again or contact support.';
+							break;
+						case 'connection_error':
+							title = 'Connection Error';
+							message = 'There was a connection error while processing your payment. Please try again.';
+							break;
+						default:
+							message = decodeURIComponent(error);
+					}
 				}
 
 				Swal.fire({
@@ -2369,18 +2433,18 @@ try {
 					icon: 'error',
 					confirmButtonText: 'Try Again',
 					confirmButtonColor: '#dc3545'
+				}).then(() => {
+					// Clean up URL
+					const newUrl = window.location.pathname;
+					history.replaceState(null, null, newUrl);
 				});
-
-				// Clean up URL without refreshing page
-				const newUrl = window.location.pathname;
-				history.replaceState(null, null, newUrl);
 			}
 		}
 
 		// Load saved preferences on page load
 		document.addEventListener('DOMContentLoaded', function() {
-			// Check for payment errors first
-			checkForPaymentErrors();
+			// Check for payment status (success or error) first
+			checkForPaymentStatus();
 
 			// Load saved language
 			const savedLanguage = localStorage.getItem('selectedLanguage');
@@ -2405,13 +2469,27 @@ try {
 			checkAndApplyPromoFromCart();
 		});
 
+		// Also check immediately in case DOM is already loaded
+		if (document.readyState === 'loading') {
+			// DOM hasn't finished loading yet, wait for DOMContentLoaded
+		} else {
+			// DOM is already loaded, run immediately
+			checkAndApplyPromoFromCart();
+		}
+
 		// Check for and apply promo code from cart
 		function checkAndApplyPromoFromCart() {
+			console.log('Checking for promo code in localStorage...');
 			const appliedPromo = localStorage.getItem('appliedPromo');
+			console.log('Raw localStorage value:', appliedPromo);
+			
 			if (appliedPromo) {
 				try {
 					const promoData = JSON.parse(appliedPromo);
-					console.log('Promo data from cart:', promoData);
+					console.log('Promo data parsed successfully:', promoData);
+					console.log('Discount amount:', promoData.discount_amount);
+					console.log('New total:', promoData.new_total);
+					console.log('Original total:', promoData.original_total);
 
 					// Show discount in order summary
 					const discountRow = document.getElementById('discountRow');
@@ -2470,9 +2548,17 @@ try {
 					console.log('Promo applied successfully. New total:', promoData.new_total);
 				} catch (error) {
 					console.error('Error applying promo from cart:', error);
+					console.error('Error details:', error.message, error.stack);
 					localStorage.removeItem('appliedPromo');
 				}
+			} else {
+				console.log('No promo code found in localStorage');
 			}
+		}
+
+		// Also check immediately in case DOM is already loaded (after function is defined)
+		if (document.readyState !== 'loading') {
+			checkAndApplyPromoFromCart();
 		}
 
 

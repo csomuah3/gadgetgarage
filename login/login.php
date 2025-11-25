@@ -1725,18 +1725,7 @@ try {
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 
-				<!-- Welcome Panel (Teal/Green) - RIGHT SIDE -->
-				<div class="welcome-panel">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
-						alt="Gadget Garage Logo" class="brand-logo">
-					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
-					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
-					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">Log In</button>
-					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">Join GadgetGarage</button>
-					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
-				</div>
-
-				<!-- Form Panel (White) -->
+				<!-- Form Panel (White) - LEFT SIDE -->
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
@@ -1916,6 +1905,17 @@ try {
 						</div>
 
 					</div>
+				</div>
+
+				<!-- Welcome Panel (Teal/Green) - RIGHT SIDE -->
+				<div class="welcome-panel">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
+						alt="Gadget Garage Logo" class="brand-logo">
+					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
+					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
+					<button class="welcome-signin-btn" id="welcomeSigninBtn" onclick="switchToLogin()" style="display: none;">Log In</button>
+					<button class="welcome-signup-btn" id="welcomeSignupBtn" onclick="switchToSignup()">Join GadgetGarage</button>
+					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
 			</div>
 		</div>

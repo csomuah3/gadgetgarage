@@ -1947,10 +1947,13 @@ try {
         
         // Set ACTIONS_PATH to absolute URL
         window.ACTIONS_PATH = baseUrl + '/actions/';
-        
+
         console.log('Base URL:', baseUrl);
         console.log('ACTIONS_PATH set to:', window.ACTIONS_PATH);
         console.log('Current pathname:', window.location.pathname);
+
+        // Test path accessibility
+        console.log('Testing ACTIONS_PATH accessibility...');
     })();
     // User dropdown functionality - from login.php
     function toggleUserDropdown() {
@@ -2244,6 +2247,7 @@ try {
         const qty = parseInt(quantity);
         if (qty < 1 || qty > 99) {
             console.log('Invalid quantity:', qty);
+            showNotification('Invalid quantity. Please enter a number between 1 and 99.', 'error');
             return;
         }
 
@@ -2253,21 +2257,37 @@ try {
         formData.append('product_id', productId);
         formData.append('quantity', qty);
 
-        const updateUrl = (window.ACTIONS_PATH || '../actions/') + 'update_quantity_action.php';
+        // Use absolute path
+        const updateUrl = window.ACTIONS_PATH + 'update_quantity_action.php';
+        console.log('Update URL:', updateUrl);
+
+        // Show loading state
+        const quantityInput = document.getElementById(cartItemId);
+        if (quantityInput) {
+            quantityInput.disabled = true;
+            quantityInput.style.opacity = '0.6';
+        }
 
         fetch(updateUrl, {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'same-origin'
         })
         .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
+
             const contentType = response.headers.get('content-type');
+            console.log('Content-Type:', contentType);
+
             if (!contentType || !contentType.includes('application/json')) {
                 return response.text().then(text => {
-                    console.error('Non-JSON response:', text);
-                    throw new Error('Server returned non-JSON response');
+                    console.error('Non-JSON response received:', text);
+                    throw new Error(`Expected JSON but received: ${contentType}\nContent: ${text.substring(0, 200)}...`);
                 });
             }
             return response.json();
@@ -2276,34 +2296,31 @@ try {
             console.log('Update quantity response:', data);
             if (data.success) {
                 // Update cart totals
-                if (typeof updateCartTotals === 'function') {
-                    updateCartTotals(data.cart_total);
-                }
+                updateCartTotals(data.cart_total);
                 // Update cart badge
-                if (typeof updateCartBadge === 'function') {
-                    updateCartBadge(data.cart_count);
-                }
-
+                updateCartBadge(data.cart_count);
                 // Show success notification
-                if (typeof showNotification === 'function') {
-                    showNotification('Quantity updated successfully', 'success');
-                }
+                showNotification('Quantity updated successfully', 'success');
             } else {
-                console.error('Failed to update quantity:', data.message);
-                if (typeof showNotification === 'function') {
-                    showNotification(data.message || 'Failed to update quantity', 'error');
-                }
-                // Reset input to original value
-                location.reload();
+                console.error('Server error:', data.message);
+                showNotification(data.message || 'Failed to update quantity', 'error');
             }
         })
         .catch(error => {
-            console.error('Error updating quantity:', error);
-            if (typeof showNotification === 'function') {
-                showNotification('Network error - please try again', 'error');
+            console.error('Fetch error details:', {
+                error: error,
+                message: error.message,
+                stack: error.stack,
+                url: updateUrl
+            });
+            showNotification(`Network error: ${error.message}`, 'error');
+        })
+        .finally(() => {
+            // Re-enable input
+            if (quantityInput) {
+                quantityInput.disabled = false;
+                quantityInput.style.opacity = '1';
             }
-            // Reset input to original value
-            location.reload();
         });
     };
 
@@ -2334,24 +2351,36 @@ try {
         const formData = new FormData();
         formData.append('product_id', productId);
 
-        const removeUrl = (window.ACTIONS_PATH || '../actions/') + 'remove_from_cart_action.php';
+        const removeUrl = window.ACTIONS_PATH + 'remove_from_cart_action.php';
         console.log('Removing item from cart, URL:', removeUrl);
+        console.log('Product ID:', productId, 'Cart Item ID:', cartItemId);
+
+        // Show loading state
+        const cartItem = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
+        if (cartItem) {
+            cartItem.style.opacity = '0.6';
+            cartItem.style.pointerEvents = 'none';
+        }
 
         fetch(removeUrl, {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'same-origin'
         })
         .then(response => {
-            // Check if response is ok
+            console.log('Remove response status:', response.status);
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            // Check if response is JSON
+
             const contentType = response.headers.get('content-type');
+            console.log('Remove response content-type:', contentType);
+
             if (!contentType || !contentType.includes('application/json')) {
                 return response.text().then(text => {
-                    console.error('Non-JSON response:', text);
-                    throw new Error('Server returned non-JSON response');
+                    console.error('Non-JSON response for remove:', text);
+                    throw new Error(`Expected JSON but received: ${contentType}\nContent: ${text.substring(0, 200)}...`);
                 });
             }
             return response.json();
@@ -2455,23 +2484,27 @@ try {
 
     // Override empty cart function
     window.performEmptyCart = function() {
-        const emptyUrl = (window.ACTIONS_PATH || '../actions/') + 'empty_cart_action.php';
+        const emptyUrl = window.ACTIONS_PATH + 'empty_cart_action.php';
         console.log('Emptying cart, URL:', emptyUrl);
 
         fetch(emptyUrl, {
-            method: 'POST'
+            method: 'POST',
+            credentials: 'same-origin'
         })
         .then(response => {
-            // Check if response is ok
+            console.log('Empty cart response status:', response.status);
+
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
             }
-            // Check if response is JSON
+
             const contentType = response.headers.get('content-type');
+            console.log('Empty cart response content-type:', contentType);
+
             if (!contentType || !contentType.includes('application/json')) {
                 return response.text().then(text => {
-                    console.error('Non-JSON response:', text);
-                    throw new Error('Server returned non-JSON response');
+                    console.error('Non-JSON response for empty cart:', text);
+                    throw new Error(`Expected JSON but received: ${contentType}\nContent: ${text.substring(0, 200)}...`);
                 });
             }
             return response.json();
@@ -2616,31 +2649,89 @@ try {
     };
 
     window.showNotification = function(message, type = 'info') {
+        console.log(`Notification (${type}):`, message);
+
         if (typeof Swal !== 'undefined') {
-            const iconType = type === 'error' ? 'error' : type === 'warning' ? 'warning' : type === 'success' ? 'success' : 'info';
+            try {
+                const iconType = type === 'error' ? 'error' : type === 'warning' ? 'warning' : type === 'success' ? 'success' : 'info';
 
-            // Use toast for better UX
-            const Toast = Swal.mixin({
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                    toast.addEventListener('mouseenter', Swal.stopTimer)
-                    toast.addEventListener('mouseleave', Swal.resumeTimer)
-                }
-            });
+                // Use toast for better UX
+                const Toast = Swal.mixin({
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timer: 3000,
+                    timerProgressBar: true,
+                    didOpen: (toast) => {
+                        toast.addEventListener('mouseenter', Swal.stopTimer)
+                        toast.addEventListener('mouseleave', Swal.resumeTimer)
+                    }
+                });
 
-            Toast.fire({
-                icon: iconType,
-                title: message
-            });
+                Toast.fire({
+                    icon: iconType,
+                    title: message
+                });
+            } catch (swalError) {
+                console.error('SweetAlert error:', swalError);
+                // Fallback to custom notification
+                showCustomNotification(message, type);
+            }
         } else {
-            // Fallback alert
-            alert(message);
+            console.log('SweetAlert not available, using custom notification');
+            showCustomNotification(message, type);
         }
     };
+
+    function showCustomNotification(message, type = 'info') {
+        // Create a custom notification element
+        const notification = document.createElement('div');
+        notification.style.cssText = `
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            z-index: 10000;
+            max-width: 350px;
+            word-wrap: break-word;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            font-family: Arial, sans-serif;
+            transition: all 0.3s ease;
+        `;
+
+        // Set background color based on type
+        const colors = {
+            success: '#22c55e',
+            error: '#ef4444',
+            warning: '#f59e0b',
+            info: '#3b82f6'
+        };
+        notification.style.backgroundColor = colors[type] || colors.info;
+        notification.textContent = message;
+
+        // Add to page
+        document.body.appendChild(notification);
+
+        // Animate in
+        requestAnimationFrame(() => {
+            notification.style.transform = 'translateX(0)';
+            notification.style.opacity = '1';
+        });
+
+        // Auto remove after 3 seconds
+        setTimeout(() => {
+            notification.style.transform = 'translateX(100%)';
+            notification.style.opacity = '0';
+            setTimeout(() => {
+                if (notification.parentNode) {
+                    notification.parentNode.removeChild(notification);
+                }
+            }, 300);
+        }, 3000);
+    }
 
     // Initialize timer when page loads
     document.addEventListener('DOMContentLoaded', function() {

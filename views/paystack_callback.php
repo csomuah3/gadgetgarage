@@ -116,74 +116,122 @@ log_paystack_activity('info', 'PayStack callback accessed', [
 
     <script>
         /**
-         * Process dummy payment - automatically complete order without verification
+         * Verify PayStack payment with proper error handling
          */
         async function verifyPayment() {
             const reference = '<?= htmlspecialchars($reference) ?>';
+            const isUserLoggedIn = <?= json_encode($user_logged_in) ?>;
 
             try {
-                console.log('Processing dummy payment with reference:', reference);
+                console.log('Verifying PayStack payment with reference:', reference);
+                console.log('User logged in status:', isUserLoggedIn);
 
-                // For dummy payment, directly process the order without PayStack verification
-                // Calculate correct path - callback is in views/, so ../actions/ is correct
-                const processUrl = '../actions/process_dummy_payment.php';
-                console.log('Processing dummy payment, URL:', processUrl);
-                
-                const response = await fetch(processUrl, {
+                if (!isUserLoggedIn) {
+                    throw new Error('Session expired. Please login again to complete your order.');
+                }
+
+                // Use the real PayStack verification endpoint
+                const verifyUrl = '../actions/paystack_verify_payment.php';
+                console.log('Verifying payment, URL:', verifyUrl);
+
+                const response = await fetch(verifyUrl, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
+                    credentials: 'same-origin',
                     body: JSON.stringify({
                         reference: reference
                     })
                 });
 
-                const data = await response.json();
-                console.log('Dummy payment processing response:', data);
+                console.log('Verification response status:', response.status);
 
-                if (data.status === 'success') {
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const textResponse = await response.text();
+                    console.error('Non-JSON response:', textResponse);
+                    throw new Error(`Server returned non-JSON response. Content: ${textResponse.substring(0, 200)}...`);
+                }
+
+                const data = await response.json();
+                console.log('PayStack verification response:', data);
+
+                if (data.status === 'success' && data.verified === true) {
                     // Show success state
                     document.getElementById('spinner').style.display = 'none';
                     document.getElementById('statusTitle').textContent = 'Payment Verified ✓';
                     document.getElementById('statusTitle').style.color = '#28a745';
-                    document.getElementById('statusMessage').textContent = 'Your payment has been verified. Redirecting...';
+                    document.getElementById('statusMessage').textContent = 'Your payment has been verified successfully! Redirecting...';
                     document.getElementById('successBox').classList.remove('d-none');
 
                     // Store order details in sessionStorage for checkout page
                     if (data.order_id) {
-                        sessionStorage.setItem('orderData', JSON.stringify(data));
+                        sessionStorage.setItem('orderData', JSON.stringify({
+                            order_id: data.order_id,
+                            order_reference: data.order_reference,
+                            total_amount: data.total_amount,
+                            payment_reference: data.payment_reference,
+                            payment_method: data.payment_method,
+                            currency: data.currency
+                        }));
                     }
 
                     // Clear promo code from localStorage
                     localStorage.removeItem('appliedPromo');
 
-                    // Redirect to checkout page with order info after 1.5 seconds
+                    // Redirect to success page or my_orders page
                     setTimeout(() => {
-                        window.location.replace('checkout.php?payment=success&order=' + encodeURIComponent(data.order_id) + '&ref=' + encodeURIComponent(reference));
-                    }, 1500);
+                        window.location.replace('my_orders.php?payment=success&order=' + encodeURIComponent(data.order_id) + '&ref=' + encodeURIComponent(reference));
+                    }, 2000);
 
                 } else {
-                    // Payment processing failed
+                    // Payment verification failed
                     document.getElementById('spinner').style.display = 'none';
-                    const errorMsg = data.message || 'Payment processing failed';
+                    const errorMsg = data.message || 'Payment verification failed';
+                    console.error('Verification failed:', errorMsg);
                     showError(errorMsg);
 
-                    // Redirect to checkout page with error after 3 seconds
+                    // Redirect to checkout page with error after 4 seconds
                     setTimeout(() => {
                         window.location.replace('checkout.php?payment=failed&reason=' + encodeURIComponent(errorMsg));
-                    }, 3000);
+                    }, 4000);
                 }
 
             } catch (error) {
-                console.error('Payment processing error:', error);
+                console.error('Payment verification error:', error);
                 document.getElementById('spinner').style.display = 'none';
-                showError('Connection error. Please refresh the page or contact support.');
 
-                // Redirect to home page after 3 seconds
-                setTimeout(() => {
-                    window.location.replace('../index.php?payment=failed&reason=' + encodeURIComponent('connection_error'));
-                }, 3000);
+                let errorMessage;
+                if (error.message.includes('Session expired')) {
+                    errorMessage = 'Your session has expired. Please login again to complete your order.';
+                    // Redirect to login page
+                    setTimeout(() => {
+                        window.location.replace('../login/user_login.php?redirect=' + encodeURIComponent('cart.php') + '&message=' + encodeURIComponent('Session expired during payment'));
+                    }, 3000);
+                } else if (error.message.includes('HTTP 404')) {
+                    errorMessage = 'Payment verification service not found. Please contact support.';
+                    setTimeout(() => {
+                        window.location.replace('checkout.php?payment=failed&reason=' + encodeURIComponent('verification_service_error'));
+                    }, 4000);
+                } else if (error.message.includes('HTTP 500')) {
+                    errorMessage = 'Server error during verification. Please try again or contact support.';
+                    setTimeout(() => {
+                        window.location.replace('checkout.php?payment=failed&reason=' + encodeURIComponent('server_error'));
+                    }, 4000);
+                } else {
+                    errorMessage = 'Connection error. Please refresh the page or contact support.';
+                    setTimeout(() => {
+                        window.location.replace('checkout.php?payment=failed&reason=' + encodeURIComponent('connection_error'));
+                    }, 4000);
+                }
+
+                showError(errorMessage);
+                addRetryButton();
             }
         }
 
@@ -195,11 +243,56 @@ log_paystack_activity('info', 'PayStack callback accessed', [
             document.getElementById('errorMessage').textContent = message;
         }
 
+        // Add retry functionality
+        let retryCount = 0;
+        const maxRetries = 2;
+
+        async function retryVerification() {
+            if (retryCount < maxRetries) {
+                retryCount++;
+                console.log(`Retrying verification (attempt ${retryCount}/${maxRetries})`);
+                document.getElementById('statusMessage').textContent = `Retrying verification (attempt ${retryCount})...`;
+                document.getElementById('spinner').style.display = 'inline-block';
+                document.getElementById('errorBox').classList.add('d-none');
+
+                setTimeout(() => {
+                    verifyPayment();
+                }, 2000);
+            } else {
+                document.getElementById('statusMessage').textContent = 'Maximum retry attempts reached. Redirecting to checkout...';
+                setTimeout(() => {
+                    window.location.replace('checkout.php?payment=failed&reason=' + encodeURIComponent('verification_timeout'));
+                }, 3000);
+            }
+        }
+
         // Start verification when page loads
         document.addEventListener('DOMContentLoaded', function() {
+            // Check if user is still logged in before attempting verification
+            if (!<?= json_encode($user_logged_in) ?>) {
+                showError('Session expired. Redirecting to login...');
+                setTimeout(() => {
+                    window.location.replace('../login/user_login.php?redirect=' + encodeURIComponent('cart.php'));
+                }, 2000);
+                return;
+            }
+
             // Add a small delay to show the processing state
             setTimeout(verifyPayment, 1000);
         });
+
+        // Add retry button functionality
+        function addRetryButton() {
+            const errorBox = document.getElementById('errorBox');
+            if (!document.getElementById('retryBtn')) {
+                const retryButton = document.createElement('button');
+                retryButton.id = 'retryBtn';
+                retryButton.className = 'btn btn-primary mt-3';
+                retryButton.innerHTML = '<i class="fas fa-redo me-2"></i>Retry Verification';
+                retryButton.onclick = retryVerification;
+                errorBox.appendChild(retryButton);
+            }
+        }
     </script>
 </body>
 </html>

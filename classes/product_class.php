@@ -247,11 +247,10 @@ class Product extends db_connection
                     }
                 }
 
-                // Delete product images (if exists) - table might not exist, so ignore errors
-                if (!$error_occurred) {
-                    $sql = "DELETE FROM product_images WHERE product_id = ?";
-                    $this->db_prepare_execute($sql, 'i', [$product_id]); // Ignore errors for this
-                }
+                // Note: Product images are stored as files on the server, not in a database table
+                // So we don't need to delete from a product_images table
+                // If you want to delete the actual image files, that would need to be done separately
+                // using PHP's unlink() function to delete files from the uploads directory
 
                 // Finally delete the product
                 if (!$error_occurred) {

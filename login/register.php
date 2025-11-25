@@ -1,22 +1,19 @@
 <?php
 session_start();
-require_once __DIR__ . '/../controllers/user_controller.php';
-
-// No PHP form processing here - we're using AJAX for form submission
 
 // Try to load categories and brands for navigation
 $categories = [];
 $brands = [];
 
 try {
-    require_once('../controllers/category_controller.php');
+    require_once(__DIR__ . '/../controllers/category_controller.php');
     $categories = get_all_categories_ctr();
 } catch (Exception $e) {
     error_log("Failed to load categories: " . $e->getMessage());
 }
 
 try {
-    require_once('../controllers/brand_controller.php');
+    require_once(__DIR__ . '/../controllers/brand_controller.php');
     $brands = get_all_brands_ctr();
 } catch (Exception $e) {
     error_log("Failed to load brands: " . $e->getMessage());
@@ -28,7 +25,7 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = 0;
 try {
-    require_once('../controllers/cart_controller.php');
+    require_once(__DIR__ . '/../controllers/cart_controller.php');
     $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 } catch (Exception $e) {
     error_log("Failed to load cart count: " . $e->getMessage());

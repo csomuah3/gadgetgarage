@@ -52,8 +52,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        // For update, we don't change the image, so we need to get the current image
-        $product_image = ''; // We'll keep the existing image for now
+        // Get existing product to preserve image if no new image is uploaded
+        $existing_product = get_product_by_id_ctr($product_id);
+        if (!$existing_product) {
+            echo json_encode(['status' => 'error', 'message' => 'Product not found']);
+            exit;
+        }
+        
+        // Keep existing image if no new image uploaded
+        $product_image = $existing_product['product_image'] ?? '';
 
         $result = update_product_ctr($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id);
         echo json_encode($result);

@@ -2215,6 +2215,121 @@ try {
     };
 
     // Override remove from cart for SweetAlert
+    // Quantity control functions
+    window.incrementQuantityByCartId = function(cartItemId, productId) {
+        const quantityInput = document.getElementById(cartItemId);
+        if (quantityInput) {
+            const currentQty = parseInt(quantityInput.value);
+            const newQty = currentQty + 1;
+            if (newQty <= 99) {
+                quantityInput.value = newQty;
+                updateQuantityByCartId(cartItemId, productId, newQty);
+            }
+        }
+    };
+
+    window.decrementQuantityByCartId = function(cartItemId, productId) {
+        const quantityInput = document.getElementById(cartItemId);
+        if (quantityInput) {
+            const currentQty = parseInt(quantityInput.value);
+            const newQty = currentQty - 1;
+            if (newQty >= 1) {
+                quantityInput.value = newQty;
+                updateQuantityByCartId(cartItemId, productId, newQty);
+            }
+        }
+    };
+
+    window.updateQuantityByCartId = function(cartItemId, productId, quantity) {
+        const qty = parseInt(quantity);
+        if (qty < 1 || qty > 99) {
+            console.log('Invalid quantity:', qty);
+            return;
+        }
+
+        console.log('Updating quantity for cart item:', cartItemId, 'product:', productId, 'quantity:', qty);
+
+        const formData = new FormData();
+        formData.append('product_id', productId);
+        formData.append('quantity', qty);
+
+        const updateUrl = (window.ACTIONS_PATH || '../actions/') + 'update_quantity_action.php';
+
+        fetch(updateUrl, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Update quantity response:', data);
+            if (data.success) {
+                // Update cart totals
+                if (typeof updateCartTotals === 'function') {
+                    updateCartTotals(data.cart_total);
+                }
+                // Update cart badge
+                if (typeof updateCartBadge === 'function') {
+                    updateCartBadge(data.cart_count);
+                }
+
+                // Show success notification
+                if (typeof showNotification === 'function') {
+                    showNotification('Quantity updated successfully', 'success');
+                }
+            } else {
+                console.error('Failed to update quantity:', data.message);
+                if (typeof showNotification === 'function') {
+                    showNotification(data.message || 'Failed to update quantity', 'error');
+                }
+                // Reset input to original value
+                location.reload();
+            }
+        })
+        .catch(error => {
+            console.error('Error updating quantity:', error);
+            if (typeof showNotification === 'function') {
+                showNotification('Network error - please try again', 'error');
+            }
+            // Reset input to original value
+            location.reload();
+        });
+    };
+
+    window.removeFromCartByCartId = function(cartItemId, productId) {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Remove Item?',
+                text: 'Are you sure you want to remove this item from your cart?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff6b6b',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    performRemoveFromCartByCartId(cartItemId, productId);
+                }
+            });
+        } else {
+            if (confirm('Are you sure you want to remove this item from your cart?')) {
+                performRemoveFromCartByCartId(cartItemId, productId);
+            }
+        }
+    };
+
     window.performRemoveFromCartByCartId = function(cartItemId, productId) {
         const formData = new FormData();
         formData.append('product_id', productId);
@@ -2435,14 +2550,104 @@ try {
         });
     };
 
+    // Helper functions for cart operations
+    window.updateCartTotals = function(newTotal) {
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartTotal = document.getElementById('cartTotal');
+
+        if (cartSubtotal) {
+            cartSubtotal.textContent = `GH₵${parseFloat(newTotal || 0).toFixed(2)}`;
+        }
+        if (cartTotal) {
+            cartTotal.textContent = `GH₵${parseFloat(newTotal || 0).toFixed(2)}`;
+        }
+
+        // Update any other total displays
+        const totalDisplays = document.querySelectorAll('.cart-total-display, .total-amount');
+        totalDisplays.forEach(display => {
+            display.textContent = `GH₵${parseFloat(newTotal || 0).toFixed(2)}`;
+        });
+    };
+
+    window.updateCartBadge = function(newCount) {
+        const cartBadge = document.getElementById('cartBadge');
+        if (cartBadge) {
+            const count = newCount !== undefined ? newCount : <?php echo $cart_count; ?>;
+            if (count > 0) {
+                cartBadge.textContent = count;
+                cartBadge.style.display = 'flex';
+            } else {
+                cartBadge.style.display = 'none';
+            }
+        }
+    };
+
+    window.checkEmptyCart = function() {
+        const cartItems = document.querySelectorAll('.cart-item[data-cart-item-id]');
+        if (cartItems.length === 0) {
+            // Show empty cart message
+            setTimeout(() => {
+                location.reload();
+            }, 1000);
+        }
+    };
+
+    window.emptyCart = function() {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Empty Cart?',
+                text: 'Are you sure you want to remove all items from your cart?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff6b6b',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, empty cart!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    performEmptyCart();
+                }
+            });
+        } else {
+            if (confirm('Are you sure you want to remove all items from your cart?')) {
+                performEmptyCart();
+            }
+        }
+    };
+
+    window.showNotification = function(message, type = 'info') {
+        if (typeof Swal !== 'undefined') {
+            const iconType = type === 'error' ? 'error' : type === 'warning' ? 'warning' : type === 'success' ? 'success' : 'info';
+
+            // Use toast for better UX
+            const Toast = Swal.mixin({
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.addEventListener('mouseenter', Swal.stopTimer)
+                    toast.addEventListener('mouseleave', Swal.resumeTimer)
+                }
+            });
+
+            Toast.fire({
+                icon: iconType,
+                title: message
+            });
+        } else {
+            // Fallback alert
+            alert(message);
+        }
+    };
+
     // Initialize timer when page loads
     document.addEventListener('DOMContentLoaded', function() {
         startPromoTimer();
 
         // Update cart badge
-        if (typeof updateCartBadge === 'function') {
-            updateCartBadge();
-        }
+        updateCartBadge();
     });
 
     // Timer functionality - from login.php

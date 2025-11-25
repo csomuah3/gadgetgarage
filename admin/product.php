@@ -1023,12 +1023,32 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
 
     console.log('Sending request to add_product_action.php');
 
-    fetch('../actions/add_product_action.php', {
+    // Calculate correct path - admin/product.php needs to go up one level to actions/
+    const addProductUrl = '../actions/add_product_action.php';
+    console.log('Fetching from URL:', addProductUrl);
+
+    fetch(addProductUrl, {
         method: 'POST',
         body: formData
     })
     .then(response => {
         console.log('Response status:', response.status);
+        console.log('Response headers:', response.headers);
+        
+        // Check if response is ok
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        
+        // Check if response is JSON
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            return response.text().then(text => {
+                console.error('Non-JSON response:', text);
+                throw new Error('Server returned non-JSON response. Check server logs for PHP errors.');
+            });
+        }
+        
         return response.json();
     })
     .then(data => {
@@ -1090,12 +1110,28 @@ function deleteProduct(productId, productName) {
             const formData = new FormData();
             formData.append('product_id', productId);
 
-            fetch('../actions/delete_product_action.php', {
+            const deleteUrl = '../actions/delete_product_action.php';
+            console.log('Deleting product, URL:', deleteUrl);
+            
+            fetch(deleteUrl, {
                 method: 'POST',
                 body: formData
             })
-            .then(response => response.json())
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    return response.text().then(text => {
+                        console.error('Non-JSON response:', text);
+                        throw new Error('Server returned non-JSON response');
+                    });
+                }
+                return response.json();
+            })
             .then(data => {
+                console.log('Delete response:', data);
                 if (data.status === 'success') {
                     Swal.fire({
                         icon: 'success',
@@ -1110,9 +1146,17 @@ function deleteProduct(productId, productName) {
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: data.message
+                        text: data.message || 'Failed to delete product'
                     });
                 }
+            })
+            .catch(error => {
+                console.error('Delete error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: 'An error occurred while deleting the product: ' + error.message
+                });
             });
         }
     });
@@ -1121,10 +1165,25 @@ function deleteProduct(productId, productName) {
 // Edit product function
 function editProduct(productId) {
     // Fetch product data first
-    fetch('../actions/get_product_action.php?id=' + productId, {
+    const getProductUrl = '../actions/get_product_action.php?id=' + productId;
+    console.log('Fetching product data, URL:', getProductUrl);
+    
+    fetch(getProductUrl, {
         method: 'GET'
     })
-    .then(response => response.json())
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const contentType = response.headers.get('content-type');
+        if (!contentType || !contentType.includes('application/json')) {
+            return response.text().then(text => {
+                console.error('Non-JSON response:', text);
+                throw new Error('Server returned non-JSON response');
+            });
+        }
+        return response.json();
+    })
     .then(data => {
         if (data.status === 'error') {
             Swal.fire({
@@ -1241,11 +1300,26 @@ function editProduct(productId) {
                 formData.append('category_id', result.value.category_id);
                 formData.append('brand_id', result.value.brand_id);
 
-                fetch('../actions/edit_product_action.php', {
+                const editUrl = '../actions/edit_product_action.php';
+                console.log('Updating product, URL:', editUrl);
+                
+                fetch(editUrl, {
                     method: 'POST',
                     body: formData
                 })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    const contentType = response.headers.get('content-type');
+                    if (!contentType || !contentType.includes('application/json')) {
+                        return response.text().then(text => {
+                            console.error('Non-JSON response:', text);
+                            throw new Error('Server returned non-JSON response');
+                        });
+                    }
+                    return response.json();
+                })
                 .then(data => {
                     if (data.status === 'success') {
                         Swal.fire({
@@ -1266,10 +1340,11 @@ function editProduct(productId) {
                     }
                 })
                 .catch(error => {
+                    console.error('Update error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error!',
-                        text: 'An error occurred while updating the product'
+                        text: 'An error occurred while updating the product: ' + error.message
                     });
                 });
             }
@@ -1279,10 +1354,11 @@ function editProduct(productId) {
         loadEditDropdowns(product.product_cat, product.product_brand);
     })
     .catch(error => {
+        console.error('Get product error:', error);
         Swal.fire({
             icon: 'error',
             title: 'Error!',
-            text: 'Failed to load product data'
+            text: 'Failed to load product data: ' + error.message
         });
     });
 }
@@ -1290,8 +1366,23 @@ function editProduct(productId) {
 // Load categories and brands for edit form
 function loadEditDropdowns(selectedCategoryId, selectedBrandId) {
     // Load categories
-    fetch('../actions/get_categories_action.php')
-        .then(response => response.json())
+    const categoriesUrl = '../actions/get_categories_action.php';
+    console.log('Fetching categories, URL:', categoriesUrl);
+    
+    fetch(categoriesUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
+                });
+            }
+            return response.json();
+        })
         .then(categories => {
             const categorySelect = document.getElementById('edit-category');
             if (categorySelect && categories.length > 0) {
@@ -1305,11 +1396,29 @@ function loadEditDropdowns(selectedCategoryId, selectedBrandId) {
                     categorySelect.appendChild(option);
                 });
             }
+        })
+        .catch(error => {
+            console.error('Error loading categories:', error);
         });
 
     // Load brands
-    fetch('../actions/get_brands_action.php')
-        .then(response => response.json())
+    const brandsUrl = '../actions/get_brands_action.php';
+    console.log('Fetching brands, URL:', brandsUrl);
+    
+    fetch(brandsUrl)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+            const contentType = response.headers.get('content-type');
+            if (!contentType || !contentType.includes('application/json')) {
+                return response.text().then(text => {
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
+                });
+            }
+            return response.json();
+        })
         .then(brands => {
             const brandSelect = document.getElementById('edit-brand');
             if (brandSelect && brands.length > 0) {
@@ -1323,6 +1432,9 @@ function loadEditDropdowns(selectedCategoryId, selectedBrandId) {
                     brandSelect.appendChild(option);
                 });
             }
+        })
+        .catch(error => {
+            console.error('Error loading brands:', error);
         });
 }
 

@@ -51,6 +51,8 @@ try {
     $last_name = trim($_POST['last_name']);
     $email = trim($_POST['email']);
     $phone = trim($_POST['phone']);
+    // Remove formatting from phone number (parentheses, dashes, spaces)
+    $phone = preg_replace('/[^0-9+]/', '', $phone);
     $pickup_address = isset($_POST['address']) ? trim($_POST['address']) : null;
 
     // Validate email
@@ -65,28 +67,37 @@ try {
 
     // Create database connection
     $db = new db_connection();
+    if (!$db->db_connect()) {
+        throw new Exception('Database connection failed');
+    }
 
-    // Insert device drop request
+    // Escape values for security
+    $device_type = mysqli_real_escape_string($db->db_conn(), $device_type);
+    $device_brand = mysqli_real_escape_string($db->db_conn(), $device_brand);
+    $device_model = mysqli_real_escape_string($db->db_conn(), $device_model);
+    $condition = mysqli_real_escape_string($db->db_conn(), $condition);
+    $description = $description ? "'" . mysqli_real_escape_string($db->db_conn(), $description) . "'" : 'NULL';
+    $asking_price = $asking_price !== null ? floatval($asking_price) : 'NULL';
+    $first_name = mysqli_real_escape_string($db->db_conn(), $first_name);
+    $last_name = mysqli_real_escape_string($db->db_conn(), $last_name);
+    $email = mysqli_real_escape_string($db->db_conn(), $email);
+    $phone = mysqli_real_escape_string($db->db_conn(), $phone);
+    $pickup_address = $pickup_address ? "'" . mysqli_real_escape_string($db->db_conn(), $pickup_address) . "'" : 'NULL';
+
+    // Insert device drop request using direct SQL
     $sql = "INSERT INTO device_drop_requests (
         device_type, device_brand, device_model, condition_status,
         description, asking_price, first_name, last_name, email, phone, pickup_address
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+    ) VALUES (
+        '$device_type', '$device_brand', '$device_model', '$condition',
+        $description, $asking_price, '$first_name', '$last_name', '$email', '$phone', $pickup_address
+    )";
 
-    $stmt = $db->db_conn()->prepare($sql);
-    if (!$stmt) {
-        throw new Exception('Database prepare failed: ' . $db->db_conn()->error);
+    if (!$db->db_write_query($sql)) {
+        throw new Exception('Database insert failed: ' . mysqli_error($db->db_conn()));
     }
 
-    $stmt->bind_param('sssssdsssss',
-        $device_type, $device_brand, $device_model, $condition,
-        $description, $asking_price, $first_name, $last_name, $email, $phone, $pickup_address
-    );
-
-    if (!$stmt->execute()) {
-        throw new Exception('Database insert failed: ' . $stmt->error);
-    }
-
-    $request_id = $db->db_conn()->insert_id;
+    $request_id = mysqli_insert_id($db->db_conn());
 
     // Handle uploaded images
     if (!empty($_FILES)) {
@@ -97,56 +108,107 @@ try {
             mkdir($upload_dir, 0755, true);
         }
 
-        $image_sql = "INSERT INTO device_drop_images (request_id, image_url, original_filename) VALUES (?, ?, ?)";
-        $image_stmt = $db->db_conn()->prepare($image_sql);
-
-        if (!$image_stmt) {
-            throw new Exception('Image database prepare failed: ' . $db->db_conn()->error);
-        }
-
+        // Process all uploaded files
         foreach ($_FILES as $key => $file) {
-            if ($file['error'] === UPLOAD_ERR_OK) {
-                // Validate file type
-                $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
-                $file_type = mime_content_type($file['tmp_name']);
+            // Handle array of files (multiple uploads)
+            if (is_array($file['error'])) {
+                foreach ($file['error'] as $index => $error) {
+                    if ($error === UPLOAD_ERR_OK) {
+                        $this_file = [
+                            'name' => $file['name'][$index],
+                            'type' => $file['type'][$index],
+                            'tmp_name' => $file['tmp_name'][$index],
+                            'error' => $file['error'][$index],
+                            'size' => $file['size'][$index]
+                        ];
+                        
+                        // Validate file type
+                        $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                        $file_type = mime_content_type($this_file['tmp_name']);
 
-                if (!in_array($file_type, $allowed_types)) {
-                    continue; // Skip invalid files
-                }
+                        if (!in_array($file_type, $allowed_types)) {
+                            error_log('Invalid file type: ' . $this_file['name']);
+                            continue;
+                        }
 
-                // Validate file size (max 5MB)
-                if ($file['size'] > 5 * 1024 * 1024) {
-                    continue; // Skip large files
-                }
+                        // Validate file size (max 5MB)
+                        if ($this_file['size'] > 5 * 1024 * 1024) {
+                            error_log('File too large: ' . $this_file['name']);
+                            continue;
+                        }
 
-                // Generate unique filename
-                $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
-                $new_filename = 'device_drop_' . $request_id . '_' . uniqid() . '.' . $extension;
-                $filepath = $upload_dir . $new_filename;
+                        // Generate unique filename
+                        $extension = strtolower(pathinfo($this_file['name'], PATHINFO_EXTENSION));
+                        $new_filename = 'device_drop_' . $request_id . '_' . uniqid() . '.' . $extension;
+                        $filepath = $upload_dir . $new_filename;
 
-                // Move uploaded file
-                if (move_uploaded_file($file['tmp_name'], $filepath)) {
-                    chmod($filepath, 0644);
+                        // Move uploaded file
+                        if (move_uploaded_file($this_file['tmp_name'], $filepath)) {
+                            chmod($filepath, 0644);
 
-                    // Save to database
-                    $relative_path = 'uploads/device_drop/' . $new_filename;
-                    $image_stmt->bind_param('iss', $request_id, $relative_path, $file['name']);
-
-                    if (!$image_stmt->execute()) {
-                        error_log('Image insert failed: ' . $image_stmt->error);
-                        // Delete uploaded file if database insert failed
-                        unlink($filepath);
+                            // Save to database
+                            $relative_path = 'uploads/device_drop/' . $new_filename;
+                            $image_url = mysqli_real_escape_string($db->db_conn(), $relative_path);
+                            $original_filename = mysqli_real_escape_string($db->db_conn(), $this_file['name']);
+                            
+                            $image_sql = "INSERT INTO device_drop_images (request_id, image_url, original_filename) 
+                                         VALUES ($request_id, '$image_url', '$original_filename')";
+                            
+                            if (!$db->db_write_query($image_sql)) {
+                                error_log('Image insert failed: ' . mysqli_error($db->db_conn()));
+                                unlink($filepath);
+                            }
+                        } else {
+                            error_log('Failed to move uploaded file: ' . $this_file['name']);
+                        }
                     }
-                } else {
-                    error_log('Failed to move uploaded file: ' . $file['name']);
+                }
+            } else {
+                // Handle single file upload
+                if ($file['error'] === UPLOAD_ERR_OK) {
+                    // Validate file type
+                    $allowed_types = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+                    $file_type = mime_content_type($file['tmp_name']);
+
+                    if (!in_array($file_type, $allowed_types)) {
+                        error_log('Invalid file type: ' . $file['name']);
+                        continue;
+                    }
+
+                    // Validate file size (max 5MB)
+                    if ($file['size'] > 5 * 1024 * 1024) {
+                        error_log('File too large: ' . $file['name']);
+                        continue;
+                    }
+
+                    // Generate unique filename
+                    $extension = strtolower(pathinfo($file['name'], PATHINFO_EXTENSION));
+                    $new_filename = 'device_drop_' . $request_id . '_' . uniqid() . '.' . $extension;
+                    $filepath = $upload_dir . $new_filename;
+
+                    // Move uploaded file
+                    if (move_uploaded_file($file['tmp_name'], $filepath)) {
+                        chmod($filepath, 0644);
+
+                        // Save to database
+                        $relative_path = 'uploads/device_drop/' . $new_filename;
+                        $image_url = mysqli_real_escape_string($db->db_conn(), $relative_path);
+                        $original_filename = mysqli_real_escape_string($db->db_conn(), $file['name']);
+                        
+                        $image_sql = "INSERT INTO device_drop_images (request_id, image_url, original_filename) 
+                                     VALUES ($request_id, '$image_url', '$original_filename')";
+                        
+                        if (!$db->db_write_query($image_sql)) {
+                            error_log('Image insert failed: ' . mysqli_error($db->db_conn()));
+                            unlink($filepath);
+                        }
+                    } else {
+                        error_log('Failed to move uploaded file: ' . $file['name']);
+                    }
                 }
             }
         }
-
-        $image_stmt->close();
     }
-
-    $stmt->close();
 
     // Send email notification (optional)
     $subject = "New Device Drop Request - Request #$request_id";

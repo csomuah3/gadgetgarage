@@ -1906,7 +1906,7 @@ try {
                 });
 
                 // Submit to backend
-                const response = await fetch('actions/submit_device_drop.php', {
+                const response = await fetch('../actions/submit_device_drop.php', {
                     method: 'POST',
                     body: formData
                 });

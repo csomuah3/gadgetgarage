@@ -1263,7 +1263,6 @@ try {
 		.hero-slide {
 			display: grid;
 			grid-template-columns: 1.5fr 1fr;
-			/* wider text area left, image right */
 			gap: 40px;
 			padding: 60px 60px;
 			border-radius: 14px;
@@ -1275,8 +1274,9 @@ try {
 			height: 100%;
 			opacity: 0;
 			visibility: hidden;
-			transform: translateX(100%);
-			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.8s, background 0.8s ease;
+			transform: translateX(0);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+			           visibility 0s 0.8s;
 			pointer-events: none;
 		}
 
@@ -1286,14 +1286,15 @@ try {
 			transform: translateX(0);
 			pointer-events: all;
 			z-index: 2;
-			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s, background 0.8s ease;
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+			           visibility 0s;
 		}
 
 		.hero-slide.exiting {
 			opacity: 0;
 			visibility: hidden;
 			transform: translateX(0);
-			transition: opacity 0.6s ease, visibility 0s 0.6s;
+			transition: opacity 0.5s ease;
 			z-index: 1;
 		}
 
@@ -1429,39 +1430,39 @@ try {
 			transition-duration: 0.4s;
 		}
 
-		/* Typography Hierarchy */
+		/* Typography Hierarchy - Reduced Sizes */
 		.brand-name {
-			font-size: clamp(28px, 4vw, 40px);
+			font-size: clamp(18px, 2.5vw, 26px);
 			font-weight: 300;
-			letter-spacing: 3px;
+			letter-spacing: 2px;
 			text-transform: uppercase;
 			opacity: 0.9;
 		}
 
 		.product-name {
-			font-size: clamp(48px, 7vw, 72px);
+			font-size: clamp(32px, 4.5vw, 48px);
 			font-weight: 700;
 			letter-spacing: -1px;
-			margin-bottom: 8px;
+			margin-bottom: 4px;
 		}
 
 		.tagline-1, .tagline-2, .tagline-3, .tagline-4 {
-			font-size: clamp(36px, 5.5vw, 56px);
+			font-size: clamp(24px, 3.5vw, 36px);
 			font-weight: 500;
 			letter-spacing: 0px;
 		}
 
 		.price-line {
-			font-size: clamp(24px, 3vw, 36px);
+			font-size: clamp(16px, 2vw, 24px);
 			font-weight: 600;
-			margin-top: 12px;
+			margin-top: 8px;
 			opacity: 0.8;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 		}
 
 		.price-amount {
-			font-size: clamp(32px, 4.5vw, 52px);
+			font-size: clamp(22px, 3vw, 34px);
 			font-weight: 800;
 			color: #FFD700;
 			text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
@@ -1579,66 +1580,43 @@ try {
 
 		.banner-media {
 			display: flex;
-			align-items: end;
-			justify-content: center;
-		}
-
-		.banner-media {
-			display: flex;
 			align-items: center;
 			justify-content: center;
 			position: relative;
 			height: 100%;
+			min-height: 350px;
 		}
 
 		.banner-media .product-image {
 			width: auto;
-			height: 100%;
-			max-height: 500px;
-			min-height: 400px;
+			height: auto;
+			max-height: 350px;
+			max-width: 100%;
 			object-fit: contain;
-			transform: translateY(8px) translateX(0);
-			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+			transform: translateY(0) translateX(0);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-			transform: translateY(8px) translateX(-20px) scale(0.98);
-			transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+			transform: translateY(0) translateX(-30px) scale(0.95);
+			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
-		/* Image animations - slide in from right for new slide */
+		/* Image animations - initial state (hidden, off to the right) */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(8px) translateX(80px) scale(0.95);
+			transform: translateY(0) translateX(60px) scale(0.9);
 		}
 
+		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(8px) translateX(0) scale(1);
-			animation: appleEntrance 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0.4s;
-		}
-
-		@keyframes appleEntrance {
-			0% {
-				opacity: 0;
-				transform: translateY(8px) translateX(80px) scale(0.95);
-			}
-
-			60% {
-				opacity: 1;
-				transform: translateY(8px) translateX(-2px) scale(1.01);
-			}
-
-			80% {
-				transform: translateY(8px) translateX(1px) scale(0.999);
-			}
-
-			100% {
-				opacity: 1;
-				transform: translateY(8px) translateX(0) scale(1);
-			}
+			transform: translateY(0) translateX(0) scale(1);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
+			           transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
 
 		/* ——— Right column (two stacked cards) ——— */
@@ -6667,12 +6645,9 @@ try {
 
 			let currentIndex = 0;
 
-			// Function to get a random index (excluding current)
-			function getRandomIndex(current) {
-				if (slides.length <= 1) return 0;
-				const availableIndices = slides.map((_, i) => i).filter(i => i !== current);
-				if (availableIndices.length === 0) return 0;
-				return availableIndices[Math.floor(Math.random() * availableIndices.length)];
+			// Function to get next sequential index
+			function getNextIndex(current) {
+				return (current + 1) % slides.length;
 			}
 
 			// Function to switch to a specific slide
@@ -6684,30 +6659,33 @@ try {
 				const currentSlide = slides[currentIndex];
 				const newSlide = slides[newIndex];
 
-				// Step 1: Fade out current slide (no movement)
+				console.log(`Switching from slide ${currentIndex} to slide ${newIndex}`);
+
+				// Step 1: Fade out current slide
 				currentSlide.classList.remove('active');
 				currentSlide.classList.add('exiting');
 
-				// Step 2: After fade starts, prepare and slide in new slide
+				// Step 2: After short delay, prepare and slide in new slide
 				setTimeout(() => {
 					// Remove exiting class from old slide
 					currentSlide.classList.remove('exiting');
 
-					// Activate new slide (will slide in from right via CSS)
+					// Activate new slide (will animate in via CSS)
 					newSlide.classList.add('active');
 
 					currentIndex = newIndex;
-				}, 300); // Half of fade duration
+				}, 400);
 			}
 
-			// Function to rotate to next random slide
+			// Function to rotate to next sequential slide
 			function rotateToNext() {
-				const nextIndex = getRandomIndex(currentIndex);
+				const nextIndex = getNextIndex(currentIndex);
 				switchSlide(nextIndex);
 			}
 
-			// Start rotation every 5 seconds
-			heroCarouselInterval = setInterval(rotateToNext, 5000);
+			// Start rotation every 3 seconds for testing
+			heroCarouselInterval = setInterval(rotateToNext, 3000);
+			console.log('Hero carousel auto-rotation started (3 second intervals)');
 
 			// Pause on hover
 			carousel.addEventListener('mouseenter', () => {
@@ -6719,11 +6697,12 @@ try {
 
 			carousel.addEventListener('mouseleave', () => {
 				if (!heroCarouselInterval) {
-					heroCarouselInterval = setInterval(rotateToNext, 5000);
+					heroCarouselInterval = setInterval(rotateToNext, 3000);
+					console.log('Hero carousel auto-rotation resumed');
 				}
 			});
 
-			console.log('Hero carousel initialized:', slides.length, 'slides, auto-rotating every 5 seconds');
+			console.log('Hero carousel initialized:', slides.length, 'slides, auto-rotating every 3 seconds');
 		}
 
 		// Initialize immediately and also on DOM ready

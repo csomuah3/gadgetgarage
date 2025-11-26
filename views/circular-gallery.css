@@ -47,7 +47,7 @@
 /* Horizontal Gallery Container */
 .horizontal-gallery-wrapper {
     width: 100%;
-    height: 400px;
+    height: 500px;
     position: relative;
     overflow: hidden;
 }
@@ -86,15 +86,15 @@
         rgba(255, 255, 255, 0.15) 0%,
         rgba(255, 255, 255, 0.05) 100%);
     backdrop-filter: blur(20px);
-    border-radius: 20px;
+    border-radius: 30px;
     border: 1px solid rgba(255, 255, 255, 0.2);
-    padding: 25px;
+    padding: 35px;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     box-shadow:
-        0 25px 45px rgba(0, 0, 0, 0.1),
-        0 10px 20px rgba(0, 0, 0, 0.2),
+        0 35px 55px rgba(0, 0, 0, 0.15),
+        0 15px 25px rgba(0, 0, 0, 0.25),
         inset 0 1px 0 rgba(255, 255, 255, 0.1);
     position: relative;
     overflow: hidden;
@@ -110,7 +110,7 @@
     background: linear-gradient(135deg,
         rgba(255, 255, 255, 0.1) 0%,
         rgba(255, 255, 255, 0.02) 100%);
-    border-radius: 20px;
+    border-radius: 30px;
     opacity: 0;
     transition: opacity 0.3s ease;
 }
@@ -133,8 +133,8 @@
 /* Stars */
 .testimonial-stars {
     color: #ffd700;
-    font-size: 1.2rem;
-    margin-bottom: 15px;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
     text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     text-align: center;
 }
@@ -142,8 +142,8 @@
 /* Testimonial Text */
 .testimonial-text {
     color: #ffffff;
-    font-size: 0.95rem;
-    line-height: 1.5;
+    font-size: 1.1rem;
+    line-height: 1.6;
     text-align: center;
     margin: 0;
     font-weight: 400;
@@ -164,7 +164,7 @@
 
 .testimonial-author strong {
     color: #ffffff;
-    font-size: 1rem;
+    font-size: 1.2rem;
     font-weight: 600;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
@@ -199,7 +199,7 @@
     }
 
     .horizontal-gallery-wrapper {
-        height: 350px;
+        height: 450px;
     }
 
     .testimonial-text {
@@ -225,7 +225,7 @@
     }
 
     .horizontal-gallery-wrapper {
-        height: 300px;
+        height: 380px;
     }
 
     .gallery-testimonial-card .card-inner {
@@ -250,7 +250,7 @@
 
 @media (max-width: 480px) {
     .horizontal-gallery-wrapper {
-        height: 280px;
+        height: 350px;
     }
 
     .testimonials-section h2 {

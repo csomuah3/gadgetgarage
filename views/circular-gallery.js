@@ -3,10 +3,10 @@ class HorizontalGallery {
         this.container = container;
         this.testimonials = testimonials;
         this.options = {
-            cardWidth: 320,
-            cardHeight: 200,
+            cardWidth: 400,
+            cardHeight: 280,
             autoScrollSpeed: 1,
-            cardSpacing: 30,
+            cardSpacing: 40,
             ...options
         };
 
@@ -110,14 +110,14 @@ class HorizontalGallery {
         const containerWidth = this.container.offsetWidth;
 
         if (containerWidth < 768) {
-            this.options.cardWidth = 280;
-            this.options.cardHeight = 180;
-        } else if (containerWidth < 1200) {
-            this.options.cardWidth = 300;
-            this.options.cardHeight = 190;
-        } else {
             this.options.cardWidth = 320;
-            this.options.cardHeight = 200;
+            this.options.cardHeight = 220;
+        } else if (containerWidth < 1200) {
+            this.options.cardWidth = 360;
+            this.options.cardHeight = 250;
+        } else {
+            this.options.cardWidth = 400;
+            this.options.cardHeight = 280;
         }
 
         // Update card sizes
@@ -205,10 +205,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('testimonial-carousel-container');
     if (container) {
         window.horizontalGallery = new HorizontalGallery(container, testimonials, {
-            cardWidth: 320,
-            cardHeight: 200,
+            cardWidth: 400,
+            cardHeight: 280,
             autoScrollSpeed: 2,
-            cardSpacing: 30
+            cardSpacing: 40
         });
 
         // Cleanup on page unload

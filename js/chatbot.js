@@ -176,6 +176,39 @@ class ChatBot {
             });
         });
 
+        // Use event delegation for form submission (works with dynamically added forms)
+        const modal = document.getElementById('supportModal');
+        if (modal) {
+            modal.addEventListener('submit', (e) => {
+                if (e.target.id === 'supportMessageForm') {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    this.handleMessageSubmit(e);
+                    return false;
+                }
+            });
+
+            // Also handle button clicks
+            modal.addEventListener('click', (e) => {
+                if (e.target.closest('.submit-btn') || e.target.classList.contains('submit-btn')) {
+                    const form = e.target.closest('form') || document.getElementById('supportMessageForm');
+                    if (form) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
+                        form.dispatchEvent(submitEvent);
+                        return false;
+                    }
+                }
+                
+                // Back button
+                if (e.target.closest('#backToMenu') || e.target.id === 'backToMenu') {
+                    e.preventDefault();
+                    this.hideMessageForm();
+                }
+            });
+        }
+
         // Click outside to close modal
         document.addEventListener('click', (e) => {
             const modal = document.getElementById('supportModal');
@@ -184,6 +217,36 @@ class ChatBot {
             if (this.isModalOpen && !chatbotContainer.contains(e.target)) {
                 this.closeModal();
             }
+        });
+    }
+
+    rebindModalEvents() {
+        // Re-bind events after modal content changes
+        const modal = document.getElementById('supportModal');
+        if (!modal) return;
+
+        // Close modal button
+        const closeBtn = document.getElementById('closeModal');
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => {
+                this.closeModal();
+            });
+        }
+
+        // Send message button
+        const sendMsgBtn = document.getElementById('sendMessageBtn');
+        if (sendMsgBtn) {
+            sendMsgBtn.addEventListener('click', () => {
+                this.openMessageForm();
+            });
+        }
+
+        // Expandable sections
+        document.querySelectorAll('.action-button[data-section]').forEach(button => {
+            button.addEventListener('click', () => {
+                const section = button.getAttribute('data-section');
+                this.toggleSection(section, button);
+            });
         });
     }
 
@@ -329,7 +392,7 @@ class ChatBot {
                         <textarea name="message" rows="4" placeholder="Describe your issue..." required></textarea>
                     </div>
 
-                    <button type="submit" class="submit-btn">
+                    <button type="button" class="submit-btn" id="sendMessageSubmitBtn">
                         <i class="fas fa-paper-plane"></i>
                         Send Message
                     </button>
@@ -349,45 +412,61 @@ class ChatBot {
         // Check if user is logged in and show/hide guest fields accordingly
         this.checkUserLoginStatus();
 
-        // Bind events - use setTimeout to ensure DOM is ready
+        // Attach event handlers directly to the newly created form
         setTimeout(() => {
-            const backBtn = document.getElementById('backToMenu');
             const form = document.getElementById('supportMessageForm');
-            
-            if (backBtn) {
-                backBtn.addEventListener('click', () => {
-                    this.hideMessageForm();
-                });
-            }
+            const backBtn = document.getElementById('backToMenu');
+            const submitBtn = document.getElementById('sendMessageSubmitBtn');
             
             if (form) {
-                // Remove any existing event listeners by cloning and replacing
-                const newForm = form.cloneNode(true);
-                form.parentNode.replaceChild(newForm, form);
-                
-                // Add event listener to the new form
-                newForm.addEventListener('submit', (e) => {
+                // Add submit handler (in case form is submitted via Enter key)
+                form.addEventListener('submit', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Form submit event triggered');
+                    console.log('Form submitted via Enter key!');
                     this.handleMessageSubmit(e);
                     return false;
                 });
-                
-                // Also add click handler to submit button as backup
-                const submitBtn = newForm.querySelector('.submit-btn');
-                if (submitBtn) {
-                    submitBtn.addEventListener('click', (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        console.log('Submit button clicked');
-                        const formEvent = new Event('submit', { bubbles: true, cancelable: true });
-                        newForm.dispatchEvent(formEvent);
+            }
+            
+            // Handle button click - this is the main handler
+            if (submitBtn) {
+                submitBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Send Message button clicked!');
+                    
+                    const form = document.getElementById('supportMessageForm');
+                    if (!form) {
+                        console.error('Form not found!');
+                        alert('Form not found. Please refresh the page.');
                         return false;
-                    });
-                }
+                    }
+                    
+                    // Validate form first
+                    if (!form.checkValidity()) {
+                        form.reportValidity();
+                        return false;
+                    }
+                    
+                    // Call handler directly
+                    const mockEvent = {
+                        preventDefault: () => {},
+                        stopPropagation: () => {},
+                        target: submitBtn
+                    };
+                    this.handleMessageSubmit(mockEvent);
+                    return false;
+                });
             } else {
-                console.error('Support message form not found!');
+                console.error('Submit button not found!');
+            }
+            
+            if (backBtn) {
+                backBtn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.hideMessageForm();
+                });
             }
         }, 100);
     }
@@ -425,16 +504,29 @@ class ChatBot {
     }
 
     async handleMessageSubmit(e) {
-        e.preventDefault();
-        e.stopPropagation();
+        if (e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
 
-        console.log('handleMessageSubmit called');
+        console.log('handleMessageSubmit called', e);
 
-        const form = e.target.closest('form') || document.getElementById('supportMessageForm');
+        // Get form - try multiple ways
+        let form = null;
+        if (e && e.target) {
+            form = e.target.closest('form') || e.target.form;
+        }
+        if (!form) {
+            form = document.getElementById('supportMessageForm');
+        }
+        
         if (!form) {
             console.error('Form not found!');
+            alert('Form not found. Please refresh the page and try again.');
             return false;
         }
+        
+        console.log('Form found:', form);
 
         // Validate form
         if (!form.checkValidity()) {

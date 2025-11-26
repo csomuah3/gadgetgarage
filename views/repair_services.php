@@ -1341,7 +1341,7 @@ try {
 
             <div class="issues-grid">
                 <?php foreach ($issue_types as $issue): ?>
-                    <div class="issue-card" onclick="selectIssue(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name']); ?>')">
+                    <div class="issue-card" onclick="goToSpecialist(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>')">
                         <div class="issue-icon">
                             <i class="<?php echo htmlspecialchars($issue['icon_class']); ?>"></i>
                         </div>
@@ -1647,6 +1647,16 @@ try {
 		}
 
 		// Repair services specific functionality
+		// Direct navigation function - goes straight to specialist page
+		function goToSpecialist(issueId, issueName) {
+			// Navigate directly to specialist selection page
+			// Both files are in the same directory (views/), so use relative path
+			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
+			console.log('Navigating to:', url);
+			window.location.href = url;
+		}
+
+		// Keep the old functions for backward compatibility if needed
 		let selectedIssue = null;
 		let selectedIssueName = '';
 
@@ -1659,20 +1669,30 @@ try {
 			});
 
 			// Select current issue
-			event.currentTarget.classList.add('selected');
-			event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
-			event.currentTarget.style.border = '2px solid #008060';
+			if (event && event.currentTarget) {
+				event.currentTarget.classList.add('selected');
+				event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
+				event.currentTarget.style.border = '2px solid #008060';
+			}
 
 			selectedIssue = issueId;
 			selectedIssueName = issueName;
 
 			// Show continue button
-			document.getElementById('continueBtn').classList.add('show');
+			const continueBtn = document.getElementById('continueBtn');
+			if (continueBtn) {
+				continueBtn.classList.add('show');
+			}
 		}
 
 		function proceedToSpecialist() {
 			if (selectedIssue) {
-				window.location.href = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
+				// Both files are in views/ directory, so relative path works
+				const url = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
+				console.log('Navigating to:', url);
+				window.location.href = url;
+			} else {
+				alert('Please select an issue first');
 			}
 		}
 

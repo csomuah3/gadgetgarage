@@ -1,32 +1,83 @@
 <?php
-// Enable error reporting for debugging (remove in production)
+// Error reporting - log errors but don't display them
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't display errors, but log them
+ini_set('display_errors', 0); // Don't display errors
 ini_set('log_errors', 1);
 
+// Set custom error handler to catch fatal errors
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error !== NULL && in_array($error['type'], [E_ERROR, E_PARSE, E_CORE_ERROR, E_COMPILE_ERROR])) {
+        echo "<h1>Fatal Error:</h1>";
+        echo "<pre>";
+        echo "Type: " . $error['type'] . "\n";
+        echo "Message: " . $error['message'] . "\n";
+        echo "File: " . $error['file'] . "\n";
+        echo "Line: " . $error['line'] . "\n";
+        echo "</pre>";
+    }
+});
+
 session_start();
+
+// Check if required files exist
+$required_files = [
+    __DIR__ . '/../settings/core.php',
+    __DIR__ . '/../settings/db_class.php',
+    __DIR__ . '/../controllers/cart_controller.php',
+    __DIR__ . '/../controllers/wishlist_controller.php'
+];
+
+foreach ($required_files as $file) {
+    if (!file_exists($file)) {
+        die("Required file missing: " . basename($file));
+    }
+}
+
 require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../settings/db_class.php';
 require_once(__DIR__ . '/../controllers/cart_controller.php');
 require_once(__DIR__ . '/../controllers/wishlist_controller.php');
 
 // Check login status
-$is_logged_in = check_login();
+$is_logged_in = false;
 $is_admin = false;
 
-if ($is_logged_in) {
-    $is_admin = check_admin();
+try {
+    $is_logged_in = check_login();
+    if ($is_logged_in) {
+        $is_admin = check_admin();
+    }
+} catch (Exception $e) {
+    error_log("Login check error: " . $e->getMessage());
+    $is_logged_in = false;
 }
 
 // Get cart count
-$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
-$ip_address = $_SERVER['REMOTE_ADDR'];
-$cart_count = get_cart_count_ctr($customer_id, $ip_address);
+$cart_count = 0;
+try {
+    $customer_id = $is_logged_in ? ($_SESSION['user_id'] ?? null) : null;
+    $ip_address = $_SERVER['REMOTE_ADDR'] ?? '0.0.0.0';
+    if (function_exists('get_cart_count_ctr')) {
+        $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    }
+} catch (Exception $e) {
+    error_log("Cart count error: " . $e->getMessage());
+    $cart_count = 0;
+}
 
 // Get wishlist count
 $wishlist_count = 0;
-if ($is_logged_in) {
-    $wishlist_count = get_wishlist_count_ctr($customer_id);
+try {
+    if ($is_logged_in && function_exists('get_wishlist_count_ctr')) {
+        $customer_id = $_SESSION['user_id'] ?? null;
+        if ($customer_id) {
+            $wishlist_count = get_wishlist_count_ctr($customer_id);
+        }
+    }
+} catch (Exception $e) {
+    error_log("Wishlist count error: " . $e->getMessage());
+    $wishlist_count = 0;
 }
 
 // Get issue details from URL
@@ -34,8 +85,14 @@ $issue_id = isset($_GET['issue_id']) ? intval($_GET['issue_id']) : 0;
 $issue_name = isset($_GET['issue_name']) ? $_GET['issue_name'] : '';
 
 if ($issue_id <= 0) {
-    header('Location: repair_services.php');
-    exit;
+    // Redirect to repair services page - same directory
+    if (!headers_sent()) {
+        header('Location: repair_services.php');
+        exit;
+    } else {
+        echo '<script>window.location.href = "repair_services.php";</script>';
+        exit;
+    }
 }
 
 // Initialize variables
@@ -55,9 +112,14 @@ try {
     $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = $issue_id_escaped");
 
     if (!$issue || $issue === false) {
-        // If issue not found, redirect back
-        header('Location: repair_services.php');
-        exit;
+        // If issue not found, redirect back to repair services - same directory
+        if (!headers_sent()) {
+            header('Location: repair_services.php');
+            exit;
+        } else {
+            echo '<script>window.location.href = "repair_services.php";</script>';
+            exit;
+        }
     }
 
     // Get specialists for this issue - escape the issue_id

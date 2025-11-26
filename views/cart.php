@@ -1823,7 +1823,13 @@ try {
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-end">
-                                                <div class="fw-bold fs-5 text-success mb-2" id="total-price-<?php echo $cart_item_id; ?>">
+                                                <div class="fw-bold fs-5 text-success mb-2" id="total-price-<?php echo $cart_item_id; ?>" 
+                                                     data-unit-price="<?php 
+                                                        $price = (isset($item['final_price']) && $item['final_price'] > 0)
+                                                            ? $item['final_price']
+                                                            : $item['product_price'];
+                                                        echo $price;
+                                                     ?>">
                                                     <?php
                                                     $price = (isset($item['final_price']) && $item['final_price'] > 0)
                                                         ? $item['final_price']
@@ -2104,30 +2110,130 @@ try {
         setInterval(updateTimer, 1000);
     }
 
+    // Set base path for API calls using PHP to ensure absolute URL
+    // This ensures paths work correctly from views/cart.php
+    (function() {
+        const BASE_URL = '<?php 
+            $protocol = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on') ? "https" : "http";
+            $host = $_SERVER['HTTP_HOST'];
+            $scriptPath = dirname(dirname($_SERVER['PHP_SELF']));
+            $scriptPath = rtrim($scriptPath, "/");
+            echo $protocol . "://" . $host . $scriptPath;
+        ?>';
+        
+        window.ACTIONS_PATH = BASE_URL + '/actions/';
+        
+        console.log('BASE_URL:', BASE_URL);
+        console.log('ACTIONS_PATH set to:', window.ACTIONS_PATH);
+        console.log('Current pathname:', window.location.pathname);
+    })();
+
     // Override cart action URLs for cart.php location
-    const originalUpdateQuantityOnServer = updateQuantityOnServer;
-    window.updateQuantityOnServer = function(productId, quantity) {
-        console.log(`Updating server: Product ${productId} to quantity ${quantity}`);
+    // These functions are defined in ../js/cart.js but need to use the correct path
+    // when called from views/cart.php
+    
+    // Quantity control functions
+    window.incrementQuantityByCartId = function(cartItemId, productId) {
+        const quantityInput = document.getElementById(cartItemId);
+        if (quantityInput) {
+            const currentQty = parseInt(quantityInput.value) || 1;
+            const newQty = currentQty + 1;
+            if (newQty <= 99) {
+                quantityInput.value = newQty;
+                updateQuantityByCartId(cartItemId, productId, newQty);
+            } else {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Maximum Quantity',
+                        text: 'Maximum quantity is 99',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }
+            }
+        }
+    };
+
+    window.decrementQuantityByCartId = function(cartItemId, productId) {
+        const quantityInput = document.getElementById(cartItemId);
+        if (quantityInput) {
+            const currentQty = parseInt(quantityInput.value) || 1;
+            const newQty = currentQty - 1;
+            if (newQty >= 1) {
+                quantityInput.value = newQty;
+                updateQuantityByCartId(cartItemId, productId, newQty);
+            } else {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Minimum Quantity',
+                        text: 'Minimum quantity is 1',
+                        timer: 2000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end'
+                    });
+                }
+            }
+        }
+    };
+
+    window.updateQuantityByCartId = function(cartItemId, productId, quantity) {
+        const qty = parseInt(quantity);
+        if (qty < 1 || qty > 99) {
+            console.log('Invalid quantity:', qty);
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Invalid Quantity',
+                    text: 'Quantity must be between 1 and 99',
+                    timer: 2000,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            }
+            // Reset to previous value
+            const quantityInput = document.getElementById(cartItemId);
+            if (quantityInput) {
+                quantityInput.value = quantityInput.defaultValue || 1;
+            }
+            return;
+        }
+
+        console.log('Updating quantity for cart item:', cartItemId, 'product:', productId, 'quantity:', qty);
 
         const formData = new FormData();
         formData.append('product_id', productId);
-        formData.append('quantity', quantity);
+        formData.append('quantity', qty);
 
-        // Use relative path
-        const updateUrl = '../actions/update_quantity_action.php';
-        
+        const updateUrl = window.ACTIONS_PATH + 'update_quantity_action.php';
         console.log('Fetching from URL:', updateUrl);
-        
+
+        // Show loading state
+        const quantityInput = document.getElementById(cartItemId);
+        const quantityControl = quantityInput ? quantityInput.closest('.quantity-control') : null;
+        if (quantityControl) {
+            quantityControl.style.opacity = '0.6';
+            quantityControl.style.pointerEvents = 'none';
+        }
+
         fetch(updateUrl, {
             method: 'POST',
-            body: formData
+            body: formData,
+            credentials: 'same-origin'
         })
         .then(response => {
-            // Check if response is ok
+            console.log('Response status:', response.status);
             if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+                return response.text().then(text => {
+                    console.error('HTTP error response text:', text);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${text.substring(0, 100)}`);
+                });
             }
-            // Check if response is JSON
             const contentType = response.headers.get('content-type');
             if (!contentType || !contentType.includes('application/json')) {
                 return response.text().then(text => {
@@ -2138,177 +2244,48 @@ try {
             return response.json();
         })
         .then(data => {
-            console.log('Server response:', data);
-
-            if (data.success) {
-                // Update cart badge and overall totals
-                if (typeof updateCartBadge === 'function') {
-                    updateCartBadge(data.cart_count);
-                } else {
-                    console.warn('updateCartBadge function not found');
-                }
-                
-                if (typeof updateCartTotals === 'function') {
-                    updateCartTotals(data.cart_total);
-                } else {
-                    console.warn('updateCartTotals function not found');
-                    // Fallback: manually update the totals
-                    const cartSubtotal = document.getElementById('cartSubtotal');
-                    const cartTotal = document.getElementById('cartTotal');
-                    if (cartSubtotal) {
-                        cartSubtotal.textContent = 'GH₵ ' + data.cart_total;
-                    }
-                    if (cartTotal) {
-                        cartTotal.textContent = 'GH₵ ' + data.cart_total;
-                    }
-                }
-                
-                // Also update the quantity input value to reflect the change
-                const quantityInput = document.getElementById(`qty-${productId}`);
-                if (quantityInput) {
-                    quantityInput.value = quantity;
-                }
-                
-                console.log('Server update successful');
-
-                // Show SweetAlert success (only if not already showing)
-                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
-                    Swal.fire({
-                        title: '🔄 Quantity Updated',
-                        text: `Quantity changed to ${quantity}`,
-                        icon: 'success',
-                        timer: 1500,
-                        showConfirmButton: false,
-                        toast: true,
-                        position: 'top-end',
-                        timerProgressBar: true
-                    });
-                }
-            } else {
-                console.error('Server update failed:', data.message);
-                if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
-                    Swal.fire({
-                        title: 'Update Failed',
-                        text: data.message || 'Failed to update cart',
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                } else if (typeof showNotification === 'function') {
-                    showNotification(data.message || 'Failed to update cart', 'error');
-                }
-            }
-        })
-        .catch(error => {
-            console.error('Error updating cart:', error);
-            console.error('Error details:', {
-                message: error.message,
-                stack: error.stack,
-                url: updateUrl
-            });
-            
-            // Show error to user
-            const errorMessage = error.message || 'An error occurred while updating the cart';
-            if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
-                Swal.fire({
-                    title: 'Update Error',
-                    text: errorMessage + '. Please try again or refresh the page.',
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            } else if (typeof showNotification === 'function') {
-                showNotification('Network error - changes may not be saved', 'warning');
-            }
-        });
-    };
-
-    // Override remove from cart for SweetAlert
-    // Quantity control functions
-    window.incrementQuantityByCartId = function(cartItemId, productId) {
-        const quantityInput = document.getElementById(cartItemId);
-        if (quantityInput) {
-            const currentQty = parseInt(quantityInput.value);
-            const newQty = currentQty + 1;
-            if (newQty <= 99) {
-                quantityInput.value = newQty;
-                updateQuantityByCartId(cartItemId, productId, newQty);
-            }
-        }
-    };
-
-    window.decrementQuantityByCartId = function(cartItemId, productId) {
-        const quantityInput = document.getElementById(cartItemId);
-        if (quantityInput) {
-            const currentQty = parseInt(quantityInput.value);
-            const newQty = currentQty - 1;
-            if (newQty >= 1) {
-                quantityInput.value = newQty;
-                updateQuantityByCartId(cartItemId, productId, newQty);
-            }
-        }
-    };
-
-    window.updateQuantityByCartId = function(cartItemId, productId, quantity) {
-        const qty = parseInt(quantity);
-        if (qty < 1 || qty > 99) {
-            console.log('Invalid quantity:', qty);
-            showNotification('Invalid quantity. Please enter a number between 1 and 99.', 'error');
-            return;
-        }
-
-        console.log('Updating quantity for cart item:', cartItemId, 'product:', productId, 'quantity:', qty);
-
-        const formData = new FormData();
-        formData.append('product_id', productId);
-        formData.append('quantity', qty);
-
-        // Use relative path
-        const updateUrl = '../actions/update_quantity_action.php';
-        console.log('Update URL:', updateUrl);
-
-        // Show loading state
-        const quantityInput = document.getElementById(cartItemId);
-        if (quantityInput) {
-            quantityInput.disabled = true;
-            quantityInput.style.opacity = '0.6';
-        }
-
-        fetch(updateUrl, {
-            method: 'POST',
-            body: formData,
-            credentials: 'same-origin'
-        })
-        .then(response => {
-            console.log('Response status:', response.status);
-            console.log('Response headers:', response.headers);
-
-            if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-            }
-
-            const contentType = response.headers.get('content-type');
-            console.log('Content-Type:', contentType);
-
-            if (!contentType || !contentType.includes('application/json')) {
-                return response.text().then(text => {
-                    console.error('Non-JSON response received:', text);
-                    throw new Error(`Expected JSON but received: ${contentType}\nContent: ${text.substring(0, 200)}...`);
-                });
-            }
-            return response.json();
-        })
-        .then(data => {
             console.log('Update quantity response:', data);
             if (data.success) {
                 // Update cart totals
+                if (typeof updateCartTotals === 'function') {
                 updateCartTotals(data.cart_total);
+                } else {
+                    const cartSubtotal = document.getElementById('cartSubtotal');
+                    const cartTotal = document.getElementById('cartTotal');
+                    if (cartSubtotal) cartSubtotal.textContent = 'GH₵ ' + parseFloat(data.cart_total).toFixed(2);
+                    if (cartTotal) cartTotal.textContent = 'GH₵ ' + parseFloat(data.cart_total).toFixed(2);
+                }
                 // Update cart badge
-                updateCartBadge(data.cart_count);
-                // Show success notification
+                if (typeof updateCartBadge === 'function') {
+                    updateCartBadge(data.cart_count);
+                } else {
+                    const cartBadge = document.getElementById('cartBadge');
+                    if (cartBadge) {
+                        if (data.cart_count > 0) {
+                            cartBadge.textContent = data.cart_count;
+                            cartBadge.style.display = 'flex';
+                        } else {
+                            cartBadge.style.display = 'none';
+                        }
+                    }
+                }
+                // Update item total price
+                const itemTotalElement = document.getElementById('total-price-' + cartItemId);
+                if (itemTotalElement && quantityInput) {
+                    const itemPrice = parseFloat(itemTotalElement.dataset.unitPrice || 0);
+                    const newTotal = itemPrice * qty;
+                    itemTotalElement.textContent = 'GH₵ ' + newTotal.toFixed(2);
+                }
+                // Update the quantity input value
+                if (quantityInput) {
+                    quantityInput.value = qty;
+                    quantityInput.defaultValue = qty;
+                }
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
-                        title: '🔄 Quantity Updated',
-                        text: `Quantity changed to ${qty}`,
                         icon: 'success',
+                        title: 'Quantity Updated',
+                        text: `Quantity changed to ${qty}`,
                         timer: 1500,
                         showConfirmButton: false,
                         toast: true,
@@ -2317,46 +2294,47 @@ try {
                     });
                 }
             } else {
-                console.error('Server error:', data.message);
+                console.error('Failed to update quantity:', data.message);
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
-                        title: '❌ Update Failed',
-                        text: data.message || 'Failed to update quantity',
                         icon: 'error',
+                        title: 'Update Failed',
+                        text: data.message || 'Failed to update quantity',
                         timer: 3000,
                         showConfirmButton: false,
                         toast: true,
-                        position: 'top-end',
-                        timerProgressBar: true
+                        position: 'top-end'
                     });
+                }
+                // Reset to previous value on error
+                if (quantityInput) {
+                    quantityInput.value = quantityInput.defaultValue || 1;
                 }
             }
         })
         .catch(error => {
-            console.error('Fetch error details:', {
-                error: error,
-                message: error.message,
-                stack: error.stack,
-                url: updateUrl
-            });
+            console.error('Error updating quantity:', error);
             if (typeof Swal !== 'undefined') {
                 Swal.fire({
-                    title: '🌐 Network Error',
-                    text: `Connection error: ${error.message}`,
                     icon: 'error',
-                    timer: 4000,
+                    title: 'Network Error',
+                    text: 'Unable to update quantity. Please try again.',
+                    timer: 3000,
                     showConfirmButton: true,
                     toast: true,
-                    position: 'top-end',
-                    timerProgressBar: true
+                    position: 'top-end'
                 });
+            }
+            // Reset to previous value on error
+            if (quantityInput) {
+                quantityInput.value = quantityInput.defaultValue || 1;
             }
         })
         .finally(() => {
-            // Re-enable input
-            if (quantityInput) {
-                quantityInput.disabled = false;
-                quantityInput.style.opacity = '1';
+            // Re-enable controls
+            if (quantityControl) {
+                quantityControl.style.opacity = '1';
+                quantityControl.style.pointerEvents = 'auto';
             }
         });
     };
@@ -2364,22 +2342,20 @@ try {
     window.removeFromCartByCartId = function(cartItemId, productId) {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
-                title: '🗑️ Remove Item?',
+                title: 'Remove Item?',
                 text: 'Are you sure you want to remove this item from your cart?',
-                icon: 'question',
+                    icon: 'warning',
                 showCancelButton: true,
-                confirmButtonColor: '#ef4444',
-                cancelButtonColor: '#6b7280',
-                confirmButtonText: '<i class="fas fa-trash"></i> Yes, remove it!',
-                cancelButtonText: '<i class="fas fa-times"></i> Cancel',
-                reverseButtons: true,
-                focusCancel: true
+                confirmButtonColor: '#ff6b6b',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, remove it!',
+                cancelButtonText: 'Cancel'
             }).then((result) => {
                 if (result.isConfirmed) {
                     performRemoveFromCartByCartId(cartItemId, productId);
                 }
-            });
-        } else {
+                });
+            } else {
             if (confirm('Are you sure you want to remove this item from your cart?')) {
                 performRemoveFromCartByCartId(cartItemId, productId);
             }
@@ -2390,11 +2366,9 @@ try {
         const formData = new FormData();
         formData.append('product_id', productId);
 
-        const removeUrl = '../actions/remove_from_cart_action.php';
+        const removeUrl = window.ACTIONS_PATH + 'remove_from_cart_action.php';
         console.log('Removing item from cart, URL:', removeUrl);
-        console.log('Product ID:', productId, 'Cart Item ID:', cartItemId);
 
-        // Show loading state
         const cartItem = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
         if (cartItem) {
             cartItem.style.opacity = '0.6';
@@ -2407,19 +2381,17 @@ try {
             credentials: 'same-origin'
         })
         .then(response => {
-            console.log('Remove response status:', response.status);
-
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                return response.text().then(text => {
+                    console.error('HTTP error response text:', text);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${text.substring(0, 100)}`);
+                });
             }
-
             const contentType = response.headers.get('content-type');
-            console.log('Remove response content-type:', contentType);
-
             if (!contentType || !contentType.includes('application/json')) {
                 return response.text().then(text => {
-                    console.error('Non-JSON response for remove:', text);
-                    throw new Error(`Expected JSON but received: ${contentType}\nContent: ${text.substring(0, 200)}...`);
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
                 });
             }
             return response.json();
@@ -2429,8 +2401,8 @@ try {
             if (data.success) {
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
-                        title: '🗑️ Item Removed',
-                        text: 'Item successfully removed from cart',
+                        title: 'Item Removed',
+                        text: 'Item removed from cart successfully',
                         icon: 'success',
                         timer: 2000,
                         showConfirmButton: false,
@@ -2438,11 +2410,8 @@ try {
                         position: 'top-end',
                         timerProgressBar: true
                     });
-                } else if (typeof showNotification === 'function') {
-                    showNotification('Item removed from cart', 'success');
                 }
 
-                // Remove the specific cart item from the DOM using the unique cart item ID
                 const cartItem = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
                 if (cartItem) {
                     cartItem.style.transition = 'all 0.3s ease';
@@ -2451,20 +2420,20 @@ try {
 
                     setTimeout(() => {
                         cartItem.remove();
-                        if (typeof checkEmptyCart === 'function') {
-                            checkEmptyCart();
+                        // Check if cart is now empty
+                        const remainingItems = document.querySelectorAll('[data-cart-item-id]');
+                        if (remainingItems.length === 0) {
+                            location.reload();
                         }
                     }, 300);
                 } else {
                     console.log('Cart item not found in DOM for cart ID:', cartItemId);
-                    // Reload if DOM element not found
                     location.reload();
                 }
 
                 if (typeof updateCartBadge === 'function') {
-                    updateCartBadge(data.cart_count);
+                updateCartBadge(data.cart_count);
                 } else {
-                    // Fallback: manually update badge
                     const cartBadge = document.getElementById('cartBadge');
                     if (cartBadge) {
                         if (data.cart_count > 0) {
@@ -2475,21 +2444,16 @@ try {
                         }
                     }
                 }
-                
                 if (typeof updateCartTotals === 'function') {
-                    updateCartTotals(data.cart_total);
-                } else {
-                    // Fallback: manually update totals
+                updateCartTotals(data.cart_total);
+            } else {
                     const cartSubtotal = document.getElementById('cartSubtotal');
                     const cartTotal = document.getElementById('cartTotal');
-                    if (cartSubtotal) {
-                        cartSubtotal.textContent = 'GH₵ ' + data.cart_total;
-                    }
-                    if (cartTotal) {
-                        cartTotal.textContent = 'GH₵ ' + data.cart_total;
-                    }
+                    if (cartSubtotal) cartSubtotal.textContent = 'GH₵ ' + parseFloat(data.cart_total).toFixed(2);
+                    if (cartTotal) cartTotal.textContent = 'GH₵ ' + parseFloat(data.cart_total).toFixed(2);
                 }
             } else {
+                console.error('Failed to remove from cart:', data.message);
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Error',
@@ -2497,56 +2461,81 @@ try {
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
-                } else if (typeof showNotification === 'function') {
-                    showNotification(data.message || 'Failed to remove item from cart', 'error');
+                }
+                // Re-enable item on error
+                if (cartItem) {
+                    cartItem.style.opacity = '1';
+                    cartItem.style.pointerEvents = 'auto';
                 }
             }
         })
         .catch(error => {
             console.error('Error removing from cart:', error);
-            console.error('Error details:', {
-                message: error.message,
-                stack: error.stack,
-                url: removeUrl
-            });
-            
-            const errorMessage = error.message || 'An error occurred while removing the item';
             if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                 Swal.fire({
-                    title: 'Remove Error',
-                    text: errorMessage + '. Please try again or refresh the page.',
+                    title: 'Network Error',
+                    text: 'Unable to connect to server. Please check your connection and try again.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } else if (typeof showNotification === 'function') {
-                showNotification('An error occurred. Please try again.', 'error');
+            }
+            // Re-enable item on error
+            if (cartItem) {
+                cartItem.style.opacity = '1';
+                cartItem.style.pointerEvents = 'auto';
             }
         });
     };
 
-    // Override empty cart function
+    window.emptyCart = function() {
+        if (typeof Swal !== 'undefined') {
+            Swal.fire({
+                title: 'Empty Cart?',
+                text: 'Are you sure you want to remove all items from your cart?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#ff6b6b',
+                cancelButtonColor: '#6c757d',
+                confirmButtonText: 'Yes, empty cart!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    performEmptyCart();
+                }
+            });
+        } else {
+            if (confirm('Are you sure you want to remove all items from your cart?')) {
+                performEmptyCart();
+            }
+        }
+    };
+
     window.performEmptyCart = function() {
-        const emptyUrl = '../actions/empty_cart_action.php';
+        const emptyUrl = window.ACTIONS_PATH + 'empty_cart_action.php';
         console.log('Emptying cart, URL:', emptyUrl);
+
+        const cartContainer = document.getElementById('cartItemsContainer');
+        if (cartContainer) {
+            cartContainer.style.opacity = '0.6';
+            cartContainer.style.pointerEvents = 'none';
+        }
 
         fetch(emptyUrl, {
             method: 'POST',
             credentials: 'same-origin'
         })
         .then(response => {
-            console.log('Empty cart response status:', response.status);
-
             if (!response.ok) {
-                throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                return response.text().then(text => {
+                    console.error('HTTP error response text:', text);
+                    throw new Error(`HTTP error! status: ${response.status}, message: ${text.substring(0, 100)}`);
+                });
             }
-
             const contentType = response.headers.get('content-type');
-            console.log('Empty cart response content-type:', contentType);
-
             if (!contentType || !contentType.includes('application/json')) {
                 return response.text().then(text => {
-                    console.error('Non-JSON response for empty cart:', text);
-                    throw new Error(`Expected JSON but received: ${contentType}\nContent: ${text.substring(0, 200)}...`);
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response');
                 });
             }
             return response.json();
@@ -2556,8 +2545,8 @@ try {
             if (data.success) {
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
-                        title: '🧹 Cart Emptied',
-                        text: 'All items removed from cart',
+                        title: 'Cart Emptied',
+                        text: 'Your cart has been emptied successfully',
                         icon: 'success',
                         timer: 2000,
                         showConfirmButton: false,
@@ -2567,33 +2556,28 @@ try {
                     }).then(() => {
                         location.reload();
                     });
-                } else if (typeof showNotification === 'function') {
-                    showNotification('Cart emptied successfully', 'success');
+                } else {
+                    location.reload();
                 }
 
                 if (typeof updateCartBadge === 'function') {
-                    updateCartBadge(0);
+                updateCartBadge(0);
+                } else {
+                    const cartBadge = document.getElementById('cartBadge');
+                    if (cartBadge) {
+                        cartBadge.style.display = 'none';
+                    }
                 }
                 if (typeof updateCartTotals === 'function') {
-                    updateCartTotals('0.00');
-                }
-
-                // Hide cart items and show empty state
-                const cartContainer = document.getElementById('cartItemsContainer');
-                if (cartContainer) {
-                    cartContainer.style.transition = 'all 0.5s ease';
-                    cartContainer.style.opacity = '0';
-
-                    setTimeout(() => {
-                        location.reload();
-                    }, 500);
+                updateCartTotals('0.00');
                 } else {
-                    // If container not found, reload immediately
-                    setTimeout(() => {
-                        location.reload();
-                    }, 500);
+                    const cartSubtotal = document.getElementById('cartSubtotal');
+                    const cartTotal = document.getElementById('cartTotal');
+                    if (cartSubtotal) cartSubtotal.textContent = 'GH₵ 0.00';
+                    if (cartTotal) cartTotal.textContent = 'GH₵ 0.00';
                 }
             } else {
+                console.error('Failed to empty cart:', data.message);
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
                         title: 'Error',
@@ -2601,32 +2585,65 @@ try {
                         icon: 'error',
                         confirmButtonText: 'OK'
                     });
-                } else if (typeof showNotification === 'function') {
-                    showNotification(data.message || 'Failed to empty cart', 'error');
+                }
+                // Re-enable container on error
+                if (cartContainer) {
+                    cartContainer.style.opacity = '1';
+                    cartContainer.style.pointerEvents = 'auto';
                 }
             }
         })
         .catch(error => {
             console.error('Error emptying cart:', error);
-            console.error('Error details:', {
-                message: error.message,
-                stack: error.stack,
-                url: emptyUrl
-            });
-            
-            const errorMessage = error.message || 'An error occurred while emptying the cart';
             if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                 Swal.fire({
-                    title: 'Empty Cart Error',
-                    text: errorMessage + '. Please try again or refresh the page.',
+                    title: 'Network Error',
+                    text: 'Unable to connect to server. Please check your connection and try again.',
                     icon: 'error',
                     confirmButtonText: 'OK'
                 });
-            } else if (typeof showNotification === 'function') {
-                showNotification('An error occurred. Please try again.', 'error');
+            }
+            // Re-enable container on error
+            if (cartContainer) {
+                cartContainer.style.opacity = '1';
+                cartContainer.style.pointerEvents = 'auto';
             }
         });
     };
+
+    // Helper functions for cart operations
+    window.updateCartTotals = function(newTotal) {
+        const cartSubtotal = document.getElementById('cartSubtotal');
+        const cartTotal = document.getElementById('cartTotal');
+
+        if (cartSubtotal) {
+            cartSubtotal.textContent = `GH₵${parseFloat(newTotal || 0).toFixed(2)}`;
+        }
+        if (cartTotal) {
+            cartTotal.textContent = `GH₵${parseFloat(newTotal || 0).toFixed(2)}`;
+        }
+
+        // Update any other total displays
+        const totalDisplays = document.querySelectorAll('.cart-total-display, .total-amount');
+        totalDisplays.forEach(display => {
+            display.textContent = `GH₵${parseFloat(newTotal || 0).toFixed(2)}`;
+        });
+    };
+
+    window.updateCartBadge = function(newCount) {
+        const cartBadge = document.getElementById('cartBadge');
+        if (cartBadge) {
+            const count = newCount !== undefined ? newCount : <?php echo $cart_count; ?>;
+            if (count > 0) {
+                cartBadge.textContent = count;
+                cartBadge.style.display = 'flex';
+            } else {
+                cartBadge.style.display = 'none';
+            }
+        }
+    };
+
+    // All cart functions are now defined above - no duplicates needed
 
     // Helper functions for cart operations
     window.updateCartTotals = function(newTotal) {
@@ -2785,7 +2802,7 @@ try {
         startPromoTimer();
 
         // Update cart badge
-        updateCartBadge();
+            updateCartBadge();
     });
 
     // Timer functionality - from login.php

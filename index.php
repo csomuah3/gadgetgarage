@@ -1262,7 +1262,7 @@ try {
 
 		/* ——— Hero Slide (Main Banner) ——— */
 		.hero-slide {
-			display: grid;
+			display: none;
 			grid-template-columns: 1.5fr 1fr;
 			gap: 40px;
 			padding: 60px 60px;
@@ -1273,27 +1273,10 @@ try {
 			left: 0;
 			width: 100%;
 			height: 100%;
-			opacity: 0;
-			visibility: hidden;
-			transform: translateX(100px);
-			transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-			pointer-events: none;
-			z-index: 1;
 		}
 
 		.hero-slide.active {
-			opacity: 1 !important;
-			visibility: visible !important;
-			transform: translateX(0) !important;
-			pointer-events: all;
-			z-index: 10;
-		}
-
-		.hero-slide.exiting {
-			opacity: 0 !important;
-			visibility: hidden !important;
-			transform: translateX(-100px) !important;
-			z-index: 5;
+			display: grid !important;
 		}
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */

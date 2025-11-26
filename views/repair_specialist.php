@@ -1,4 +1,9 @@
 <?php
+// Enable error reporting for debugging (remove in production)
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display errors, but log them
+ini_set('log_errors', 1);
+
 session_start();
 require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../settings/db_class.php';
@@ -33,29 +38,61 @@ if ($issue_id <= 0) {
     exit;
 }
 
+// Initialize variables
+$issue = null;
+$specialists = [];
+$error_message = null;
+
 try {
     $db = new db_connection();
-    $db->db_connect();
+    
+    if (!$db->db_connect()) {
+        throw new Exception("Database connection failed");
+    }
 
-    // Get issue details
-    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = $issue_id");
+    // Get issue details - escape the issue_id
+    $issue_id_escaped = intval($issue_id); // Already validated as int, but ensure it's safe
+    $issue = $db->db_fetch_one("SELECT * FROM repair_issue_types WHERE issue_id = $issue_id_escaped");
 
-    if (!$issue) {
+    if (!$issue || $issue === false) {
+        // If issue not found, redirect back
         header('Location: repair_services.php');
         exit;
     }
 
-    // Get specialists for this issue
+    // Get specialists for this issue - escape the issue_id
     $specialists_query = "SELECT s.*, si.issue_id
                          FROM specialists s
                          JOIN specialist_issues si ON s.specialist_id = si.specialist_id
-                         WHERE si.issue_id = $issue_id AND s.is_available = 1
+                         WHERE si.issue_id = $issue_id_escaped AND s.is_available = 1
                          ORDER BY s.rating DESC, s.experience_years DESC";
-    $specialists = $db->db_fetch_all($specialists_query);
+    $specialists_result = $db->db_fetch_all($specialists_query);
+    
+    // If db_fetch_all returns false or null, set to empty array
+    if ($specialists_result === false || $specialists_result === null) {
+        $specialists = [];
+    } else {
+        $specialists = $specialists_result;
+    }
 
 } catch (Exception $e) {
+    error_log("Repair specialist error: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
     $error_message = "Unable to load specialists. Please try again later.";
     $specialists = [];
+    // Don't set $issue to null if we already have it from URL params
+    if (!$issue) {
+        $issue = null;
+    }
+} catch (Error $e) {
+    // Catch PHP 7+ errors (TypeError, etc.)
+    error_log("Repair specialist fatal error: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+    $error_message = "A system error occurred. Please try again later.";
+    $specialists = [];
+    if (!$issue) {
+        $issue = null;
+    }
 }
 ?>
 
@@ -963,7 +1000,7 @@ try {
                             <i class="fas fa-sign-in-alt"></i>
                             <span>Login</span>
                         </a>
-                        <a href="../views/register.php" class="action-item">
+                        <a href="../login/register.php" class="action-item">
                             <i class="fas fa-user-plus"></i>
                             <span>Register</span>
                         </a>
@@ -1110,15 +1147,27 @@ try {
             </div>
 
             <!-- Issue Info -->
+            <?php if ($issue): ?>
             <div class="issue-info">
                 <h2 style="color: #047857; margin-bottom: 0.5rem;">
-                    <i class="<?php echo htmlspecialchars($issue['icon_class']); ?> me-2"></i>
-                    <?php echo htmlspecialchars($issue['issue_name']); ?>
+                    <i class="<?php echo htmlspecialchars($issue['icon_class'] ?? 'fas fa-tools'); ?> me-2"></i>
+                    <?php echo htmlspecialchars($issue['issue_name'] ?? $issue_name); ?>
                 </h2>
                 <p style="color: #6b7280; margin: 0;">
-                    <?php echo htmlspecialchars($issue['issue_description']); ?>
+                    <?php echo htmlspecialchars($issue['issue_description'] ?? 'Select a specialist to help with your repair issue.'); ?>
                 </p>
             </div>
+            <?php else: ?>
+            <div class="issue-info">
+                <h2 style="color: #047857; margin-bottom: 0.5rem;">
+                    <i class="fas fa-tools me-2"></i>
+                    <?php echo htmlspecialchars($issue_name); ?>
+                </h2>
+                <p style="color: #6b7280; margin: 0;">
+                    Select a specialist to help with your repair issue.
+                </p>
+            </div>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -1147,7 +1196,7 @@ try {
             <?php else: ?>
                 <div class="specialists-grid">
                     <?php foreach ($specialists as $specialist): ?>
-                        <div class="specialist-card" onclick="selectSpecialist(<?php echo $specialist['specialist_id']; ?>, '<?php echo htmlspecialchars($specialist['specialist_name']); ?>')">
+                        <div class="specialist-card" onclick="selectSpecialist(<?php echo $specialist['specialist_id']; ?>, '<?php echo htmlspecialchars($specialist['specialist_name']); ?>', this)">
                             <div class="specialist-avatar">
                                 <?php echo strtoupper(substr($specialist['specialist_name'], 0, 2)); ?>
                             </div>
@@ -1209,7 +1258,7 @@ try {
         let selectedSpecialist = null;
         let selectedSpecialistName = '';
 
-        function selectSpecialist(specialistId, specialistName) {
+        function selectSpecialist(specialistId, specialistName, element) {
             // Remove previous selection
             document.querySelectorAll('.specialist-card').forEach(card => {
                 card.classList.remove('selected');
@@ -1218,15 +1267,21 @@ try {
             });
 
             // Select current specialist
-            event.currentTarget.classList.add('selected');
-            event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
-            event.currentTarget.style.border = '2px solid #10b981';
+            const card = element || event?.currentTarget;
+            if (card) {
+                card.classList.add('selected');
+                card.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
+                card.style.border = '2px solid #10b981';
+            }
 
             selectedSpecialist = specialistId;
             selectedSpecialistName = specialistName;
 
             // Show continue button
-            document.getElementById('continueBtn').classList.add('show');
+            const continueBtn = document.getElementById('continueBtn');
+            if (continueBtn) {
+                continueBtn.classList.add('show');
+            }
         }
 
         function proceedToSchedule() {

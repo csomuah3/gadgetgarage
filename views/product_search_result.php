@@ -1558,7 +1558,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
                     }, 1500);
 
                     // Update cart count if available
-                    const cartCounter = document.querySelector('.cart-counter');
+                    const cartCounter = document.getElementById('cartBadge');
                     if (cartCounter && data.cart_count) {
                         cartCounter.textContent = data.cart_count;
                         cartCounter.style.display = 'inline';

@@ -2113,8 +2113,8 @@ try {
         formData.append('product_id', productId);
         formData.append('quantity', quantity);
 
-        // Use the actions path (use window.ACTIONS_PATH if available, otherwise default)
-        const updateUrl = (window.ACTIONS_PATH || '../actions/') + 'update_quantity_action.php';
+        // Use relative path
+        const updateUrl = '../actions/update_quantity_action.php';
         
         console.log('Fetching from URL:', updateUrl);
         
@@ -2258,8 +2258,8 @@ try {
         formData.append('product_id', productId);
         formData.append('quantity', qty);
 
-        // Use absolute path
-        const updateUrl = window.ACTIONS_PATH + 'update_quantity_action.php';
+        // Use relative path
+        const updateUrl = '../actions/update_quantity_action.php';
         console.log('Update URL:', updateUrl);
 
         // Show loading state
@@ -2352,7 +2352,7 @@ try {
         const formData = new FormData();
         formData.append('product_id', productId);
 
-        const removeUrl = window.ACTIONS_PATH + 'remove_from_cart_action.php';
+        const removeUrl = '../actions/remove_from_cart_action.php';
         console.log('Removing item from cart, URL:', removeUrl);
         console.log('Product ID:', productId, 'Cart Item ID:', cartItemId);
 
@@ -2485,7 +2485,7 @@ try {
 
     // Override empty cart function
     window.performEmptyCart = function() {
-        const emptyUrl = window.ACTIONS_PATH + 'empty_cart_action.php';
+        const emptyUrl = '../actions/empty_cart_action.php';
         console.log('Emptying cart, URL:', emptyUrl);
 
         fetch(emptyUrl, {

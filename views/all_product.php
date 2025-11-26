@@ -3091,7 +3091,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     button.style.background = '#10b981';
 
                     // Update cart count if available
-                    const cartCounter = document.querySelector('.cart-counter');
+                    const cartCounter = document.getElementById('cartBadge');
                     if (cartCounter && data.cart_count) {
                         cartCounter.textContent = data.cart_count;
                         cartCounter.style.display = 'inline';

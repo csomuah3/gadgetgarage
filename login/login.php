@@ -1720,7 +1720,7 @@ try {
 	</nav>
 
 	<!-- Login Form Section -->
-	<div class="login-page-container">
+	<div class=" login-page-container">
 		<div class="auth-container">
 			<div class="auth-panels" id="authPanels">
 

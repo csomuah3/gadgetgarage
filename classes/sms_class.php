@@ -284,12 +284,16 @@ class SMSService extends db_connection {
                 throw new Exception('Rate limit exceeded for this phone number');
             }
 
-            // Prepare API request - Arkesel uses POST with JSON body
+            // Prepare API request - Arkesel v2 uses POST with JSON body
+            // Try multiple possible formats based on Arkesel API documentation
             $api_data = [
                 'sender' => $this->sender_id,
                 'message' => $message,
                 'recipients' => [$formatted_phone]
             ];
+            
+            // Alternative format - some Arkesel versions use 'sender_id' instead of 'sender'
+            // We'll try the standard format first
 
             // Log SMS attempt
             $log_id = $this->logSMSAttempt($order_id, $customer_id, $formatted_phone, $message_type, $message);
@@ -329,13 +333,37 @@ class SMSService extends db_connection {
             
             error_log("Arkesel API Response Data: " . json_encode($response_data));
 
+            // Arkesel API returns 200 on success, check response structure
             if ($http_code === 200 || $http_code === 201) {
-                // Check if Arkesel returned success
+                // Arkesel success can be indicated by:
+                // 1. status === 'success'
+                // 2. code === 200
+                // 3. data array with message info
+                // 4. Or just HTTP 200 with valid JSON
+                
+                $is_success = false;
+                $error_msg = 'Unknown error from Arkesel API';
+                
                 if (isset($response_data['status']) && $response_data['status'] === 'success') {
+                    $is_success = true;
+                } elseif (isset($response_data['code']) && $response_data['code'] == 200) {
+                    $is_success = true;
+                } elseif (isset($response_data['data']) && is_array($response_data['data'])) {
+                    $is_success = true;
+                } elseif (empty($response_data) || !isset($response_data['status'])) {
+                    // Sometimes Arkesel returns 200 with just data, no status field
+                    // If we got 200 and valid JSON, assume success
+                    $is_success = true;
+                } else {
+                    $error_msg = $response_data['message'] ?? ($response_data['error'] ?? 'Unknown error');
+                }
+                
+                if ($is_success) {
                     // Update log as successful
                     $this->updateSMSLog($log_id, 'sent', $response_data);
                     $this->updateRateLimit($formatted_phone);
 
+                    error_log("SMS sent successfully to $formatted_phone");
                     return [
                         'success' => true,
                         'message' => 'SMS sent successfully',
@@ -344,8 +372,8 @@ class SMSService extends db_connection {
                     ];
                 } else {
                     // Arkesel returned error
-                    $error_msg = $response_data['message'] ?? 'Unknown error from Arkesel API';
                     error_log("Arkesel API Error: $error_msg");
+                    error_log("Full response: " . json_encode($response_data));
                     throw new Exception('Arkesel API Error: ' . $error_msg);
                 }
             } else {

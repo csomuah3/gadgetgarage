@@ -125,6 +125,7 @@ try {
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 	<link href="includes/chatbot-styles.css" rel="stylesheet">
 	<link href="css/dark-mode.css" rel="stylesheet">
+	<link href="views/testimonial-carousel.css" rel="stylesheet">
 	<style>
 		/* Import Google Fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -1381,11 +1382,13 @@ try {
 			display: inline-block;
 		}
 
-		/* Vertically stacked text like inspiration */
+		/* Vertically stacked text - Left aligned */
 		.banner-text-stack {
 			display: flex;
 			flex-direction: column;
 			gap: 4px;
+			text-align: left;
+			align-items: flex-start;
 		}
 
 		.text-line {
@@ -1465,6 +1468,16 @@ try {
 			font-weight: 700;
 			letter-spacing: -1px;
 			margin-bottom: 4px;
+		}
+
+		.product-desc {
+			font-size: clamp(14px, 1.5vw, 18px);
+			font-weight: 400;
+			line-height: 1.4;
+			opacity: 0.9;
+			font-style: italic;
+			margin-bottom: 16px;
+			max-width: 80%;
 		}
 
 		.tagline-1,
@@ -1614,7 +1627,8 @@ try {
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 350px;
+			max-height: 480px;
+			min-height: 420px;
 			max-width: 100%;
 			object-fit: contain;
 			transform: translateY(0) translateX(0);
@@ -1641,6 +1655,37 @@ try {
 			transform: translateY(0) translateX(0) scale(1);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
+		}
+
+		/* Navigation Dots */
+		.hero-dots {
+			position: absolute;
+			bottom: 20px;
+			left: 50%;
+			transform: translateX(-50%);
+			display: flex;
+			gap: 12px;
+			z-index: 20;
+		}
+
+		.carousel-dot {
+			width: 12px;
+			height: 12px;
+			border-radius: 50%;
+			background: rgba(255, 255, 255, 0.4);
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border: 2px solid transparent;
+		}
+
+		.carousel-dot.active {
+			background: rgba(255, 255, 255, 0.9);
+			transform: scale(1.2);
+		}
+
+		.carousel-dot:hover {
+			background: rgba(255, 255, 255, 0.7);
+			transform: scale(1.1);
 		}
 
 		/* ——— Right column (two stacked cards) ——— */
@@ -5040,10 +5085,9 @@ try {
 								<div class="banner-text-stack">
 									<div class="text-line brand-name">Apple</div>
 									<div class="text-line product-name">iPad Pro</div>
-									<div class="text-line tagline-1">Smart</div>
-									<div class="text-line tagline-2">Tech,</div>
-									<div class="text-line tagline-3">Smarter</div>
-									<div class="text-line tagline-4">Spending</div>
+									<div class="text-line product-desc">Powerful performance meets portability in this refurbished iPad Pro</div>
+									<div class="text-line tagline-1">SMART TECH</div>
+									<div class="text-line tagline-2">SMARTER SPENDING</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 2,500.00</div>
 								</div>
@@ -5068,9 +5112,9 @@ try {
 								<div class="banner-text-stack">
 									<div class="text-line brand-name">Apple</div>
 									<div class="text-line product-name">iPhone</div>
-									<div class="text-line tagline-1">Premium</div>
-									<div class="text-line tagline-2">Quality,</div>
-									<div class="text-line tagline-3">Best Value</div>
+									<div class="text-line product-desc">Experience premium features and reliability in this certified refurbished iPhone</div>
+									<div class="text-line tagline-1">SMART TECH</div>
+									<div class="text-line tagline-2">SMARTER SPENDING</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 1,800.00</div>
 								</div>
@@ -5095,9 +5139,9 @@ try {
 								<div class="banner-text-stack">
 									<div class="text-line brand-name">Fujifilm</div>
 									<div class="text-line product-name">Instax Mini</div>
-									<div class="text-line tagline-1">Capture</div>
-									<div class="text-line tagline-2">Moments,</div>
-									<div class="text-line tagline-3">Save Money</div>
+									<div class="text-line product-desc">Instant photography fun with this popular refurbished instant camera</div>
+									<div class="text-line tagline-1">SMART TECH</div>
+									<div class="text-line tagline-2">SMARTER SPENDING</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 450.00</div>
 								</div>
@@ -5122,9 +5166,9 @@ try {
 								<div class="banner-text-stack">
 									<div class="text-line brand-name">Samsung</div>
 									<div class="text-line product-name">Galaxy Z Fold</div>
-									<div class="text-line tagline-1">Innovation</div>
-									<div class="text-line tagline-2">Meets</div>
-									<div class="text-line tagline-3">Affordability</div>
+									<div class="text-line product-desc">Cutting-edge foldable technology at an unbeatable refurbished price</div>
+									<div class="text-line tagline-1">SMART TECH</div>
+									<div class="text-line tagline-2">SMARTER SPENDING</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 3,200.00</div>
 								</div>
@@ -5139,6 +5183,13 @@ try {
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/images-42.jpeg-removebg-preview.png" alt="Samsung Galaxy Z Fold" class="product-image" />
 							</div>
 						</article>
+					</div>
+					<!-- Navigation Dots -->
+					<div class="hero-dots">
+						<span class="carousel-dot active" data-slide="0"></span>
+						<span class="carousel-dot" data-slide="1"></span>
+						<span class="carousel-dot" data-slide="2"></span>
+						<span class="carousel-dot" data-slide="3"></span>
 					</div>
 				</div>
 
@@ -5726,20 +5777,15 @@ try {
 	</section>
 
 	<!-- TESTIMONIALS — Card Stack -->
-	<!-- Customer Testimonials - Circular Gallery -->
-	<section class="testimonials">
+	<!-- Customer Testimonials - Auto-Scrolling Circular Gallery -->
+	<section class="testimonials-section">
 		<div class="container">
-			<!-- Title Section - Top and Centered -->
-			<div class="testimonials-header">
-				<h2 class="testimonials-title" data-translate="what_customers_say">What Our Customers Say</h2>
-				<p class="testimonials-subtitle" data-translate="amazing_reviews">Stories from satisfied GadgetGarage customers</p>
-			</div>
+			<h2 data-translate="what_customers_say">What Our Customers Say</h2>
+			<p class="section-subtitle" data-translate="amazing_reviews">Stories from satisfied GadgetGarage customers</p>
 
-			<!-- Circular Gallery Container -->
-			<div class="circular-testimonials-wrapper" id="circularTestimonials">
-				<div class="circular-testimonials-track" id="testimonialsTrack">
-					<!-- Testimonials will be dynamically inserted here -->
-				</div>
+			<!-- Auto-Scrolling Circular Carousel Container -->
+			<div id="testimonial-carousel-container">
+				<!-- Carousel will be dynamically inserted here -->
 			</div>
 		</div>
 	</section>
@@ -5881,6 +5927,7 @@ try {
 	<script src="js/header.js"></script>
 	<script src="js/chatbot.js"></script>
 	<script src="js/newsletter-popup.js"></script>
+	<script src="views/testimonial-carousel.js"></script>
 	<script>
 		// Search functionality
 		document.querySelector('.search-input').addEventListener('keypress', function(e) {
@@ -6899,15 +6946,9 @@ try {
 				console.log(`Slide ${i}:`, slide.className, slide.dataset.product);
 			});
 
-			// Start rotation every 2 seconds for testing
-			heroCarouselInterval = setInterval(rotateToNext, 2000);
-			console.log('Hero carousel auto-rotation started (2 second intervals)');
-
-			// Test one rotation manually after 1 second
-			setTimeout(() => {
-				console.log('Testing manual rotation...');
-				rotateToNext();
-			}, 1000);
+			// Start rotation every 4 seconds
+			heroCarouselInterval = setInterval(rotateToNext, 4000);
+			console.log('✅ Hero carousel auto-rotation started (4 second intervals)');
 
 			// Pause on hover
 			carousel.addEventListener('mouseenter', () => {
@@ -6919,12 +6960,12 @@ try {
 
 			carousel.addEventListener('mouseleave', () => {
 				if (!heroCarouselInterval) {
-					heroCarouselInterval = setInterval(rotateToNext, 2000);
+					heroCarouselInterval = setInterval(rotateToNext, 4000);
 					console.log('Hero carousel auto-rotation resumed');
 				}
 			});
 
-			console.log('🎉 Hero carousel initialized:', slides.length, 'slides, auto-rotating every 2 seconds');
+			console.log('🎉 Hero carousel initialized:', slides.length, 'slides, auto-rotating every 4 seconds');
 		}
 
 		// Force immediate start for testing
@@ -7418,353 +7459,7 @@ try {
 			}
 		}
 
-		// Simple Circular Testimonials Gallery - REWRITTEN FOR RELIABILITY
-		function initCircularTestimonials() {
-			console.log('=== INITIALIZING CIRCULAR TESTIMONIALS ===');
-
-			const wrapper = document.getElementById('circularTestimonials');
-			const track = document.getElementById('testimonialsTrack');
-
-			if (!wrapper || !track) {
-				console.error('❌ Required elements not found!', { wrapper: !!wrapper, track: !!track });
-				return;
-			}
-
-			// Ensure wrapper is visible and has dimensions
-			wrapper.style.display = 'block';
-			wrapper.style.visibility = 'visible';
-			wrapper.style.opacity = '1';
-			
-			console.log('✓ Elements found, wrapper size:', wrapper.offsetWidth, 'x', wrapper.offsetHeight);
-
-				// Testimonials data - at least 10 testimonials
-				const testimonials = [{
-						quote: "Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!",
-						rating: 5,
-						name: "Yaw Mensah",
-						location: "Software Developer, Accra"
-					},
-					{
-						quote: "The prices are great and the checkout process was incredibly smooth. No hidden fees!",
-						rating: 5,
-						name: "Akua Asante",
-						location: "Marketing Manager, Kumasi"
-					},
-					{
-						quote: "Customer support was amazing! They helped me pick the right camera for my photography business.",
-						rating: 5,
-						name: "Kofi Boateng",
-						location: "Photographer, Tema"
-					},
-					{
-						quote: "Authentic brands with solid warranties. My iPhone has been working perfectly for months!",
-						rating: 5,
-						name: "Ama Adjei",
-						location: "Student, Cape Coast"
-					},
-					{
-						quote: "Best tech store in Ghana! Quality products at unbeatable prices. Highly recommend!",
-						rating: 5,
-						name: "Kwame Osei",
-						location: "Business Owner, Tamale"
-					},
-					{
-						quote: "Fast shipping and excellent packaging. My order arrived in perfect condition.",
-						rating: 5,
-						name: "Efua Mensah",
-						location: "Teacher, Takoradi"
-					},
-					{
-						quote: "Great selection of refurbished devices. Saved so much money without compromising quality!",
-						rating: 5,
-						name: "David Asante",
-						location: "Engineer, Sunyani"
-					},
-					{
-						quote: "The repair service is top-notch. Fixed my phone quickly and professionally.",
-						rating: 5,
-						name: "Grace Appiah",
-						location: "Nurse, Koforidua"
-					},
-					{
-						quote: "Love the warranty options! Gives me peace of mind when buying refurbished tech.",
-						rating: 5,
-						name: "Michael Darko",
-						location: "Student, Legon"
-					},
-					{
-						quote: "Excellent customer service and product quality. Will definitely shop here again!",
-						rating: 5,
-						name: "Sarah Owusu",
-						location: "Designer, Osu"
-					},
-					{
-						quote: "Amazing deals on premium devices. Got my dream laptop at half the retail price!",
-						rating: 5,
-						name: "Emmanuel Tetteh",
-						location: "Developer, East Legon"
-					},
-					{
-						quote: "Quick response time and professional service. Very satisfied with my purchase!",
-						rating: 5,
-						name: "Patience Adu",
-						location: "Accountant, Teshie"
-					}
-				];
-
-			// Clear any existing cards first
-			track.innerHTML = '';
-			track.style.position = 'relative';
-			track.style.width = '100%';
-			track.style.height = '100%';
-
-			// Testimonials data
-			const testimonials = [
-				{ quote: "Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!", rating: 5, name: "Yaw Mensah", location: "Software Developer, Accra" },
-				{ quote: "The prices are great and the checkout process was incredibly smooth. No hidden fees!", rating: 5, name: "Akua Asante", location: "Marketing Manager, Kumasi" },
-				{ quote: "Customer support was amazing! They helped me pick the right camera for my photography business.", rating: 5, name: "Kofi Boateng", location: "Photographer, Tema" },
-				{ quote: "Authentic brands with solid warranties. My iPhone has been working perfectly for months!", rating: 5, name: "Ama Adjei", location: "Student, Cape Coast" },
-				{ quote: "Best tech store in Ghana! Quality products at unbeatable prices. Highly recommend!", rating: 5, name: "Kwame Osei", location: "Business Owner, Tamale" },
-				{ quote: "Fast shipping and excellent packaging. My order arrived in perfect condition.", rating: 5, name: "Efua Mensah", location: "Teacher, Takoradi" },
-				{ quote: "Great selection of refurbished devices. Saved so much money without compromising quality!", rating: 5, name: "David Asante", location: "Engineer, Sunyani" },
-				{ quote: "The repair service is top-notch. Fixed my phone quickly and professionally.", rating: 5, name: "Grace Appiah", location: "Nurse, Koforidua" },
-				{ quote: "Love the warranty options! Gives me peace of mind when buying refurbished tech.", rating: 5, name: "Michael Darko", location: "Student, Legon" },
-				{ quote: "Excellent customer service and product quality. Will definitely shop here again!", rating: 5, name: "Sarah Owusu", location: "Designer, Osu" },
-				{ quote: "Amazing deals on premium devices. Got my dream laptop at half the retail price!", rating: 5, name: "Emmanuel Tetteh", location: "Developer, East Legon" },
-				{ quote: "Quick response time and professional service. Very satisfied with my purchase!", rating: 5, name: "Patience Adu", location: "Accountant, Teshie" }
-			];
-
-			// Create testimonial cards
-			testimonials.forEach((testimonial, index) => {
-				const card = document.createElement('div');
-				card.className = 'circular-testimonial-card';
-				card.setAttribute('data-index', index);
-				card.innerHTML = `
-					<div class="circular-testimonial-quote">"${testimonial.quote}"</div>
-					<div>
-						<div class="circular-star-rating">
-							${'<span class="circular-star">★</span>'.repeat(testimonial.rating)}
-						</div>
-						<div class="circular-testimonial-author">
-							<h4 class="circular-author-name">${testimonial.name}</h4>
-							<p class="circular-author-location">${testimonial.location}</p>
-						</div>
-					</div>
-				`;
-				// Set initial styles to ensure visibility
-				card.style.position = 'absolute';
-				card.style.display = 'flex';
-				card.style.visibility = 'visible';
-				card.style.opacity = '1';
-				track.appendChild(card);
-			});
-
-			console.log(`✓ Created ${testimonials.length} testimonial cards`);
-
-			// Circular gallery parameters
-			const totalItems = testimonials.length;
-			const angleStep = (2 * Math.PI) / totalItems;
-			let rotation = 0;
-			let targetRotation = 0;
-			let isDragging = false;
-			let startX = 0;
-			let currentRotation = 0;
-			let animationFrameId = null;
-
-			// Position cards in a circle - SIMPLIFIED AND RELIABLE
-			function positionCards() {
-				const cards = track.querySelectorAll('.circular-testimonial-card');
-				if (cards.length === 0) {
-					console.error('❌ No cards found in DOM!');
-					return;
-				}
-
-				// Force wrapper to have dimensions
-				if (wrapper.offsetWidth === 0 || wrapper.offsetHeight === 0) {
-					wrapper.style.width = '100%';
-					wrapper.style.height = '600px';
-					wrapper.style.minHeight = '600px';
-				}
-
-				const wrapperWidth = wrapper.offsetWidth || 1200;
-				const wrapperHeight = wrapper.offsetHeight || 600;
-
-				const centerX = wrapperWidth / 2;
-				const centerY = wrapperHeight / 2;
-				const radius = Math.min(wrapperWidth * 0.28, wrapperHeight * 0.35, 320);
-				const cardWidth = 350;
-				const cardHeight = 260;
-
-				cards.forEach((card, index) => {
-					const angle = (index * angleStep) + rotation;
-					
-					// Calculate position
-					const x = radius * Math.cos(angle);
-					const y = radius * Math.sin(angle) * 0.35; // Elliptical shape
-					
-					// Calculate visibility and scale
-					const frontFactor = Math.abs(Math.cos(angle));
-					const opacity = Math.max(0.65, Math.min(1, frontFactor + 0.2));
-					const scale = 0.8 + (frontFactor * 0.2);
-
-					// Calculate final position
-					const finalX = centerX + x - (cardWidth / 2);
-					const finalY = centerY + y - (cardHeight / 2);
-
-					// Apply all styles
-					card.style.left = finalX + 'px';
-					card.style.top = finalY + 'px';
-					card.style.transform = `scale(${scale.toFixed(3)})`;
-					card.style.opacity = opacity;
-					card.style.zIndex = Math.round(frontFactor * 100) + 10;
-				});
-			}
-
-			// Smooth rotation animation
-			function animate() {
-				rotation += (targetRotation - rotation) * 0.05;
-				positionCards();
-				animationFrameId = requestAnimationFrame(animate);
-			}
-
-			// Auto-rotate
-			let autoRotateInterval = setInterval(() => {
-				if (!isDragging) {
-					targetRotation += angleStep * 0.08; // Slow auto-rotation
-				}
-			}, 150);
-
-			// Mouse drag handlers
-			wrapper.addEventListener('mousedown', (e) => {
-				isDragging = true;
-				startX = e.clientX;
-				currentRotation = rotation;
-				clearInterval(autoRotateInterval);
-			});
-
-			wrapper.addEventListener('mousemove', (e) => {
-				if (isDragging) {
-					const deltaX = e.clientX - startX;
-					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
-					const radius = Math.min(wrapperWidth * 0.35, 450);
-					targetRotation = currentRotation + (deltaX / radius) * 2;
-				}
-			});
-
-			wrapper.addEventListener('mouseup', () => {
-				isDragging = false;
-				autoRotateInterval = setInterval(() => {
-					if (!isDragging) {
-						targetRotation += angleStep * 0.08;
-					}
-				}, 150);
-			});
-
-			wrapper.addEventListener('mouseleave', () => {
-				isDragging = false;
-			});
-
-			// Touch support
-			wrapper.addEventListener('touchstart', (e) => {
-				isDragging = true;
-				startX = e.touches[0].clientX;
-				currentRotation = rotation;
-				clearInterval(autoRotateInterval);
-			});
-
-			wrapper.addEventListener('touchmove', (e) => {
-				if (isDragging) {
-					const deltaX = e.touches[0].clientX - startX;
-					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
-					const radius = Math.min(wrapperWidth * 0.35, 450);
-					targetRotation = currentRotation + (deltaX / radius) * 2;
-				}
-			});
-
-			wrapper.addEventListener('touchend', () => {
-				isDragging = false;
-				autoRotateInterval = setInterval(() => {
-					if (!isDragging) {
-						targetRotation += angleStep * 0.08;
-					}
-				}, 150);
-			});
-
-			// Wheel scroll
-			wrapper.addEventListener('wheel', (e) => {
-				e.preventDefault();
-				targetRotation += (e.deltaY > 0 ? 1 : -1) * angleStep * 0.5;
-			});
-
-			// Initialize - wait for DOM and ensure dimensions
-			function initializeGallery() {
-				// Force wrapper dimensions if needed
-				if (wrapper.offsetWidth === 0 || wrapper.offsetHeight === 0) {
-					wrapper.style.width = '100%';
-					wrapper.style.height = '600px';
-					wrapper.style.minHeight = '600px';
-					console.log('⚠️ Forced wrapper dimensions');
-				}
-
-				const cards = track.querySelectorAll('.circular-testimonial-card');
-				if (cards.length === 0) {
-					console.error('❌ No cards found!');
-					return;
-				}
-
-				console.log('Initializing gallery with', cards.length, 'cards');
-				console.log('Wrapper size:', wrapper.offsetWidth, 'x', wrapper.offsetHeight);
-
-				// Position cards immediately
-				positionCards();
-				
-				// Start animation
-				animate();
-
-				// Verify first card is visible
-				if (cards.length > 0) {
-					const firstCard = cards[0];
-					const rect = firstCard.getBoundingClientRect();
-					console.log('✓ Gallery initialized!');
-					console.log('First card position:', rect.left, rect.top);
-					console.log('First card visible:', rect.width > 0 && rect.height > 0);
-				}
-			}
-
-			// Try initialization multiple times
-			setTimeout(initializeGallery, 50);
-			setTimeout(initializeGallery, 200);
-			setTimeout(initializeGallery, 500);
-			setTimeout(initializeGallery, 1000);
-
-			// Handle resize
-			let resizeTimeout;
-			window.addEventListener('resize', () => {
-				clearTimeout(resizeTimeout);
-				resizeTimeout = setTimeout(() => {
-					positionCards();
-				}, 250);
-			});
-
-			console.log('✓ Circular testimonials gallery setup complete');
-		}
-
-		// Initialize on page load
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', initCircularTestimonials);
-		} else {
-			// DOM already loaded
-			initCircularTestimonials();
-		}
-
-		// Also try on window load as fallback
-		window.addEventListener('load', function() {
-			const track = document.getElementById('testimonialsTrack');
-			if (track && track.children.length === 0) {
-				console.log('Re-initializing circular testimonials on window load');
-				initCircularTestimonials();
-			}
-		});
+		// Old testimonials code removed - using new auto-scrolling carousel
 
 		// Countdown timer functionality for deals
 		function updateCountdown() {

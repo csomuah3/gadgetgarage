@@ -3592,7 +3592,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                      class="product-image"
                      data-product-id="${product.product_id}"
                      data-product-image="${product.product_image || ''}"
-                     data-product-title="${product.product_title}">
+                     data-product-title="${product.product_title}"
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
                 <div class="product-badge">New</div>
             </div>
             <div class="product-content">
@@ -3779,7 +3780,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Populate product info
             document.getElementById('modalProductInfo').innerHTML = `
                 <div style="display: flex; gap: 20px; align-items: center; margin-bottom: 20px;">
-                    <img src="${product.image_url || ('http://169.239.251.102:442/~chelsea.somuah/uploads/' + (product.image || ''))}" alt="${product.name}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb;">
+                    <img src="${product.image_url || ('http://169.239.251.102:442/~chelsea.somuah/uploads/' + (product.image || ''))}" alt="${product.name}" style="width: 80px; height: 80px; object-fit: contain; border-radius: 8px; border: 1px solid #e5e7eb;" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
                     <div>
                         <h6 style="color: #6b7280; font-size: 0.9rem; margin: 0 0 5px 0;">${product.brand.charAt(0).toUpperCase() + product.brand.slice(1)}</h6>
                         <h5 style="color: #1f2937; margin: 0; font-size: 1.1rem;">${product.name}</h5>

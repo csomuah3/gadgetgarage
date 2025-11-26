@@ -3592,7 +3592,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                      class="product-image"
                      data-product-id="${product.product_id}"
                      data-product-image="${product.product_image || ''}"
-                     data-product-title="${product.product_title}">
+                     data-product-title="${product.product_title}"
+                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
                 <div class="product-badge">New</div>
             </div>
             <div class="product-content">

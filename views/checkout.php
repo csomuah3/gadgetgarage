@@ -1519,7 +1519,8 @@ try {
                                     <div class="col-auto">
                                         <img src="<?php echo get_product_image_url($item['product_image']); ?>"
                                              alt="<?php echo htmlspecialchars($item['product_title']); ?>"
-                                             class="product-image-small">
+                                             class="product-image-small"
+                                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
                                     </div>
                                     <div class="col">
                                         <h6 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h6>
@@ -2409,21 +2410,21 @@ try {
 				let message = reason ? decodeURIComponent(reason) : 'There was an issue with your payment.';
 
 				if (error) {
-					switch(error) {
-						case 'cancelled':
-							title = 'Payment Cancelled';
-							message = 'Your payment was cancelled. You can try again when ready.';
-							break;
-						case 'verification_failed':
-							title = 'Payment Verification Failed';
-							message = 'We could not verify your payment. Please try again or contact support.';
-							break;
-						case 'connection_error':
-							title = 'Connection Error';
-							message = 'There was a connection error while processing your payment. Please try again.';
-							break;
-						default:
-							message = decodeURIComponent(error);
+				switch(error) {
+					case 'cancelled':
+						title = 'Payment Cancelled';
+						message = 'Your payment was cancelled. You can try again when ready.';
+						break;
+					case 'verification_failed':
+						title = 'Payment Verification Failed';
+						message = 'We could not verify your payment. Please try again or contact support.';
+						break;
+					case 'connection_error':
+						title = 'Connection Error';
+						message = 'There was a connection error while processing your payment. Please try again.';
+						break;
+					default:
+						message = decodeURIComponent(error);
 					}
 				}
 
@@ -2435,8 +2436,8 @@ try {
 					confirmButtonColor: '#dc3545'
 				}).then(() => {
 					// Clean up URL
-					const newUrl = window.location.pathname;
-					history.replaceState(null, null, newUrl);
+				const newUrl = window.location.pathname;
+				history.replaceState(null, null, newUrl);
 				});
 			}
 		}
@@ -2444,7 +2445,7 @@ try {
 		// Set base path for API calls (similar to cart.php)
 		const BASE_PATH = '<?php echo dirname($_SERVER['PHP_SELF']); ?>';
 		const ACTIONS_PATH = BASE_PATH.replace('/views', '') + '/actions/';
-		
+
 		// Load saved preferences on page load
 		document.addEventListener('DOMContentLoaded', function() {
 			// Check for payment status (success or error) first

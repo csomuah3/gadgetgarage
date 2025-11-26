@@ -1319,23 +1319,20 @@ try {
 		}
 
 		/* Text colors for each gradient */
-		.hero-slide[data-gradient="ipad-gradient"] .banner-title,
-		.hero-slide[data-gradient="ipad-gradient"] .banner-price {
+		/* Text colors for each gradient */
+		.hero-slide[data-gradient="ipad-gradient"] .text-line {
 			color: #ffffff !important;
 		}
 
-		.hero-slide[data-gradient="iphone-gradient"] .banner-title,
-		.hero-slide[data-gradient="iphone-gradient"] .banner-price {
+		.hero-slide[data-gradient="iphone-gradient"] .text-line {
 			color: #1a1f2e !important;
 		}
 
-		.hero-slide[data-gradient="polaroid-gradient"] .banner-title,
-		.hero-slide[data-gradient="polaroid-gradient"] .banner-price {
+		.hero-slide[data-gradient="polaroid-gradient"] .text-line {
 			color: #8b4513 !important;
 		}
 
-		.hero-slide[data-gradient="samsung-gradient"] .banner-title,
-		.hero-slide[data-gradient="samsung-gradient"] .banner-price {
+		.hero-slide[data-gradient="samsung-gradient"] .text-line {
 			color: #ffffff !important;
 		}
 
@@ -1343,53 +1340,89 @@ try {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			gap: 28px;
+			gap: 24px;
 			padding: 20px 0;
 		}
 
-		.banner-title {
-			font-size: clamp(36px, 5.5vw, 56px);
-			/* big multi-line headline */
+		/* Vertically stacked text like inspiration */
+		.banner-text-stack {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
+		}
+
+		.text-line {
+			font-size: clamp(42px, 6vw, 64px);
 			font-weight: 700;
-			line-height: 1.15;
+			line-height: 1.1;
 			color: inherit;
 			margin: 0;
 			transition: opacity 0.6s ease, transform 0.6s ease;
 			transform: translateY(0);
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
 		}
 
-		.hero-slide:not(.active) .banner-title {
+		.hero-slide:not(.active) .text-line {
 			opacity: 0;
-			transform: translateY(20px);
+			transform: translateY(15px);
 		}
 
-		.hero-slide.active .banner-title {
+		.hero-slide.active .text-line {
 			opacity: 1;
 			transform: translateY(0);
 		}
 
-		.banner-price {
-			font-size: clamp(20px, 2.5vw, 32px);
-			color: inherit;
-			margin: 0;
-			transition: opacity 0.6s ease, transform 0.6s ease;
-			transform: translateY(0);
+		.price-line {
+			font-size: clamp(24px, 3vw, 36px);
+			font-weight: 600;
+			margin-top: 12px;
 		}
 
-		.hero-slide:not(.active) .banner-price {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-
-		.hero-slide.active .banner-price {
-			opacity: 1;
-			transform: translateY(0);
-		}
-
-
-		.banner-price .price {
+		.price-amount {
+			font-size: clamp(32px, 4.5vw, 52px);
 			font-weight: 800;
-			font-size: 1.2em;
+		}
+
+		/* Social Media Buttons */
+		.social-buttons {
+			display: flex;
+			gap: 12px;
+			margin: 16px 0;
+		}
+
+		.social-btn {
+			width: 40px;
+			height: 40px;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			text-decoration: none;
+			transition: all 0.3s ease;
+			background: rgba(255, 255, 255, 0.2);
+			color: inherit;
+			border: 1px solid rgba(255, 255, 255, 0.3);
+		}
+
+		.social-btn:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: scale(1.1);
+		}
+
+		.social-btn i {
+			font-size: 18px;
+		}
+
+		.hero-slide[data-gradient="iphone-gradient"] .social-btn,
+		.hero-slide[data-gradient="polaroid-gradient"] .social-btn {
+			background: rgba(0, 0, 0, 0.1);
+			border-color: rgba(0, 0, 0, 0.2);
+			color: inherit;
+		}
+
+		.hero-slide[data-gradient="iphone-gradient"] .social-btn:hover,
+		.hero-slide[data-gradient="polaroid-gradient"] .social-btn:hover {
+			background: rgba(0, 0, 0, 0.15);
 		}
 
 		.btn-primary {
@@ -1406,6 +1439,8 @@ try {
 			text-decoration: none;
 			transition: all 0.3s ease;
 			box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+			width: fit-content;
+			margin-top: 8px;
 		}
 
 		.btn-primary:hover {
@@ -2672,6 +2707,17 @@ try {
 			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 			position: relative;
 			overflow: hidden;
+		}
+
+		.featured-ig-empty {
+			text-align: center;
+			padding: 60px 20px;
+			color: #6b7280;
+		}
+
+		.featured-ig-empty p {
+			margin: 0;
+			font-size: 1.1rem;
 		}
 
 		.featured-ig-section::before {
@@ -4618,8 +4664,21 @@ try {
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Apple iPad Pro<br>Smart Tech, Smarter Spending</h1>
-								<p class="banner-price">Starting At <span class="price">GH₵ 2,500.00</span></p>
+								<div class="banner-text-stack">
+									<div class="text-line">Apple</div>
+									<div class="text-line">iPad Pro</div>
+									<div class="text-line">Smart</div>
+									<div class="text-line">Tech,</div>
+									<div class="text-line">Smarter</div>
+									<div class="text-line">Spending</div>
+									<div class="text-line price-line">Starting At</div>
+									<div class="text-line price-amount">GH₵ 2,500.00</div>
+								</div>
+								<div class="social-buttons">
+									<a href="#" class="social-btn instagram" aria-label="Share on Instagram"><i class="fab fa-instagram"></i></a>
+									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
+									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+								</div>
 								<a href="views/all_product.php?category=ipads" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
@@ -4630,8 +4689,20 @@ try {
 						<!-- Product 2: iPhone -->
 						<article class="hero-slide" data-product="iphone" data-gradient="iphone-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Apple iPhone<br>Premium Quality, Best Value</h1>
-								<p class="banner-price">Starting At <span class="price">GH₵ 1,800.00</span></p>
+								<div class="banner-text-stack">
+									<div class="text-line">Apple</div>
+									<div class="text-line">iPhone</div>
+									<div class="text-line">Premium</div>
+									<div class="text-line">Quality,</div>
+									<div class="text-line">Best Value</div>
+									<div class="text-line price-line">Starting At</div>
+									<div class="text-line price-amount">GH₵ 1,800.00</div>
+								</div>
+								<div class="social-buttons">
+									<a href="#" class="social-btn instagram" aria-label="Share on Instagram"><i class="fab fa-instagram"></i></a>
+									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
+									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+								</div>
 								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
@@ -4642,8 +4713,20 @@ try {
 						<!-- Product 3: Polaroid Camera -->
 						<article class="hero-slide" data-product="polaroid" data-gradient="polaroid-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Fujifilm Instax Mini<br>Capture Moments, Save Money</h1>
-								<p class="banner-price">Starting At <span class="price">GH₵ 450.00</span></p>
+								<div class="banner-text-stack">
+									<div class="text-line">Fujifilm</div>
+									<div class="text-line">Instax Mini</div>
+									<div class="text-line">Capture</div>
+									<div class="text-line">Moments,</div>
+									<div class="text-line">Save Money</div>
+									<div class="text-line price-line">Starting At</div>
+									<div class="text-line price-amount">GH₵ 450.00</div>
+								</div>
+								<div class="social-buttons">
+									<a href="#" class="social-btn instagram" aria-label="Share on Instagram"><i class="fab fa-instagram"></i></a>
+									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
+									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+								</div>
 								<a href="views/all_product.php?category=cameras" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
@@ -4654,8 +4737,20 @@ try {
 						<!-- Product 4: Samsung Phone -->
 						<article class="hero-slide" data-product="samsung" data-gradient="samsung-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Samsung Galaxy Z Fold<br>Innovation Meets Affordability</h1>
-								<p class="banner-price">Starting At <span class="price">GH₵ 3,200.00</span></p>
+								<div class="banner-text-stack">
+									<div class="text-line">Samsung</div>
+									<div class="text-line">Galaxy Z Fold</div>
+									<div class="text-line">Innovation</div>
+									<div class="text-line">Meets</div>
+									<div class="text-line">Affordability</div>
+									<div class="text-line price-line">Starting At</div>
+									<div class="text-line price-amount">GH₵ 3,200.00</div>
+								</div>
+								<div class="social-buttons">
+									<a href="#" class="social-btn instagram" aria-label="Share on Instagram"><i class="fab fa-instagram"></i></a>
+									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
+									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
+								</div>
 								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
@@ -4802,15 +4897,15 @@ try {
 	</section>
 
 	<!-- Featured on IG this Week -->
-	<?php if (!empty($featured_ig_products)): ?>
-		<section class="featured-ig-section">
-			<div class="container">
-				<div class="section-header">
-					<h2 class="featured-ig-title">
-						<i class="fab fa-instagram"></i>
-						Featured on IG this Week
-					</h2>
-				</div>
+	<section class="featured-ig-section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="featured-ig-title">
+					<i class="fab fa-instagram"></i>
+					Featured on IG this Week
+				</h2>
+			</div>
+			<?php if (!empty($featured_ig_products)): ?>
 				<div class="featured-ig-grid">
 					<?php foreach ($featured_ig_products as $index => $product): ?>
 						<div class="featured-ig-card" data-index="<?= $index ?>">
@@ -4834,9 +4929,14 @@ try {
 						</div>
 					<?php endforeach; ?>
 				</div>
-			</div>
-		</section>
-	<?php endif; ?>
+			<?php else: ?>
+				<div class="featured-ig-empty">
+					<p>No products found in "As featured on IG" category. Please add products to this category to see them here.</p>
+					<p style="font-size: 0.9rem; color: #6b7280; margin-top: 10px;">Category names to check: "As featured on IG", "Featured on IG", "Instagram Featured"</p>
+				</div>
+			<?php endif; ?>
+		</div>
+	</section>
 
 	<!-- Camera & Video Equipment Promo -->
 	<!-- DJI Osmo Pocket 3 Promo -->

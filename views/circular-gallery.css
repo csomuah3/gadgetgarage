@@ -44,39 +44,38 @@
     font-family: 'Inter', sans-serif;
 }
 
-/* 3D Gallery Container */
-.circular-gallery-wrapper {
+/* Horizontal Gallery Container */
+.horizontal-gallery-wrapper {
     width: 100%;
-    height: 600px;
+    height: 400px;
     position: relative;
-    overflow: visible;
+    overflow: hidden;
 }
 
-.circular-gallery-container {
+.horizontal-gallery-container {
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d;
+    display: flex;
+    align-items: center;
 }
 
-.circular-gallery-track {
+.horizontal-gallery-track {
     width: 100%;
     height: 100%;
     position: relative;
-    transform-style: preserve-3d;
-    transform-origin: center center;
+    display: flex;
+    align-items: center;
 }
 
 /* Individual Testimonial Cards */
 .gallery-testimonial-card {
     position: absolute;
     top: 50%;
-    left: 50%;
-    transform-origin: center center;
-    transform-style: preserve-3d;
+    transform: translateY(-50%);
     cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    backface-visibility: hidden;
+    transition: transform 0.1s linear;
+    flex-shrink: 0;
     will-change: transform;
 }
 
@@ -199,8 +198,8 @@
         font-size: 2.5rem;
     }
 
-    .circular-gallery-wrapper {
-        height: 550px;
+    .horizontal-gallery-wrapper {
+        height: 350px;
     }
 
     .testimonial-text {
@@ -211,7 +210,7 @@
 @media (max-width: 768px) {
     .testimonials-section {
         padding: 60px 0;
-        min-height: 600px;
+        min-height: 500px;
     }
 
     .testimonials-section h2 {
@@ -225,8 +224,8 @@
         padding: 0 20px;
     }
 
-    .circular-gallery-wrapper {
-        height: 450px;
+    .horizontal-gallery-wrapper {
+        height: 300px;
     }
 
     .gallery-testimonial-card .card-inner {
@@ -250,8 +249,8 @@
 }
 
 @media (max-width: 480px) {
-    .circular-gallery-wrapper {
-        height: 400px;
+    .horizontal-gallery-wrapper {
+        height: 280px;
     }
 
     .testimonials-section h2 {

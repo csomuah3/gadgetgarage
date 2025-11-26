@@ -71,7 +71,7 @@
 /* Individual Testimonial Cards */
 .gallery-testimonial-card {
     position: absolute;
-    top: 50%;
+    top: 40%;
     transform: translateY(-50%);
     cursor: pointer;
     transition: transform 0.1s linear;

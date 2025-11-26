@@ -5,7 +5,7 @@
  */
 
 // Arkesel API Configuration
-define('SMS_API_KEY', 'dFJQc2RzaXNhSEFzS1FsampvSVA');
+define('SMS_API_KEY', 'b05TRXV3bWJ2WnBlZmNXc2lMT28');
 define('SMS_API_URL', 'https://sms.arkesel.com/api/v2/sms/send');
 define('SMS_SENDER_ID', 'Gadget-G'); // Max 11 characters for Arkesel
 
@@ -81,6 +81,7 @@ define('SMS_TYPE_CART_ABANDONMENT', 'cart_abandonment');
 define('SMS_TYPE_CART_REMINDER', 'cart_reminder');
 define('SMS_TYPE_PAYMENT_RECEIVED', 'payment_received');
 define('SMS_TYPE_WELCOME_REGISTRATION', 'welcome_registration');
+define('SMS_TYPE_APPOINTMENT_CONFIRMATION', 'appointment_confirmation');
 
 // Phone number validation patterns
 $phone_patterns = [

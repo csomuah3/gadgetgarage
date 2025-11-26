@@ -468,6 +468,80 @@ function send_welcome_registration_sms($customer_id, $customer_name, $phone_numb
 }
 
 /**
+ * Send appointment confirmation SMS
+ * @param int $appointment_id
+ * @param string $customer_name
+ * @param string $phone_number
+ * @param string $appointment_date
+ * @param string $appointment_time
+ * @param string $specialist_name
+ * @param string $issue_name
+ * @return bool
+ */
+function send_appointment_confirmation_sms($appointment_id, $customer_name, $phone_number, $appointment_date, $appointment_time, $specialist_name, $issue_name) {
+    try {
+        global $sms_urls;
+
+        $phone = format_phone_number($phone_number);
+        if (!$phone) {
+            log_sms_activity('error', 'Invalid phone number for appointment SMS', [
+                'appointment_id' => $appointment_id,
+                'phone' => $phone_number
+            ]);
+            return false;
+        }
+
+        // Format date and time for display
+        $date_formatted = date('l, F j, Y', strtotime($appointment_date));
+        $time_formatted = date('g:i A', strtotime($appointment_time));
+
+        // Create message
+        $message = "Hello {$customer_name}, your repair appointment has been confirmed!\n\n";
+        $message .= "Issue: {$issue_name}\n";
+        $message .= "Specialist: {$specialist_name}\n";
+        $message .= "Date: {$date_formatted}\n";
+        $message .= "Time: {$time_formatted}\n\n";
+        $message .= "Appointment ID: #{$appointment_id}\n\n";
+        $message .= "We look forward to helping you with your device repair. If you need to reschedule, please contact us.\n\n";
+        $message .= "Thank you, GadgetGarage";
+
+        $sms = new SMSService();
+        // Get customer_id if available (for logging)
+        $customer_id = null;
+        try {
+            require_once __DIR__ . '/../settings/db_class.php';
+            $db = new db_connection();
+            if ($db->db_connect()) {
+                $appointment_query = "SELECT customer_id FROM repair_appointments WHERE appointment_id = $appointment_id";
+                $appointment_data = $db->db_fetch_one($appointment_query);
+                if ($appointment_data) {
+                    $customer_id = $appointment_data['customer_id'];
+                }
+            }
+        } catch (Exception $e) {
+            // Ignore if can't get customer_id
+        }
+        
+        $result = $sms->sendSMS($phone, $message, SMS_TYPE_APPOINTMENT_CONFIRMATION, $appointment_id, $customer_id);
+
+        log_sms_activity('info', 'Appointment confirmation SMS attempt', [
+            'appointment_id' => $appointment_id,
+            'phone' => $phone,
+            'result' => $result
+        ]);
+
+        return $result['success'] ?? false;
+
+    } catch (Exception $e) {
+        log_sms_activity('error', 'Failed to send appointment confirmation SMS', [
+            'appointment_id' => $appointment_id,
+            'error' => $e->getMessage()
+        ]);
+        return false;
+    }
+}
+
+/**
  * Send order status update SMS notification
  * @param int $order_id
  * @param string $status

@@ -1911,6 +1911,21 @@ try {
                     body: formData
                 });
 
+                // Check if response is OK
+                if (!response.ok) {
+                    const errorText = await response.text();
+                    console.error('HTTP Error:', response.status, errorText);
+                    throw new Error(`HTTP ${response.status}: ${errorText.substring(0, 100)}`);
+                }
+
+                // Check if response is JSON
+                const contentType = response.headers.get('content-type');
+                if (!contentType || !contentType.includes('application/json')) {
+                    const text = await response.text();
+                    console.error('Non-JSON response:', text);
+                    throw new Error('Server returned non-JSON response: ' + text.substring(0, 100));
+                }
+
                 const result = await response.json();
 
                 if (result.success) {
@@ -1939,14 +1954,27 @@ try {
 
             } catch (error) {
                 console.error('Network error:', error);
+                console.error('Error details:', {
+                    message: error.message,
+                    stack: error.stack,
+                    name: error.name
+                });
+                
+                let errorMessage = 'There was a network error submitting your request.';
+                if (error.message) {
+                    errorMessage += '\n\nError: ' + error.message;
+                }
+                
                 if (typeof Swal !== 'undefined') {
                     Swal.fire({
-                        title: 'Network Error',
-                        text: 'There was a network error submitting your request. Please try again or contact us directly.',
+                        title: 'Error',
+                        text: errorMessage,
                         icon: 'error',
                         confirmButtonColor: '#D19C97',
                         confirmButtonText: 'OK'
                     });
+                } else {
+                    alert('Error: ' + errorMessage);
                 }
             } finally {
                 // Reset button

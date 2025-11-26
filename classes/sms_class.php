@@ -284,22 +284,30 @@ class SMSService extends db_connection {
                 throw new Exception('Rate limit exceeded for this phone number');
             }
 
-            // Prepare API request
-            $url = $this->api_url . '?' . http_build_query([
-                'action' => 'send-sms',
-                'api_key' => $this->api_key,
-                'to' => $formatted_phone,
-                'from' => $this->sender_id,
-                'sms' => $message
-            ]);
+            // Prepare API request - Arkesel uses POST with JSON body
+            $api_data = [
+                'sender' => $this->sender_id,
+                'message' => $message,
+                'recipients' => [$formatted_phone]
+            ];
 
             // Log SMS attempt
             $log_id = $this->logSMSAttempt($order_id, $customer_id, $formatted_phone, $message_type, $message);
+            
+            error_log("Sending SMS to Arkesel API - URL: " . $this->api_url);
+            error_log("SMS Data: " . json_encode($api_data));
+            error_log("API Key: " . substr($this->api_key, 0, 10) . "...");
 
-            // Send HTTP request
+            // Send HTTP request using POST with JSON
             $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_URL, $this->api_url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($api_data));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'api-key: ' . $this->api_key
+            ]);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($ch, CURLOPT_USERAGENT, 'GadgetGarage SMS Service 1.0');
@@ -308,27 +316,41 @@ class SMSService extends db_connection {
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $error = curl_error($ch);
             curl_close($ch);
+            
+            error_log("Arkesel API Response - HTTP Code: $http_code, Response: " . substr($response, 0, 200));
 
             if ($error) {
+                error_log("cURL Error: $error");
                 throw new Exception('cURL Error: ' . $error);
             }
 
             // Parse response
             $response_data = json_decode($response, true);
+            
+            error_log("Arkesel API Response Data: " . json_encode($response_data));
 
-            if ($http_code === 200) {
-                // Update log as successful
-                $this->updateSMSLog($log_id, 'sent', $response_data);
-                $this->updateRateLimit($phone_number);
+            if ($http_code === 200 || $http_code === 201) {
+                // Check if Arkesel returned success
+                if (isset($response_data['status']) && $response_data['status'] === 'success') {
+                    // Update log as successful
+                    $this->updateSMSLog($log_id, 'sent', $response_data);
+                    $this->updateRateLimit($formatted_phone);
 
-                return [
-                    'success' => true,
-                    'message' => 'SMS sent successfully',
-                    'log_id' => $log_id,
-                    'response' => $response_data
-                ];
+                    return [
+                        'success' => true,
+                        'message' => 'SMS sent successfully',
+                        'log_id' => $log_id,
+                        'response' => $response_data
+                    ];
+                } else {
+                    // Arkesel returned error
+                    $error_msg = $response_data['message'] ?? 'Unknown error from Arkesel API';
+                    error_log("Arkesel API Error: $error_msg");
+                    throw new Exception('Arkesel API Error: ' . $error_msg);
+                }
             } else {
-                throw new Exception('HTTP Error ' . $http_code . ': ' . $response);
+                error_log("HTTP Error $http_code: $response");
+                throw new Exception('HTTP Error ' . $http_code . ': ' . substr($response, 0, 200));
             }
 
         } catch (Exception $e) {
@@ -674,11 +696,24 @@ class SMSService extends db_connection {
      */
     public function sendAppointmentConfirmationSMS($appointment_id, $customer_id, $phone_number, $customer_name, $appointment_date, $appointment_time, $specialist_name, $issue_name) {
         try {
+            // Log the phone number received
+            error_log("sendAppointmentConfirmationSMS called - Phone: $phone_number, Appointment ID: $appointment_id");
+            
             // Check if SMS is enabled (default to enabled if setting not found)
             $sms_enabled = $this->settings['sms_enabled'] ?? (defined('SMS_ENABLED') && SMS_ENABLED ? 1 : 1);
             if ($sms_enabled != 1) {
+                error_log("SMS is disabled in settings");
                 return ['success' => false, 'message' => 'SMS is disabled'];
             }
+            
+            // Validate and format phone number first
+            $formatted_phone = format_phone_number($phone_number);
+            if (!$formatted_phone) {
+                error_log("Phone number formatting failed - Original: $phone_number");
+                return ['success' => false, 'message' => 'Invalid phone number format: ' . $phone_number];
+            }
+            
+            error_log("Phone number formatted - Original: $phone_number, Formatted: $formatted_phone");
 
             // Format date and time for display
             $date_formatted = date('l, F j, Y', strtotime($appointment_date));
@@ -694,8 +729,10 @@ class SMSService extends db_connection {
             $message .= "We look forward to helping you with your device repair. If you need to reschedule, please contact us.\n\n";
             $message .= "Thank you, GadgetGarage";
 
-            // Send SMS using private method
-            $result = $this->sendSMS($phone_number, $message, 'appointment_confirmation', $appointment_id, $customer_id);
+            // Send SMS using private method - use formatted phone number
+            $result = $this->sendSMS($formatted_phone, $message, 'appointment_confirmation', $appointment_id, $customer_id);
+            
+            error_log("SMS send result: " . json_encode($result));
 
             return $result;
 

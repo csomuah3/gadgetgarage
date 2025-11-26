@@ -39,11 +39,11 @@ class CartManager {
         formData.append('product_id', productId);
         formData.append('quantity', newQuantity);
 
-        console.log('Sending request to:', this.baseUrl + 'test_cart_update.php');
+        console.log('Sending request to:', this.baseUrl + 'update_cart_quantity.php');
         console.log('FormData:', Array.from(formData.entries()));
 
-        // Send request (temporarily using test endpoint)
-        fetch(this.baseUrl + 'test_cart_update.php', {
+        // Send request
+        fetch(this.baseUrl + 'update_cart_quantity.php', {
             method: 'POST',
             body: formData,
             credentials: 'same-origin'

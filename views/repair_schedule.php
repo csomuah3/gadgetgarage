@@ -26,7 +26,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
         $customer_id = isset($_SESSION['user_id']) ? $_SESSION['user_id'] : null;
         $appointment_date = $_POST['appointment_date'];
         $appointment_time = $_POST['appointment_time'];
-        $customer_phone = $_POST['customer_phone'];
+        $customer_phone = trim($_POST['customer_phone']);
+        // Remove formatting from phone number (parentheses, dashes, spaces) for SMS
+        $customer_phone_clean = preg_replace('/[^0-9+]/', '', $customer_phone);
         $device_info = $_POST['device_info'] ?? '';
         $issue_description = $_POST['issue_description'] ?? '';
 
@@ -91,12 +93,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
                     $issue_data = $db->db_fetch_one($issue_query);
                     $issue_name = $issue_data['issue_name'] ?? 'Device Repair';
                     
-                    // Send SMS
-                    error_log("Attempting to send appointment SMS - Appointment ID: $appointment_id, Phone: $customer_phone, Name: $customer_name");
+                    // Send SMS - use cleaned phone number
+                    error_log("Attempting to send appointment SMS - Appointment ID: $appointment_id, Original Phone: $customer_phone, Cleaned Phone: $customer_phone_clean, Name: $customer_name");
                     $sms_sent = send_appointment_confirmation_sms(
                         $appointment_id,
                         $customer_name,
-                        $customer_phone,
+                        $customer_phone_clean, // Use cleaned phone number
                         $appointment_date,
                         $appointment_time,
                         $specialist_name,

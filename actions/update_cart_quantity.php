@@ -4,7 +4,7 @@ header('Content-Type: application/json');
 
 // Enable error reporting for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 0); // Don't show errors to user
+ini_set('display_errors', 1); // Show errors for debugging
 ini_set('log_errors', 1);
 
 try {
@@ -108,7 +108,10 @@ try {
     error_log('Cart quantity update error: ' . $e->getMessage());
     echo json_encode([
         'success' => false,
-        'message' => 'An error occurred while updating quantity'
+        'message' => 'An error occurred while updating quantity',
+        'error' => $e->getMessage(),
+        'line' => $e->getLine(),
+        'file' => $e->getFile()
     ]);
 }
 ?>

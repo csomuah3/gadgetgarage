@@ -1,10 +1,14 @@
 <?php
 // Enable error reporting for debugging
 error_reporting(E_ALL);
-ini_set('display_errors', 1);
+ini_set('display_errors', 0); // Don't display errors in output
+ini_set('log_errors', 1);
 
-// Set response header
+// Set response header FIRST before any output
 header('Content-Type: application/json');
+
+// Start output buffering to catch any errors
+ob_start();
 
 try {
     // Log incoming request for debugging
@@ -13,7 +17,7 @@ try {
     error_log('FILES data: ' . print_r(array_keys($_FILES), true));
 
     // Include database connection
-    require_once('../settings/db_class.php');
+    require_once(__DIR__ . '/../settings/db_class.php');
 
     // Check if request is POST
     if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -229,14 +233,24 @@ try {
     // Uncomment below to send email notifications
     // mail('admin@gadgetgarage.com', $subject, $message);
 
+    // Clear output buffer before sending JSON
+    ob_clean();
+    
     // Return success response
     echo json_encode([
         'success' => true,
         'message' => 'Device drop request submitted successfully',
         'request_id' => $request_id
     ]);
+    
+    // End output buffering
+    ob_end_flush();
+    exit;
 
 } catch (Exception $e) {
+    // Clear any output buffer
+    ob_clean();
+    
     // Log detailed error for debugging
     error_log('Device Drop Error: ' . $e->getMessage());
     error_log('POST data: ' . print_r($_POST, true));
@@ -249,5 +263,28 @@ try {
         'message' => 'There was an error processing your request. Please try again.',
         'debug' => $e->getMessage() // Remove this in production
     ]);
+} catch (Error $e) {
+    // Clear any output buffer
+    ob_clean();
+    
+    // Log PHP 7+ errors
+    error_log('Device Drop Fatal Error: ' . $e->getMessage());
+    error_log('Stack trace: ' . $e->getTraceAsString());
+
+    // Return error response
+    http_response_code(500);
+    echo json_encode([
+        'success' => false,
+        'message' => 'A system error occurred. Please try again later.',
+        'debug' => $e->getMessage()
+    ]);
+    
+    ob_end_flush();
+    exit;
+}
+
+// End output buffering if we get here (shouldn't happen)
+if (ob_get_level() > 0) {
+    ob_end_flush();
 }
 ?>

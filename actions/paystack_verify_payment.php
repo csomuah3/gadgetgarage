@@ -2,11 +2,30 @@
 session_start();
 header('Content-Type: application/json');
 
-require_once __DIR__ . '/../settings/core.php';
-require_once __DIR__ . '/../settings/paystack_config.php';
-require_once __DIR__ . '/../controllers/cart_controller.php';
-require_once __DIR__ . '/../controllers/order_controller.php';
-require_once __DIR__ . '/../helpers/sms_helper.php';
+// Enable error reporting for debugging
+error_reporting(E_ALL);
+ini_set('display_errors', 0); // Don't display errors to user, only log them
+ini_set('log_errors', 1);
+
+try {
+    require_once __DIR__ . '/../settings/core.php';
+    require_once __DIR__ . '/../settings/paystack_config.php';
+    require_once __DIR__ . '/../controllers/cart_controller.php';
+    require_once __DIR__ . '/../controllers/order_controller.php';
+
+    // Try to load SMS helper but don't fail if it doesn't exist
+    if (file_exists(__DIR__ . '/../helpers/sms_helper.php')) {
+        require_once __DIR__ . '/../helpers/sms_helper.php';
+    }
+} catch (Exception $include_error) {
+    error_log('PayStack verification include error: ' . $include_error->getMessage());
+    echo json_encode([
+        'status' => 'error',
+        'verified' => false,
+        'message' => 'System configuration error. Please contact support.'
+    ]);
+    exit();
+}
 
 // Check if user is logged in
 if (!check_login()) {
@@ -187,26 +206,44 @@ try {
         // Update order status to completed after successful payment
         update_order_status_ctr($order_id, 'completed');
 
+        // Add initial tracking record
+        try {
+            update_order_tracking_ctr($order_id, 'pending', 'Payment confirmed', null, $customer_id);
+        } catch (Exception $tracking_error) {
+            // Don't fail payment if tracking fails
+            error_log('Order tracking failed: ' . $tracking_error->getMessage());
+        }
+
         // Empty cart
         empty_cart_ctr($customer_id, $ip_address);
 
-        // Send SMS confirmation if enabled
+        // Send SMS confirmation if enabled (optional - don't fail payment if this doesn't work)
         $sms_sent = false;
-        if (SMS_ENABLED) {
-            try {
+        try {
+            if (defined('SMS_ENABLED') && SMS_ENABLED && function_exists('send_order_confirmation_sms')) {
                 $sms_sent = send_order_confirmation_sms($order_id);
                 if ($sms_sent) {
-                    log_sms_activity('info', 'Order confirmation SMS sent after PayStack payment', [
-                        'order_id' => $order_id,
-                        'customer_id' => $customer_id,
-                        'reference' => $reference
-                    ]);
+                    if (function_exists('log_sms_activity')) {
+                        log_sms_activity('info', 'Order confirmation SMS sent after PayStack payment', [
+                            'order_id' => $order_id,
+                            'customer_id' => $customer_id,
+                            'reference' => $reference
+                        ]);
+                    }
                 }
-            } catch (Exception $sms_error) {
-                log_sms_activity('error', 'Failed to send order confirmation SMS', [
-                    'order_id' => $order_id,
-                    'error' => $sms_error->getMessage()
-                ]);
+            }
+        } catch (Exception $sms_error) {
+            // Don't fail payment if SMS fails
+            error_log('SMS error during payment verification: ' . $sms_error->getMessage());
+            if (function_exists('log_sms_activity')) {
+                try {
+                    log_sms_activity('error', 'Failed to send order confirmation SMS', [
+                        'order_id' => $order_id,
+                        'error' => $sms_error->getMessage()
+                    ]);
+                } catch (Exception $log_error) {
+                    error_log('SMS logging failed: ' . $log_error->getMessage());
+                }
             }
         }
 

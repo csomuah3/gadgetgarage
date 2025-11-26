@@ -54,11 +54,11 @@ try {
 	try {
 		require_once(__DIR__ . '/controllers/product_controller.php');
 		require_once(__DIR__ . '/helpers/image_helper.php');
-		
+
 		// Find the "As featured on IG" category
 		$featured_ig_category = null;
 		$possible_names = ['As featured on IG', 'As Featured on IG', 'as featured on ig', 'Featured on IG', 'featured on ig', 'Instagram Featured'];
-		
+
 		foreach ($categories as $cat) {
 			$cat_name = trim($cat['cat_name']);
 			foreach ($possible_names as $name) {
@@ -68,12 +68,12 @@ try {
 				}
 			}
 		}
-		
+
 		// If category found, get products (max 5)
 		if ($featured_ig_category) {
 			$all_ig_products = get_products_by_category_ctr($featured_ig_category['cat_id']);
 			$featured_ig_products = array_slice($all_ig_products, 0, 5);
-			
+
 			// Enrich products with image URLs
 			foreach ($featured_ig_products as &$product) {
 				$product['image_url'] = get_product_image_url(
@@ -1237,8 +1237,8 @@ try {
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 560px;
-			/* height close to screenshot */
+			min-height: 620px;
+			/* increased height for better text arrangement */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1246,10 +1246,11 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 560px;
+			min-height: 620px;
 			border-radius: 14px;
 			overflow: hidden;
-			background: #f0f4f8; /* Fallback background */
+			background: #f0f4f8;
+			/* Fallback background */
 		}
 
 		.hero-carousel {
@@ -1263,8 +1264,8 @@ try {
 			display: grid;
 			grid-template-columns: 1.15fr 1fr;
 			/* copy left, image right */
-			gap: 24px;
-			padding: 48px;
+			gap: 32px;
+			padding: 60px 48px;
 			border-radius: 14px;
 			overflow: hidden;
 			position: absolute;
@@ -1273,44 +1274,64 @@ try {
 			width: 100%;
 			height: 100%;
 			opacity: 0;
+			visibility: hidden;
 			transform: translateX(100%);
-			transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s 0.8s, background 0.8s ease;
 			pointer-events: none;
 		}
 
 		.hero-slide.active {
 			opacity: 1;
+			visibility: visible;
 			transform: translateX(0);
 			pointer-events: all;
 			z-index: 2;
+			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0s, background 0.8s ease;
 		}
 
 		.hero-slide.exiting {
 			opacity: 0;
+			visibility: hidden;
 			transform: translateX(0);
-			transition: opacity 0.6s ease;
+			transition: opacity 0.6s ease, visibility 0s 0.6s;
 			z-index: 1;
 		}
 
-		/* Product-specific gradient backgrounds - IMPORTANT: Use !important to override */
+		/* Product-specific gradient backgrounds - MORE VIBRANT AND EVIDENT */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: linear-gradient(135deg, #e8f0f8 0%, #c5d9e8 50%, #a8c5d8 100%) !important;
-			color: #1f2937 !important;
+			background: linear-gradient(135deg, #a8c5e8 0%, #7ba3d4 30%, #5a8fc8 60%, #3d7bb8 100%) !important;
+			color: #ffffff !important;
 		}
 
 		.hero-slide[data-gradient="iphone-gradient"] {
-			background: linear-gradient(135deg, #f0f4f8 0%, #d1dce8 50%, #b8c8d8 100%) !important;
-			color: #1f2937 !important;
+			background: linear-gradient(135deg, #d4d8e0 0%, #b8c0d0 30%, #9ca8c0 60%, #7d8ba8 100%) !important;
+			color: #1a1f2e !important;
 		}
 
 		.hero-slide[data-gradient="polaroid-gradient"] {
-			background: linear-gradient(135deg, #fef9f3 0%, #f5e8d8 50%, #ead4c0 100%) !important;
-			color: #1f2937 !important;
+			background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 30%, #ffd9b3 60%, #ffc999 100%) !important;
+			color: #8b4513 !important;
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] {
-			background: linear-gradient(135deg, #0d4a2e 0%, #1a6b47 50%, #2d8a5f 100%) !important;
+			background: linear-gradient(135deg, #0a3d2a 0%, #1a5d3f 30%, #2d7d54 60%, #3d9d69 100%) !important;
 			color: #ffffff !important;
+		}
+
+		/* Text colors for each gradient */
+		.hero-slide[data-gradient="ipad-gradient"] .banner-title,
+		.hero-slide[data-gradient="ipad-gradient"] .banner-price {
+			color: #ffffff !important;
+		}
+
+		.hero-slide[data-gradient="iphone-gradient"] .banner-title,
+		.hero-slide[data-gradient="iphone-gradient"] .banner-price {
+			color: #1a1f2e !important;
+		}
+
+		.hero-slide[data-gradient="polaroid-gradient"] .banner-title,
+		.hero-slide[data-gradient="polaroid-gradient"] .banner-price {
+			color: #8b4513 !important;
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] .banner-title,
@@ -1318,34 +1339,51 @@ try {
 			color: #ffffff !important;
 		}
 
-		.hero-slide[data-gradient="ipad-gradient"] .banner-title,
-		.hero-slide[data-gradient="ipad-gradient"] .banner-price,
-		.hero-slide[data-gradient="iphone-gradient"] .banner-title,
-		.hero-slide[data-gradient="iphone-gradient"] .banner-price,
-		.hero-slide[data-gradient="polaroid-gradient"] .banner-title,
-		.hero-slide[data-gradient="polaroid-gradient"] .banner-price {
-			color: #1f2937 !important;
-		}
-
 		.banner-copy {
-			display: grid;
-			align-content: center;
-			gap: 22px;
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			gap: 28px;
+			padding: 20px 0;
 		}
 
 		.banner-title {
-			font-size: clamp(32px, 5vw, 48px);
+			font-size: clamp(36px, 5.5vw, 56px);
 			/* big multi-line headline */
-			font-weight: 600;
-			line-height: 1.08;
+			font-weight: 700;
+			line-height: 1.15;
 			color: inherit;
 			margin: 0;
+			transition: opacity 0.6s ease, transform 0.6s ease;
+			transform: translateY(0);
+		}
+
+		.hero-slide:not(.active) .banner-title {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+
+		.hero-slide.active .banner-title {
+			opacity: 1;
+			transform: translateY(0);
 		}
 
 		.banner-price {
-			font-size: clamp(18px, 2vw, 28px);
+			font-size: clamp(20px, 2.5vw, 32px);
 			color: inherit;
-			margin: 0 0 8px;
+			margin: 0;
+			transition: opacity 0.6s ease, transform 0.6s ease;
+			transform: translateY(0);
+		}
+
+		.hero-slide:not(.active) .banner-price {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+
+		.hero-slide.active .banner-price {
+			opacity: 1;
+			transform: translateY(0);
 		}
 
 
@@ -1407,7 +1445,7 @@ try {
 			max-height: 500px;
 			min-height: 400px;
 			object-fit: contain;
-			transform: translateY(8px);
+			transform: translateY(8px) translateX(0);
 			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 		}
 
@@ -1417,26 +1455,37 @@ try {
 			transform: translateY(8px) translateX(0);
 		}
 
-		/* Image animations - slide in from right for active */
-		.hero-slide:not(.active) .product-image {
+		/* Image animations - slide in from right for new slide */
+		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(8px) translateX(100px);
+			transform: translateY(8px) translateX(150px);
 		}
 
 		.hero-slide.active .product-image {
 			opacity: 1;
 			transform: translateY(8px) translateX(0);
-			animation: slideInFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+			animation: subtleBounce 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s;
 		}
 
-		@keyframes slideInFromRight {
+		@keyframes subtleBounce {
 			0% {
-				opacity: 0;
-				transform: translateY(8px) translateX(100px);
+				transform: translateY(8px) translateX(0) scale(1);
 			}
+
+			50% {
+				transform: translateY(8px) translateX(0) scale(1.02);
+			}
+
+			70% {
+				transform: translateY(8px) translateX(0) scale(0.99);
+			}
+
+			85% {
+				transform: translateY(8px) translateX(0) scale(1.01);
+			}
+
 			100% {
-				opacity: 1;
-				transform: translateY(8px) translateX(0);
+				transform: translateY(8px) translateX(0) scale(1);
 			}
 		}
 
@@ -2633,7 +2682,7 @@ try {
 			right: 0;
 			bottom: 0;
 			background: radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.03) 0%, transparent 50%),
-			            radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.03) 0%, transparent 50%);
+				radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.03) 0%, transparent 50%);
 			pointer-events: none;
 		}
 
@@ -2766,9 +2815,11 @@ try {
 			0% {
 				background-position: 0% 50%;
 			}
+
 			50% {
 				background-position: 100% 50%;
 			}
+
 			100% {
 				background-position: 0% 50%;
 			}
@@ -4752,39 +4803,39 @@ try {
 
 	<!-- Featured on IG this Week -->
 	<?php if (!empty($featured_ig_products)): ?>
-	<section class="featured-ig-section">
-		<div class="container">
-			<div class="section-header">
-				<h2 class="featured-ig-title">
-					<i class="fab fa-instagram"></i>
-					Featured on IG this Week
-				</h2>
-			</div>
-			<div class="featured-ig-grid">
-				<?php foreach ($featured_ig_products as $index => $product): ?>
-					<div class="featured-ig-card" data-index="<?= $index ?>">
-						<a href="views/single_product.php?id=<?= $product['product_id'] ?>" class="featured-ig-link">
-							<div class="featured-ig-image-wrapper">
-								<img src="<?= htmlspecialchars($product['image_url']) ?>" 
-									 alt="<?= htmlspecialchars($product['product_title']) ?>" 
-									 class="featured-ig-image">
-								<div class="featured-ig-overlay">
-									<i class="fab fa-instagram"></i>
+		<section class="featured-ig-section">
+			<div class="container">
+				<div class="section-header">
+					<h2 class="featured-ig-title">
+						<i class="fab fa-instagram"></i>
+						Featured on IG this Week
+					</h2>
+				</div>
+				<div class="featured-ig-grid">
+					<?php foreach ($featured_ig_products as $index => $product): ?>
+						<div class="featured-ig-card" data-index="<?= $index ?>">
+							<a href="views/single_product.php?id=<?= $product['product_id'] ?>" class="featured-ig-link">
+								<div class="featured-ig-image-wrapper">
+									<img src="<?= htmlspecialchars($product['image_url']) ?>"
+										alt="<?= htmlspecialchars($product['product_title']) ?>"
+										class="featured-ig-image">
+									<div class="featured-ig-overlay">
+										<i class="fab fa-instagram"></i>
+									</div>
 								</div>
-							</div>
-							<div class="featured-ig-content">
-								<h3 class="featured-ig-product-title"><?= htmlspecialchars($product['product_title']) ?></h3>
-								<div class="featured-ig-price">GH₵ <?= number_format($product['product_price'], 2) ?></div>
-								<button class="featured-ig-add-cart" onclick="event.preventDefault(); addToCart(<?= $product['product_id'] ?>, 1);">
-									<i class="fas fa-shopping-cart"></i> Add to Cart
-								</button>
-							</div>
-						</a>
-					</div>
-				<?php endforeach; ?>
+								<div class="featured-ig-content">
+									<h3 class="featured-ig-product-title"><?= htmlspecialchars($product['product_title']) ?></h3>
+									<div class="featured-ig-price">GH₵ <?= number_format($product['product_price'], 2) ?></div>
+									<button class="featured-ig-add-cart" onclick="event.preventDefault(); addToCart(<?= $product['product_id'] ?>, 1);">
+										<i class="fas fa-shopping-cart"></i> Add to Cart
+									</button>
+								</div>
+							</a>
+						</div>
+					<?php endforeach; ?>
+				</div>
 			</div>
-		</div>
-	</section>
+		</section>
 	<?php endif; ?>
 
 	<!-- Camera & Video Equipment Promo -->
@@ -6355,78 +6406,62 @@ try {
 			initHeroCarousel();
 		});
 
-		// Hero Carousel Function
+		// Hero Carousel Function - Defined outside to ensure it's accessible
 		function initHeroCarousel() {
 			const carousel = document.getElementById('heroCarousel');
 			if (!carousel) {
-				console.log('Hero carousel not found');
+				console.error('Hero carousel element not found');
 				return;
 			}
 
-			const slides = carousel.querySelectorAll('.hero-slide');
+			const slides = Array.from(carousel.querySelectorAll('.hero-slide'));
 			if (slides.length === 0) {
-				console.log('No slides found');
+				console.error('No slides found in carousel');
 				return;
 			}
 
-			// Initialize: Set first slide as active, others as hidden
+			// Initialize: Set first slide as active, others hidden
 			slides.forEach((slide, index) => {
+				slide.classList.remove('active', 'exiting');
 				if (index === 0) {
 					slide.classList.add('active');
-					slide.style.opacity = '1';
-					slide.style.transform = 'translateX(0)';
-				} else {
-					slide.classList.remove('active');
-					slide.style.opacity = '0';
-					slide.style.transform = 'translateX(100%)';
 				}
 			});
 
 			let currentIndex = 0;
-			let rotationInterval;
+			let rotationInterval = null;
 
 			// Function to get a random index (excluding current)
 			function getRandomIndex(current) {
 				if (slides.length <= 1) return 0;
-				
-				const availableIndices = Array.from({ length: slides.length }, (_, i) => i)
-					.filter(i => i !== current);
-				
+				const availableIndices = slides.map((_, i) => i).filter(i => i !== current);
 				if (availableIndices.length === 0) return 0;
-				
 				return availableIndices[Math.floor(Math.random() * availableIndices.length)];
 			}
 
 			// Function to switch to a specific slide
 			function switchSlide(newIndex) {
-				if (newIndex === currentIndex || newIndex < 0 || newIndex >= slides.length) return;
+				if (newIndex === currentIndex || newIndex < 0 || newIndex >= slides.length) {
+					return;
+				}
 
 				const currentSlide = slides[currentIndex];
 				const newSlide = slides[newIndex];
 
-				// Fade out current slide (no movement, just opacity)
+				// Step 1: Fade out current slide (no movement)
 				currentSlide.classList.remove('active');
 				currentSlide.classList.add('exiting');
-				currentSlide.style.opacity = '0';
-				currentSlide.style.transform = 'translateX(0)';
 
-				// Prepare new slide (off-screen right)
-				newSlide.style.opacity = '0';
-				newSlide.style.transform = 'translateX(100%)';
-				newSlide.classList.remove('exiting');
-
-				// Small delay to ensure current slide starts fading
+				// Step 2: After fade starts, prepare and slide in new slide
 				setTimeout(() => {
 					// Remove exiting class from old slide
 					currentSlide.classList.remove('exiting');
-					
-					// Activate new slide (slides in from right)
+
+					// Activate new slide (will slide in from right via CSS)
 					newSlide.classList.add('active');
-					newSlide.style.opacity = '1';
-					newSlide.style.transform = 'translateX(0)';
-					
+
 					currentIndex = newIndex;
-				}, 100);
+				}, 300); // Half of fade duration
 			}
 
 			// Function to rotate to next random slide
@@ -6442,20 +6477,33 @@ try {
 			carousel.addEventListener('mouseenter', () => {
 				if (rotationInterval) {
 					clearInterval(rotationInterval);
+					rotationInterval = null;
 				}
 			});
 
 			carousel.addEventListener('mouseleave', () => {
-				rotationInterval = setInterval(rotateToNext, 5000);
+				if (!rotationInterval) {
+					rotationInterval = setInterval(rotateToNext, 5000);
+				}
 			});
 
-			console.log('Hero carousel initialized with', slides.length, 'slides');
+			console.log('Hero carousel initialized:', slides.length, 'slides, auto-rotating every 5 seconds');
+		}
+
+		// Also try to initialize on window load as fallback
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', function() {
+				setTimeout(initHeroCarousel, 100);
+			});
+		} else {
+			// DOM already loaded
+			setTimeout(initHeroCarousel, 100);
 		}
 
 		// Featured on IG scroll animation function
 		function initFeaturedIGAnimations() {
 			const cards = document.querySelectorAll('.featured-ig-card');
-			
+
 			if (cards.length === 0) return;
 
 			// Create Intersection Observer for scroll animations
@@ -6484,8 +6532,8 @@ try {
 		}
 
 
-			// Load top picks
-			loadTopPicks();
+		// Load top picks
+		loadTopPicks();
 		});
 
 

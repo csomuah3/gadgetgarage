@@ -700,7 +700,8 @@ if (isset($_SESSION['error_message'])) {
                                         <?php if (!empty($product['product_image'])): ?>
                                             <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/<?= htmlspecialchars($product['product_image']) ?>"
                                                  alt="<?= htmlspecialchars($product['product_title']) ?>"
-                                                 class="rounded" style="width: 50px; height: 50px; object-fit: cover;">
+                                                 class="rounded" style="width: 50px; height: 50px; object-fit: cover;"
+                                                 onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
                                         <?php else: ?>
                                             <div class="bg-light rounded d-flex align-items-center justify-content-center" style="width: 50px; height: 50px;">
                                                 <i class="fas fa-image text-muted"></i>

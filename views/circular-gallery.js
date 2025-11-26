@@ -3,10 +3,10 @@ class HorizontalGallery {
         this.container = container;
         this.testimonials = testimonials;
         this.options = {
-            cardWidth: 400,
-            cardHeight: 280,
+            cardWidth: 320,
+            cardHeight: 250, // 80% of 320px container height
             autoScrollSpeed: 1,
-            cardSpacing: 40,
+            cardSpacing: 30,
             ...options
         };
 
@@ -106,18 +106,19 @@ class HorizontalGallery {
     }
 
     handleResize() {
-        // Adjust card sizes based on container width
+        // Adjust card sizes based on container - cards always 80% of container height
         const containerWidth = this.container.offsetWidth;
+        const containerHeight = this.wrapper.offsetHeight;
 
         if (containerWidth < 768) {
-            this.options.cardWidth = 320;
-            this.options.cardHeight = 220;
+            this.options.cardWidth = 280;
+            this.options.cardHeight = Math.floor(containerHeight * 0.8);
         } else if (containerWidth < 1200) {
-            this.options.cardWidth = 360;
-            this.options.cardHeight = 250;
+            this.options.cardWidth = 300;
+            this.options.cardHeight = Math.floor(containerHeight * 0.8);
         } else {
-            this.options.cardWidth = 400;
-            this.options.cardHeight = 280;
+            this.options.cardWidth = 320;
+            this.options.cardHeight = Math.floor(containerHeight * 0.8);
         }
 
         // Update card sizes
@@ -205,10 +206,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const container = document.getElementById('testimonial-carousel-container');
     if (container) {
         window.horizontalGallery = new HorizontalGallery(container, testimonials, {
-            cardWidth: 400,
-            cardHeight: 280,
+            cardWidth: 320,
+            cardHeight: 250,
             autoScrollSpeed: 2,
-            cardSpacing: 40
+            cardSpacing: 30
         });
 
         // Cleanup on page unload

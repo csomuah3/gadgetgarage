@@ -2122,6 +2122,8 @@ try {
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
+			visibility: visible;
+			opacity: 1;
 		}
 
 		.circular-testimonial-card:hover {
@@ -7388,7 +7390,12 @@ try {
 			const wrapper = document.getElementById('circularTestimonials');
 			const track = document.getElementById('testimonialsTrack');
 			
-			if (!wrapper || !track) return;
+			if (!wrapper || !track) {
+				console.log('Circular testimonials: Elements not found', { wrapper: !!wrapper, track: !!track });
+				return;
+			}
+
+			console.log('Initializing circular testimonials gallery');
 
 			// Testimonials data - at least 10 testimonials
 			const testimonials = [
@@ -7426,7 +7433,6 @@ try {
 			});
 
 			// Circular gallery parameters
-			const radius = 800; // Radius of the circle
 			const totalItems = testimonials.length;
 			const angleStep = (2 * Math.PI) / totalItems;
 			let rotation = 0;
@@ -7438,23 +7444,36 @@ try {
 			// Position cards in a circle
 			function positionCards() {
 				const cards = track.querySelectorAll('.circular-testimonial-card');
-				const centerX = wrapper.offsetWidth / 2;
-				const centerY = wrapper.offsetHeight / 2;
+				if (cards.length === 0) return;
+				
+				const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
+				const wrapperHeight = wrapper.offsetHeight || 600;
+				const centerX = wrapperWidth / 2;
+				const centerY = wrapperHeight / 2;
+				
+				// Calculate radius based on container size (smaller for visibility)
+				const radius = Math.min(wrapperWidth * 0.35, wrapperHeight * 0.4, 450);
+				const cardWidth = 380;
+				const cardHeight = 280;
 
 				cards.forEach((card, index) => {
 					const angle = (index * angleStep) + rotation;
-					const x = centerX + radius * Math.cos(angle) - 190; // 190 = half card width
-					const y = centerY + radius * Math.sin(angle) * 0.3 - 140; // 140 = half card height, 0.3 for elliptical effect
-					const z = radius * Math.sin(angle) * 0.5;
 					
-					// Calculate opacity and scale based on position
-					const distanceFromCenter = Math.abs(Math.sin(angle));
-					const opacity = 0.4 + (1 - distanceFromCenter) * 0.6;
-					const scale = 0.7 + (1 - distanceFromCenter) * 0.3;
+					// Calculate position in 3D space
+					const x = centerX + radius * Math.cos(angle) - (cardWidth / 2);
+					const y = centerY + radius * Math.sin(angle) * 0.4 - (cardHeight / 2);
+					const z = radius * Math.sin(angle) * 0.3;
+					
+					// Calculate opacity and scale based on position (front cards are more visible)
+					const normalizedAngle = ((angle % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
+					const frontFactor = Math.abs(Math.cos(normalizedAngle - Math.PI / 2));
+					const opacity = 0.3 + frontFactor * 0.7;
+					const scale = 0.6 + frontFactor * 0.4;
 
-					card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale}) rotateY(${Math.sin(angle) * 20}deg)`;
+					card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale}) rotateY(${Math.sin(angle) * 15}deg)`;
 					card.style.opacity = opacity;
 					card.style.zIndex = Math.round(z) + 1000;
+					card.style.visibility = 'visible';
 				});
 			}
 
@@ -7483,6 +7502,8 @@ try {
 			wrapper.addEventListener('mousemove', (e) => {
 				if (isDragging) {
 					const deltaX = e.clientX - startX;
+					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
+					const radius = Math.min(wrapperWidth * 0.35, 450);
 					targetRotation = currentRotation + (deltaX / radius) * 2;
 				}
 			});
@@ -7511,6 +7532,8 @@ try {
 			wrapper.addEventListener('touchmove', (e) => {
 				if (isDragging) {
 					const deltaX = e.touches[0].clientX - startX;
+					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
+					const radius = Math.min(wrapperWidth * 0.35, 450);
 					targetRotation = currentRotation + (deltaX / radius) * 2;
 				}
 			});
@@ -7531,8 +7554,11 @@ try {
 			});
 
 			// Initial positioning
-			positionCards();
-			animate();
+			setTimeout(() => {
+				positionCards();
+				animate();
+				console.log('Circular testimonials gallery initialized with', testimonials.length, 'testimonials');
+			}, 100);
 
 			// Handle resize
 			window.addEventListener('resize', () => {
@@ -7541,7 +7567,21 @@ try {
 		}
 
 		// Initialize on page load
-		document.addEventListener('DOMContentLoaded', initCircularTestimonials);
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initCircularTestimonials);
+		} else {
+			// DOM already loaded
+			initCircularTestimonials();
+		}
+
+		// Also try on window load as fallback
+		window.addEventListener('load', function() {
+			const track = document.getElementById('testimonialsTrack');
+			if (track && track.children.length === 0) {
+				console.log('Re-initializing circular testimonials on window load');
+				initCircularTestimonials();
+			}
+		});
 
 		// Countdown timer functionality for deals
 		function updateCountdown() {

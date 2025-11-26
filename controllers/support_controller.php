@@ -41,20 +41,55 @@ function create_support_message_ctr($customer_id, $name, $phone, $subject, $mess
     }
 
     // Create the message
-    $sql = "INSERT INTO support_messages
-            (customer_id, customer_name, customer_phone, subject, message, priority, status)
-            VALUES (?, ?, ?, ?, ?, ?, 'new')";
-
-    $stmt = mysqli_prepare($db->db_conn(), $sql);
-
-    if (!$stmt) {
-        error_log("Support controller: Failed to prepare statement: " . mysqli_error($db->db_conn()));
-        return false;
+    // Note: customer_email is optional, use empty string if not provided
+    $customer_email = '';
+    
+    // Try to get email from customer table if customer_id is provided
+    if ($customer_id) {
+        $email_query = "SELECT customer_email FROM customer WHERE customer_id = " . intval($customer_id);
+        $email_result = $db->db_fetch_one($email_query);
+        if ($email_result && !empty($email_result['customer_email'])) {
+            $customer_email = $email_result['customer_email'];
+        }
     }
+    
+    // Check if table has customer_email column, if not, use direct SQL without it
+    $check_column_query = "SHOW COLUMNS FROM support_messages LIKE 'customer_email'";
+    $column_exists = $db->db_fetch_one($check_column_query);
+    
+    if ($column_exists) {
+        // Table has customer_email column
+        $sql = "INSERT INTO support_messages
+                (customer_id, customer_name, customer_email, customer_phone, subject, message, priority, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, 'new')";
 
-    error_log("Support controller: Statement prepared successfully");
+        $stmt = mysqli_prepare($db->db_conn(), $sql);
 
-    mysqli_stmt_bind_param($stmt, "isssss", $customer_id, $name, $phone, $subject, $message, $priority);
+        if (!$stmt) {
+            error_log("Support controller: Failed to prepare statement: " . mysqli_error($db->db_conn()));
+            return false;
+        }
+
+        error_log("Support controller: Statement prepared successfully");
+
+        mysqli_stmt_bind_param($stmt, "isssssss", $customer_id, $name, $customer_email, $phone, $subject, $message, $priority);
+    } else {
+        // Table doesn't have customer_email column, use original format
+        $sql = "INSERT INTO support_messages
+                (customer_id, customer_name, customer_phone, subject, message, priority, status)
+                VALUES (?, ?, ?, ?, ?, ?, 'new')";
+
+        $stmt = mysqli_prepare($db->db_conn(), $sql);
+
+        if (!$stmt) {
+            error_log("Support controller: Failed to prepare statement: " . mysqli_error($db->db_conn()));
+            return false;
+        }
+
+        error_log("Support controller: Statement prepared successfully");
+
+        mysqli_stmt_bind_param($stmt, "isssss", $customer_id, $name, $phone, $subject, $message, $priority);
+    }
 
     $result = mysqli_stmt_execute($stmt);
     if (!$result) {
@@ -116,10 +151,21 @@ function get_all_support_messages_ctr($status = null, $limit = null) {
         return false;
     }
 
-    $sql = "SELECT message_id, customer_id, customer_name, customer_phone, subject,
-                   LEFT(message, 100) as message_preview, message, status, priority,
-                   assigned_to, admin_response, response_date, created_at, updated_at
-            FROM support_messages";
+    // Check if customer_email column exists
+    $check_email_column = "SHOW COLUMNS FROM support_messages LIKE 'customer_email'";
+    $email_column_exists = $db->db_fetch_one($check_email_column);
+    
+    if ($email_column_exists) {
+        $sql = "SELECT message_id, customer_id, customer_name, customer_email, customer_phone, subject,
+                       LEFT(message, 100) as message_preview, message, status, priority,
+                       assigned_to, admin_response, response_date, created_at, updated_at
+                FROM support_messages";
+    } else {
+        $sql = "SELECT message_id, customer_id, customer_name, customer_phone, subject,
+                       LEFT(message, 100) as message_preview, message, status, priority,
+                       assigned_to, admin_response, response_date, created_at, updated_at
+                FROM support_messages";
+    }
 
     if ($status) {
         $sql .= " WHERE status = '" . mysqli_real_escape_string($db->db_conn(), $status) . "'";

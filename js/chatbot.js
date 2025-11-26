@@ -406,12 +406,14 @@ class ChatBot {
         formData.append('subject', form.subject.value);
         formData.append('message', form.message.value);
 
-        // Add guest name and phone if provided
+        // Add guest name and phone if provided (for non-logged-in users)
         if (form.guest_name && form.guest_name.value) {
-            formData.append('guest_name', form.guest_name.value);
+            formData.append('name', form.guest_name.value);
+            formData.append('customer_name', form.guest_name.value);
         }
         if (form.guest_phone && form.guest_phone.value) {
-            formData.append('guest_phone', form.guest_phone.value);
+            formData.append('phone', form.guest_phone.value);
+            formData.append('customer_phone', form.guest_phone.value);
         }
 
         formData.append('send_message', '1');

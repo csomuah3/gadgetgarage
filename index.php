@@ -1299,31 +1299,31 @@ try {
 		.hero-slide[data-gradient="ipad-gradient"] {
 			background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e9aaf 100%) !important;
 			color: #ffffff !important;
-			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
 
 		.hero-slide[data-gradient="iphone-gradient"] {
 			background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%) !important;
 			color: #ffffff !important;
-			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
 
 		.hero-slide[data-gradient="polaroid-gradient"] {
 			background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 30%, #ff8a80 70%, #ff7043 100%) !important;
 			color: #ffffff !important;
-			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] {
 			background: linear-gradient(135deg, #2c3e50 0%, #34495e 30%, #5d4e75 60%, #a0416e 100%) !important;
 			color: #ffffff !important;
-			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
+			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
 
 		/* Consistent white text for all gradients - Apple style */
 		.hero-slide .text-line {
 			color: #ffffff !important;
-			text-shadow: 0 1px 3px rgba(0,0,0,0.3);
+			text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 		}
 
 		.banner-copy {
@@ -1340,7 +1340,7 @@ try {
 			opacity: 0;
 			transform: translateY(15px);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s,
-			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s;
+				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s;
 		}
 
 		.hero-slide.active .brand-logo-section {
@@ -1365,7 +1365,8 @@ try {
 			height: 36px;
 		}
 
-		.fujifilm-logo, .samsung-logo {
+		.fujifilm-logo,
+		.samsung-logo {
 			font-family: 'Arial', sans-serif;
 			font-size: 20px;
 			font-weight: 800;
@@ -1394,21 +1395,44 @@ try {
 			color: inherit;
 			margin: 0;
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			transform: translateY(0);
 			font-family: 'Georgia', 'Times New Roman', serif;
 			letter-spacing: 0.5px;
 		}
 
 		/* Enhanced staggered delays for text lines */
-		.hero-slide .text-line:nth-child(1) { transition-delay: 0.1s; }
-		.hero-slide .text-line:nth-child(2) { transition-delay: 0.18s; }
-		.hero-slide .text-line:nth-child(3) { transition-delay: 0.26s; }
-		.hero-slide .text-line:nth-child(4) { transition-delay: 0.34s; }
-		.hero-slide .text-line:nth-child(5) { transition-delay: 0.42s; }
-		.hero-slide .text-line:nth-child(6) { transition-delay: 0.5s; }
-		.hero-slide .text-line:nth-child(7) { transition-delay: 0.58s; }
-		.hero-slide .text-line:nth-child(8) { transition-delay: 0.66s; }
+		.hero-slide .text-line:nth-child(1) {
+			transition-delay: 0.1s;
+		}
+
+		.hero-slide .text-line:nth-child(2) {
+			transition-delay: 0.18s;
+		}
+
+		.hero-slide .text-line:nth-child(3) {
+			transition-delay: 0.26s;
+		}
+
+		.hero-slide .text-line:nth-child(4) {
+			transition-delay: 0.34s;
+		}
+
+		.hero-slide .text-line:nth-child(5) {
+			transition-delay: 0.42s;
+		}
+
+		.hero-slide .text-line:nth-child(6) {
+			transition-delay: 0.5s;
+		}
+
+		.hero-slide .text-line:nth-child(7) {
+			transition-delay: 0.58s;
+		}
+
+		.hero-slide .text-line:nth-child(8) {
+			transition-delay: 0.66s;
+		}
 
 		.hero-slide:not(.active) .text-line {
 			opacity: 0;
@@ -1443,7 +1467,10 @@ try {
 			margin-bottom: 4px;
 		}
 
-		.tagline-1, .tagline-2, .tagline-3, .tagline-4 {
+		.tagline-1,
+		.tagline-2,
+		.tagline-3,
+		.tagline-4 {
 			font-size: clamp(24px, 3.5vw, 36px);
 			font-weight: 500;
 			letter-spacing: 0px;
@@ -1473,7 +1500,7 @@ try {
 			opacity: 0;
 			transform: translateY(15px);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s,
-			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s;
+				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s;
 		}
 
 		.hero-slide.active .social-buttons {
@@ -1592,7 +1619,7 @@ try {
 			object-fit: contain;
 			transform: translateY(0) translateX(0);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - fade out for exiting */
@@ -1613,7 +1640,7 @@ try {
 			opacity: 1;
 			transform: translateY(0) translateX(0) scale(1);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
-			           transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
+				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
 
 		/* ——— Right column (two stacked cards) ——— */
@@ -2088,11 +2115,14 @@ try {
 		/* Circular Gallery Wrapper */
 		.circular-testimonials-wrapper {
 			width: 100%;
+			min-width: 100%;
 			height: 600px;
+			min-height: 600px;
 			position: relative;
 			perspective: 2000px;
-			overflow: hidden;
+			overflow: visible;
 			cursor: grab;
+			background: transparent;
 		}
 
 		.circular-testimonials-wrapper:active {
@@ -2104,6 +2134,7 @@ try {
 			width: 100%;
 			height: 100%;
 			transform-style: preserve-3d;
+			overflow: visible;
 		}
 
 		/* Individual Testimonial Card */
@@ -3076,12 +3107,12 @@ try {
 			left: 0;
 			right: 0;
 			bottom: 0;
-			background: linear-gradient(135deg, 
-				rgba(240, 148, 51, 0.3) 0%,
-				rgba(230, 104, 60, 0.3) 25%,
-				rgba(220, 39, 67, 0.3) 50%,
-				rgba(204, 35, 102, 0.3) 75%,
-				rgba(188, 24, 136, 0.3) 100%);
+			background: linear-gradient(135deg,
+					rgba(240, 148, 51, 0.3) 0%,
+					rgba(230, 104, 60, 0.3) 25%,
+					rgba(220, 39, 67, 0.3) 50%,
+					rgba(204, 35, 102, 0.3) 75%,
+					rgba(188, 24, 136, 0.3) 100%);
 			opacity: 0;
 			transition: opacity 0.4s ease;
 			pointer-events: none;
@@ -3251,7 +3282,8 @@ try {
 				height: 40px;
 			}
 		}
-			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+
+		box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 		}
 
 		.featured-ig-add-cart:active {
@@ -5000,10 +5032,10 @@ try {
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">
-					<div class="banner-copy">
+							<div class="banner-copy">
 								<div class="brand-logo-section">
 									<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z'/></svg>" alt="Apple" class="brand-logo apple-logo" />
-					</div>
+								</div>
 								<div class="banner-text-stack">
 									<div class="text-line brand-name">Apple</div>
 									<div class="text-line product-name">iPad Pro</div>
@@ -5048,10 +5080,10 @@ try {
 								</div>
 								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
-					<div class="banner-media">
+							<div class="banner-media">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/iphone_-removebg-preview.png" alt="Apple iPhone" class="product-image" />
-					</div>
-				</article>
+							</div>
+						</article>
 
 						<!-- Product 3: Polaroid Camera -->
 						<article class="hero-slide" data-product="polaroid" data-gradient="polaroid-gradient">
@@ -5254,7 +5286,7 @@ try {
 					Featured on IG this Week
 				</h2>
 			</div>
-			
+
 			<div class="featured-ig-carousel-wrapper">
 				<div class="featured-ig-carousel" id="featuredIgCarousel">
 					<?php if (!empty($featured_ig_products)): ?>
@@ -5307,7 +5339,7 @@ try {
 						<?php endfor; ?>
 					<?php endif; ?>
 				</div>
-				
+
 				<!-- Navigation arrows -->
 				<button class="ig-carousel-prev" aria-label="Previous">
 					<i class="fas fa-chevron-left"></i>
@@ -5390,10 +5422,10 @@ try {
 					<!-- Wishlist Heart -->
 					<div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
 						<button onclick="event.stopPropagation(); toggleWishlist(1, this)"
-								class="wishlist-btn"
-								style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
-								onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
-								onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+							class="wishlist-btn"
+							style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+							onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+							onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
 							<i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
 						</button>
 					</div>
@@ -5464,7 +5496,7 @@ try {
 					</div>
 					<div class="deal-discount">-8%</div>
 					<div class="deal-image-container">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
 					</div>
 					<div class="deal-brand">Apple M2</div>
 					<h3 class="deal-title">Apple iPad Pro 12.9" 6th Gen M2 256GB Wi-Fi </h3>
@@ -5530,7 +5562,7 @@ try {
 					</div>
 					<div class="deal-discount">-19%</div>
 					<div class="deal-image-container">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
+						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
 					</div>
 					<div class="deal-brand">Sony</div>
 					<h3 class="deal-title">Sony a7R V Mirrorless Camera</h3>
@@ -6944,10 +6976,10 @@ try {
 			function scrollToIndex(index) {
 				if (index < 0) index = 0;
 				if (index >= slides.length) index = slides.length - 1;
-				
+
 				currentIndex = index;
 				const scrollPosition = currentIndex * slideWidth;
-				
+
 				carousel.scrollTo({
 					left: scrollPosition,
 					behavior: 'smooth'
@@ -7072,11 +7104,11 @@ try {
 			cards.forEach(card => {
 				observer.observe(card);
 			});
-			}
+		}
 
 
-			// Load top picks
-			loadTopPicks();
+		// Load top picks
+		loadTopPicks();
 		});
 
 
@@ -7387,37 +7419,103 @@ try {
 
 		// Circular Testimonials Gallery
 		function initCircularTestimonials() {
-			const wrapper = document.getElementById('circularTestimonials');
-			const track = document.getElementById('testimonialsTrack');
-			
-			if (!wrapper || !track) {
-				console.log('Circular testimonials: Elements not found', { wrapper: !!wrapper, track: !!track });
-				return;
-			}
+			try {
+				const wrapper = document.getElementById('circularTestimonials');
+				const track = document.getElementById('testimonialsTrack');
 
-			console.log('Initializing circular testimonials gallery');
+				if (!wrapper || !track) {
+					console.warn('Circular testimonials: Elements not found', {
+						wrapper: !!wrapper,
+						track: !!track
+					});
+					return;
+				}
 
-			// Testimonials data - at least 10 testimonials
-			const testimonials = [
-				{ quote: "Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!", rating: 5, name: "Yaw Mensah", location: "Software Developer, Accra" },
-				{ quote: "The prices are great and the checkout process was incredibly smooth. No hidden fees!", rating: 5, name: "Akua Asante", location: "Marketing Manager, Kumasi" },
-				{ quote: "Customer support was amazing! They helped me pick the right camera for my photography business.", rating: 5, name: "Kofi Boateng", location: "Photographer, Tema" },
-				{ quote: "Authentic brands with solid warranties. My iPhone has been working perfectly for months!", rating: 5, name: "Ama Adjei", location: "Student, Cape Coast" },
-				{ quote: "Best tech store in Ghana! Quality products at unbeatable prices. Highly recommend!", rating: 5, name: "Kwame Osei", location: "Business Owner, Tamale" },
-				{ quote: "Fast shipping and excellent packaging. My order arrived in perfect condition.", rating: 5, name: "Efua Mensah", location: "Teacher, Takoradi" },
-				{ quote: "Great selection of refurbished devices. Saved so much money without compromising quality!", rating: 5, name: "David Asante", location: "Engineer, Sunyani" },
-				{ quote: "The repair service is top-notch. Fixed my phone quickly and professionally.", rating: 5, name: "Grace Appiah", location: "Nurse, Koforidua" },
-				{ quote: "Love the warranty options! Gives me peace of mind when buying refurbished tech.", rating: 5, name: "Michael Darko", location: "Student, Legon" },
-				{ quote: "Excellent customer service and product quality. Will definitely shop here again!", rating: 5, name: "Sarah Owusu", location: "Designer, Osu" },
-				{ quote: "Amazing deals on premium devices. Got my dream laptop at half the retail price!", rating: 5, name: "Emmanuel Tetteh", location: "Developer, East Legon" },
-				{ quote: "Quick response time and professional service. Very satisfied with my purchase!", rating: 5, name: "Patience Adu", location: "Accountant, Teshie" }
-			];
+				console.log('✓ Initializing circular testimonials gallery');
 
-			// Create testimonial cards
-			testimonials.forEach((testimonial, index) => {
-				const card = document.createElement('div');
-				card.className = 'circular-testimonial-card';
-				card.innerHTML = `
+				// Testimonials data - at least 10 testimonials
+				const testimonials = [{
+						quote: "Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!",
+						rating: 5,
+						name: "Yaw Mensah",
+						location: "Software Developer, Accra"
+					},
+					{
+						quote: "The prices are great and the checkout process was incredibly smooth. No hidden fees!",
+						rating: 5,
+						name: "Akua Asante",
+						location: "Marketing Manager, Kumasi"
+					},
+					{
+						quote: "Customer support was amazing! They helped me pick the right camera for my photography business.",
+						rating: 5,
+						name: "Kofi Boateng",
+						location: "Photographer, Tema"
+					},
+					{
+						quote: "Authentic brands with solid warranties. My iPhone has been working perfectly for months!",
+						rating: 5,
+						name: "Ama Adjei",
+						location: "Student, Cape Coast"
+					},
+					{
+						quote: "Best tech store in Ghana! Quality products at unbeatable prices. Highly recommend!",
+						rating: 5,
+						name: "Kwame Osei",
+						location: "Business Owner, Tamale"
+					},
+					{
+						quote: "Fast shipping and excellent packaging. My order arrived in perfect condition.",
+						rating: 5,
+						name: "Efua Mensah",
+						location: "Teacher, Takoradi"
+					},
+					{
+						quote: "Great selection of refurbished devices. Saved so much money without compromising quality!",
+						rating: 5,
+						name: "David Asante",
+						location: "Engineer, Sunyani"
+					},
+					{
+						quote: "The repair service is top-notch. Fixed my phone quickly and professionally.",
+						rating: 5,
+						name: "Grace Appiah",
+						location: "Nurse, Koforidua"
+					},
+					{
+						quote: "Love the warranty options! Gives me peace of mind when buying refurbished tech.",
+						rating: 5,
+						name: "Michael Darko",
+						location: "Student, Legon"
+					},
+					{
+						quote: "Excellent customer service and product quality. Will definitely shop here again!",
+						rating: 5,
+						name: "Sarah Owusu",
+						location: "Designer, Osu"
+					},
+					{
+						quote: "Amazing deals on premium devices. Got my dream laptop at half the retail price!",
+						rating: 5,
+						name: "Emmanuel Tetteh",
+						location: "Developer, East Legon"
+					},
+					{
+						quote: "Quick response time and professional service. Very satisfied with my purchase!",
+						rating: 5,
+						name: "Patience Adu",
+						location: "Accountant, Teshie"
+					}
+				];
+
+				// Clear any existing cards first
+				track.innerHTML = '';
+
+				// Create testimonial cards
+				testimonials.forEach((testimonial, index) => {
+					const card = document.createElement('div');
+					card.className = 'circular-testimonial-card';
+					card.innerHTML = `
 					<div class="circular-testimonial-quote">"${testimonial.quote}"</div>
 					<div>
 						<div class="circular-star-rating">
@@ -7429,141 +7527,158 @@ try {
 						</div>
 					</div>
 				`;
-				track.appendChild(card);
-			});
-
-			// Circular gallery parameters
-			const totalItems = testimonials.length;
-			const angleStep = (2 * Math.PI) / totalItems;
-			let rotation = 0;
-			let targetRotation = 0;
-			let isDragging = false;
-			let startX = 0;
-			let currentRotation = 0;
-
-			// Position cards in a circle
-			function positionCards() {
-				const cards = track.querySelectorAll('.circular-testimonial-card');
-				if (cards.length === 0) return;
-				
-				const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
-				const wrapperHeight = wrapper.offsetHeight || 600;
-				const centerX = wrapperWidth / 2;
-				const centerY = wrapperHeight / 2;
-				
-				// Calculate radius based on container size (smaller for visibility)
-				const radius = Math.min(wrapperWidth * 0.35, wrapperHeight * 0.4, 450);
-				const cardWidth = 380;
-				const cardHeight = 280;
-
-				cards.forEach((card, index) => {
-					const angle = (index * angleStep) + rotation;
-					
-					// Calculate position in 3D space
-					const x = centerX + radius * Math.cos(angle) - (cardWidth / 2);
-					const y = centerY + radius * Math.sin(angle) * 0.4 - (cardHeight / 2);
-					const z = radius * Math.sin(angle) * 0.3;
-					
-					// Calculate opacity and scale based on position (front cards are more visible)
-					const normalizedAngle = ((angle % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
-					const frontFactor = Math.abs(Math.cos(normalizedAngle - Math.PI / 2));
-					const opacity = 0.3 + frontFactor * 0.7;
-					const scale = 0.6 + frontFactor * 0.4;
-
-					card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale}) rotateY(${Math.sin(angle) * 15}deg)`;
-					card.style.opacity = opacity;
-					card.style.zIndex = Math.round(z) + 1000;
-					card.style.visibility = 'visible';
+					track.appendChild(card);
 				});
-			}
 
-			// Smooth rotation animation
-			function animate() {
-				rotation += (targetRotation - rotation) * 0.05;
-				positionCards();
-				requestAnimationFrame(animate);
-			}
+				console.log(`✓ Created ${testimonials.length} testimonial cards`);
 
-			// Auto-rotate
-			let autoRotateInterval = setInterval(() => {
-				if (!isDragging) {
-					targetRotation += angleStep * 0.1; // Slow auto-rotation
-				}
-			}, 100);
+				// Circular gallery parameters
+				const totalItems = testimonials.length;
+				const angleStep = (2 * Math.PI) / totalItems;
+				let rotation = 0;
+				let targetRotation = 0;
+				let isDragging = false;
+				let startX = 0;
+				let currentRotation = 0;
 
-			// Mouse drag
-			wrapper.addEventListener('mousedown', (e) => {
-				isDragging = true;
-				startX = e.clientX;
-				currentRotation = rotation;
-				clearInterval(autoRotateInterval);
-			});
+				// Position cards in a circle
+				function positionCards() {
+					const cards = track.querySelectorAll('.circular-testimonial-card');
+					if (cards.length === 0) return;
 
-			wrapper.addEventListener('mousemove', (e) => {
-				if (isDragging) {
-					const deltaX = e.clientX - startX;
 					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
-					const radius = Math.min(wrapperWidth * 0.35, 450);
-					targetRotation = currentRotation + (deltaX / radius) * 2;
-				}
-			});
+					const wrapperHeight = wrapper.offsetHeight || 600;
+					const centerX = wrapperWidth / 2;
+					const centerY = wrapperHeight / 2;
 
-			wrapper.addEventListener('mouseup', () => {
-				isDragging = false;
-				autoRotateInterval = setInterval(() => {
+					// Calculate radius based on container size (smaller for visibility)
+					const radius = Math.min(wrapperWidth * 0.35, wrapperHeight * 0.4, 450);
+					const cardWidth = 380;
+					const cardHeight = 280;
+
+					cards.forEach((card, index) => {
+						const angle = (index * angleStep) + rotation;
+
+						// Calculate position in 3D space
+						const x = centerX + radius * Math.cos(angle) - (cardWidth / 2);
+						const y = centerY + radius * Math.sin(angle) * 0.4 - (cardHeight / 2);
+						const z = radius * Math.sin(angle) * 0.3;
+
+						// Calculate opacity and scale based on position (front cards are more visible)
+						const normalizedAngle = ((angle % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
+						const frontFactor = Math.abs(Math.cos(normalizedAngle - Math.PI / 2));
+						const opacity = 0.3 + frontFactor * 0.7;
+						const scale = 0.6 + frontFactor * 0.4;
+
+						card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale}) rotateY(${Math.sin(angle) * 15}deg)`;
+						card.style.opacity = opacity;
+						card.style.zIndex = Math.round(z) + 1000;
+						card.style.visibility = 'visible';
+					});
+				}
+
+				// Smooth rotation animation
+				function animate() {
+					rotation += (targetRotation - rotation) * 0.05;
+					positionCards();
+					requestAnimationFrame(animate);
+				}
+
+				// Auto-rotate
+				let autoRotateInterval = setInterval(() => {
 					if (!isDragging) {
-						targetRotation += angleStep * 0.1;
+						targetRotation += angleStep * 0.1; // Slow auto-rotation
 					}
 				}, 100);
-			});
 
-			wrapper.addEventListener('mouseleave', () => {
-				isDragging = false;
-			});
+				// Mouse drag
+				wrapper.addEventListener('mousedown', (e) => {
+					isDragging = true;
+					startX = e.clientX;
+					currentRotation = rotation;
+					clearInterval(autoRotateInterval);
+				});
 
-			// Touch support
-			wrapper.addEventListener('touchstart', (e) => {
-				isDragging = true;
-				startX = e.touches[0].clientX;
-				currentRotation = rotation;
-				clearInterval(autoRotateInterval);
-			});
+				wrapper.addEventListener('mousemove', (e) => {
+					if (isDragging) {
+						const deltaX = e.clientX - startX;
+						const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
+						const radius = Math.min(wrapperWidth * 0.35, 450);
+						targetRotation = currentRotation + (deltaX / radius) * 2;
+					}
+				});
 
-			wrapper.addEventListener('touchmove', (e) => {
-				if (isDragging) {
-					const deltaX = e.touches[0].clientX - startX;
-					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
-					const radius = Math.min(wrapperWidth * 0.35, 450);
-					targetRotation = currentRotation + (deltaX / radius) * 2;
-				}
-			});
+				wrapper.addEventListener('mouseup', () => {
+					isDragging = false;
+					autoRotateInterval = setInterval(() => {
+						if (!isDragging) {
+							targetRotation += angleStep * 0.1;
+						}
+					}, 100);
+				});
 
-			wrapper.addEventListener('touchend', () => {
-				isDragging = false;
-				autoRotateInterval = setInterval(() => {
-					if (!isDragging) {
-						targetRotation += angleStep * 0.1;
+				wrapper.addEventListener('mouseleave', () => {
+					isDragging = false;
+				});
+
+				// Touch support
+				wrapper.addEventListener('touchstart', (e) => {
+					isDragging = true;
+					startX = e.touches[0].clientX;
+					currentRotation = rotation;
+					clearInterval(autoRotateInterval);
+				});
+
+				wrapper.addEventListener('touchmove', (e) => {
+					if (isDragging) {
+						const deltaX = e.touches[0].clientX - startX;
+						const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
+						const radius = Math.min(wrapperWidth * 0.35, 450);
+						targetRotation = currentRotation + (deltaX / radius) * 2;
+					}
+				});
+
+				wrapper.addEventListener('touchend', () => {
+					isDragging = false;
+					autoRotateInterval = setInterval(() => {
+						if (!isDragging) {
+							targetRotation += angleStep * 0.1;
+						}
+					}, 100);
+				});
+
+				// Wheel scroll
+				wrapper.addEventListener('wheel', (e) => {
+					e.preventDefault();
+					targetRotation += (e.deltaY > 0 ? 1 : -1) * angleStep * 0.5;
+				});
+
+				// Initial positioning - wait for layout
+				setTimeout(() => {
+					// Ensure wrapper has dimensions
+					if (wrapper.offsetWidth === 0 || wrapper.offsetHeight === 0) {
+						console.warn('Wrapper has no dimensions, retrying...');
+						setTimeout(() => {
+							positionCards();
+							animate();
+						}, 500);
+					} else {
+						positionCards();
+						animate();
+						console.log('✓ Circular testimonials gallery initialized with', testimonials.length, 'testimonials');
+						console.log('✓ Wrapper dimensions:', wrapper.offsetWidth, 'x', wrapper.offsetHeight);
 					}
 				}, 100);
-			});
 
-			// Wheel scroll
-			wrapper.addEventListener('wheel', (e) => {
-				e.preventDefault();
-				targetRotation += (e.deltaY > 0 ? 1 : -1) * angleStep * 0.5;
-			});
+				// Handle resize
+				window.addEventListener('resize', () => {
+					positionCards();
+				});
 
-			// Initial positioning
-			setTimeout(() => {
-				positionCards();
-				animate();
-				console.log('Circular testimonials gallery initialized with', testimonials.length, 'testimonials');
-			}, 100);
-
-			// Handle resize
-			window.addEventListener('resize', () => {
-				positionCards();
-			});
+				console.log('✓ Circular testimonials gallery setup complete');
+			} catch (error) {
+				console.error('✗ Error initializing circular testimonials:', error);
+			}
 		}
 
 		// Initialize on page load
@@ -7816,26 +7931,26 @@ try {
 
 				// Make AJAX call to remove from wishlist
 				fetch('actions/remove_from_wishlist.php', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-					body: 'product_id=' + productId
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data.success) {
-						// Update wishlist badge if exists
-						const wishlistBadge = document.getElementById('wishlistBadge');
-						if (wishlistBadge) {
-							let count = parseInt(wishlistBadge.textContent) || 0;
-							count = Math.max(0, count - 1);
-							wishlistBadge.textContent = count;
-							wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: 'product_id=' + productId
+					})
+					.then(response => response.json())
+					.then(data => {
+						if (data.success) {
+							// Update wishlist badge if exists
+							const wishlistBadge = document.getElementById('wishlistBadge');
+							if (wishlistBadge) {
+								let count = parseInt(wishlistBadge.textContent) || 0;
+								count = Math.max(0, count - 1);
+								wishlistBadge.textContent = count;
+								wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+							}
 						}
-					}
-				})
-				.catch(error => console.error('Error:', error));
+					})
+					.catch(error => console.error('Error:', error));
 			} else {
 				// Add to wishlist
 				button.classList.add('active');
@@ -7843,54 +7958,54 @@ try {
 
 				// Make AJAX call to add to wishlist
 				fetch('actions/add_to_wishlist.php', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-					body: 'product_id=' + productId
-				})
-				.then(response => response.json())
-				.then(data => {
-					if (data.success) {
-						// Update wishlist badge
-						const wishlistBadge = document.getElementById('wishlistBadge');
-						if (wishlistBadge) {
-							let count = parseInt(wishlistBadge.textContent) || 0;
-							count++;
-							wishlistBadge.textContent = count;
-							wishlistBadge.style.display = 'flex';
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+						body: 'product_id=' + productId
+					})
+					.then(response => response.json())
+					.then(data => {
+						if (data.success) {
+							// Update wishlist badge
+							const wishlistBadge = document.getElementById('wishlistBadge');
+							if (wishlistBadge) {
+								let count = parseInt(wishlistBadge.textContent) || 0;
+								count++;
+								wishlistBadge.textContent = count;
+								wishlistBadge.style.display = 'flex';
+							}
+						} else {
+							// Revert button state if failed
+							button.classList.remove('active');
+							icon.className = 'far fa-heart';
+							if (data.message) {
+								alert(data.message);
+							}
 						}
-					} else {
+					})
+					.catch(error => {
+						console.error('Error:', error);
 						// Revert button state if failed
 						button.classList.remove('active');
 						icon.className = 'far fa-heart';
-						if (data.message) {
-							alert(data.message);
-						}
-					}
-				})
-				.catch(error => {
-					console.error('Error:', error);
-					// Revert button state if failed
-					button.classList.remove('active');
-					icon.className = 'far fa-heart';
-				});
+					});
 			}
 		}
 
 		// Newsletter popup for new users
 		<?php if ($show_newsletter_popup): ?>
-		console.log('Newsletter popup should be shown!');
-		document.addEventListener('DOMContentLoaded', function() {
-			console.log('DOM loaded, showing newsletter popup...');
-			// Show newsletter popup after a short delay
-			setTimeout(function() {
-				console.log('Calling showNewsletterPopup()...');
-				showNewsletterPopup();
-			}, 2000); // 2 second delay after page loads
-		});
+			console.log('Newsletter popup should be shown!');
+			document.addEventListener('DOMContentLoaded', function() {
+				console.log('DOM loaded, showing newsletter popup...');
+				// Show newsletter popup after a short delay
+				setTimeout(function() {
+					console.log('Calling showNewsletterPopup()...');
+					showNewsletterPopup();
+				}, 2000); // 2 second delay after page loads
+			});
 		<?php else: ?>
-		console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
+			console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
 		<?php endif; ?>
 
 		// Check for payment redirect

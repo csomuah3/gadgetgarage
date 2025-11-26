@@ -273,11 +273,17 @@ class SMSService extends db_connection {
      */
     private function sendSMS($phone_number, $message, $message_type, $order_id = null, $customer_id = null) {
         try {
+            // Log original phone number
+            error_log("SMS sendSMS called - Original phone: $phone_number, Message type: $message_type");
+            
             // Validate and format phone number
             $formatted_phone = format_phone_number($phone_number);
             if (!$formatted_phone) {
-                throw new Exception('Invalid phone number format');
+                error_log("SMS Error: Phone number formatting failed for: $phone_number");
+                throw new Exception('Invalid phone number format: ' . $phone_number);
             }
+            
+            error_log("SMS Phone formatted: $phone_number -> $formatted_phone");
 
             // Check rate limiting (simplified - always allows for now)
             if (!$this->checkRateLimit($formatted_phone)) {
@@ -298,9 +304,13 @@ class SMSService extends db_connection {
             // Log SMS attempt
             $log_id = $this->logSMSAttempt($order_id, $customer_id, $formatted_phone, $message_type, $message);
             
-            error_log("Sending SMS to Arkesel API - URL: " . $this->api_url);
-            error_log("SMS Data: " . json_encode($api_data));
+            error_log("=== SMS SENDING ATTEMPT ===");
+            error_log("API URL: " . $this->api_url);
             error_log("API Key: " . substr($this->api_key, 0, 10) . "...");
+            error_log("Sender ID: " . $this->sender_id);
+            error_log("Recipient: $formatted_phone");
+            error_log("Message length: " . strlen($message));
+            error_log("Request Data: " . json_encode($api_data, JSON_PRETTY_PRINT));
 
             // Send HTTP request using POST with JSON
             $ch = curl_init();
@@ -319,9 +329,14 @@ class SMSService extends db_connection {
             $response = curl_exec($ch);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             $error = curl_error($ch);
+            $curl_info = curl_getinfo($ch);
             curl_close($ch);
             
-            error_log("Arkesel API Response - HTTP Code: $http_code, Response: " . substr($response, 0, 200));
+            error_log("=== ARKESEL API RESPONSE ===");
+            error_log("HTTP Code: $http_code");
+            error_log("cURL Error: " . ($error ? $error : 'None'));
+            error_log("Response (first 500 chars): " . substr($response, 0, 500));
+            error_log("Full Response: " . $response);
 
             if ($error) {
                 error_log("cURL Error: $error");

@@ -6854,141 +6854,80 @@ try {
 			// Featured on IG scroll animations
 			initFeaturedIGAnimations();
 
-			// Hero Carousel - Sequential rotation
-			console.log('🚀 Starting hero carousel initialization from DOMContentLoaded...');
-			initHeroCarousel();
-
-			// Also try again after a short delay in case of timing issues
-			setTimeout(() => {
-				console.log('🔄 Secondary carousel initialization attempt...');
-				if (!heroCarouselInterval) {
-					initHeroCarousel();
-				}
-			}, 2000);
+			// Hero Carousel - Simple version
+			console.log('🚀 Starting hero carousel from DOMContentLoaded...');
+			startHeroCarousel();
 		});
 
-		// Hero Carousel Function - Defined outside to ensure it's accessible
-		let heroCarouselInterval = null;
+		// Simple Working Hero Carousel
+		let carouselInterval;
+		let currentSlideIndex = 0;
 
-		function initHeroCarousel() {
-			const carousel = document.getElementById('heroCarousel');
-			if (!carousel) {
-				console.error('Hero carousel element not found');
-				return;
-			}
+		function startHeroCarousel() {
+			const slides = document.querySelectorAll('.hero-slide');
+			const dots = document.querySelectorAll('.carousel-dot');
 
-			const slides = Array.from(carousel.querySelectorAll('.hero-slide'));
 			if (slides.length === 0) {
-				console.error('No slides found in carousel');
+				console.log('❌ No slides found');
 				return;
 			}
 
-			// Clear any existing interval
-			if (heroCarouselInterval) {
-				clearInterval(heroCarouselInterval);
-				heroCarouselInterval = null;
+			console.log('🚀 Starting hero carousel with', slides.length, 'slides');
+
+			function showSlide(index) {
+				// Hide all slides
+				slides.forEach(s => s.classList.remove('active'));
+				dots.forEach(d => d.classList.remove('active'));
+
+				// Show current slide
+				slides[index].classList.add('active');
+				if (dots[index]) dots[index].classList.add('active');
+
+				currentSlideIndex = index;
+				console.log('📺 Showing slide:', index, slides[index].dataset.product);
 			}
 
-			// Initialize: Set first slide as active, others hidden
-			slides.forEach((slide, index) => {
-				slide.classList.remove('active', 'exiting');
-				if (index === 0) {
-					slide.classList.add('active');
-				}
-			});
-
-			let currentIndex = 0;
-
-			// Function to get next sequential index
-			function getNextIndex(current) {
-				return (current + 1) % slides.length;
+			function nextSlide() {
+				const next = (currentSlideIndex + 1) % slides.length;
+				showSlide(next);
 			}
 
-			// Function to switch to a specific slide
-			function switchSlide(newIndex) {
-				if (newIndex === currentIndex || newIndex < 0 || newIndex >= slides.length) {
-					console.log('Invalid slide index or same slide');
-					return;
-				}
+			// Initialize
+			showSlide(0);
 
-				const currentSlide = slides[currentIndex];
-				const newSlide = slides[newIndex];
+			// Start auto-rotation
+			if (carouselInterval) clearInterval(carouselInterval);
+			carouselInterval = setInterval(nextSlide, 3000);
 
-				console.log(`🔄 Switching from slide ${currentIndex} (${currentSlide.dataset.product}) to slide ${newIndex} (${newSlide.dataset.product})`);
-
-				// Remove all classes from all slides first
-				slides.forEach(slide => {
-					slide.classList.remove('active', 'exiting');
+			// Add dot click handlers
+			dots.forEach((dot, index) => {
+				dot.addEventListener('click', () => {
+					clearInterval(carouselInterval);
+					showSlide(index);
+					carouselInterval = setInterval(nextSlide, 3000);
 				});
-
-				// Add exiting to current slide
-				currentSlide.classList.add('exiting');
-
-				// Add active to new slide immediately
-				newSlide.classList.add('active');
-
-				currentIndex = newIndex;
-
-				console.log(`✅ Switched to slide ${currentIndex}`);
-				console.log('Current slide classes:', currentSlide.className);
-				console.log('New slide classes:', newSlide.className);
-			}
-
-			// Function to rotate to next sequential slide
-			function rotateToNext() {
-				const nextIndex = getNextIndex(currentIndex);
-				switchSlide(nextIndex);
-			}
-
-			// Add debugging
-			console.log('Found slides:', slides.length);
-			slides.forEach((slide, i) => {
-				console.log(`Slide ${i}:`, slide.className, slide.dataset.product);
 			});
 
-			// Start rotation every 4 seconds
-			heroCarouselInterval = setInterval(rotateToNext, 4000);
-			console.log('✅ Hero carousel auto-rotation started (4 second intervals)');
-
-			// Pause on hover
-			carousel.addEventListener('mouseenter', () => {
-				if (heroCarouselInterval) {
-					clearInterval(heroCarouselInterval);
-					heroCarouselInterval = null;
-				}
-			});
-
-			carousel.addEventListener('mouseleave', () => {
-				if (!heroCarouselInterval) {
-					heroCarouselInterval = setInterval(rotateToNext, 4000);
-					console.log('Hero carousel auto-rotation resumed');
-				}
-			});
-
-			console.log('🎉 Hero carousel initialized:', slides.length, 'slides, auto-rotating every 4 seconds');
+			console.log('✅ Carousel started successfully');
 		}
 
-		// Force immediate start for testing
-		console.log('🔥 Force starting carousel immediately...');
+		// Force start carousel immediately
 		setTimeout(() => {
-			initHeroCarousel();
-		}, 500);
+			console.log('🔥 Force starting carousel...');
+			startHeroCarousel();
+		}, 1000);
 
-		// Initialize immediately and also on DOM ready
+		// Multiple initialization attempts
 		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', function() {
-				setTimeout(initHeroCarousel, 500);
-			});
+			document.addEventListener('DOMContentLoaded', startHeroCarousel);
 		} else {
-			// DOM already loaded
-			setTimeout(initHeroCarousel, 500);
+			startHeroCarousel();
 		}
 
-		// Also try on window load as final fallback
-		window.addEventListener('load', function() {
-			if (!document.querySelector('.hero-slide.active')) {
-				setTimeout(initHeroCarousel, 1000);
-			}
+		// Final fallback on window load
+		window.addEventListener('load', () => {
+			setTimeout(startHeroCarousel, 500);
+		});
 			// Initialize Featured IG Carousel
 			initFeaturedIgCarousel();
 		});

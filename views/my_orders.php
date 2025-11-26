@@ -15,14 +15,35 @@ try {
 
     $is_admin = check_admin();
     $customer_id = $_SESSION['user_id'];
-    $orders = get_user_orders_ctr($customer_id);
+
+    // Get orders with error handling
+    $orders = [];
+    try {
+        $orders = get_user_orders_ctr($customer_id);
+        if (!$orders) {
+            $orders = [];
+        }
+    } catch (Exception $e) {
+        error_log("Error fetching orders for customer $customer_id: " . $e->getMessage());
+        $orders = [];
+    }
 
     // Get cart count
     $ip_address = $_SERVER['REMOTE_ADDR'];
-    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    $cart_count = 0;
+    try {
+        $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    } catch (Exception $e) {
+        error_log("Error fetching cart count: " . $e->getMessage());
+    }
 
     // Get wishlist count
-    $wishlist_count = get_wishlist_count_ctr($customer_id);
+    $wishlist_count = 0;
+    try {
+        $wishlist_count = get_wishlist_count_ctr($customer_id);
+    } catch (Exception $e) {
+        error_log("Error fetching wishlist count: " . $e->getMessage());
+    }
 
 } catch (Exception $e) {
     die("Critical error: " . $e->getMessage());
@@ -944,7 +965,7 @@ try {
                                     </span>
                                 </div>
                                 <div class="col-md-3">
-                                    <div class="order-total">GH₵<?php echo number_format($order['order_total'], 2); ?></div>
+                                    <div class="order-total">GH₵<?php echo number_format($order['total_amount'] ?? 0, 2); ?></div>
                                 </div>
                                 <div class="col-md-3 text-end">
                                     <button class="btn-view-details" onclick="viewOrderDetails(<?php echo $order['order_id']; ?>)">
@@ -956,8 +977,8 @@ try {
                         <div class="order-body">
                             <div class="row align-items-center">
                                 <div class="col-md-12">
-                                    <p class="mb-0"><strong>Items:</strong> <?php echo $order['total_items'] ?? 1; ?> item(s)</p>
-                                    <p class="mb-0"><strong>Payment:</strong> <?php echo $order['payment_method'] ?? 'Credit Card'; ?></p>
+                                    <p class="mb-0"><strong>Items:</strong> <?php echo $order['item_count'] ?? 1; ?> item(s)</p>
+                                    <p class="mb-0"><strong>Payment:</strong> <?php echo ucfirst($order['payment_method'] ?? 'Credit Card'); ?></p>
                                 </div>
                             </div>
                         </div>

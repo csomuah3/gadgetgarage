@@ -1541,7 +1541,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             formData.append('condition', 'excellent');
             formData.append('final_price', 0); // Will be calculated by backend
 
-            fetch('actions/add_to_cart_action.php', {
+            fetch('../actions/add_to_cart_action.php', {
                 method: 'POST',
                 body: formData
             })

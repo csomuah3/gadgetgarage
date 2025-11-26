@@ -79,15 +79,25 @@ class Order extends db_connection
     {
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);
 
-        $sql = "SELECT o.*, COUNT(od.product_id) as item_count, SUM(p.amt) as total_amount
+        $sql = "SELECT o.*,
+                       COUNT(od.product_id) as item_count,
+                       COALESCE(SUM(p.amt), 0) as total_amount,
+                       p.payment_method,
+                       p.currency
                 FROM orders o
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
                 WHERE o.customer_id = $customer_id
-                GROUP BY o.order_id
+                GROUP BY o.order_id, p.payment_method, p.currency
                 ORDER BY o.order_date DESC";
 
-        return $this->db_fetch_all($sql);
+        try {
+            $result = $this->db_fetch_all($sql);
+            return $result ? $result : [];
+        } catch (Exception $e) {
+            error_log("Error fetching user orders: " . $e->getMessage());
+            return [];
+        }
     }
 
     public function get_order_details($order_id)

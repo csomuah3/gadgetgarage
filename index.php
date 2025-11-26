@@ -1232,8 +1232,8 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 2fr 1fr;
-			/* big left + narrow right */
+			grid-template-columns: 2.5fr 1fr;
+			/* wider left + narrow right */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
@@ -1353,13 +1353,14 @@ try {
 
 		.text-line {
 			font-size: clamp(42px, 6vw, 64px);
-			font-weight: 700;
-			line-height: 1.1;
+			font-weight: 400;
+			line-height: 1.2;
 			color: inherit;
 			margin: 0;
 			transition: opacity 0.6s ease, transform 0.6s ease;
 			transform: translateY(0);
-			font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+			font-family: 'Georgia', 'Times New Roman', serif;
+			letter-spacing: 0.5px;
 		}
 
 		.hero-slide:not(.active) .text-line {
@@ -6507,6 +6508,8 @@ try {
 		});
 
 		// Hero Carousel Function - Defined outside to ensure it's accessible
+		let heroCarouselInterval = null;
+
 		function initHeroCarousel() {
 			const carousel = document.getElementById('heroCarousel');
 			if (!carousel) {
@@ -6520,6 +6523,12 @@ try {
 				return;
 			}
 
+			// Clear any existing interval
+			if (heroCarouselInterval) {
+				clearInterval(heroCarouselInterval);
+				heroCarouselInterval = null;
+			}
+
 			// Initialize: Set first slide as active, others hidden
 			slides.forEach((slide, index) => {
 				slide.classList.remove('active', 'exiting');
@@ -6529,7 +6538,6 @@ try {
 			});
 
 			let currentIndex = 0;
-			let rotationInterval = null;
 
 			// Function to get a random index (excluding current)
 			function getRandomIndex(current) {
@@ -6571,34 +6579,41 @@ try {
 			}
 
 			// Start rotation every 5 seconds
-			rotationInterval = setInterval(rotateToNext, 5000);
+			heroCarouselInterval = setInterval(rotateToNext, 5000);
 
 			// Pause on hover
 			carousel.addEventListener('mouseenter', () => {
-				if (rotationInterval) {
-					clearInterval(rotationInterval);
-					rotationInterval = null;
+				if (heroCarouselInterval) {
+					clearInterval(heroCarouselInterval);
+					heroCarouselInterval = null;
 				}
 			});
 
 			carousel.addEventListener('mouseleave', () => {
-				if (!rotationInterval) {
-					rotationInterval = setInterval(rotateToNext, 5000);
+				if (!heroCarouselInterval) {
+					heroCarouselInterval = setInterval(rotateToNext, 5000);
 				}
 			});
 
 			console.log('Hero carousel initialized:', slides.length, 'slides, auto-rotating every 5 seconds');
 		}
 
-		// Also try to initialize on window load as fallback
+		// Initialize immediately and also on DOM ready
 		if (document.readyState === 'loading') {
 			document.addEventListener('DOMContentLoaded', function() {
-				setTimeout(initHeroCarousel, 100);
+				setTimeout(initHeroCarousel, 500);
 			});
 		} else {
 			// DOM already loaded
-			setTimeout(initHeroCarousel, 100);
+			setTimeout(initHeroCarousel, 500);
 		}
+
+		// Also try on window load as final fallback
+		window.addEventListener('load', function() {
+			if (!document.querySelector('.hero-slide.active')) {
+				setTimeout(initHeroCarousel, 1000);
+			}
+		});
 
 		// Featured on IG scroll animation function
 		function initFeaturedIGAnimations() {

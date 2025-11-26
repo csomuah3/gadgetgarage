@@ -1249,6 +1249,7 @@ try {
 			min-height: 560px;
 			border-radius: 14px;
 			overflow: hidden;
+			background: #f0f4f8; /* Fallback background */
 		}
 
 		.hero-carousel {
@@ -1291,31 +1292,39 @@ try {
 			z-index: 1;
 		}
 
-		/* Product-specific gradient backgrounds */
+		/* Product-specific gradient backgrounds - IMPORTANT: Use !important to override */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: linear-gradient(135deg, #e8f0f8 0%, #c5d9e8 50%, #a8c5d8 100%);
-			color: #1f2937;
+			background: linear-gradient(135deg, #e8f0f8 0%, #c5d9e8 50%, #a8c5d8 100%) !important;
+			color: #1f2937 !important;
 		}
 
 		.hero-slide[data-gradient="iphone-gradient"] {
-			background: linear-gradient(135deg, #f0f4f8 0%, #d1dce8 50%, #b8c8d8 100%);
-			color: #1f2937;
+			background: linear-gradient(135deg, #f0f4f8 0%, #d1dce8 50%, #b8c8d8 100%) !important;
+			color: #1f2937 !important;
 		}
 
 		.hero-slide[data-gradient="polaroid-gradient"] {
-			background: linear-gradient(135deg, #fef9f3 0%, #f5e8d8 50%, #ead4c0 100%);
-			color: #1f2937;
+			background: linear-gradient(135deg, #fef9f3 0%, #f5e8d8 50%, #ead4c0 100%) !important;
+			color: #1f2937 !important;
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] {
-			background: linear-gradient(135deg, #0d4a2e 0%, #1a6b47 50%, #2d8a5f 100%);
-			color: #ffffff;
+			background: linear-gradient(135deg, #0d4a2e 0%, #1a6b47 50%, #2d8a5f 100%) !important;
+			color: #ffffff !important;
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] .banner-title,
-		.hero-slide[data-gradient="samsung-gradient"] .banner-price,
-		.hero-slide[data-gradient="samsung-gradient"] .banner-tagline {
-			color: #ffffff;
+		.hero-slide[data-gradient="samsung-gradient"] .banner-price {
+			color: #ffffff !important;
+		}
+
+		.hero-slide[data-gradient="ipad-gradient"] .banner-title,
+		.hero-slide[data-gradient="ipad-gradient"] .banner-price,
+		.hero-slide[data-gradient="iphone-gradient"] .banner-title,
+		.hero-slide[data-gradient="iphone-gradient"] .banner-price,
+		.hero-slide[data-gradient="polaroid-gradient"] .banner-title,
+		.hero-slide[data-gradient="polaroid-gradient"] .banner-price {
+			color: #1f2937 !important;
 		}
 
 		.banner-copy {
@@ -1339,14 +1348,6 @@ try {
 			margin: 0 0 8px;
 		}
 
-		.banner-tagline {
-			font-size: clamp(14px, 1.5vw, 18px);
-			color: inherit;
-			opacity: 0.85;
-			margin: 0 0 20px;
-			font-weight: 500;
-			font-style: italic;
-		}
 
 		.banner-price .price {
 			font-weight: 800;
@@ -1397,27 +1398,41 @@ try {
 			align-items: center;
 			justify-content: center;
 			position: relative;
-		}
-
-		.banner-media img {
-			width: 100%;
 			height: 100%;
-			max-height: 450px;
+		}
+
+		.banner-media .product-image {
+			width: auto;
+			height: 100%;
+			max-height: 500px;
+			min-height: 400px;
 			object-fit: contain;
-			/* keep proportions */
 			transform: translateY(8px);
-			/* slight drop like screenshot */
-			transition: transform 0.3s ease;
+			transition: opacity 0.6s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
 		}
 
-		.hero-slide.active .banner-media img {
-			animation: floatIn 0.8s ease-out;
+		/* Image animations - fade out for exiting */
+		.hero-slide.exiting .product-image {
+			opacity: 0;
+			transform: translateY(8px) translateX(0);
 		}
 
-		@keyframes floatIn {
+		/* Image animations - slide in from right for active */
+		.hero-slide:not(.active) .product-image {
+			opacity: 0;
+			transform: translateY(8px) translateX(100px);
+		}
+
+		.hero-slide.active .product-image {
+			opacity: 1;
+			transform: translateY(8px) translateX(0);
+			animation: slideInFromRight 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+		}
+
+		@keyframes slideInFromRight {
 			0% {
 				opacity: 0;
-				transform: translateY(20px) translateX(30px);
+				transform: translateY(8px) translateX(100px);
 			}
 			100% {
 				opacity: 1;
@@ -4552,52 +4567,48 @@ try {
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Apple iPad Pro<br>Premium Refurbished<br>Smart Tech, Smarter Spending</h1>
+								<h1 class="banner-title">Apple iPad Pro<br>Smart Tech, Smarter Spending</h1>
 								<p class="banner-price">Starting At <span class="price">GH₵ 2,500.00</span></p>
-								<p class="banner-tagline">Like New Quality, Unbeatable Price</p>
 								<a href="views/all_product.php?category=ipads" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
-								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad-removebg-preview.png" alt="Apple iPad Pro" />
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad-removebg-preview.png" alt="Apple iPad Pro" class="product-image" />
 							</div>
 						</article>
 
 						<!-- Product 2: iPhone -->
 						<article class="hero-slide" data-product="iphone" data-gradient="iphone-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Apple iPhone<br>Certified Refurbished<br>Premium Quality, Best Value</h1>
+								<h1 class="banner-title">Apple iPhone<br>Premium Quality, Best Value</h1>
 								<p class="banner-price">Starting At <span class="price">GH₵ 1,800.00</span></p>
-								<p class="banner-tagline">Restored to Perfection</p>
 								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
-								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/iphone_-removebg-preview.png" alt="Apple iPhone" />
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/iphone_-removebg-preview.png" alt="Apple iPhone" class="product-image" />
 							</div>
 						</article>
 
 						<!-- Product 3: Polaroid Camera -->
 						<article class="hero-slide" data-product="polaroid" data-gradient="polaroid-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Fujifilm Instax Mini<br>Refurbished & Ready<br>Capture Moments, Save Money</h1>
+								<h1 class="banner-title">Fujifilm Instax Mini<br>Capture Moments, Save Money</h1>
 								<p class="banner-price">Starting At <span class="price">GH₵ 450.00</span></p>
-								<p class="banner-tagline">Vintage Style, Modern Savings</p>
 								<a href="views/all_product.php?category=cameras" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
-								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/polaroid-removebg-preview.png" alt="Fujifilm Instax Mini" />
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/polaroid-removebg-preview.png" alt="Fujifilm Instax Mini" class="product-image" />
 							</div>
 						</article>
 
 						<!-- Product 4: Samsung Phone -->
 						<article class="hero-slide" data-product="samsung" data-gradient="samsung-gradient">
 							<div class="banner-copy">
-								<h1 class="banner-title">Samsung Galaxy Z Fold<br>Premium Refurbished<br>Innovation Meets Affordability</h1>
+								<h1 class="banner-title">Samsung Galaxy Z Fold<br>Innovation Meets Affordability</h1>
 								<p class="banner-price">Starting At <span class="price">GH₵ 3,200.00</span></p>
-								<p class="banner-tagline">Cutting-Edge Tech, Smart Price</p>
 								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
-								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/images-42.jpeg-removebg-preview.png" alt="Samsung Galaxy Z Fold" />
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/images-42.jpeg-removebg-preview.png" alt="Samsung Galaxy Z Fold" class="product-image" />
 							</div>
 						</article>
 					</div>
@@ -6347,38 +6358,43 @@ try {
 		// Hero Carousel Function
 		function initHeroCarousel() {
 			const carousel = document.getElementById('heroCarousel');
-			if (!carousel) return;
+			if (!carousel) {
+				console.log('Hero carousel not found');
+				return;
+			}
 
 			const slides = carousel.querySelectorAll('.hero-slide');
-			if (slides.length === 0) return;
+			if (slides.length === 0) {
+				console.log('No slides found');
+				return;
+			}
+
+			// Initialize: Set first slide as active, others as hidden
+			slides.forEach((slide, index) => {
+				if (index === 0) {
+					slide.classList.add('active');
+					slide.style.opacity = '1';
+					slide.style.transform = 'translateX(0)';
+				} else {
+					slide.classList.remove('active');
+					slide.style.opacity = '0';
+					slide.style.transform = 'translateX(100%)';
+				}
+			});
 
 			let currentIndex = 0;
-			let usedIndices = [];
 			let rotationInterval;
 
 			// Function to get a random index (excluding current)
 			function getRandomIndex(current) {
 				if (slides.length <= 1) return 0;
-
-				// If we've used all indices, reset
-				if (usedIndices.length >= slides.length - 1) {
-					usedIndices = [];
-				}
-
-				// Get available indices (all except current)
+				
 				const availableIndices = Array.from({ length: slides.length }, (_, i) => i)
-					.filter(i => i !== current && !usedIndices.includes(i));
-
-				// If no available indices, reset and exclude current
-				if (availableIndices.length === 0) {
-					usedIndices = [];
-					return current === 0 ? 1 : 0;
-				}
-
-				// Pick random from available
-				const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
-				usedIndices.push(randomIndex);
-				return randomIndex;
+					.filter(i => i !== current);
+				
+				if (availableIndices.length === 0) return 0;
+				
+				return availableIndices[Math.floor(Math.random() * availableIndices.length)];
 			}
 
 			// Function to switch to a specific slide
@@ -6388,25 +6404,29 @@ try {
 				const currentSlide = slides[currentIndex];
 				const newSlide = slides[newIndex];
 
-				// Fade out current slide (no animation, just opacity)
+				// Fade out current slide (no movement, just opacity)
 				currentSlide.classList.remove('active');
 				currentSlide.classList.add('exiting');
-
-				// Remove exiting class after transition
-				setTimeout(() => {
-					currentSlide.classList.remove('exiting');
-				}, 600);
+				currentSlide.style.opacity = '0';
+				currentSlide.style.transform = 'translateX(0)';
 
 				// Prepare new slide (off-screen right)
-				newSlide.style.transform = 'translateX(100%)';
 				newSlide.style.opacity = '0';
+				newSlide.style.transform = 'translateX(100%)';
+				newSlide.classList.remove('exiting');
 
 				// Small delay to ensure current slide starts fading
 				setTimeout(() => {
+					// Remove exiting class from old slide
+					currentSlide.classList.remove('exiting');
+					
 					// Activate new slide (slides in from right)
 					newSlide.classList.add('active');
+					newSlide.style.opacity = '1';
+					newSlide.style.transform = 'translateX(0)';
+					
 					currentIndex = newIndex;
-				}, 50);
+				}, 100);
 			}
 
 			// Function to rotate to next random slide
@@ -6418,14 +6438,18 @@ try {
 			// Start rotation every 5 seconds
 			rotationInterval = setInterval(rotateToNext, 5000);
 
-			// Pause on hover (optional - can remove if you want continuous rotation)
+			// Pause on hover
 			carousel.addEventListener('mouseenter', () => {
-				clearInterval(rotationInterval);
+				if (rotationInterval) {
+					clearInterval(rotationInterval);
+				}
 			});
 
 			carousel.addEventListener('mouseleave', () => {
 				rotationInterval = setInterval(rotateToNext, 5000);
 			});
+
+			console.log('Hero carousel initialized with', slides.length, 'slides');
 		}
 
 		// Featured on IG scroll animation function

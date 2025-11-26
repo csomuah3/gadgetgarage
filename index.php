@@ -7417,21 +7417,17 @@ try {
 			}
 		}
 
-		// Circular Testimonials Gallery
+		// Simple Circular Testimonials Gallery
 		function initCircularTestimonials() {
-			try {
-				const wrapper = document.getElementById('circularTestimonials');
-				const track = document.getElementById('testimonialsTrack');
+			const wrapper = document.getElementById('circularTestimonials');
+			const track = document.getElementById('testimonialsTrack');
 
-				if (!wrapper || !track) {
-					console.warn('Circular testimonials: Elements not found', {
-						wrapper: !!wrapper,
-						track: !!track
-					});
-					return;
-				}
+			if (!wrapper || !track) {
+				console.error('Testimonials elements not found');
+				return;
+			}
 
-				console.log('✓ Initializing circular testimonials gallery');
+			console.log('Initializing circular testimonials...');
 
 				// Testimonials data - at least 10 testimonials
 				const testimonials = [{
@@ -7541,40 +7537,49 @@ try {
 				let startX = 0;
 				let currentRotation = 0;
 
-				// Position cards in a circle
+				// Position cards in a circle - SIMPLIFIED
 				function positionCards() {
 					const cards = track.querySelectorAll('.circular-testimonial-card');
-					if (cards.length === 0) return;
+					if (cards.length === 0) {
+						console.error('No cards found!');
+						return;
+					}
 
-					const wrapperWidth = wrapper.offsetWidth || window.innerWidth;
-					const wrapperHeight = wrapper.offsetHeight || 600;
+					const wrapperWidth = wrapper.offsetWidth;
+					const wrapperHeight = wrapper.offsetHeight;
+					
+					if (wrapperWidth === 0 || wrapperHeight === 0) {
+						console.warn('Wrapper has no size yet');
+						return;
+					}
+
 					const centerX = wrapperWidth / 2;
 					const centerY = wrapperHeight / 2;
-
-					// Calculate radius based on container size (smaller for visibility)
-					const radius = Math.min(wrapperWidth * 0.35, wrapperHeight * 0.4, 450);
-					const cardWidth = 380;
-					const cardHeight = 280;
+					const radius = Math.min(wrapperWidth * 0.3, 350); // Smaller, visible radius
+					const cardWidth = 350;
+					const cardHeight = 260;
 
 					cards.forEach((card, index) => {
 						const angle = (index * angleStep) + rotation;
+						
+						// Simple 2D circular positioning
+						const x = radius * Math.cos(angle);
+						const y = radius * Math.sin(angle) * 0.5; // Elliptical shape
+						
+						// Calculate visibility based on front/back
+						const frontFactor = Math.abs(Math.cos(angle));
+						const opacity = Math.max(0.5, frontFactor);
+						const scale = 0.75 + (frontFactor * 0.25);
 
-						// Calculate position in 3D space
-						const x = centerX + radius * Math.cos(angle) - (cardWidth / 2);
-						const y = centerY + radius * Math.sin(angle) * 0.4 - (cardHeight / 2);
-						const z = radius * Math.sin(angle) * 0.3;
-
-						// Calculate opacity and scale based on position (front cards are more visible)
-						const normalizedAngle = ((angle % (2 * Math.PI)) + (2 * Math.PI)) % (2 * Math.PI);
-						const frontFactor = Math.abs(Math.cos(normalizedAngle - Math.PI / 2));
-						const opacity = 0.3 + frontFactor * 0.7;
-						const scale = 0.6 + frontFactor * 0.4;
-
-						card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale}) rotateY(${Math.sin(angle) * 15}deg)`;
+						// Use transform for positioning
+						card.style.transform = `translate(${centerX + x - (cardWidth/2)}px, ${centerY + y - (cardHeight/2)}px) scale(${scale})`;
 						card.style.opacity = opacity;
-						card.style.zIndex = Math.round(z) + 1000;
+						card.style.zIndex = Math.round(frontFactor * 100);
+						card.style.display = 'flex';
 						card.style.visibility = 'visible';
 					});
+					
+					console.log('Cards positioned:', cards.length, 'cards at radius:', radius);
 				}
 
 				// Smooth rotation animation
@@ -7653,22 +7658,22 @@ try {
 					targetRotation += (e.deltaY > 0 ? 1 : -1) * angleStep * 0.5;
 				});
 
-				// Initial positioning - wait for layout
-				setTimeout(() => {
-					// Ensure wrapper has dimensions
-					if (wrapper.offsetWidth === 0 || wrapper.offsetHeight === 0) {
-						console.warn('Wrapper has no dimensions, retrying...');
-						setTimeout(() => {
-							positionCards();
-							animate();
-						}, 500);
-					} else {
+				// Initial positioning - multiple attempts
+				function tryInit() {
+					if (wrapper.offsetWidth > 0 && wrapper.offsetHeight > 0) {
 						positionCards();
 						animate();
-						console.log('✓ Circular testimonials gallery initialized with', testimonials.length, 'testimonials');
-						console.log('✓ Wrapper dimensions:', wrapper.offsetWidth, 'x', wrapper.offsetHeight);
+						console.log('✓ Gallery initialized!', wrapper.offsetWidth, 'x', wrapper.offsetHeight);
+					} else {
+						console.log('Waiting for wrapper dimensions...');
+						setTimeout(tryInit, 100);
 					}
-				}, 100);
+				}
+				
+				// Try immediately and then with delays
+				tryInit();
+				setTimeout(tryInit, 200);
+				setTimeout(tryInit, 500);
 
 				// Handle resize
 				window.addEventListener('resize', () => {

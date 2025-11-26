@@ -2040,11 +2040,11 @@ try {
 
 
 
-		/* TESTIMONIALS — Card Stack */
+		/* TESTIMONIALS — Circular Gallery */
 		.testimonials {
 			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
-			padding: 120px 0;
-			min-height: 80vh;
+			padding: 80px 0 120px;
+			min-height: 700px;
 			position: relative;
 			overflow: hidden;
 		}
@@ -2060,25 +2060,161 @@ try {
 			opacity: 0.3;
 		}
 
-		.testimonials .section-title {
+		/* Header Section - Top and Centered */
+		.testimonials-header {
+			text-align: center;
+			margin-bottom: 60px;
+			position: relative;
+			z-index: 2;
+		}
+
+		.testimonials-title {
 			color: #fff;
-			font-size: 4.5rem;
+			font-size: 3.5rem;
 			font-weight: 900;
-			margin-bottom: 20px;
-			text-align: left;
+			margin-bottom: 15px;
 			font-family: 'Inter', sans-serif;
 			letter-spacing: -0.02em;
 			line-height: 1.1;
 		}
 
-		.testimonials .section-sub {
+		.testimonials-subtitle {
 			color: rgba(255, 255, 255, 0.9);
-			font-size: 1.8rem;
+			font-size: 1.4rem;
 			font-weight: 400;
-			margin-bottom: 80px;
-			text-align: left;
 			font-family: 'Inter', sans-serif;
-			letter-spacing: -0.01em;
+		}
+
+		/* Circular Gallery Wrapper */
+		.circular-testimonials-wrapper {
+			width: 100%;
+			height: 600px;
+			position: relative;
+			perspective: 2000px;
+			overflow: hidden;
+			cursor: grab;
+		}
+
+		.circular-testimonials-wrapper:active {
+			cursor: grabbing;
+		}
+
+		.circular-testimonials-track {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			transform-style: preserve-3d;
+		}
+
+		/* Individual Testimonial Card */
+		.circular-testimonial-card {
+			position: absolute;
+			width: 380px;
+			height: 280px;
+			border-radius: 20px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08));
+			backdrop-filter: blur(20px);
+			padding: 30px;
+			color: #fff;
+			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+			transition: transform 0.3s ease, opacity 0.3s ease;
+			display: flex;
+			flex-direction: column;
+			justify-content: space-between;
+		}
+
+		.circular-testimonial-card:hover {
+			transform: translateZ(30px) scale(1.05);
+			box-shadow: 0 30px 60px rgba(0, 0, 0, 0.4);
+		}
+
+		.circular-testimonial-quote {
+			font-size: 1.1rem;
+			line-height: 1.6;
+			margin-bottom: 20px;
+			font-style: italic;
+			color: #fff;
+			font-weight: 400;
+			flex: 1;
+		}
+
+		.circular-star-rating {
+			display: flex;
+			gap: 4px;
+			margin-bottom: 20px;
+		}
+
+		.circular-star {
+			color: #ffd700;
+			font-size: 1.2rem;
+		}
+
+		.circular-testimonial-author {
+			display: flex;
+			flex-direction: column;
+			gap: 5px;
+			border-top: 1px solid rgba(255, 255, 255, 0.2);
+			padding-top: 15px;
+		}
+
+		.circular-author-name {
+			margin: 0;
+			font-size: 1.1rem;
+			color: #fff;
+			font-weight: 600;
+		}
+
+		.circular-author-location {
+			margin: 0;
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 0.95rem;
+			font-weight: 400;
+		}
+
+		@media (max-width: 1200px) {
+			.testimonials-title {
+				font-size: 3rem;
+			}
+
+			.testimonials-subtitle {
+				font-size: 1.2rem;
+			}
+
+			.circular-testimonial-card {
+				width: 340px;
+				height: 260px;
+				padding: 25px;
+			}
+		}
+
+		@media (max-width: 768px) {
+			.testimonials {
+				padding: 60px 0 100px;
+				min-height: 600px;
+			}
+
+			.testimonials-title {
+				font-size: 2.5rem;
+			}
+
+			.testimonials-subtitle {
+				font-size: 1.1rem;
+			}
+
+			.circular-testimonials-wrapper {
+				height: 500px;
+			}
+
+			.circular-testimonial-card {
+				width: 300px;
+				height: 240px;
+				padding: 20px;
+			}
+
+			.circular-testimonial-quote {
+				font-size: 1rem;
+			}
 		}
 
 		.card-swap-container {
@@ -5555,128 +5691,19 @@ try {
 	</section>
 
 	<!-- TESTIMONIALS — Card Stack -->
+	<!-- Customer Testimonials - Circular Gallery -->
 	<section class="testimonials">
 		<div class="container">
-			<div class="testimonials-text-section">
-				<h2 class="section-title" data-translate="what_customers_say">What Our Customers Say</h2>
-				<p class="section-sub" data-translate="amazing_reviews">Stories from satisfied GadgetGarage customers</p>
+			<!-- Title Section - Top and Centered -->
+			<div class="testimonials-header">
+				<h2 class="testimonials-title" data-translate="what_customers_say">What Our Customers Say</h2>
+				<p class="testimonials-subtitle" data-translate="amazing_reviews">Stories from satisfied GadgetGarage customers</p>
 			</div>
 
-			<div class="card-swap-container" id="cardSwapContainer">
-				<div class="testimonial-card">
-					<div class="card-features">
-						<div class="card-feature">
-							<i class="fas fa-bolt"></i> <span data-translate="fast">Fast</span>
-						</div>
-						<div class="card-feature">
-							<i class="fas fa-shield-alt"></i> <span data-translate="reliable">Reliable</span>
-						</div>
-					</div>
-					<div class="testimonial-content">
-						<div class="star-rating">
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-						</div>
-						<div class="testimonial-quote">
-							"Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!"
-						</div>
-						<div class="testimonial-author">
-							<div class="author-info">
-								<h4>Yaw Mensah</h4>
-								<p>Software Developer, Accra</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="testimonial-card">
-					<div class="card-features">
-						<div class="card-feature">
-							<i class="fas fa-dollar-sign"></i> <span data-translate="affordable">Affordable</span>
-						</div>
-						<div class="card-feature">
-							<i class="fas fa-star"></i> <span data-translate="quality">Quality</span>
-						</div>
-					</div>
-					<div class="testimonial-content">
-						<div class="star-rating">
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-						</div>
-						<div class="testimonial-quote">
-							"The prices are great and the checkout process was incredibly smooth. No hidden fees!"
-						</div>
-						<div class="testimonial-author">
-							<div class="author-info">
-								<h4>Akua Asante</h4>
-								<p>Marketing Manager, Kumasi</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="testimonial-card">
-					<div class="card-features">
-						<div class="card-feature">
-							<i class="fas fa-headset"></i> Support
-						</div>
-						<div class="card-feature">
-							<i class="fas fa-wrench"></i> Expert
-						</div>
-					</div>
-					<div class="testimonial-content">
-						<div class="star-rating">
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-						</div>
-						<div class="testimonial-quote">
-							"Customer support was amazing! They helped me pick the right camera for my photography business."
-						</div>
-						<div class="testimonial-author">
-							<div class="author-info">
-								<h4>Kofi Boateng</h4>
-								<p>Photographer, Tema</p>
-							</div>
-						</div>
-					</div>
-				</div>
-
-				<div class="testimonial-card">
-					<div class="card-features">
-						<div class="card-feature">
-							<i class="fas fa-certificate"></i> Authentic
-						</div>
-						<div class="card-feature">
-							<i class="fas fa-tools"></i> Warranty
-						</div>
-					</div>
-					<div class="testimonial-content">
-						<div class="star-rating">
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-							<span class="star">★</span>
-						</div>
-						<div class="testimonial-quote">
-							"Authentic brands with solid warranties. My iPhone has been working perfectly for months!"
-						</div>
-						<div class="testimonial-author">
-							<div class="author-info">
-								<h4>Ama Adjei</h4>
-								<p>Student, Cape Coast</p>
-							</div>
-						</div>
-					</div>
+			<!-- Circular Gallery Container -->
+			<div class="circular-testimonials-wrapper" id="circularTestimonials">
+				<div class="circular-testimonials-track" id="testimonialsTrack">
+					<!-- Testimonials will be dynamically inserted here -->
 				</div>
 			</div>
 		</div>
@@ -7356,15 +7383,165 @@ try {
 			}
 		}
 
-		// Initialize the card stack animation
-		const cardStack = new CardStack('#cardSwapContainer', {
-			cardDistance: 60,
-			verticalDistance: 70,
-			delay: 5000,
-			pauseOnHover: true,
-			skewAmount: 6,
-			easing: 'elastic'
-		});
+		// Circular Testimonials Gallery
+		function initCircularTestimonials() {
+			const wrapper = document.getElementById('circularTestimonials');
+			const track = document.getElementById('testimonialsTrack');
+			
+			if (!wrapper || !track) return;
+
+			// Testimonials data - at least 10 testimonials
+			const testimonials = [
+				{ quote: "Fantastic service and fast delivery. My refurbished laptop arrived in two days and works like new!", rating: 5, name: "Yaw Mensah", location: "Software Developer, Accra" },
+				{ quote: "The prices are great and the checkout process was incredibly smooth. No hidden fees!", rating: 5, name: "Akua Asante", location: "Marketing Manager, Kumasi" },
+				{ quote: "Customer support was amazing! They helped me pick the right camera for my photography business.", rating: 5, name: "Kofi Boateng", location: "Photographer, Tema" },
+				{ quote: "Authentic brands with solid warranties. My iPhone has been working perfectly for months!", rating: 5, name: "Ama Adjei", location: "Student, Cape Coast" },
+				{ quote: "Best tech store in Ghana! Quality products at unbeatable prices. Highly recommend!", rating: 5, name: "Kwame Osei", location: "Business Owner, Tamale" },
+				{ quote: "Fast shipping and excellent packaging. My order arrived in perfect condition.", rating: 5, name: "Efua Mensah", location: "Teacher, Takoradi" },
+				{ quote: "Great selection of refurbished devices. Saved so much money without compromising quality!", rating: 5, name: "David Asante", location: "Engineer, Sunyani" },
+				{ quote: "The repair service is top-notch. Fixed my phone quickly and professionally.", rating: 5, name: "Grace Appiah", location: "Nurse, Koforidua" },
+				{ quote: "Love the warranty options! Gives me peace of mind when buying refurbished tech.", rating: 5, name: "Michael Darko", location: "Student, Legon" },
+				{ quote: "Excellent customer service and product quality. Will definitely shop here again!", rating: 5, name: "Sarah Owusu", location: "Designer, Osu" },
+				{ quote: "Amazing deals on premium devices. Got my dream laptop at half the retail price!", rating: 5, name: "Emmanuel Tetteh", location: "Developer, East Legon" },
+				{ quote: "Quick response time and professional service. Very satisfied with my purchase!", rating: 5, name: "Patience Adu", location: "Accountant, Teshie" }
+			];
+
+			// Create testimonial cards
+			testimonials.forEach((testimonial, index) => {
+				const card = document.createElement('div');
+				card.className = 'circular-testimonial-card';
+				card.innerHTML = `
+					<div class="circular-testimonial-quote">"${testimonial.quote}"</div>
+					<div>
+						<div class="circular-star-rating">
+							${'<span class="circular-star">★</span>'.repeat(testimonial.rating)}
+						</div>
+						<div class="circular-testimonial-author">
+							<h4 class="circular-author-name">${testimonial.name}</h4>
+							<p class="circular-author-location">${testimonial.location}</p>
+						</div>
+					</div>
+				`;
+				track.appendChild(card);
+			});
+
+			// Circular gallery parameters
+			const radius = 800; // Radius of the circle
+			const totalItems = testimonials.length;
+			const angleStep = (2 * Math.PI) / totalItems;
+			let rotation = 0;
+			let targetRotation = 0;
+			let isDragging = false;
+			let startX = 0;
+			let currentRotation = 0;
+
+			// Position cards in a circle
+			function positionCards() {
+				const cards = track.querySelectorAll('.circular-testimonial-card');
+				const centerX = wrapper.offsetWidth / 2;
+				const centerY = wrapper.offsetHeight / 2;
+
+				cards.forEach((card, index) => {
+					const angle = (index * angleStep) + rotation;
+					const x = centerX + radius * Math.cos(angle) - 190; // 190 = half card width
+					const y = centerY + radius * Math.sin(angle) * 0.3 - 140; // 140 = half card height, 0.3 for elliptical effect
+					const z = radius * Math.sin(angle) * 0.5;
+					
+					// Calculate opacity and scale based on position
+					const distanceFromCenter = Math.abs(Math.sin(angle));
+					const opacity = 0.4 + (1 - distanceFromCenter) * 0.6;
+					const scale = 0.7 + (1 - distanceFromCenter) * 0.3;
+
+					card.style.transform = `translate3d(${x}px, ${y}px, ${z}px) scale(${scale}) rotateY(${Math.sin(angle) * 20}deg)`;
+					card.style.opacity = opacity;
+					card.style.zIndex = Math.round(z) + 1000;
+				});
+			}
+
+			// Smooth rotation animation
+			function animate() {
+				rotation += (targetRotation - rotation) * 0.05;
+				positionCards();
+				requestAnimationFrame(animate);
+			}
+
+			// Auto-rotate
+			let autoRotateInterval = setInterval(() => {
+				if (!isDragging) {
+					targetRotation += angleStep * 0.1; // Slow auto-rotation
+				}
+			}, 100);
+
+			// Mouse drag
+			wrapper.addEventListener('mousedown', (e) => {
+				isDragging = true;
+				startX = e.clientX;
+				currentRotation = rotation;
+				clearInterval(autoRotateInterval);
+			});
+
+			wrapper.addEventListener('mousemove', (e) => {
+				if (isDragging) {
+					const deltaX = e.clientX - startX;
+					targetRotation = currentRotation + (deltaX / radius) * 2;
+				}
+			});
+
+			wrapper.addEventListener('mouseup', () => {
+				isDragging = false;
+				autoRotateInterval = setInterval(() => {
+					if (!isDragging) {
+						targetRotation += angleStep * 0.1;
+					}
+				}, 100);
+			});
+
+			wrapper.addEventListener('mouseleave', () => {
+				isDragging = false;
+			});
+
+			// Touch support
+			wrapper.addEventListener('touchstart', (e) => {
+				isDragging = true;
+				startX = e.touches[0].clientX;
+				currentRotation = rotation;
+				clearInterval(autoRotateInterval);
+			});
+
+			wrapper.addEventListener('touchmove', (e) => {
+				if (isDragging) {
+					const deltaX = e.touches[0].clientX - startX;
+					targetRotation = currentRotation + (deltaX / radius) * 2;
+				}
+			});
+
+			wrapper.addEventListener('touchend', () => {
+				isDragging = false;
+				autoRotateInterval = setInterval(() => {
+					if (!isDragging) {
+						targetRotation += angleStep * 0.1;
+					}
+				}, 100);
+			});
+
+			// Wheel scroll
+			wrapper.addEventListener('wheel', (e) => {
+				e.preventDefault();
+				targetRotation += (e.deltaY > 0 ? 1 : -1) * angleStep * 0.5;
+			});
+
+			// Initial positioning
+			positionCards();
+			animate();
+
+			// Handle resize
+			window.addEventListener('resize', () => {
+				positionCards();
+			});
+		}
+
+		// Initialize on page load
+		document.addEventListener('DOMContentLoaded', initCircularTestimonials);
 
 		// Countdown timer functionality for deals
 		function updateCountdown() {

@@ -92,6 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
                     $issue_name = $issue_data['issue_name'] ?? 'Device Repair';
                     
                     // Send SMS
+                    error_log("Attempting to send appointment SMS - Appointment ID: $appointment_id, Phone: $customer_phone, Name: $customer_name");
                     $sms_sent = send_appointment_confirmation_sms(
                         $appointment_id,
                         $customer_name,
@@ -102,12 +103,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
                         $issue_name
                     );
                     
+                    error_log("SMS send result: " . ($sms_sent ? 'SUCCESS' : 'FAILED'));
+                    
                     if ($sms_sent) {
                         $success_message .= " A confirmation SMS has been sent to your phone.";
+                    } else {
+                        error_log("SMS sending failed for appointment ID: $appointment_id");
                     }
                 } catch (Exception $sms_error) {
                     // SMS error is not critical, continue
                     error_log('Appointment SMS error: ' . $sms_error->getMessage());
+                    error_log('SMS error stack trace: ' . $sms_error->getTraceAsString());
                 }
             }
         } else {
@@ -558,7 +564,7 @@ try {
     <header class="main-header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
-                <a href="index.php" class="logo">
+                <a href="../index.php" class="logo">
                     <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
                          alt="Gadget Garage"
                          style="height: 40px; width: auto; object-fit: contain;">
@@ -605,7 +611,7 @@ try {
                         <i class="fas fa-check-circle" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
                         <h3 style="color: #047857; margin-bottom: 1rem;">Appointment Scheduled!</h3>
                         <p style="color: #6b7280; margin-bottom: 2rem;">Your repair appointment has been successfully scheduled. You will receive an SMS confirmation and we'll call you when it's time for your appointment.</p>
-                        <a href="index.php" class="btn btn-primary">Return to Home</a>
+                        <a href="../index.php" class="btn btn-primary">Return to Home</a>
                     </div>
                 </div>
             <?php endif; ?>

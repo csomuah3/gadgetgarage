@@ -482,14 +482,28 @@ function send_appointment_confirmation_sms($appointment_id, $customer_name, $pho
     try {
         global $sms_urls;
 
+        log_sms_activity('info', 'Starting appointment SMS', [
+            'appointment_id' => $appointment_id,
+            'original_phone' => $phone_number,
+            'customer_name' => $customer_name
+        ]);
+
         $phone = format_phone_number($phone_number);
         if (!$phone) {
             log_sms_activity('error', 'Invalid phone number for appointment SMS', [
                 'appointment_id' => $appointment_id,
-                'phone' => $phone_number
+                'phone' => $phone_number,
+                'formatted_phone' => $phone
             ]);
+            error_log("Appointment SMS: Phone number formatting failed. Original: $phone_number");
             return false;
         }
+
+        log_sms_activity('info', 'Phone number formatted successfully', [
+            'appointment_id' => $appointment_id,
+            'original_phone' => $phone_number,
+            'formatted_phone' => $phone
+        ]);
 
         // Format date and time for display
         $date_formatted = date('l, F j, Y', strtotime($appointment_date));
@@ -505,7 +519,6 @@ function send_appointment_confirmation_sms($appointment_id, $customer_name, $pho
         $message .= "We look forward to helping you with your device repair. If you need to reschedule, please contact us.\n\n";
         $message .= "Thank you, GadgetGarage";
 
-        $sms = new SMSService();
         // Get customer_id if available (for logging)
         $customer_id = null;
         try {
@@ -522,7 +535,17 @@ function send_appointment_confirmation_sms($appointment_id, $customer_name, $pho
             // Ignore if can't get customer_id
         }
         
-        $result = $sms->sendSMS($phone, $message, SMS_TYPE_APPOINTMENT_CONFIRMATION, $appointment_id, $customer_id);
+        $sms = new SMSService();
+        $result = $sms->sendAppointmentConfirmationSMS(
+            $appointment_id,
+            $customer_id,
+            $phone,
+            $customer_name,
+            $appointment_date,
+            $appointment_time,
+            $specialist_name,
+            $issue_name
+        );
 
         log_sms_activity('info', 'Appointment confirmation SMS attempt', [
             'appointment_id' => $appointment_id,

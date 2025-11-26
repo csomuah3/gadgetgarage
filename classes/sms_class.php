@@ -669,6 +669,42 @@ class SMSService extends db_connection {
         return $this->db_write_query($sql);
     }
 
+    /**
+     * Send appointment confirmation SMS
+     */
+    public function sendAppointmentConfirmationSMS($appointment_id, $customer_id, $phone_number, $customer_name, $appointment_date, $appointment_time, $specialist_name, $issue_name) {
+        try {
+            // Check if SMS is enabled (default to enabled if setting not found)
+            $sms_enabled = $this->settings['sms_enabled'] ?? (defined('SMS_ENABLED') && SMS_ENABLED ? 1 : 1);
+            if ($sms_enabled != 1) {
+                return ['success' => false, 'message' => 'SMS is disabled'];
+            }
+
+            // Format date and time for display
+            $date_formatted = date('l, F j, Y', strtotime($appointment_date));
+            $time_formatted = date('g:i A', strtotime($appointment_time));
+
+            // Create message
+            $message = "Hello {$customer_name}, your repair appointment has been confirmed!\n\n";
+            $message .= "Issue: {$issue_name}\n";
+            $message .= "Specialist: {$specialist_name}\n";
+            $message .= "Date: {$date_formatted}\n";
+            $message .= "Time: {$time_formatted}\n\n";
+            $message .= "Appointment ID: #{$appointment_id}\n\n";
+            $message .= "We look forward to helping you with your device repair. If you need to reschedule, please contact us.\n\n";
+            $message .= "Thank you, GadgetGarage";
+
+            // Send SMS using private method
+            $result = $this->sendSMS($phone_number, $message, 'appointment_confirmation', $appointment_id, $customer_id);
+
+            return $result;
+
+        } catch (Exception $e) {
+            $this->logError('Appointment Confirmation SMS Error', $e->getMessage(), $appointment_id);
+            return ['success' => false, 'message' => 'SMS sending failed: ' . $e->getMessage()];
+        }
+    }
+
     private function logError($context, $message, $reference_id = null) {
         error_log("[SMS Service] {$context}: {$message} (Ref: {$reference_id})");
     }

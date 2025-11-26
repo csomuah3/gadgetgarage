@@ -11,7 +11,8 @@ require_once __DIR__ . '/settings/sms_config.php';
 require_once __DIR__ . '/helpers/sms_helper.php';
 
 // Test phone number - REPLACE WITH YOUR PHONE NUMBER
-$test_phone = '0244123456'; // Change this to your actual phone number
+// Format: 0244123456 (Ghana number starting with 0)
+$test_phone = '0244123456'; // ⚠️ CHANGE THIS TO YOUR ACTUAL PHONE NUMBER
 
 echo "<h2>SMS Test Results</h2>";
 echo "<pre>";

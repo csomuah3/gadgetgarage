@@ -125,7 +125,7 @@ try {
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 	<link href="includes/chatbot-styles.css" rel="stylesheet">
 	<link href="css/dark-mode.css" rel="stylesheet">
-	<link href="views/testimonial-carousel.css" rel="stylesheet">
+	<link href="views/circular-gallery.css" rel="stylesheet">
 	<style>
 		/* Import Google Fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -5927,7 +5927,7 @@ try {
 	<script src="js/header.js"></script>
 	<script src="js/chatbot.js"></script>
 	<script src="js/newsletter-popup.js"></script>
-	<script src="views/testimonial-carousel.js"></script>
+	<script src="views/circular-gallery.js"></script>
 	<script>
 		// Search functionality
 		document.querySelector('.search-input').addEventListener('keypress', function(e) {

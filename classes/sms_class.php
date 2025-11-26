@@ -291,15 +291,16 @@ class SMSService extends db_connection {
             }
 
             // Prepare API request - Arkesel v2 uses POST with JSON body
-            // Try multiple possible formats based on Arkesel API documentation
+            // Arkesel might accept phone with or without +, try without + first
+            $phone_for_api = str_replace('+', '', $formatted_phone);
+            
             $api_data = [
                 'sender' => $this->sender_id,
                 'message' => $message,
-                'recipients' => [$formatted_phone]
+                'recipients' => [$phone_for_api] // Try without + sign
             ];
             
-            // Alternative format - some Arkesel versions use 'sender_id' instead of 'sender'
-            // We'll try the standard format first
+            error_log("Phone for API (without +): $phone_for_api");
 
             // Log SMS attempt
             $log_id = $this->logSMSAttempt($order_id, $customer_id, $formatted_phone, $message_type, $message);

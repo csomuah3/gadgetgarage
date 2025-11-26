@@ -1,0 +1,286 @@
+/* Circular Gallery 3D Testimonials */
+.testimonials-section {
+    padding: 80px 0;
+    background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+    position: relative;
+    overflow: hidden;
+    min-height: 700px;
+}
+
+.testimonials-section::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(circle at 30% 20%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 70% 80%, rgba(255, 119, 198, 0.1) 0%, transparent 50%);
+}
+
+.testimonials-section .container {
+    position: relative;
+    z-index: 2;
+}
+
+.testimonials-section h2 {
+    text-align: center;
+    color: white;
+    font-size: 3rem;
+    margin-bottom: 20px;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    font-family: 'Inter', sans-serif;
+}
+
+.testimonials-section .section-subtitle {
+    text-align: center;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    margin-bottom: 60px;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    font-family: 'Inter', sans-serif;
+}
+
+/* 3D Gallery Container */
+.circular-gallery-wrapper {
+    width: 100%;
+    height: 600px;
+    position: relative;
+    overflow: visible;
+}
+
+.circular-gallery-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+}
+
+.circular-gallery-track {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d;
+    transform-origin: center center;
+}
+
+/* Individual Testimonial Cards */
+.gallery-testimonial-card {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform-origin: center center;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    backface-visibility: hidden;
+    will-change: transform;
+}
+
+.gallery-testimonial-card .card-inner {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.15) 0%,
+        rgba(255, 255, 255, 0.05) 100%);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 25px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow:
+        0 25px 45px rgba(0, 0, 0, 0.1),
+        0 10px 20px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    position: relative;
+    overflow: hidden;
+}
+
+.gallery-testimonial-card .card-inner::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(255, 255, 255, 0.02) 100%);
+    border-radius: 20px;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.gallery-testimonial-card.active .card-inner::before {
+    opacity: 1;
+}
+
+.gallery-testimonial-card.active .card-inner {
+    background: linear-gradient(135deg,
+        rgba(255, 255, 255, 0.25) 0%,
+        rgba(255, 255, 255, 0.1) 100%);
+    border-color: rgba(255, 255, 255, 0.4);
+    box-shadow:
+        0 35px 65px rgba(0, 0, 0, 0.2),
+        0 15px 30px rgba(0, 0, 0, 0.3),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Stars */
+.testimonial-stars {
+    color: #ffd700;
+    font-size: 1.2rem;
+    margin-bottom: 15px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+    text-align: center;
+}
+
+/* Testimonial Text */
+.testimonial-text {
+    color: #ffffff;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    text-align: center;
+    margin: 0;
+    font-weight: 400;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Author */
+.testimonial-author {
+    text-align: center;
+    margin-top: 15px;
+    padding-top: 15px;
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.testimonial-author strong {
+    color: #ffffff;
+    font-size: 1rem;
+    font-weight: 600;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+}
+
+/* Hover Effects */
+.gallery-testimonial-card:hover .card-inner {
+    transform: translateY(-5px);
+    box-shadow:
+        0 40px 70px rgba(0, 0, 0, 0.25),
+        0 20px 35px rgba(0, 0, 0, 0.35),
+        inset 0 1px 0 rgba(255, 255, 255, 0.2);
+}
+
+/* Active Card Special Effects */
+.gallery-testimonial-card.active {
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0px);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .testimonials-section h2 {
+        font-size: 2.5rem;
+    }
+
+    .circular-gallery-wrapper {
+        height: 550px;
+    }
+
+    .testimonial-text {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .testimonials-section {
+        padding: 60px 0;
+        min-height: 600px;
+    }
+
+    .testimonials-section h2 {
+        font-size: 2.2rem;
+        margin-bottom: 15px;
+    }
+
+    .testimonials-section .section-subtitle {
+        font-size: 1rem;
+        margin-bottom: 40px;
+        padding: 0 20px;
+    }
+
+    .circular-gallery-wrapper {
+        height: 450px;
+    }
+
+    .gallery-testimonial-card .card-inner {
+        padding: 20px;
+        border-radius: 15px;
+    }
+
+    .testimonial-text {
+        font-size: 0.85rem;
+        line-height: 1.4;
+    }
+
+    .testimonial-stars {
+        font-size: 1rem;
+        margin-bottom: 12px;
+    }
+
+    .testimonial-author strong {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .circular-gallery-wrapper {
+        height: 400px;
+    }
+
+    .testimonials-section h2 {
+        font-size: 1.8rem;
+    }
+
+    .gallery-testimonial-card .card-inner {
+        padding: 15px;
+    }
+
+    .testimonial-text {
+        font-size: 0.8rem;
+    }
+}
+
+/* Performance optimizations */
+.gallery-testimonial-card {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+    -webkit-backface-visibility: hidden;
+    -moz-backface-visibility: hidden;
+    backface-visibility: hidden;
+}
+
+.circular-gallery-wrapper,
+.circular-gallery-container,
+.circular-gallery-track {
+    -webkit-transform-style: preserve-3d;
+    -moz-transform-style: preserve-3d;
+    transform-style: preserve-3d;
+}

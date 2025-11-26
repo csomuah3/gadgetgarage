@@ -77,10 +77,10 @@ try {
         error_log("Main image upload error code: " . $_FILES['product_image']['error']);
     }
 
-    // If no main image uploaded, use placeholder
+    // If no main image uploaded, use a default placeholder or empty string
     if (empty($product_image)) {
-        $product_image = 'placeholder.jpg';
-        error_log("Using placeholder image");
+        $product_image = 'no-image.jpg'; // This will be handled gracefully in the frontend
+        error_log("Using default no-image placeholder");
     }
 
     // Add the product to database

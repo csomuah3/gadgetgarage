@@ -67,7 +67,7 @@ function update_product_ctr($product_id, $product_title, $product_price, $produc
         return ['status' => 'error', 'message' => 'Product title already exists'];
     }
 
-    // Get existing product to preserve stock_quantity if not provided
+    // Get existing product to preserve fields if not provided
     if ($stock_quantity === null) {
         $existing_product = $product->get_product_by_id($product_id);
         $stock_quantity = $existing_product ? ($existing_product['stock_quantity'] ?? 0) : 0;

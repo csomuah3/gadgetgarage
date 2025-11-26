@@ -62,9 +62,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // Keep existing image if no new image uploaded
         $product_image = $existing_product['product_image'] ?? '';
         
-        // Get product_color and stock_quantity from existing product or form
+        // Get additional product fields from existing product or form
         $product_color = trim($_POST['product_color'] ?? $existing_product['product_color'] ?? '');
         $stock_quantity = isset($_POST['stock_quantity']) ? intval($_POST['stock_quantity']) : ($existing_product['stock_quantity'] ?? 0);
+
+        // Validate stock quantity
+        if ($stock_quantity < 0) {
+            echo json_encode(['status' => 'error', 'message' => 'Stock quantity cannot be negative']);
+            exit;
+        }
 
         $result = update_product_ctr($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $product_color, $stock_quantity);
         echo json_encode($result);

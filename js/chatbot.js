@@ -349,14 +349,47 @@ class ChatBot {
         // Check if user is logged in and show/hide guest fields accordingly
         this.checkUserLoginStatus();
 
-        // Bind events
-        document.getElementById('backToMenu').addEventListener('click', () => {
-            this.hideMessageForm();
-        });
-
-        document.getElementById('supportMessageForm').addEventListener('submit', (e) => {
-            this.handleMessageSubmit(e);
-        });
+        // Bind events - use setTimeout to ensure DOM is ready
+        setTimeout(() => {
+            const backBtn = document.getElementById('backToMenu');
+            const form = document.getElementById('supportMessageForm');
+            
+            if (backBtn) {
+                backBtn.addEventListener('click', () => {
+                    this.hideMessageForm();
+                });
+            }
+            
+            if (form) {
+                // Remove any existing event listeners by cloning and replacing
+                const newForm = form.cloneNode(true);
+                form.parentNode.replaceChild(newForm, form);
+                
+                // Add event listener to the new form
+                newForm.addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Form submit event triggered');
+                    this.handleMessageSubmit(e);
+                    return false;
+                });
+                
+                // Also add click handler to submit button as backup
+                const submitBtn = newForm.querySelector('.submit-btn');
+                if (submitBtn) {
+                    submitBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Submit button clicked');
+                        const formEvent = new Event('submit', { bubbles: true, cancelable: true });
+                        newForm.dispatchEvent(formEvent);
+                        return false;
+                    });
+                }
+            } else {
+                console.error('Support message form not found!');
+            }
+        }, 100);
     }
 
     checkUserLoginStatus() {
@@ -393,9 +426,28 @@ class ChatBot {
 
     async handleMessageSubmit(e) {
         e.preventDefault();
+        e.stopPropagation();
 
-        const form = e.target;
+        console.log('handleMessageSubmit called');
+
+        const form = e.target.closest('form') || document.getElementById('supportMessageForm');
+        if (!form) {
+            console.error('Form not found!');
+            return false;
+        }
+
+        // Validate form
+        if (!form.checkValidity()) {
+            form.reportValidity();
+            return false;
+        }
+
         const submitBtn = form.querySelector('.submit-btn');
+        if (!submitBtn) {
+            console.error('Submit button not found!');
+            return false;
+        }
+
         const originalText = submitBtn.innerHTML;
 
         // Show loading state
@@ -403,33 +455,74 @@ class ChatBot {
         submitBtn.disabled = true;
 
         const formData = new FormData();
-        formData.append('subject', form.subject.value);
-        formData.append('message', form.message.value);
+        
+        // Get form values
+        const subject = form.querySelector('[name="subject"]')?.value;
+        const message = form.querySelector('[name="message"]')?.value;
+        const guestName = form.querySelector('[name="guest_name"]')?.value;
+        const guestPhone = form.querySelector('[name="guest_phone"]')?.value;
+
+        if (!subject || !message) {
+            alert('Please fill in all required fields');
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+            return false;
+        }
+
+        formData.append('subject', subject);
+        formData.append('message', message);
 
         // Add guest name and phone if provided (for non-logged-in users)
-        if (form.guest_name && form.guest_name.value) {
-            formData.append('name', form.guest_name.value);
-            formData.append('customer_name', form.guest_name.value);
+        if (guestName) {
+            formData.append('name', guestName);
+            formData.append('customer_name', guestName);
         }
-        if (form.guest_phone && form.guest_phone.value) {
-            formData.append('phone', form.guest_phone.value);
-            formData.append('customer_phone', form.guest_phone.value);
+        if (guestPhone) {
+            formData.append('phone', guestPhone);
+            formData.append('customer_phone', guestPhone);
         }
 
         formData.append('send_message', '1');
 
+        console.log('Sending form data:', {
+            subject: subject,
+            message: message,
+            guestName: guestName,
+            guestPhone: guestPhone
+        });
+
         try {
-            const response = await fetch('actions/send_support_message.php', {
+            // Determine correct path - try relative first, then absolute
+            let actionUrl = 'actions/send_support_message.php';
+            if (window.location.pathname.includes('/views/')) {
+                actionUrl = '../actions/send_support_message.php';
+            } else if (window.location.pathname.includes('/admin/')) {
+                actionUrl = '../actions/send_support_message.php';
+            }
+
+            console.log('Fetching URL:', actionUrl);
+
+            const response = await fetch(actionUrl, {
                 method: 'POST',
                 body: formData
             });
 
+            console.log('Response status:', response.status);
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
             const result = await response.json();
+            console.log('Response result:', result);
 
             if (result.success) {
                 // Show success message
                 form.style.display = 'none';
-                document.getElementById('messageSuccess').style.display = 'block';
+                const successDiv = document.getElementById('messageSuccess');
+                if (successDiv) {
+                    successDiv.style.display = 'block';
+                }
 
                 // Hide success message and return to menu after 3 seconds
                 setTimeout(() => {
@@ -439,6 +532,7 @@ class ChatBot {
                 throw new Error(result.message || 'Failed to send message');
             }
         } catch (error) {
+            console.error('Error sending message:', error);
             if (typeof Swal !== 'undefined') {
                 Swal.fire({
                     title: 'Error',
@@ -446,10 +540,14 @@ class ChatBot {
                     icon: 'error',
                     confirmButtonColor: '#D19C97'
                 });
+            } else {
+                alert('Error sending message: ' + error.message);
             }
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
         }
+
+        return false;
     }
 }
 

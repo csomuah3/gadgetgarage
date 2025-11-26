@@ -1297,43 +1297,35 @@ try {
 			z-index: 1;
 		}
 
-		/* Product-specific gradient backgrounds - MORE VIBRANT AND EVIDENT */
+		/* Apple-style Product Gradients - Premium & Sophisticated */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: linear-gradient(135deg, #a8c5e8 0%, #7ba3d4 30%, #5a8fc8 60%, #3d7bb8 100%) !important;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e9aaf 100%) !important;
 			color: #ffffff !important;
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 		}
 
 		.hero-slide[data-gradient="iphone-gradient"] {
-			background: linear-gradient(135deg, #d4d8e0 0%, #b8c0d0 30%, #9ca8c0 60%, #7d8ba8 100%) !important;
-			color: #1a1f2e !important;
+			background: linear-gradient(135deg, #f093fb 0%, #f5576c 50%, #4facfe 100%) !important;
+			color: #ffffff !important;
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 		}
 
 		.hero-slide[data-gradient="polaroid-gradient"] {
-			background: linear-gradient(135deg, #fff5e6 0%, #ffe8cc 30%, #ffd9b3 60%, #ffc999 100%) !important;
-			color: #8b4513 !important;
+			background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 30%, #ff8a80 70%, #ff7043 100%) !important;
+			color: #ffffff !important;
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] {
-			background: linear-gradient(135deg, #0a3d2a 0%, #1a5d3f 30%, #2d7d54 60%, #3d9d69 100%) !important;
+			background: linear-gradient(135deg, #2c3e50 0%, #34495e 30%, #5d4e75 60%, #a0416e 100%) !important;
 			color: #ffffff !important;
+			box-shadow: inset 0 1px 0 rgba(255,255,255,0.1);
 		}
 
-		/* Text colors for each gradient */
-		/* Text colors for each gradient */
-		.hero-slide[data-gradient="ipad-gradient"] .text-line {
+		/* Consistent white text for all gradients - Apple style */
+		.hero-slide .text-line {
 			color: #ffffff !important;
-		}
-
-		.hero-slide[data-gradient="iphone-gradient"] .text-line {
-			color: #1a1f2e !important;
-		}
-
-		.hero-slide[data-gradient="polaroid-gradient"] .text-line {
-			color: #8b4513 !important;
-		}
-
-		.hero-slide[data-gradient="samsung-gradient"] .text-line {
-			color: #ffffff !important;
+			text-shadow: 0 1px 3px rgba(0,0,0,0.3);
 		}
 
 		.banner-copy {
@@ -1342,6 +1334,52 @@ try {
 			justify-content: center;
 			gap: 24px;
 			padding: 20px 0;
+		}
+
+		/* Brand Logo Section */
+		.brand-logo-section {
+			margin-bottom: 16px;
+			opacity: 0;
+			transform: translateY(15px);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s,
+			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s;
+		}
+
+		.hero-slide.active .brand-logo-section {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.hero-slide.exiting .brand-logo-section {
+			opacity: 0;
+			transform: translateY(-10px);
+			transition-delay: 0s;
+			transition-duration: 0.3s;
+		}
+
+		.brand-logo {
+			height: 32px;
+			width: auto;
+			filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+		}
+
+		.apple-logo {
+			height: 36px;
+		}
+
+		.fujifilm-logo, .samsung-logo {
+			font-family: 'Arial', sans-serif;
+			font-size: 20px;
+			font-weight: 800;
+			letter-spacing: 2px;
+			color: white;
+			text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+			padding: 8px 16px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 20px;
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			display: inline-block;
 		}
 
 		/* Vertically stacked text like inspiration */
@@ -1357,31 +1395,76 @@ try {
 			line-height: 1.2;
 			color: inherit;
 			margin: 0;
-			transition: opacity 0.6s ease, transform 0.6s ease;
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			transform: translateY(0);
 			font-family: 'Georgia', 'Times New Roman', serif;
 			letter-spacing: 0.5px;
 		}
 
+		/* Enhanced staggered delays for text lines */
+		.hero-slide .text-line:nth-child(1) { transition-delay: 0.1s; }
+		.hero-slide .text-line:nth-child(2) { transition-delay: 0.18s; }
+		.hero-slide .text-line:nth-child(3) { transition-delay: 0.26s; }
+		.hero-slide .text-line:nth-child(4) { transition-delay: 0.34s; }
+		.hero-slide .text-line:nth-child(5) { transition-delay: 0.42s; }
+		.hero-slide .text-line:nth-child(6) { transition-delay: 0.5s; }
+		.hero-slide .text-line:nth-child(7) { transition-delay: 0.58s; }
+		.hero-slide .text-line:nth-child(8) { transition-delay: 0.66s; }
+
 		.hero-slide:not(.active) .text-line {
 			opacity: 0;
-			transform: translateY(15px);
+			transform: translateY(25px) translateX(-8px);
 		}
 
 		.hero-slide.active .text-line {
 			opacity: 1;
-			transform: translateY(0);
+			transform: translateY(0) translateX(0);
+		}
+
+		/* Exiting slide text animation */
+		.hero-slide.exiting .text-line {
+			opacity: 0;
+			transform: translateY(-15px) translateX(8px);
+			transition-duration: 0.4s;
+		}
+
+		/* Typography Hierarchy */
+		.brand-name {
+			font-size: clamp(28px, 4vw, 40px);
+			font-weight: 300;
+			letter-spacing: 3px;
+			text-transform: uppercase;
+			opacity: 0.9;
+		}
+
+		.product-name {
+			font-size: clamp(48px, 7vw, 72px);
+			font-weight: 700;
+			letter-spacing: -1px;
+			margin-bottom: 8px;
+		}
+
+		.tagline-1, .tagline-2, .tagline-3, .tagline-4 {
+			font-size: clamp(36px, 5.5vw, 56px);
+			font-weight: 500;
+			letter-spacing: 0px;
 		}
 
 		.price-line {
 			font-size: clamp(24px, 3vw, 36px);
 			font-weight: 600;
 			margin-top: 12px;
+			opacity: 0.8;
+			text-transform: uppercase;
+			letter-spacing: 1px;
 		}
 
 		.price-amount {
 			font-size: clamp(32px, 4.5vw, 52px);
 			font-weight: 800;
+			color: #FFD700;
+			text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
 		}
 
 		/* Social Media Buttons */
@@ -1389,6 +1472,22 @@ try {
 			display: flex;
 			gap: 12px;
 			margin: 16px 0;
+			opacity: 0;
+			transform: translateY(15px);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s,
+			           transform 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s;
+		}
+
+		.hero-slide.active .social-buttons {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.hero-slide.exiting .social-buttons {
+			opacity: 0;
+			transform: translateY(-10px);
+			transition-delay: 0s;
+			transition-duration: 0.3s;
 		}
 
 		.social-btn {
@@ -1399,15 +1498,17 @@ try {
 			align-items: center;
 			justify-content: center;
 			text-decoration: none;
-			transition: all 0.3s ease;
+			transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 			background: rgba(255, 255, 255, 0.2);
 			color: inherit;
 			border: 1px solid rgba(255, 255, 255, 0.3);
+			backdrop-filter: blur(10px);
 		}
 
 		.social-btn:hover {
 			background: rgba(255, 255, 255, 0.3);
-			transform: scale(1.1);
+			transform: scale(1.08) translateY(-1px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 		}
 
 		.social-btn i {
@@ -1438,16 +1539,31 @@ try {
 			font-weight: 700;
 			letter-spacing: .2px;
 			text-decoration: none;
-			transition: all 0.3s ease;
+			transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
 			box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
 			width: fit-content;
 			margin-top: 8px;
+			opacity: 0;
+			transform: translateY(20px);
+		}
+
+		.hero-slide.active .btn-primary {
+			opacity: 1;
+			transform: translateY(0);
+			transition-delay: 0.8s;
+		}
+
+		.hero-slide.exiting .btn-primary {
+			opacity: 0;
+			transform: translateY(-10px);
+			transition-delay: 0s;
+			transition-duration: 0.3s;
 		}
 
 		.btn-primary:hover {
 			background: linear-gradient(135deg, #2563EB, #1e40af);
-			transform: translateY(-2px);
-			box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+			transform: translateY(-3px);
+			box-shadow: 0 8px 25px rgba(37, 99, 235, 0.5);
 		}
 
 		.hero-slide[data-gradient="samsung-gradient"] .btn-primary {
@@ -1488,39 +1604,39 @@ try {
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-			transform: translateY(8px) translateX(0);
+			transform: translateY(8px) translateX(-20px) scale(0.98);
+			transition: opacity 0.4s ease, transform 0.6s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - slide in from right for new slide */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(8px) translateX(150px);
+			transform: translateY(8px) translateX(80px) scale(0.95);
 		}
 
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(8px) translateX(0);
-			animation: subtleBounce 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) 0.3s;
+			transform: translateY(8px) translateX(0) scale(1);
+			animation: appleEntrance 1.4s cubic-bezier(0.23, 1, 0.32, 1) 0.4s;
 		}
 
-		@keyframes subtleBounce {
+		@keyframes appleEntrance {
 			0% {
-				transform: translateY(8px) translateX(0) scale(1);
+				opacity: 0;
+				transform: translateY(8px) translateX(80px) scale(0.95);
 			}
 
-			50% {
-				transform: translateY(8px) translateX(0) scale(1.02);
+			60% {
+				opacity: 1;
+				transform: translateY(8px) translateX(-2px) scale(1.01);
 			}
 
-			70% {
-				transform: translateY(8px) translateX(0) scale(0.99);
-			}
-
-			85% {
-				transform: translateY(8px) translateX(0) scale(1.01);
+			80% {
+				transform: translateY(8px) translateX(1px) scale(0.999);
 			}
 
 			100% {
+				opacity: 1;
 				transform: translateY(8px) translateX(0) scale(1);
 			}
 		}
@@ -4665,13 +4781,16 @@ try {
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">
 							<div class="banner-copy">
+								<div class="brand-logo-section">
+									<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z'/></svg>" alt="Apple" class="brand-logo apple-logo" />
+								</div>
 								<div class="banner-text-stack">
-									<div class="text-line">Apple</div>
-									<div class="text-line">iPad Pro</div>
-									<div class="text-line">Smart</div>
-									<div class="text-line">Tech,</div>
-									<div class="text-line">Smarter</div>
-									<div class="text-line">Spending</div>
+									<div class="text-line brand-name">Apple</div>
+									<div class="text-line product-name">iPad Pro</div>
+									<div class="text-line tagline-1">Smart</div>
+									<div class="text-line tagline-2">Tech,</div>
+									<div class="text-line tagline-3">Smarter</div>
+									<div class="text-line tagline-4">Spending</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 2,500.00</div>
 								</div>
@@ -4690,12 +4809,15 @@ try {
 						<!-- Product 2: iPhone -->
 						<article class="hero-slide" data-product="iphone" data-gradient="iphone-gradient">
 							<div class="banner-copy">
+								<div class="brand-logo-section">
+									<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z'/></svg>" alt="Apple" class="brand-logo apple-logo" />
+								</div>
 								<div class="banner-text-stack">
-									<div class="text-line">Apple</div>
-									<div class="text-line">iPhone</div>
-									<div class="text-line">Premium</div>
-									<div class="text-line">Quality,</div>
-									<div class="text-line">Best Value</div>
+									<div class="text-line brand-name">Apple</div>
+									<div class="text-line product-name">iPhone</div>
+									<div class="text-line tagline-1">Premium</div>
+									<div class="text-line tagline-2">Quality,</div>
+									<div class="text-line tagline-3">Best Value</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 1,800.00</div>
 								</div>
@@ -4714,12 +4836,15 @@ try {
 						<!-- Product 3: Polaroid Camera -->
 						<article class="hero-slide" data-product="polaroid" data-gradient="polaroid-gradient">
 							<div class="banner-copy">
+								<div class="brand-logo-section">
+									<div class="brand-logo fujifilm-logo">FUJIFILM</div>
+								</div>
 								<div class="banner-text-stack">
-									<div class="text-line">Fujifilm</div>
-									<div class="text-line">Instax Mini</div>
-									<div class="text-line">Capture</div>
-									<div class="text-line">Moments,</div>
-									<div class="text-line">Save Money</div>
+									<div class="text-line brand-name">Fujifilm</div>
+									<div class="text-line product-name">Instax Mini</div>
+									<div class="text-line tagline-1">Capture</div>
+									<div class="text-line tagline-2">Moments,</div>
+									<div class="text-line tagline-3">Save Money</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 450.00</div>
 								</div>
@@ -4738,12 +4863,15 @@ try {
 						<!-- Product 4: Samsung Phone -->
 						<article class="hero-slide" data-product="samsung" data-gradient="samsung-gradient">
 							<div class="banner-copy">
+								<div class="brand-logo-section">
+									<div class="brand-logo samsung-logo">SAMSUNG</div>
+								</div>
 								<div class="banner-text-stack">
-									<div class="text-line">Samsung</div>
-									<div class="text-line">Galaxy Z Fold</div>
-									<div class="text-line">Innovation</div>
-									<div class="text-line">Meets</div>
-									<div class="text-line">Affordability</div>
+									<div class="text-line brand-name">Samsung</div>
+									<div class="text-line product-name">Galaxy Z Fold</div>
+									<div class="text-line tagline-1">Innovation</div>
+									<div class="text-line tagline-2">Meets</div>
+									<div class="text-line tagline-3">Affordability</div>
 									<div class="text-line price-line">Starting At</div>
 									<div class="text-line price-amount">GH₵ 3,200.00</div>
 								</div>

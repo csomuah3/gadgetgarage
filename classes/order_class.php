@@ -79,16 +79,21 @@ class Order extends db_connection
     {
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);
 
-        $sql = "SELECT o.*,
-                       COUNT(od.product_id) as item_count,
-                       COALESCE(SUM(p.amt), 0) as total_amount,
-                       p.payment_method,
-                       p.currency
+        $sql = "SELECT o.order_id,
+                       o.customer_id,
+                       o.invoice_no,
+                       o.order_date,
+                       o.order_status,
+                       o.tracking_number,
+                       COUNT(DISTINCT od.product_id) as item_count,
+                       COALESCE(MAX(p.amt), 0) as total_amount,
+                       MAX(p.payment_method) as payment_method,
+                       MAX(p.currency) as currency
                 FROM orders o
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
                 WHERE o.customer_id = $customer_id
-                GROUP BY o.order_id, p.payment_method, p.currency
+                GROUP BY o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status, o.tracking_number
                 ORDER BY o.order_date DESC";
 
         try {

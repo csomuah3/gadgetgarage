@@ -46,7 +46,41 @@ try {
     }
 
 } catch (Exception $e) {
-    die("Critical error: " . $e->getMessage());
+    error_log("Critical error in my_orders.php: " . $e->getMessage());
+    error_log("Stack trace: " . $e->getTraceAsString());
+
+    // Display user-friendly error message
+    ?>
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Error - Gadget Garage</title>
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+        <style>
+            body { background: #f8f9fa; }
+            .error-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
+            .error-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
+        </style>
+    </head>
+    <body>
+        <div class="error-container">
+            <div class="error-card">
+                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem; margin-bottom: 20px;"></i>
+                <h3 class="mb-3">Oops! Something went wrong</h3>
+                <p class="text-muted mb-4">We're experiencing technical difficulties. Please try again later or contact support if the problem persists.</p>
+                <div class="d-grid gap-2">
+                    <a href="../index.php" class="btn btn-primary">Return Home</a>
+                    <a href="../views/cart.php" class="btn btn-outline-secondary">Go to Cart</a>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+    </body>
+    </html>
+    <?php
+    exit();
 }
 ?>
 

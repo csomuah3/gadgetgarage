@@ -1251,7 +1251,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             formData.append('condition', 'excellent');
             formData.append('final_price', 0);
 
-            fetch('actions/add_to_cart_action.php', {
+            fetch('../actions/add_to_cart_action.php', {
                 method: 'POST',
                 body: formData
             })

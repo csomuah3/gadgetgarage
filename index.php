@@ -49,6 +49,44 @@ try {
 		error_log("Failed to load brands: " . $e->getMessage());
 	}
 
+	// Fetch Featured on IG products
+	$featured_ig_products = [];
+	try {
+		require_once(__DIR__ . '/controllers/product_controller.php');
+		require_once(__DIR__ . '/helpers/image_helper.php');
+		
+		// Find the "As featured on IG" category
+		$featured_ig_category = null;
+		$possible_names = ['As featured on IG', 'As Featured on IG', 'as featured on ig', 'Featured on IG', 'featured on ig', 'Instagram Featured'];
+		
+		foreach ($categories as $cat) {
+			$cat_name = trim($cat['cat_name']);
+			foreach ($possible_names as $name) {
+				if (strtolower($cat_name) === strtolower(trim($name))) {
+					$featured_ig_category = $cat;
+					break 2;
+				}
+			}
+		}
+		
+		// If category found, get products (max 5)
+		if ($featured_ig_category) {
+			$all_ig_products = get_products_by_category_ctr($featured_ig_category['cat_id']);
+			$featured_ig_products = array_slice($all_ig_products, 0, 5);
+			
+			// Enrich products with image URLs
+			foreach ($featured_ig_products as &$product) {
+				$product['image_url'] = get_product_image_url(
+					$product['product_image'] ?? '',
+					$product['product_title'] ?? ''
+				);
+			}
+			unset($product);
+		}
+	} catch (Exception $e) {
+		error_log("Failed to load Featured on IG products: " . $e->getMessage());
+	}
+
 	// Newsletter popup logic for new users
 	$show_newsletter_popup = false;
 	if ($is_logged_in) {
@@ -1203,8 +1241,24 @@ try {
 			/* height close to screenshot */
 		}
 
-		/* ——— Main (left) banner ——— */
-		.main-banner {
+		/* ——— Hero Carousel Wrapper ——— */
+		.hero-carousel-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			min-height: 560px;
+			border-radius: 14px;
+			overflow: hidden;
+		}
+
+		.hero-carousel {
+			position: relative;
+			width: 100%;
+			height: 100%;
+		}
+
+		/* ——— Hero Slide (Main Banner) ——— */
+		.hero-slide {
 			display: grid;
 			grid-template-columns: 1.15fr 1fr;
 			/* copy left, image right */
@@ -1212,15 +1266,56 @@ try {
 			padding: 48px;
 			border-radius: 14px;
 			overflow: hidden;
-			position: relative;
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			opacity: 0;
+			transform: translateX(100%);
+			transition: opacity 0.8s ease, transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+			pointer-events: none;
 		}
 
-		.main-banner.coral {
-			/* coral/red like your image */
-			padding-left: 0;
-			background: #ff5b57;
-			/* tweak to #ff5a54 if you prefer */
-			color: #fff;
+		.hero-slide.active {
+			opacity: 1;
+			transform: translateX(0);
+			pointer-events: all;
+			z-index: 2;
+		}
+
+		.hero-slide.exiting {
+			opacity: 0;
+			transform: translateX(0);
+			transition: opacity 0.6s ease;
+			z-index: 1;
+		}
+
+		/* Product-specific gradient backgrounds */
+		.hero-slide[data-gradient="ipad-gradient"] {
+			background: linear-gradient(135deg, #e8f0f8 0%, #c5d9e8 50%, #a8c5d8 100%);
+			color: #1f2937;
+		}
+
+		.hero-slide[data-gradient="iphone-gradient"] {
+			background: linear-gradient(135deg, #f0f4f8 0%, #d1dce8 50%, #b8c8d8 100%);
+			color: #1f2937;
+		}
+
+		.hero-slide[data-gradient="polaroid-gradient"] {
+			background: linear-gradient(135deg, #fef9f3 0%, #f5e8d8 50%, #ead4c0 100%);
+			color: #1f2937;
+		}
+
+		.hero-slide[data-gradient="samsung-gradient"] {
+			background: linear-gradient(135deg, #0d4a2e 0%, #1a6b47 50%, #2d8a5f 100%);
+			color: #ffffff;
+		}
+
+		.hero-slide[data-gradient="samsung-gradient"] .banner-title,
+		.hero-slide[data-gradient="samsung-gradient"] .banner-price,
+		.hero-slide[data-gradient="samsung-gradient"] .banner-tagline {
+			color: #ffffff;
 		}
 
 		.banner-copy {
@@ -1234,14 +1329,23 @@ try {
 			/* big multi-line headline */
 			font-weight: 600;
 			line-height: 1.08;
-			color: #fff;
+			color: inherit;
 			margin: 0;
 		}
 
 		.banner-price {
 			font-size: clamp(18px, 2vw, 28px);
-			color: #fff;
+			color: inherit;
 			margin: 0 0 8px;
+		}
+
+		.banner-tagline {
+			font-size: clamp(14px, 1.5vw, 18px);
+			color: inherit;
+			opacity: 0.85;
+			margin: 0 0 20px;
+			font-weight: 500;
+			font-style: italic;
 		}
 
 		.banner-price .price {
@@ -1261,6 +1365,25 @@ try {
 			font-weight: 700;
 			letter-spacing: .2px;
 			text-decoration: none;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+		}
+
+		.btn-primary:hover {
+			background: linear-gradient(135deg, #2563EB, #1e40af);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+		}
+
+		.hero-slide[data-gradient="samsung-gradient"] .btn-primary {
+			background: linear-gradient(135deg, #ffffff, #f0f0f0);
+			color: #0d4a2e;
+			box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
+		}
+
+		.hero-slide[data-gradient="samsung-gradient"] .btn-primary:hover {
+			background: linear-gradient(135deg, #f0f0f0, #e0e0e0);
+			color: #1a6b47;
 		}
 
 		.banner-media {
@@ -1269,13 +1392,37 @@ try {
 			justify-content: center;
 		}
 
+		.banner-media {
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			position: relative;
+		}
+
 		.banner-media img {
 			width: 100%;
 			height: 100%;
+			max-height: 450px;
 			object-fit: contain;
 			/* keep proportions */
 			transform: translateY(8px);
 			/* slight drop like screenshot */
+			transition: transform 0.3s ease;
+		}
+
+		.hero-slide.active .banner-media img {
+			animation: floatIn 0.8s ease-out;
+		}
+
+		@keyframes floatIn {
+			0% {
+				opacity: 0;
+				transform: translateY(20px) translateX(30px);
+			}
+			100% {
+				opacity: 1;
+				transform: translateY(8px) translateX(0);
+			}
 		}
 
 		/* ——— Right column (two stacked cards) ——— */
@@ -2453,6 +2600,246 @@ try {
 
 		.collection-link:hover {
 			color: #006b4e;
+		}
+
+		/* Featured on IG Section */
+		.featured-ig-section {
+			padding: 80px 0;
+			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.featured-ig-section::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: radial-gradient(circle at 20% 50%, rgba(138, 43, 226, 0.03) 0%, transparent 50%),
+			            radial-gradient(circle at 80% 80%, rgba(255, 20, 147, 0.03) 0%, transparent 50%);
+			pointer-events: none;
+		}
+
+		.featured-ig-title {
+			font-size: 2.5rem;
+			font-weight: 700;
+			color: #1f2937;
+			text-align: center;
+			margin-bottom: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 15px;
+		}
+
+		.featured-ig-title i {
+			background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			font-size: 2.8rem;
+		}
+
+		.featured-ig-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+			gap: 30px;
+			max-width: 1200px;
+			margin: 0 auto;
+			padding: 0 20px;
+		}
+
+		.featured-ig-card {
+			background: white;
+			border-radius: 16px;
+			overflow: hidden;
+			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+			opacity: 0;
+			transform: translateY(30px);
+			position: relative;
+		}
+
+		.featured-ig-card.animate-in {
+			opacity: 1;
+			transform: translateY(0);
+		}
+
+		.featured-ig-link {
+			text-decoration: none;
+			color: inherit;
+			display: block;
+		}
+
+		.featured-ig-image-wrapper {
+			position: relative;
+			width: 100%;
+			height: 280px;
+			overflow: hidden;
+			background: #f8f9fa;
+		}
+
+		.featured-ig-image {
+			width: 100%;
+			height: 100%;
+			object-fit: cover;
+			transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+			border-radius: 0;
+		}
+
+		.featured-ig-overlay {
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(135deg, rgba(138, 43, 226, 0.7) 0%, rgba(255, 20, 147, 0.7) 100%);
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			opacity: 0;
+			transition: opacity 0.4s ease;
+		}
+
+		.featured-ig-overlay i {
+			font-size: 3rem;
+			color: white;
+			transform: scale(0.8);
+			transition: transform 0.4s ease;
+		}
+
+		.featured-ig-card:hover {
+			transform: translateY(-8px);
+			box-shadow: 0 12px 30px rgba(138, 43, 226, 0.2);
+		}
+
+		.featured-ig-card:hover .featured-ig-image {
+			transform: scale(1.1);
+		}
+
+		.featured-ig-card:hover .featured-ig-overlay {
+			opacity: 1;
+		}
+
+		.featured-ig-card:hover .featured-ig-overlay i {
+			transform: scale(1.1);
+		}
+
+		.featured-ig-image-wrapper::before {
+			content: '';
+			position: absolute;
+			top: -2px;
+			left: -2px;
+			right: -2px;
+			bottom: -2px;
+			background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #f09433);
+			background-size: 300% 300%;
+			border-radius: 16px;
+			opacity: 0;
+			z-index: -1;
+			transition: opacity 0.4s ease;
+			animation: gradient-border 3s ease infinite;
+		}
+
+		.featured-ig-card:hover .featured-ig-image-wrapper::before {
+			opacity: 1;
+		}
+
+		@keyframes gradient-border {
+			0% {
+				background-position: 0% 50%;
+			}
+			50% {
+				background-position: 100% 50%;
+			}
+			100% {
+				background-position: 0% 50%;
+			}
+		}
+
+		.featured-ig-content {
+			padding: 20px;
+		}
+
+		.featured-ig-product-title {
+			font-size: 1rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 10px;
+			line-height: 1.4;
+			display: -webkit-box;
+			-webkit-line-clamp: 2;
+			-webkit-box-orient: vertical;
+			overflow: hidden;
+		}
+
+		.featured-ig-price {
+			font-size: 1.3rem;
+			font-weight: 700;
+			color: #2563EB;
+			margin-bottom: 15px;
+		}
+
+		.featured-ig-add-cart {
+			width: 100%;
+			padding: 12px 20px;
+			background: linear-gradient(135deg, #2563EB 0%, #1e40af 100%);
+			color: white;
+			border: none;
+			border-radius: 8px;
+			font-weight: 600;
+			font-size: 0.95rem;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			gap: 8px;
+		}
+
+		.featured-ig-add-cart:hover {
+			background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+		}
+
+		.featured-ig-add-cart:active {
+			transform: translateY(0);
+		}
+
+		/* Mobile Responsive */
+		@media (max-width: 768px) {
+			.featured-ig-title {
+				font-size: 2rem;
+			}
+
+			.featured-ig-title i {
+				font-size: 2.2rem;
+			}
+
+			.featured-ig-grid {
+				grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+				gap: 20px;
+				padding: 0 15px;
+			}
+
+			.featured-ig-image-wrapper {
+				height: 220px;
+			}
+
+			.featured-ig-content {
+				padding: 15px;
+			}
+
+			.featured-ig-product-title {
+				font-size: 0.9rem;
+			}
+
+			.featured-ig-price {
+				font-size: 1.1rem;
+			}
 		}
 
 		/* Special Product Section */
@@ -4159,20 +4546,62 @@ try {
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
-				<!-- LEFT: MAIN BANNER -->
-				<article class="main-banner coral">
-					<div class="banner-copy">
-						<h1 class="banner-title"><span data-translate="ipad_pro_title">Apple IPad Pro 11<br>Ultra Retina XDR<br>Display, 256GB</span></h1>
-						<p class="banner-price"><span data-translate="starting_at">Starting At</span> <span class="price">GH₵ 236.00</span></p>
-						<a href="views/all_product.php" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
-					</div>
+				<!-- LEFT: MAIN BANNER CAROUSEL -->
+				<div class="hero-carousel-wrapper">
+					<div class="hero-carousel" id="heroCarousel">
+						<!-- Product 1: iPad -->
+						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">
+							<div class="banner-copy">
+								<h1 class="banner-title">Apple iPad Pro<br>Premium Refurbished<br>Smart Tech, Smarter Spending</h1>
+								<p class="banner-price">Starting At <span class="price">GH₵ 2,500.00</span></p>
+								<p class="banner-tagline">Like New Quality, Unbeatable Price</p>
+								<a href="views/all_product.php?category=ipads" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+							</div>
+							<div class="banner-media">
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad-removebg-preview.png" alt="Apple iPad Pro" />
+							</div>
+						</article>
 
-					<div class="banner-media">
-						<img
-							src="https://images.unsplash.com/photo-1611186871348-b1ce696e52c9?q=80&w=1600&auto=format&fit=crop"
-							alt="iPad Pro" />
+						<!-- Product 2: iPhone -->
+						<article class="hero-slide" data-product="iphone" data-gradient="iphone-gradient">
+							<div class="banner-copy">
+								<h1 class="banner-title">Apple iPhone<br>Certified Refurbished<br>Premium Quality, Best Value</h1>
+								<p class="banner-price">Starting At <span class="price">GH₵ 1,800.00</span></p>
+								<p class="banner-tagline">Restored to Perfection</p>
+								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+							</div>
+							<div class="banner-media">
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/iphone_-removebg-preview.png" alt="Apple iPhone" />
+							</div>
+						</article>
+
+						<!-- Product 3: Polaroid Camera -->
+						<article class="hero-slide" data-product="polaroid" data-gradient="polaroid-gradient">
+							<div class="banner-copy">
+								<h1 class="banner-title">Fujifilm Instax Mini<br>Refurbished & Ready<br>Capture Moments, Save Money</h1>
+								<p class="banner-price">Starting At <span class="price">GH₵ 450.00</span></p>
+								<p class="banner-tagline">Vintage Style, Modern Savings</p>
+								<a href="views/all_product.php?category=cameras" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+							</div>
+							<div class="banner-media">
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/polaroid-removebg-preview.png" alt="Fujifilm Instax Mini" />
+							</div>
+						</article>
+
+						<!-- Product 4: Samsung Phone -->
+						<article class="hero-slide" data-product="samsung" data-gradient="samsung-gradient">
+							<div class="banner-copy">
+								<h1 class="banner-title">Samsung Galaxy Z Fold<br>Premium Refurbished<br>Innovation Meets Affordability</h1>
+								<p class="banner-price">Starting At <span class="price">GH₵ 3,200.00</span></p>
+								<p class="banner-tagline">Cutting-Edge Tech, Smart Price</p>
+								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+							</div>
+							<div class="banner-media">
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/images-42.jpeg-removebg-preview.png" alt="Samsung Galaxy Z Fold" />
+							</div>
+						</article>
 					</div>
-				</article>
+				</div>
 
 				<!-- RIGHT: TWO SIDE CARDS -->
 				<div class="side-banners">
@@ -4309,6 +4738,43 @@ try {
 			</div>
 		</div>
 	</section>
+
+	<!-- Featured on IG this Week -->
+	<?php if (!empty($featured_ig_products)): ?>
+	<section class="featured-ig-section">
+		<div class="container">
+			<div class="section-header">
+				<h2 class="featured-ig-title">
+					<i class="fab fa-instagram"></i>
+					Featured on IG this Week
+				</h2>
+			</div>
+			<div class="featured-ig-grid">
+				<?php foreach ($featured_ig_products as $index => $product): ?>
+					<div class="featured-ig-card" data-index="<?= $index ?>">
+						<a href="views/single_product.php?id=<?= $product['product_id'] ?>" class="featured-ig-link">
+							<div class="featured-ig-image-wrapper">
+								<img src="<?= htmlspecialchars($product['image_url']) ?>" 
+									 alt="<?= htmlspecialchars($product['product_title']) ?>" 
+									 class="featured-ig-image">
+								<div class="featured-ig-overlay">
+									<i class="fab fa-instagram"></i>
+								</div>
+							</div>
+							<div class="featured-ig-content">
+								<h3 class="featured-ig-product-title"><?= htmlspecialchars($product['product_title']) ?></h3>
+								<div class="featured-ig-price">GH₵ <?= number_format($product['product_price'], 2) ?></div>
+								<button class="featured-ig-add-cart" onclick="event.preventDefault(); addToCart(<?= $product['product_id'] ?>, 1);">
+									<i class="fas fa-shopping-cart"></i> Add to Cart
+								</button>
+							</div>
+						</a>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
+	<?php endif; ?>
 
 	<!-- Camera & Video Equipment Promo -->
 	<!-- DJI Osmo Pocket 3 Promo -->
@@ -5870,6 +6336,128 @@ try {
 				document.body.classList.add('dark-mode');
 				document.getElementById('themeToggle').classList.add('active');
 			}
+
+			// Featured on IG scroll animations
+			initFeaturedIGAnimations();
+
+			// Hero Carousel - Random rotation
+			initHeroCarousel();
+		});
+
+		// Hero Carousel Function
+		function initHeroCarousel() {
+			const carousel = document.getElementById('heroCarousel');
+			if (!carousel) return;
+
+			const slides = carousel.querySelectorAll('.hero-slide');
+			if (slides.length === 0) return;
+
+			let currentIndex = 0;
+			let usedIndices = [];
+			let rotationInterval;
+
+			// Function to get a random index (excluding current)
+			function getRandomIndex(current) {
+				if (slides.length <= 1) return 0;
+
+				// If we've used all indices, reset
+				if (usedIndices.length >= slides.length - 1) {
+					usedIndices = [];
+				}
+
+				// Get available indices (all except current)
+				const availableIndices = Array.from({ length: slides.length }, (_, i) => i)
+					.filter(i => i !== current && !usedIndices.includes(i));
+
+				// If no available indices, reset and exclude current
+				if (availableIndices.length === 0) {
+					usedIndices = [];
+					return current === 0 ? 1 : 0;
+				}
+
+				// Pick random from available
+				const randomIndex = availableIndices[Math.floor(Math.random() * availableIndices.length)];
+				usedIndices.push(randomIndex);
+				return randomIndex;
+			}
+
+			// Function to switch to a specific slide
+			function switchSlide(newIndex) {
+				if (newIndex === currentIndex || newIndex < 0 || newIndex >= slides.length) return;
+
+				const currentSlide = slides[currentIndex];
+				const newSlide = slides[newIndex];
+
+				// Fade out current slide (no animation, just opacity)
+				currentSlide.classList.remove('active');
+				currentSlide.classList.add('exiting');
+
+				// Remove exiting class after transition
+				setTimeout(() => {
+					currentSlide.classList.remove('exiting');
+				}, 600);
+
+				// Prepare new slide (off-screen right)
+				newSlide.style.transform = 'translateX(100%)';
+				newSlide.style.opacity = '0';
+
+				// Small delay to ensure current slide starts fading
+				setTimeout(() => {
+					// Activate new slide (slides in from right)
+					newSlide.classList.add('active');
+					currentIndex = newIndex;
+				}, 50);
+			}
+
+			// Function to rotate to next random slide
+			function rotateToNext() {
+				const nextIndex = getRandomIndex(currentIndex);
+				switchSlide(nextIndex);
+			}
+
+			// Start rotation every 5 seconds
+			rotationInterval = setInterval(rotateToNext, 5000);
+
+			// Pause on hover (optional - can remove if you want continuous rotation)
+			carousel.addEventListener('mouseenter', () => {
+				clearInterval(rotationInterval);
+			});
+
+			carousel.addEventListener('mouseleave', () => {
+				rotationInterval = setInterval(rotateToNext, 5000);
+			});
+		}
+
+		// Featured on IG scroll animation function
+		function initFeaturedIGAnimations() {
+			const cards = document.querySelectorAll('.featured-ig-card');
+			
+			if (cards.length === 0) return;
+
+			// Create Intersection Observer for scroll animations
+			const observerOptions = {
+				root: null,
+				rootMargin: '0px 0px -100px 0px',
+				threshold: 0.1
+			};
+
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach((entry, index) => {
+					if (entry.isIntersecting) {
+						// Stagger animation with delay based on index
+						setTimeout(() => {
+							entry.target.classList.add('animate-in');
+						}, index * 150); // 150ms delay between each card
+						observer.unobserve(entry.target);
+					}
+				});
+			}, observerOptions);
+
+			// Observe each card
+			cards.forEach(card => {
+				observer.observe(card);
+			});
+		}
 
 
 			// Load top picks

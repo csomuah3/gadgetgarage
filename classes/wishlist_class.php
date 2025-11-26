@@ -57,8 +57,10 @@ class Wishlist extends db_connection
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);
 
         $sql = "SELECT * FROM wishlist WHERE customer_id = $customer_id AND product_id = $product_id";
-        $result = $this->db_read_query($sql);
-        return $result && mysqli_num_rows($result) > 0;
+        if ($this->db_query($sql)) {
+            return mysqli_num_rows($this->results) > 0;
+        }
+        return false;
     }
 
     public function get_wishlist_items($customer_id)
@@ -71,12 +73,13 @@ class Wishlist extends db_connection
                 WHERE w.customer_id = $customer_id
                 ORDER BY w.created_at DESC";
 
-        $result = $this->db_read_query($sql);
         $items = array();
-
-        if ($result && mysqli_num_rows($result) > 0) {
-            while ($row = mysqli_fetch_assoc($result)) {
-                $items[] = $row;
+        
+        if ($this->db_query($sql)) {
+            if (mysqli_num_rows($this->results) > 0) {
+                while ($row = mysqli_fetch_assoc($this->results)) {
+                    $items[] = $row;
+                }
             }
         }
 
@@ -88,11 +91,10 @@ class Wishlist extends db_connection
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);
 
         $sql = "SELECT COUNT(*) as count FROM wishlist WHERE customer_id = $customer_id";
-        $result = $this->db_read_query($sql);
-
-        if ($result) {
-            $row = mysqli_fetch_assoc($result);
-            return $row['count'];
+        
+        if ($this->db_query($sql)) {
+            $row = mysqli_fetch_assoc($this->results);
+            return $row ? (int)$row['count'] : 0;
         }
 
         return 0;

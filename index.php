@@ -6837,80 +6837,71 @@ try {
 			// Featured on IG scroll animations
 			initFeaturedIGAnimations();
 
-			// Hero Carousel - Simple version
+			// Hero Carousel - Super Simple Version
 			console.log('🚀 Starting hero carousel from DOMContentLoaded...');
-			startHeroCarousel();
+			initSimpleCarousel();
 		});
 
-		// Simple Working Hero Carousel
-		let carouselInterval;
-		let currentSlideIndex = 0;
+		// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
+		let slideTimer;
+		let currentSlide = 0;
 
-		function startHeroCarousel() {
+		function initSimpleCarousel() {
+			console.log('🔥 STARTING SIMPLE CAROUSEL');
+
 			const slides = document.querySelectorAll('.hero-slide');
 			const dots = document.querySelectorAll('.carousel-dot');
 
-			if (slides.length === 0) {
-				console.log('❌ No slides found');
-				return;
-			}
+			console.log('Found slides:', slides.length);
+			console.log('Found dots:', dots.length);
 
-			console.log('🚀 Starting hero carousel with', slides.length, 'slides');
+			if (slides.length === 0) return;
 
-			function showSlide(index) {
-				// Hide all slides
-				slides.forEach(s => s.classList.remove('active'));
-				dots.forEach(d => d.classList.remove('active'));
+			function showSlideNumber(num) {
+				console.log('🎯 SWITCHING TO SLIDE:', num);
+
+				// Hide ALL slides
+				for (let i = 0; i < slides.length; i++) {
+					slides[i].classList.remove('active');
+					slides[i].style.display = 'none';
+				}
+
+				// Hide ALL dots
+				for (let i = 0; i < dots.length; i++) {
+					dots[i].classList.remove('active');
+				}
 
 				// Show current slide
-				slides[index].classList.add('active');
-				if (dots[index]) dots[index].classList.add('active');
+				slides[num].classList.add('active');
+				slides[num].style.display = 'grid';
 
-				currentSlideIndex = index;
-				console.log('📺 Showing slide:', index, slides[index].dataset.product);
+				// Show current dot
+				if (dots[num]) {
+					dots[num].classList.add('active');
+				}
+
+				console.log('✅ NOW SHOWING:', slides[num].dataset.product);
 			}
 
-			function nextSlide() {
-				const next = (currentSlideIndex + 1) % slides.length;
-				showSlide(next);
+			function goToNextSlide() {
+				currentSlide = (currentSlide + 1) % slides.length;
+				showSlideNumber(currentSlide);
 			}
 
-			// Initialize
-			showSlide(0);
+			// Show first slide immediately
+			showSlideNumber(0);
 
-			// Start auto-rotation
-			if (carouselInterval) clearInterval(carouselInterval);
-			carouselInterval = setInterval(nextSlide, 3000);
+			// Start timer - change every 2 seconds
+			if (slideTimer) clearInterval(slideTimer);
+			slideTimer = setInterval(goToNextSlide, 2000);
 
-			// Add dot click handlers
-			dots.forEach((dot, index) => {
-				dot.addEventListener('click', () => {
-					clearInterval(carouselInterval);
-					showSlide(index);
-					carouselInterval = setInterval(nextSlide, 3000);
-				});
-			});
-
-			console.log('✅ Carousel started successfully');
+			console.log('🚀 TIMER STARTED - CHANGES EVERY 2 SECONDS');
 		}
 
-		// Force start carousel immediately
-		setTimeout(() => {
-			console.log('🔥 Force starting carousel...');
-			startHeroCarousel();
-		}, 1000);
-
-		// Multiple initialization attempts
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', startHeroCarousel);
-		} else {
-			startHeroCarousel();
-		}
-
-		// Final fallback on window load
-		window.addEventListener('load', () => {
-			setTimeout(startHeroCarousel, 500);
-		});
+		// FORCE START IMMEDIATELY
+		setTimeout(initSimpleCarousel, 500);
+		setTimeout(initSimpleCarousel, 1500);
+		setTimeout(initSimpleCarousel, 3000);
 			// Initialize Featured IG Carousel
 			initFeaturedIgCarousel();
 		});

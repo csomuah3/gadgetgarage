@@ -2168,12 +2168,12 @@ try {
 		.circular-testimonial-card {
 			position: absolute !important;
 			width: 350px;
-			height: 260px;
+			height: 320px;
 			border-radius: 20px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
 			background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08)) !important;
 			backdrop-filter: blur(20px);
-			padding: 25px;
+			padding: 30px;
 			color: #fff !important;
 			box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
 			transition: transform 0.3s ease, opacity 0.3s ease;

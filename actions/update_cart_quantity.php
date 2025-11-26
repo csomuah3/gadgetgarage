@@ -63,8 +63,13 @@ try {
         exit;
     }
 
+    // Log the inputs for debugging
+    error_log("Update cart quantity - Product ID: $product_id, Quantity: $quantity, Customer ID: $customer_id, IP: $ip_address");
+
     // Update cart quantity
-    $update_result = update_cart_quantity_ctr($customer_id, $product_id, $quantity, $ip_address);
+    $update_result = update_cart_item_ctr($product_id, $quantity, $customer_id, $ip_address);
+
+    error_log("Update cart quantity result: " . ($update_result ? 'success' : 'failure'));
 
     if ($update_result) {
         // Get updated cart totals

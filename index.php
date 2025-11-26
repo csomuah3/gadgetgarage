@@ -1274,28 +1274,25 @@ try {
 			height: 100%;
 			opacity: 0;
 			visibility: hidden;
-			transform: translateX(0);
-			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-			           visibility 0s 0.8s;
+			transform: translateX(100px);
+			transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			pointer-events: none;
+			z-index: 1;
 		}
 
 		.hero-slide.active {
-			opacity: 1;
-			visibility: visible;
-			transform: translateX(0);
+			opacity: 1 !important;
+			visibility: visible !important;
+			transform: translateX(0) !important;
 			pointer-events: all;
-			z-index: 2;
-			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-			           visibility 0s;
+			z-index: 10;
 		}
 
 		.hero-slide.exiting {
-			opacity: 0;
-			visibility: hidden;
-			transform: translateX(0);
-			transition: opacity 0.5s ease;
-			z-index: 1;
+			opacity: 0 !important;
+			visibility: hidden !important;
+			transform: translateX(-100px) !important;
+			z-index: 5;
 		}
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
@@ -2796,23 +2793,12 @@ try {
 			color: #006b4e;
 		}
 
-		/* Featured on IG Section */
+		/* Featured on IG Section - Carousel Style */
 		.featured-ig-section {
 			padding: 80px 0;
 			background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
 			position: relative;
 			overflow: hidden;
-		}
-
-		.featured-ig-empty {
-			text-align: center;
-			padding: 60px 20px;
-			color: #6b7280;
-		}
-
-		.featured-ig-empty p {
-			margin: 0;
-			font-size: 1.1rem;
 		}
 
 		.featured-ig-section::before {
@@ -2847,29 +2833,76 @@ try {
 			font-size: 2.8rem;
 		}
 
-		.featured-ig-grid {
-			display: grid;
-			grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-			gap: 30px;
-			max-width: 1200px;
+		/* Carousel Wrapper */
+		.featured-ig-carousel-wrapper {
+			position: relative;
+			max-width: 1400px;
 			margin: 0 auto;
-			padding: 0 20px;
+			padding: 0 60px;
 		}
 
-		.featured-ig-card {
-			background: white;
-			border-radius: 16px;
-			overflow: hidden;
-			box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-			transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-			opacity: 0;
-			transform: translateY(30px);
+		.featured-ig-carousel {
+			display: flex;
+			gap: 30px;
+			overflow-x: auto;
+			scroll-behavior: smooth;
+			scroll-snap-type: x mandatory;
+			-webkit-overflow-scrolling: touch;
+			scrollbar-width: none;
+			-ms-overflow-style: none;
+			padding: 20px 0;
+			cursor: grab;
+		}
+
+		.featured-ig-carousel:active {
+			cursor: grabbing;
+		}
+
+		.featured-ig-carousel::-webkit-scrollbar {
+			display: none;
+		}
+
+		/* Instagram Phone Frame */
+		.featured-ig-slide {
+			flex: 0 0 320px;
+			scroll-snap-align: center;
 			position: relative;
 		}
 
-		.featured-ig-card.animate-in {
-			opacity: 1;
-			transform: translateY(0);
+		.ig-phone-frame {
+			background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+			border-radius: 35px;
+			padding: 12px;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3),
+				0 0 0 2px rgba(255, 255, 255, 0.1) inset;
+			position: relative;
+			transition: transform 0.3s ease, box-shadow 0.3s ease;
+		}
+
+		.ig-phone-frame::before {
+			content: '';
+			position: absolute;
+			top: 15px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 60px;
+			height: 6px;
+			background: #333;
+			border-radius: 3px;
+			z-index: 10;
+		}
+
+		.ig-phone-frame:hover {
+			transform: translateY(-10px) scale(1.02);
+			box-shadow: 0 25px 70px rgba(138, 43, 226, 0.4),
+				0 0 0 3px rgba(138, 43, 226, 0.2) inset;
+		}
+
+		.ig-screen {
+			background: #000;
+			border-radius: 25px;
+			overflow: hidden;
+			position: relative;
 		}
 
 		.featured-ig-link {
@@ -2878,99 +2911,104 @@ try {
 			display: block;
 		}
 
-		.featured-ig-image-wrapper {
+		/* Image Container with Instagram Gradient */
+		.ig-image-container {
 			position: relative;
 			width: 100%;
-			height: 280px;
+			height: 350px;
 			overflow: hidden;
-			background: #f8f9fa;
+			background: #1a1a1a;
 		}
 
-		.featured-ig-image {
+		.ig-image {
 			width: 100%;
 			height: 100%;
 			object-fit: cover;
-			transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-			border-radius: 0;
+			transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 		}
 
-		.featured-ig-overlay {
+		.ig-phone-frame:hover .ig-image {
+			transform: scale(1.15);
+		}
+
+		/* Instagram Gradient Overlay */
+		.ig-gradient-overlay {
 			position: absolute;
 			top: 0;
 			left: 0;
 			right: 0;
 			bottom: 0;
-			background: linear-gradient(135deg, rgba(138, 43, 226, 0.7) 0%, rgba(255, 20, 147, 0.7) 100%);
+			background: linear-gradient(135deg, 
+				rgba(240, 148, 51, 0.3) 0%,
+				rgba(230, 104, 60, 0.3) 25%,
+				rgba(220, 39, 67, 0.3) 50%,
+				rgba(204, 35, 102, 0.3) 75%,
+				rgba(188, 24, 136, 0.3) 100%);
+			opacity: 0;
+			transition: opacity 0.4s ease;
+			pointer-events: none;
+		}
+
+		.ig-phone-frame:hover .ig-gradient-overlay {
+			opacity: 1;
+		}
+
+		/* Instagram Icon */
+		.ig-instagram-icon {
+			position: absolute;
+			top: 50%;
+			left: 50%;
+			transform: translate(-50%, -50%) scale(0.8);
+			opacity: 0;
+			transition: all 0.4s ease;
+			z-index: 2;
+		}
+
+		.ig-instagram-icon i {
+			font-size: 4rem;
+			background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+			-webkit-background-clip: text;
+			-webkit-text-fill-color: transparent;
+			background-clip: text;
+			filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.5));
+		}
+
+		.ig-phone-frame:hover .ig-instagram-icon {
+			opacity: 1;
+			transform: translate(-50%, -50%) scale(1);
+		}
+
+		/* Placeholder for empty frames */
+		.ig-placeholder {
+			width: 100%;
+			height: 100%;
 			display: flex;
+			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			opacity: 0;
-			transition: opacity 0.4s ease;
-		}
-
-		.featured-ig-overlay i {
-			font-size: 3rem;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 			color: white;
-			transform: scale(0.8);
-			transition: transform 0.4s ease;
 		}
 
-		.featured-ig-card:hover {
-			transform: translateY(-8px);
-			box-shadow: 0 12px 30px rgba(138, 43, 226, 0.2);
+		.ig-placeholder i {
+			font-size: 4rem;
+			margin-bottom: 15px;
+			opacity: 0.7;
 		}
 
-		.featured-ig-card:hover .featured-ig-image {
-			transform: scale(1.1);
+		.ig-placeholder p {
+			font-size: 1.1rem;
+			font-weight: 600;
+			margin: 0;
 		}
 
-		.featured-ig-card:hover .featured-ig-overlay {
-			opacity: 1;
-		}
-
-		.featured-ig-card:hover .featured-ig-overlay i {
-			transform: scale(1.1);
-		}
-
-		.featured-ig-image-wrapper::before {
-			content: '';
-			position: absolute;
-			top: -2px;
-			left: -2px;
-			right: -2px;
-			bottom: -2px;
-			background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #f09433);
-			background-size: 300% 300%;
-			border-radius: 16px;
-			opacity: 0;
-			z-index: -1;
-			transition: opacity 0.4s ease;
-			animation: gradient-border 3s ease infinite;
-		}
-
-		.featured-ig-card:hover .featured-ig-image-wrapper::before {
-			opacity: 1;
-		}
-
-		@keyframes gradient-border {
-			0% {
-				background-position: 0% 50%;
-			}
-
-			50% {
-				background-position: 100% 50%;
-			}
-
-			100% {
-				background-position: 0% 50%;
-			}
-		}
-
-		.featured-ig-content {
+		/* Content Section */
+		.ig-content {
 			padding: 20px;
+			background: white;
 		}
 
-		.featured-ig-product-title {
+		.ig-product-title {
 			font-size: 1rem;
 			font-weight: 600;
 			color: #1f2937;
@@ -2978,18 +3016,19 @@ try {
 			line-height: 1.4;
 			display: -webkit-box;
 			-webkit-line-clamp: 2;
+			line-clamp: 2;
 			-webkit-box-orient: vertical;
 			overflow: hidden;
 		}
 
-		.featured-ig-price {
+		.ig-price {
 			font-size: 1.3rem;
 			font-weight: 700;
 			color: #2563EB;
 			margin-bottom: 15px;
 		}
 
-		.featured-ig-add-cart {
+		.ig-add-cart-btn {
 			width: 100%;
 			padding: 12px 20px;
 			background: linear-gradient(135deg, #2563EB 0%, #1e40af 100%);
@@ -3006,9 +3045,74 @@ try {
 			gap: 8px;
 		}
 
-		.featured-ig-add-cart:hover {
+		.ig-add-cart-btn:hover {
 			background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
 			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+		}
+
+		/* Carousel Navigation */
+		.ig-carousel-prev,
+		.ig-carousel-next {
+			position: absolute;
+			top: 50%;
+			transform: translateY(-50%);
+			background: white;
+			border: 2px solid #e5e7eb;
+			border-radius: 50%;
+			width: 50px;
+			height: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			z-index: 10;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		}
+
+		.ig-carousel-prev {
+			left: 0;
+		}
+
+		.ig-carousel-next {
+			right: 0;
+		}
+
+		.ig-carousel-prev:hover,
+		.ig-carousel-next:hover {
+			background: linear-gradient(135deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%);
+			border-color: transparent;
+			color: white;
+			transform: translateY(-50%) scale(1.1);
+			box-shadow: 0 6px 20px rgba(138, 43, 226, 0.3);
+		}
+
+		.ig-carousel-prev i,
+		.ig-carousel-next i {
+			font-size: 1.2rem;
+		}
+
+		/* Responsive */
+		@media (max-width: 768px) {
+			.featured-ig-carousel-wrapper {
+				padding: 0 50px;
+			}
+
+			.featured-ig-slide {
+				flex: 0 0 280px;
+			}
+
+			.ig-image-container {
+				height: 300px;
+			}
+
+			.ig-carousel-prev,
+			.ig-carousel-next {
+				width: 40px;
+				height: 40px;
+			}
+		}
 			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
 		}
 
@@ -4758,10 +4862,10 @@ try {
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">
-							<div class="banner-copy">
+					<div class="banner-copy">
 								<div class="brand-logo-section">
 									<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z'/></svg>" alt="Apple" class="brand-logo apple-logo" />
-								</div>
+					</div>
 								<div class="banner-text-stack">
 									<div class="text-line brand-name">Apple</div>
 									<div class="text-line product-name">iPad Pro</div>
@@ -4806,10 +4910,10 @@ try {
 								</div>
 								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
-							<div class="banner-media">
+					<div class="banner-media">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/iphone_-removebg-preview.png" alt="Apple iPhone" class="product-image" />
-							</div>
-						</article>
+					</div>
+				</article>
 
 						<!-- Product 3: Polaroid Camera -->
 						<article class="hero-slide" data-product="polaroid" data-gradient="polaroid-gradient">
@@ -5012,36 +5116,68 @@ try {
 					Featured on IG this Week
 				</h2>
 			</div>
-			<?php if (!empty($featured_ig_products)): ?>
-				<div class="featured-ig-grid">
-					<?php foreach ($featured_ig_products as $index => $product): ?>
-						<div class="featured-ig-card" data-index="<?= $index ?>">
-							<a href="views/single_product.php?id=<?= $product['product_id'] ?>" class="featured-ig-link">
-								<div class="featured-ig-image-wrapper">
-									<img src="<?= htmlspecialchars($product['image_url']) ?>"
-										alt="<?= htmlspecialchars($product['product_title']) ?>"
-										class="featured-ig-image">
-									<div class="featured-ig-overlay">
-										<i class="fab fa-instagram"></i>
+			
+			<div class="featured-ig-carousel-wrapper">
+				<div class="featured-ig-carousel" id="featuredIgCarousel">
+					<?php if (!empty($featured_ig_products)): ?>
+						<?php foreach ($featured_ig_products as $index => $product): ?>
+							<div class="featured-ig-slide" data-index="<?= $index ?>">
+								<div class="ig-phone-frame">
+									<div class="ig-screen">
+										<a href="views/single_product.php?id=<?= $product['product_id'] ?>" class="featured-ig-link">
+											<div class="ig-image-container">
+												<img src="<?= htmlspecialchars($product['image_url']) ?>"
+													alt="<?= htmlspecialchars($product['product_title']) ?>"
+													class="ig-image">
+												<div class="ig-gradient-overlay"></div>
+												<div class="ig-instagram-icon">
+													<i class="fab fa-instagram"></i>
+												</div>
+											</div>
+											<div class="ig-content">
+												<h3 class="ig-product-title"><?= htmlspecialchars($product['product_title']) ?></h3>
+												<div class="ig-price">GH₵ <?= number_format($product['product_price'], 2) ?></div>
+												<button class="ig-add-cart-btn" onclick="event.preventDefault(); addToCart(<?= $product['product_id'] ?>, 1);">
+													<i class="fas fa-shopping-cart"></i> Add to Cart
+												</button>
+											</div>
+										</a>
 									</div>
 								</div>
-								<div class="featured-ig-content">
-									<h3 class="featured-ig-product-title"><?= htmlspecialchars($product['product_title']) ?></h3>
-									<div class="featured-ig-price">GH₵ <?= number_format($product['product_price'], 2) ?></div>
-									<button class="featured-ig-add-cart" onclick="event.preventDefault(); addToCart(<?= $product['product_id'] ?>, 1);">
-										<i class="fas fa-shopping-cart"></i> Add to Cart
-									</button>
+							</div>
+						<?php endforeach; ?>
+					<?php else: ?>
+						<!-- Placeholder frames when no products -->
+						<?php for ($i = 0; $i < 5; $i++): ?>
+							<div class="featured-ig-slide" data-index="<?= $i ?>">
+								<div class="ig-phone-frame">
+									<div class="ig-screen">
+										<div class="ig-image-container">
+											<div class="ig-placeholder">
+												<i class="fab fa-instagram"></i>
+												<p>Product Frame <?= $i + 1 ?></p>
+											</div>
+											<div class="ig-gradient-overlay"></div>
+										</div>
+										<div class="ig-content">
+											<h3 class="ig-product-title">Coming Soon</h3>
+											<div class="ig-price">GH₵ 0.00</div>
+										</div>
+									</div>
 								</div>
-							</a>
-						</div>
-					<?php endforeach; ?>
+							</div>
+						<?php endfor; ?>
+					<?php endif; ?>
 				</div>
-			<?php else: ?>
-				<div class="featured-ig-empty">
-					<p>No products found in "As featured on IG" category. Please add products to this category to see them here.</p>
-					<p style="font-size: 0.9rem; color: #6b7280; margin-top: 10px;">Category names to check: "As featured on IG", "Featured on IG", "Instagram Featured"</p>
-				</div>
-			<?php endif; ?>
+				
+				<!-- Navigation arrows -->
+				<button class="ig-carousel-prev" aria-label="Previous">
+					<i class="fas fa-chevron-left"></i>
+				</button>
+				<button class="ig-carousel-next" aria-label="Next">
+					<i class="fas fa-chevron-right"></i>
+				</button>
+			</div>
 		</div>
 	</section>
 
@@ -5116,10 +5252,10 @@ try {
 					<!-- Wishlist Heart -->
 					<div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
 						<button onclick="event.stopPropagation(); toggleWishlist(1, this)"
-							class="wishlist-btn"
-							style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
-							onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
-							onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+								class="wishlist-btn"
+								style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+								onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+								onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
 							<i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
 						</button>
 					</div>
@@ -5190,7 +5326,7 @@ try {
 					</div>
 					<div class="deal-discount">-8%</div>
 					<div class="deal-image-container">
-						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
 					</div>
 					<div class="deal-brand">Apple M2</div>
 					<h3 class="deal-title">Apple iPad Pro 12.9" 6th Gen M2 256GB Wi-Fi </h3>
@@ -5256,7 +5392,7 @@ try {
 					</div>
 					<div class="deal-discount">-19%</div>
 					<div class="deal-image-container">
-						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
+					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
 					</div>
 					<div class="deal-brand">Sony</div>
 					<h3 class="deal-title">Sony a7R V Mirrorless Camera</h3>
@@ -6609,8 +6745,17 @@ try {
 			// Featured on IG scroll animations
 			initFeaturedIGAnimations();
 
-			// Hero Carousel - Random rotation
+			// Hero Carousel - Sequential rotation
+			console.log('🚀 Starting hero carousel initialization from DOMContentLoaded...');
 			initHeroCarousel();
+
+			// Also try again after a short delay in case of timing issues
+			setTimeout(() => {
+				console.log('🔄 Secondary carousel initialization attempt...');
+				if (!heroCarouselInterval) {
+					initHeroCarousel();
+				}
+			}, 2000);
 		});
 
 		// Hero Carousel Function - Defined outside to ensure it's accessible
@@ -6653,28 +6798,31 @@ try {
 			// Function to switch to a specific slide
 			function switchSlide(newIndex) {
 				if (newIndex === currentIndex || newIndex < 0 || newIndex >= slides.length) {
+					console.log('Invalid slide index or same slide');
 					return;
 				}
 
 				const currentSlide = slides[currentIndex];
 				const newSlide = slides[newIndex];
 
-				console.log(`Switching from slide ${currentIndex} to slide ${newIndex}`);
+				console.log(`🔄 Switching from slide ${currentIndex} (${currentSlide.dataset.product}) to slide ${newIndex} (${newSlide.dataset.product})`);
 
-				// Step 1: Fade out current slide
-				currentSlide.classList.remove('active');
+				// Remove all classes from all slides first
+				slides.forEach(slide => {
+					slide.classList.remove('active', 'exiting');
+				});
+
+				// Add exiting to current slide
 				currentSlide.classList.add('exiting');
 
-				// Step 2: After short delay, prepare and slide in new slide
-				setTimeout(() => {
-					// Remove exiting class from old slide
-					currentSlide.classList.remove('exiting');
+				// Add active to new slide immediately
+				newSlide.classList.add('active');
 
-					// Activate new slide (will animate in via CSS)
-					newSlide.classList.add('active');
+				currentIndex = newIndex;
 
-					currentIndex = newIndex;
-				}, 400);
+				console.log(`✅ Switched to slide ${currentIndex}`);
+				console.log('Current slide classes:', currentSlide.className);
+				console.log('New slide classes:', newSlide.className);
 			}
 
 			// Function to rotate to next sequential slide
@@ -6683,9 +6831,21 @@ try {
 				switchSlide(nextIndex);
 			}
 
-			// Start rotation every 3 seconds for testing
-			heroCarouselInterval = setInterval(rotateToNext, 3000);
-			console.log('Hero carousel auto-rotation started (3 second intervals)');
+			// Add debugging
+			console.log('Found slides:', slides.length);
+			slides.forEach((slide, i) => {
+				console.log(`Slide ${i}:`, slide.className, slide.dataset.product);
+			});
+
+			// Start rotation every 2 seconds for testing
+			heroCarouselInterval = setInterval(rotateToNext, 2000);
+			console.log('Hero carousel auto-rotation started (2 second intervals)');
+
+			// Test one rotation manually after 1 second
+			setTimeout(() => {
+				console.log('Testing manual rotation...');
+				rotateToNext();
+			}, 1000);
 
 			// Pause on hover
 			carousel.addEventListener('mouseenter', () => {
@@ -6697,13 +6857,19 @@ try {
 
 			carousel.addEventListener('mouseleave', () => {
 				if (!heroCarouselInterval) {
-					heroCarouselInterval = setInterval(rotateToNext, 3000);
+					heroCarouselInterval = setInterval(rotateToNext, 2000);
 					console.log('Hero carousel auto-rotation resumed');
 				}
 			});
 
-			console.log('Hero carousel initialized:', slides.length, 'slides, auto-rotating every 3 seconds');
+			console.log('🎉 Hero carousel initialized:', slides.length, 'slides, auto-rotating every 2 seconds');
 		}
+
+		// Force immediate start for testing
+		console.log('🔥 Force starting carousel immediately...');
+		setTimeout(() => {
+			initHeroCarousel();
+		}, 500);
 
 		// Initialize immediately and also on DOM ready
 		if (document.readyState === 'loading') {
@@ -6720,7 +6886,133 @@ try {
 			if (!document.querySelector('.hero-slide.active')) {
 				setTimeout(initHeroCarousel, 1000);
 			}
+			// Initialize Featured IG Carousel
+			initFeaturedIgCarousel();
 		});
+
+		// Featured on IG Carousel Function
+		function initFeaturedIgCarousel() {
+			const carousel = document.getElementById('featuredIgCarousel');
+			if (!carousel) {
+				console.log('Featured IG carousel not found');
+				return;
+			}
+
+			const slides = carousel.querySelectorAll('.featured-ig-slide');
+			if (slides.length === 0) {
+				console.log('No slides found in Featured IG carousel');
+				return;
+			}
+
+			const prevBtn = document.querySelector('.ig-carousel-prev');
+			const nextBtn = document.querySelector('.ig-carousel-next');
+
+			let currentIndex = 0;
+			const slideWidth = slides[0].offsetWidth + 30; // width + gap
+			let autoScrollInterval;
+
+			// Function to scroll to a specific index
+			function scrollToIndex(index) {
+				if (index < 0) index = 0;
+				if (index >= slides.length) index = slides.length - 1;
+				
+				currentIndex = index;
+				const scrollPosition = currentIndex * slideWidth;
+				
+				carousel.scrollTo({
+					left: scrollPosition,
+					behavior: 'smooth'
+				});
+			}
+
+			// Previous button
+			if (prevBtn) {
+				prevBtn.addEventListener('click', () => {
+					scrollToIndex(currentIndex - 1);
+					resetAutoScroll();
+				});
+			}
+
+			// Next button
+			if (nextBtn) {
+				nextBtn.addEventListener('click', () => {
+					scrollToIndex(currentIndex + 1);
+					resetAutoScroll();
+				});
+			}
+
+			// Auto-scroll function
+			function startAutoScroll() {
+				autoScrollInterval = setInterval(() => {
+					currentIndex++;
+					if (currentIndex >= slides.length) {
+						currentIndex = 0;
+						// Smooth scroll to start
+						carousel.scrollTo({
+							left: 0,
+							behavior: 'smooth'
+						});
+					} else {
+						scrollToIndex(currentIndex);
+					}
+				}, 4000); // Auto-scroll every 4 seconds
+			}
+
+			function resetAutoScroll() {
+				clearInterval(autoScrollInterval);
+				startAutoScroll();
+			}
+
+			// Pause on hover
+			carousel.addEventListener('mouseenter', () => {
+				clearInterval(autoScrollInterval);
+			});
+
+			carousel.addEventListener('mouseleave', () => {
+				startAutoScroll();
+			});
+
+			// Update current index on scroll
+			carousel.addEventListener('scroll', () => {
+				const scrollLeft = carousel.scrollLeft;
+				currentIndex = Math.round(scrollLeft / slideWidth);
+			});
+
+			// Start auto-scroll
+			startAutoScroll();
+
+			// Touch/swipe support
+			let isDown = false;
+			let startX;
+			let scrollLeft;
+
+			carousel.addEventListener('mousedown', (e) => {
+				isDown = true;
+				carousel.style.cursor = 'grabbing';
+				startX = e.pageX - carousel.offsetLeft;
+				scrollLeft = carousel.scrollLeft;
+			});
+
+			carousel.addEventListener('mouseleave', () => {
+				isDown = false;
+				carousel.style.cursor = 'grab';
+			});
+
+			carousel.addEventListener('mouseup', () => {
+				isDown = false;
+				carousel.style.cursor = 'grab';
+			});
+
+			carousel.addEventListener('mousemove', (e) => {
+				if (!isDown) return;
+				e.preventDefault();
+				const x = e.pageX - carousel.offsetLeft;
+				const walk = (x - startX) * 2;
+				carousel.scrollLeft = scrollLeft - walk;
+			});
+
+			console.log('Featured IG carousel initialized with', slides.length, 'slides');
+		}
 
 		// Featured on IG scroll animation function
 		function initFeaturedIGAnimations() {
@@ -6751,11 +7043,11 @@ try {
 			cards.forEach(card => {
 				observer.observe(card);
 			});
-		}
+			}
 
 
-		// Load top picks
-		loadTopPicks();
+			// Load top picks
+			loadTopPicks();
 		});
 
 
@@ -7307,26 +7599,26 @@ try {
 
 				// Make AJAX call to remove from wishlist
 				fetch('actions/remove_from_wishlist.php', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: 'product_id=' + productId
-					})
-					.then(response => response.json())
-					.then(data => {
-						if (data.success) {
-							// Update wishlist badge if exists
-							const wishlistBadge = document.getElementById('wishlistBadge');
-							if (wishlistBadge) {
-								let count = parseInt(wishlistBadge.textContent) || 0;
-								count = Math.max(0, count - 1);
-								wishlistBadge.textContent = count;
-								wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
-							}
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: 'product_id=' + productId
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						// Update wishlist badge if exists
+						const wishlistBadge = document.getElementById('wishlistBadge');
+						if (wishlistBadge) {
+							let count = parseInt(wishlistBadge.textContent) || 0;
+							count = Math.max(0, count - 1);
+							wishlistBadge.textContent = count;
+							wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
 						}
-					})
-					.catch(error => console.error('Error:', error));
+					}
+				})
+				.catch(error => console.error('Error:', error));
 			} else {
 				// Add to wishlist
 				button.classList.add('active');
@@ -7334,54 +7626,54 @@ try {
 
 				// Make AJAX call to add to wishlist
 				fetch('actions/add_to_wishlist.php', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/x-www-form-urlencoded',
-						},
-						body: 'product_id=' + productId
-					})
-					.then(response => response.json())
-					.then(data => {
-						if (data.success) {
-							// Update wishlist badge
-							const wishlistBadge = document.getElementById('wishlistBadge');
-							if (wishlistBadge) {
-								let count = parseInt(wishlistBadge.textContent) || 0;
-								count++;
-								wishlistBadge.textContent = count;
-								wishlistBadge.style.display = 'flex';
-							}
-						} else {
-							// Revert button state if failed
-							button.classList.remove('active');
-							icon.className = 'far fa-heart';
-							if (data.message) {
-								alert(data.message);
-							}
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+					body: 'product_id=' + productId
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						// Update wishlist badge
+						const wishlistBadge = document.getElementById('wishlistBadge');
+						if (wishlistBadge) {
+							let count = parseInt(wishlistBadge.textContent) || 0;
+							count++;
+							wishlistBadge.textContent = count;
+							wishlistBadge.style.display = 'flex';
 						}
-					})
-					.catch(error => {
-						console.error('Error:', error);
+					} else {
 						// Revert button state if failed
 						button.classList.remove('active');
 						icon.className = 'far fa-heart';
-					});
+						if (data.message) {
+							alert(data.message);
+						}
+					}
+				})
+				.catch(error => {
+					console.error('Error:', error);
+					// Revert button state if failed
+					button.classList.remove('active');
+					icon.className = 'far fa-heart';
+				});
 			}
 		}
 
 		// Newsletter popup for new users
 		<?php if ($show_newsletter_popup): ?>
-			console.log('Newsletter popup should be shown!');
-			document.addEventListener('DOMContentLoaded', function() {
-				console.log('DOM loaded, showing newsletter popup...');
-				// Show newsletter popup after a short delay
-				setTimeout(function() {
-					console.log('Calling showNewsletterPopup()...');
-					showNewsletterPopup();
-				}, 2000); // 2 second delay after page loads
-			});
+		console.log('Newsletter popup should be shown!');
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log('DOM loaded, showing newsletter popup...');
+			// Show newsletter popup after a short delay
+			setTimeout(function() {
+				console.log('Calling showNewsletterPopup()...');
+				showNewsletterPopup();
+			}, 2000); // 2 second delay after page loads
+		});
 		<?php else: ?>
-			console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
+		console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
 		<?php endif; ?>
 
 		// Check for payment redirect

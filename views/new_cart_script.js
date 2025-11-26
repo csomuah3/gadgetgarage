@@ -1,7 +1,14 @@
 // Clean cart functionality with SweetAlert
 class CartManager {
     constructor() {
-        this.baseUrl = '../actions/';
+        // Determine the base URL dynamically based on current page location
+        const currentPath = window.location.pathname;
+        if (currentPath.includes('/views/')) {
+            this.baseUrl = '../actions/';
+        } else {
+            this.baseUrl = 'actions/';
+        }
+        console.log('Cart Manager base URL:', this.baseUrl);
         this.init();
     }
 
@@ -12,6 +19,8 @@ class CartManager {
 
     // Update quantity function
     updateQuantity(productId, newQuantity) {
+        console.log('updateQuantity called:', productId, newQuantity);
+
         // Validate quantity
         if (newQuantity < 1) {
             this.showError('Minimum quantity is 1');
@@ -30,25 +39,43 @@ class CartManager {
         formData.append('product_id', productId);
         formData.append('quantity', newQuantity);
 
-        // Send request
-        fetch(this.baseUrl + 'update_cart_quantity.php', {
+        console.log('Sending request to:', this.baseUrl + 'test_cart_update.php');
+        console.log('FormData:', Array.from(formData.entries()));
+
+        // Send request (temporarily using test endpoint)
+        fetch(this.baseUrl + 'test_cart_update.php', {
             method: 'POST',
             body: formData,
             credentials: 'same-origin'
         })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                this.showSuccess(data.message);
-                this.updateCartDisplay(data);
-                this.updateItemQuantity(productId, newQuantity, data.item_total);
-            } else {
-                this.showError(data.message);
+        .then(response => {
+            console.log('Response status:', response.status);
+            console.log('Response headers:', response.headers);
+            return response.text();
+        })
+        .then(text => {
+            console.log('Raw response:', text);
+            try {
+                const data = JSON.parse(text);
+                console.log('Parsed response:', data);
+
+                if (data.success) {
+                    this.showSuccess(data.message);
+                    this.updateCartDisplay(data);
+                    this.updateItemQuantity(productId, newQuantity, data.item_total);
+                } else {
+                    this.showError(data.message || 'Failed to update quantity');
+                    this.resetQuantityInput(productId);
+                }
+            } catch (parseError) {
+                console.error('JSON Parse Error:', parseError);
+                console.error('Raw response was:', text);
+                this.showError('Server returned invalid response');
                 this.resetQuantityInput(productId);
             }
         })
         .catch(error => {
-            console.error('Error:', error);
+            console.error('Fetch Error:', error);
             this.showError('Failed to update quantity. Please try again.');
             this.resetQuantityInput(productId);
         });

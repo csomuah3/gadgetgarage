@@ -3297,7 +3297,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     }
 
                     // Show success notification
-                    showNotification(data.message, 'success');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: '🛒 Added to Cart',
+                            text: data.message,
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            toast: true,
+                            position: 'top-end',
+                            timerProgressBar: true
+                        });
+                    }
 
                     // Show cart sidebar after successful addition
                     setTimeout(() => {
@@ -3308,14 +3319,36 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 } else {
                     button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
                     button.style.background = '#ef4444';
-                    showNotification(data.message, 'error');
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: '❌ Cart Error',
+                            text: data.message,
+                            icon: 'error',
+                            timer: 3000,
+                            showConfirmButton: false,
+                            toast: true,
+                            position: 'top-end',
+                            timerProgressBar: true
+                        });
+                    }
                 }
             })
             .catch(error => {
                 console.error('Error adding to cart:', error);
                 button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
                 button.style.background = '#ef4444';
-                showNotification('Failed to add product to cart', 'error');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '🌐 Connection Error',
+                        text: 'Failed to add product to cart. Please try again.',
+                        icon: 'error',
+                        timer: 4000,
+                        showConfirmButton: true,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true
+                    });
+                }
             })
             .finally(() => {
                 // Reset button after 2 seconds

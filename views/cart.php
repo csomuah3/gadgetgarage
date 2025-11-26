@@ -2174,11 +2174,14 @@ try {
                 // Show SweetAlert success (only if not already showing)
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
-                        title: 'Cart Updated',
-                        text: 'Quantity updated successfully',
+                        title: '🔄 Quantity Updated',
+                        text: `Quantity changed to ${quantity}`,
                         icon: 'success',
                         timer: 1500,
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true
                     });
                 }
             } else {
@@ -2301,10 +2304,32 @@ try {
                 // Update cart badge
                 updateCartBadge(data.cart_count);
                 // Show success notification
-                showNotification('Quantity updated successfully', 'success');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '🔄 Quantity Updated',
+                        text: `Quantity changed to ${qty}`,
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true
+                    });
+                }
             } else {
                 console.error('Server error:', data.message);
-                showNotification(data.message || 'Failed to update quantity', 'error');
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: '❌ Update Failed',
+                        text: data.message || 'Failed to update quantity',
+                        icon: 'error',
+                        timer: 3000,
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true
+                    });
+                }
             }
         })
         .catch(error => {
@@ -2314,7 +2339,18 @@ try {
                 stack: error.stack,
                 url: updateUrl
             });
-            showNotification(`Network error: ${error.message}`, 'error');
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: '🌐 Network Error',
+                    text: `Connection error: ${error.message}`,
+                    icon: 'error',
+                    timer: 4000,
+                    showConfirmButton: true,
+                    toast: true,
+                    position: 'top-end',
+                    timerProgressBar: true
+                });
+            }
         })
         .finally(() => {
             // Re-enable input
@@ -2328,14 +2364,16 @@ try {
     window.removeFromCartByCartId = function(cartItemId, productId) {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
-                title: 'Remove Item?',
+                title: '🗑️ Remove Item?',
                 text: 'Are you sure you want to remove this item from your cart?',
-                icon: 'warning',
+                icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#ff6b6b',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, remove it!',
-                cancelButtonText: 'Cancel'
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-trash"></i> Yes, remove it!',
+                cancelButtonText: '<i class="fas fa-times"></i> Cancel',
+                reverseButtons: true,
+                focusCancel: true
             }).then((result) => {
                 if (result.isConfirmed) {
                     performRemoveFromCartByCartId(cartItemId, productId);
@@ -2391,11 +2429,14 @@ try {
             if (data.success) {
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
-                        title: 'Item Removed',
-                        text: 'Item removed from cart successfully',
+                        title: '🗑️ Item Removed',
+                        text: 'Item successfully removed from cart',
                         icon: 'success',
                         timer: 2000,
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true
                     });
                 } else if (typeof showNotification === 'function') {
                     showNotification('Item removed from cart', 'success');
@@ -2515,11 +2556,14 @@ try {
             if (data.success) {
                 if (typeof Swal !== 'undefined' && !Swal.isLoading()) {
                     Swal.fire({
-                        title: 'Cart Emptied',
-                        text: 'Your cart has been emptied successfully',
+                        title: '🧹 Cart Emptied',
+                        text: 'All items removed from cart',
                         icon: 'success',
                         timer: 2000,
-                        showConfirmButton: false
+                        showConfirmButton: false,
+                        toast: true,
+                        position: 'top-end',
+                        timerProgressBar: true
                     }).then(() => {
                         location.reload();
                     });
@@ -2629,14 +2673,16 @@ try {
     window.emptyCart = function() {
         if (typeof Swal !== 'undefined') {
             Swal.fire({
-                title: 'Empty Cart?',
+                title: '🧹 Empty Cart?',
                 text: 'Are you sure you want to remove all items from your cart?',
-                icon: 'warning',
+                icon: 'question',
                 showCancelButton: true,
-                confirmButtonColor: '#ff6b6b',
-                cancelButtonColor: '#6c757d',
-                confirmButtonText: 'Yes, empty cart!',
-                cancelButtonText: 'Cancel'
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: '<i class="fas fa-trash-alt"></i> Yes, empty cart!',
+                cancelButtonText: '<i class="fas fa-times"></i> Cancel',
+                reverseButtons: true,
+                focusCancel: true
             }).then((result) => {
                 if (result.isConfirmed) {
                     performEmptyCart();

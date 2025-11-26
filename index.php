@@ -1232,8 +1232,8 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 2.5fr 1fr;
-			/* wider left + narrow right */
+			grid-template-columns: 3.5fr 1fr;
+			/* much wider left + narrow right */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
@@ -1262,10 +1262,10 @@ try {
 		/* ——— Hero Slide (Main Banner) ——— */
 		.hero-slide {
 			display: grid;
-			grid-template-columns: 1.15fr 1fr;
-			/* copy left, image right */
-			gap: 32px;
-			padding: 60px 48px;
+			grid-template-columns: 1.5fr 1fr;
+			/* wider text area left, image right */
+			gap: 40px;
+			padding: 60px 60px;
 			border-radius: 14px;
 			overflow: hidden;
 			position: absolute;

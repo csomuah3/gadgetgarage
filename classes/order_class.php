@@ -86,14 +86,14 @@ class Order extends db_connection
                        o.order_status,
                        o.tracking_number,
                        COUNT(DISTINCT od.product_id) as item_count,
-                       COALESCE(MAX(p.amt), 0) as total_amount,
-                       MAX(p.payment_method) as payment_method,
-                       MAX(p.currency) as currency
+                       COALESCE(SUM(p.amt), 0) as total_amount,
+                       GROUP_CONCAT(DISTINCT p.payment_method) as payment_method,
+                       GROUP_CONCAT(DISTINCT p.currency) as currency
                 FROM orders o
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
                 WHERE o.customer_id = $customer_id
-                GROUP BY o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status, o.tracking_number
+                GROUP BY o.order_id
                 ORDER BY o.order_date DESC";
 
         try {

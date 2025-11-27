@@ -8635,6 +8635,19 @@ try {
 			z-index: 10002;
 			transform: scale(1);
 			opacity: 1;
+			border: 3px solid #008060;
+			animation: ratingPopupAppear 0.3s ease-out;
+		}
+
+		@keyframes ratingPopupAppear {
+			0% {
+				transform: scale(0.8);
+				opacity: 0;
+			}
+			100% {
+				transform: scale(1);
+				opacity: 1;
+			}
 		}
 
 		.rating-popup-header {
@@ -8861,7 +8874,15 @@ try {
 					popup.style.display = 'block';
 					popup.style.position = 'relative';
 					popup.style.zIndex = '10002';
+					popup.style.margin = 'auto';
+
+					// Temporary: Make it very obvious for testing
+					popup.style.border = '5px solid #ff0000';
+					popup.style.backgroundColor = '#ffffff';
+
 					console.log('Rating popup content made visible');
+					console.log('Rating popup dimensions:', popup.offsetWidth, 'x', popup.offsetHeight);
+					console.log('Rating popup position:', popup.getBoundingClientRect());
 				} else {
 					console.error('Rating popup content not found!');
 				}
@@ -9090,18 +9111,29 @@ try {
 						console.log('SweetAlert confirmed, result:', result);
 						console.log('About to show rating popup for order:', orderParam);
 
-						// Send SMS notification
-						fetch('actions/send_order_sms_action.php', {
-							method: 'POST',
-							headers: {
-								'Content-Type': 'application/json',
-							},
-							body: JSON.stringify({
-								order_id: orderParam
-							})
-						}).catch(err => {
-							console.log('SMS notification error (non-critical):', err);
-						});
+						// Send SMS notification (only if orderParam is valid)
+						if (orderParam && orderParam !== 'null' && orderParam !== null) {
+							fetch('actions/send_order_sms_action.php', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								body: JSON.stringify({
+									order_id: orderParam
+								})
+							}).then(response => {
+								if (!response.ok) {
+									console.log('SMS response not OK:', response.status, response.statusText);
+								}
+								return response.json();
+							}).then(data => {
+								console.log('SMS notification result:', data);
+							}).catch(err => {
+								console.log('SMS notification error (non-critical):', err);
+							});
+						} else {
+							console.log('Skipping SMS notification - orderParam is null/invalid');
+						}
 
 						// Show rating popup immediately instead of setTimeout
 						console.log('Calling showRatingPopup now...');

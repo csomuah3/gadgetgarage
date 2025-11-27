@@ -80,15 +80,8 @@ try {
         'site' => 'Gadget Garage'
     ];
 
-    // Initialize PayStack transaction
-    $paystack_response = paystack_initialize_transaction(
-        $customer_email,
-        $amount_pesewas,
-        $reference,
-        $metadata
-    );
-
-    if (isset($paystack_response['status']) && $paystack_response['status'] === true) {
+    // For test mode, bypass PayStack API and simulate success
+    if (PAYSTACK_ENVIRONMENT === 'test') {
         // Store transaction details in session for verification later
         $_SESSION['paystack_reference'] = $reference;
         $_SESSION['paystack_amount'] = $cart_total;
@@ -96,21 +89,57 @@ try {
         $_SESSION['paystack_email'] = $customer_email;
         $_SESSION['paystack_timestamp'] = time();
 
-        log_paystack_activity('info', 'PayStack transaction initialized successfully', [
+        log_paystack_activity('info', 'Test mode: PayStack transaction bypassed and auto-approved', [
             'reference' => $reference,
-            'authorization_url' => $paystack_response['data']['authorization_url']
+            'mode' => 'test'
         ]);
+
+        // Create test callback URL - simulate successful payment
+        $test_callback_url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? 'https' : 'http') .
+                            '://' . $_SERVER['HTTP_HOST'] .
+                            dirname(dirname($_SERVER['REQUEST_URI'])) .
+                            '/views/paystack_callback.php?reference=' . urlencode($reference) . '&trxref=' . urlencode($reference);
 
         echo json_encode([
             'status' => 'success',
-            'authorization_url' => $paystack_response['data']['authorization_url'],
+            'authorization_url' => $test_callback_url,
             'reference' => $reference,
-            'access_code' => $paystack_response['data']['access_code'],
-            'message' => 'Redirecting to PayStack...'
+            'access_code' => 'test_' . $reference,
+            'message' => 'Test mode: Redirecting to payment verification...'
         ]);
     } else {
-        $error_message = isset($paystack_response['message']) ? $paystack_response['message'] : 'PayStack API error';
-        throw new Exception($error_message);
+        // Initialize PayStack transaction for live mode
+        $paystack_response = paystack_initialize_transaction(
+            $customer_email,
+            $amount_pesewas,
+            $reference,
+            $metadata
+        );
+
+        if (isset($paystack_response['status']) && $paystack_response['status'] === true) {
+            // Store transaction details in session for verification later
+            $_SESSION['paystack_reference'] = $reference;
+            $_SESSION['paystack_amount'] = $cart_total;
+            $_SESSION['paystack_original_amount'] = $custom_total ? get_cart_total_ctr($customer_id, $ip_address) : $cart_total;
+            $_SESSION['paystack_email'] = $customer_email;
+            $_SESSION['paystack_timestamp'] = time();
+
+            log_paystack_activity('info', 'PayStack transaction initialized successfully', [
+                'reference' => $reference,
+                'authorization_url' => $paystack_response['data']['authorization_url']
+            ]);
+
+            echo json_encode([
+                'status' => 'success',
+                'authorization_url' => $paystack_response['data']['authorization_url'],
+                'reference' => $reference,
+                'access_code' => $paystack_response['data']['access_code'],
+                'message' => 'Redirecting to PayStack...'
+            ]);
+        } else {
+            $error_message = isset($paystack_response['message']) ? $paystack_response['message'] : 'PayStack API error';
+            throw new Exception($error_message);
+        }
     }
 
 } catch (Exception $e) {

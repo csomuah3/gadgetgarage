@@ -84,3 +84,15 @@ function get_customer_by_email_ctr($email)
         return false;
     }
 }
+
+// Customer controller function to get customer by ID
+function get_customer_by_id_ctr($customer_id)
+{
+    try {
+        $u = new User();
+        return $u->getUserById($customer_id);
+    } catch (Exception $e) {
+        error_log("get_customer_by_id_ctr exception: " . $e->getMessage());
+        return false;
+    }
+}

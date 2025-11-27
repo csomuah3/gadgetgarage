@@ -5,7 +5,9 @@ class Order extends db_connection
 {
     public function __construct()
     {
-        $this->db_connect();
+        if ($this->db === null) {
+            $this->db_connect();
+        }
     }
 
     public function create_order($customer_id, $invoice_no = null, $order_status = 'pending')
@@ -406,38 +408,34 @@ class Order extends db_connection
     public function delete_order($order_id)
     {
         try {
-            if (!$this->db_connect()) {
-                return false;
-            }
-
             // Start transaction
             mysqli_autocommit($this->db, false);
 
-            $order_id = intval($order_id);
+            $order_id = mysqli_real_escape_string($this->db, $order_id);
 
             // Delete payment records first (if any)
-            $payment_sql = "DELETE FROM payment WHERE order_id = ?";
-            if (!$this->db_prepare_execute($payment_sql, 'i', [$order_id])) {
+            $payment_sql = "DELETE FROM payment WHERE order_id = $order_id";
+            if (!$this->db_write_query($payment_sql)) {
                 mysqli_rollback($this->db);
                 mysqli_autocommit($this->db, true);
                 return false;
             }
 
             // Delete order details
-            $details_sql = "DELETE FROM orderdetails WHERE order_id = ?";
-            if (!$this->db_prepare_execute($details_sql, 'i', [$order_id])) {
+            $details_sql = "DELETE FROM orderdetails WHERE order_id = $order_id";
+            if (!$this->db_write_query($details_sql)) {
                 mysqli_rollback($this->db);
                 mysqli_autocommit($this->db, true);
                 return false;
             }
 
             // Delete order tracking (if exists)
-            $tracking_sql = "DELETE FROM order_tracking WHERE order_id = ?";
-            $this->db_prepare_execute($tracking_sql, 'i', [$order_id]); // Don't fail if table doesn't exist
+            $tracking_sql = "DELETE FROM order_tracking WHERE order_id = $order_id";
+            $this->db_write_query($tracking_sql); // Don't fail if table doesn't exist
 
             // Finally delete the order
-            $order_sql = "DELETE FROM orders WHERE order_id = ?";
-            if (!$this->db_prepare_execute($order_sql, 'i', [$order_id])) {
+            $order_sql = "DELETE FROM orders WHERE order_id = $order_id";
+            if (!$this->db_write_query($order_sql)) {
                 mysqli_rollback($this->db);
                 mysqli_autocommit($this->db, true);
                 return false;

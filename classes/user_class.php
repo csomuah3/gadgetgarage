@@ -190,6 +190,19 @@ class User extends db_connection
         }
     }
 
+    // GET user by ID - for order details functionality
+    public function getUserById($customer_id)
+    {
+        try {
+            $customer_id = mysqli_real_escape_string($this->db, $customer_id);
+            $sql = "SELECT * FROM customer WHERE customer_id = '$customer_id'";
+            return $this->db_fetch_one($sql);
+        } catch (Exception $e) {
+            error_log("GetUserById error: " . $e->getMessage());
+            return false;
+        }
+    }
+
     // LOGIN user - enhanced method that matches assignment requirements
     public function login($email, $password)
     {

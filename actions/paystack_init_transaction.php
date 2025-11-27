@@ -7,11 +7,20 @@ require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../settings/paystack_config.php';
 require_once __DIR__ . '/../controllers/cart_controller.php';
 
-// Check if user is logged in
-if (!check_login()) {
+// Check if user is logged in - with debugging
+$login_status = check_login();
+error_log("PayStack Init: Login status = " . ($login_status ? 'true' : 'false'));
+error_log("PayStack Init: Session data = " . json_encode($_SESSION ?? []));
+
+if (!$login_status) {
     echo json_encode([
         'status' => 'error',
-        'message' => 'Please login to complete payment'
+        'message' => 'Please login to complete payment',
+        'debug' => [
+            'session_exists' => session_status() === PHP_SESSION_ACTIVE,
+            'user_id_set' => isset($_SESSION['user_id']),
+            'session_data' => $_SESSION ?? []
+        ]
     ]);
     exit();
 }
@@ -46,13 +55,27 @@ try {
     $customer_id = $_SESSION['user_id'];
     $ip_address = $_SERVER['REMOTE_ADDR'];
 
+    error_log("PayStack Init: Customer ID = $customer_id, IP = $ip_address");
+    error_log("PayStack Init: Custom total = " . ($custom_total ?: 'none'));
+
     // Get cart total (use custom total if provided for promo discounts)
-    $cart_total = $custom_total ?: get_cart_total_ctr($customer_id, $ip_address);
+    try {
+        $cart_total = $custom_total ?: get_cart_total_ctr($customer_id, $ip_address);
+        error_log("PayStack Init: Cart total = $cart_total");
+    } catch (Exception $cart_error) {
+        error_log("PayStack Init: Cart total error = " . $cart_error->getMessage());
+        throw new Exception("Failed to calculate cart total: " . $cart_error->getMessage());
+    }
 
     if ($cart_total <= 0) {
         echo json_encode([
             'status' => 'error',
-            'message' => 'Your cart is empty or invalid'
+            'message' => 'Your cart is empty or invalid',
+            'debug' => [
+                'cart_total' => $cart_total,
+                'custom_total' => $custom_total,
+                'customer_id' => $customer_id
+            ]
         ]);
         exit();
     }

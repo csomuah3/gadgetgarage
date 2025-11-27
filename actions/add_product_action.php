@@ -130,6 +130,14 @@ try {
         'stock' => $stock_quantity
     ]));
 
+    // Add debug logging before calling controller
+    error_log("About to call add_product_ctr with parameters:");
+    error_log("Title: " . $product_title);
+    error_log("Price: " . $product_price);
+    error_log("Category: " . $product_cat);
+    error_log("Brand: " . $product_brand);
+    error_log("Stock: " . $stock_quantity);
+
     $result = add_product_ctr(
         $product_title,
         $product_price,
@@ -144,7 +152,7 @@ try {
 
     error_log("Product insertion result: " . json_encode($result));
 
-    if ($result['status'] === 'success') {
+    if ($result && isset($result['status']) && $result['status'] === 'success') {
         // Handle additional images if uploaded
         if (isset($_FILES['product_images']) && is_array($_FILES['product_images']['name'])) {
             $additional_images = handleMultipleImageUpload($_FILES['product_images']);

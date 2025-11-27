@@ -10,13 +10,22 @@ class Product extends db_connection
     public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity)
     {
         try {
+            error_log("Attempting database connection...");
             if (!$this->db_connect()) {
                 error_log("Add product error: Database connection failed");
+                error_log("Connection error: " . mysqli_connect_error());
                 return false;
             }
+            error_log("Database connection successful");
 
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+            error_log("Executing SQL: " . $sql);
+            error_log("With parameters: " . json_encode([
+                $product_title, $product_price, $product_desc, $product_image,
+                $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity
+            ]));
 
             $result = $this->db_prepare_execute($sql, 'sdssssiii', [
                 $product_title,
@@ -33,8 +42,9 @@ class Product extends db_connection
             if ($result === false) {
                 error_log("Add product error: Failed to execute insert query");
                 error_log("MySQL error: " . (isset($this->db) ? mysqli_error($this->db) : 'Database not connected'));
-                error_log("SQL: " . $sql);
-                error_log("Params: " . json_encode([$product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity]));
+                error_log("MySQL errno: " . (isset($this->db) ? mysqli_errno($this->db) : 'No error number'));
+            } else {
+                error_log("Product insertion successful, result: " . json_encode($result));
             }
 
             return $result;

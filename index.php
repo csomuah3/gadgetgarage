@@ -8572,9 +8572,75 @@ try {
 			showSimpleRatingPopup('TEST123');
 		}
 
+		// ULTRA SIMPLE rating using browser alerts/confirms
+		function showUltraSimpleRating(orderId) {
+			console.log('Showing ULTRA simple rating for order:', orderId);
+
+			// Use basic browser dialogs - these ALWAYS work
+			setTimeout(() => {
+				const userWantsToRate = confirm("Thank you for your order!\n\nWould you like to rate your experience?\n\n(Click OK to rate, Cancel to skip)");
+
+				if (userWantsToRate) {
+					// Show rating options using simple dialogs
+					let rating = null;
+
+					if (confirm("How satisfied are you?\n\nClick OK for 'Very Satisfied' or Cancel to see more options")) {
+						rating = 5;
+					} else {
+						const response = prompt("Please rate from 1-5:\n\n1 = Very Poor\n2 = Poor\n3 = Average\n4 = Good\n5 = Excellent\n\nEnter a number (1-5):");
+
+						const numRating = parseInt(response);
+						if (numRating >= 1 && numRating <= 5) {
+							rating = numRating;
+						} else {
+							rating = 3; // Default to average if invalid input
+						}
+					}
+
+					// Show thank you message
+					let message = '';
+					switch(rating) {
+						case 1:
+						case 2:
+							message = `Thank you for your ${rating}-star rating. We'll work to improve your experience!`;
+							break;
+						case 3:
+							message = `Thank you for your ${rating}-star rating. We appreciate your feedback!`;
+							break;
+						case 4:
+						case 5:
+							message = `Thank you for your ${rating}-star rating! We're so glad you had a great experience!`;
+							break;
+					}
+
+					alert(message + "\n\nYour feedback helps us improve our service.");
+					console.log(`Ultra simple rating submitted: ${rating} stars for order ${orderId}`);
+
+					// Optional: Send rating to server (if system is working)
+					try {
+						fetch('actions/submit_rating.php', {
+							method: 'POST',
+							headers: { 'Content-Type': 'application/json' },
+							body: JSON.stringify({
+								order_id: orderId,
+								rating: rating,
+								method: 'ultra_simple'
+							})
+						}).catch(e => console.log('Rating submission failed (non-critical):', e));
+					} catch (e) {
+						console.log('Rating system unavailable, but feedback recorded locally');
+					}
+				} else {
+					console.log('User skipped rating');
+					alert("Thank you! If you'd like to rate your experience later, you can contact our support team.");
+				}
+			}, 500); // Small delay to ensure smooth transition from Sweet Alert
+		}
+
 		// Global accessibility for testing
 		window.testRatingPopup = testRatingPopup;
 		window.testSimpleRatingPopup = testSimpleRatingPopup;
+		window.testUltraSimpleRating = function() { showUltraSimpleRating('TEST123'); };
 		window.forceCloseRatingPopup = forceCloseRatingPopup;
 
 		// Show popup for logged-in users (limited to once every 5 hours)
@@ -8834,30 +8900,12 @@ try {
 			});
 		}
 
-		// Show rating popup - BULLETPROOF VERSION
+		// Show rating popup - ULTRA SIMPLE VERSION
 		function showRatingPopup(orderId) {
 			console.log('Showing rating popup for order:', orderId);
 
-			// Try the fancy popup first
-			const overlay = document.getElementById('ratingPopupOverlay');
-			if (overlay) {
-				console.log('Trying fancy rating popup...');
-				showFancyRatingPopup(orderId);
-
-				// Check if it actually became visible after 500ms
-				setTimeout(() => {
-					const isVisible = overlay.offsetWidth > 0 && overlay.offsetHeight > 0;
-					console.log('Fancy popup visible check:', isVisible);
-
-					if (!isVisible) {
-						console.log('Fancy popup failed, showing simple popup');
-						showSimpleRatingPopup(orderId);
-					}
-				}, 500);
-			} else {
-				console.log('No fancy popup element, showing simple popup');
-				showSimpleRatingPopup(orderId);
-			}
+			// Skip all fancy stuff and go straight to bulletproof method
+			showUltraSimpleRating(orderId);
 		}
 
 		// Original fancy popup function

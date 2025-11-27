@@ -167,7 +167,7 @@ try {
 			overflow-x: hidden;
 		}
 
-		/* Promotional Banner Styles - First Banner (promo-banner2) matches login page */
+		/* Promotional Banner Styles - Same as index */
 		.promo-banner2 {
 			background: #001f3f !important;
 			color: white;
@@ -236,7 +236,7 @@ try {
 			opacity: 0.8;
 		}
 
-		/* Header Styles */
+		/* Header Styles - Same as index */
 		.main-header {
 			background: #ffffff;
 			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -279,26 +279,26 @@ try {
 
 		.search-container {
 			position: relative;
-			flex: 1;
-			max-width: 450px;
-			margin: 0 40px;
+			max-width: 600px;
+			width: 100%;
+			margin: 0 auto;
 		}
 
 		.search-input {
 			width: 100%;
-			padding: 12px 20px 12px 50px;
-			border: 2px solid #e2e8f0;
-			border-radius: 25px;
-			font-size: 1.2rem;
-			transition: all 0.3s ease;
+			padding: 15px 50px 15px 50px;
+			border: 2px solid #e5e7eb;
+			border-radius: 50px;
 			background: #f8fafc;
+			font-size: 1rem;
+			transition: all 0.3s ease;
+			outline: none;
 		}
 
 		.search-input:focus {
-			outline: none;
-			border-color: #008060;
+			border-color: #3b82f6;
 			background: white;
-			box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
 		}
 
 		.search-icon {
@@ -306,28 +306,57 @@ try {
 			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
-			color: #008060;
+			color: #6b7280;
 			font-size: 1.1rem;
 		}
 
 		.search-btn {
 			position: absolute;
-			right: 6px;
+			right: 8px;
 			top: 50%;
 			transform: translateY(-50%);
-			background: linear-gradient(135deg, #008060, #006b4e);
-			border: none;
-			padding: 8px 16px;
-			border-radius: 20px;
+			background: linear-gradient(135deg, #3b82f6, #1e40af);
 			color: white;
-			font-weight: 200;
-			cursor: pointer;
+			border: none;
+			border-radius: 50%;
+			width: 40px;
+			height: 40px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
 			transition: all 0.3s ease;
 		}
 
 		.search-btn:hover {
-			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-50%) scale(1.05);
+			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+		}
+
+		.tech-revival-section {
+			display: flex;
+			align-items: center;
+			gap: 12px;
+			color: #1f2937;
+		}
+
+		.tech-revival-icon {
+			font-size: 2.5rem;
+			color: #10b981;
+		}
+
+		.tech-revival-text {
+			font-size: 1.1rem;
+			font-weight: 600;
+			margin: 0;
+			line-height: 1.2;
+		}
+
+		.contact-number {
+			font-size: 1rem;
+			font-weight: 500;
+			color: #6b7280;
+			margin: 0;
+			line-height: 1.2;
 		}
 
 		.header-actions {
@@ -1000,15 +1029,15 @@ try {
 			margin-right: 8px;
 		}
 
-		/* Main Navigation */
+		/* Main Navigation - Copied from index.php */
 		.main-nav {
-			background: #FFFFFF;
-			border-bottom: 1px solid #E5E7EB;
+			background: #ffffff;
+			border-bottom: 1px solid #e5e7eb;
 			padding: 12px 0;
 			position: sticky;
 			top: 85px;
 			z-index: 999;
-			box-shadow: 0 2px 8px rgba(30, 58, 95, 0.08);
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 		}
 
 		.nav-menu {
@@ -1019,10 +1048,11 @@ try {
 		}
 
 		.nav-item {
-			color: #1F2937;
+			color: #1f2937;
 			text-decoration: none;
 			font-weight: 600;
 			padding: 16px 20px;
+			font-size: 1.3rem;
 			display: flex;
 			align-items: center;
 			gap: 6px;
@@ -1032,8 +1062,8 @@ try {
 		}
 
 		.nav-item:hover {
-			background: rgba(37, 99, 235, 0.08);
-			color: #2563EB;
+			background: rgba(0, 128, 96, 0.1);
+			color: #008060;
 			transform: translateY(-2px);
 		}
 
@@ -1054,7 +1084,7 @@ try {
 		}
 
 		.categories-button {
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			background: #4f63d2;
 			color: white;
 			border: none;
 			padding: 12px 20px;
@@ -1081,40 +1111,13 @@ try {
 			transform: rotate(180deg);
 		}
 
-
 		.nav-item.dropdown {
 			position: relative;
-		}
-
-		.nav-link {
-			color: #1f2937;
-			text-decoration: none;
-			font-weight: 500;
-			font-size: 2rem;
-			padding: 12px 0;
-			display: flex;
-			align-items: center;
-			gap: 6px;
-			transition: all 0.3s ease;
-		}
-
-		.nav-link:hover {
-			color: #2563EB;
-		}
-
-		.nav-link i {
-			font-size: 1.2rem;
-			transition: transform 0.3s ease;
-		}
-
-		.dropdown:hover .nav-link i {
-			transform: rotate(180deg);
 		}
 
 		/* Mega Dropdown */
 		.mega-dropdown {
 			position: absolute;
-
 			top: 100%;
 			left: 0;
 			width: 800px;
@@ -1124,8 +1127,8 @@ try {
 			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
 			padding: 32px;
 			opacity: 0;
-			visibility: visible;
-			transform: translateY(0px);
+			visibility: hidden;
+			transform: translateY(-10px);
 			transition: all 0.3s ease;
 			z-index: 1000;
 		}
@@ -1173,13 +1176,13 @@ try {
 		}
 
 		.dropdown-column ul li a:hover {
-			color: #2563EB;
+			color: #008060;
 			transform: translateX(4px);
 		}
 
 		.dropdown-column ul li a i {
 			color: #9ca3af;
-			width: 16px;
+			width: 20px;
 		}
 
 		.dropdown-column.featured {
@@ -1191,51 +1194,154 @@ try {
 			display: flex;
 			gap: 12px;
 			align-items: center;
-			padding: 16px;
-			border-radius: 12px;
-			background: #f8fafc;
-			border: 1px solid #e5e7eb;
-			transition: all 0.3s ease;
-		}
-
-		.featured-item:hover {
-			transform: translateY(-2px);
-			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 		}
 
 		.featured-item img {
 			width: 60px;
-			height: 40px;
+			height: 60px;
+			border-radius: 8px;
 			object-fit: cover;
-			border-radius: 6px;
+		}
+
+		.featured-text {
+			display: flex;
+			flex-direction: column;
+			gap: 4px;
 		}
 
 		.featured-text strong {
 			color: #1f2937;
-			font-size: 0.9rem;
-			font-weight: 600;
+			font-size: 1rem;
 		}
 
 		.featured-text p {
 			color: #6b7280;
-			font-size: 0.8rem;
-			margin: 4px 0;
+			font-size: 0.9rem;
+			margin: 0;
 		}
 
 		.shop-now-btn {
-			background: #2563EB;
+			background: #008060;
 			color: white;
-			padding: 4px 8px;
-			border-radius: 6px;
 			text-decoration: none;
-			font-size: 0.6rem;
+			padding: 6px 12px;
+			border-radius: 4px;
+			font-size: 0.8rem;
 			font-weight: 500;
-			transition: all 0.3s ease;
+			margin-top: 4px;
+			display: inline-block;
+			transition: background 0.3s ease;
 		}
 
 		.shop-now-btn:hover {
-			background: #374151;
+			background: #006b4e;
 			color: white;
+		}
+
+		/* Simple Dropdown */
+		.simple-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: #ffffff;
+			border: 1px solid #e5e7eb;
+			border-radius: 8px;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			padding: 8px 0;
+			min-width: 200px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.simple-dropdown.show {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.simple-dropdown ul {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
+
+		.simple-dropdown ul li a {
+			color: #6b7280;
+			text-decoration: none;
+			padding: 8px 16px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.3s ease;
+		}
+
+		.simple-dropdown ul li a:hover {
+			background: #f9fafb;
+			color: #008060;
+		}
+
+		/* Dropdown Positioning */
+		.nav-dropdown {
+			position: relative;
+		}
+
+		.brands-dropdown {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			background: white;
+			border: 1px solid #e5e7eb;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			min-width: 300px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateY(-10px);
+			transition: all 0.3s ease;
+			z-index: 1000;
+		}
+
+		.shop-categories-btn:hover .brands-dropdown {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
+		}
+
+		.brands-dropdown h4 {
+			margin-bottom: 15px;
+			color: #1f2937;
+			font-size: 1.1rem;
+			font-weight: 600;
+		}
+
+		.brands-dropdown ul {
+			list-style: none;
+			margin: 0;
+			padding: 0;
+		}
+
+		.brands-dropdown li {
+			margin-bottom: 8px;
+		}
+
+		.brands-dropdown a {
+			color: #6b7280;
+			text-decoration: none;
+			padding: 8px 12px;
+			border-radius: 6px;
+			display: flex;
+			align-items: center;
+			gap: 8px;
+			transition: all 0.3s ease;
+		}
+
+		.brands-dropdown a:hover {
+			background: #f3f4f6;
+			color: #3b82f6;
 		}
 
 		/* Hero Section */
@@ -5023,7 +5129,7 @@ try {
 
 	<!-- Main Header -->
 	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 120px 0 95px;">
+		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
 				<a href="index.php" class="logo">
@@ -5230,7 +5336,7 @@ try {
 									<div class="featured-text">
 										<strong>New Arrivals</strong>
 										<p>Latest tech gadgets</p>
-										<a href="views/all_product.php" class="shop-now-btn">Shop </a>
+										<a href="views/all_product.php" class="shop-now-btn">Shop</a>
 									</div>
 								</div>
 							</div>
@@ -6123,39 +6229,39 @@ try {
 					<div class="col-lg-2 col-md-6 mb-4">
 						<h5 class="footer-title">Shop</h5>
 						<ul class="footer-links">
-							<li><a href="views/all_product.php?category=phones">Smartphones</a></li>
+							<li><a href="views/all_product.php?category=smartphones">Smartphones</a></li>
 							<li><a href="views/all_product.php?category=laptops">Laptops</a></li>
 							<li><a href="views/all_product.php?category=ipads">Tablets</a></li>
 							<li><a href="views/all_product.php?category=cameras">Cameras</a></li>
-							<li><a href="views/all_product.php?category=video">Video Equipment</a></li>
+							<li><a href="views/all_product.php?category=video_equipment">Video Equipment</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
 						<h5 class="footer-title">Services</h5>
 						<ul class="footer-links">
 							<li><a href="views/repair_services.php">Device Repair</a></li>
-							<li><a href="#">Tech Support</a></li>
-							<li><a href="#">Data Recovery</a></li>
-							<li><a href="#">Setup Services</a></li>
-							<li><a href="#">Warranty</a></li>
+							<li><a href="views/contact.php">Tech Support</a></li>
+							<li><a href="views/repair_services.php">Data Recovery</a></li>
+							<li><a href="views/contact.php">Setup Services</a></li>
+							<li><a href="views/terms_conditions.php">Warranty</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
 						<h5 class="footer-title">Company</h5>
 						<ul class="footer-links">
-							<li><a href="#">About Us</a></li>
+							<li><a href="views/contact.php">About Us</a></li>
 							<li><a href="views/contact.php">Contact</a></li>
-							<li><a href="#">Careers</a></li>
-							<li><a href="#">Blog</a></li>
-							<li><a href="#">Press</a></li>
+							<li><a href="views/contact.php">Careers</a></li>
+							<li><a href="views/contact.php">Blog</a></li>
+							<li><a href="views/contact.php">Press</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
 						<h5 class="footer-title">Support</h5>
 						<ul class="footer-links">
-							<li><a href="#">Help Center</a></li>
-							<li><a href="#">Shipping Info</a></li>
-							<li><a href="#">Returns</a></li>
+							<li><a href="views/contact.php">Help Center</a></li>
+							<li><a href="views/terms_conditions.php">Shipping Info</a></li>
+							<li><a href="views/terms_conditions.php">Returns</a></li>
 							<li><a href="views/legal.php">Privacy Policy</a></li>
 							<li><a href="views/terms_conditions.php">Terms of Service</a></li>
 						</ul>

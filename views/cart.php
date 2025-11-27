@@ -1463,6 +1463,125 @@ try {
                 margin-bottom: 1rem;
             }
         }
+
+        /* Footer Styles */
+        .main-footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 60px 0 20px;
+            margin-top: 0;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo .garage {
+            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-description {
+            color: #6b7280;
+            font-size: 0.95rem;
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .social-link:hover {
+            background: #2563EB;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links li a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links li a:hover {
+            color: #2563EB;
+            transform: translateX(4px);
+        }
+
+        .footer-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+            margin: 40px 0 20px;
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 0.9rem;
+            margin: 0;
+        }
+
+        .payment-methods {
+            display: flex;
+            gap: 8px;
+            justify-content: end;
+            align-items: center;
+        }
+
+        .payment-methods img {
+            height: 25px;
+            border-radius: 4px;
+            opacity: 0.8;
+            transition: opacity 0.3s ease;
+        }
+
+        .payment-methods img:hover {
+            opacity: 1;
+        }
     </style>
 </head>
 
@@ -1920,6 +2039,88 @@ try {
             </div>
         <?php endif; ?>
     </div>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="row">
+                    <div class="col-lg-4 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <div class="footer-logo" style="margin-bottom: 16px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                                    alt="Gadget Garage"
+                                    style="height: 35px; width: auto; object-fit: contain;">
+                            </div>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Shop</h5>
+                        <ul class="footer-links">
+                            <li><a href="all_product.php?category=smartphones">Smartphones</a></li>
+                            <li><a href="all_product.php?category=laptops">Laptops</a></li>
+                            <li><a href="all_product.php?category=ipads">Tablets</a></li>
+                            <li><a href="all_product.php?category=cameras">Cameras</a></li>
+                            <li><a href="all_product.php?category=video_equipment">Video Equipment</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Services</h5>
+                        <ul class="footer-links">
+                            <li><a href="repair_services.php">Device Repair</a></li>
+                            <li><a href="contact.php">Tech Support</a></li>
+                            <li><a href="repair_services.php">Data Recovery</a></li>
+                            <li><a href="contact.php">Setup Services</a></li>
+                            <li><a href="terms_conditions.php">Warranty</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Company</h5>
+                        <ul class="footer-links">
+                            <li><a href="contact.php">About Us</a></li>
+                            <li><a href="contact.php">Contact</a></li>
+                            <li><a href="contact.php">Careers</a></li>
+                            <li><a href="contact.php">Blog</a></li>
+                            <li><a href="contact.php">Press</a></li>
+                        </ul>
+                    </div>
+                    <div class="col-lg-2 col-md-6 mb-4">
+                        <h5 class="footer-title">Support</h5>
+                        <ul class="footer-links">
+                            <li><a href="contact.php">Help Center</a></li>
+                            <li><a href="terms_conditions.php">Shipping Info</a></li>
+                            <li><a href="terms_conditions.php">Returns</a></li>
+                            <li><a href="legal.php">Privacy Policy</a></li>
+                            <li><a href="terms_conditions.php">Terms of Service</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-6">
+                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+                        </div>
+                        <div class="col-md-6 text-end">
+                            <div class="payment-methods">
+                                <img src="<?php echo generate_placeholder_url('VISA', '40x25'); ?>" alt="Visa">
+                                <img src="<?php echo generate_placeholder_url('MC', '40x25'); ?>" alt="Mastercard">
+                                <img src="<?php echo generate_placeholder_url('AMEX', '40x25'); ?>" alt="American Express">
+                                <img src="<?php echo generate_placeholder_url('GPAY', '40x25'); ?>" alt="Google Pay">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

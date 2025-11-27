@@ -8562,9 +8562,22 @@ try {
 
 		// Manual function to test rating popup
 		function testRatingPopup() {
-			showRatingPopup('TEST123');
-			console.log('Rating popup test triggered');
+			console.log('Testing rating popup...');
+			const overlay = document.getElementById('ratingPopupOverlay');
+			if (overlay) {
+				console.log('Rating popup overlay found');
+				showRatingPopup('TEST123');
+			} else {
+				console.error('Rating popup overlay NOT found!');
+				// Try to find any rating popup elements
+				const allRatingElements = document.querySelectorAll('[id*="rating"]');
+				console.log('Found rating elements:', allRatingElements);
+			}
 		}
+
+		// Global accessibility for testing
+		window.testRatingPopup = testRatingPopup;
+		window.forceCloseRatingPopup = forceCloseRatingPopup;
 
 		// Show popup for logged-in users (limited to once every 5 hours)
 		<?php if ($is_logged_in): ?>
@@ -9073,8 +9086,10 @@ try {
 						confirmButtonColor: '#008060',
 						confirmButtonText: 'Great!',
 						allowOutsideClick: false
-					}).then(() => {
-						console.log('SweetAlert confirmed, showing rating popup...');
+					}).then((result) => {
+						console.log('SweetAlert confirmed, result:', result);
+						console.log('About to show rating popup for order:', orderParam);
+
 						// Send SMS notification
 						fetch('actions/send_order_sms_action.php', {
 							method: 'POST',
@@ -9088,10 +9103,18 @@ try {
 							console.log('SMS notification error (non-critical):', err);
 						});
 
-						// Show rating popup after confirmation
+						// Show rating popup immediately instead of setTimeout
+						console.log('Calling showRatingPopup now...');
+						showRatingPopup(orderParam);
+
+						// Also try with a short delay as backup
 						setTimeout(() => {
-							showRatingPopup(orderParam);
-						}, 500);
+							console.log('Backup rating popup call...');
+							if (!document.getElementById('ratingPopupOverlay').classList.contains('show')) {
+								console.log('Rating popup not visible, trying again...');
+								showRatingPopup(orderParam);
+							}
+						}, 100);
 					});
 				} else {
 					console.log('SweetAlert not available, using standard alert');

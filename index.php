@@ -162,8 +162,8 @@ try {
 
 		body {
 			font-family: "Times New Roman", Times, serif;
-			background-color: #FFFFFF;
-			color: #374151;
+			background-color: #ffffff;
+			color: #1a1a1a;
 			overflow-x: hidden;
 		}
 
@@ -238,8 +238,8 @@ try {
 
 		/* Header Styles */
 		.main-header {
-			background: #FFFFFF;
-			box-shadow: 0 2px 8px rgba(30, 58, 95, 0.08);
+			background: #ffffff;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 			position: sticky;
 			top: 38px;
 			z-index: 1000;
@@ -296,9 +296,9 @@ try {
 
 		.search-input:focus {
 			outline: none;
-			border-color: #2563EB;
+			border-color: #008060;
 			background: white;
-			box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+			box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
 		}
 
 		.search-icon {
@@ -306,7 +306,7 @@ try {
 			left: 18px;
 			top: 50%;
 			transform: translateY(-50%);
-			color: #2563EB;
+			color: #008060;
 			font-size: 1.1rem;
 		}
 
@@ -315,7 +315,7 @@ try {
 			right: 6px;
 			top: 50%;
 			transform: translateY(-50%);
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			border: none;
 			padding: 8px 16px;
 			border-radius: 20px;
@@ -326,7 +326,7 @@ try {
 		}
 
 		.search-btn:hover {
-			background: linear-gradient(135deg, #2563EB, #1E3A5F);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-50%) scale(1.05);
 		}
 
@@ -353,7 +353,7 @@ try {
 
 		.tech-revival-icon {
 			font-size: 1.2rem;
-			color: #2563EB;
+			color: #008060;
 			transition: transform 0.3s ease;
 		}
 
@@ -389,9 +389,9 @@ try {
 		}
 
 		.contact-number {
-			font-size: 1.1 rem;
+			font-size: 1.1rem;
 			font-weight: 600;
-			color: #2563EB;
+			color: #008060;
 			margin: 0;
 			margin-top: 4px;
 		}
@@ -579,7 +579,7 @@ try {
 			position: absolute;
 			top: 4px;
 			right: 4px;
-			background: linear-gradient(135deg, #2563EB, #1E3A5F);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			color: white;
 			font-size: 1rem;
 			font-weight: 100;
@@ -614,7 +614,7 @@ try {
 		}
 
 		.login-btn {
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			border: none;
 			padding: 10px 20px;
@@ -626,7 +626,7 @@ try {
 		}
 
 		.login-btn:hover {
-			background: linear-gradient(135deg, #2563EB, #1E3A5F);
+			background: linear-gradient(135deg, #006b4e, #008060);
 			transform: translateY(-1px);
 			color: white;
 		}
@@ -657,7 +657,7 @@ try {
 		.user-avatar {
 			width: 48px;
 			height: 48px;
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			border-radius: 50%;
 			display: flex;
 			align-items: center;
@@ -750,7 +750,7 @@ try {
 		}
 
 		.toggle-switch.active {
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			background: linear-gradient(135deg, #008060, #006b4e);
 		}
 
 		.toggle-slider {
@@ -5078,7 +5078,7 @@ try {
 
 						<!-- User Avatar Dropdown -->
 						<div class="user-dropdown">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
+							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
@@ -5092,7 +5092,7 @@ try {
 								</a>
 								<a href="track_order.php" class="dropdown-item-custom">
 									<i class="fas fa-truck"></i>
-									<span data-translate="track_orders">Track your Order</span>
+									<span data-translate="track_orders">Track Orders</span>
 								</a>
 								<a href="views/notifications.php" class="dropdown-item-custom">
 									<i class="fas fa-bell"></i>

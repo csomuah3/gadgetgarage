@@ -86,8 +86,10 @@ class Order extends db_connection
                        o.order_status,
                        o.tracking_number,
                        COUNT(DISTINCT od.product_id) as item_count,
-                       COALESCE(SUM(p.amt),
-                           COALESCE(SUM(od.qty * pr.product_price), 0)
+                       COALESCE(
+                           CASE WHEN SUM(p.amt) IS NOT NULL THEN SUM(p.amt)
+                                ELSE SUM(od.qty * pr.product_price)
+                           END, 0
                        ) as total_amount,
                        GROUP_CONCAT(DISTINCT p.payment_method) as payment_method,
                        GROUP_CONCAT(DISTINCT p.currency) as currency
@@ -282,8 +284,10 @@ class Order extends db_connection
                        c.customer_contact as customer_contact,
                        COUNT(DISTINCT od.product_id) as item_count,
                        SUM(od.qty) as total_items,
-                       COALESCE(SUM(p.amt),
-                           COALESCE(SUM(od.qty * pr.product_price), 0)
+                       COALESCE(
+                           CASE WHEN SUM(p.amt) IS NOT NULL THEN SUM(p.amt)
+                                ELSE SUM(od.qty * pr.product_price)
+                           END, 0
                        ) as total_amount,
                        COALESCE(MAX(p.currency), 'GHS') as currency,
                        MAX(p.payment_date) as payment_date
@@ -365,6 +369,8 @@ class Order extends db_connection
 
     public function assign_tracking_number($order_id)
     {
+        error_log("assign_tracking_number called for order_id: $order_id");
+
         $order_id = mysqli_real_escape_string($this->db, $order_id);
 
         // Check if order already has a tracking number
@@ -372,7 +378,7 @@ class Order extends db_connection
         $existing_tracking = $this->db_fetch_one($check_sql);
 
         if ($existing_tracking && !empty($existing_tracking['tracking_number'])) {
-            // Order already has a tracking number
+            error_log("Order $order_id already has tracking number: " . $existing_tracking['tracking_number']);
             return $existing_tracking['tracking_number'];
         }
 
@@ -380,14 +386,77 @@ class Order extends db_connection
         $tracking_number = $this->generate_tracking_number();
         $tracking_number = mysqli_real_escape_string($this->db, $tracking_number);
 
+        error_log("Generated tracking number for order $order_id: $tracking_number");
+
         // Assign tracking number to order
         $update_sql = "UPDATE orders SET tracking_number = '$tracking_number' WHERE order_id = $order_id";
 
         if ($this->db_write_query($update_sql)) {
+            error_log("Successfully assigned tracking number $tracking_number to order $order_id");
             return $tracking_number;
         }
 
+        error_log("Failed to update tracking number for order $order_id");
         return false;
+    }
+
+    /**
+     * Delete an order and all related data
+     */
+    public function delete_order($order_id)
+    {
+        try {
+            if (!$this->db_connect()) {
+                return false;
+            }
+
+            // Start transaction
+            mysqli_autocommit($this->db, false);
+
+            $order_id = intval($order_id);
+
+            // Delete payment records first (if any)
+            $payment_sql = "DELETE FROM payment WHERE order_id = ?";
+            if (!$this->db_prepare_execute($payment_sql, 'i', [$order_id])) {
+                mysqli_rollback($this->db);
+                mysqli_autocommit($this->db, true);
+                return false;
+            }
+
+            // Delete order details
+            $details_sql = "DELETE FROM orderdetails WHERE order_id = ?";
+            if (!$this->db_prepare_execute($details_sql, 'i', [$order_id])) {
+                mysqli_rollback($this->db);
+                mysqli_autocommit($this->db, true);
+                return false;
+            }
+
+            // Delete order tracking (if exists)
+            $tracking_sql = "DELETE FROM order_tracking WHERE order_id = ?";
+            $this->db_prepare_execute($tracking_sql, 'i', [$order_id]); // Don't fail if table doesn't exist
+
+            // Finally delete the order
+            $order_sql = "DELETE FROM orders WHERE order_id = ?";
+            if (!$this->db_prepare_execute($order_sql, 'i', [$order_id])) {
+                mysqli_rollback($this->db);
+                mysqli_autocommit($this->db, true);
+                return false;
+            }
+
+            // Commit transaction
+            mysqli_commit($this->db);
+            mysqli_autocommit($this->db, true);
+
+            return true;
+
+        } catch (Exception $e) {
+            if ($this->db) {
+                mysqli_rollback($this->db);
+                mysqli_autocommit($this->db, true);
+            }
+            error_log("Delete order error: " . $e->getMessage());
+            return false;
+        }
     }
 }
 ?>

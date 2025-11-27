@@ -90,4 +90,10 @@ function assign_tracking_number_ctr($order_id)
     $order = new Order();
     return $order->assign_tracking_number($order_id);
 }
+
+function delete_order_ctr($order_id)
+{
+    $order = new Order();
+    return $order->delete_order($order_id);
+}
 ?>

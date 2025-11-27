@@ -284,12 +284,17 @@ try {
                                         <button class="btn btn-sm btn-outline-primary"
                                                 onclick="updateTracking(<?= $order['order_id'] ?>)"
                                                 title="Update Tracking">
-                                            <i class="fas fa-truck"></i>
+                                            <i class="fas fa-bus"></i>
                                         </button>
                                         <button class="btn btn-sm btn-outline-info"
-                                                onclick="viewOrder(<?= $order['order_id'] ?>)"
+                                                onclick="viewOrderDetails(<?= $order['order_id'] ?>)"
                                                 title="View Details">
                                             <i class="fas fa-eye"></i>
+                                        </button>
+                                        <button class="btn btn-sm btn-outline-danger"
+                                                onclick="deleteOrder(<?= $order['order_id'] ?>)"
+                                                title="Delete Order">
+                                            <i class="fas fa-trash"></i>
                                         </button>
                                     </div>
                                 </td>
@@ -619,25 +624,380 @@ function performTrackingUpdate(orderId, trackingData) {
     form.submit();
 }
 
-function viewOrder(orderId) {
-    // Create modal for order details
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({
-            title: 'Order Details',
-            text: `Order #${orderId} details - Advanced order view coming soon!`,
-            icon: 'info',
-            confirmButtonColor: '#D19C97',
-            confirmButtonText: 'OK'
+// View Order Details Function
+function viewOrderDetails(orderId) {
+    // Show loading state
+    Swal.fire({
+        title: 'Loading Order Details...',
+        html: '<div class="spinner-border text-primary" role="status"><span class="visually-hidden">Loading...</span></div>',
+        showConfirmButton: false,
+        allowOutsideClick: false
+    });
+
+    // Fetch order details
+    fetch(`../actions/get_order_details_action.php?id=${orderId}`)
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                const order = data.order;
+
+                // Create detailed order view HTML
+                const orderDetailsHTML = `
+                    <div class="order-details-container">
+                        <style>
+                            .order-details-container {
+                                max-width: 900px;
+                                margin: 0 auto;
+                                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                                text-align: left;
+                            }
+                            .order-section {
+                                background: #f8f9fa;
+                                border-radius: 12px;
+                                padding: 20px;
+                                margin-bottom: 20px;
+                                border: 1px solid #e9ecef;
+                            }
+                            .order-section h6 {
+                                color: #495057;
+                                font-weight: 600;
+                                margin-bottom: 15px;
+                                font-size: 14px;
+                                text-transform: uppercase;
+                                letter-spacing: 0.5px;
+                                display: flex;
+                                align-items: center;
+                                gap: 8px;
+                            }
+                            .order-info-row {
+                                display: grid;
+                                grid-template-columns: 1fr 1fr;
+                                gap: 20px;
+                                margin-bottom: 15px;
+                            }
+                            .order-info-item {
+                                display: flex;
+                                flex-direction: column;
+                            }
+                            .order-info-label {
+                                font-weight: 500;
+                                color: #495057;
+                                margin-bottom: 5px;
+                                font-size: 13px;
+                            }
+                            .order-info-value {
+                                font-size: 14px;
+                                color: #212529;
+                                padding: 8px 12px;
+                                background: white;
+                                border-radius: 6px;
+                                border: 1px solid #e9ecef;
+                            }
+                            .order-items-table {
+                                width: 100%;
+                                border-collapse: collapse;
+                                margin-top: 10px;
+                            }
+                            .order-items-table th,
+                            .order-items-table td {
+                                padding: 12px;
+                                text-align: left;
+                                border-bottom: 1px solid #dee2e6;
+                            }
+                            .order-items-table th {
+                                background: #e9ecef;
+                                font-weight: 600;
+                                font-size: 12px;
+                                text-transform: uppercase;
+                                letter-spacing: 0.5px;
+                            }
+                            .status-badge-modal {
+                                padding: 6px 12px;
+                                border-radius: 20px;
+                                font-size: 12px;
+                                font-weight: 600;
+                                text-transform: uppercase;
+                                letter-spacing: 0.5px;
+                            }
+                            .status-pending { background: #fff3cd; color: #856404; }
+                            .status-processing { background: #cce7ff; color: #0066cc; }
+                            .status-shipped { background: #d4edda; color: #155724; }
+                            .status-delivered { background: #d1ecf1; color: #0c5460; }
+                            .status-cancelled { background: #f8d7da; color: #721c24; }
+                            .total-section {
+                                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                                color: white;
+                                border-radius: 12px;
+                                padding: 20px;
+                                text-align: center;
+                            }
+                            .total-amount {
+                                font-size: 28px;
+                                font-weight: 700;
+                                margin: 10px 0;
+                            }
+                            @media (max-width: 768px) {
+                                .order-info-row { grid-template-columns: 1fr; }
+                            }
+                        </style>
+
+                        <!-- Order Information Section -->
+                        <div class="order-section">
+                            <h6><i class="fas fa-receipt text-primary"></i>Order Information</h6>
+
+                            <div class="order-info-row">
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Order ID</span>
+                                    <span class="order-info-value">#${order.order_id || 'N/A'}</span>
+                                </div>
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Order Date</span>
+                                    <span class="order-info-value">${formatDate(order.order_date) || 'N/A'}</span>
+                                </div>
+                            </div>
+
+                            <div class="order-info-row">
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Tracking Number</span>
+                                    <span class="order-info-value">${order.tracking_number || 'Not assigned'}</span>
+                                </div>
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Status</span>
+                                    <span class="order-info-value">
+                                        <span class="status-badge-modal status-${(order.order_status || 'pending').toLowerCase()}">
+                                            ${order.order_status || 'Pending'}
+                                        </span>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Customer Information Section -->
+                        <div class="order-section">
+                            <h6><i class="fas fa-user text-info"></i>Customer Information</h6>
+
+                            <div class="order-info-row">
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Customer Name</span>
+                                    <span class="order-info-value">${order.customer_name || 'Unknown'}</span>
+                                </div>
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Email</span>
+                                    <span class="order-info-value">${order.customer_email || 'N/A'}</span>
+                                </div>
+                            </div>
+
+                            <div class="order-info-row">
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Phone</span>
+                                    <span class="order-info-value">${order.customer_contact || 'N/A'}</span>
+                                </div>
+                                <div class="order-info-item">
+                                    <span class="order-info-label">Location</span>
+                                    <span class="order-info-value">${order.customer_city || 'N/A'}, ${order.customer_country || 'N/A'}</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Order Items Section -->
+                        <div class="order-section">
+                            <h6><i class="fas fa-shopping-cart text-success"></i>Order Items</h6>
+
+                            <table class="order-items-table">
+                                <thead>
+                                    <tr>
+                                        <th>Product</th>
+                                        <th>Quantity</th>
+                                        <th>Unit Price</th>
+                                        <th>Subtotal</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    ${order.items ? order.items.map(item => `
+                                        <tr>
+                                            <td>
+                                                <strong>${item.product_title || 'Unknown Product'}</strong>
+                                            </td>
+                                            <td>${item.qty || 0}</td>
+                                            <td>GH₵${parseFloat(item.product_price || 0).toFixed(2)}</td>
+                                            <td>GH₵${(parseFloat(item.product_price || 0) * parseInt(item.qty || 0)).toFixed(2)}</td>
+                                        </tr>
+                                    `).join('') : '<tr><td colspan="4">No items found</td></tr>'}
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Total Section -->
+                        <div class="total-section">
+                            <h6 style="margin: 0; opacity: 0.9;">Total Amount</h6>
+                            <div class="total-amount">GH₵${parseFloat(order.total_amount || 0).toFixed(2)}</div>
+                            <small style="opacity: 0.8;">${order.currency || 'GHS'}</small>
+                        </div>
+                    </div>
+                `;
+
+                Swal.fire({
+                    title: `<i class="fas fa-file-invoice text-primary me-2"></i>Order #${order.order_id}`,
+                    html: orderDetailsHTML,
+                    showCancelButton: false,
+                    confirmButtonText: '<i class="fas fa-times me-2"></i>Close',
+                    width: '950px',
+                    customClass: {
+                        popup: 'order-details-popup',
+                        confirmButton: 'btn btn-secondary btn-lg'
+                    },
+                    showClass: {
+                        popup: 'animate__animated animate__fadeInDown'
+                    },
+                    hideClass: {
+                        popup: 'animate__animated animate__fadeOutUp'
+                    }
+                });
+
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Failed to Load Order',
+                    text: data.message || 'Could not fetch order details',
+                    confirmButtonText: 'OK'
+                });
+            }
+        })
+        .catch(error => {
+            console.error('Error fetching order details:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Connection Error',
+                text: 'Failed to connect to server. Please try again.',
+                confirmButtonText: 'OK'
+            });
         });
-    } else {
-        Swal.fire({
-            title: 'Order Details',
-            text: `Order #${orderId} details - Advanced order view coming soon!`,
-            icon: 'info',
-            confirmButtonColor: '#007bff',
-            confirmButtonText: 'OK'
-        });
-    }
+}
+
+// Helper function to format dates
+function formatDate(dateString) {
+    if (!dateString) return 'N/A';
+    const date = new Date(dateString);
+    const options = {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    };
+    return date.toLocaleDateString('en-US', options);
+}
+
+// Delete Order Function
+function deleteOrder(orderId) {
+    Swal.fire({
+        title: 'Delete Order?',
+        html: `
+            <div class="text-center">
+                <i class="fas fa-exclamation-triangle text-warning fa-3x mb-3"></i>
+                <p class="mb-3">Are you sure you want to delete order <strong>#${orderId}</strong>?</p>
+                <div class="alert alert-warning">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Warning:</strong> This action cannot be undone. All order data will be permanently removed.
+                </div>
+            </div>
+        `,
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#6c757d',
+        confirmButtonText: '<i class="fas fa-trash me-2"></i>Yes, Delete Order',
+        cancelButtonText: '<i class="fas fa-times me-2"></i>Cancel',
+        customClass: {
+            confirmButton: 'btn btn-danger btn-lg',
+            cancelButton: 'btn btn-secondary btn-lg'
+        },
+        buttonsStyling: false
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Show loading state
+            Swal.fire({
+                title: 'Deleting Order...',
+                html: '<div class="spinner-border text-danger" role="status"><span class="visually-hidden">Deleting...</span></div>',
+                showConfirmButton: false,
+                allowOutsideClick: false
+            });
+
+            // Send delete request
+            const formData = new FormData();
+            formData.append('order_id', orderId);
+
+            fetch('../actions/delete_order_action.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Order Deleted!',
+                        html: `
+                            <div class="text-center">
+                                <i class="fas fa-check-circle text-success fa-3x mb-3"></i>
+                                <p>Order <strong>#${orderId}</strong> has been successfully deleted.</p>
+                                <div class="alert alert-success">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    The page will refresh to show updated order list.
+                                </div>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        timer: 2000,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Refresh the page to show updated order list
+                        window.location.reload();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Delete Failed',
+                        html: `
+                            <div class="text-center">
+                                <i class="fas fa-exclamation-circle text-danger fa-3x mb-3"></i>
+                                <p>Failed to delete order <strong>#${orderId}</strong></p>
+                                <div class="alert alert-danger">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    ${data.message || 'An unknown error occurred'}
+                                </div>
+                            </div>
+                        `,
+                        confirmButtonText: 'OK',
+                        customClass: {
+                            confirmButton: 'btn btn-danger'
+                        }
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error deleting order:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Connection Error',
+                    html: `
+                        <div class="text-center">
+                            <i class="fas fa-wifi fa-3x text-danger mb-3"></i>
+                            <p>Failed to connect to the server.</p>
+                            <div class="alert alert-danger">
+                                <i class="fas fa-info-circle me-2"></i>
+                                Please check your internet connection and try again.
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonText: 'OK',
+                    customClass: {
+                        confirmButton: 'btn btn-danger'
+                    }
+                });
+            });
+        }
+    });
 }
 
 function refreshOrders() {

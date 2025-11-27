@@ -1,25 +1,6 @@
 <?php
-session_start();
-
-// Initialize basic variables to prevent errors
-$categories = [];
-$brands = [];
-$cart_count = 0;
-$is_logged_in = false;
-
-// Only include essentials to prevent 500 errors
-try {
-    require_once '../settings/db_class.php';
-    require_once(__DIR__ . '/../settings/core.php');
-
-    // Check if user is logged in
-    $is_logged_in = function_exists('check_login') ? check_login() : isset($_SESSION['user_id']);
-    $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
-
-} catch (Exception $e) {
-    error_log("Register page error: " . $e->getMessage());
-    // Continue loading the page even if some features fail
-}
+// No PHP includes or session management needed for register page
+// This is a static registration form
 ?>
 
 <!DOCTYPE html>
@@ -1744,76 +1725,19 @@ try {
 					</div>
 				</div>
 
-				<!-- User Actions - Far Right -->
+				<!-- Simple Actions for Register Page -->
 				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
 					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-					<?php if (isset($_SESSION['user_id'])): ?>
-						<!-- Wishlist Icon -->
-						<div class="header-icon">
-							<a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-								<i class="fas fa-heart"></i>
-								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-							</a>
-						</div>
-
-						<!-- Cart Icon -->
-						<div class="header-icon">
-							<a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-								<i class="fas fa-shopping-cart"></i>
-								<?php if ($cart_count > 0): ?>
-									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
-								<?php else: ?>
-									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
-								<?php endif; ?>
-							</a>
-						</div>
-
-						<!-- User Avatar Dropdown -->
-						<div class="user-dropdown">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
-							</div>
-							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="goToAccount()">
-									<i class="fas fa-user"></i>
-									<span>Account</span>
-								</button>
-								<div class="dropdown-divider-custom"></div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-globe"></i>
-									<div class="language-selector">
-										<span>Language</span>
-										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-											<option value="en">🇬🇧 EN</option>
-											<option value="es">🇪🇸 ES</option>
-											<option value="fr">🇫🇷 FR</option>
-											<option value="de">🇩🇪 DE</option>
-										</select>
-									</div>
-								</div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-moon"></i>
-									<div class="theme-toggle">
-										<span>Dark Mode</span>
-										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-											<div class="toggle-slider"></div>
-										</div>
-									</div>
-								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="logout.php" class="dropdown-item-custom">
-									<i class="fas fa-sign-out-alt"></i>
-									<span>Logout</span>
-								</a>
-							</div>
-						</div>
-					<?php else: ?>
-						<!-- Login Button -->
-						<a href="login.php" class="login-btn">
-							<i class="fas fa-user"></i>
-							Login
+					<div style="display: flex; align-items: center; gap: 15px;">
+						<a href="login.php" style="color: #f8fafc; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+							<i class="fas fa-sign-in-alt"></i>
+							<span>Login</span>
 						</a>
-					<?php endif; ?>
+						<a href="../index.php" style="color: #f8fafc; text-decoration: none; font-weight: 500; display: flex; align-items: center; gap: 8px;">
+							<i class="fas fa-home"></i>
+							<span>Home</span>
+						</a>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -1833,11 +1757,6 @@ try {
 					<div class="brands-dropdown" id="shopDropdown">
 						<h4>All Brands</h4>
 						<ul>
-							<?php if (!empty($brands)): ?>
-								<?php foreach ($brands as $brand): ?>
-									<li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
-								<?php endforeach; ?>
-							<?php else: ?>
 								<li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
 								<li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
 								<li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
@@ -1846,7 +1765,6 @@ try {
 								<li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
 								<li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
 								<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
-							<?php endif; ?>
 						</ul>
 					</div>
 				</div>
@@ -2070,7 +1988,6 @@ try {
 										SIGN UP
 									</button>
 								</form>
-							<?php endif; ?>
 						</div>
 
 					</div>

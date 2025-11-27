@@ -4571,76 +4571,64 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="footer-brand">
-                            <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                alt="Gadget Garage"
-                                style="height: 35px; width: auto; object-fit: contain;"
-                                class="footer-logo">
-                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
-                            <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                <div class="row align-items-start">
+                    <!-- Left Side: Navigation Links -->
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Get Help</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Help Center</a></li>
+                                    <li><a href="contact.php">Track Order</a></li>
+                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
+                                    <li><a href="terms_conditions.php">Returns</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Company</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Careers</a></li>
+                                    <li><a href="contact.php">About</a></li>
+                                    <li><a href="contact.php">Stores</a></li>
+                                    <li><a href="contact.php">Want to Collab?</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Quick Links</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Size Guide</a></li>
+                                    <li><a href="contact.php">Sitemap</a></li>
+                                    <li><a href="contact.php">Gift Cards</a></li>
+                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Shop</h5>
-                        <ul class="footer-links">
-                            <li><a href="all_product.php?category=phones">Smartphones</a></li>
-                            <li><a href="all_product.php?category=laptops">Laptops</a></li>
-                            <li><a href="all_product.php?category=ipads">Tablets</a></li>
-                            <li><a href="all_product.php?category=cameras">Cameras</a></li>
-                            <li><a href="all_product.php?category=video">Video Equipment</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Services</h5>
-                        <ul class="footer-links">
-                            <li><a href="repair_services.php">Device Repair</a></li>
-                            <li><a href="#">Tech Support</a></li>
-                            <li><a href="#">Data Recovery</a></li>
-                            <li><a href="#">Setup Services</a></li>
-                            <li><a href="#">Warranty</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Company</h5>
-                        <ul class="footer-links">
-                            <li><a href="#">About Us</a></li>
-                            <li><a href="#">Contact</a></li>
-                            <li><a href="#">Careers</a></li>
-                            <li><a href="#">Blog</a></li>
-                            <li><a href="#">Press</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Support</h5>
-                        <ul class="footer-links">
-                            <li><a href="#">Help Center</a></li>
-                            <li><a href="#">Shipping Info</a></li>
-                            <li><a href="#">Returns</a></li>
-                            <li><a href="#">Privacy Policy</a></li>
-                            <li><a href="#">Terms of Service</a></li>
-                        </ul>
+                    <!-- Right Side: Email Signup Form -->
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="newsletter-signup-section">
+                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+                                <button type="submit" class="newsletter-submit-btn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </form>
+                            <p class="newsletter-disclaimer">
+                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+                            </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <hr class="footer-divider">
                 <div class="footer-bottom">
                     <div class="row align-items-center">
-                        <div class="col-md-6">
+                        <div class="col-md-12 text-center">
                             <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
-                        </div>
-                        <div class="col-md-6 text-end">
-                            <div class="payment-methods">
-                                <img src="<?php echo generate_placeholder_url('VISA', '40x25'); ?>" alt="Visa">
-                                <img src="<?php echo generate_placeholder_url('MC', '40x25'); ?>" alt="Mastercard">
-                                <img src="<?php echo generate_placeholder_url('AMEX', '40x25'); ?>" alt="American Express">
-                                <img src="<?php echo generate_placeholder_url('GPAY', '40x25'); ?>" alt="Google Pay">
-                            </div>
                         </div>
                     </div>
                 </div>

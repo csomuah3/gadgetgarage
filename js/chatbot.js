@@ -176,32 +176,11 @@ class ChatBot {
             });
         });
 
-        // Use event delegation for form submission (works with dynamically added forms)
+        // Use event delegation for back button (since it's dynamically added)
         const modal = document.getElementById('supportModal');
         if (modal) {
-            modal.addEventListener('submit', (e) => {
-                if (e.target.id === 'supportMessageForm') {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    this.handleMessageSubmit(e);
-                    return false;
-                }
-            });
-
-            // Also handle button clicks
             modal.addEventListener('click', (e) => {
-                if (e.target.closest('.submit-btn') || e.target.classList.contains('submit-btn')) {
-                    const form = e.target.closest('form') || document.getElementById('supportMessageForm');
-                    if (form) {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        const submitEvent = new Event('submit', { bubbles: true, cancelable: true });
-                        form.dispatchEvent(submitEvent);
-                        return false;
-                    }
-                }
-                
-                // Back button
+                // Back button handler
                 if (e.target.closest('#backToMenu') || e.target.id === 'backToMenu') {
                     e.preventDefault();
                     this.hideMessageForm();
@@ -392,7 +371,7 @@ class ChatBot {
                         <textarea name="message" rows="4" placeholder="Describe your issue..." required></textarea>
                     </div>
 
-                    <button type="button" class="submit-btn" id="sendMessageSubmitBtn">
+                    <button type="submit" class="submit-btn" id="sendMessageSubmitBtn">
                         <i class="fas fa-paper-plane"></i>
                         Send Message
                     </button>
@@ -416,52 +395,20 @@ class ChatBot {
         setTimeout(() => {
             const form = document.getElementById('supportMessageForm');
             const backBtn = document.getElementById('backToMenu');
-            const submitBtn = document.getElementById('sendMessageSubmitBtn');
-            
+
             if (form) {
-                // Add submit handler (in case form is submitted via Enter key)
+                // Add submit handler for form submission (Enter key or submit button)
                 form.addEventListener('submit', (e) => {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Form submitted via Enter key!');
+                    console.log('Form submitted!');
                     this.handleMessageSubmit(e);
                     return false;
                 });
-            }
-            
-            // Handle button click - this is the main handler
-            if (submitBtn) {
-                submitBtn.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    e.stopPropagation();
-                    console.log('Send Message button clicked!');
-                    
-                    const form = document.getElementById('supportMessageForm');
-                    if (!form) {
-                        console.error('Form not found!');
-                        alert('Form not found. Please refresh the page.');
-                        return false;
-                    }
-                    
-                    // Validate form first
-                    if (!form.checkValidity()) {
-                        form.reportValidity();
-                        return false;
-                    }
-                    
-                    // Call handler directly
-                    const mockEvent = {
-                        preventDefault: () => {},
-                        stopPropagation: () => {},
-                        target: submitBtn
-                    };
-                    this.handleMessageSubmit(mockEvent);
-                    return false;
-                });
             } else {
-                console.error('Submit button not found!');
+                console.error('Form not found!');
             }
-            
+
             if (backBtn) {
                 backBtn.addEventListener('click', (e) => {
                     e.preventDefault();

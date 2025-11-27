@@ -1873,15 +1873,6 @@ try {
                         </div>
 
                         <div id="promoMessage" class="mt-2" style="display: none;"></div>
-                        <div id="appliedPromo" class="applied-promo-redesign mt-2" style="display: none;">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <span class="promo-info-redesign">
-                                    <i class="fas fa-tag text-success me-1"></i>
-                                    <span id="promoCodeText"></span>
-                                </span>
-                                <button type="button" id="removePromoBtn" class="btn btn-sm btn-outline-danger">Remove</button>
-                            </div>
-                        </div>
                     </div>
 
                     <div class="cart-summary">

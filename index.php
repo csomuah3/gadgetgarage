@@ -8923,12 +8923,37 @@ try {
 			}
 		}
 
+		// Clear cart after successful payment
+		function clearCartAfterPayment() {
+			fetch('actions/empty_cart_action.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({})
+			}).then(response => response.json())
+			.then(data => {
+				if (data.success) {
+					console.log('Cart cleared successfully after payment');
+					// Update cart count in header
+					updateCartBadge(0);
+				} else {
+					console.error('Failed to clear cart:', data.message);
+				}
+			}).catch(err => {
+				console.log('Cart clearing error (non-critical):', err);
+			});
+		}
+
 		// Handle payment success
 		<?php if ($payment_success && $order_id_from_payment): ?>
 		document.addEventListener('DOMContentLoaded', function() {
 			const orderId = <?php echo json_encode($order_id_from_payment); ?>;
 			const orderRef = <?php echo json_encode($payment_reference); ?>;
 			const orderDetails = <?php echo json_encode($order_details); ?>;
+
+			// Clear the cart immediately after successful payment
+			clearCartAfterPayment();
 
 			// Show order confirmation Sweet Alert
 			if (typeof Swal !== 'undefined') {

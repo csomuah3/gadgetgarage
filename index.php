@@ -511,12 +511,6 @@ try {
 			z-index: 1000;
 		}
 
-		.shop-categories-btn:hover .brands-dropdown {
-			opacity: 1;
-			visibility: visible;
-			transform: translateY(0);
-		}
-
 		.brands-dropdown h4 {
 			margin-bottom: 15px;
 			color: #1f2937;
@@ -6248,35 +6242,49 @@ try {
 	<script src="js/newsletter-popup.js"></script>
 	<script src="views/circular-gallery.js"></script>
 	<script>
+		// Make functions globally accessible
+		window.dropdownTimeout = null;
+		window.shopDropdownTimeout = null;
+		window.moreDropdownTimeout = null;
+		window.userDropdownTimeout = null;
+
 		// Search functionality
-		document.querySelector('.search-input').addEventListener('keypress', function(e) {
-			if (e.key === 'Enter') {
-				performSearch();
+		document.addEventListener('DOMContentLoaded', function() {
+			const searchInput = document.querySelector('.search-input');
+			const searchBtn = document.querySelector('.search-btn');
+			
+			if (searchInput) {
+				searchInput.addEventListener('keypress', function(e) {
+					if (e.key === 'Enter') {
+						performSearch();
+					}
+				});
+			}
+			
+			if (searchBtn) {
+				searchBtn.addEventListener('click', performSearch);
 			}
 		});
 
-		document.querySelector('.search-btn').addEventListener('click', performSearch);
-
 		function performSearch() {
-			const query = document.querySelector('.search-input').value.trim();
+			const query = document.querySelector('.search-input')?.value.trim();
 			if (query) {
 				// Redirect to search results page
 				window.location.href = 'product_search_result.php?query=' + encodeURIComponent(query);
 			}
 		}
 
-		// Dropdown functions
+		// Dropdown functions - must be global for inline handlers
 		let dropdownTimeout;
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
+		let userDropdownTimeout;
 
 		function showDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
 			if (dropdown) {
 				clearTimeout(dropdownTimeout);
-				dropdown.style.opacity = '1';
-				dropdown.style.visibility = 'visible';
-				dropdown.style.transform = 'translateY(0)';
+				dropdown.style.cssText = 'opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important;';
 			}
 		}
 
@@ -6285,9 +6293,7 @@ try {
 			if (dropdown) {
 				clearTimeout(dropdownTimeout);
 				dropdownTimeout = setTimeout(() => {
-					dropdown.style.opacity = '0';
-					dropdown.style.visibility = 'hidden';
-					dropdown.style.transform = 'translateY(-10px)';
+					dropdown.style.cssText = 'opacity: 0 !important; visibility: hidden !important; transform: translateY(-10px) !important;';
 				}, 300);
 			}
 		}
@@ -6368,9 +6374,6 @@ try {
 				userDropdown.addEventListener('mouseleave', hideUserDropdown);
 			}
 		});
-
-		// User dropdown hover functionality
-		let userDropdownTimeout;
 
 		function showUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');

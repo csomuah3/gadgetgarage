@@ -3184,6 +3184,214 @@ try {
     </script>
 
     <style>
+        /* Cart Popup Styles */
+        .cart-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .cart-popup-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .cart-popup {
+            background: white;
+            border-radius: 12px;
+            max-width: 450px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .cart-popup-overlay.show .cart-popup {
+            transform: scale(1);
+        }
+
+        .cart-popup-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid #e5e7eb;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .cart-popup-header h3 {
+            margin: 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .cart-popup-close {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 5px;
+            border-radius: 50%;
+            transition: background 0.2s ease;
+        }
+
+        .cart-popup-close:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .cart-popup-body {
+            padding: 20px;
+        }
+
+        .added-item {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f8fafc;
+            border-radius: 8px;
+        }
+
+        .item-image {
+            width: 80px;
+            height: 80px;
+            object-fit: cover;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .item-details h4 {
+            margin: 0 0 8px 0;
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .item-specs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+        }
+
+        .condition-badge {
+            background: #3b82f6;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .quantity-badge {
+            background: #6b7280;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 500;
+        }
+
+        .item-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #10b981;
+        }
+
+        .cart-summary {
+            border-top: 1px solid #e5e7eb;
+            padding-top: 15px;
+        }
+
+        .cart-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .cart-count {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .subtotal {
+            color: #1f2937;
+        }
+
+        .shipping-badge {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 500;
+        }
+
+        .cart-popup-footer {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            border-top: 1px solid #e5e7eb;
+            background: #f9fafb;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .cart-popup-footer .btn {
+            flex: 1;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-outline {
+            background: white;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+        }
+
+        .btn-outline:hover {
+            border-color: #d1d5db;
+            background: #f9fafb;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            transform: translateY(-1px);
+        }
+
         /* Footer Styles */
         .main-footer {
             background: #ffffff;
@@ -3909,24 +4117,40 @@ function addToCartWithCondition(productId) {
     .then(response => response.json())
     .then(data => {
         console.log('Cart response:', data);
-        if (data.status === 'success') {
-            // Show success message
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: 'Added to Cart!',
-                    text: 'Product has been added to your cart.',
-                    icon: 'success',
-                    timer: 2000
-                });
+        if (data.status === 'success' || data.success) {
+            // Use the beautiful popup from cart.js if available
+            if (typeof showAddedToCartPopup === 'function') {
+                // Transform our data to match the expected format
+                var popupData = {
+                    product_name: data.product_name || '<?php echo addslashes($product['product_title']); ?>',
+                    product_image: '<?php echo addslashes(get_product_image_url($product['product_image'], $product['product_title'])); ?>',
+                    condition: condition,
+                    quantity: 1,
+                    final_price: price,
+                    product_price: price,
+                    cart_count: data.cart_count || 0,
+                    cart_total: data.cart_total || '0'
+                };
+                showAddedToCartPopup(popupData);
             } else {
-                alert('Product added to cart successfully!');
+                // Fallback to SweetAlert if cart.js not loaded
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Added to Cart!',
+                        text: 'Product has been added to your cart.',
+                        icon: 'success',
+                        timer: 2000
+                    });
+                } else {
+                    alert('Product added to cart successfully!');
+                }
             }
 
             // Update cart count if element exists
             var cartBadge = document.getElementById('cartBadge');
-            if (cartBadge && data.cart_count) {
+            if (cartBadge && (data.cart_count || data.cart_count === 0)) {
                 cartBadge.textContent = data.cart_count;
-                cartBadge.style.display = 'inline';
+                cartBadge.style.display = data.cart_count > 0 ? 'inline' : 'none';
             }
         } else {
             // Show error message
@@ -3955,9 +4179,94 @@ function addToCartWithCondition(productId) {
     });
 }
 
+// Beautiful cart popup function (from cart.js)
+function showAddedToCartPopup(data) {
+    // Remove existing popup
+    var existingPopup = document.getElementById('addedToCartPopup');
+    if (existingPopup) existingPopup.remove();
+
+    var safeProductName = (data.product_name || 'Product').replace(/"/g, '&quot;').replace(/'/g, '&#39;');
+    var productImage = data.product_image || '';
+
+    var popup = document.createElement('div');
+    popup.id = 'addedToCartPopup';
+    popup.className = 'cart-popup-overlay';
+    popup.innerHTML =
+        '<div class="cart-popup">' +
+            '<div class="cart-popup-header">' +
+                '<h3><i class="fas fa-check-circle text-success"></i> Added to Cart!</h3>' +
+                '<button class="cart-popup-close" onclick="closeAddedToCartPopup()">' +
+                    '<i class="fas fa-times"></i>' +
+                '</button>' +
+            '</div>' +
+            '<div class="cart-popup-body">' +
+                '<div class="added-item">' +
+                    '<img src="' + productImage + '" alt="' + safeProductName + '" class="item-image">' +
+                    '<div class="item-details">' +
+                        '<h4>' + data.product_name + '</h4>' +
+                        '<div class="item-specs">' +
+                            (data.condition ? '<span class="condition-badge">' + data.condition + ' Condition</span>' : '') +
+                            '<span class="quantity-badge">Qty: ' + (data.quantity || 1) + '</span>' +
+                        '</div>' +
+                        '<div class="item-price">GH₵' + Math.round(parseFloat(data.final_price || data.product_price)).toLocaleString() + '</div>' +
+                    '</div>' +
+                '</div>' +
+                '<div class="cart-summary">' +
+                    '<div class="cart-info">' +
+                        '<div class="cart-count">' +
+                            '<i class="fas fa-shopping-bag"></i>' +
+                            '<span>Cart (' + (data.cart_count || 0) + ')</span>' +
+                        '</div>' +
+                        '<div class="subtotal">' +
+                            '<span>Subtotal: <strong>GH₵' + Math.round(parseFloat(data.cart_total || '0')).toLocaleString() + '</strong></span>' +
+                        '</div>' +
+                    '</div>' +
+                    (parseFloat(data.cart_total || '0') > 200 ? '<div class="shipping-badge"><i class="fas fa-shipping-fast"></i> You earned Free Standard Shipping!</div>' : '') +
+                '</div>' +
+            '</div>' +
+            '<div class="cart-popup-footer">' +
+                '<button class="btn btn-outline" onclick="closeAddedToCartPopup()">Continue Shopping</button>' +
+                '<button class="btn btn-primary" onclick="viewCart()">' +
+                    '<i class="fas fa-shopping-cart"></i> View Cart (' + (data.cart_count || 0) + ')' +
+                '</button>' +
+            '</div>' +
+        '</div>';
+
+    document.body.appendChild(popup);
+
+    // Show popup with animation
+    setTimeout(function() {
+        popup.classList.add('show');
+    }, 10);
+
+    // Auto close after 8 seconds
+    setTimeout(function() {
+        if (document.getElementById('addedToCartPopup')) {
+            closeAddedToCartPopup();
+        }
+    }, 8000);
+}
+
+function closeAddedToCartPopup() {
+    var popup = document.getElementById('addedToCartPopup');
+    if (popup) {
+        popup.classList.remove('show');
+        setTimeout(function() {
+            popup.remove();
+        }, 300);
+    }
+}
+
+function viewCart() {
+    window.location.href = '../views/cart.php';
+}
+
 // Make functions globally available
 window.selectCondition = selectCondition;
 window.addToCartWithCondition = addToCartWithCondition;
+window.showAddedToCartPopup = showAddedToCartPopup;
+window.closeAddedToCartPopup = closeAddedToCartPopup;
+window.viewCart = viewCart;
 
 console.log('=== CONDITION SELECTION SCRIPT LOADED ===');
 console.log('selectCondition available:', typeof window.selectCondition);

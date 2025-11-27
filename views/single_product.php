@@ -4225,7 +4225,7 @@ function showAddedToCartPopup(data) {
                 '</div>' +
             '</div>' +
             '<div class="cart-popup-footer">' +
-                '<button class="btn btn-outline" onclick="closeAddedToCartPopup()">Continue Shopping</button>' +
+                '<button class="btn btn-outline" onclick="continueShopping()">Continue Shopping</button>' +
                 '<button class="btn btn-primary" onclick="viewCart()">' +
                     '<i class="fas fa-shopping-cart"></i> View Cart (' + (data.cart_count || 0) + ')' +
                 '</button>' +
@@ -4261,12 +4261,17 @@ function viewCart() {
     window.location.href = '../views/cart.php';
 }
 
+function continueShopping() {
+    window.location.href = '../index.php';
+}
+
 // Make functions globally available
 window.selectCondition = selectCondition;
 window.addToCartWithCondition = addToCartWithCondition;
 window.showAddedToCartPopup = showAddedToCartPopup;
 window.closeAddedToCartPopup = closeAddedToCartPopup;
 window.viewCart = viewCart;
+window.continueShopping = continueShopping;
 
 console.log('=== CONDITION SELECTION SCRIPT LOADED ===');
 console.log('selectCondition available:', typeof window.selectCondition);

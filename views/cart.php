@@ -1472,20 +1472,53 @@ try {
             margin-top: 0;
         }
 
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 16px;
+        .footer-brand {
+            margin-bottom: 30px;
         }
 
-        .footer-logo .garage {
+        .footer-logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+
+        .footer-logo-icon {
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
+            flex-shrink: 0;
+        }
+
+        .footer-logo-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .footer-logo {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #1E3A5F;
+            margin: 0;
+            line-height: 1.2;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .footer-tagline {
+            font-size: 0.75rem;
+            color: #2563EB;
+            font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 2px;
         }
 
         .footer-description {
@@ -1493,6 +1526,7 @@ try {
             font-size: 0.95rem;
             margin-bottom: 24px;
             line-height: 1.6;
+            font-family: "Times New Roman", Times, serif;
         }
 
         .social-links {
@@ -1511,6 +1545,7 @@ try {
             color: #6b7280;
             text-decoration: none;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .social-link:hover {
@@ -2113,10 +2148,31 @@ try {
         <div class="container">
             <div class="footer-content">
                 <div class="row align-items-start">
-                    <!-- Left Side: Navigation Links -->
-                    <div class="col-lg-8 col-md-12">
+                    <!-- First Column: Logo and Social -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <div class="footer-logo-container">
+                                <div class="footer-logo-icon">
+                                    <i class="fas fa-bolt"></i>
+                                </div>
+                                <div class="footer-logo-text">
+                                    <h3 class="footer-logo">GADGET GARAGE</h3>
+                                    <p class="footer-tagline">RELIABLE TECH. RENEWED FOR YOU.</p>
+                                </div>
+                            </div>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Navigation Links -->
+                    <div class="col-lg-5 col-md-12">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Get Help</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Help Center</a></li>
@@ -2126,7 +2182,7 @@ try {
                                     <li><a href="contact.php">Contact Us</a></li>
                                 </ul>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Company</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Careers</a></li>
@@ -2135,7 +2191,7 @@ try {
                                     <li><a href="contact.php">Want to Collab?</a></li>
                                 </ul>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Quick Links</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Size Guide</a></li>

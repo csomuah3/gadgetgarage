@@ -4456,15 +4456,24 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Global functions accessible from HTML onclick events
         window.toggleWishlist = function(productId, button) {
-            console.log('toggleWishlist called with productId:', productId, 'button:', button);
+            <?php if (!$is_logged_in): ?>
+                window.location.href = '../login/login.php';
+                return;
+            <?php endif; ?>
+
             const icon = button.querySelector('i');
+            if (!icon) {
+                console.error('Icon not found in button');
+                return;
+            }
+
             const isActive = button.classList.contains('active');
-            console.log('Icon:', icon, 'IsActive:', isActive);
 
             if (isActive) {
                 // Remove from wishlist
                 button.classList.remove('active');
                 icon.className = 'far fa-heart';
+                icon.style.color = '#6b7280';
 
                 // Make AJAX call to remove from wishlist
                 fetch('../actions/remove_from_wishlist.php', {
@@ -4489,6 +4498,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         // Revert if failed
                         button.classList.add('active');
                         icon.className = 'fas fa-heart';
+                        icon.style.color = '#ef4444';
                         if (data.message) alert(data.message);
                     }
                 })
@@ -4497,11 +4507,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     // Revert if failed
                     button.classList.add('active');
                     icon.className = 'fas fa-heart';
+                    icon.style.color = '#ef4444';
                 });
             } else {
                 // Add to wishlist
                 button.classList.add('active');
                 icon.className = 'fas fa-heart';
+                icon.style.color = '#ef4444';
 
                 // Make AJAX call to add to wishlist
                 fetch('../actions/add_to_wishlist.php', {
@@ -4526,6 +4538,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         // Revert button state if failed
                         button.classList.remove('active');
                         icon.className = 'far fa-heart';
+                        icon.style.color = '#6b7280';
                         if (data.message) {
                             alert(data.message);
                         }
@@ -4536,6 +4549,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     // Revert button state if failed
                     button.classList.remove('active');
                     icon.className = 'far fa-heart';
+                    icon.style.color = '#6b7280';
                 });
             }
         };

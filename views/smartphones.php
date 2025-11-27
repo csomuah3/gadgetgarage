@@ -4,6 +4,7 @@ require_once(__DIR__ . '/../controllers/cart_controller.php');
 require_once(__DIR__ . '/../controllers/product_controller.php');
 require_once(__DIR__ . '/../controllers/category_controller.php');
 require_once(__DIR__ . '/../controllers/brand_controller.php');
+require_once(__DIR__ . '/../controllers/wishlist_controller.php');
 require_once(__DIR__ . '/../helpers/image_helper.php');
 
 $is_logged_in = check_login();
@@ -2908,12 +2909,20 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                     <!-- Wishlist Heart -->
                                     <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                                        <?php
+                                        $is_in_wishlist = false;
+                                        if ($is_logged_in) {
+                                            $is_in_wishlist = check_wishlist_item_ctr($product['product_id'], $customer_id);
+                                        }
+                                        $heart_class = $is_in_wishlist ? 'fas fa-heart' : 'far fa-heart';
+                                        $btn_class = $is_in_wishlist ? 'wishlist-btn active' : 'wishlist-btn';
+                                        ?>
                                         <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>, this)"
-                                            class="wishlist-btn"
+                                            class="<?php echo $btn_class; ?>"
                                             style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
                                             onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
                                             onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
-                                            <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                                            <i class="<?php echo $heart_class; ?>" style="color: <?php echo $is_in_wishlist ? '#ef4444' : '#6b7280'; ?>; font-size: 16px;"></i>
                                         </button>
                                     </div>
 
@@ -4708,6 +4717,148 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     </div>
 
     <?php include '../includes/cart_sidebar.php'; ?>
+
+    <script>
+        // Load wishlist status on page load
+        <?php if ($is_logged_in): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('../actions/get_wishlist_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'product_id=0'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.wishlist_items) {
+                    // Update wishlist badge
+                    const wishlistBadge = document.getElementById('wishlistBadge');
+                    if (wishlistBadge && data.count > 0) {
+                        wishlistBadge.textContent = data.count;
+                        wishlistBadge.style.display = 'flex';
+                    }
+
+                    // Update wishlist heart buttons
+                    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+                    wishlistButtons.forEach(button => {
+                        const onclickAttr = button.getAttribute('onclick');
+                        if (onclickAttr) {
+                            const match = onclickAttr.match(/toggleWishlist\((\d+)/);
+                            if (match) {
+                                const productId = parseInt(match[1]);
+                                if (data.wishlist_items.includes(productId)) {
+                                    button.classList.add('active');
+                                    const icon = button.querySelector('i');
+                                    if (icon) {
+                                        icon.className = 'fas fa-heart';
+                                        icon.style.color = '#ef4444';
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading wishlist status:', error));
+        });
+        <?php endif; ?>
+
+        // Global function accessible from HTML onclick events
+        window.toggleWishlist = function(productId, button) {
+            <?php if (!$is_logged_in): ?>
+                window.location.href = '../login/login.php';
+                return;
+            <?php endif; ?>
+
+            const icon = button.querySelector('i');
+            const isActive = button.classList.contains('active');
+
+            if (isActive) {
+                // Remove from wishlist
+                button.classList.remove('active');
+                icon.className = 'far fa-heart';
+                icon.style.color = '#6b7280';
+
+                // Make AJAX call to remove from wishlist
+                fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge if exists
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count = Math.max(0, count - 1);
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    } else {
+                        // Revert if failed
+                        button.classList.add('active');
+                        icon.className = 'fas fa-heart';
+                        icon.style.color = '#ef4444';
+                        if (data.message) alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert if failed
+                    button.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                    icon.style.color = '#ef4444';
+                });
+            } else {
+                // Add to wishlist
+                button.classList.add('active');
+                icon.className = 'fas fa-heart';
+                icon.style.color = '#ef4444';
+
+                // Make AJAX call to add to wishlist
+                fetch('../actions/add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count++;
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = 'flex';
+                        }
+                    } else {
+                        // Revert button state if failed
+                        button.classList.remove('active');
+                        icon.className = 'far fa-heart';
+                        icon.style.color = '#6b7280';
+                        if (data.message) {
+                            alert(data.message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert button state if failed
+                    button.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                    icon.style.color = '#6b7280';
+                });
+            }
+        };
+    </script>
 
 </body>
 

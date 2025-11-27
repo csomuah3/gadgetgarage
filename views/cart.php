@@ -1483,6 +1483,12 @@ try {
             margin-bottom: 16px;
         }
 
+        .footer-logo img {
+            height: 80px !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+
         .footer-logo .garage {
             background: linear-gradient(135deg, #1E3A5F, #2563EB);
             color: white;
@@ -1494,9 +1500,9 @@ try {
 
         .footer-description {
             color: #6b7280;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             margin-bottom: 24px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .social-links {
@@ -1505,8 +1511,8 @@ try {
         }
 
         .social-link {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: #f3f4f6;
             border-radius: 50%;
             display: flex;
@@ -1515,7 +1521,7 @@ try {
             color: #6b7280;
             text-decoration: none;
             transition: all 0.3s ease;
-            font-size: 1rem;
+            font-size: 1.2rem;
         }
 
         .social-link:hover {
@@ -1525,10 +1531,10 @@ try {
         }
 
         .footer-title {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #1f2937;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .footer-links {
@@ -1538,13 +1544,13 @@ try {
         }
 
         .footer-links li {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .footer-links li a {
             color: #6b7280;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
@@ -1566,7 +1572,7 @@ try {
 
         .copyright {
             color: #6b7280;
-            font-size: 0.9rem;
+            font-size: 1rem;
             margin: 0;
         }
 
@@ -1581,9 +1587,9 @@ try {
 
         .newsletter-title {
             color: #1f2937;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .newsletter-form {
@@ -1598,10 +1604,10 @@ try {
 
         .newsletter-input {
             flex: 1;
-            padding: 12px 18px;
+            padding: 14px 20px;
             border: none;
             outline: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #1a1a1a;
             background: #e5e7eb;
         }
@@ -1634,8 +1640,8 @@ try {
 
         .newsletter-disclaimer {
             color: #6b7280;
-            font-size: 0.7rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.6;
             margin: 8px 0 0 0;
             text-align: left;
         }
@@ -2121,10 +2127,9 @@ try {
                     <!-- First Column: Logo and Social -->
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="footer-brand">
-                            <div class="footer-logo" style="margin-bottom: 16px;">
+                            <div class="footer-logo" style="margin-bottom: 20px;">
                                 <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                    alt="Gadget Garage"
-                                    style="height: 35px; width: auto; object-fit: contain;">
+                                    alt="Gadget Garage">
                             </div>
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">

@@ -127,7 +127,7 @@ if ($category_id > 0) {
                 $related_products[] = $row;
             }
             $stmt->close();
-            $db->db_close();
+            // Connection will close automatically at end of script
         }
     } catch (Exception $e) {
         error_log("Related products error: " . $e->getMessage());

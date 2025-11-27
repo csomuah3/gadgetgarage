@@ -120,7 +120,7 @@ try {
                 LEFT JOIN brands b ON p.product_brand = b.brand_id
                 WHERE p.product_cat = ? AND p.product_id != ?
                 ORDER BY p.product_id DESC
-                LIMIT 6
+                LIMIT 4
             ");
             $stmt->bind_param('ii', $category_id, $product_id);
             $stmt->execute();
@@ -131,10 +131,10 @@ try {
             $stmt->close();
         }
 
-        // If we have less than 6 products, fill with products from other categories
+        // If we have less than 4 products, fill with products from other categories
         $current_count = count($related_products);
-        if ($current_count < 6) {
-            $needed = 6 - $current_count;
+        if ($current_count < 4) {
+            $needed = 4 - $current_count;
 
             // Get product IDs we already have to exclude them
             $exclude_ids = [$product_id]; // Always exclude current product
@@ -1827,6 +1827,9 @@ try {
                         <div style="margin-bottom: 30px;">
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
+                            <!-- Test Button for debugging -->
+                            <button onclick="testClick()" style="background: red; color: white; padding: 10px; margin-bottom: 10px; border: none; border-radius: 5px;">TEST CLICK</button>
+
                             <!-- Excellent Condition -->
                             <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo $excellentPrice; ?>" onclick="selectCondition('excellent')">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -1929,14 +1932,26 @@ try {
             fair: <?php echo $fairPrice; ?>
         };
 
+        // SIMPLE TEST FUNCTION - for debugging
+        window.testClick = function() {
+            alert('Button click is working!');
+        };
+
         // GLOBAL function definition - make sure it's available to onclick handlers
         window.selectCondition = function(condition, price = null) {
-            try {
-                console.log('selectCondition called with:', condition, price);
+            // Basic alert to test if function is called
+            console.log('=== selectCondition CALLED ===');
+            console.log('Condition:', condition);
+            console.log('Price:', price);
 
+            // Show visual feedback immediately
+            alert('Condition selected: ' + condition);
+
+            try {
                 // Validate condition
                 if (!['excellent', 'good', 'fair'].includes(condition)) {
                     console.error('Invalid condition:', condition);
+                    alert('Invalid condition: ' + condition);
                     return;
                 }
 
@@ -1947,6 +1962,7 @@ try {
                 console.log('Updated selectedCondition:', selectedCondition, 'selectedPrice:', selectedPrice);
             } catch (error) {
                 console.error('Error in selectCondition:', error);
+                alert('Error: ' + error.message);
                 return;
             }
 

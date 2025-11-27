@@ -1568,25 +1568,27 @@ try {
         /* Newsletter Signup Section */
         .newsletter-signup-section {
             background: #000000;
-            padding: 40px 20px;
-            margin: 40px 0 20px;
+            padding: 30px 25px;
             border-radius: 8px;
-            text-align: center;
+            text-align: left;
+            max-width: 100%;
+            height: fit-content;
         }
 
         .newsletter-title {
             color: #ffffff;
-            font-size: 1.2rem;
+            font-size: 1rem;
             font-weight: 700;
             text-transform: uppercase;
-            margin-bottom: 20px;
-            letter-spacing: 1px;
+            margin-bottom: 15px;
+            letter-spacing: 0.5px;
+            line-height: 1.3;
         }
 
         .newsletter-form {
             display: flex;
-            max-width: 500px;
-            margin: 0 auto 20px;
+            width: 100%;
+            margin: 0 0 15px 0;
             gap: 0;
             border-radius: 50px;
             overflow: hidden;
@@ -1595,10 +1597,10 @@ try {
 
         .newsletter-input {
             flex: 1;
-            padding: 15px 20px;
+            padding: 12px 18px;
             border: none;
             outline: none;
-            font-size: 1rem;
+            font-size: 0.9rem;
             color: #1a1a1a;
             background: #ffffff;
         }
@@ -1608,8 +1610,9 @@ try {
         }
 
         .newsletter-submit-btn {
-            width: 50px;
-            height: 50px;
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
             border: none;
             background: #e5e7eb;
             color: #000000;
@@ -1630,10 +1633,10 @@ try {
 
         .newsletter-disclaimer {
             color: #9ca3af;
-            font-size: 0.75rem;
-            line-height: 1.6;
-            margin: 10px auto 0;
-            max-width: 600px;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            margin: 8px 0 0 0;
+            text-align: left;
         }
 
         .newsletter-disclaimer a {
@@ -1644,6 +1647,12 @@ try {
 
         .newsletter-disclaimer a:hover {
             color: #d1d5db;
+        }
+
+        @media (max-width: 991px) {
+            .newsletter-signup-section {
+                margin-top: 20px;
+            }
         }
     </style>
 </head>
@@ -2107,81 +2116,60 @@ try {
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
-                <div class="row">
-                    <div class="col-lg-4 col-md-6 mb-4">
-                        <div class="footer-brand">
-                            <div class="footer-logo" style="margin-bottom: 16px;">
-                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                    alt="Gadget Garage"
-                                    style="height: 35px; width: auto; object-fit: contain;">
+                <div class="row align-items-start">
+                    <!-- Left Side: Navigation Links -->
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Get Help</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Help Center</a></li>
+                                    <li><a href="contact.php">Track Order</a></li>
+                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
+                                    <li><a href="terms_conditions.php">Returns</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
                             </div>
-                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
-                            <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Company</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Careers</a></li>
+                                    <li><a href="contact.php">About</a></li>
+                                    <li><a href="contact.php">Stores</a></li>
+                                    <li><a href="contact.php">Want to Collab?</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Quick Links</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Size Guide</a></li>
+                                    <li><a href="contact.php">Sitemap</a></li>
+                                    <li><a href="contact.php">Gift Cards</a></li>
+                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Shop</h5>
-                        <ul class="footer-links">
-                            <li><a href="all_product.php?category=smartphones">Smartphones</a></li>
-                            <li><a href="all_product.php?category=laptops">Laptops</a></li>
-                            <li><a href="all_product.php?category=ipads">Tablets</a></li>
-                            <li><a href="all_product.php?category=cameras">Cameras</a></li>
-                            <li><a href="all_product.php?category=video_equipment">Video Equipment</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Services</h5>
-                        <ul class="footer-links">
-                            <li><a href="repair_services.php">Device Repair</a></li>
-                            <li><a href="contact.php">Tech Support</a></li>
-                            <li><a href="repair_services.php">Data Recovery</a></li>
-                            <li><a href="contact.php">Setup Services</a></li>
-                            <li><a href="terms_conditions.php">Warranty</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Company</h5>
-                        <ul class="footer-links">
-                            <li><a href="contact.php">About Us</a></li>
-                            <li><a href="contact.php">Contact</a></li>
-                            <li><a href="contact.php">Careers</a></li>
-                            <li><a href="contact.php">Blog</a></li>
-                            <li><a href="contact.php">Press</a></li>
-                        </ul>
-                    </div>
-                    <div class="col-lg-2 col-md-6 mb-4">
-                        <h5 class="footer-title">Support</h5>
-                        <ul class="footer-links">
-                            <li><a href="contact.php">Help Center</a></li>
-                            <li><a href="terms_conditions.php">Shipping Info</a></li>
-                            <li><a href="terms_conditions.php">Returns</a></li>
-                            <li><a href="legal.php">Privacy Policy</a></li>
-                            <li><a href="terms_conditions.php">Terms of Service</a></li>
-                        </ul>
+                    <!-- Right Side: Email Signup Form -->
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="newsletter-signup-section">
+                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+                                <button type="submit" class="newsletter-submit-btn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </form>
+                            <p class="newsletter-disclaimer">
+                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+                            </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
+                        </div>
                     </div>
                 </div>
                 <hr class="footer-divider">
-                <!-- Newsletter Signup Section -->
-                <div class="newsletter-signup-section">
-                    <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
-                    <form class="newsletter-form" id="newsletterForm">
-                        <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
-                        <button type="submit" class="newsletter-submit-btn">
-                            <i class="fas fa-arrow-right"></i>
-                        </button>
-                    </form>
-                    <p class="newsletter-disclaimer">
-                        By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
-                    </p>
-                    <p class="newsletter-disclaimer">
-                        By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
-                    </p>
-                </div>
                 <div class="footer-bottom">
                     <div class="row align-items-center">
                         <div class="col-md-12 text-center">

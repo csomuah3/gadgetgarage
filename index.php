@@ -448,16 +448,17 @@ try {
 			position: absolute;
 			top: 100%;
 			left: 0;
-			background: white;
+			background: #ffffff;
 			border: 1px solid #e5e7eb;
 			border-radius: 8px;
-			min-width: 160px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			z-index: 1000;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+			padding: 8px 0;
+			min-width: 200px;
 			opacity: 0;
 			visibility: hidden;
 			transform: translateY(-10px);
 			transition: all 0.3s ease;
+			z-index: 1000;
 		}
 
 		.simple-dropdown.show {
@@ -468,28 +469,23 @@ try {
 
 		.simple-dropdown ul {
 			list-style: none;
-			padding: 8px 0;
+			padding: 0;
 			margin: 0;
 		}
 
-		.simple-dropdown li {
-			padding: 0;
-		}
-
-		.simple-dropdown a {
+		.simple-dropdown ul li a {
+			color: #6b7280;
+			text-decoration: none;
+			padding: 8px 16px;
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			padding: 12px 16px;
-			color: #4b5563;
-			text-decoration: none;
-			font-size: 0.9rem;
 			transition: all 0.3s ease;
 		}
 
-		.simple-dropdown a:hover {
-			background: #f3f4f6;
-			color: #2563EB;
+		.simple-dropdown ul li a:hover {
+			background: #f9fafb;
+			color: #008060;
 		}
 
 		.flash-deal-spacer {
@@ -504,59 +500,54 @@ try {
 			left: 0;
 			background: white;
 			border: 1px solid #e5e7eb;
-			border-radius: 8px;
-			padding: 12px;
-			width: 280px;
-			max-height: 350px;
-			overflow-y: auto;
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-			z-index: 1000;
+			border-radius: 12px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+			padding: 20px;
+			min-width: 300px;
 			opacity: 0;
 			visibility: hidden;
 			transform: translateY(-10px);
 			transition: all 0.3s ease;
+			z-index: 1000;
 		}
 
-		.brands-dropdown.show {
+		.shop-categories-btn:hover .brands-dropdown {
 			opacity: 1;
 			visibility: visible;
 			transform: translateY(0);
 		}
 
 		.brands-dropdown h4 {
-			font-size: 1rem;
-			font-weight: 600;
+			margin-bottom: 15px;
 			color: #1f2937;
-			margin-bottom: 12px;
-			padding-bottom: 8px;
-			border-bottom: 1px solid #e5e7eb;
+			font-size: 1.1rem;
+			font-weight: 600;
 		}
 
 		.brands-dropdown ul {
 			list-style: none;
-			padding: 0;
 			margin: 0;
+			padding: 0;
 		}
 
 		.brands-dropdown li {
-			padding: 0;
+			margin-bottom: 8px;
 		}
 
 		.brands-dropdown a {
+			color: #6b7280;
+			text-decoration: none;
+			padding: 8px 12px;
+			border-radius: 6px;
 			display: flex;
 			align-items: center;
 			gap: 8px;
-			padding: 8px 12px;
-			color: #4b5563;
-			text-decoration: none;
-			font-size: 0.9rem;
-			border-radius: 6px;
-			transition: all 0.2s ease;
+			transition: all 0.3s ease;
 		}
 
 		.brands-dropdown a:hover {
 			background: #f3f4f6;
-			color: #2563EB;
+			color: #3b82f6;
 		}
 
 		/* Scrollbar styling for brands dropdown */
@@ -580,62 +571,37 @@ try {
 
 		.header-icon {
 			position: relative;
-			padding: 14px;
-			border-radius: 12px;
-			transition: all 0.3s ease;
-			color: #1f2937;
-			cursor: pointer;
+			width: 48px;
+			height: 48px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-		}
-
-		.header-icon i {
-			font-size: 1.8rem;
-			font-weight: 700;
-			stroke-width: 2;
-			-webkit-text-stroke: 1px currentColor;
+			color: #374151;
+			font-size: 1.3rem;
+			transition: all 0.3s ease;
+			border-radius: 50%;
 		}
 
 		.header-icon:hover {
-			background: rgba(0, 128, 96, 0.15);
-			color: #2563EB;
-			transform: scale(1.15);
-			box-shadow: 0 4px 12px rgba(0, 128, 96, 0.2);
+			background: rgba(139, 95, 191, 0.1);
+			transform: scale(1.1);
 		}
 
+		.wishlist-badge,
 		.cart-badge {
 			position: absolute;
-			top: 4px;
-			right: 4px;
-			background: linear-gradient(135deg, #006b4e, #008060);
+			top: -2px;
+			right: -2px;
+			background: #ef4444;
 			color: white;
-			font-size: 1rem;
-			font-weight: 100;
-			padding: 5px 9px;
-			border-radius: 14px;
-			min-width: 26px;
-			text-align: center;
-			border: 3px solid white;
-			box-shadow: none;
-			line-height: 1;
-		}
-
-		.wishlist-badge {
-			position: absolute;
-			top: 4px;
-			right: 4px;
-			background: linear-gradient(135deg, #ef4444, #dc2626);
-			color: white;
-			font-size: 1rem;
-			font-weight: 100;
-			padding: 5px 9px;
-			border-radius: 14px;
-			min-width: 26px;
-			text-align: center;
-			border: 3px solid white;
-			box-shadow: none;
-			line-height: 1;
+			border-radius: 50%;
+			width: 20px;
+			height: 20px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			font-size: 0.7rem;
+			font-weight: 600;
 		}
 
 		.user-menu {
@@ -711,16 +677,16 @@ try {
 			right: 0;
 			background: rgba(255, 255, 255, 0.95);
 			backdrop-filter: blur(20px);
-			border: 1px solid rgba(37, 99, 235, 0.15);
+			border: 1px solid rgba(139, 95, 191, 0.2);
 			border-radius: 15px;
-			box-shadow: 0 8px 32px rgba(30, 58, 95, 0.08);
+			box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
 			padding: 15px 0;
 			min-width: 220px;
-			z-index: 1000;
 			opacity: 0;
 			visibility: hidden;
 			transform: translateY(-10px);
 			transition: all 0.3s ease;
+			z-index: 1000;
 		}
 
 		.dropdown-menu-custom.show {
@@ -741,12 +707,11 @@ try {
 			background: none;
 			width: 100%;
 			cursor: pointer;
-			font-size: 0.9rem;
 		}
 
 		.dropdown-item-custom:hover {
-			background: rgba(37, 99, 235, 0.08);
-			color: #2563EB;
+			background: rgba(139, 95, 191, 0.1);
+			color: #008060;
 			transform: translateX(3px);
 		}
 
@@ -758,7 +723,7 @@ try {
 
 		.dropdown-divider-custom {
 			height: 1px;
-			background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.15), transparent);
+			background: linear-gradient(90deg, transparent, rgba(139, 95, 191, 0.2), transparent);
 			margin: 8px 0;
 		}
 
@@ -6366,23 +6331,22 @@ try {
 
 		function showDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
-			console.log('showDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(dropdownTimeout);
-				dropdown.classList.add('show');
-				console.log('Added show class to brands dropdown');
+				dropdown.style.opacity = '1';
+				dropdown.style.visibility = 'visible';
+				dropdown.style.transform = 'translateY(0)';
 			}
 		}
 
 		function hideDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
 			if (dropdown) {
-				// Clear any existing timeout
 				clearTimeout(dropdownTimeout);
-				// Set a delay before hiding to allow moving to dropdown
 				dropdownTimeout = setTimeout(() => {
-					dropdown.classList.remove('show');
-					console.log('Removed show class from brands dropdown');
+					dropdown.style.opacity = '0';
+					dropdown.style.visibility = 'hidden';
+					dropdown.style.transform = 'translateY(-10px)';
 				}, 300);
 			}
 		}
@@ -6438,24 +6402,50 @@ try {
 		// Enhanced dropdown behavior
 		document.addEventListener('DOMContentLoaded', function() {
 			const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
-			const dropdown = document.getElementById('shopDropdown');
-
-			if (shopCategoriesBtn && dropdown) {
-				// Show dropdown on button hover
+			const brandsDropdown = document.getElementById('shopDropdown');
+			
+			if (shopCategoriesBtn && brandsDropdown) {
 				shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
-
-				// Hide dropdown when leaving button (with delay)
 				shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
-
-				// Keep dropdown open when hovering over it
-				dropdown.addEventListener('mouseenter', function() {
+				brandsDropdown.addEventListener('mouseenter', function() {
 					clearTimeout(dropdownTimeout);
 				});
+				brandsDropdown.addEventListener('mouseleave', hideDropdown);
+			}
 
-				// Hide dropdown when leaving dropdown area
-				dropdown.addEventListener('mouseleave', hideDropdown);
+			const userAvatar = document.querySelector('.user-avatar');
+			const userDropdown = document.getElementById('userDropdownMenu');
+			
+			if (userAvatar && userDropdown) {
+				userAvatar.addEventListener('mouseenter', showUserDropdown);
+				userAvatar.addEventListener('mouseleave', hideUserDropdown);
+				userDropdown.addEventListener('mouseenter', function() {
+					clearTimeout(userDropdownTimeout);
+				});
+				userDropdown.addEventListener('mouseleave', hideUserDropdown);
 			}
 		});
+
+		// User dropdown hover functionality
+		let userDropdownTimeout;
+
+		function showUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				clearTimeout(userDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				clearTimeout(userDropdownTimeout);
+				userDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
 
 		// Smooth scrolling for internal links
 		document.querySelectorAll('a[href^="#"]').forEach(anchor => {
@@ -6490,90 +6480,20 @@ try {
 			observer.observe(el);
 		});
 
-		// User dropdown functionality with hover
-		let userDropdownTimeout;
-
-		function showUserDropdown() {
-			const dropdown = document.getElementById('userDropdownMenu');
-			console.log('showUserDropdown called, dropdown element:', dropdown);
-			if (dropdown) {
-				clearTimeout(userDropdownTimeout);
-				dropdown.classList.add('show');
-				console.log('Added show class to user dropdown');
-			}
-		}
-
-		function hideUserDropdown() {
-			const dropdown = document.getElementById('userDropdownMenu');
-			if (dropdown) {
-				clearTimeout(userDropdownTimeout);
-				userDropdownTimeout = setTimeout(() => {
-					dropdown.classList.remove('show');
-					console.log('Removed show class from user dropdown');
-				}, 300);
-			}
-		}
-
+		// User dropdown functionality
 		function toggleUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');
-			if (dropdown) {
-				dropdown.classList.toggle('show');
-			}
+			dropdown.classList.toggle('show');
 		}
 
-		// Add hover and click functionality to user dropdown
-		document.addEventListener('DOMContentLoaded', function() {
-			const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
-			const userDropdown = document.getElementById('userDropdownMenu');
-
-			if (userAvatar && userDropdown) {
-				// Show dropdown on avatar hover
-				userAvatar.addEventListener('mouseenter', function(e) {
-					e.stopPropagation();
-					showUserDropdown();
-				});
-
-				// Hide dropdown when leaving avatar (with delay)
-				userAvatar.addEventListener('mouseleave', function(e) {
-					e.stopPropagation();
-					hideUserDropdown();
-				});
-
-				// Keep dropdown open when hovering over it
-				userDropdown.addEventListener('mouseenter', function() {
-					clearTimeout(userDropdownTimeout);
-				});
-
-				// Hide dropdown when leaving dropdown area
-				userDropdown.addEventListener('mouseleave', hideUserDropdown);
-
-				// Handle click on avatar to toggle dropdown
-				userAvatar.addEventListener('click', function(e) {
-					e.stopPropagation();
-					e.preventDefault();
-					// Clear any pending hide timeout
-					clearTimeout(userDropdownTimeout);
-					toggleUserDropdown();
-				});
-			}
-		});
-
-		// Close dropdown when clicking outside (with slight delay to allow toggle to work)
+		// Close dropdown when clicking outside
 		document.addEventListener('click', function(event) {
-			setTimeout(function() {
-				const dropdown = document.getElementById('userDropdownMenu');
-				const avatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
+			const dropdown = document.getElementById('userDropdownMenu');
+			const avatar = document.querySelector('.user-avatar');
 
-				if (dropdown && avatar) {
-					// Check if click is outside both dropdown and avatar
-					const isClickInsideDropdown = dropdown.contains(event.target);
-					const isClickOnAvatar = avatar.contains(event.target);
-
-					if (!isClickInsideDropdown && !isClickOnAvatar) {
-						dropdown.classList.remove('show');
-					}
-				}
-			}, 10);
+			if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+				dropdown.classList.remove('show');
+			}
 		});
 
 		// Profile picture modal functionality

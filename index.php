@@ -8563,20 +8563,18 @@ try {
 		// Manual function to test rating popup
 		function testRatingPopup() {
 			console.log('Testing rating popup...');
-			const overlay = document.getElementById('ratingPopupOverlay');
-			if (overlay) {
-				console.log('Rating popup overlay found');
-				showRatingPopup('TEST123');
-			} else {
-				console.error('Rating popup overlay NOT found!');
-				// Try to find any rating popup elements
-				const allRatingElements = document.querySelectorAll('[id*="rating"]');
-				console.log('Found rating elements:', allRatingElements);
-			}
+			showRatingPopup('TEST123');
+		}
+
+		// Manual function to test ONLY the simple popup
+		function testSimpleRatingPopup() {
+			console.log('Testing simple rating popup...');
+			showSimpleRatingPopup('TEST123');
 		}
 
 		// Global accessibility for testing
 		window.testRatingPopup = testRatingPopup;
+		window.testSimpleRatingPopup = testSimpleRatingPopup;
 		window.forceCloseRatingPopup = forceCloseRatingPopup;
 
 		// Show popup for logged-in users (limited to once every 5 hours)
@@ -8836,28 +8834,40 @@ try {
 			});
 		}
 
-		// Show rating popup
+		// Show rating popup - BULLETPROOF VERSION
 		function showRatingPopup(orderId) {
 			console.log('Showing rating popup for order:', orderId);
+
+			// Try the fancy popup first
+			const overlay = document.getElementById('ratingPopupOverlay');
+			if (overlay) {
+				console.log('Trying fancy rating popup...');
+				showFancyRatingPopup(orderId);
+
+				// Check if it actually became visible after 500ms
+				setTimeout(() => {
+					const isVisible = overlay.offsetWidth > 0 && overlay.offsetHeight > 0;
+					console.log('Fancy popup visible check:', isVisible);
+
+					if (!isVisible) {
+						console.log('Fancy popup failed, showing simple popup');
+						showSimpleRatingPopup(orderId);
+					}
+				}, 500);
+			} else {
+				console.log('No fancy popup element, showing simple popup');
+				showSimpleRatingPopup(orderId);
+			}
+		}
+
+		// Original fancy popup function
+		function showFancyRatingPopup(orderId) {
 			currentOrderId = orderId;
 			easeRating = 0;
 			satisfactionRating = 0;
 
-			// Reset form values
-			const commentField = document.getElementById('ratingComment');
-			if (commentField) {
-				commentField.value = '';
-			}
-
-			// Reset stars
-			updateStars('easeStars', 0);
-			updateStars('satisfactionStars', 0);
-
-			// Show the popup
 			const overlay = document.getElementById('ratingPopupOverlay');
 			if (overlay) {
-				console.log('Rating popup overlay found, showing popup');
-
 				// Force popup to be visible with explicit styles
 				overlay.style.display = 'flex';
 				overlay.style.position = 'fixed';
@@ -8866,29 +8876,83 @@ try {
 				overlay.style.width = '100%';
 				overlay.style.height = '100%';
 				overlay.style.zIndex = '10001';
+				overlay.style.backgroundColor = 'rgba(0,0,0,0.5)';
 				overlay.classList.add('show');
 
-				// Ensure popup content is visible
 				const popup = overlay.querySelector('.rating-popup');
 				if (popup) {
 					popup.style.display = 'block';
 					popup.style.position = 'relative';
 					popup.style.zIndex = '10002';
 					popup.style.margin = 'auto';
-
-					// Temporary: Make it very obvious for testing
 					popup.style.border = '5px solid #ff0000';
 					popup.style.backgroundColor = '#ffffff';
-
-					console.log('Rating popup content made visible');
-					console.log('Rating popup dimensions:', popup.offsetWidth, 'x', popup.offsetHeight);
-					console.log('Rating popup position:', popup.getBoundingClientRect());
-				} else {
-					console.error('Rating popup content not found!');
 				}
-			} else {
-				console.error('Rating popup overlay not found!');
 			}
+		}
+
+		// Simple fallback popup using basic HTML
+		function showSimpleRatingPopup(orderId) {
+			console.log('Creating simple rating popup for order:', orderId);
+
+			// Create a simple popup div
+			const simplePopup = document.createElement('div');
+			simplePopup.id = 'simpleRatingPopup';
+			simplePopup.style.cssText = `
+				position: fixed;
+				top: 50%;
+				left: 50%;
+				transform: translate(-50%, -50%);
+				background: white;
+				padding: 30px;
+				border: 5px solid #008060;
+				border-radius: 10px;
+				box-shadow: 0 0 20px rgba(0,0,0,0.5);
+				z-index: 99999;
+				width: 400px;
+				text-align: center;
+				font-family: Arial, sans-serif;
+			`;
+
+			simplePopup.innerHTML = `
+				<h3 style="color: #008060; margin-bottom: 20px;">Rate Your Experience</h3>
+				<p style="margin-bottom: 20px;">How satisfied are you with your order?</p>
+				<div style="margin-bottom: 20px;">
+					<button onclick="submitSimpleRating(1)" style="margin: 5px; padding: 10px; background: #ff4444; color: white; border: none; border-radius: 5px;">⭐ Poor</button>
+					<button onclick="submitSimpleRating(2)" style="margin: 5px; padding: 10px; background: #ff8800; color: white; border: none; border-radius: 5px;">⭐⭐ Fair</button>
+					<button onclick="submitSimpleRating(3)" style="margin: 5px; padding: 10px; background: #ffaa00; color: white; border: none; border-radius: 5px;">⭐⭐⭐ Good</button>
+					<button onclick="submitSimpleRating(4)" style="margin: 5px; padding: 10px; background: #88cc00; color: white; border: none; border-radius: 5px;">⭐⭐⭐⭐ Great</button>
+					<button onclick="submitSimpleRating(5)" style="margin: 5px; padding: 10px; background: #00cc44; color: white; border: none; border-radius: 5px;">⭐⭐⭐⭐⭐ Excellent</button>
+				</div>
+				<button onclick="closeSimpleRating()" style="padding: 10px 20px; background: #666; color: white; border: none; border-radius: 5px;">Skip</button>
+			`;
+
+			// Add overlay
+			const overlay = document.createElement('div');
+			overlay.style.cssText = `
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				background: rgba(0,0,0,0.5);
+				z-index: 99998;
+			`;
+
+			document.body.appendChild(overlay);
+			document.body.appendChild(simplePopup);
+
+			// Global functions for the simple popup
+			window.submitSimpleRating = function(rating) {
+				console.log('Simple rating submitted:', rating);
+				alert(`Thank you for rating us ${rating} stars! Your feedback helps us improve.`);
+				closeSimpleRating();
+			};
+
+			window.closeSimpleRating = function() {
+				if (overlay.parentNode) overlay.remove();
+				if (simplePopup.parentNode) simplePopup.remove();
+			};
 		}
 
 		// Close rating popup

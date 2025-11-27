@@ -8550,6 +8550,22 @@ try {
 			console.log('Flash deals popup forced to show.');
 		}
 
+		// Manual function to force close rating popup (emergency close)
+		function forceCloseRatingPopup() {
+			const overlay = document.getElementById('ratingPopupOverlay');
+			if (overlay) {
+				overlay.style.display = 'none';
+				overlay.classList.remove('show');
+				console.log('Rating popup force closed');
+			}
+		}
+
+		// Manual function to test rating popup
+		function testRatingPopup() {
+			showRatingPopup('TEST123');
+			console.log('Rating popup test triggered');
+		}
+
 		// Show popup for logged-in users (limited to once every 5 hours)
 		<?php if ($is_logged_in): ?>
 			document.addEventListener('DOMContentLoaded', function() {
@@ -8603,6 +8619,9 @@ try {
 			overflow-y: auto;
 			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 			position: relative;
+			z-index: 10002;
+			transform: scale(1);
+			opacity: 1;
 		}
 
 		.rating-popup-header {
@@ -8812,7 +8831,27 @@ try {
 			const overlay = document.getElementById('ratingPopupOverlay');
 			if (overlay) {
 				console.log('Rating popup overlay found, showing popup');
+
+				// Force popup to be visible with explicit styles
+				overlay.style.display = 'flex';
+				overlay.style.position = 'fixed';
+				overlay.style.top = '0';
+				overlay.style.left = '0';
+				overlay.style.width = '100%';
+				overlay.style.height = '100%';
+				overlay.style.zIndex = '10001';
 				overlay.classList.add('show');
+
+				// Ensure popup content is visible
+				const popup = overlay.querySelector('.rating-popup');
+				if (popup) {
+					popup.style.display = 'block';
+					popup.style.position = 'relative';
+					popup.style.zIndex = '10002';
+					console.log('Rating popup content made visible');
+				} else {
+					console.error('Rating popup content not found!');
+				}
 			} else {
 				console.error('Rating popup overlay not found!');
 			}
@@ -9007,14 +9046,27 @@ try {
 
 				// Show Sweet Alert
 				if (typeof Swal !== 'undefined') {
-					console.log('Showing SweetAlert...');
+					console.log('Showing SweetAlert with orderParam:', orderParam);
+
+					// Get a display-friendly order ID - use payment reference if order ID is null/unavailable
+					let displayOrderId;
+					if (orderParam && orderParam !== 'null' && orderParam !== null) {
+						displayOrderId = orderParam;
+					} else if (refParam) {
+						// Use last part of payment reference as order identifier
+						displayOrderId = refParam.split('-').pop() || refParam;
+					} else {
+						displayOrderId = 'Processing...';
+					}
+
 					Swal.fire({
 						title: 'Payment Successful!',
 						html: `
 							<div style="text-align: left; padding: 10px 0;">
-								<p style="margin-bottom: 10px;"><strong>Order ID:</strong> ${orderParam}</p>
+								<p style="margin-bottom: 10px;"><strong>Order ID:</strong> ${displayOrderId}</p>
 								<p style="margin-bottom: 10px;"><strong>Payment Reference:</strong> ${refParam || 'N/A'}</p>
-								<p style="color: #10b981; margin-top: 15px;">Your order has been confirmed and will be processed shortly.</p>
+								<p style="color: #10b981; margin-top: 15px;">Your payment has been confirmed and your order is being processed.</p>
+								${orderParam === 'null' || orderParam === null ? '<p style="color: #f59e0b; font-size: 0.9em; margin-top: 10px;">Order details will be available shortly in your account.</p>' : ''}
 							</div>
 						`,
 						icon: 'success',

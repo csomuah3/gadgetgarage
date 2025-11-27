@@ -1218,6 +1218,9 @@ try {
         <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
     </div>
 
+    <!-- Floating Bubbles Background -->
+    <div class="floating-bubbles"></div>
+
     <!-- Main Header -->
     <header class="main-header animate__animated animate__fadeInDown">
         <div class="container-fluid" style="padding: 0 40px;">
@@ -1252,7 +1255,7 @@ try {
                 <!-- User Actions - Far Right -->
                 <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
                     <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if ($is_logged_in): ?>
                         <!-- Wishlist Icon -->
                         <div class="header-icon">
                             <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
@@ -1275,29 +1278,13 @@ try {
 
                         <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
                                 <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <a href="../views/account.php" class="dropdown-item-custom">
+                                <button class="dropdown-item-custom" onclick="goToAccount()">
                                     <i class="fas fa-user"></i>
-                                    <span data-translate="account">Account</span>
-                                </a>
-                                <a href="../views/my_orders.php" class="dropdown-item-custom">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span data-translate="my_orders">My Orders</span>
-                                </a>
-                                <a href="../track_order.php" class="dropdown-item-custom">
-                                    <i class="fas fa-truck"></i>
-                                    <span data-translate="track_orders">Track your Order</span>
-                                </a>
-                                <a href="../views/notifications.php" class="dropdown-item-custom">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Notifications</span>
-                                </a>
-                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-                                    <i class="fas fa-camera"></i>
-                                    <span>Profile Picture</span>
+                                    <span>Account</span>
                                 </button>
                                 <div class="dropdown-divider-custom"></div>
                                 <div class="dropdown-item-custom">
@@ -1334,11 +1321,6 @@ try {
                             <i class="fas fa-user"></i>
                             Login
                         </a>
-                        <!-- Register Button -->
-                        <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
-                            <i class="fas fa-user-plus"></i>
-                            Register
-                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1361,7 +1343,7 @@ try {
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
-                                    <li><a href="../views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                    <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                                 <?php endforeach; ?>
                             <?php else: ?>
                                 <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
@@ -1394,8 +1376,8 @@ try {
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                    <li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                    <li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
@@ -1405,8 +1387,8 @@ try {
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                    <li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                    <li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
@@ -1416,8 +1398,8 @@ try {
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                    <li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                    <li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column featured">
@@ -1427,7 +1409,7 @@ try {
                                     <div class="featured-text">
                                         <strong>New Arrivals</strong>
                                         <p>Latest tech gadgets</p>
-                                        <a href="../views/all_product.php" class="shop-now-btn">Shop </a>
+                                        <a href="../views/all_product.php" class="shop-now-btn">Shop</a>
                                     </div>
                                 </div>
                             </div>
@@ -1763,123 +1745,25 @@ try {
         setInterval(updateTimer, 1000);
         updateTimer(); // Initial call
 
-        // User dropdown functionality with hover
-        let userDropdownTimeout;
-        let dropdownTimeout;
-
-        function showUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                userDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
+        // User dropdown functionality
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
+            dropdown.classList.toggle('show');
         }
 
-        function showDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdown.classList.add('show');
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdownMenu');
+            const avatar = document.querySelector('.user-avatar');
+
+            if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+                dropdown.classList.remove('show');
             }
-        }
-
-        function hideDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        // Add hover and click functionality to user dropdown
-        document.addEventListener('DOMContentLoaded', function() {
-            const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
-            const userDropdown = document.getElementById('userDropdownMenu');
-
-            if (userAvatar && userDropdown) {
-                // Show dropdown on avatar hover
-                userAvatar.addEventListener('mouseenter', function(e) {
-                    e.stopPropagation();
-                    showUserDropdown();
-                });
-
-                // Hide dropdown when leaving avatar (with delay)
-                userAvatar.addEventListener('mouseleave', function(e) {
-                    e.stopPropagation();
-                    hideUserDropdown();
-                });
-
-                // Keep dropdown open when hovering over it
-                userDropdown.addEventListener('mouseenter', function() {
-                    clearTimeout(userDropdownTimeout);
-                });
-
-                // Hide dropdown when leaving dropdown area
-                userDropdown.addEventListener('mouseleave', function() {
-                    hideUserDropdown();
-                });
-
-                // Handle click on avatar to toggle dropdown
-                userAvatar.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    // Clear any pending hide timeout
-                    clearTimeout(userDropdownTimeout);
-                    toggleUserDropdown();
-                });
-            }
-
-            // Close dropdown when clicking outside (with slight delay to allow toggle to work)
-            document.addEventListener('click', function(event) {
-                setTimeout(function() {
-                    const dropdown = document.getElementById('userDropdownMenu');
-                    const avatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
-
-                    if (dropdown && avatar) {
-                        // Check if click is outside both dropdown and avatar
-                        const isClickInsideDropdown = dropdown.contains(event.target);
-                        const isClickOnAvatar = avatar.contains(event.target);
-
-                        if (!isClickInsideDropdown && !isClickOnAvatar) {
-                            dropdown.classList.remove('show');
-                        }
-                    }
-                }, 10);
-            });
         });
 
-        // Profile picture modal functionality
-        function openProfilePictureModal() {
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: 'Profile Picture',
-                    text: 'Profile picture upload functionality will be implemented',
-                    icon: 'info',
-                    confirmButtonColor: '#D19C97',
-                    confirmButtonText: 'OK'
-                });
-            } else {
-                alert('Profile picture upload functionality will be implemented');
-            }
+        // Account page navigation
+        function goToAccount() {
+            window.location.href = 'my_orders.php';
         }
 
         // Language change functionality

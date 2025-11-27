@@ -632,23 +632,23 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             <i class="fas fa-bolt"></i>
         </div>
         <div class="promo-banner-center">
-            <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
             <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
         </div>
-        <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
+        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
     </div>
 
     <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles" id="floatingBubbles"></div>
+    <div class="floating-bubbles"></div>
 
+    <!-- Main Header -->
     <header class="main-header animate__animated animate__fadeInDown">
         <div class="container-fluid" style="padding: 0 40px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->
                 <a href="../index.php" class="logo">
                     <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                        alt="Gadget Garage"
-                        style="height: 40px; width: auto; object-fit: contain;">
+                        alt="Gadget Garage">
                 </a>
 
                 <!-- Center Content -->
@@ -675,7 +675,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <!-- User Actions - Far Right -->
                 <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
                     <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-                    <?php if (isset($_SESSION['user_id'])): ?>
+                    <?php if ($is_logged_in): ?>
                         <!-- Wishlist Icon -->
                         <div class="header-icon">
                             <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
@@ -698,29 +698,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                         <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
                                 <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <a href="../views/account.php" class="dropdown-item-custom">
+                                <button class="dropdown-item-custom" onclick="goToAccount()">
                                     <i class="fas fa-user"></i>
-                                    <span data-translate="account">Account</span>
-                                </a>
-                                <a href="../views/my_orders.php" class="dropdown-item-custom">
-                                    <i class="fas fa-shopping-bag"></i>
-                                    <span data-translate="my_orders">My Orders</span>
-                                </a>
-                                <a href="../track_order.php" class="dropdown-item-custom">
-                                    <i class="fas fa-truck"></i>
-                                    <span data-translate="track_orders">Track your Order</span>
-                                </a>
-                                <a href="../views/notifications.php" class="dropdown-item-custom">
-                                    <i class="fas fa-bell"></i>
-                                    <span>Notifications</span>
-                                </a>
-                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-                                    <i class="fas fa-camera"></i>
-                                    <span>Profile Picture</span>
+                                    <span>Account</span>
                                 </button>
                                 <div class="dropdown-divider-custom"></div>
                                 <div class="dropdown-item-custom">
@@ -757,11 +741,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             <i class="fas fa-user"></i>
                             Login
                         </a>
-                        <!-- Register Button -->
-                        <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
-                            <i class="fas fa-user-plus"></i>
-                            Register
-                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -780,20 +759,27 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <i class="fas fa-chevron-down"></i>
                     </button>
                     <div class="brands-dropdown" id="shopDropdown">
-                        <h4 data-translate="all_brands">All Brands</h4>
+                        <h4>All Brands</h4>
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
                                     <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li><a href="all_product.php"><i class="fas fa-tag"></i> All Products</a></li>
+                                <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                                <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                                <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                                <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                                <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                                <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                                <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                                <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>
                 </div>
 
-                <a href="../index.php" class="nav-item" data-translate="home">HOME</a>
+                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
                 <!-- Shop Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
@@ -805,36 +791,35 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="dropdown-content">
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                        Mobile Devices
+                                    <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="mobile_devices">Mobile Devices</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="mobile_devices.php?category=smartphones"><i class="fas fa-mobile-alt"></i> Smartphones</a></li>
-                                    <li><a href="mobile_devices.php?category=ipads"><i class="fas fa-tablet-alt"></i> iPads</a></li>
-                                    <li><a href="mobile_devices.php?category=tablets"><i class="fas fa-tablet-alt"></i> Tablets</a></li>
+                                    <li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
-                                        Computing
+                                    <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="computing">Computing</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="computing.php?category=laptops"><i class="fas fa-laptop"></i> Laptops</a></li>
-                                    <li><a href="computing.php?category=desktops"><i class="fas fa-desktop"></i> Desktops</a></li>
+                                    <li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
-                                        Photography & Video
+                                    <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="photography_video">Photography & Video</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="photography_video.php?category=cameras"><i class="fas fa-camera"></i> Cameras</a></li>
-                                    <li><a href="photography_video.php?category=video_equipment"><i class="fas fa-video"></i> Video Equipment</a></li>
+                                    <li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column featured">
@@ -844,7 +829,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <div class="featured-text">
                                         <strong>New Arrivals</strong>
                                         <p>Latest tech gadgets</p>
-                                        <a href="all_product.php" class="shop-now-btn">Shop Now</a>
+                                        <a href="../views/all_product.php" class="shop-now-btn">Shop</a>
                                     </div>
                                 </div>
                             </div>
@@ -1941,27 +1926,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        // User dropdown functionality with hover
-        let userDropdownTimeout;
-
-        function showUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                userDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
+        // Header dropdown functions
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
@@ -1984,60 +1949,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 brandsDropdown.addEventListener('mouseleave', hideDropdown);
             }
 
-            // User dropdown hover and click functionality
-            const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
+            // User dropdown hover functionality
+            const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
 
             if (userAvatar && userDropdown) {
-                // Show dropdown on avatar hover
-                userAvatar.addEventListener('mouseenter', function(e) {
-                    e.stopPropagation();
-                    showUserDropdown();
-                });
-
-                // Hide dropdown when leaving avatar (with delay)
-                userAvatar.addEventListener('mouseleave', function(e) {
-                    e.stopPropagation();
-                    hideUserDropdown();
-                });
-
-                // Keep dropdown open when hovering over it
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
                 userDropdown.addEventListener('mouseenter', function() {
                     clearTimeout(userDropdownTimeout);
                 });
-
-                // Hide dropdown when leaving dropdown area
-                userDropdown.addEventListener('mouseleave', function() {
-                    hideUserDropdown();
-                });
-
-                // Handle click on avatar to toggle dropdown
-                userAvatar.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    e.preventDefault();
-                    // Clear any pending hide timeout
-                    clearTimeout(userDropdownTimeout);
-                    toggleUserDropdown();
-                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
             }
-
-            // Close dropdown when clicking outside (with slight delay to allow toggle to work)
-            document.addEventListener('click', function(event) {
-                setTimeout(function() {
-                    const dropdown = document.getElementById('userDropdownMenu');
-                    const avatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
-
-                    if (dropdown && avatar) {
-                        // Check if click is outside both dropdown and avatar
-                        const isClickInsideDropdown = dropdown.contains(event.target);
-                        const isClickOnAvatar = avatar.contains(event.target);
-
-                        if (!isClickInsideDropdown && !isClickOnAvatar) {
-                            dropdown.classList.remove('show');
-                        }
-                    }
-                }, 10);
-            });
         });
 
         function openProfilePictureModal() {

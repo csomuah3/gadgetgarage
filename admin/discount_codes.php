@@ -15,89 +15,208 @@ require_once __DIR__ . '/../controllers/discount_controller.php';
 try {
     $all_discounts = get_all_discounts_ctr();
     error_log("Discount codes fetched: " . count($all_discounts));
+    // Debug: Print the actual data
+    error_log("Discount codes data: " . print_r($all_discounts, true));
 } catch (Exception $e) {
     error_log("Error fetching discount codes: " . $e->getMessage());
     $all_discounts = [];
 }
+
+// Calculate statistics
+$total_codes = count($all_discounts);
+$active_codes = 0;
+$inactive_codes = 0;
+$total_usage = 0;
+
+foreach ($all_discounts as $discount) {
+    if ($discount['is_active']) {
+        $active_codes++;
+    } else {
+        $inactive_codes++;
+    }
+    $total_usage += $discount['times_used'] ?? 0;
+}
 ?>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><?php echo $page_title; ?> - Gadget Garage Admin</title>
+<?php include 'includes/admin_header.php'; ?>
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Font Awesome -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <!-- SweetAlert2 -->
-    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
-    <!-- DataTables CSS -->
-    <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css" rel="stylesheet">
+<!-- Page Header -->
+<div class="page-header">
+    <h1 class="page-title">Discount Codes Management</h1>
+    <p class="page-subtitle">Create, manage, and track discount codes and promotional offers</p>
+    <nav class="breadcrumb-custom">
+        <span>Home > Discounts</span>
+    </nav>
+</div>
 
-    <style>
-        :root {
-            --primary-color: #3b82f6;
-            --secondary-color: #64748b;
-            --success-color: #10b981;
-            --warning-color: #f59e0b;
-            --danger-color: #ef4444;
-            --dark-color: #1e293b;
-            --light-color: #f8fafc;
-        }
+<!-- Statistics Dashboard -->
+<div class="row g-4 mb-4">
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-primary mb-3">
+                    <i class="fas fa-percentage fa-3x"></i>
+                </div>
+                <h3 class="counter text-primary" data-target="<?= $total_codes ?>">0</h3>
+                <p class="text-muted mb-0">Total Codes</p>
+                <small class="text-info">
+                    <i class="fas fa-tag me-1"></i>
+                    Available
+                </small>
+            </div>
+        </div>
+    </div>
 
-        body {
-            background-color: var(--light-color);
-            font-family: 'Inter', sans-serif;
-        }
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-success mb-3">
+                    <i class="fas fa-check-circle fa-3x"></i>
+                </div>
+                <h3 class="counter text-success" data-target="<?= $active_codes ?>">0</h3>
+                <p class="text-muted mb-0">Active Codes</p>
+                <small class="text-success">
+                    <i class="fas fa-arrow-up me-1"></i>
+                    Currently active
+                </small>
+            </div>
+        </div>
+    </div>
 
-        .navbar {
-            background: linear-gradient(135deg, var(--dark-color) 0%, var(--secondary-color) 100%);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-warning mb-3">
+                    <i class="fas fa-pause-circle fa-3x"></i>
+                </div>
+                <h3 class="counter text-warning" data-target="<?= $inactive_codes ?>">0</h3>
+                <p class="text-muted mb-0">Inactive Codes</p>
+                <small class="text-warning">
+                    <i class="fas fa-minus-circle me-1"></i>
+                    Not active
+                </small>
+            </div>
+        </div>
+    </div>
 
-        .navbar-brand {
-            font-weight: 700;
-            font-size: 1.5rem;
-        }
+    <div class="col-lg-3 col-md-6">
+        <div class="admin-card">
+            <div class="card-body-custom text-center">
+                <div class="analytics-icon text-info mb-3">
+                    <i class="fas fa-chart-line fa-3x"></i>
+                </div>
+                <h3 class="counter text-info" data-target="<?= $total_usage ?>">0</h3>
+                <p class="text-muted mb-0">Total Usage</p>
+                <small class="text-info">
+                    <i class="fas fa-users me-1"></i>
+                    Times used
+                </small>
+            </div>
+        </div>
+    </div>
+</div>
 
-        .main-container {
-            margin-top: 2rem;
-        }
+<!-- Discount Codes Management -->
+<div class="admin-card">
+    <div class="card-header-custom d-flex justify-content-between align-items-center">
+        <h5><i class="fas fa-percentage me-2"></i>Discount Codes</h5>
+        <button class="btn btn-primary-custom" data-bs-toggle="modal" data-bs-target="#addDiscountModal">
+            <i class="fas fa-plus me-2"></i>Add New Code
+        </button>
+    </div>
+    <div class="card-body-custom p-0">
+        <div class="table-responsive">
+            <table class="table table-custom mb-0" id="discountTable">
+                <thead>
+                    <tr>
+                        <th>CODE</th>
+                        <th>DESCRIPTION</th>
+                        <th>TYPE</th>
+                        <th>VALUE</th>
+                        <th>MIN ORDER</th>
+                        <th>USAGE</th>
+                        <th>STATUS</th>
+                        <th>EXPIRES</th>
+                        <th>ACTIONS</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php if (empty($all_discounts)): ?>
+                        <tr>
+                            <td colspan="9" class="text-center py-4">
+                                <div class="empty-state">
+                                    <i class="fas fa-percentage fa-3x text-muted mb-3"></i>
+                                    <h5 class="text-muted">No Discount Codes Found</h5>
+                                    <p class="text-muted">Create your first discount code to get started.</p>
+                                    <?php if (ini_get('display_errors')): ?>
+                                        <small class="text-info">Debug: Discounts array count = <?= count($all_discounts) ?></small>
+                                    <?php endif; ?>
+                                </div>
+                            </td>
+                        </tr>
+                    <?php else: ?>
+                        <?php foreach ($all_discounts as $discount): ?>
+                            <tr>
+                                <td>
+                                    <strong class="text-primary"><?= htmlspecialchars($discount['promo_code']) ?></strong>
+                                </td>
+                                <td><?= htmlspecialchars($discount['promo_description'] ?? 'No description') ?></td>
+                                <td>
+                                    <span class="badge bg-info">
+                                        <?= strtoupper($discount['discount_type']) ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <strong>
+                                        <?php if ($discount['discount_type'] == 'percentage'): ?>
+                                            <?= $discount['discount_value'] ?>%
+                                        <?php else: ?>
+                                            GH₵<?= number_format($discount['discount_value'], 2) ?>
+                                        <?php endif; ?>
+                                    </strong>
+                                </td>
+                                <td>GH₵<?= number_format($discount['min_order_amount'], 2) ?></td>
+                                <td>
+                                    <span class="badge bg-secondary">
+                                        <?= $discount['times_used'] ?? 0 ?> / <?= $discount['usage_limit'] ?? '∞' ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="badge bg-<?= $discount['is_active'] ? 'success' : 'danger' ?>">
+                                        <?= $discount['is_active'] ? 'ACTIVE' : 'INACTIVE' ?>
+                                    </span>
+                                </td>
+                                <td>
+                                    <?php if ($discount['end_date']): ?>
+                                        <?= date('M d, Y', strtotime($discount['end_date'])) ?>
+                                    <?php else: ?>
+                                        <span class="text-muted">No expiry</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <div class="btn-group btn-group-sm">
+                                        <button class="btn btn-outline-primary" onclick="editDiscount(<?= $discount['promo_id'] ?>)">
+                                            <i class="fas fa-edit"></i>
+                                        </button>
+                                        <button class="btn btn-outline-<?= $discount['is_active'] ? 'warning' : 'success' ?>"
+                                                onclick="toggleDiscountStatus(<?= $discount['promo_id'] ?>)">
+                                            <i class="fas fa-<?= $discount['is_active'] ? 'pause' : 'play' ?>"></i>
+                                        </button>
+                                        <button class="btn btn-outline-danger" onclick="deleteDiscount(<?= $discount['promo_id'] ?>, '<?= htmlspecialchars($discount['promo_code']) ?>')">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
-        .page-header {
-            background: white;
-            border-radius: 12px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            border-left: 4px solid var(--primary-color);
-        }
-
-        .page-title {
-            color: var(--dark-color);
-            font-weight: 700;
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .page-subtitle {
-            color: var(--secondary-color);
-            font-size: 1.1rem;
-        }
-
-        .card {
-            border: none;
-            border-radius: 12px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-            margin-bottom: 2rem;
-        }
-
-        .card-header {
-            background: white;
-            border-bottom: 1px solid #e2e8f0;
+<style>
             border-radius: 12px 12px 0 0 !important;
             padding: 1.5rem;
         }

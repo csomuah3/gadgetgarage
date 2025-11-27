@@ -1278,8 +1278,8 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
         /* Footer Styles */
         .main-footer {
-            background: #1f2937;
-            color: #e5e7eb;
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
             padding: 60px 0 20px;
             margin-top: 0;
         }
@@ -1287,12 +1287,12 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         .footer-logo {
             font-size: 1.8rem;
             font-weight: 700;
-            color: white;
+            color: #1f2937;
             margin-bottom: 16px;
         }
 
         .footer-logo .garage {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #1E3A5F, #2563EB);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
@@ -1301,7 +1301,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         }
 
         .footer-description {
-            color: #9ca3af;
+            color: #6b7280;
             font-size: 0.95rem;
             margin-bottom: 24px;
             line-height: 1.6;
@@ -1315,18 +1315,18 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         .social-link {
             width: 40px;
             height: 40px;
-            background: #374151;
+            background: #f3f4f6;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #9ca3af;
+            color: #6b7280;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
         .social-link:hover {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #2563EB;
             color: white;
             transform: translateY(-2px);
         }
@@ -1334,7 +1334,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         .footer-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: white;
+            color: #1f2937;
             margin-bottom: 20px;
         }
 
@@ -1349,28 +1349,118 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         }
 
         .footer-links li a {
-            color: #9ca3af;
+            color: #6b7280;
             text-decoration: none;
             font-size: 0.9rem;
             transition: all 0.3s ease;
         }
 
         .footer-links li a:hover {
-            color: #667eea;
+            color: #2563EB;
             transform: translateX(4px);
         }
 
         .footer-divider {
             border: none;
             height: 1px;
-            background: #374151;
+            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
             margin: 40px 0 20px;
         }
 
+        .footer-bottom {
+            padding-top: 20px;
+        }
+
         .copyright {
-            color: #9ca3af;
+            color: #6b7280;
             font-size: 0.9rem;
             margin: 0;
+        }
+
+        /* Newsletter Signup Section */
+        .newsletter-signup-section {
+            background: transparent;
+            padding: 0;
+            text-align: left;
+            max-width: 100%;
+            height: fit-content;
+        }
+
+        .newsletter-title {
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            width: 100%;
+            margin: 0 0 15px 0;
+            gap: 0;
+            border-radius: 50px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            outline: none;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input::placeholder {
+            color: #6b7280;
+        }
+
+        .newsletter-submit-btn {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border: none;
+            background: #9ca3af;
+            color: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        .newsletter-submit-btn:hover {
+            background: #6b7280;
+            transform: scale(1.05);
+        }
+
+        .newsletter-disclaimer {
+            color: #6b7280;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            margin: 8px 0 0 0;
+            text-align: left;
+        }
+
+        .newsletter-disclaimer a {
+            color: #2563EB;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .newsletter-disclaimer a:hover {
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 991px) {
+            .newsletter-signup-section {
+                margin-top: 20px;
+            }
         }
 
         /* Dark Mode Promotional Banner Styles */
@@ -1806,59 +1896,67 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container">
-            <div class="row">
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <div class="footer-brand">
-                        <div class="footer-logo" style="margin-bottom: 16px;">
-                            <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                 alt="Gadget Garage"
-                                 style="height: 35px; width: auto; object-fit: contain;">
+            <div class="footer-content">
+                <div class="row align-items-start">
+                    <!-- Left Side: Navigation Links -->
+                    <div class="col-lg-8 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Get Help</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Help Center</a></li>
+                                    <li><a href="contact.php">Track Order</a></li>
+                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
+                                    <li><a href="terms_conditions.php">Returns</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Company</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Careers</a></li>
+                                    <li><a href="contact.php">About</a></li>
+                                    <li><a href="contact.php">Stores</a></li>
+                                    <li><a href="contact.php">Want to Collab?</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-3 col-md-6 mb-4">
+                                <h5 class="footer-title">Quick Links</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Size Guide</a></li>
+                                    <li><a href="contact.php">Sitemap</a></li>
+                                    <li><a href="contact.php">Gift Cards</a></li>
+                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
+                                </ul>
+                            </div>
                         </div>
-                        <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions. Experience technology like never before.</p>
-                        <div class="social-links">
-                            <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                            <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                    <!-- Right Side: Email Signup Form -->
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="newsletter-signup-section">
+                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+                                <button type="submit" class="newsletter-submit-btn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </form>
+                            <p class="newsletter-disclaimer">
+                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+                            </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
                         </div>
                     </div>
                 </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h5 class="footer-title">Quick Links</h5>
-                    <ul class="footer-links">
-                        <li><a href="index.php">Home</a></li>
-                        <li><a href="all_product.php">All Products</a></li>
-                        <li><a href="cart.php">Shopping Cart</a></li>
-                        <li><a href="contact.php">Contact Us</a></li>
-                        <li><a href="legal.php">Legal</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-2 col-md-6 mb-4">
-                    <h5 class="footer-title">Products</h5>
-                    <ul class="footer-links">
-                        <li><a href="all_product.php?category=phones">Smartphones</a></li>
-                        <li><a href="all_product.php?category=laptops">Laptops</a></li>
-                        <li><a href="all_product.php?category=ipads">Tablets</a></li>
-                        <li><a href="all_product.php?category=cameras">Cameras</a></li>
-                    </ul>
-                </div>
-                <div class="col-lg-4 col-md-6 mb-4">
-                    <h5 class="footer-title">Contact Info</h5>
-                    <ul class="footer-links">
-                        <li><i class="fas fa-map-marker-alt me-2"></i>Oxford Street, Osu, Accra</li>
-                        <li><i class="fas fa-phone me-2"></i>055-138-7578</li>
-                        <li><i class="fas fa-envelope me-2"></i>info@gadgetgarage.gh</li>
-                        <li><i class="fas fa-clock me-2"></i>Mon-Fri: 9AM-7PM</li>
-                    </ul>
-                </div>
-            </div>
-            <hr class="footer-divider">
-            <div class="row align-items-center">
-                <div class="col-md-6">
-                    <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
-                </div>
-                <div class="col-md-6 text-end">
-                    <p class="copyright">Designed with <i class="fas fa-heart" style="color: #667eea;"></i> for tech enthusiasts</p>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 text-center">
+                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

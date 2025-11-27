@@ -3776,6 +3776,62 @@ try {
         </div>
     </div>
 
+<!-- EMERGENCY STANDALONE CONDITION SELECTION SCRIPT -->
+<script type="text/javascript">
+console.log('=== EMERGENCY SCRIPT LOADING ===');
+
+// Test function
+function testClick() {
+    alert('TEST CLICK WORKS!');
+    console.log('Test click function called');
+}
+
+// Simple condition selection
+function selectCondition(condition) {
+    console.log('selectCondition called:', condition);
+    alert('Condition selected: ' + condition);
+
+    // Simple visual feedback
+    var allOptions = document.querySelectorAll('[data-condition]');
+    console.log('Found condition options:', allOptions.length);
+
+    for (var i = 0; i < allOptions.length; i++) {
+        allOptions[i].style.background = 'rgba(255,255,255,0.1)';
+        allOptions[i].style.border = 'none';
+    }
+
+    var selectedOption = document.querySelector('[data-condition="' + condition + '"]');
+    if (selectedOption) {
+        selectedOption.style.background = 'rgba(255,255,255,0.3)';
+        selectedOption.style.border = '2px solid #10b981';
+        console.log('Applied selected styling to:', condition);
+    } else {
+        console.log('Could not find option for:', condition);
+    }
+
+    // Update price display
+    var priceElement = document.getElementById('currentPrice');
+    if (priceElement) {
+        var priceData = {
+            'excellent': <?php echo $excellentPrice; ?>,
+            'good': <?php echo $goodPrice; ?>,
+            'fair': <?php echo $fairPrice; ?>
+        };
+        var newPrice = priceData[condition];
+        priceElement.textContent = 'GH₵' + Math.round(newPrice).toLocaleString();
+        console.log('Updated price to:', newPrice);
+    }
+}
+
+// Make functions globally available
+window.testClick = testClick;
+window.selectCondition = selectCondition;
+
+console.log('=== EMERGENCY SCRIPT LOADED ===');
+console.log('testClick available:', typeof window.testClick);
+console.log('selectCondition available:', typeof window.selectCondition);
+</script>
+
 </body>
 
 </html>

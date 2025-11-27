@@ -101,16 +101,18 @@ $fairPrice = calculateConditionPrice($basePrice, $productCategory, 'fair', $cate
 $goodDiscount = $basePrice - $goodPrice;
 $fairDiscount = $basePrice - $fairPrice;
 
-// Get related products from the same category (excluding current product)
+// Get Top Picks - start with same category, then fill with other popular products
 $category_id = $product['product_cat'] ?? 0;
 $related_products = [];
-if ($category_id > 0) {
-    try {
-        require_once(__DIR__ . '/../settings/db_class.php');
-        $db = new db_connection();
-        if ($db->db_connect()) {
-            $conn = $db->db_conn();
-            // Get products with category and brand names
+
+try {
+    require_once(__DIR__ . '/../settings/db_class.php');
+    $db = new db_connection();
+    if ($db->db_connect()) {
+        $conn = $db->db_conn();
+
+        // First, get products from the same category (excluding current product)
+        if ($category_id > 0) {
             $stmt = $conn->prepare("
                 SELECT p.*, c.cat_name, b.brand_name
                 FROM products p
@@ -118,7 +120,7 @@ if ($category_id > 0) {
                 LEFT JOIN brands b ON p.product_brand = b.brand_id
                 WHERE p.product_cat = ? AND p.product_id != ?
                 ORDER BY p.product_id DESC
-                LIMIT 4
+                LIMIT 6
             ");
             $stmt->bind_param('ii', $category_id, $product_id);
             $stmt->execute();
@@ -127,12 +129,48 @@ if ($category_id > 0) {
                 $related_products[] = $row;
             }
             $stmt->close();
-            // Connection will close automatically at end of script
         }
-    } catch (Exception $e) {
-        error_log("Related products error: " . $e->getMessage());
-        $related_products = []; // Default to empty array if related products fail
+
+        // If we have less than 6 products, fill with products from other categories
+        $current_count = count($related_products);
+        if ($current_count < 6) {
+            $needed = 6 - $current_count;
+
+            // Get product IDs we already have to exclude them
+            $exclude_ids = [$product_id]; // Always exclude current product
+            foreach ($related_products as $existing) {
+                $exclude_ids[] = $existing['product_id'];
+            }
+            $exclude_placeholders = str_repeat('?,', count($exclude_ids) - 1) . '?';
+
+            $stmt = $conn->prepare("
+                SELECT p.*, c.cat_name, b.brand_name
+                FROM products p
+                LEFT JOIN categories c ON p.product_cat = c.cat_id
+                LEFT JOIN brands b ON p.product_brand = b.brand_id
+                WHERE p.product_id NOT IN ($exclude_placeholders)
+                ORDER BY p.product_id DESC
+                LIMIT ?
+            ");
+
+            // Bind the exclude IDs and limit
+            $types = str_repeat('i', count($exclude_ids)) . 'i';
+            $values = array_merge($exclude_ids, [$needed]);
+            $stmt->bind_param($types, ...$values);
+            $stmt->execute();
+            $result = $stmt->get_result();
+
+            while ($row = $result->fetch_assoc()) {
+                $related_products[] = $row;
+            }
+            $stmt->close();
+        }
+
+        // Connection will close automatically at end of script
     }
+} catch (Exception $e) {
+    error_log("Top picks products error: " . $e->getMessage());
+    $related_products = []; // Default to empty array if products fail
 }
 ?>
 
@@ -1891,15 +1929,26 @@ if ($category_id > 0) {
             fair: <?php echo $fairPrice; ?>
         };
 
-        // IMMEDIATE function definition - available right away
-        function selectCondition(condition, price = null) {
-            console.log('selectCondition called with:', condition, price);
+        // GLOBAL function definition - make sure it's available to onclick handlers
+        window.selectCondition = function(condition, price = null) {
+            try {
+                console.log('selectCondition called with:', condition, price);
 
-            selectedCondition = condition;
-            // Use price from priceData if not provided
-            selectedPrice = price !== null ? parseFloat(price) : priceData[condition];
+                // Validate condition
+                if (!['excellent', 'good', 'fair'].includes(condition)) {
+                    console.error('Invalid condition:', condition);
+                    return;
+                }
 
-            console.log('Updated selectedCondition:', selectedCondition, 'selectedPrice:', selectedPrice);
+                selectedCondition = condition;
+                // Use price from priceData if not provided
+                selectedPrice = price !== null ? parseFloat(price) : priceData[condition];
+
+                console.log('Updated selectedCondition:', selectedCondition, 'selectedPrice:', selectedPrice);
+            } catch (error) {
+                console.error('Error in selectCondition:', error);
+                return;
+            }
 
             // Update visual selection - reset all options first
             const allOptions = document.querySelectorAll('[data-condition]');
@@ -1947,10 +1996,7 @@ if ($category_id > 0) {
             }
 
             console.log('Price display updated. Current price:', selectedPrice);
-        }
-
-        // Make function available globally
-        window.selectCondition = selectCondition;
+        };
 
         // Initialize condition selection
         function initializeConditionSelection() {
@@ -2631,6 +2677,17 @@ if ($category_id > 0) {
                 option.addEventListener('mouseleave', function() {
                     if (selectedCondition !== condition) {
                         this.style.background = 'rgba(255,255,255,0.1)';
+                    }
+                });
+
+                // Add click listener as backup for onclick handler
+                option.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    console.log('Click event fired for condition:', condition);
+                    if (typeof window.selectCondition === 'function') {
+                        window.selectCondition(condition);
+                    } else {
+                        console.error('selectCondition function not available');
                     }
                 });
             });
@@ -3556,7 +3613,7 @@ if ($category_id > 0) {
         <section class="related-products-section">
             <div class="container-fluid">
                 <div class="related-products-header">
-                    <h2 class="related-products-title">Related Products</h2>
+                    <h2 class="related-products-title">Top Picks for You</h2>
                 </div>
                 <div class="related-products-grid">
                     <?php foreach ($related_products as $related_product):

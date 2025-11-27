@@ -6259,9 +6259,11 @@ try {
 
 		function showDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
+			console.log('showDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(dropdownTimeout);
 				dropdown.classList.add('show');
+				console.log('Added show class to brands dropdown');
 			}
 		}
 
@@ -6273,6 +6275,7 @@ try {
 				// Set a delay before hiding to allow moving to dropdown
 				dropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
+					console.log('Removed show class from brands dropdown');
 				}, 300);
 			}
 		}
@@ -6280,9 +6283,11 @@ try {
 		// Shop Category Dropdown Functions
 		function showShopDropdown() {
 			const dropdown = document.getElementById('shopCategoryDropdown');
+			console.log('showShopDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(shopDropdownTimeout);
 				dropdown.classList.add('show');
+				console.log('Added show class to shop category dropdown');
 			}
 		}
 
@@ -6292,6 +6297,7 @@ try {
 				clearTimeout(shopDropdownTimeout);
 				shopDropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
+					console.log('Removed show class from shop category dropdown');
 				}, 300);
 			}
 		}
@@ -6299,9 +6305,11 @@ try {
 		// More Dropdown Functions
 		function showMoreDropdown() {
 			const dropdown = document.getElementById('moreDropdown');
+			console.log('showMoreDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(moreDropdownTimeout);
 				dropdown.classList.add('show');
+				console.log('Added show class to more dropdown');
 			}
 		}
 
@@ -6311,6 +6319,7 @@ try {
 				clearTimeout(moreDropdownTimeout);
 				moreDropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
+					console.log('Removed show class from more dropdown');
 				}, 300);
 			}
 		}
@@ -6321,23 +6330,101 @@ try {
 
 		// Enhanced dropdown behavior
 		document.addEventListener('DOMContentLoaded', function() {
+			console.log('DOM Content Loaded - Setting up dropdowns');
+
+			// Setup brands dropdown
 			const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
 			const dropdown = document.getElementById('shopDropdown');
+			console.log('Brands dropdown setup - button:', shopCategoriesBtn, 'dropdown:', dropdown);
 
 			if (shopCategoriesBtn && dropdown) {
 				// Show dropdown on button hover
-				shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+				shopCategoriesBtn.addEventListener('mouseenter', function() {
+					console.log('Brands button mouseenter');
+					showDropdown();
+				});
 
 				// Hide dropdown when leaving button (with delay)
-				shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+				shopCategoriesBtn.addEventListener('mouseleave', function() {
+					console.log('Brands button mouseleave');
+					hideDropdown();
+				});
 
 				// Keep dropdown open when hovering over it
 				dropdown.addEventListener('mouseenter', function() {
+					console.log('Brands dropdown mouseenter');
 					clearTimeout(dropdownTimeout);
 				});
 
 				// Hide dropdown when leaving dropdown area
-				dropdown.addEventListener('mouseleave', hideDropdown);
+				dropdown.addEventListener('mouseleave', function() {
+					console.log('Brands dropdown mouseleave');
+					hideDropdown();
+				});
+			} else {
+				console.log('Brands dropdown elements not found');
+			}
+
+			// Setup shop category dropdown
+			const shopNavItem = document.querySelector('.nav-dropdown[onmouseenter="showShopDropdown()"]');
+			const shopCategoryDropdown = document.getElementById('shopCategoryDropdown');
+			console.log('Shop category setup - nav item:', shopNavItem, 'dropdown:', shopCategoryDropdown);
+
+			if (shopNavItem && shopCategoryDropdown) {
+				// Remove inline event handlers and use JavaScript
+				shopNavItem.removeAttribute('onmouseenter');
+				shopNavItem.removeAttribute('onmouseleave');
+
+				shopNavItem.addEventListener('mouseenter', function() {
+					console.log('Shop nav item mouseenter');
+					showShopDropdown();
+				});
+
+				shopNavItem.addEventListener('mouseleave', function() {
+					console.log('Shop nav item mouseleave');
+					hideShopDropdown();
+				});
+
+				shopCategoryDropdown.addEventListener('mouseenter', function() {
+					console.log('Shop category dropdown mouseenter');
+					clearTimeout(shopDropdownTimeout);
+				});
+
+				shopCategoryDropdown.addEventListener('mouseleave', function() {
+					console.log('Shop category dropdown mouseleave');
+					hideShopDropdown();
+				});
+			}
+
+			// Setup more dropdown
+			const moreNavItem = document.querySelector('.nav-dropdown[onmouseenter="showMoreDropdown()"]');
+			const moreDropdown = document.getElementById('moreDropdown');
+			console.log('More dropdown setup - nav item:', moreNavItem, 'dropdown:', moreDropdown);
+
+			if (moreNavItem && moreDropdown) {
+				// Remove inline event handlers and use JavaScript
+				moreNavItem.removeAttribute('onmouseenter');
+				moreNavItem.removeAttribute('onmouseleave');
+
+				moreNavItem.addEventListener('mouseenter', function() {
+					console.log('More nav item mouseenter');
+					showMoreDropdown();
+				});
+
+				moreNavItem.addEventListener('mouseleave', function() {
+					console.log('More nav item mouseleave');
+					hideMoreDropdown();
+				});
+
+				moreDropdown.addEventListener('mouseenter', function() {
+					console.log('More dropdown mouseenter');
+					clearTimeout(moreDropdownTimeout);
+				});
+
+				moreDropdown.addEventListener('mouseleave', function() {
+					console.log('More dropdown mouseleave');
+					hideMoreDropdown();
+				});
 			}
 		});
 
@@ -6379,9 +6466,11 @@ try {
 
 		function showUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');
+			console.log('showUserDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(userDropdownTimeout);
 				dropdown.classList.add('show');
+				console.log('Added show class to user dropdown');
 			}
 		}
 
@@ -6391,6 +6480,7 @@ try {
 				clearTimeout(userDropdownTimeout);
 				userDropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
+					console.log('Removed show class from user dropdown');
 				}, 300);
 			}
 		}
@@ -6406,36 +6496,46 @@ try {
 		document.addEventListener('DOMContentLoaded', function() {
 			const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
 			const userDropdown = document.getElementById('userDropdownMenu');
+			console.log('User dropdown setup - avatar:', userAvatar, 'dropdown:', userDropdown);
 
 			if (userAvatar && userDropdown) {
 				// Show dropdown on avatar hover
 				userAvatar.addEventListener('mouseenter', function(e) {
+					console.log('User avatar mouseenter');
 					e.stopPropagation();
 					showUserDropdown();
 				});
 
 				// Hide dropdown when leaving avatar (with delay)
 				userAvatar.addEventListener('mouseleave', function(e) {
+					console.log('User avatar mouseleave');
 					e.stopPropagation();
 					hideUserDropdown();
 				});
 
 				// Keep dropdown open when hovering over it
 				userDropdown.addEventListener('mouseenter', function() {
+					console.log('User dropdown mouseenter');
 					clearTimeout(userDropdownTimeout);
 				});
 
 				// Hide dropdown when leaving dropdown area
-				userDropdown.addEventListener('mouseleave', hideUserDropdown);
+				userDropdown.addEventListener('mouseleave', function() {
+					console.log('User dropdown mouseleave');
+					hideUserDropdown();
+				});
 
 				// Handle click on avatar to toggle dropdown
 				userAvatar.addEventListener('click', function(e) {
+					console.log('User avatar clicked');
 					e.stopPropagation();
 					e.preventDefault();
 					// Clear any pending hide timeout
 					clearTimeout(userDropdownTimeout);
 					toggleUserDropdown();
 				});
+			} else {
+				console.log('User dropdown elements not found');
 			}
 		});
 

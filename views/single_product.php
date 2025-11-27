@@ -48,7 +48,8 @@ $categoryPricing = [
 ];
 
 // Function to calculate price based on category and condition
-function calculateConditionPrice($basePrice, $category, $condition, $categoryPricing) {
+function calculateConditionPrice($basePrice, $category, $condition, $categoryPricing)
+{
     $categoryKey = isset($categoryPricing[$category]) ? $category : 'default';
     $discount = $categoryPricing[$categoryKey][$condition];
     return max(0, $basePrice - $discount);
@@ -66,6 +67,35 @@ $fairPrice = calculateConditionPrice($basePrice, $productCategory, 'fair', $cate
 // Calculate discounts
 $goodDiscount = $basePrice - $goodPrice;
 $fairDiscount = $basePrice - $fairPrice;
+
+// Get related products from the same category (excluding current product)
+$category_id = $product['product_cat'] ?? 0;
+$related_products = [];
+if ($category_id > 0) {
+    require_once(__DIR__ . '/../settings/db_class.php');
+    $db = new db_connection();
+    if ($db->db_connect()) {
+        $conn = $db->db_conn();
+        // Get products with category and brand names
+        $stmt = $conn->prepare("
+            SELECT p.*, c.cat_name, b.brand_name 
+            FROM products p
+            LEFT JOIN categories c ON p.product_cat = c.cat_id
+            LEFT JOIN brands b ON p.product_brand = b.brand_id
+            WHERE p.product_cat = ? AND p.product_id != ?
+            ORDER BY p.product_id DESC
+            LIMIT 4
+        ");
+        $stmt->bind_param('ii', $category_id, $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+        while ($row = $result->fetch_assoc()) {
+            $related_products[] = $row;
+        }
+        $stmt->close();
+        $db->db_close();
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -1171,7 +1201,7 @@ $fairDiscount = $basePrice - $fairPrice;
             color: #f59e0b;
         }
 
-        .condition-option input[type="radio"]:checked + .condition-label {
+        .condition-option input[type="radio"]:checked+.condition-label {
             border-color: #000000;
             background: #f8f9fa;
             transform: translateY(-2px);
@@ -1406,228 +1436,228 @@ $fairDiscount = $basePrice - $fairPrice;
 <body>
     <!-- Promotional Banner -->
     <div class="promo-banner2">
-		<div class="promo-banner-left">
-			<i class="fas fa-bolt"></i>
-		</div>
-		<div class="promo-banner-center">
-			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
-			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
-		</div>
-		<a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
-	</div>
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="promo-banner-center">
+            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
+    </div>
 
-	<!-- Main Header -->
-	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 40px;">
-			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-				<!-- Logo - Far Left -->
-				<a href="../index.php" class="logo">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-						alt="Gadget Garage">
-				</a>
+    <!-- Main Header -->
+    <header class="main-header animate__animated animate__fadeInDown">
+        <div class="container-fluid" style="padding: 0 40px;">
+            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+                <!-- Logo - Far Left -->
+                <a href="../index.php" class="logo">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                        alt="Gadget Garage">
+                </a>
 
-				<!-- Center Content -->
-				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="../product_search_result.php">
-						<i class="fas fa-search search-icon"></i>
-						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-						<button type="submit" class="search-btn">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
+                <!-- Center Content -->
+                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                    <!-- Search Bar -->
+                    <form class="search-container" method="GET" action="../product_search_result.php">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
 
-					<!-- Tech Revival Section -->
-					<div class="tech-revival-section">
-						<i class="fas fa-recycle tech-revival-icon"></i>
-						<div>
-							<p class="tech-revival-text">Bring Retired Devices</p>
-							<p class="contact-number">055-138-7578</p>
-						</div>
-					</div>
-				</div>
+                    <!-- Tech Revival Section -->
+                    <div class="tech-revival-section">
+                        <i class="fas fa-recycle tech-revival-icon"></i>
+                        <div>
+                            <p class="tech-revival-text">Bring Retired Devices</p>
+                            <p class="contact-number">055-138-7578</p>
+                        </div>
+                    </div>
+                </div>
 
-				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
-					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-					<?php if ($is_logged_in): ?>
-						<!-- Wishlist Icon -->
-						<div class="header-icon">
-							<a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-								<i class="fas fa-heart"></i>
-								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-							</a>
-						</div>
+                <!-- User Actions - Far Right -->
+                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
+                    <?php if ($is_logged_in): ?>
+                        <!-- Wishlist Icon -->
+                        <div class="header-icon">
+                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-heart"></i>
+                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
+                            </a>
+                        </div>
 
-						<!-- Cart Icon -->
-						<div class="header-icon">
-							<a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-								<i class="fas fa-shopping-cart"></i>
-								<?php if ($cart_count > 0): ?>
-									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
-								<?php else: ?>
-									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
-								<?php endif; ?>
-							</a>
-						</div>
+                        <!-- Cart Icon -->
+                        <div class="header-icon">
+                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shopping-cart"></i>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php else: ?>
+                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php endif; ?>
+                            </a>
+                        </div>
 
-						<!-- User Avatar Dropdown -->
-						<div class="user-dropdown">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-								<?= strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)) ?>
-							</div>
-							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="goToAccount()">
-									<i class="fas fa-user"></i>
-									<span>Account</span>
-								</button>
-								<div class="dropdown-divider-custom"></div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-globe"></i>
-									<div class="language-selector">
-										<span>Language</span>
-										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-											<option value="en">🇬🇧 EN</option>
-											<option value="es">🇪🇸 ES</option>
-											<option value="fr">🇫🇷 FR</option>
-											<option value="de">🇩🇪 DE</option>
-										</select>
-									</div>
-								</div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-moon"></i>
-									<div class="theme-toggle">
-										<span>Dark Mode</span>
-										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-											<div class="toggle-slider"></div>
-										</div>
-									</div>
-								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="../login/logout.php" class="dropdown-item-custom">
-									<i class="fas fa-sign-out-alt"></i>
-									<span>Logout</span>
-								</a>
-							</div>
-						</div>
-					<?php else: ?>
-						<!-- Login Button -->
-						<a href="../login/login.php" class="login-btn">
-							<i class="fas fa-user"></i>
-							Login
-						</a>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-	</header>
+                        <!-- User Avatar Dropdown -->
+                        <div class="user-dropdown">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+                                <?= strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)) ?>
+                            </div>
+                            <div class="dropdown-menu-custom" id="userDropdownMenu">
+                                <button class="dropdown-item-custom" onclick="goToAccount()">
+                                    <i class="fas fa-user"></i>
+                                    <span>Account</span>
+                                </button>
+                                <div class="dropdown-divider-custom"></div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-globe"></i>
+                                    <div class="language-selector">
+                                        <span>Language</span>
+                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+                                            <option value="en">🇬🇧 EN</option>
+                                            <option value="es">🇪🇸 ES</option>
+                                            <option value="fr">🇫🇷 FR</option>
+                                            <option value="de">🇩🇪 DE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-moon"></i>
+                                    <div class="theme-toggle">
+                                        <span>Dark Mode</span>
+                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+                                            <div class="toggle-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider-custom"></div>
+                                <a href="../login/logout.php" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <!-- Login Button -->
+                        <a href="../login/login.php" class="login-btn">
+                            <i class="fas fa-user"></i>
+                            Login
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </header>
 
-	<!-- Main Navigation -->
-	<nav class="main-nav">
-		<div class="container-fluid px-0">
-			<div class="nav-menu">
-				<!-- Shop by Brands Button -->
-				<div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
-					<button class="categories-button">
-						<i class="fas fa-tags"></i>
-						<span data-translate="shop_by_brands">SHOP BY BRANDS</span>
-						<i class="fas fa-chevron-down"></i>
-					</button>
-					<div class="brands-dropdown" id="shopDropdown">
-						<h4>All Brands</h4>
-						<ul>
-							<li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-							<li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-							<li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-							<li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-							<li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-							<li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-							<li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-							<li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
-						</ul>
-					</div>
-				</div>
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container-fluid px-0">
+            <div class="nav-menu">
+                <!-- Shop by Brands Button -->
+                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+                    <button class="categories-button">
+                        <i class="fas fa-tags"></i>
+                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="brands-dropdown" id="shopDropdown">
+                        <h4>All Brands</h4>
+                        <ul>
+                            <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                            <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                            <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                            <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                            <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                            <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                            <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                            <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                        </ul>
+                    </div>
+                </div>
 
-				<a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
-				<!-- Shop Dropdown -->
-				<div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
-					<a href="#" class="nav-item">
-						<span data-translate="shop">SHOP</span>
-						<i class="fas fa-chevron-down"></i>
-					</a>
-					<div class="mega-dropdown" id="shopCategoryDropdown">
-						<div class="dropdown-content">
-							<div class="dropdown-column">
-								<h4>
-									<a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
-										<span data-translate="mobile_devices">Mobile Devices</span>
-									</a>
-								</h4>
-								<ul>
-									<li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-									<li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
-								</ul>
-							</div>
-							<div class="dropdown-column">
-								<h4>
-									<a href="../views/computing.php" style="text-decoration: none; color: inherit;">
-										<span data-translate="computing">Computing</span>
-									</a>
-								</h4>
-								<ul>
-									<li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-									<li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
-								</ul>
-							</div>
-							<div class="dropdown-column">
-								<h4>
-									<a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
-										<span data-translate="photography_video">Photography & Video</span>
-									</a>
-								</h4>
-								<ul>
-									<li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-									<li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
-								</ul>
-							</div>
-							<div class="dropdown-column featured">
-								<h4>Shop All</h4>
-								<div class="featured-item">
-									<img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
-									<div class="featured-text">
-										<strong>New Arrivals</strong>
-										<p>Latest tech gadgets</p>
-										<a href="../views/all_product.php" class="shop-now-btn">Shop</a>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
-				</div>
+                <!-- Shop Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+                    <a href="#" class="nav-item">
+                        <span data-translate="shop">SHOP</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="mega-dropdown" id="shopCategoryDropdown">
+                        <div class="dropdown-content">
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="mobile_devices">Mobile Devices</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="computing">Computing</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="photography_video">Photography & Video</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column featured">
+                                <h4>Shop All</h4>
+                                <div class="featured-item">
+                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+                                    <div class="featured-text">
+                                        <strong>New Arrivals</strong>
+                                        <p>Latest tech gadgets</p>
+                                        <a href="../views/all_product.php" class="shop-now-btn">Shop</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-				<a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-				<a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+                <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+                <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
-				<!-- More Dropdown -->
-				<div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
-					<a href="#" class="nav-item">
-						<span data-translate="more">MORE</span>
-						<i class="fas fa-chevron-down"></i>
-					</a>
-					<div class="simple-dropdown" id="moreDropdown">
-						<ul>
-							<li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-							<li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
-						</ul>
-					</div>
-				</div>
+                <!-- More Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+                    <a href="#" class="nav-item">
+                        <span data-translate="more">MORE</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="simple-dropdown" id="moreDropdown">
+                        <ul>
+                            <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
 
-				<!-- Flash Deal positioned at far right -->
-				<a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
-			</div>
-		</div>
-	</nav>
+                <!-- Flash Deal positioned at far right -->
+                <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+            </div>
+        </div>
+    </nav>
 
     <div class="container mt-4" id="product-details">
 
@@ -1638,7 +1668,7 @@ $fairDiscount = $basePrice - $fairPrice;
                     <div class="product-gallery">
                         <!-- Main Image Display -->
                         <div class="main-image-container">
-                            <?php 
+                            <?php
                             $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product', '600x400');
                             $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '600x400');
                             ?>
@@ -1699,7 +1729,7 @@ $fairDiscount = $basePrice - $fairPrice;
                                 '• Professional-grade reliability',
                                 '• Advanced connectivity options'
                             ];
-                            foreach($features as $feature): ?>
+                            foreach ($features as $feature): ?>
                                 <div style="color: rgba(255,255,255,0.95); margin-bottom: 8px; display: flex; align-items: center;">
                                     <i class="fas fa-check" style="color: #10b981; margin-right: 12px; font-size: 0.9rem;"></i>
                                     <?php echo $feature; ?>
@@ -1734,7 +1764,7 @@ $fairDiscount = $basePrice - $fairPrice;
                                     <div style="text-align: right;">
                                         <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($goodPrice, 0); ?></div>
                                         <?php if ($goodDiscount > 0): ?>
-                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵<?php echo number_format($goodDiscount, 0); ?></div>
+                                            <div style="color: #10b981; font-size: 0.85rem;">-GH₵<?php echo number_format($goodDiscount, 0); ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -1750,7 +1780,7 @@ $fairDiscount = $basePrice - $fairPrice;
                                     <div style="text-align: right;">
                                         <div style="font-size: 1.1rem; font-weight: 700; color: white;">GH₵<?php echo number_format($fairPrice, 0); ?></div>
                                         <?php if ($fairDiscount > 0): ?>
-                                        <div style="color: #10b981; font-size: 0.85rem;">-GH₵<?php echo number_format($fairDiscount, 0); ?></div>
+                                            <div style="color: #10b981; font-size: 0.85rem;">-GH₵<?php echo number_format($fairDiscount, 0); ?></div>
                                         <?php endif; ?>
                                     </div>
                                 </div>
@@ -1769,7 +1799,7 @@ $fairDiscount = $basePrice - $fairPrice;
 
                         <!-- Add to Cart Button -->
                         <button onclick="addToCartWithCondition(<?php echo $product['product_id']; ?>)" id="addToCartBtn"
-                                style="width: 100%; background: white; color: #4f46e5; border: none; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
+                            style="width: 100%; background: white; color: #4f46e5; border: none; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
                             <i class="fas fa-shopping-cart"></i>
                             Add to Cart - GH₵<span id="cartButtonPrice"><?php echo number_format($product['product_price'], 0); ?></span>
                         </button>
@@ -2019,38 +2049,38 @@ $fairDiscount = $basePrice - $fairPrice;
             formData.append('final_price', window.enhancedModalData.unitPrice);
 
             fetch('../actions/add_to_cart_action.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Success animation
-                    confirmBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
-                    confirmBtn.classList.add('btn-success');
-                    confirmBtn.classList.remove('btn-primary');
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Success animation
+                        confirmBtn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        confirmBtn.classList.add('btn-success');
+                        confirmBtn.classList.remove('btn-primary');
 
-                    updateCartBadge(data.cart_count);
+                        updateCartBadge(data.cart_count);
 
-                    // Show success notification with quantity info
-                    showNotification(`Added ${window.enhancedModalData.quantity} item(s) to cart successfully!`, 'success');
+                        // Show success notification with quantity info
+                        showNotification(`Added ${window.enhancedModalData.quantity} item(s) to cart successfully!`, 'success');
 
-                    // Close modal after delay
-                    setTimeout(() => {
-                        closeEnhancedAddToCartModal();
-                    }, 1500);
-                } else {
+                        // Close modal after delay
+                        setTimeout(() => {
+                            closeEnhancedAddToCartModal();
+                        }, 1500);
+                    } else {
+                        confirmBtn.innerHTML = originalText;
+                        confirmBtn.disabled = false;
+                        showNotification(data.message || 'Failed to add product to cart', 'error');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     confirmBtn.innerHTML = originalText;
                     confirmBtn.disabled = false;
-                    showNotification(data.message || 'Failed to add product to cart', 'error');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                confirmBtn.innerHTML = originalText;
-                confirmBtn.disabled = false;
-                showNotification('An error occurred. Please try again.', 'error');
-            });
+                    showNotification('An error occurred. Please try again.', 'error');
+                });
         }
 
         function closeEnhancedAddToCartModal() {
@@ -2092,7 +2122,10 @@ $fairDiscount = $basePrice - $fairPrice;
             }
 
             if (!selectedCondition || selectedPrice <= 0) {
-                console.error('Invalid selection:', { selectedCondition, selectedPrice });
+                console.error('Invalid selection:', {
+                    selectedCondition,
+                    selectedPrice
+                });
                 showNotification('Please select a condition first', 'error');
                 return;
             }
@@ -2116,40 +2149,40 @@ $fairDiscount = $basePrice - $fairPrice;
             formData.append('final_price', selectedPrice);
 
             fetch('../actions/add_to_cart_action.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok');
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data.success) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Added Successfully!';
-                    btn.style.background = '#10b981';
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added Successfully!';
+                        btn.style.background = '#10b981';
 
-                    setTimeout(() => {
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.style.background = 'white';
+                            btn.disabled = false;
+                        }, 2500);
+
+                        // Show SweetAlert cart popup positioned on the right side
+                        showSweetCartPopup(data);
+                        updateCartBadge(data.cart_count);
+                    } else {
                         btn.innerHTML = originalText;
-                        btn.style.background = 'white';
                         btn.disabled = false;
-                    }, 2500);
-
-                    // Show SweetAlert cart popup positioned on the right side
-                    showSweetCartPopup(data);
-                    updateCartBadge(data.cart_count);
-                } else {
+                        showNotification(data.message || 'Failed to add product to cart', 'error');
+                    }
+                })
+                .catch(error => {
                     btn.innerHTML = originalText;
                     btn.disabled = false;
-                    showNotification(data.message || 'Failed to add product to cart', 'error');
-                }
-            })
-            .catch(error => {
-                btn.innerHTML = originalText;
-                btn.disabled = false;
-                showNotification('An error occurred. Please try again.', 'error');
-            });
+                    showNotification('An error occurred. Please try again.', 'error');
+                });
         }
 
 
@@ -2697,7 +2730,7 @@ $fairDiscount = $basePrice - $fairPrice;
         document.addEventListener('DOMContentLoaded', function() {
             const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
             const brandsDropdown = document.getElementById('shopDropdown');
-            
+
             if (shopCategoriesBtn && brandsDropdown) {
                 shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
                 shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
@@ -2709,7 +2742,7 @@ $fairDiscount = $basePrice - $fairPrice;
 
             const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
-            
+
             if (userAvatar && userDropdown) {
                 userAvatar.addEventListener('mouseenter', showUserDropdown);
                 userAvatar.addEventListener('mouseleave', hideUserDropdown);
@@ -2737,9 +2770,9 @@ $fairDiscount = $basePrice - $fairPrice;
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 timerElement.innerHTML = days + "d:" +
-                                         (hours < 10 ? "0" : "") + hours + "h:" +
-                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
-                                         (seconds < 10 ? "0" : "") + seconds + "s";
+                    (hours < 10 ? "0" : "") + hours + "h:" +
+                    (minutes < 10 ? "0" : "") + minutes + "m:" +
+                    (seconds < 10 ? "0" : "") + seconds + "s";
             }
         }
 
@@ -2917,43 +2950,43 @@ $fairDiscount = $basePrice - $fairPrice;
 
             try {
                 Swal.fire({
-                title: '<i class="fas fa-check-circle" style="color: #10b981;"></i> Added to Cart!',
-                html: cartStateHTML,
-                width: 420,
-                position: 'top-end',
-                toast: false,
-                showConfirmButton: true,
-                showCancelButton: true,
-                confirmButtonText: '<i class="fas fa-shopping-cart"></i> View Cart (' + (data.cart_count || 0) + ')',
-                cancelButtonText: 'Continue Shopping',
-                confirmButtonColor: '#4f46e5',
-                cancelButtonColor: '#6b7280',
-                timer: 8000,
-                timerProgressBar: true,
-                customClass: {
-                    popup: 'swal-cart-popup',
-                    title: 'swal-cart-title',
-                    htmlContainer: 'swal-cart-content'
-                },
-                didOpen: (popup) => {
-                    // Position the popup under the navbar
-                    popup.style.marginTop = '80px'; // Adjust based on your navbar height
-                    popup.style.marginRight = '20px';
-                },
-                willClose: () => {
-                    // Optional: Add any cleanup here
-                }
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Go to cart page
-                    window.location.href = '../views/cart.php';
-                }
-                // If cancelled or auto-closed, user continues shopping
-            });
+                    title: '<i class="fas fa-check-circle" style="color: #10b981;"></i> Added to Cart!',
+                    html: cartStateHTML,
+                    width: 420,
+                    position: 'top-end',
+                    toast: false,
+                    showConfirmButton: true,
+                    showCancelButton: true,
+                    confirmButtonText: '<i class="fas fa-shopping-cart"></i> View Cart (' + (data.cart_count || 0) + ')',
+                    cancelButtonText: 'Continue Shopping',
+                    confirmButtonColor: '#4f46e5',
+                    cancelButtonColor: '#6b7280',
+                    timer: 8000,
+                    timerProgressBar: true,
+                    customClass: {
+                        popup: 'swal-cart-popup',
+                        title: 'swal-cart-title',
+                        htmlContainer: 'swal-cart-content'
+                    },
+                    didOpen: (popup) => {
+                        // Position the popup under the navbar
+                        popup.style.marginTop = '80px'; // Adjust based on your navbar height
+                        popup.style.marginRight = '20px';
+                    },
+                    willClose: () => {
+                        // Optional: Add any cleanup here
+                    }
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Go to cart page
+                        window.location.href = '../views/cart.php';
+                    }
+                    // If cancelled or auto-closed, user continues shopping
+                });
 
-            // Add custom CSS for better styling
-            const customStyle = document.createElement('style');
-            customStyle.textContent = `
+                // Add custom CSS for better styling
+                const customStyle = document.createElement('style');
+                customStyle.textContent = `
                 .swal-cart-popup {
                     border-radius: 16px !important;
                     box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15) !important;
@@ -3001,14 +3034,14 @@ $fairDiscount = $basePrice - $fairPrice;
                     color: #374151 !important;
                 }
             `;
-            document.head.appendChild(customStyle);
+                document.head.appendChild(customStyle);
 
-            // Remove the style after the popup is closed to avoid accumulation
-            setTimeout(() => {
-                if (customStyle.parentNode) {
-                    customStyle.remove();
-                }
-            }, 10000);
+                // Remove the style after the popup is closed to avoid accumulation
+                setTimeout(() => {
+                    if (customStyle.parentNode) {
+                        customStyle.remove();
+                    }
+                }, 10000);
 
             } catch (error) {
                 console.error('Error showing SweetAlert popup:', error);
@@ -3291,7 +3324,232 @@ $fairDiscount = $basePrice - $fairPrice;
                 left: 15px;
             }
         }
+
+        /* Related Products Section */
+        .related-products-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
+            margin-top: 60px;
+        }
+
+        .related-products-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .related-products-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1a202c;
+            margin-bottom: 15px;
+            position: relative;
+            display: inline-block;
+        }
+
+        .related-products-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 4px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            border-radius: 2px;
+        }
+
+        .related-products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .related-product-card {
+            background: var(--pure-white);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 4px 16px var(--shadow);
+            transition: all 0.4s ease;
+            cursor: pointer;
+            border: 1px solid var(--border-light);
+            position: relative;
+            width: 100%;
+            min-height: 450px;
+        }
+
+        .related-product-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 12px 32px var(--shadow-hover);
+            border-color: var(--royal-blue);
+        }
+
+        .related-product-image-container {
+            position: relative;
+            width: 100%;
+            height: 240px;
+            overflow: hidden;
+            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
+        }
+
+        .related-product-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: all 0.4s ease;
+        }
+
+        .related-product-card:hover .related-product-image {
+            transform: scale(1.1);
+        }
+
+        .related-product-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: var(--gradient-primary);
+            color: var(--pure-white);
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            box-shadow: 0 2px 8px var(--shadow);
+        }
+
+        .related-product-content {
+            padding: 25px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .related-product-title {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .related-product-price {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: #000000;
+            margin-bottom: 15px;
+        }
+
+        .related-product-meta {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 15px;
+        }
+
+        .related-meta-tag {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 20px;
+            font-size: 0.85rem;
+            color: #000000;
+            font-weight: 500;
+        }
+
+        .related-add-to-cart-btn {
+            width: 100%;
+            padding: 15px;
+            background: var(--gradient-primary);
+            color: var(--pure-white);
+            border: none;
+            border-radius: 15px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: 0 4px 12px var(--shadow);
+        }
+
+        .related-add-to-cart-btn:hover {
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--navy-blue) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        @media (max-width: 768px) {
+            .related-products-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                gap: 20px;
+            }
+
+            .related-products-title {
+                font-size: 2rem;
+            }
+        }
     </style>
+
+    <!-- Related Products Section -->
+    <?php if (!empty($related_products)): ?>
+        <section class="related-products-section">
+            <div class="container-fluid">
+                <div class="related-products-header">
+                    <h2 class="related-products-title">Related Products</h2>
+                </div>
+                <div class="related-products-grid">
+                    <?php foreach ($related_products as $related_product):
+                        $related_image_url = get_product_image_url($related_product['product_image'] ?? '', $related_product['product_title'] ?? 'Product', '400x300');
+                        $related_fallback_url = generate_placeholder_url($related_product['product_title'] ?? 'Product', '400x300');
+                    ?>
+                        <div class="related-product-card" onclick="window.location.href='single_product.php?id=<?php echo $related_product['product_id']; ?>'">
+                            <div class="related-product-image-container">
+                                <img src="<?php echo htmlspecialchars($related_image_url); ?>"
+                                    alt="<?php echo htmlspecialchars($related_product['product_title']); ?>"
+                                    class="related-product-image"
+                                    data-product-id="<?php echo $related_product['product_id']; ?>"
+                                    data-product-image="<?php echo htmlspecialchars($related_product['product_image'] ?? ''); ?>"
+                                    data-product-title="<?php echo htmlspecialchars($related_product['product_title']); ?>"
+                                    onerror="this.src='<?php echo htmlspecialchars($related_fallback_url); ?>'; this.onerror=null;">
+                                <div class="related-product-badge">New</div>
+                            </div>
+                            <div class="related-product-content">
+                                <h5 class="related-product-title"><?php echo htmlspecialchars($related_product['product_title']); ?></h5>
+                                <div class="related-product-price">GH₵ <?php echo number_format(floatval($related_product['product_price']), 2); ?></div>
+                                <div class="related-product-meta">
+                                    <span class="related-meta-tag">
+                                        <i class="fas fa-tag"></i>
+                                        <?php echo htmlspecialchars($related_product['cat_name'] ?? 'N/A'); ?>
+                                    </span>
+                                    <span class="related-meta-tag">
+                                        <i class="fas fa-store"></i>
+                                        <?php echo htmlspecialchars($related_product['brand_name'] ?? 'N/A'); ?>
+                                    </span>
+                                </div>
+                                <button class="related-add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(<?php echo $related_product['product_id']; ?>, '<?php echo addslashes($related_product['product_title']); ?>', <?php echo $related_product['product_price']; ?>, '<?php echo htmlspecialchars($related_image_url); ?>')">
+                                    <i class="fas fa-shopping-cart"></i>
+                                    Add to Cart
+                                </button>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+            </div>
+        </section>
+    <?php endif; ?>
 
     <!-- Footer -->
     <footer class="main-footer">

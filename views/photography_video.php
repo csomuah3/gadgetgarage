@@ -1726,21 +1726,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Apply/Clear Filters Buttons -->
                     <div class="filter-actions" style="display: flex; flex-direction: column; gap: 10px; margin-top: 20px;">
-                        <button class="apply-filters-btn" id="applyFilters" onclick="applyAllFilters()" style="
-                            background: linear-gradient(135deg, #22c55e, #16a34a);
-                            color: white;
-                            border: none;
-                            border-radius: 8px;
-                            padding: 12px 20px;
-                            font-weight: 600;
-                            cursor: pointer;
-                            transition: all 0.3s ease;
-                            display: flex;
-                            align-items: center;
-                            justify-content: center;
-                            gap: 8px;
-                            opacity: 1;
-                        ">
+                        <button class="apply-filters-btn" id="applyFilters">
                             <i class="fas fa-filter"></i>
                             Apply Filters
                         </button>
@@ -1963,8 +1949,43 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <script>
         // Filter System JavaScript
         let filtersChanged = false;
+        let initialState = null;
+
+        function captureInitialState() {
+            initialState = {
+                search: '',
+                rating: '',
+                minPrice: 0,
+                maxPrice: 50000,
+                categories: [''],
+                brand: '',
+                size: '',
+                color: ''
+            };
+        }
+
+        function showApplyButton() {
+            if (!filtersChanged) {
+                filtersChanged = true;
+                const applyBtn = document.getElementById('applyFilters');
+                if (applyBtn) {
+                    applyBtn.classList.add('has-changes');
+                    applyBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Apply Changes';
+                }
+            }
+        }
+
+        function hideApplyButton() {
+            filtersChanged = false;
+            const applyBtn = document.getElementById('applyFilters');
+            if (applyBtn) {
+                applyBtn.classList.remove('has-changes');
+                applyBtn.innerHTML = '<i class="fas fa-filter"></i> Apply Filters';
+            }
+        }
 
         function initPhotoFilters() {
+            captureInitialState();
             initCategoryFilter();
             initBrandFilter();
             initMobileFilterToggle();
@@ -1978,48 +1999,65 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const maxSlider = document.getElementById('maxPriceSlider');
             const minDisplay = document.getElementById('priceMinDisplay');
             const maxDisplay = document.getElementById('priceMaxDisplay');
-            const priceRange = document.getElementById('priceRange');
+            const rangeDisplay = document.getElementById('priceRange');
 
-            if (minSlider && maxSlider && minDisplay && maxDisplay) {
-                // Update display on input
-                function updatePriceDisplay() {
-                    let minVal = parseInt(minSlider.value);
-                    let maxVal = parseInt(maxSlider.value);
+            if (!minSlider || !maxSlider || !minDisplay || !maxDisplay || !rangeDisplay) {
+                console.warn('Price slider elements not found');
+                return;
+            }
 
-                    // Ensure min doesn't exceed max
-                    if (minVal >= maxVal) {
-                        minVal = maxVal - 100;
-                        minSlider.value = minVal;
-                    }
+            function updatePriceDisplay() {
+                const minVal = parseInt(minSlider.value);
+                const maxVal = parseInt(maxSlider.value);
 
-                    // Ensure max doesn't go below min
-                    if (maxVal <= minVal) {
-                        maxVal = minVal + 100;
-                        maxSlider.value = maxVal;
-                    }
-
-                    // Update display text with Ghana Cedis
-                    minDisplay.textContent = 'GH₵ ' + minVal.toLocaleString();
-                    maxDisplay.textContent = 'GH₵ ' + maxVal.toLocaleString();
-
-                    // Update slider range visualization
-                    if (priceRange) {
-                        const minPercent = (minVal / 50000) * 100;
-                        const maxPercent = (maxVal / 50000) * 100;
-                        priceRange.style.left = minPercent + '%';
-                        priceRange.style.width = (maxPercent - minPercent) + '%';
-                    }
-
-                    showApplyButtonWithChanges();
+                // Ensure min is not greater than max
+                if (minVal > maxVal - 100) {
+                    minSlider.value = maxVal - 100;
                 }
 
-                // Attach event listeners
-                minSlider.addEventListener('input', updatePriceDisplay);
-                maxSlider.addEventListener('input', updatePriceDisplay);
+                if (maxVal < minVal + 100) {
+                    maxSlider.value = minVal + 100;
+                }
 
-                // Initial call
-                updatePriceDisplay();
+                const finalMin = parseInt(minSlider.value);
+                const finalMax = parseInt(maxSlider.value);
+
+                // Always update the display in real-time
+                minDisplay.textContent = `GH₵ ${finalMin.toLocaleString()}`;
+                maxDisplay.textContent = `GH₵ ${finalMax.toLocaleString()}`;
+
+                // Update range display
+                const minPercent = (finalMin / parseInt(minSlider.max)) * 100;
+                const maxPercent = (finalMax / parseInt(maxSlider.max)) * 100;
+
+                rangeDisplay.style.left = `${minPercent}%`;
+                rangeDisplay.style.right = `${100 - maxPercent}%`;
             }
+
+            function checkForChanges() {
+                const finalMin = parseInt(minSlider.value);
+                const finalMax = parseInt(maxSlider.value);
+
+                // Show apply button if values changed from initial (only if initialState exists)
+                if (initialState && (finalMin !== initialState.minPrice || finalMax !== initialState.maxPrice)) {
+                    showApplyButton();
+                }
+            }
+
+            // Real-time display updates on input (as user drags)
+            minSlider.addEventListener('input', updatePriceDisplay);
+            maxSlider.addEventListener('input', updatePriceDisplay);
+
+            // Also update on mousemove for smoother real-time updates
+            minSlider.addEventListener('mousemove', updatePriceDisplay);
+            maxSlider.addEventListener('mousemove', updatePriceDisplay);
+
+            // Check for changes on mouse up or touch end
+            minSlider.addEventListener('change', checkForChanges);
+            maxSlider.addEventListener('change', checkForChanges);
+
+            // Initialize
+            updatePriceDisplay();
         }
 
         // Global function for HTML oninput calls
@@ -2185,6 +2223,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Initialize filters on page load
         document.addEventListener('DOMContentLoaded', function() {
             initPhotoFilters();
+
+            // Apply Filters button click handler
+            const applyFiltersBtn = document.getElementById('applyFilters');
+            if (applyFiltersBtn) {
+                applyFiltersBtn.addEventListener('click', function() {
+                    if (typeof executeFilters === 'function') {
+                        executeFilters();
+                    } else if (typeof applyAllFilters === 'function') {
+                        applyAllFilters();
+                    }
+                });
+            }
         });
     </script>
     <script>

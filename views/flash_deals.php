@@ -2961,8 +2961,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <!-- Apply/Clear Filters Buttons -->
                     <div class="filter-actions">
-                        <button class="apply-filters-btn" id="applyFilters" style="display: none;">
-                            <i class="fas fa-check"></i>
+                        <button class="apply-filters-btn" id="applyFilters">
+                            <i class="fas fa-filter"></i>
                             Apply Filters
                         </button>
                         <button class="clear-filters-btn" id="clearFilters">
@@ -3637,6 +3637,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const maxDisplay = document.getElementById('priceMaxDisplay');
             const rangeDisplay = document.getElementById('priceRange');
 
+            if (!minSlider || !maxSlider || !minDisplay || !maxDisplay || !rangeDisplay) {
+                console.warn('Price slider elements not found');
+                return;
+            }
+
             function updatePriceDisplay() {
                 const minVal = parseInt(minSlider.value);
                 const maxVal = parseInt(maxSlider.value);
@@ -3675,9 +3680,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 }
             }
 
-            // Real-time display updates
+            // Real-time display updates on input (as user drags)
             minSlider.addEventListener('input', updatePriceDisplay);
             maxSlider.addEventListener('input', updatePriceDisplay);
+
+            // Also update on mousemove for smoother real-time updates
+            minSlider.addEventListener('mousemove', updatePriceDisplay);
+            maxSlider.addEventListener('mousemove', updatePriceDisplay);
 
             // Check for changes on mouse up or touch end
             minSlider.addEventListener('change', checkForChanges);

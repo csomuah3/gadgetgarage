@@ -1069,23 +1069,60 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
                 }, 500);
             });
         } else {
-            Swal.fire({
-                icon: 'error',
-                title: 'Error!',
-                text: data.message
-            });
+            // Handle authentication/authorization errors with redirects
+            if (data.action === 'redirect') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.message,
+                    showConfirmButton: true,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = data.redirect;
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error!',
+                    text: data.message
+                });
+            }
         }
     })
     .catch(error => {
         console.error('Fetch error:', error);
+
+        let errorMessage = 'An error occurred while adding the product: ' + error.message;
+
+        // Handle specific HTTP errors
+        if (error.message.includes('401')) {
+            errorMessage = 'Your session has expired. Please log in again to continue.';
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Session Expired',
+                    text: errorMessage,
+                    confirmButtonText: 'Go to Login'
+                }).then(() => {
+                    window.location.href = '../login/login.php';
+                });
+            } else {
+                alert(errorMessage);
+                window.location.href = '../login/login.php';
+            }
+            return;
+        } else if (error.message.includes('403')) {
+            errorMessage = 'Access denied. You do not have admin privileges.';
+        }
+
         if (typeof Swal !== 'undefined') {
             Swal.fire({
                 icon: 'error',
                 title: 'Error!',
-                text: 'An error occurred while adding the product: ' + error.message
+                text: errorMessage
             });
         } else {
-            alert('An error occurred while adding the product: ' + error.message);
+            alert(errorMessage);
         }
     })
     .finally(() => {
@@ -1095,6 +1132,33 @@ document.getElementById('addProductForm').addEventListener('submit', function(e)
 });
 
 }); // End DOMContentLoaded
+
+// Function to check session status
+async function checkSessionStatus() {
+    try {
+        const response = await fetch('../actions/debug_session.php');
+        const sessionInfo = await response.json();
+        console.log('Session Status:', sessionInfo);
+
+        if (!sessionInfo.check_login) {
+            console.warn('User is not logged in');
+            // Could show a warning banner here
+        } else if (!sessionInfo.check_admin) {
+            console.warn('User is not admin');
+            // Could redirect to main site
+        }
+
+        return sessionInfo;
+    } catch (error) {
+        console.error('Failed to check session status:', error);
+        return null;
+    }
+}
+
+// Check session on page load
+document.addEventListener('DOMContentLoaded', function() {
+    checkSessionStatus();
+});
 
 // Delete product function
 function deleteProduct(productId, productName) {

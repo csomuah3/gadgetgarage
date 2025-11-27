@@ -1305,9 +1305,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 }
             }
 
-            // Real-time display updates
+            // Real-time display updates on input (as user drags)
             minSlider.addEventListener('input', updatePriceDisplay);
             maxSlider.addEventListener('input', updatePriceDisplay);
+
+            // Also update on mousemove for smoother real-time updates
+            minSlider.addEventListener('mousemove', updatePriceDisplay);
+            maxSlider.addEventListener('mousemove', updatePriceDisplay);
 
             // Check for changes on mouse up or touch end
             minSlider.addEventListener('change', checkForChanges);

@@ -1906,7 +1906,7 @@
 												name="name"
 												class="form-control with-icon"
 												placeholder="Enter your full name"
-												value="<?php echo htmlspecialchars($name ?? ''); ?>"
+												value=""
 												required>
 										</div>
 									</div>
@@ -1920,7 +1920,7 @@
 												name="email"
 												class="form-control with-icon"
 												placeholder="Enter your email"
-												value="<?php echo htmlspecialchars($email ?? ''); ?>"
+												value=""
 												required>
 										</div>
 									</div>
@@ -1934,7 +1934,7 @@
 												name="phone_number"
 												class="form-control with-flag"
 												placeholder="your phone number"
-												value="<?php echo htmlspecialchars($phone_number ?? ''); ?>"
+												value=""
 												required>
 										</div>
 									</div>
@@ -1945,12 +1945,12 @@
 											<i class="fas fa-globe input-icon"></i>
 											<select id="country" name="country" class="form-control with-icon" required>
 												<option value="">Select Country</option>
-												<option value="Ghana" <?php echo (isset($country) && $country === 'Ghana') ? 'selected' : 'selected'; ?>>Ghana</option>
-												<option value="Nigeria" <?php echo (isset($country) && $country === 'Nigeria') ? 'selected' : ''; ?>>Nigeria</option>
-												<option value="USA" <?php echo (isset($country) && $country === 'USA') ? 'selected' : ''; ?>>United States</option>
-												<option value="UK" <?php echo (isset($country) && $country === 'UK') ? 'selected' : ''; ?>>United Kingdom</option>
-												<option value="Canada" <?php echo (isset($country) && $country === 'Canada') ? 'selected' : ''; ?>>Canada</option>
-												<option value="Australia" <?php echo (isset($country) && $country === 'Australia') ? 'selected' : ''; ?>>Australia</option>
+												<option value="Ghana" selected>Ghana</option>
+												<option value="Nigeria">Nigeria</option>
+												<option value="USA">United States</option>
+												<option value="UK">United Kingdom</option>
+												<option value="Canada">Canada</option>
+												<option value="Australia">Australia</option>
 											</select>
 										</div>
 									</div>
@@ -1964,7 +1964,7 @@
 												name="city"
 												class="form-control with-icon"
 												placeholder="Enter your city"
-												value="<?php echo htmlspecialchars($city ?? ''); ?>"
+												value=""
 												required>
 										</div>
 									</div>
@@ -2152,11 +2152,31 @@
 
 		// Handle signup form submission
 		document.addEventListener('DOMContentLoaded', function() {
+			console.log('DOM Content Loaded');
 			const signupForm = document.getElementById('registerForm');
+			console.log('Signup form element:', signupForm);
 
 			if (signupForm) {
+				console.log('Signup form found, attaching event listener');
+
+				// Also add click handler to submit button as fallback
+				const submitBtn = signupForm.querySelector('.submit-btn');
+				if (submitBtn) {
+					console.log('Submit button found:', submitBtn);
+					submitBtn.addEventListener('click', function(e) {
+						console.log('Submit button clicked');
+						if (submitBtn.type !== 'submit') {
+							e.preventDefault();
+							signupForm.dispatchEvent(new Event('submit'));
+						}
+					});
+				} else {
+					console.log('ERROR: Submit button not found!');
+				}
+
 				signupForm.addEventListener('submit', async function(e) {
 					e.preventDefault();
+					console.log('Form submit event triggered');
 
 					// Remove any existing error/success messages
 					const existingAlerts = signupForm.parentNode.querySelectorAll('.alert');
@@ -2166,17 +2186,36 @@
 					const submitBtn = signupForm.querySelector('.submit-btn');
 					const originalBtnText = submitBtn.textContent;
 
+					// Debug: Log form data
+					console.log('Form data being sent:');
+					for (let [key, value] of formData.entries()) {
+						console.log(key, value);
+					}
+
 					// Disable button
 					submitBtn.disabled = true;
 					submitBtn.textContent = 'Signing Up...';
 
 					try {
+						console.log('Sending fetch request to: ../actions/register_user_action.php');
 						const response = await fetch('../actions/register_user_action.php', {
 							method: 'POST',
 							body: formData
 						});
 
-						const result = await response.json();
+						console.log('Response status:', response.status);
+						console.log('Response headers:', response.headers);
+
+						const responseText = await response.text();
+						console.log('Raw response:', responseText);
+
+						let result;
+						try {
+							result = JSON.parse(responseText);
+						} catch (parseError) {
+							console.error('JSON parse error:', parseError);
+							throw new Error('Invalid JSON response: ' + responseText);
+						}
 
 						if (result.status === 'success') {
 							// Show success message
@@ -2199,15 +2238,17 @@
 							submitBtn.textContent = originalBtnText;
 						}
 					} catch (error) {
+						console.error('Signup error:', error);
 						const alertDiv = document.createElement('div');
 						alertDiv.className = 'alert alert-danger';
-						alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>An error occurred. Please try again.';
+						alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Error: ' + error.message;
 						signupForm.parentNode.insertBefore(alertDiv, signupForm);
 						submitBtn.disabled = false;
 						submitBtn.textContent = originalBtnText;
-						console.error('Signup error:', error);
 					}
 				});
+			} else {
+				console.log('ERROR: Signup form not found!');
 			}
 		});
 	</script>

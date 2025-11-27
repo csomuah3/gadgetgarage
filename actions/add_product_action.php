@@ -8,10 +8,44 @@ require_once __DIR__ . '/../controllers/product_controller.php';
 
 header('Content-Type: application/json');
 
+// Debug session information
+error_log("Add Product Debug - Session data: " . json_encode($_SESSION));
+error_log("Add Product Debug - User ID: " . (get_user_id() ?? 'NULL'));
+error_log("Add Product Debug - User Role: " . (get_user_role() ?? 'NULL'));
+error_log("Add Product Debug - Check login: " . (check_login() ? 'TRUE' : 'FALSE'));
+error_log("Add Product Debug - Check admin: " . (check_admin() ? 'TRUE' : 'FALSE'));
+
 // Check if user is logged in and is admin
 if (!check_login()) {
     http_response_code(401);
-    echo json_encode(['status' => 'error', 'message' => 'User not logged in']);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Your session has expired. Please log in again to continue.',
+        'action' => 'redirect',
+        'redirect' => '../login/login.php',
+        'debug' => [
+            'session_user_id' => isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'NOT SET',
+            'session_email' => isset($_SESSION['email']) ? $_SESSION['email'] : 'NOT SET',
+            'session_id' => session_id()
+        ]
+    ]);
+    exit;
+}
+
+// Check if user is admin
+if (!check_admin()) {
+    http_response_code(403);
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Access denied. Admin privileges required to add products.',
+        'action' => 'redirect',
+        'redirect' => '../index.php',
+        'debug' => [
+            'user_role' => get_user_role(),
+            'admin_role_id' => ADMIN_ROLE_ID,
+            'is_admin' => check_admin()
+        ]
+    ]);
     exit;
 }
 

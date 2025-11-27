@@ -146,6 +146,7 @@ try {
 	<link href="includes/chatbot-styles.css" rel="stylesheet">
 	<link href="css/dark-mode.css" rel="stylesheet">
 	<link href="views/circular-gallery.css" rel="stylesheet">
+	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<style>
 		/* Import Google Fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -8537,11 +8538,36 @@ try {
 			window.location.href = 'views/flash_deals.php';
 		}
 
-		// Show popup every time user logs in
+		// Manual function to reset flash deals popup timer (for testing/admin use)
+		function resetFlashDealsTimer() {
+			localStorage.removeItem('flashDealsPopupLastSeen');
+			console.log('Flash deals popup timer reset. Next page refresh will show popup.');
+		}
+
+		// Manual function to show flash deals popup (for testing)
+		function forceShowFlashDealsPopup() {
+			showFlashDealsPopup();
+			console.log('Flash deals popup forced to show.');
+		}
+
+		// Show popup for logged-in users (limited to once every 5 hours)
 		<?php if ($is_logged_in): ?>
 			document.addEventListener('DOMContentLoaded', function() {
-				// Always show popup for logged-in users
-				setTimeout(showFlashDealsPopup, 1500);
+				// Check if 5 hours have passed since last popup
+				const lastSeen = localStorage.getItem('flashDealsPopupLastSeen');
+				const fiveHoursInMs = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+				const now = Date.now();
+
+				if (!lastSeen || (now - parseInt(lastSeen)) > fiveHoursInMs) {
+					// Show popup if never seen before or if 5 hours have passed
+					setTimeout(showFlashDealsPopup, 1500);
+				} else {
+					// Calculate time remaining for debugging
+					const timeRemaining = fiveHoursInMs - (now - parseInt(lastSeen));
+					const hoursRemaining = Math.floor(timeRemaining / (60 * 60 * 1000));
+					const minutesRemaining = Math.floor((timeRemaining % (60 * 60 * 1000)) / (60 * 1000));
+					console.log(`Flash deals popup suppressed. Next popup in ${hoursRemaining}h ${minutesRemaining}m`);
+				}
 			});
 		<?php endif; ?>
 	</script>
@@ -8976,8 +9002,12 @@ try {
 				// Clear cart
 				clearCartAfterPayment();
 
+				// Check SweetAlert availability
+				console.log('SweetAlert available:', typeof Swal !== 'undefined');
+
 				// Show Sweet Alert
 				if (typeof Swal !== 'undefined') {
+					console.log('Showing SweetAlert...');
 					Swal.fire({
 						title: 'Payment Successful!',
 						html: `
@@ -8992,11 +9022,31 @@ try {
 						confirmButtonText: 'Great!',
 						allowOutsideClick: false
 					}).then(() => {
+						console.log('SweetAlert confirmed, showing rating popup...');
+						// Send SMS notification
+						fetch('actions/send_order_sms_action.php', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({
+								order_id: orderParam
+							})
+						}).catch(err => {
+							console.log('SMS notification error (non-critical):', err);
+						});
+
 						// Show rating popup after confirmation
 						setTimeout(() => {
 							showRatingPopup(orderParam);
 						}, 500);
 					});
+				} else {
+					console.log('SweetAlert not available, using standard alert');
+					alert(`Payment Successful!\n\nOrder ID: ${orderParam}\nPayment Reference: ${refParam || 'N/A'}\n\nYour order has been confirmed!`);
+					setTimeout(() => {
+						showRatingPopup(orderParam);
+					}, 1000);
 				}
 			}
 		});

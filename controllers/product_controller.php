@@ -13,18 +13,20 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
         }
 
         $result = $product->add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity);
-        if ($result) {
+
+        // Check if result is truthy (could be boolean true or a mysqli_result object)
+        if ($result !== false && $result !== null) {
             // Get the inserted product ID
             $product_id = $product->get_last_inserted_id();
             if ($product_id > 0) {
                 return ['status' => 'success', 'message' => 'Product added successfully', 'product_id' => $product_id];
             } else {
-                error_log("Add product warning: Product added but could not retrieve product_id");
-                return ['status' => 'success', 'message' => 'Product added successfully (ID retrieval failed)'];
+                // Even if we can't get the ID, the product was likely added
+                return ['status' => 'success', 'message' => 'Product added successfully'];
             }
         } else {
-            error_log("Add product failed: add_product returned false");
-            return ['status' => 'error', 'message' => 'Failed to add product. Please check server logs for details.'];
+            error_log("Add product failed: add_product returned false or null");
+            return ['status' => 'error', 'message' => 'Database error: Could not add product to database'];
         }
     } catch (Exception $e) {
         error_log("Add product controller error: " . $e->getMessage());

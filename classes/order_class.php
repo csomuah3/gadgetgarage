@@ -86,11 +86,14 @@ class Order extends db_connection
                        o.order_status,
                        o.tracking_number,
                        COUNT(DISTINCT od.product_id) as item_count,
-                       COALESCE(SUM(p.amt), 0) as total_amount,
+                       COALESCE(SUM(p.amt),
+                           COALESCE(SUM(od.qty * pr.product_price), 0)
+                       ) as total_amount,
                        GROUP_CONCAT(DISTINCT p.payment_method) as payment_method,
                        GROUP_CONCAT(DISTINCT p.currency) as currency
                 FROM orders o
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
+                LEFT JOIN products pr ON od.product_id = pr.product_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
                 WHERE o.customer_id = $customer_id
                 GROUP BY o.order_id
@@ -273,20 +276,24 @@ class Order extends db_connection
     public function get_all_orders()
     {
         $sql = "SELECT o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status,
+                       o.tracking_number,
                        c.customer_name as customer_name,
                        c.customer_email as customer_email,
                        c.customer_contact as customer_contact,
                        COUNT(DISTINCT od.product_id) as item_count,
                        SUM(od.qty) as total_items,
-                       COALESCE(MAX(p.amt), 0) as total_amount,
+                       COALESCE(SUM(p.amt),
+                           COALESCE(SUM(od.qty * pr.product_price), 0)
+                       ) as total_amount,
                        COALESCE(MAX(p.currency), 'GHS') as currency,
                        MAX(p.payment_date) as payment_date
                 FROM orders o
                 JOIN customer c ON o.customer_id = c.customer_id
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
+                LEFT JOIN products pr ON od.product_id = pr.product_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
                 GROUP BY o.order_id, o.customer_id, o.invoice_no, o.order_date, o.order_status,
-                         c.customer_name, c.customer_email, c.customer_contact
+                         o.tracking_number, c.customer_name, c.customer_email, c.customer_contact
                 ORDER BY o.order_date DESC";
 
         return $this->db_fetch_all($sql);

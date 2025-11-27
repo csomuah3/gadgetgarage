@@ -177,11 +177,13 @@ if (!class_exists('db_connection')) {
                 return false;
             }
 
-            // For SELECT statements, return the result
+            // For INSERT/UPDATE/DELETE statements, return true on success
+            // For SELECT statements, return the result set
             $stmt_result = mysqli_stmt_get_result($stmt);
             mysqli_stmt_close($stmt);
 
-            return $stmt_result ?: $result;
+            // If get_result returns false (like for INSERT/UPDATE/DELETE), return the execution result
+            return $stmt_result !== false ? $stmt_result : $result;
         }
 
         //fetch one using prepared statement

@@ -1248,67 +1248,6 @@ try {
 			color: #008060;
 		}
 
-		/* Dropdown Positioning */
-		.nav-dropdown {
-			position: relative;
-		}
-
-		.brands-dropdown {
-			position: absolute;
-			top: 100%;
-			left: 0;
-			background: white;
-			border: 1px solid #e5e7eb;
-			border-radius: 12px;
-			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-			padding: 20px;
-			min-width: 300px;
-			opacity: 0;
-			visibility: hidden;
-			transform: translateY(-10px);
-			transition: all 0.3s ease;
-			z-index: 1000;
-		}
-
-		.shop-categories-btn:hover .brands-dropdown {
-			opacity: 1;
-			visibility: visible;
-			transform: translateY(0);
-		}
-
-		.brands-dropdown h4 {
-			margin-bottom: 15px;
-			color: #1f2937;
-			font-size: 1.1rem;
-			font-weight: 600;
-		}
-
-		.brands-dropdown ul {
-			list-style: none;
-			margin: 0;
-			padding: 0;
-		}
-
-		.brands-dropdown li {
-			margin-bottom: 8px;
-		}
-
-		.brands-dropdown a {
-			color: #6b7280;
-			text-decoration: none;
-			padding: 8px 12px;
-			border-radius: 6px;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			transition: all 0.3s ease;
-		}
-
-		.brands-dropdown a:hover {
-			background: #f3f4f6;
-			color: #3b82f6;
-		}
-
 		/* Hero Section */
 		/* Hero Banner Styles */
 		/* ——— Layout shell ——— */
@@ -6326,8 +6265,10 @@ try {
 			}
 		}
 
-		// Dropdown navigation functions
+		// Dropdown functions
 		let dropdownTimeout;
+		let shopDropdownTimeout;
+		let moreDropdownTimeout;
 
 		function showDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
@@ -6351,14 +6292,12 @@ try {
 			}
 		}
 
-		// Shop Category Dropdown Functions
+		// Shop Dropdown Functions
 		function showShopDropdown() {
 			const dropdown = document.getElementById('shopCategoryDropdown');
-			console.log('showShopDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(shopDropdownTimeout);
 				dropdown.classList.add('show');
-				console.log('Added show class to shop category dropdown');
 			}
 		}
 
@@ -6368,7 +6307,6 @@ try {
 				clearTimeout(shopDropdownTimeout);
 				shopDropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
-					console.log('Removed show class from shop category dropdown');
 				}, 300);
 			}
 		}
@@ -6376,11 +6314,9 @@ try {
 		// More Dropdown Functions
 		function showMoreDropdown() {
 			const dropdown = document.getElementById('moreDropdown');
-			console.log('showMoreDropdown called, dropdown element:', dropdown);
 			if (dropdown) {
 				clearTimeout(moreDropdownTimeout);
 				dropdown.classList.add('show');
-				console.log('Added show class to more dropdown');
 			}
 		}
 
@@ -6390,35 +6326,42 @@ try {
 				clearTimeout(moreDropdownTimeout);
 				moreDropdownTimeout = setTimeout(() => {
 					dropdown.classList.remove('show');
-					console.log('Removed show class from more dropdown');
 				}, 300);
 			}
 		}
 
-		// Timeout variables
-		let shopDropdownTimeout;
-		let moreDropdownTimeout;
-
-		// Enhanced dropdown behavior
+		// Enhanced dropdown behavior - keep dropdowns open when hovering over them
 		document.addEventListener('DOMContentLoaded', function() {
-			const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+			// Brands dropdown - keep it open when hovering over the dropdown itself
 			const brandsDropdown = document.getElementById('shopDropdown');
-			
-			if (shopCategoriesBtn && brandsDropdown) {
-				shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
-				shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+			if (brandsDropdown) {
 				brandsDropdown.addEventListener('mouseenter', function() {
 					clearTimeout(dropdownTimeout);
 				});
 				brandsDropdown.addEventListener('mouseleave', hideDropdown);
 			}
 
-			const userAvatar = document.querySelector('.user-avatar');
+			// Shop category dropdown - keep it open when hovering over the dropdown itself
+			const shopCategoryDropdown = document.getElementById('shopCategoryDropdown');
+			if (shopCategoryDropdown) {
+				shopCategoryDropdown.addEventListener('mouseenter', function() {
+					clearTimeout(shopDropdownTimeout);
+				});
+				shopCategoryDropdown.addEventListener('mouseleave', hideShopDropdown);
+			}
+
+			// More dropdown - keep it open when hovering over the dropdown itself
+			const moreDropdown = document.getElementById('moreDropdown');
+			if (moreDropdown) {
+				moreDropdown.addEventListener('mouseenter', function() {
+					clearTimeout(moreDropdownTimeout);
+				});
+				moreDropdown.addEventListener('mouseleave', hideMoreDropdown);
+			}
+
+			// User dropdown - keep it open when hovering over the dropdown itself
 			const userDropdown = document.getElementById('userDropdownMenu');
-			
-			if (userAvatar && userDropdown) {
-				userAvatar.addEventListener('mouseenter', showUserDropdown);
-				userAvatar.addEventListener('mouseleave', hideUserDropdown);
+			if (userDropdown) {
 				userDropdown.addEventListener('mouseenter', function() {
 					clearTimeout(userDropdownTimeout);
 				});

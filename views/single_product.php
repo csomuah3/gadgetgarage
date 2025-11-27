@@ -1827,9 +1827,6 @@ try {
                         <div style="margin-bottom: 30px;">
                             <h5 style="color: white; margin-bottom: 20px; font-weight: 600;">Select Condition</h5>
 
-                            <!-- Test Button for debugging -->
-                            <button onclick="testClick()" style="background: red; color: white; padding: 10px; margin-bottom: 10px; border: none; border-radius: 5px;">TEST CLICK</button>
-
                             <!-- Excellent Condition -->
                             <div style="background: rgba(255,255,255,0.15); border-radius: 12px; padding: 20px; margin-bottom: 15px; cursor: pointer; transition: all 0.3s ease;" id="excellent-option" data-condition="excellent" data-price="<?php echo $excellentPrice; ?>" onclick="selectCondition('excellent')">
                                 <div style="display: flex; justify-content: space-between; align-items: center;">
@@ -3780,16 +3777,9 @@ try {
 <script type="text/javascript">
 console.log('=== EMERGENCY SCRIPT LOADING ===');
 
-// Test function
-function testClick() {
-    alert('TEST CLICK WORKS!');
-    console.log('Test click function called');
-}
-
 // Simple condition selection
 function selectCondition(condition) {
     console.log('selectCondition called:', condition);
-    alert('Condition selected: ' + condition);
 
     // Simple visual feedback
     var allOptions = document.querySelectorAll('[data-condition]');
@@ -3823,12 +3813,10 @@ function selectCondition(condition) {
     }
 }
 
-// Make functions globally available
-window.testClick = testClick;
+// Make function globally available
 window.selectCondition = selectCondition;
 
-console.log('=== EMERGENCY SCRIPT LOADED ===');
-console.log('testClick available:', typeof window.testClick);
+console.log('=== CONDITION SELECTION SCRIPT LOADED ===');
 console.log('selectCondition available:', typeof window.selectCondition);
 </script>
 

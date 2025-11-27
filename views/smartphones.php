@@ -1305,7 +1305,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             background: #ffffff;
             border-top: 1px solid #e5e7eb;
             padding: 60px 0 20px;
-            margin-top: 80px;
+            margin-top: 0;
         }
 
         .footer-logo {
@@ -1316,7 +1316,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .footer-logo .garage {
-            background: linear-gradient(135deg, #000000, #333333);
+            background: linear-gradient(135deg, #1E3A5F, #2563EB);
             color: white;
             padding: 4px 8px;
             border-radius: 6px;
@@ -1350,7 +1350,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .social-link:hover {
-            background: #000000;
+            background: #2563EB;
             color: white;
             transform: translateY(-2px);
         }
@@ -1380,7 +1380,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .footer-links li a:hover {
-            color: #000000;
+            color: #2563EB;
             transform: translateX(4px);
         }
 
@@ -1399,6 +1399,92 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             color: #6b7280;
             font-size: 0.9rem;
             margin: 0;
+        }
+
+        /* Newsletter Signup Section */
+        .newsletter-signup-section {
+            background: transparent;
+            padding: 0;
+            text-align: left;
+            max-width: 100%;
+            height: fit-content;
+        }
+
+        .newsletter-title {
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            width: 100%;
+            margin: 0 0 15px 0;
+            gap: 0;
+            border-radius: 50px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 12px 18px;
+            border: none;
+            outline: none;
+            font-size: 0.9rem;
+            color: #1a1a1a;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input::placeholder {
+            color: #6b7280;
+        }
+
+        .newsletter-submit-btn {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border: none;
+            background: #9ca3af;
+            color: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        .newsletter-submit-btn:hover {
+            background: #6b7280;
+            transform: scale(1.05);
+        }
+
+        .newsletter-disclaimer {
+            color: #6b7280;
+            font-size: 0.7rem;
+            line-height: 1.5;
+            margin: 8px 0 0 0;
+            text-align: left;
+        }
+
+        .newsletter-disclaimer a {
+            color: #2563EB;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .newsletter-disclaimer a:hover {
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 991px) {
+            .newsletter-signup-section {
+                margin-top: 20px;
+            }
         }
 
         .payment-methods {

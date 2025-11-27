@@ -1567,22 +1567,18 @@ try {
 
         /* Newsletter Signup Section */
         .newsletter-signup-section {
-            background: #000000;
-            padding: 30px 25px;
-            border-radius: 8px;
+            background: transparent;
+            padding: 0;
             text-align: left;
             max-width: 100%;
             height: fit-content;
         }
 
         .newsletter-title {
-            color: #ffffff;
-            font-size: 1rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            margin-bottom: 15px;
-            letter-spacing: 0.5px;
-            line-height: 1.3;
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
         }
 
         .newsletter-form {
@@ -1592,7 +1588,7 @@ try {
             gap: 0;
             border-radius: 50px;
             overflow: hidden;
-            background: #ffffff;
+            background: #e5e7eb;
         }
 
         .newsletter-input {
@@ -1602,7 +1598,7 @@ try {
             outline: none;
             font-size: 0.9rem;
             color: #1a1a1a;
-            background: #ffffff;
+            background: #e5e7eb;
         }
 
         .newsletter-input::placeholder {
@@ -1614,8 +1610,8 @@ try {
             height: 45px;
             min-width: 45px;
             border: none;
-            background: #e5e7eb;
-            color: #000000;
+            background: #9ca3af;
+            color: #ffffff;
             border-radius: 50%;
             cursor: pointer;
             display: flex;
@@ -1627,12 +1623,12 @@ try {
         }
 
         .newsletter-submit-btn:hover {
-            background: #d1d5db;
+            background: #6b7280;
             transform: scale(1.05);
         }
 
         .newsletter-disclaimer {
-            color: #9ca3af;
+            color: #6b7280;
             font-size: 0.7rem;
             line-height: 1.5;
             margin: 8px 0 0 0;
@@ -1640,13 +1636,13 @@ try {
         }
 
         .newsletter-disclaimer a {
-            color: #ffffff;
+            color: #2563EB;
             text-decoration: underline;
             transition: color 0.3s ease;
         }
 
         .newsletter-disclaimer a:hover {
-            color: #d1d5db;
+            color: #1d4ed8;
         }
 
         @media (max-width: 991px) {

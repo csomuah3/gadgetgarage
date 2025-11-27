@@ -8767,16 +8767,28 @@ try {
 
 		// Show rating popup
 		function showRatingPopup(orderId) {
+			console.log('Showing rating popup for order:', orderId);
 			currentOrderId = orderId;
 			easeRating = 0;
 			satisfactionRating = 0;
-			if (document.getElementById('easeRating')) {
-				document.getElementById('easeRating').value = 0;
-				document.getElementById('satisfactionRating').value = 0;
-				document.getElementById('ratingComment').value = '';
-				updateStars('easeStars', 0);
-				updateStars('satisfactionStars', 0);
-				document.getElementById('ratingPopupOverlay').classList.add('show');
+
+			// Reset form values
+			const commentField = document.getElementById('ratingComment');
+			if (commentField) {
+				commentField.value = '';
+			}
+
+			// Reset stars
+			updateStars('easeStars', 0);
+			updateStars('satisfactionStars', 0);
+
+			// Show the popup
+			const overlay = document.getElementById('ratingPopupOverlay');
+			if (overlay) {
+				console.log('Rating popup overlay found, showing popup');
+				overlay.classList.add('show');
+			} else {
+				console.error('Rating popup overlay not found!');
 			}
 		}
 
@@ -8878,8 +8890,17 @@ try {
 			});
 		}
 
+		// Debug payment success variables
+		console.log('Payment success check:', {
+			payment_success: <?php echo json_encode($payment_success); ?>,
+			order_id_from_payment: <?php echo json_encode($order_id_from_payment); ?>,
+			payment_reference: <?php echo json_encode($payment_reference); ?>,
+			order_details: <?php echo json_encode($order_details); ?>
+		});
+
 		// Handle payment success
 		<?php if ($payment_success && $order_id_from_payment): ?>
+		console.log('Payment success handler triggered!');
 		document.addEventListener('DOMContentLoaded', function() {
 			const orderId = <?php echo json_encode($order_id_from_payment); ?>;
 			const orderRef = <?php echo json_encode($payment_reference); ?>;
@@ -8931,12 +8952,59 @@ try {
 				}, 500);
 			}
 		});
+		<?php else: ?>
+		console.log('Payment success handler NOT triggered - PHP conditions not met');
 		<?php endif; ?>
+
+		// Fallback: Check URL parameters directly in JavaScript for testing
+		document.addEventListener('DOMContentLoaded', function() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const paymentParam = urlParams.get('payment');
+			const orderParam = urlParams.get('order');
+			const refParam = urlParams.get('ref');
+
+			console.log('URL parameters:', {
+				payment: paymentParam,
+				order: orderParam,
+				ref: refParam
+			});
+
+			// If PHP handler didn't work but we have URL parameters, try JavaScript fallback
+			if (paymentParam === 'success' && orderParam) {
+				console.log('Triggering fallback payment success handler');
+
+				// Clear cart
+				clearCartAfterPayment();
+
+				// Show Sweet Alert
+				if (typeof Swal !== 'undefined') {
+					Swal.fire({
+						title: 'Payment Successful!',
+						html: `
+							<div style="text-align: left; padding: 10px 0;">
+								<p style="margin-bottom: 10px;"><strong>Order ID:</strong> ${orderParam}</p>
+								<p style="margin-bottom: 10px;"><strong>Payment Reference:</strong> ${refParam || 'N/A'}</p>
+								<p style="color: #10b981; margin-top: 15px;">Your order has been confirmed and will be processed shortly.</p>
+							</div>
+						`,
+						icon: 'success',
+						confirmButtonColor: '#008060',
+						confirmButtonText: 'Great!',
+						allowOutsideClick: false
+					}).then(() => {
+						// Show rating popup after confirmation
+						setTimeout(() => {
+							showRatingPopup(orderParam);
+						}, 500);
+					});
+				}
+			}
+		});
 	</script>
 
 	<!-- Rating Popup -->
-	<div class="rating-popup-overlay" id="ratingPopupOverlay">
-		<div class="rating-popup">
+	<div class="rating-popup-overlay" id="ratingPopupOverlay" onclick="closeRatingPopup()">
+		<div class="rating-popup" onclick="event.stopPropagation()">
 			<div class="rating-popup-header">
 				<h3 class="rating-popup-title">Rate your experience</h3>
 				<button class="rating-close-btn" onclick="closeRatingPopup()">×</button>

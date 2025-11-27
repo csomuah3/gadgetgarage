@@ -269,7 +269,7 @@ try {
 		}
 
 		.logo .garage {
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			background: linear-gradient(135deg, #008060, #006b4e);
 			color: white;
 			padding: 4px 8px;
 			border-radius: 6px;
@@ -287,11 +287,11 @@ try {
 		.search-input {
 			width: 100%;
 			padding: 12px 20px 12px 50px;
-			border: 2px solid #E5E7EB;
+			border: 2px solid #e2e8f0;
 			border-radius: 25px;
 			font-size: 1.2rem;
 			transition: all 0.3s ease;
-			background: #F8FAFC;
+			background: #f8fafc;
 		}
 
 		.search-input:focus {

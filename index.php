@@ -5090,7 +5090,7 @@ try {
 								</a>
 								<a href="track_order.php" class="dropdown-item-custom">
 									<i class="fas fa-truck"></i>
-									<span data-translate="track_orders">Track Orders</span>
+									<span data-translate="track_orders">Track your Order</span>
 								</a>
 								<a href="views/notifications.php" class="dropdown-item-custom">
 									<i class="fas fa-bell"></i>
@@ -6363,11 +6363,53 @@ try {
 			observer.observe(el);
 		});
 
-		// User dropdown functionality
+		// User dropdown functionality with hover
+		let userDropdownTimeout;
+
+		function showUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				clearTimeout(userDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				clearTimeout(userDropdownTimeout);
+				userDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
 		function toggleUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');
 			dropdown.classList.toggle('show');
 		}
+
+		// Add hover functionality to user dropdown
+		document.addEventListener('DOMContentLoaded', function() {
+			const userAvatar = document.querySelector('.user-avatar');
+			const userDropdown = document.getElementById('userDropdownMenu');
+
+			if (userAvatar && userDropdown) {
+				// Show dropdown on avatar hover
+				userAvatar.addEventListener('mouseenter', showUserDropdown);
+
+				// Hide dropdown when leaving avatar (with delay)
+				userAvatar.addEventListener('mouseleave', hideUserDropdown);
+
+				// Keep dropdown open when hovering over it
+				userDropdown.addEventListener('mouseenter', function() {
+					clearTimeout(userDropdownTimeout);
+				});
+
+				// Hide dropdown when leaving dropdown area
+				userDropdown.addEventListener('mouseleave', hideUserDropdown);
+			}
+		});
 
 		// Close dropdown when clicking outside
 		document.addEventListener('click', function(event) {

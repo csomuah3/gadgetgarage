@@ -130,8 +130,8 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                     throw new Error('Session expired. Please login again to complete your order.');
                 }
 
-                // Use the real PayStack verification endpoint
-                const verifyUrl = '../actions/paystack_verify_payment.php';
+                // Use the simple PayStack verification endpoint for testing
+                const verifyUrl = '../actions/paystack_verify_payment_simple.php';
                 console.log('Verifying payment, URL:', verifyUrl);
 
                 const response = await fetch(verifyUrl, {

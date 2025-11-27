@@ -1,20 +1,46 @@
 <?php
-require_once(__DIR__ . '/../settings/core.php');
-require_once(__DIR__ . '/../controllers/product_controller.php');
-require_once(__DIR__ . '/../controllers/cart_controller.php');
-require_once(__DIR__ . '/../helpers/image_helper.php');
+// Enable error reporting for debugging
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
 
-$is_logged_in = check_login();
-$is_admin = false;
-
-if ($is_logged_in) {
-    $is_admin = check_admin();
+try {
+    require_once(__DIR__ . '/../settings/core.php');
+    require_once(__DIR__ . '/../controllers/product_controller.php');
+    require_once(__DIR__ . '/../controllers/cart_controller.php');
+    require_once(__DIR__ . '/../helpers/image_helper.php');
+} catch (Exception $e) {
+    error_log("Single product page include error: " . $e->getMessage());
+    die("Error loading required files. Please try again later.");
 }
 
-// Get cart count
-$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
-$ip_address = $_SERVER['REMOTE_ADDR'];
-$cart_count = get_cart_count_ctr($customer_id, $ip_address);
+// Safe session management
+try {
+    $is_logged_in = check_login();
+    $is_admin = false;
+
+    if ($is_logged_in) {
+        $is_admin = check_admin();
+    }
+
+    // Get cart count with error handling
+    $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
+    $ip_address = $_SERVER['REMOTE_ADDR'];
+    $cart_count = 0;
+
+    try {
+        $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    } catch (Exception $e) {
+        error_log("Cart count error: " . $e->getMessage());
+        $cart_count = 0; // Default to 0 if cart count fails
+    }
+} catch (Exception $e) {
+    error_log("Session management error: " . $e->getMessage());
+    $is_logged_in = false;
+    $is_admin = false;
+    $customer_id = null;
+    $cart_count = 0;
+}
 
 // Get product ID from URL (handle both 'id' and 'pid' parameters)
 $product_id = isset($_GET['pid']) ? intval($_GET['pid']) : (isset($_GET['id']) ? intval($_GET['id']) : 0);
@@ -24,10 +50,17 @@ if ($product_id <= 0) {
     exit();
 }
 
-// Get product details
-$product = view_single_product_ctr($product_id);
+// Get product details with error handling
+try {
+    $product = view_single_product_ctr($product_id);
 
-if (!$product) {
+    if (!$product) {
+        error_log("Product not found: ID = " . $product_id);
+        header('Location: all_product.php');
+        exit();
+    }
+} catch (Exception $e) {
+    error_log("Product retrieval error: " . $e->getMessage());
     header('Location: all_product.php');
     exit();
 }
@@ -72,28 +105,33 @@ $fairDiscount = $basePrice - $fairPrice;
 $category_id = $product['product_cat'] ?? 0;
 $related_products = [];
 if ($category_id > 0) {
-    require_once(__DIR__ . '/../settings/db_class.php');
-    $db = new db_connection();
-    if ($db->db_connect()) {
-        $conn = $db->db_conn();
-        // Get products with category and brand names
-        $stmt = $conn->prepare("
-            SELECT p.*, c.cat_name, b.brand_name 
-            FROM products p
-            LEFT JOIN categories c ON p.product_cat = c.cat_id
-            LEFT JOIN brands b ON p.product_brand = b.brand_id
-            WHERE p.product_cat = ? AND p.product_id != ?
-            ORDER BY p.product_id DESC
-            LIMIT 4
-        ");
-        $stmt->bind_param('ii', $category_id, $product_id);
-        $stmt->execute();
-        $result = $stmt->get_result();
-        while ($row = $result->fetch_assoc()) {
-            $related_products[] = $row;
+    try {
+        require_once(__DIR__ . '/../settings/db_class.php');
+        $db = new db_connection();
+        if ($db->db_connect()) {
+            $conn = $db->db_conn();
+            // Get products with category and brand names
+            $stmt = $conn->prepare("
+                SELECT p.*, c.cat_name, b.brand_name
+                FROM products p
+                LEFT JOIN categories c ON p.product_cat = c.cat_id
+                LEFT JOIN brands b ON p.product_brand = b.brand_id
+                WHERE p.product_cat = ? AND p.product_id != ?
+                ORDER BY p.product_id DESC
+                LIMIT 4
+            ");
+            $stmt->bind_param('ii', $category_id, $product_id);
+            $stmt->execute();
+            $result = $stmt->get_result();
+            while ($row = $result->fetch_assoc()) {
+                $related_products[] = $row;
+            }
+            $stmt->close();
+            $db->db_close();
         }
-        $stmt->close();
-        $db->db_close();
+    } catch (Exception $e) {
+        error_log("Related products error: " . $e->getMessage());
+        $related_products = []; // Default to empty array if related products fail
     }
 }
 ?>
@@ -1503,8 +1541,18 @@ if ($category_id > 0) {
 
                         <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['user_name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-                                <?= strtoupper(substr($_SESSION['user_name'] ?? 'U', 0, 1)) ?>
+                            <?php
+                            $user_name = '';
+                            if ($is_logged_in && isset($_SESSION['user_name'])) {
+                                $user_name = $_SESSION['user_name'];
+                            } elseif ($is_logged_in && isset($_SESSION['name'])) {
+                                $user_name = $_SESSION['name'];
+                            } else {
+                                $user_name = 'User';
+                            }
+                            ?>
+                            <div class="user-avatar" title="<?= htmlspecialchars($user_name) ?>" onclick="toggleUserDropdown()">
+                                <?= strtoupper(substr($user_name, 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
                                 <button class="dropdown-item-custom" onclick="goToAccount()">

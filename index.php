@@ -168,7 +168,7 @@ try {
 		}
 
 		/* Promotional Banner Styles - Same as index */
-		.promo-banner {
+		.promo-banner2 {
 			background: #001f3f !important;
 			color: white;
 			padding: 6px 15px;
@@ -187,14 +187,14 @@ try {
 			max-width: 100%;
 		}
 
-		.promo-banner-left {
+		.promo-banner2 .promo-banner-left {
 			display: flex;
 			align-items: center;
 			gap: 15px;
 			flex: 0 0 auto;
 		}
 
-		.promo-banner-center {
+		.promo-banner2 .promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -202,17 +202,17 @@ try {
 			flex: 1;
 		}
 
-		.promo-banner i {
+		.promo-banner2 i {
 			font-size: 1rem;
 		}
 
-		.promo-banner .promo-text {
+		.promo-banner2 .promo-text {
 			font-size: 1rem;
 			font-weight: 400;
 			letter-spacing: 0.5px;
 		}
 
-		.promo-timer {
+		.promo-banner2 .promo-timer {
 			background: transparent;
 			padding: 0;
 			border-radius: 0;
@@ -222,7 +222,7 @@ try {
 			border: none;
 		}
 
-		.promo-shop-link {
+		.promo-banner2 .promo-shop-link {
 			color: white;
 			text-decoration: underline;
 			font-weight: 700;
@@ -232,7 +232,7 @@ try {
 			flex: 0 0 auto;
 		}
 
-		.promo-shop-link:hover {
+		.promo-banner2 .promo-shop-link:hover {
 			opacity: 0.8;
 		}
 
@@ -5091,15 +5091,15 @@ try {
 <body>
 
 	<!-- Promotional Banner -->
-	<div class="promo-banner">
+	<div class="promo-banner2">
 		<div class="promo-banner-left">
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+			<span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
-		<a href="#flash-deals" class="promo-shop-link">Shop Now</a>
+		<a href="#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
@@ -6311,12 +6311,12 @@ try {
 			
 			if (searchInput) {
 				searchInput.addEventListener('keypress', function(e) {
-					if (e.key === 'Enter') {
-						performSearch();
-					}
-				});
+			if (e.key === 'Enter') {
+				performSearch();
 			}
-			
+		});
+			}
+
 			if (searchBtn) {
 				searchBtn.addEventListener('click', performSearch);
 			}
@@ -6570,17 +6570,17 @@ try {
 		// User dropdown functionality
 		function toggleUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');
-			dropdown.classList.toggle('show');
+				dropdown.classList.toggle('show');
 		}
 
 		// Close dropdown when clicking outside
 		document.addEventListener('click', function(event) {
-			const dropdown = document.getElementById('userDropdownMenu');
+				const dropdown = document.getElementById('userDropdownMenu');
 			const avatar = document.querySelector('.user-avatar');
 
 			if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
-				dropdown.classList.remove('show');
-			}
+						dropdown.classList.remove('show');
+					}
 		});
 
 		// Profile picture modal functionality

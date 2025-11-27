@@ -1476,49 +1476,20 @@ try {
             margin-bottom: 30px;
         }
 
-        .footer-logo-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .footer-logo-icon {
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            font-weight: 700;
-            flex-shrink: 0;
-        }
-
-        .footer-logo-text {
-            display: flex;
-            flex-direction: column;
-        }
-
         .footer-logo {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: 700;
-            color: #1E3A5F;
-            margin: 0;
-            line-height: 1.2;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            color: #1f2937;
+            margin-bottom: 16px;
         }
 
-        .footer-tagline {
-            font-size: 0.75rem;
-            color: #2563EB;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-top: 2px;
+        .footer-logo .garage {
+            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
         }
 
         .footer-description {
@@ -1526,7 +1497,6 @@ try {
             font-size: 0.95rem;
             margin-bottom: 24px;
             line-height: 1.6;
-            font-family: "Times New Roman", Times, serif;
         }
 
         .social-links {
@@ -2151,14 +2121,10 @@ try {
                     <!-- First Column: Logo and Social -->
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="footer-brand">
-                            <div class="footer-logo-container">
-                                <div class="footer-logo-icon">
-                                    <i class="fas fa-bolt"></i>
-                                </div>
-                                <div class="footer-logo-text">
-                                    <h3 class="footer-logo">GADGET GARAGE</h3>
-                                    <p class="footer-tagline">RELIABLE TECH. RENEWED FOR YOU.</p>
-                                </div>
+                            <div class="footer-logo" style="margin-bottom: 16px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                                    alt="Gadget Garage"
+                                    style="height: 35px; width: auto; object-fit: contain;">
                             </div>
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">

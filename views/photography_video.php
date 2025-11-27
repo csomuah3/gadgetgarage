@@ -38,16 +38,16 @@ try {
 $photo_video_categories = ['cameras', 'video_equipment', 'Cameras', 'Video Equipment', 'Camera', 'Video', 'Photography'];
 
 // Filter products for photography & video devices only
-$photo_video_products = array_filter($all_products, function($product) use ($photo_video_categories) {
+$photo_video_products = array_filter($all_products, function ($product) use ($photo_video_categories) {
     return in_array($product['cat_name'], $photo_video_categories) ||
-           stripos($product['product_title'], 'camera') !== false ||
-           stripos($product['product_title'], 'video') !== false ||
-           stripos($product['product_title'], 'photography') !== false ||
-           stripos($product['product_title'], 'photo') !== false ||
-           stripos($product['product_title'], 'lens') !== false ||
-           stripos($product['product_title'], 'camcorder') !== false ||
-           stripos($product['cat_name'], 'photo') !== false ||
-           stripos($product['cat_name'], 'video') !== false;
+        stripos($product['product_title'], 'camera') !== false ||
+        stripos($product['product_title'], 'video') !== false ||
+        stripos($product['product_title'], 'photography') !== false ||
+        stripos($product['product_title'], 'photo') !== false ||
+        stripos($product['product_title'], 'lens') !== false ||
+        stripos($product['product_title'], 'camcorder') !== false ||
+        stripos($product['cat_name'], 'photo') !== false ||
+        stripos($product['cat_name'], 'video') !== false;
 });
 
 // Apply additional filters based on URL parameters
@@ -59,28 +59,28 @@ $search_query = $_GET['search'] ?? '';
 $filtered_products = $photo_video_products;
 
 if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
         return strcasecmp($product['cat_name'], $category_filter) === 0;
     });
 }
 
 if ($brand_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
         return $product['brand_id'] == $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
-    $filtered_products = array_filter($filtered_products, function($product) use ($search_query) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
         return stripos($product['product_title'], $search_query) !== false ||
-               stripos($product['product_desc'], $search_query) !== false;
+            stripos($product['product_desc'], $search_query) !== false;
     });
 }
 
 // Get unique categories and brands from photo/video products
 $photo_video_cats = array_unique(array_column($photo_video_products, 'cat_name'));
 $photo_video_brand_ids = array_unique(array_column($photo_video_products, 'brand_id'));
-$photo_video_brands = array_filter($brands, function($brand) use ($photo_video_brand_ids) {
+$photo_video_brands = array_filter($brands, function ($brand) use ($photo_video_brand_ids) {
     return in_array($brand['brand_id'], $photo_video_brand_ids);
 });
 
@@ -871,12 +871,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
+
             10% {
                 opacity: 0.6;
             }
+
             90% {
                 opacity: 0.6;
             }
+
             100% {
                 transform: translateY(-100px) rotate(360deg);
                 opacity: 0;
@@ -1039,72 +1042,74 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             position: relative;
         }
 
+        /* Price Range Slider Styles */
+        .price-slider-container {
+            padding: 10px 0;
+        }
+
         .price-slider-track {
             position: relative;
             height: 6px;
-            background: #e5e7eb;
+            background: #e2e8f0;
             border-radius: 3px;
-            margin: 20px 0;
+            margin: 10px 0 20px 0;
         }
 
         .price-slider-range {
             position: absolute;
-            height: 100%;
-            background: linear-gradient(135deg, #059669, #047857);
+            height: 6px;
+            background: #000000;
             border-radius: 3px;
             left: 0%;
-            width: 100%;
+            right: 0%;
         }
 
         .price-slider {
             position: absolute;
-            top: -7px;
-            left: 0;
+            top: -2px;
             width: 100%;
-            height: 6px;
-            border-radius: 3px;
+            height: 10px;
             background: transparent;
             outline: none;
-            -webkit-appearance: none;
             pointer-events: none;
+            -webkit-appearance: none;
+            appearance: none;
         }
 
         .price-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
+            background: var(--royal-blue);
             border-radius: 50%;
-            background: #059669;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            pointer-events: all;
-            transition: all 0.2s ease;
-        }
-
-        .price-slider::-webkit-slider-thumb:hover {
-            transform: scale(1.1);
-            background: #047857;
+            pointer-events: auto;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
+            background: var(--royal-blue);
             border-radius: 50%;
-            background: #059669;
             cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
-            pointer-events: all;
+            pointer-events: auto;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-display {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            color: #374151;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .price-separator {
+            color: #666;
         }
 
         .tag-filters {
@@ -1274,7 +1279,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             transition: all 0.3s ease;
         }
 
-        .page-btn:hover, .page-btn.active {
+        .page-btn:hover,
+        .page-btn.active {
             background: #008060;
             color: white;
             border-color: #008060;
@@ -1645,8 +1651,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-range-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100" oninput="updatePriceDisplay()">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100" oninput="updatePriceDisplay()">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
                             </div>
                             <div class="price-display">
                                 <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
@@ -1769,57 +1775,57 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </button>
                 </div>
 
-        <!-- Products Grid -->
-        <div class="row">
-                <div class="col-md-4">
-                    <label class="form-label">Category</label>
-                    <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
-                        <option value="all">All Photography & Video</option>
-                        <?php foreach ($photo_video_cats as $cat): ?>
-                            <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo $category_filter === $cat ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars(ucfirst($cat)); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-4">
-                    <label class="form-label">Brand</label>
-                    <select class="filter-select" id="brandFilter" onchange="applyFilters()">
-                        <option value="all">All Brands</option>
-                        <?php foreach ($photo_video_brands as $brand): ?>
-                            <option value="<?php echo $brand['brand_id']; ?>" <?php echo $brand_filter == $brand['brand_id'] ? 'selected' : ''; ?>>
-                                <?php echo htmlspecialchars($brand['brand_name']); ?>
-                            </option>
-                        <?php endforeach; ?>
-                    </select>
-                </div>
-                <div class="col-md-4 d-flex align-items-end">
-                    <button class="clear-filters-btn w-100" onclick="clearFilters()">
-                        <i class="fas fa-times"></i> Clear Filters
-                    </button>
+                <!-- Products Grid -->
+                <div class="row">
+                    <div class="col-md-4">
+                        <label class="form-label">Category</label>
+                        <select class="filter-select" id="categoryFilter" onchange="applyFilters()">
+                            <option value="all">All Photography & Video</option>
+                            <?php foreach ($photo_video_cats as $cat): ?>
+                                <option value="<?php echo htmlspecialchars($cat); ?>" <?php echo $category_filter === $cat ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars(ucfirst($cat)); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Brand</label>
+                        <select class="filter-select" id="brandFilter" onchange="applyFilters()">
+                            <option value="all">All Brands</option>
+                            <?php foreach ($photo_video_brands as $brand): ?>
+                                <option value="<?php echo $brand['brand_id']; ?>" <?php echo $brand_filter == $brand['brand_id'] ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($brand['brand_name']); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4 d-flex align-items-end">
+                        <button class="clear-filters-btn w-100" onclick="clearFilters()">
+                            <i class="fas fa-times"></i> Clear Filters
+                        </button>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        <!-- Products Grid -->
-        <?php if (empty($products_to_display)): ?>
-            <div class="no-results">
-                <i class="fas fa-camera fa-4x mb-3" style="color: #cbd5e0;"></i>
-                <h3>No Photography & Video Products Found</h3>
-                <p>Try adjusting your filters or search terms.</p>
-                <a href="photography_video.php" class="btn btn-primary mt-3">
-                    <i class="fas fa-refresh"></i> View All Photography & Video
-                </a>
-            </div>
-        <?php else: ?>
-            <div class="product-grid" id="productGrid">
-                <?php foreach ($products_to_display as $product):
-                    // Calculate random discount percentage (13% shown in your example)
-                    $discount_percentage = rand(10, 25);
-                    $original_price = $product['product_price'] * (1 + $discount_percentage / 100);
-                    $rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
-                ?>
-                    <div class="modern-product-card" style="
+            <!-- Products Grid -->
+            <?php if (empty($products_to_display)): ?>
+                <div class="no-results">
+                    <i class="fas fa-camera fa-4x mb-3" style="color: #cbd5e0;"></i>
+                    <h3>No Photography & Video Products Found</h3>
+                    <p>Try adjusting your filters or search terms.</p>
+                    <a href="photography_video.php" class="btn btn-primary mt-3">
+                        <i class="fas fa-refresh"></i> View All Photography & Video
+                    </a>
+                </div>
+            <?php else: ?>
+                <div class="product-grid" id="productGrid">
+                    <?php foreach ($products_to_display as $product):
+                        // Calculate random discount percentage (13% shown in your example)
+                        $discount_percentage = rand(10, 25);
+                        $original_price = $product['product_price'] * (1 + $discount_percentage / 100);
+                        $rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
+                    ?>
+                        <div class="modern-product-card" style="
                         background: white;
                         border-radius: 16px;
                         border: 1px solid #e5e7eb;
@@ -1829,126 +1835,127 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         position: relative;
                         transform-origin: center;
                     " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
-                       onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
-                        <!-- Discount Badge -->
-                        <?php if ($discount_percentage > 0): ?>
-                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
-                            -<?php echo $discount_percentage; ?>%
-                        </div>
-                        <?php endif; ?>
-                        <!-- Wishlist Heart -->
-                        <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
-                            <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
+                            onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+                            <!-- Discount Badge -->
+                            <?php if ($discount_percentage > 0): ?>
+                                <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                                    -<?php echo $discount_percentage; ?>%
+                                </div>
+                            <?php endif; ?>
+                            <!-- Wishlist Heart -->
+                            <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                                <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
                                     style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
                                     onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
                                     onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
-                                <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
-                            </button>
-                        </div>
-                        <!-- Product Image -->
-                        <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
-                            <?php
-                            $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
-                            $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
-                            ?>
-                            <img src="<?php echo htmlspecialchars($image_url); ?>"
-                                alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                                style="max-width: 100%; max-height: 100%; object-fit: contain;"
-                                onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
-                        </div>
-                        <!-- Product Content -->
-                        <div style="padding: 25px;">
-                            <!-- Product Title -->
-                            <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
-                                <?php echo htmlspecialchars($product['product_title']); ?>
-                            </h3>
-                            <!-- Rating -->
-                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                <div style="color: #fbbf24; margin-right: 8px;">
-                                    <?php
-                                    $full_stars = floor($rating);
-                                    $half_star = $rating - $full_stars >= 0.5;
-                                    for($i = 0; $i < $full_stars; $i++) {
-                                        echo '<i class="fas fa-star"></i>';
-                                    }
-                                    if($half_star) {
-                                        echo '<i class="fas fa-star-half-alt"></i>';
-                                        $full_stars++;
-                                    }
-                                    for($i = $full_stars; $i < 5; $i++) {
-                                        echo '<i class="far fa-star"></i>';
-                                    }
-                                    ?>
-                                </div>
-                                <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
+                                    <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                                </button>
                             </div>
-                            <!-- Optional Status Text -->
-                            <?php if (rand(1, 3) === 1): // Only show for some products ?>
-                                <div style="margin-bottom: 12px;">
-                                    <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
-                                </div>
-                            <?php endif; ?>
-                            <!-- Pricing -->
-                            <div style="margin-bottom: 25px;">
-                                <div style="display: flex; align-items: center; gap: 12px;">
-                                    <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 800;">
-                                        GH₵<?php echo number_format($product['product_price'], 0); ?>
-                                    </span>
-                                    <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through;">
-                                        GH₵<?php echo number_format($original_price, 0); ?>
-                                    </span>
-                                </div>
-                                <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px;">
-                                    Limited time offer - While supplies last
-                                </div>
+                            <!-- Product Image -->
+                            <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
+                                <?php
+                                $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
+                                $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
+                                ?>
+                                <img src="<?php echo htmlspecialchars($image_url); ?>"
+                                    alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
+                                    style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                    onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
                             </div>
-                            <!-- View Details Button -->
-                            <button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
+                            <!-- Product Content -->
+                            <div style="padding: 25px;">
+                                <!-- Product Title -->
+                                <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
+                                    <?php echo htmlspecialchars($product['product_title']); ?>
+                                </h3>
+                                <!-- Rating -->
+                                <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                    <div style="color: #fbbf24; margin-right: 8px;">
+                                        <?php
+                                        $full_stars = floor($rating);
+                                        $half_star = $rating - $full_stars >= 0.5;
+                                        for ($i = 0; $i < $full_stars; $i++) {
+                                            echo '<i class="fas fa-star"></i>';
+                                        }
+                                        if ($half_star) {
+                                            echo '<i class="fas fa-star-half-alt"></i>';
+                                            $full_stars++;
+                                        }
+                                        for ($i = $full_stars; $i < 5; $i++) {
+                                            echo '<i class="far fa-star"></i>';
+                                        }
+                                        ?>
+                                    </div>
+                                    <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
+                                </div>
+                                <!-- Optional Status Text -->
+                                <?php if (rand(1, 3) === 1): // Only show for some products 
+                                ?>
+                                    <div style="margin-bottom: 12px;">
+                                        <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
+                                    </div>
+                                <?php endif; ?>
+                                <!-- Pricing -->
+                                <div style="margin-bottom: 25px;">
+                                    <div style="display: flex; align-items: center; gap: 12px;">
+                                        <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 800;">
+                                            GH₵<?php echo number_format($product['product_price'], 0); ?>
+                                        </span>
+                                        <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through;">
+                                            GH₵<?php echo number_format($original_price, 0); ?>
+                                        </span>
+                                    </div>
+                                    <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px;">
+                                        Limited time offer - While supplies last
+                                    </div>
+                                </div>
+                                <!-- View Details Button -->
+                                <button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
                                     style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                <i class="fas fa-eye"></i>
-                                View Details
-                            </button>
+                                    <i class="fas fa-eye"></i>
+                                    View Details
+                                </button>
 
-                            <!-- Installment Payment Info -->
-                            <div style="margin-top: 12px; text-align: center;">
-                                <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
-                                    Pay in installment, with only your Ghana Card
-                                </p>
-                                <p style="font-size: 0.7rem; color: #9ca3af; margin: 4px 0; line-height: 1.3;">
-                                    Contact us to Enroll in GadgetGarage's installment Plans
-                                </p>
+                                <!-- Installment Payment Info -->
+                                <div style="margin-top: 12px; text-align: center;">
+                                    <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
+                                        Pay in installment, with only your Ghana Card
+                                    </p>
+                                    <p style="font-size: 0.7rem; color: #9ca3af; margin: 4px 0; line-height: 1.3;">
+                                        Contact us to Enroll in GadgetGarage's installment Plans
+                                    </p>
+                                </div>
                             </div>
                         </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-
-            <!-- Pagination -->
-            <?php if ($total_pages > 1): ?>
-                <div class="pagination">
-                    <?php if ($current_page > 1): ?>
-                        <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $current_page - 1; ?>" class="page-btn">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </a>
-                    <?php endif; ?>
-
-                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                        <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"
-                           class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>">
-                            <?php echo $i; ?>
-                        </a>
-                    <?php endfor; ?>
-
-                    <?php if ($current_page < $total_pages): ?>
-                        <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $current_page + 1; ?>" class="page-btn">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </a>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
+
+                <!-- Pagination -->
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($current_page > 1): ?>
+                            <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $current_page - 1; ?>" class="page-btn">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </a>
+                        <?php endif; ?>
+
+                        <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                            <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"
+                                class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($current_page < $total_pages): ?>
+                            <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $current_page + 1; ?>" class="page-btn">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
             <?php endif; ?>
-        <?php endif; ?>
-            </div>
         </div>
+    </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -2192,8 +2199,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         function toggleWishlist(productId) {
             // Check if user is logged in
             <?php if (!$is_logged_in): ?>
-            window.location.href = 'login/login.php';
-            return;
+                window.location.href = 'login/login.php';
+                return;
             <?php endif; ?>
 
             const heartIcon = event.target;
@@ -2210,16 +2217,28 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             // Make API call
             fetch('actions/wishlist_action.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: `product_id=${productId}&action=${isWishlisted ? 'remove' : 'add'}`
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (!data.success) {
-                    // Revert the UI change if the API call failed
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `product_id=${productId}&action=${isWishlisted ? 'remove' : 'add'}`
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (!data.success) {
+                        // Revert the UI change if the API call failed
+                        if (isWishlisted) {
+                            heartIcon.className = 'fas fa-heart';
+                            heartIcon.style.color = '#ef4444';
+                        } else {
+                            heartIcon.className = 'far fa-heart';
+                            heartIcon.style.color = '#6b7280';
+                        }
+                        console.error('Failed to update wishlist');
+                    }
+                })
+                .catch(error => {
+                    // Revert the UI change if there was an error
                     if (isWishlisted) {
                         heartIcon.className = 'fas fa-heart';
                         heartIcon.style.color = '#ef4444';
@@ -2227,20 +2246,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         heartIcon.className = 'far fa-heart';
                         heartIcon.style.color = '#6b7280';
                     }
-                    console.error('Failed to update wishlist');
-                }
-            })
-            .catch(error => {
-                // Revert the UI change if there was an error
-                if (isWishlisted) {
-                    heartIcon.className = 'fas fa-heart';
-                    heartIcon.style.color = '#ef4444';
-                } else {
-                    heartIcon.className = 'far fa-heart';
-                    heartIcon.style.color = '#6b7280';
-                }
-                console.error('Error:', error);
-            });
+                    console.error('Error:', error);
+                });
         }
 
         function addToCart(productId) {
@@ -2257,28 +2264,40 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             formData.append('final_price', 0);
 
             fetch('../actions/add_to_cart_action.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-                    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
 
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
-                        btn.disabled = false;
-                    }, 1500);
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
+                            btn.disabled = false;
+                        }, 1500);
 
-                    // Update cart count
-                    const cartBadge = document.getElementById('cartBadge');
-                    if (cartBadge && data.cart_count) {
-                        cartBadge.textContent = data.cart_count;
-                        cartBadge.style.display = 'inline';
+                        // Update cart count
+                        const cartBadge = document.getElementById('cartBadge');
+                        if (cartBadge && data.cart_count) {
+                            cartBadge.textContent = data.cart_count;
+                            cartBadge.style.display = 'inline';
+                        }
+                    } else {
+                        btn.innerHTML = 'Error!';
+                        btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
+                            btn.disabled = false;
+                        }, 2000);
                     }
-                } else {
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     btn.innerHTML = 'Error!';
                     btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
 
@@ -2287,19 +2306,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
                         btn.disabled = false;
                     }, 2000);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                btn.innerHTML = 'Error!';
-                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
-                    btn.disabled = false;
-                }, 2000);
-            });
+                });
         }
 
         function applyFilters() {
@@ -2392,7 +2399,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture modal not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Profile picture modal not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -2406,7 +2419,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Language change to ' + lang + ' not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Language change to ' + lang + ' not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -2420,39 +2439,120 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Theme toggle not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Theme toggle not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
+        // Dropdown navigation functions with timeout delays
+        let dropdownTimeout;
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
+        let userDropdownTimeout;
+
         function showDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Enhanced dropdown behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+            const brandsDropdown = document.getElementById('shopDropdown');
+
+            if (shopCategoriesBtn && brandsDropdown) {
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(dropdownTimeout);
+                });
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+            }
+
+            const userAvatar = document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+
+            if (userAvatar && userDropdown) {
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            }
+        });
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -2490,9 +2590,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 timerElement.innerHTML = days + "d:" +
-                                         (hours < 10 ? "0" : "") + hours + "h:" +
-                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
-                                         (seconds < 10 ? "0" : "") + seconds + "s";
+                    (hours < 10 ? "0" : "") + hours + "h:" +
+                    (minutes < 10 ? "0" : "") + minutes + "m:" +
+                    (seconds < 10 ? "0" : "") + seconds + "s";
             }
         }
 
@@ -2534,4 +2634,5 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         });
     </script>
 </body>
+
 </html>

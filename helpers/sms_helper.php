@@ -724,3 +724,85 @@ function cleanup_old_sms_logs($days_to_keep = 90) {
         return false;
     }
 }
+
+/**
+ * Send admin notification SMS for new order
+ * @param int $order_id
+ * @return bool
+ */
+function send_admin_new_order_sms($order_id) {
+    error_log("send_admin_new_order_sms called with order_id: $order_id");
+
+    // Check if admin SMS notifications are enabled
+    if (!defined('ADMIN_SMS_ENABLED') || !ADMIN_SMS_ENABLED || !defined('ADMIN_NEW_ORDER_SMS_ENABLED') || !ADMIN_NEW_ORDER_SMS_ENABLED) {
+        error_log("Admin SMS disabled - ADMIN_SMS_ENABLED: " . (defined('ADMIN_SMS_ENABLED') ? (ADMIN_SMS_ENABLED ? 'true' : 'false') : 'not_defined'));
+        return false;
+    }
+
+    error_log("Admin SMS enabled, proceeding with SMS send");
+
+    try {
+        require_once __DIR__ . '/../controllers/order_controller.php';
+        require_once __DIR__ . '/../settings/db_class.php';
+
+        // Get order details
+        $db = new db_connection();
+        $db->db_connect();
+
+        $order_query = "SELECT o.*, c.customer_name, c.customer_contact as customer_phone, c.customer_email,
+                               p.payment_method, p.amount as payment_amount
+                        FROM orders o
+                        LEFT JOIN customer c ON o.customer_id = c.customer_id
+                        LEFT JOIN payments p ON o.order_id = p.order_id
+                        WHERE o.order_id = " . intval($order_id);
+
+        $order = $db->db_fetch_one($order_query);
+
+        if (!$order) {
+            log_sms_activity('error', 'Admin SMS: Order not found', ['order_id' => $order_id]);
+            return false;
+        }
+
+        // Get order items count
+        $items_query = "SELECT COUNT(*) as items_count FROM order_details WHERE order_id = " . intval($order_id);
+        $items_result = $db->db_fetch_one($items_query);
+        $items_count = $items_result ? $items_result['items_count'] : 0;
+
+        // Format admin phone number
+        $admin_phone = format_phone_number(ADMIN_PHONE_NUMBER);
+        if (!$admin_phone) {
+            log_sms_activity('error', 'Admin SMS: Invalid admin phone number', ['phone' => ADMIN_PHONE_NUMBER]);
+            return false;
+        }
+
+        // Prepare template data
+        global $sms_urls;
+        $template_data = [
+            'order_id' => $order['order_id'],
+            'customer_name' => $order['customer_name'] ?: 'Guest Customer',
+            'customer_phone' => $order['customer_phone'] ?: 'No phone',
+            'amount' => number_format($order['order_total'] ?: $order['payment_amount'] ?: 0, 2),
+            'items_count' => $items_count,
+            'payment_method' => $order['payment_method'] ?: 'Unknown',
+            'admin_url' => $sms_urls['admin_orders'] . $order_id
+        ];
+
+        $sms = new SMSService();
+        $result = $sms->sendAdminOrderNotificationSMS($order_id, $admin_phone, $template_data);
+
+        log_sms_activity('info', 'Admin new order SMS sent', [
+            'order_id' => $order_id,
+            'admin_phone' => $admin_phone,
+            'result' => $result
+        ]);
+
+        return $result['success'] ?? false;
+
+    } catch (Exception $e) {
+        log_sms_activity('error', 'Failed to send admin new order SMS', [
+            'order_id' => $order_id,
+            'error' => $e->getMessage()
+        ]);
+        return false;
+    }
+}

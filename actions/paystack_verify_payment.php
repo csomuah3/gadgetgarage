@@ -197,6 +197,20 @@ try {
         } catch (Exception $sms_error) {
             error_log('SMS error: ' . $sms_error->getMessage());
         }
+
+        // Send admin notification SMS
+        error_log("PayStack: Attempting to send admin SMS for order: $order_id");
+        try {
+            if (function_exists('send_admin_new_order_sms')) {
+                error_log("PayStack: send_admin_new_order_sms function exists, calling it");
+                $admin_sms_result = send_admin_new_order_sms($order_id);
+                error_log("PayStack: Admin SMS result: " . json_encode($admin_sms_result));
+            } else {
+                error_log("PayStack: send_admin_new_order_sms function does NOT exist");
+            }
+        } catch (Exception $admin_sms_error) {
+            error_log('Admin SMS error: ' . $admin_sms_error->getMessage());
+        }
         
         // Clear session payment data
         unset($_SESSION['paystack_reference']);
@@ -266,7 +280,16 @@ try {
                     if ($payment_id) {
                         update_order_status_ctr($order_id, 'completed');
                         empty_cart_ctr($customer_id, $ip_address);
-                        
+
+                        // Send admin notification SMS for fallback order
+                        try {
+                            if (function_exists('send_admin_new_order_sms')) {
+                                send_admin_new_order_sms($order_id);
+                            }
+                        } catch (Exception $admin_sms_error) {
+                            error_log('Admin SMS error (fallback): ' . $admin_sms_error->getMessage());
+                        }
+
                         echo json_encode([
                             'status' => 'success',
                             'verified' => true,

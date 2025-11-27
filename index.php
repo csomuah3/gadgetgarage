@@ -7,6 +7,7 @@ try {
 	// Start session and include core functions
 	require_once(__DIR__ . '/settings/core.php');
 	require_once(__DIR__ . '/controllers/cart_controller.php');
+	require_once(__DIR__ . '/controllers/wishlist_controller.php');
 	require_once(__DIR__ . '/helpers/image_helper.php');
 
 	// Check login status and admin status
@@ -32,7 +33,7 @@ try {
 	$payment_success = isset($_GET['payment']) && $_GET['payment'] === 'success';
 	$order_id_from_payment = isset($_GET['order']) ? intval($_GET['order']) : null;
 	$payment_reference = isset($_GET['ref']) ? htmlspecialchars($_GET['ref']) : null;
-	
+
 	// Get order details if payment was successful
 	$order_details = null;
 	if ($payment_success && $order_id_from_payment) {
@@ -5076,7 +5077,7 @@ try {
 
 						<!-- User Avatar Dropdown -->
 						<div class="user-dropdown">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
@@ -5663,12 +5664,21 @@ try {
 
 					<!-- Wishlist Heart -->
 					<div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
-						<button onclick="event.stopPropagation(); toggleWishlist(1, this)"
-							class="wishlist-btn"
+						<?php
+						$product_id = 1; // This appears to be a static product
+						$is_in_wishlist = false;
+						if ($is_logged_in && $customer_id) {
+							$is_in_wishlist = check_wishlist_item_ctr($product_id, $customer_id);
+						}
+						$heart_class = $is_in_wishlist ? 'fas fa-heart' : 'far fa-heart';
+						$btn_class = $is_in_wishlist ? 'wishlist-btn active' : 'wishlist-btn';
+						?>
+						<button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product_id; ?>, this)"
+							class="<?php echo $btn_class; ?>"
 							style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
 							onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
 							onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
-							<i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+							<i class="<?php echo $heart_class; ?>" style="color: <?php echo $is_in_wishlist ? '#ef4444' : '#6b7280'; ?>; font-size: 16px;"></i>
 						</button>
 					</div>
 
@@ -5992,14 +6002,13 @@ try {
 					Subscribe to our newsletter and get exclusive access to special offers, new arrivals, and limited-time deals delivered straight to your inbox.
 				</p>
 				<form class="newsletter-form" id="newsletterForm" onsubmit="subscribeNewsletterSection(event)">
-					<input 
-						type="email" 
-						class="newsletter-input" 
+					<input
+						type="email"
+						class="newsletter-input"
 						id="newsletterEmailInput"
-						placeholder="Enter your email address" 
+						placeholder="Enter your email address"
 						required
-						autocomplete="email"
-					>
+						autocomplete="email">
 					<button type="submit" class="newsletter-submit-btn" id="newsletterSubmitBtn">
 						<i class="fas fa-paper-plane"></i> Subscribe
 					</button>
@@ -6015,42 +6024,44 @@ try {
 	<script>
 		async function subscribeNewsletterSection(event) {
 			event.preventDefault();
-			
+
 			const form = document.getElementById('newsletterForm');
 			const emailInput = document.getElementById('newsletterEmailInput');
 			const submitBtn = document.getElementById('newsletterSubmitBtn');
 			const messageDiv = document.getElementById('newsletterMessage');
-			
+
 			const email = emailInput.value.trim();
-			
+
 			if (!email) {
 				showNewsletterMessage('Please enter your email address', 'error');
 				return;
 			}
-			
+
 			// Validate email format
 			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 			if (!emailRegex.test(email)) {
 				showNewsletterMessage('Please enter a valid email address', 'error');
 				return;
 			}
-			
+
 			// Disable button and show loading state
 			submitBtn.disabled = true;
 			submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
 			messageDiv.className = 'newsletter-message';
-			
+
 			try {
 				const response = await fetch('actions/subscribe_newsletter_action.php', {
 					method: 'POST',
 					headers: {
 						'Content-Type': 'application/json',
 					},
-					body: JSON.stringify({ email: email })
+					body: JSON.stringify({
+						email: email
+					})
 				});
-				
+
 				const data = await response.json();
-				
+
 				if (data.success) {
 					showNewsletterMessage('Thank you for joining Gadget Garage Premium list!', 'success');
 					emailInput.value = '';
@@ -6072,12 +6083,12 @@ try {
 				submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Subscribe';
 			}
 		}
-		
+
 		function showNewsletterMessage(message, type) {
 			const messageDiv = document.getElementById('newsletterMessage');
 			messageDiv.textContent = message;
 			messageDiv.className = `newsletter-message ${type}`;
-			
+
 			// Auto-hide success messages after 5 seconds
 			if (type === 'success') {
 				setTimeout(() => {
@@ -6386,20 +6397,28 @@ try {
 
 		function toggleUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');
-			dropdown.classList.toggle('show');
+			if (dropdown) {
+				dropdown.classList.toggle('show');
+			}
 		}
 
-		// Add hover functionality to user dropdown
+		// Add hover and click functionality to user dropdown
 		document.addEventListener('DOMContentLoaded', function() {
-			const userAvatar = document.querySelector('.user-avatar');
+			const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
 			const userDropdown = document.getElementById('userDropdownMenu');
 
 			if (userAvatar && userDropdown) {
 				// Show dropdown on avatar hover
-				userAvatar.addEventListener('mouseenter', showUserDropdown);
+				userAvatar.addEventListener('mouseenter', function(e) {
+					e.stopPropagation();
+					showUserDropdown();
+				});
 
 				// Hide dropdown when leaving avatar (with delay)
-				userAvatar.addEventListener('mouseleave', hideUserDropdown);
+				userAvatar.addEventListener('mouseleave', function(e) {
+					e.stopPropagation();
+					hideUserDropdown();
+				});
 
 				// Keep dropdown open when hovering over it
 				userDropdown.addEventListener('mouseenter', function() {
@@ -6408,17 +6427,34 @@ try {
 
 				// Hide dropdown when leaving dropdown area
 				userDropdown.addEventListener('mouseleave', hideUserDropdown);
+
+				// Handle click on avatar to toggle dropdown
+				userAvatar.addEventListener('click', function(e) {
+					e.stopPropagation();
+					e.preventDefault();
+					// Clear any pending hide timeout
+					clearTimeout(userDropdownTimeout);
+					toggleUserDropdown();
+				});
 			}
 		});
 
-		// Close dropdown when clicking outside
+		// Close dropdown when clicking outside (with slight delay to allow toggle to work)
 		document.addEventListener('click', function(event) {
-			const dropdown = document.getElementById('userDropdownMenu');
-			const avatar = document.querySelector('.user-avatar');
+			setTimeout(function() {
+				const dropdown = document.getElementById('userDropdownMenu');
+				const avatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
 
-			if (!dropdown.contains(event.target) && !avatar.contains(event.target)) {
-				dropdown.classList.remove('show');
-			}
+				if (dropdown && avatar) {
+					// Check if click is outside both dropdown and avatar
+					const isClickInsideDropdown = dropdown.contains(event.target);
+					const isClickOnAvatar = avatar.contains(event.target);
+
+					if (!isClickInsideDropdown && !isClickOnAvatar) {
+						dropdown.classList.remove('show');
+					}
+				}
+			}, 10);
 		});
 
 		// Profile picture modal functionality
@@ -7258,8 +7294,8 @@ try {
 		setTimeout(initSimpleCarousel, 500);
 		setTimeout(initSimpleCarousel, 1500);
 		setTimeout(initSimpleCarousel, 3000);
-			// Initialize Featured IG Carousel
-			initFeaturedIgCarousel();
+		// Initialize Featured IG Carousel
+		initFeaturedIgCarousel();
 		});
 
 		// Featured on IG Carousel Function
@@ -8039,7 +8075,6 @@ try {
 		<?php else: ?>
 			console.log('Newsletter popup NOT showing. Logged in: <?php echo $is_logged_in ? "yes" : "no"; ?>');
 		<?php endif; ?>
-
 	</script>
 
 	<!-- Rating Popup -->
@@ -8697,7 +8732,9 @@ try {
 			try {
 				fetch('actions/submit_rating.php', {
 					method: 'POST',
-					headers: { 'Content-Type': 'application/json' },
+					headers: {
+						'Content-Type': 'application/json'
+					},
 					body: JSON.stringify({
 						order_id: orderId,
 						rating: rating,
@@ -8713,7 +8750,7 @@ try {
 			let message = '';
 			let icon = 'success';
 
-			switch(rating) {
+			switch (rating) {
 				case 1:
 				case 2:
 					message = `Thank you for your ${rating}-star rating. We'll work to improve your experience!`;
@@ -8744,7 +8781,9 @@ try {
 		// Global accessibility for testing
 		window.testRatingPopup = testRatingPopup;
 		window.testSimpleRatingPopup = testSimpleRatingPopup;
-		window.testSweetAlertRating = function() { showSweetAlertRating('TEST123'); };
+		window.testSweetAlertRating = function() {
+			showSweetAlertRating('TEST123');
+		};
 		window.forceCloseRatingPopup = forceCloseRatingPopup;
 
 		// Show popup for logged-in users (limited to once every 5 hours)
@@ -8812,6 +8851,7 @@ try {
 				transform: scale(0.8);
 				opacity: 0;
 			}
+
 			100% {
 				transform: scale(1);
 				opacity: 1;
@@ -8959,9 +8999,9 @@ try {
 				font-size: 1.3rem;
 			}
 
-		.rating-star {
-			font-size: 1.8rem;
-		}
+			.rating-star {
+				font-size: 1.8rem;
+			}
 	</style>
 
 	<script>
@@ -9130,7 +9170,7 @@ try {
 		// Submit rating
 		async function submitRating(event) {
 			event.preventDefault();
-			
+
 			if (!currentOrderId) {
 				alert('Order ID is missing');
 				return;
@@ -9138,7 +9178,7 @@ try {
 
 			const comment = document.getElementById('ratingComment').value.trim();
 			const doneBtn = document.getElementById('ratingDoneBtn');
-			
+
 			// Disable button
 			doneBtn.disabled = true;
 			doneBtn.textContent = 'Submitting...';
@@ -9186,23 +9226,23 @@ try {
 		// Clear cart after successful payment
 		function clearCartAfterPayment() {
 			fetch('actions/empty_cart_action.php', {
-				method: 'POST',
-				headers: {
-					'Content-Type': 'application/json',
-				},
-				body: JSON.stringify({})
-			}).then(response => response.json())
-			.then(data => {
-				if (data.success) {
-					console.log('Cart cleared successfully after payment');
-					// Update cart count in header
-					updateCartBadge(0);
-				} else {
-					console.error('Failed to clear cart:', data.message);
-				}
-			}).catch(err => {
-				console.log('Cart clearing error (non-critical):', err);
-			});
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({})
+				}).then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						console.log('Cart cleared successfully after payment');
+						// Update cart count in header
+						updateCartBadge(0);
+					} else {
+						console.error('Failed to clear cart:', data.message);
+					}
+				}).catch(err => {
+					console.log('Cart clearing error (non-critical):', err);
+				});
 		}
 
 		// Debug payment success variables
@@ -9215,20 +9255,20 @@ try {
 
 		// Handle payment success
 		<?php if ($payment_success && $order_id_from_payment): ?>
-		console.log('Payment success handler triggered!');
-		document.addEventListener('DOMContentLoaded', function() {
-			const orderId = <?php echo json_encode($order_id_from_payment); ?>;
-			const orderRef = <?php echo json_encode($payment_reference); ?>;
-			const orderDetails = <?php echo json_encode($order_details); ?>;
+			console.log('Payment success handler triggered!');
+			document.addEventListener('DOMContentLoaded', function() {
+				const orderId = <?php echo json_encode($order_id_from_payment); ?>;
+				const orderRef = <?php echo json_encode($payment_reference); ?>;
+				const orderDetails = <?php echo json_encode($order_details); ?>;
 
-			// Clear the cart immediately after successful payment
-			clearCartAfterPayment();
+				// Clear the cart immediately after successful payment
+				clearCartAfterPayment();
 
-			// Show order confirmation Sweet Alert
-			if (typeof Swal !== 'undefined') {
-				Swal.fire({
-					title: 'Payment Successful!',
-					html: `
+				// Show order confirmation Sweet Alert
+				if (typeof Swal !== 'undefined') {
+					Swal.fire({
+						title: 'Payment Successful!',
+						html: `
 						<div style="text-align: left; padding: 10px 0;">
 							<p style="margin-bottom: 10px;"><strong>Order ID:</strong> ${orderDetails?.invoice_no || orderDetails?.order_reference || orderId}</p>
 							<p style="margin-bottom: 10px;"><strong>Payment Reference:</strong> ${orderRef || 'N/A'}</p>
@@ -9236,39 +9276,39 @@ try {
 							<p style="color: #10b981; margin-top: 15px;">Your order has been confirmed and will be processed shortly.</p>
 						</div>
 					`,
-					icon: 'success',
-					confirmButtonColor: '#008060',
-					confirmButtonText: 'Great!',
-					allowOutsideClick: false
-				}).then(() => {
-					// Send SMS notification
-					fetch('actions/send_order_sms_action.php', {
-						method: 'POST',
-						headers: {
-							'Content-Type': 'application/json',
-						},
-						body: JSON.stringify({
-							order_id: orderId
-						})
-					}).catch(err => {
-						console.log('SMS notification error (non-critical):', err);
-					});
+						icon: 'success',
+						confirmButtonColor: '#008060',
+						confirmButtonText: 'Great!',
+						allowOutsideClick: false
+					}).then(() => {
+						// Send SMS notification
+						fetch('actions/send_order_sms_action.php', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({
+								order_id: orderId
+							})
+						}).catch(err => {
+							console.log('SMS notification error (non-critical):', err);
+						});
 
-					// Show rating popup after confirmation
+						// Show rating popup after confirmation
+						setTimeout(() => {
+							showRatingPopup(orderId);
+						}, 500);
+					});
+				} else {
+					// Fallback if SweetAlert not available
+					alert('Payment successful! Order ID: ' + orderId);
 					setTimeout(() => {
 						showRatingPopup(orderId);
 					}, 500);
-				});
-			} else {
-				// Fallback if SweetAlert not available
-				alert('Payment successful! Order ID: ' + orderId);
-				setTimeout(() => {
-					showRatingPopup(orderId);
-				}, 500);
-			}
-		});
+				}
+			});
 		<?php else: ?>
-		console.log('Payment success handler NOT triggered - PHP conditions not met');
+			console.log('Payment success handler NOT triggered - PHP conditions not met');
 		<?php endif; ?>
 
 		// Fallback: Check URL parameters directly in JavaScript for testing
@@ -9423,12 +9463,11 @@ try {
 				<!-- Comment Section -->
 				<div class="rating-comment-section">
 					<div class="rating-question-title">Tell us the reason for your score</div>
-					<textarea 
-						class="rating-comment-input" 
-						id="ratingComment" 
-						name="comment" 
-						placeholder="Share your feedback (optional)"
-					></textarea>
+					<textarea
+						class="rating-comment-input"
+						id="ratingComment"
+						name="comment"
+						placeholder="Share your feedback (optional)"></textarea>
 				</div>
 
 				<div class="rating-buttons">

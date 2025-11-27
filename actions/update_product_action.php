@@ -125,9 +125,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     try {
-        $result = update_product_ctr($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id);
+        // Add missing parameters with default values
+        $product_color = trim($_POST['product_color'] ?? '');
+        $stock_quantity = isset($_POST['stock_quantity']) ? (int)$_POST['stock_quantity'] : null;
+
+        $result = update_product_ctr($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $category_id, $brand_id, $product_color, $stock_quantity);
         echo json_encode($result);
     } catch (Exception $e) {
+        error_log("Product update error: " . $e->getMessage());
         echo json_encode(['status' => 'error', 'message' => 'Failed to update product: ' . $e->getMessage()]);
     }
 } else {

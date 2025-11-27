@@ -45,21 +45,21 @@ $search_query = $_GET['search'] ?? '';
 $filtered_products = $all_products;
 
 if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
         return $product['cat_name'] === $category_filter;
     });
 }
 
 if ($brand_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
         return $product['brand_name'] === $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
-    $filtered_products = array_filter($filtered_products, function($product) use ($search_query) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
         return stripos($product['product_title'], $search_query) !== false ||
-               stripos($product['product_desc'], $search_query) !== false;
+            stripos($product['product_desc'], $search_query) !== false;
     });
 }
 
@@ -851,12 +851,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
+
             10% {
                 opacity: 0.6;
             }
+
             90% {
                 opacity: 0.6;
             }
+
             100% {
                 transform: translateY(-100px) rotate(360deg);
                 opacity: 0;
@@ -886,12 +889,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         /* Sidebar Layout Styles */
+        /* Sidebar Layout Styles */
         .filters-sidebar {
-            background: #ffffff;
+            background: var(--pure-white);
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px var(--shadow);
+            border: 1px solid var(--border-light);
             position: sticky;
             top: 20px;
             max-height: calc(100vh - 40px);
@@ -908,7 +912,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .filter-title {
-            color: #1f2937;
+            color: var(--text-dark);
             font-weight: 700;
             font-size: 1.2rem;
             margin: 0;
@@ -934,7 +938,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .filter-subtitle {
-            color: #333;
+            color: var(--text-dark);
             font-weight: 600;
             font-size: 0.95rem;
             margin-bottom: 12px;
@@ -969,9 +973,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .search-input:focus {
             outline: none;
-            border-color: #000000;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
+            border-color: var(--royal-blue);
+            background: var(--pure-white);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
         .search-icon {
@@ -1055,15 +1059,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         .filter-actions {
             margin-top: 30px;
             padding-top: 20px;
-            border-top: 2px solid rgba(0, 128, 96, 0.1);
+            border-top: 2px solid rgba(37, 99, 235, 0.1);
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
         .apply-filters-btn {
-            background: #000000;
-            color: white;
+            background: var(--gradient-primary);
+            color: var(--pure-white);
             border: none;
             padding: 12px 20px;
             border-radius: 12px;
@@ -1077,12 +1081,61 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             text-transform: uppercase;
             letter-spacing: 0.5px;
             font-size: 0.9rem;
+            box-shadow: 0 4px 12px var(--shadow);
+            position: relative;
+            width: 100%;
         }
 
         .apply-filters-btn:hover {
-            background: #374151;
+            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--navy-blue) 100%);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 8px 20px var(--shadow-hover);
+        }
+
+        .apply-filters-btn.has-changes {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            animation: subtle-pulse 2s infinite;
+        }
+
+        .apply-filters-btn.has-changes::after {
+            content: '';
+            position: absolute;
+            top: -3px;
+            right: -3px;
+            width: 10px;
+            height: 10px;
+            background: #ef4444;
+            border: 2px solid white;
+            border-radius: 50%;
+            animation: pulse-dot 1.5s infinite;
+        }
+
+        @keyframes subtle-pulse {
+
+            0%,
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+            50% {
+                transform: scale(1.02);
+                opacity: 0.95;
+            }
+        }
+
+        @keyframes pulse-dot {
+
+            0%,
+            100% {
+                opacity: 1;
+                transform: scale(1);
+            }
+
+            50% {
+                opacity: 0.7;
+                transform: scale(1.2);
+            }
         }
 
         /* Mobile Styles */
@@ -1154,12 +1207,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .rating-option label:hover {
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(37, 99, 235, 0.08);
         }
 
         .rating-option input[type="radio"]:checked+label {
-            background: rgba(0, 0, 0, 0.2);
-            color: #000000;
+            background: rgba(37, 99, 235, 0.12);
+            color: var(--navy-blue);
         }
 
         .stars {
@@ -1216,23 +1269,23 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             appearance: none;
             width: 18px;
             height: 18px;
-            background: #000000;
+            background: var(--royal-blue);
             border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
             border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-slider::-moz-range-thumb {
             width: 18px;
             height: 18px;
-            background: #000000;
+            background: var(--royal-blue);
             border-radius: 50%;
             cursor: pointer;
             pointer-events: auto;
             border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-display {
@@ -1240,7 +1293,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
-            color: #000000;
+            color: var(--text-dark);
         }
 
         .price-separator {
@@ -2236,10 +2289,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         /* Product Card Enhancements */
         @keyframes popupFade {
-            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
-            15% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            85% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(0.8); }
+            0% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
+
+            15% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            85% {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translate(-50%, -50%) scale(0.8);
+            }
         }
 
         .product-image-container:hover .product-image {
@@ -2585,8 +2653,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-slider-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100" oninput="updatePriceDisplay()">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100" oninput="updatePriceDisplay()">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
                             </div>
                             <div class="price-display">
                                 <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
@@ -2731,23 +2799,23 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     position: relative;
                                     transform-origin: center;
                                 " onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
-                                   onmouseout="this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+                                    onmouseout="this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
 
 
                                     <!-- Discount Badge -->
                                     <?php if ($discount_percentage > 0): ?>
-                                    <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
-                                        -<?php echo $discount_percentage; ?>%
-                                    </div>
+                                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                                            -<?php echo $discount_percentage; ?>%
+                                        </div>
                                     <?php endif; ?>
 
                                     <!-- Wishlist Heart -->
                                     <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
                                         <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>, this)"
-                                                class="wishlist-btn"
-                                                style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
-                                                onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
-                                                onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                            class="wishlist-btn"
+                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                            onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
                                             <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
                                         </button>
                                     </div>
@@ -2765,8 +2833,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
 
                                         <!-- Customer Activity Popup - Now inside image frame -->
-                                        <?php if (rand(1, 3) === 1): // Show on 33% of cards only ?>
-                                        <div class="customer-activity-popup" style="
+                                        <?php if (rand(1, 3) === 1): // Show on 33% of cards only 
+                                        ?>
+                                            <div class="customer-activity-popup" style="
                                             position: absolute;
                                             bottom: 12px;
                                             left: 50%;
@@ -2784,18 +2853,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                             pointer-events: none;
                                             animation-delay: <?php echo rand(1, 15); ?>s;
                                         ">
-                                            <?php
-                                            $activities = [
-                                                rand(2, 8) . ' customers viewing this',
-                                                rand(1, 5) . ' customers added to cart',
-                                                rand(3, 12) . ' customers wishlisted this',
-                                                rand(1, 4) . ' customers bought recently',
-                                                rand(5, 15) . ' customers interested',
-                                                rand(2, 6) . ' customers comparing this'
-                                            ];
-                                            echo $activities[array_rand($activities)];
-                                            ?>
-                                        </div>
+                                                <?php
+                                                $activities = [
+                                                    rand(2, 8) . ' customers viewing this',
+                                                    rand(1, 5) . ' customers added to cart',
+                                                    rand(3, 12) . ' customers wishlisted this',
+                                                    rand(1, 4) . ' customers bought recently',
+                                                    rand(5, 15) . ' customers interested',
+                                                    rand(2, 6) . ' customers comparing this'
+                                                ];
+                                                echo $activities[array_rand($activities)];
+                                                ?>
+                                            </div>
                                         <?php endif; ?>
                                     </div>
 
@@ -2814,14 +2883,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                                 $full_stars = floor($rating);
                                                 $half_star = $rating - $full_stars >= 0.5;
 
-                                                for($i = 0; $i < $full_stars; $i++) {
+                                                for ($i = 0; $i < $full_stars; $i++) {
                                                     echo '<i class="fas fa-star"></i>';
                                                 }
-                                                if($half_star) {
+                                                if ($half_star) {
                                                     echo '<i class="fas fa-star-half-alt"></i>';
                                                     $full_stars++;
                                                 }
-                                                for($i = $full_stars; $i < 5; $i++) {
+                                                for ($i = $full_stars; $i < 5; $i++) {
                                                     echo '<i class="far fa-star"></i>';
                                                 }
                                                 ?>
@@ -2859,15 +2928,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         <!-- View Details Button -->
                                         <?php if ($stock_quantity > 0): ?>
                                             <button onclick="viewProductDetails(<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>)"
-                                                    data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
-                                                    style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                                data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
+                                                style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                                 <i class="fas fa-eye"></i>
                                                 View Details
                                             </button>
                                         <?php else: ?>
                                             <button onclick="showOutOfStockAlert()"
-                                                    disabled
-                                                    style="width: 100%; background: #94a3b8; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: not-allowed; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
+                                                disabled
+                                                style="width: 100%; background: #94a3b8; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: not-allowed; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
                                                 <i class="fas fa-times-circle"></i>
                                                 Out of Stock
                                             </button>
@@ -2953,7 +3022,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }).then((result) => {
                 if (result.isConfirmed) {
                     // Scroll to top of products or redirect to all products
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
                 }
             });
         };
@@ -3002,84 +3074,84 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             formData.append('quantity', 1);
 
             fetch('../actions/add_to_cart_action.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    button.innerHTML = '<i class="fas fa-check"></i> Added!';
-                    button.style.background = '#10b981';
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        button.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        button.style.background = '#10b981';
 
-                    // Update cart count if available
-                    const cartCounter = document.getElementById('cartBadge');
-                    if (cartCounter && data.cart_count) {
-                        cartCounter.textContent = data.cart_count;
-                        cartCounter.style.display = 'inline';
-                    }
-
-                    // Show success notification
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            title: '🛒 Added to Cart',
-                            text: data.message,
-                            icon: 'success',
-                            timer: 2000,
-                            showConfirmButton: false,
-                            toast: true,
-                            position: 'top-end',
-                            timerProgressBar: true
-                        });
-                    }
-
-                    // Show cart sidebar after successful addition
-                    setTimeout(() => {
-                        if (window.showCartSidebar) {
-                            window.showCartSidebar();
+                        // Update cart count if available
+                        const cartCounter = document.getElementById('cartBadge');
+                        if (cartCounter && data.cart_count) {
+                            cartCounter.textContent = data.cart_count;
+                            cartCounter.style.display = 'inline';
                         }
-                    }, 500);
-                } else {
+
+                        // Show success notification
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: '🛒 Added to Cart',
+                                text: data.message,
+                                icon: 'success',
+                                timer: 2000,
+                                showConfirmButton: false,
+                                toast: true,
+                                position: 'top-end',
+                                timerProgressBar: true
+                            });
+                        }
+
+                        // Show cart sidebar after successful addition
+                        setTimeout(() => {
+                            if (window.showCartSidebar) {
+                                window.showCartSidebar();
+                            }
+                        }, 500);
+                    } else {
+                        button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
+                        button.style.background = '#ef4444';
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: '❌ Cart Error',
+                                text: data.message,
+                                icon: 'error',
+                                timer: 3000,
+                                showConfirmButton: false,
+                                toast: true,
+                                position: 'top-end',
+                                timerProgressBar: true
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
                     button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
                     button.style.background = '#ef4444';
                     if (typeof Swal !== 'undefined') {
                         Swal.fire({
-                            title: '❌ Cart Error',
-                            text: data.message,
+                            title: '🌐 Connection Error',
+                            text: 'Failed to add product to cart. Please try again.',
                             icon: 'error',
-                            timer: 3000,
-                            showConfirmButton: false,
+                            timer: 4000,
+                            showConfirmButton: true,
                             toast: true,
                             position: 'top-end',
                             timerProgressBar: true
                         });
                     }
-                }
-            })
-            .catch(error => {
-                console.error('Error adding to cart:', error);
-                button.innerHTML = '<i class="fas fa-exclamation-triangle"></i> Error';
-                button.style.background = '#ef4444';
-                if (typeof Swal !== 'undefined') {
-                    Swal.fire({
-                        title: '🌐 Connection Error',
-                        text: 'Failed to add product to cart. Please try again.',
-                        icon: 'error',
-                        timer: 4000,
-                        showConfirmButton: true,
-                        toast: true,
-                        position: 'top-end',
-                        timerProgressBar: true
-                    });
-                }
-            })
-            .finally(() => {
-                // Reset button after 2 seconds
-                setTimeout(() => {
-                    button.innerHTML = originalText;
-                    button.style.background = '#ffd700';
-                    button.disabled = false;
-                }, 2000);
-            });
+                })
+                .finally(() => {
+                    // Reset button after 2 seconds
+                    setTimeout(() => {
+                        button.innerHTML = originalText;
+                        button.style.background = '#ffd700';
+                        button.disabled = false;
+                    }, 2000);
+                });
         }
 
         function showNotification(message, type) {
@@ -3132,7 +3204,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Cart Feature Coming Soon', text: 'Cart functionality will be implemented soon!', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Cart Feature Coming Soon',
+                    text: 'Cart functionality will be implemented soon!',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -3287,15 +3365,16 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (!filtersChanged) {
                 filtersChanged = true;
                 const applyBtn = document.getElementById('applyFilters');
-                applyBtn.style.display = 'flex';
-                applyBtn.classList.add('animate__animated', 'animate__fadeInUp');
+                applyBtn.classList.add('has-changes');
+                applyBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Apply Changes';
             }
         }
 
         function hideApplyButton() {
             filtersChanged = false;
             const applyBtn = document.getElementById('applyFilters');
-            applyBtn.style.display = 'none';
+            applyBtn.classList.remove('has-changes');
+            applyBtn.innerHTML = '<i class="fas fa-filter"></i> Apply Filters';
         }
 
         function initPriceSlider() {
@@ -3567,7 +3646,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             confirmButtonText: 'OK'
                         });
                     } else {
-                        Swal.fire({title: 'Filter Error', text: 'Error applying filters. Please try again.', icon: 'error', confirmButtonColor: '#dc3545', confirmButtonText: 'OK'});
+                        Swal.fire({
+                            title: 'Filter Error',
+                            text: 'Error applying filters. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#dc3545',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 })
                 .finally(() => {
@@ -3890,7 +3975,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const products = Array.from(productGrid.children);
 
             products.sort((a, b) => {
-                switch(sortValue) {
+                switch (sortValue) {
                     case 'alphabetically-az':
                         return a.querySelector('h5').textContent.localeCompare(b.querySelector('h5').textContent);
                     case 'alphabetically-za':
@@ -3960,7 +4045,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture modal not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Profile picture modal not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -3974,7 +4065,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Language change to ' + lang + ' not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Language change to ' + lang + ' not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -3988,7 +4085,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Theme toggle not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Theme toggle not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -4021,7 +4124,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     }
                 });
             }
-            }
+        }
         }
 
         // Floating Bubbles Animation
@@ -4071,35 +4174,110 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         });
 
         // Add functions for hover-based dropdowns (matching index.php)
+        // Dropdown navigation functions with timeout delays
+        let dropdownTimeout;
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
+        let userDropdownTimeout;
+
         function showDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Enhanced dropdown behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+            const brandsDropdown = document.getElementById('shopDropdown');
+
+            if (shopCategoriesBtn && brandsDropdown) {
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(dropdownTimeout);
+                });
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+            }
+
+            const userAvatar = document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+
+            if (userAvatar && userDropdown) {
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            }
+        });
 
         // Timer functionality
         function updateTimer() {
@@ -4118,9 +4296,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 timerElement.innerHTML = days + "d:" +
-                                         (hours < 10 ? "0" : "") + hours + "h:" +
-                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
-                                         (seconds < 10 ? "0" : "") + seconds + "s";
+                    (hours < 10 ? "0" : "") + hours + "h:" +
+                    (minutes < 10 ? "0" : "") + minutes + "m:" +
+                    (seconds < 10 ? "0" : "") + seconds + "s";
             }
         }
 
@@ -4174,10 +4352,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Initialize wishlist status
         document.addEventListener('DOMContentLoaded', function() {
             // Popup animations now handled by PHP random delays
-            });
+        });
 
-            // Load wishlist status
-            loadWishlistStatus();
+        // Load wishlist status
+        loadWishlistStatus();
         });
 
         function loadWishlistStatus() {
@@ -4221,36 +4399,36 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                 // Make AJAX call to remove from wishlist
                 fetch('../actions/remove_from_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update wishlist badge if exists
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count = Math.max(0, count - 1);
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update wishlist badge if exists
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count = Math.max(0, count - 1);
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                            }
+                        } else {
+                            // Revert if failed
+                            button.classList.add('active');
+                            icon.className = 'fas fa-heart';
+                            if (data.message) alert(data.message);
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         // Revert if failed
                         button.classList.add('active');
                         icon.className = 'fas fa-heart';
-                        if (data.message) alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Revert if failed
-                    button.classList.add('active');
-                    icon.className = 'fas fa-heart';
-                });
+                    });
             } else {
                 // Add to wishlist
                 button.classList.add('active');
@@ -4258,38 +4436,38 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                 // Make AJAX call to add to wishlist
                 fetch('../actions/add_to_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update wishlist badge
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count++;
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = 'flex';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update wishlist badge
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count++;
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = 'flex';
+                            }
+                        } else {
+                            // Revert button state if failed
+                            button.classList.remove('active');
+                            icon.className = 'far fa-heart';
+                            if (data.message) {
+                                alert(data.message);
+                            }
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         // Revert button state if failed
                         button.classList.remove('active');
                         icon.className = 'far fa-heart';
-                        if (data.message) {
-                            alert(data.message);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Revert button state if failed
-                    button.classList.remove('active');
-                    icon.className = 'far fa-heart';
-                });
+                    });
             }
         };
     </script>
@@ -4302,9 +4480,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="col-lg-4 col-md-6 mb-4">
                         <div class="footer-brand">
                             <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                 alt="Gadget Garage"
-                                 style="height: 35px; width: auto; object-fit: contain;"
-                                 class="footer-logo">
+                                alt="Gadget Garage"
+                                style="height: 35px; width: auto; object-fit: contain;"
+                                class="footer-logo">
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">
                                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>

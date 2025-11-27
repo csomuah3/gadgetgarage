@@ -38,15 +38,15 @@ try {
 $computing_categories = ['laptops', 'desktops', 'Laptops', 'Desktops', 'Computer', 'PC', 'MacBook', 'iMac'];
 
 // Filter products for computing devices only
-$computing_products = array_filter($all_products, function($product) use ($computing_categories) {
+$computing_products = array_filter($all_products, function ($product) use ($computing_categories) {
     return in_array($product['cat_name'], $computing_categories) ||
-           stripos($product['product_title'], 'laptop') !== false ||
-           stripos($product['product_title'], 'desktop') !== false ||
-           stripos($product['product_title'], 'computer') !== false ||
-           stripos($product['product_title'], 'macbook') !== false ||
-           stripos($product['product_title'], 'imac') !== false ||
-           stripos($product['cat_name'], 'computing') !== false ||
-           stripos($product['cat_name'], 'computer') !== false;
+        stripos($product['product_title'], 'laptop') !== false ||
+        stripos($product['product_title'], 'desktop') !== false ||
+        stripos($product['product_title'], 'computer') !== false ||
+        stripos($product['product_title'], 'macbook') !== false ||
+        stripos($product['product_title'], 'imac') !== false ||
+        stripos($product['cat_name'], 'computing') !== false ||
+        stripos($product['cat_name'], 'computer') !== false;
 });
 
 // Apply additional filters based on URL parameters
@@ -58,28 +58,28 @@ $search_query = $_GET['search'] ?? '';
 $filtered_products = $computing_products;
 
 if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
         return strcasecmp($product['cat_name'], $category_filter) === 0;
     });
 }
 
 if ($brand_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
         return $product['brand_id'] == $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
-    $filtered_products = array_filter($filtered_products, function($product) use ($search_query) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
         return stripos($product['product_title'], $search_query) !== false ||
-               stripos($product['product_desc'], $search_query) !== false;
+            stripos($product['product_desc'], $search_query) !== false;
     });
 }
 
 // Get unique categories and brands from computing products
 $computing_cats = array_unique(array_column($computing_products, 'cat_name'));
 $computing_brand_ids = array_unique(array_column($computing_products, 'brand_id'));
-$computing_brands = array_filter($brands, function($brand) use ($computing_brand_ids) {
+$computing_brands = array_filter($brands, function ($brand) use ($computing_brand_ids) {
     return in_array($brand['brand_id'], $computing_brand_ids);
 });
 
@@ -107,6 +107,75 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="includes/header-styles.css" rel="stylesheet">
     <link href="includes/chatbot-styles.css" rel="stylesheet">
     <style>
+        /* Promotional Banner Styles - promo-banner2 */
+        .promo-banner2 {
+            background: #001f3f !important;
+            color: white;
+            padding: 6px 15px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 400;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            max-width: 100%;
+        }
+
+        .promo-banner2 .promo-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 0 0 auto;
+        }
+
+        .promo-banner2 .promo-banner-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .promo-banner2 i {
+            font-size: 1rem;
+        }
+
+        .promo-banner2 .promo-text {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
+
+        .promo-banner2 .promo-timer {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 1.3rem;
+            font-weight: 500;
+            margin: 0;
+            border: none;
+        }
+
+        .promo-banner2 .promo-shop-link {
+            color: white;
+            text-decoration: underline;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-size: 1.2rem;
+            flex: 0 0 auto;
+        }
+
+        .promo-banner2 .promo-shop-link:hover {
+            opacity: 0.8;
+        }
+
         /* Floating Bubbles Animation */
         .floating-bubbles {
             position: fixed;
@@ -133,12 +202,15 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 transform: translateY(100vh) rotate(0deg);
                 opacity: 0;
             }
+
             10% {
                 opacity: 0.6;
             }
+
             90% {
                 opacity: 0.6;
             }
+
             100% {
                 transform: translateY(-100px) rotate(360deg);
                 opacity: 0;
@@ -276,44 +348,74 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             padding: 10px 0;
         }
 
-        .price-slider {
-            width: 100%;
+        /* Price Range Slider Styles */
+        .price-slider-container {
+            padding: 10px 0;
+        }
+
+        .price-slider-track {
+            position: relative;
             height: 6px;
+            background: #e2e8f0;
             border-radius: 3px;
-            background: #e5e7eb;
+            margin: 10px 0 20px 0;
+        }
+
+        .price-slider-range {
+            position: absolute;
+            height: 6px;
+            background: #000000;
+            border-radius: 3px;
+            left: 0%;
+            right: 0%;
+        }
+
+        .price-slider {
+            position: absolute;
+            top: -2px;
+            width: 100%;
+            height: 10px;
+            background: transparent;
             outline: none;
+            pointer-events: none;
             -webkit-appearance: none;
-            margin-bottom: 15px;
+            appearance: none;
         }
 
         .price-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
+            background: var(--royal-blue);
             border-radius: 50%;
-            background: #059669;
             cursor: pointer;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            pointer-events: auto;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
+            background: var(--royal-blue);
             border-radius: 50%;
-            background: #059669;
             cursor: pointer;
-            border: none;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            pointer-events: auto;
+            border: 2px solid white;
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-display {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-size: 0.9rem;
-            color: #374151;
-            font-weight: 500;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .price-separator {
+            color: #666;
         }
 
         .tag-filters {
@@ -483,7 +585,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             transition: all 0.3s ease;
         }
 
-        .page-btn:hover, .page-btn.active {
+        .page-btn:hover,
+        .page-btn.active {
             background: #008060;
             color: white;
             border-color: #008060;
@@ -525,118 +628,124 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 <body>
     <!-- Promotional Banner -->
     <div class="promo-banner2">
-        <i class="fas fa-shipping-fast"></i>
-        <span data-translate="free_next_day_delivery">Free Next Day Delivery on Orders Above GH₵2,000!</span>
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
+        </div>
+        <div class="promo-banner-center">
+            <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
     </div>
 
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles" id="floatingBubbles"></div>
 
-	<header class="main-header animate__animated animate__fadeInDown">
-		<div class="container-fluid" style="padding: 0 40px;">
-			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-				<!-- Logo - Far Left -->
-				<a href="../index.php" class="logo">
-					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-					     alt="Gadget Garage"
-					     style="height: 40px; width: auto; object-fit: contain;">
-				</a>
+    <header class="main-header animate__animated animate__fadeInDown">
+        <div class="container-fluid" style="padding: 0 40px;">
+            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+                <!-- Logo - Far Left -->
+                <a href="../index.php" class="logo">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                        alt="Gadget Garage"
+                        style="height: 40px; width: auto; object-fit: contain;">
+                </a>
 
-				<!-- Center Content -->
-				<div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-					<!-- Search Bar -->
-					<form class="search-container" method="GET" action="../product_search_result.php">
-						<i class="fas fa-search search-icon"></i>
-						<input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-						<button type="submit" class="search-btn">
-							<i class="fas fa-search"></i>
-						</button>
-					</form>
+                <!-- Center Content -->
+                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                    <!-- Search Bar -->
+                    <form class="search-container" method="GET" action="../product_search_result.php">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
 
-					<!-- Tech Revival Section -->
-					<div class="tech-revival-section">
-						<i class="fas fa-recycle tech-revival-icon"></i>
-						<div>
-							<p class="tech-revival-text">Bring Retired Devices</p>
-							<p class="contact-number">055-138-7578</p>
-						</div>
-					</div>
-				</div>
+                    <!-- Tech Revival Section -->
+                    <div class="tech-revival-section">
+                        <i class="fas fa-recycle tech-revival-icon"></i>
+                        <div>
+                            <p class="tech-revival-text">Bring Retired Devices</p>
+                            <p class="contact-number">055-138-7578</p>
+                        </div>
+                    </div>
+                </div>
 
-				<!-- User Actions - Far Right -->
-				<div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
-					<span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-					<?php if (isset($_SESSION['user_id'])): ?>
-						<!-- Wishlist Icon -->
-						<div class="header-icon">
-							<a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-								<i class="fas fa-heart"></i>
-								<span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-							</a>
-						</div>
+                <!-- User Actions - Far Right -->
+                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <!-- Wishlist Icon -->
+                        <div class="header-icon">
+                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-heart"></i>
+                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
+                            </a>
+                        </div>
 
-						<!-- Cart Icon -->
-						<div class="header-icon">
-							<a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-								<i class="fas fa-shopping-cart"></i>
-								<?php if ($cart_count > 0): ?>
-									<span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
-								<?php else: ?>
-									<span class="cart-badge" id="cartBadge" style="display: none;">0</span>
-								<?php endif; ?>
-							</a>
-						</div>
+                        <!-- Cart Icon -->
+                        <div class="header-icon">
+                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shopping-cart"></i>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php else: ?>
+                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                                <?php endif; ?>
+                            </a>
+                        </div>
 
-						<!-- User Avatar Dropdown -->
-						<div class="user-dropdown">
-							<div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
-							</div>
-							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<button class="dropdown-item-custom" onclick="goToAccount()">
-									<i class="fas fa-user"></i>
-									<span>Account</span>
-								</button>
-								<div class="dropdown-divider-custom"></div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-globe"></i>
-									<div class="language-selector">
-										<span>Language</span>
-										<select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-											<option value="en">🇬🇧 EN</option>
-											<option value="es">🇪🇸 ES</option>
-											<option value="fr">🇫🇷 FR</option>
-											<option value="de">🇩🇪 DE</option>
-										</select>
-									</div>
-								</div>
-								<div class="dropdown-item-custom">
-									<i class="fas fa-moon"></i>
-									<div class="theme-toggle">
-										<span>Dark Mode</span>
-										<div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-											<div class="toggle-slider"></div>
-										</div>
-									</div>
-								</div>
-								<div class="dropdown-divider-custom"></div>
-								<a href="login/logout.php" class="dropdown-item-custom">
-									<i class="fas fa-sign-out-alt"></i>
-									<span>Logout</span>
-								</a>
-							</div>
-						</div>
-					<?php else: ?>
-						<!-- Login Button -->
-						<a href="login/login.php" class="login-btn">
-							<i class="fas fa-user"></i>
-							Login
-						</a>
-					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-	</header>
+                        <!-- User Avatar Dropdown -->
+                        <div class="user-dropdown">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+                            </div>
+                            <div class="dropdown-menu-custom" id="userDropdownMenu">
+                                <button class="dropdown-item-custom" onclick="goToAccount()">
+                                    <i class="fas fa-user"></i>
+                                    <span>Account</span>
+                                </button>
+                                <div class="dropdown-divider-custom"></div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-globe"></i>
+                                    <div class="language-selector">
+                                        <span>Language</span>
+                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+                                            <option value="en">🇬🇧 EN</option>
+                                            <option value="es">🇪🇸 ES</option>
+                                            <option value="fr">🇫🇷 FR</option>
+                                            <option value="de">🇩🇪 DE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-moon"></i>
+                                    <div class="theme-toggle">
+                                        <span>Dark Mode</span>
+                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+                                            <div class="toggle-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider-custom"></div>
+                                <a href="login/logout.php" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
+                            </div>
+                        </div>
+                    <?php else: ?>
+                        <!-- Login Button -->
+                        <a href="login/login.php" class="login-btn">
+                            <i class="fas fa-user"></i>
+                            Login
+                        </a>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+    </header>
 
     <!-- Main Navigation -->
     <nav class="main-nav">
@@ -831,8 +940,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-slider-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100" oninput="updatePriceDisplay()">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100" oninput="updatePriceDisplay()">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
                             </div>
                             <div class="price-display">
                                 <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
@@ -915,73 +1024,73 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             Clear All Filters
                         </button>
                     </div>
-                            <button class="tag-btn" data-brand="lenovo_desktop">Lenovo Desktop</button>
-                            <button class="tag-btn" data-brand="lenovo_laptop">Lenovo Laptop</button>
-                            <button class="tag-btn" data-brand="microsoft_desktops">Microsoft Desktops</button>
-                            <button class="tag-btn" data-brand="microsoft_laptops">Microsoft Laptops</button>
-                        </div>
-                    </div>
+                    <button class="tag-btn" data-brand="lenovo_desktop">Lenovo Desktop</button>
+                    <button class="tag-btn" data-brand="lenovo_laptop">Lenovo Laptop</button>
+                    <button class="tag-btn" data-brand="microsoft_desktops">Microsoft Desktops</button>
+                    <button class="tag-btn" data-brand="microsoft_laptops">Microsoft Laptops</button>
+                </div>
+            </div>
 
-                    <!-- Filter by Size -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="tag-filters" id="sizeTags">
-                            <button class="tag-btn active" data-size="">All</button>
-                            <button class="tag-btn" data-size="large">Large</button>
-                            <button class="tag-btn" data-size="medium">Medium</button>
-                            <button class="tag-btn" data-size="small">Small</button>
-                        </div>
-                    </div>
+            <!-- Filter by Size -->
+            <div class="filter-group">
+                <h6 class="filter-subtitle">Filter By Size</h6>
+                <div class="tag-filters" id="sizeTags">
+                    <button class="tag-btn active" data-size="">All</button>
+                    <button class="tag-btn" data-size="large">Large</button>
+                    <button class="tag-btn" data-size="medium">Medium</button>
+                    <button class="tag-btn" data-size="small">Small</button>
+                </div>
+            </div>
 
-                    <!-- Filter by Color -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Color</h6>
-                        <div class="color-filters" id="colorTags">
-                            <div class="color-option active" data-color="">
-                                <div class="color-circle" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);"></div>
-                            </div>
-                            <div class="color-option" data-color="blue">
-                                <div class="color-circle" style="background: #3b82f6;"></div>
-                            </div>
-                            <div class="color-option" data-color="gray">
-                                <div class="color-circle" style="background: #6b7280;"></div>
-                            </div>
-                            <div class="color-option" data-color="green">
-                                <div class="color-circle" style="background: #10b981;"></div>
-                            </div>
-                            <div class="color-option" data-color="red">
-                                <div class="color-circle" style="background: #ef4444;"></div>
-                            </div>
-                            <div class="color-option" data-color="yellow">
-                                <div class="color-circle" style="background: #f59e0b;"></div>
-                            </div>
-                        </div>
+            <!-- Filter by Color -->
+            <div class="filter-group">
+                <h6 class="filter-subtitle">Filter By Color</h6>
+                <div class="color-filters" id="colorTags">
+                    <div class="color-option active" data-color="">
+                        <div class="color-circle" style="background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);"></div>
                     </div>
-
-                    <!-- Clear All Filters Button -->
-                    <div class="filter-actions">
-                        <button class="clear-all-filters-btn" id="clearAllFilters">
-                            <i class="fas fa-times"></i>
-                            Clear All Filters
-                        </button>
+                    <div class="color-option" data-color="blue">
+                        <div class="color-circle" style="background: #3b82f6;"></div>
+                    </div>
+                    <div class="color-option" data-color="gray">
+                        <div class="color-circle" style="background: #6b7280;"></div>
+                    </div>
+                    <div class="color-option" data-color="green">
+                        <div class="color-circle" style="background: #10b981;"></div>
+                    </div>
+                    <div class="color-option" data-color="red">
+                        <div class="color-circle" style="background: #ef4444;"></div>
+                    </div>
+                    <div class="color-option" data-color="yellow">
+                        <div class="color-circle" style="background: #f59e0b;"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- Right Content - Products -->
-            <div class="col-lg-9 col-md-8" id="productContent">
-                <div class="d-flex justify-content-between align-items-center mb-4">
-                    <h1 class="page-title mb-0" data-translate="computing">Computing</h1>
-                    <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
-                        <i class="fas fa-filter me-2"></i>
-                        Filters
-                    </button>
-                </div>
+            <!-- Clear All Filters Button -->
+            <div class="filter-actions">
+                <button class="clear-all-filters-btn" id="clearAllFilters">
+                    <i class="fas fa-times"></i>
+                    Clear All Filters
+                </button>
+            </div>
+        </div>
+    </div>
 
-                <!-- Results Info -->
-                <div class="results-info" id="resultsInfo" style="display: none;">
-                    <span id="resultsText">Showing all products</span>
-                </div>
+    <!-- Right Content - Products -->
+    <div class="col-lg-9 col-md-8" id="productContent">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1 class="page-title mb-0" data-translate="computing">Computing</h1>
+            <button class="btn btn-outline-primary d-md-none" id="mobileFilterToggle">
+                <i class="fas fa-filter me-2"></i>
+                Filters
+            </button>
+        </div>
+
+        <!-- Results Info -->
+        <div class="results-info" id="resultsInfo" style="display: none;">
+            <span id="resultsText">Showing all products</span>
+        </div>
 
         <!-- Products Grid -->
         <?php if (empty($products_to_display)): ?>
@@ -1011,21 +1120,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         position: relative;
                         transform-origin: center;
                     " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
-                       onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+                        onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
 
                         <!-- Discount Badge -->
                         <?php if ($discount_percentage > 0): ?>
-                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
-                            -<?php echo $discount_percentage; ?>%
-                        </div>
+                            <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                                -<?php echo $discount_percentage; ?>%
+                            </div>
                         <?php endif; ?>
 
                         <!-- Wishlist Heart -->
                         <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
                             <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
-                                    style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
-                                    onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
-                                    onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
                                 <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
                             </button>
                         </div>
@@ -1056,14 +1165,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     $full_stars = floor($rating);
                                     $half_star = $rating - $full_stars >= 0.5;
 
-                                    for($i = 0; $i < $full_stars; $i++) {
+                                    for ($i = 0; $i < $full_stars; $i++) {
                                         echo '<i class="fas fa-star"></i>';
                                     }
-                                    if($half_star) {
+                                    if ($half_star) {
                                         echo '<i class="fas fa-star-half-alt"></i>';
                                         $full_stars++;
                                     }
-                                    for($i = $full_stars; $i < 5; $i++) {
+                                    for ($i = $full_stars; $i < 5; $i++) {
                                         echo '<i class="far fa-star"></i>';
                                     }
                                     ?>
@@ -1072,7 +1181,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             </div>
 
                             <!-- Optional Status Text -->
-                            <?php if (rand(1, 3) === 1): // Only show for some products ?>
+                            <?php if (rand(1, 3) === 1): // Only show for some products 
+                            ?>
                                 <div style="margin-bottom: 12px;">
                                     <span style="background: #16a34a; color: white; padding: 4px 8px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">In Stock</span>
                                 </div>
@@ -1095,7 +1205,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                             <!-- View Details Button -->
                             <button onclick="viewProductDetails(<?php echo $product['product_id']; ?>)"
-                                    style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
                                 <i class="fas fa-eye"></i>
                                 View Details
                             </button>
@@ -1125,7 +1235,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     <?php for ($i = 1; $i <= $total_pages; $i++): ?>
                         <a href="?category=<?php echo urlencode($category_filter); ?>&brand=<?php echo $brand_filter; ?>&search=<?php echo urlencode($search_query); ?>&page=<?php echo $i; ?>"
-                           class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>">
+                            class="page-btn <?php echo $i == $current_page ? 'active' : ''; ?>">
                             <?php echo $i; ?>
                         </a>
                     <?php endfor; ?>
@@ -1146,10 +1256,72 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Filter System JavaScript
         let filtersChanged = false;
 
+        function initPriceSlider() {
+            const minSlider = document.getElementById('minPriceSlider');
+            const maxSlider = document.getElementById('maxPriceSlider');
+            const minDisplay = document.getElementById('priceMinDisplay');
+            const maxDisplay = document.getElementById('priceMaxDisplay');
+            const rangeDisplay = document.getElementById('priceRange');
+
+            if (!minSlider || !maxSlider || !minDisplay || !maxDisplay || !rangeDisplay) {
+                return;
+            }
+
+            function updatePriceDisplay() {
+                const minVal = parseInt(minSlider.value);
+                const maxVal = parseInt(maxSlider.value);
+
+                // Ensure min is not greater than max
+                if (minVal > maxVal - 100) {
+                    minSlider.value = maxVal - 100;
+                }
+
+                if (maxVal < minVal + 100) {
+                    maxSlider.value = minVal + 100;
+                }
+
+                const finalMin = parseInt(minSlider.value);
+                const finalMax = parseInt(maxSlider.value);
+
+                // Always update the display in real-time
+                minDisplay.textContent = `GH₵ ${finalMin.toLocaleString()}`;
+                maxDisplay.textContent = `GH₵ ${finalMax.toLocaleString()}`;
+
+                // Update range display
+                const minPercent = (finalMin / parseInt(minSlider.max)) * 100;
+                const maxPercent = (finalMax / parseInt(maxSlider.max)) * 100;
+
+                rangeDisplay.style.left = `${minPercent}%`;
+                rangeDisplay.style.right = `${100 - maxPercent}%`;
+            }
+
+            function checkForChanges() {
+                const finalMin = parseInt(minSlider.value);
+                const finalMax = parseInt(maxSlider.value);
+
+                // Show apply button if values changed from initial (only if initialState exists)
+                if (initialState && (finalMin !== initialState.minPrice || finalMax !== initialState.maxPrice)) {
+                    showApplyButton();
+                }
+            }
+
+            // Real-time display updates
+            minSlider.addEventListener('input', updatePriceDisplay);
+            maxSlider.addEventListener('input', updatePriceDisplay);
+
+            // Check for changes on mouse up or touch end
+            minSlider.addEventListener('change', checkForChanges);
+            maxSlider.addEventListener('change', checkForChanges);
+
+            // Initialize
+            updatePriceDisplay();
+        }
+
         function initComputingFilters() {
             initCategoryFilter();
             initBrandFilter();
             initMobileFilterToggle();
+            initPriceSlider();
         }
 
         function initCategoryFilter() {
@@ -1196,7 +1368,19 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (!filtersChanged) {
                 filtersChanged = true;
                 const applyBtn = document.getElementById('applyFilters');
-                if (applyBtn) applyBtn.style.display = 'flex';
+                if (applyBtn) {
+                    applyBtn.classList.add('has-changes');
+                    applyBtn.innerHTML = '<i class="fas fa-sync-alt"></i> Apply Changes';
+                }
+            }
+        }
+
+        function hideApplyButton() {
+            filtersChanged = false;
+            const applyBtn = document.getElementById('applyFilters');
+            if (applyBtn) {
+                applyBtn.classList.remove('has-changes');
+                applyBtn.innerHTML = '<i class="fas fa-filter"></i> Apply Filters';
             }
         }
 
@@ -1234,7 +1418,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Wishlist functionality coming soon!', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Wishlist functionality coming soon!',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -1252,28 +1442,40 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             formData.append('final_price', 0);
 
             fetch('../actions/add_to_cart_action.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    btn.innerHTML = '<i class="fas fa-check"></i> Added!';
-                    btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        btn.innerHTML = '<i class="fas fa-check"></i> Added!';
+                        btn.style.background = 'linear-gradient(135deg, #10b981, #059669)';
 
-                    setTimeout(() => {
-                        btn.innerHTML = originalText;
-                        btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
-                        btn.disabled = false;
-                    }, 1500);
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
+                            btn.disabled = false;
+                        }, 1500);
 
-                    // Update cart count
-                    const cartBadge = document.getElementById('cartBadge');
-                    if (cartBadge && data.cart_count) {
-                        cartBadge.textContent = data.cart_count;
-                        cartBadge.style.display = 'inline';
+                        // Update cart count
+                        const cartBadge = document.getElementById('cartBadge');
+                        if (cartBadge && data.cart_count) {
+                            cartBadge.textContent = data.cart_count;
+                            cartBadge.style.display = 'inline';
+                        }
+                    } else {
+                        btn.innerHTML = 'Error!';
+                        btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
+
+                        setTimeout(() => {
+                            btn.innerHTML = originalText;
+                            btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
+                            btn.disabled = false;
+                        }, 2000);
                     }
-                } else {
+                })
+                .catch(error => {
+                    console.error('Error:', error);
                     btn.innerHTML = 'Error!';
                     btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
 
@@ -1282,19 +1484,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
                         btn.disabled = false;
                     }, 2000);
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                btn.innerHTML = 'Error!';
-                btn.style.background = 'linear-gradient(135deg, #ef4444, #dc2626)';
-
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = 'linear-gradient(135deg, #008060, #006b4e)';
-                    btn.disabled = false;
-                }, 2000);
-            });
+                });
         }
 
         // Advanced Filtering System
@@ -1335,25 +1525,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
 
             fetch('../actions/product_actions.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    updateProductGrid(data.products);
-                    updateResultsInfo(data.total_count);
-                } else {
-                    console.error('Filter error:', data.message);
-                }
-            })
-            .catch(error => {
-                console.error('Network error:', error);
-                const productGrid = document.getElementById('productGrid');
-                if (productGrid) {
-                    productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>Error loading products. Please try again.</div>';
-                }
-            });
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        updateProductGrid(data.products);
+                        updateResultsInfo(data.total_count);
+                    } else {
+                        console.error('Filter error:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Network error:', error);
+                    const productGrid = document.getElementById('productGrid');
+                    if (productGrid) {
+                        productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>Error loading products. Please try again.</div>';
+                    }
+                });
         }
 
         function updateProductGrid(products) {
@@ -1487,43 +1677,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 });
             });
 
-            // Price sliders
-            const priceMin = document.getElementById('priceMin');
-            const priceMax = document.getElementById('priceMax');
-            const minDisplay = document.getElementById('minPriceDisplay');
-            const maxDisplay = document.getElementById('maxPriceDisplay');
-
-            if (priceMin && priceMax) {
-                function updatePriceDisplay() {
-                    const min = parseInt(priceMin.value);
-                    const max = parseInt(priceMax.value);
-
-                    if (min > max) {
-                        priceMin.value = max;
-                    }
-                    if (max < min) {
-                        priceMax.value = min;
-                    }
-
-                    currentFilters.priceMin = parseInt(priceMin.value);
-                    currentFilters.priceMax = parseInt(priceMax.value);
-
-                    if (minDisplay) minDisplay.textContent = `GH₵${currentFilters.priceMin}`;
-                    if (maxDisplay) maxDisplay.textContent = `GH₵${currentFilters.priceMax}`;
-                }
-
-                priceMin.addEventListener('input', debounce(function() {
-                    updatePriceDisplay();
-                    executeFilters();
-                }, 300));
-
-                priceMax.addEventListener('input', debounce(function() {
-                    updatePriceDisplay();
-                    executeFilters();
-                }, 300));
-
-                updatePriceDisplay();
-            }
+            // Price sliders - use initPriceSlider from all_product.php
+            initPriceSlider();
 
             // Category tags
             document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
@@ -1764,8 +1919,39 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         // Header dropdown functions
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
-            dropdown.classList.toggle('show');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
         }
+
+        // Enhanced dropdown behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Shop by Brands dropdown
+            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+            const brandsDropdown = document.getElementById('shopDropdown');
+
+            if (shopCategoriesBtn && brandsDropdown) {
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(dropdownTimeout);
+                });
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+            }
+
+            // User dropdown hover functionality
+            const userAvatar = document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+
+            if (userAvatar && userDropdown) {
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            }
+        });
 
         function openProfilePictureModal() {
             if (typeof Swal !== 'undefined') {
@@ -1777,7 +1963,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture modal not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Profile picture modal not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -1791,7 +1983,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Language change to ' + lang + ' not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Language change to ' + lang + ' not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
@@ -1805,38 +2003,92 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     confirmButtonText: 'OK'
                 });
             } else {
-                Swal.fire({title: 'Feature Coming Soon', text: 'Theme toggle not implemented yet', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+                Swal.fire({
+                    title: 'Feature Coming Soon',
+                    text: 'Theme toggle not implemented yet',
+                    icon: 'info',
+                    confirmButtonColor: '#007bff',
+                    confirmButtonText: 'OK'
+                });
             }
         }
 
+        // Dropdown navigation functions with timeout delays
+        let dropdownTimeout;
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
+        let userDropdownTimeout;
+
         function showDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         // Timer functionality
@@ -1856,9 +2108,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 timerElement.innerHTML = days + "d:" +
-                                         (hours < 10 ? "0" : "") + hours + "h:" +
-                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
-                                         (seconds < 10 ? "0" : "") + seconds + "s";
+                    (hours < 10 ? "0" : "") + hours + "h:" +
+                    (minutes < 10 ? "0" : "") + minutes + "m:" +
+                    (seconds < 10 ? "0" : "") + seconds + "s";
             }
         }
 
@@ -2045,4 +2297,5 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         });
     </script>
 </body>
+
 </html>

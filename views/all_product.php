@@ -4,6 +4,7 @@ require_once(__DIR__ . '/../controllers/cart_controller.php');
 require_once(__DIR__ . '/../controllers/product_controller.php');
 require_once(__DIR__ . '/../controllers/category_controller.php');
 require_once(__DIR__ . '/../controllers/brand_controller.php');
+require_once(__DIR__ . '/../controllers/wishlist_controller.php');
 require_once(__DIR__ . '/../helpers/image_helper.php');
 
 $is_logged_in = check_login();
@@ -2802,12 +2803,20 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                                     <!-- Wishlist Heart -->
                                     <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                                        <?php
+                                        $is_in_wishlist = false;
+                                        if ($is_logged_in) {
+                                            $is_in_wishlist = check_wishlist_item_ctr($product['product_id'], $customer_id);
+                                        }
+                                        $heart_class = $is_in_wishlist ? 'fas fa-heart' : 'far fa-heart';
+                                        $btn_class = $is_in_wishlist ? 'wishlist-btn active' : 'wishlist-btn';
+                                        ?>
                                         <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>, this)"
-                                                class="wishlist-btn"
+                                                class="<?php echo $btn_class; ?>"
                                                 style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
                                                 onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
                                                 onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
-                                            <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
+                                            <i class="<?php echo $heart_class; ?>" style="color: <?php echo $is_in_wishlist ? '#ef4444' : '#6b7280'; ?>; font-size: 16px;"></i>
                                         </button>
                                     </div>
 
@@ -4153,35 +4162,112 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         });
 
         // Add functions for hover-based dropdowns (matching index.php)
+        // Dropdown navigation functions with timeout delays
+        let dropdownTimeout;
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
+        let userDropdownTimeout;
+
         function showDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideDropdown() {
             const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
 
         function showMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.add('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
         function hideMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
         }
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Enhanced dropdown behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            // Shop by Brands dropdown
+            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+            const brandsDropdown = document.getElementById('shopDropdown');
+            
+            if (shopCategoriesBtn && brandsDropdown) {
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(dropdownTimeout);
+                });
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+            }
+
+            // User dropdown hover functionality
+            const userAvatar = document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+            
+            if (userAvatar && userDropdown) {
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            }
+        });
 
         // Timer functionality
         function updateTimer() {

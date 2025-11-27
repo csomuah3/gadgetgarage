@@ -16,6 +16,11 @@ define('SMS_RETRY_DELAY', 300); // 5 minutes in seconds
 define('SMS_RATE_LIMIT', 100); // Max SMS per hour
 define('SMS_QUEUE_ENABLED', true);
 
+// Admin Settings
+define('ADMIN_SMS_ENABLED', true);
+define('ADMIN_PHONE_NUMBER', '+233551387578');
+define('ADMIN_NEW_ORDER_SMS_ENABLED', true);
+
 // Cart Abandonment Settings
 define('CART_ABANDONMENT_ENABLED', true);
 define('CART_ABANDONMENT_DELAY', 1800); // 30 minutes in seconds
@@ -65,6 +70,12 @@ $sms_templates = [
         'es' => "¡Bienvenido a Gadget Garage, {name}! 🎉 Tu cuenta se ha creado exitosamente. ¡Empieza a comprar las mejores ofertas tecnológicas hoy! Visita: {website_url}",
         'fr' => "Bienvenue chez Gadget Garage, {name}! 🎉 Votre compte a été créé avec succès. Commencez à acheter les meilleures offres technologiques aujourd'hui! Visitez: {website_url}",
         'de' => "Willkommen bei Gadget Garage, {name}! 🎉 Ihr Konto wurde erfolgreich erstellt. Beginnen Sie heute mit dem Einkauf der besten Tech-Angebote! Besuchen Sie: {website_url}"
+    ],
+    'admin_new_order' => [
+        'en' => "🛒 NEW ORDER ALERT! Order #{order_id} from {customer_name} ({customer_phone}). Amount: GH¢{amount}. Items: {items_count}. Payment: {payment_method}. View: {admin_url}",
+        'es' => "🛒 ¡ALERTA NUEVO PEDIDO! Orden #{order_id} de {customer_name} ({customer_phone}). Monto: GH¢{amount}. Artículos: {items_count}. Pago: {payment_method}. Ver: {admin_url}",
+        'fr' => "🛒 ALERTE NOUVELLE COMMANDE! Commande #{order_id} de {customer_name} ({customer_phone}). Montant: GH¢{amount}. Articles: {items_count}. Paiement: {payment_method}. Voir: {admin_url}",
+        'de' => "🛒 NEUE BESTELLUNG! Bestellung #{order_id} von {customer_name} ({customer_phone}). Betrag: GH¢{amount}. Artikel: {items_count}. Zahlung: {payment_method}. Ansehen: {admin_url}"
     ]
 ];
 
@@ -81,6 +92,7 @@ define('SMS_TYPE_CART_ABANDONMENT', 'cart_abandonment');
 define('SMS_TYPE_CART_REMINDER', 'cart_reminder');
 define('SMS_TYPE_PAYMENT_RECEIVED', 'payment_received');
 define('SMS_TYPE_WELCOME_REGISTRATION', 'welcome_registration');
+define('SMS_TYPE_ADMIN_NEW_ORDER', 'admin_new_order');
 define('SMS_TYPE_APPOINTMENT_CONFIRMATION', 'appointment_confirmation');
 
 // Phone number validation patterns
@@ -121,5 +133,6 @@ define('SMS_LOG_FILE', __DIR__ . '/../logs/sms.log');
 $sms_urls = [
     'tracking_base' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/track_order.php?order=',
     'checkout_url' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/views/checkout.php',
-    'website_url' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/'
+    'website_url' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/',
+    'admin_orders' => 'http://169.239.251.102:442/~chelsea.somuah/Ecommerce_Final/admin/orders.php?order='
 ];

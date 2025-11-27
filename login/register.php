@@ -1,34 +1,24 @@
 <?php
 session_start();
 
-// Try to load categories and brands for navigation
+// Initialize basic variables to prevent errors
 $categories = [];
 $brands = [];
-
-try {
-    require_once(__DIR__ . '/../controllers/category_controller.php');
-    $categories = get_all_categories_ctr();
-} catch (Exception $e) {
-    error_log("Failed to load categories: " . $e->getMessage());
-}
-
-try {
-    require_once(__DIR__ . '/../controllers/brand_controller.php');
-    $brands = get_all_brands_ctr();
-} catch (Exception $e) {
-    error_log("Failed to load brands: " . $e->getMessage());
-}
-
-// Get cart count - same as index.php
-$is_logged_in = isset($_SESSION['user_id']);
-$customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
-$ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = 0;
+$is_logged_in = false;
+
+// Only include essentials to prevent 500 errors
 try {
-    require_once(__DIR__ . '/../controllers/cart_controller.php');
-    $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+    require_once '../settings/db_class.php';
+    require_once(__DIR__ . '/../settings/core.php');
+
+    // Check if user is logged in
+    $is_logged_in = function_exists('check_login') ? check_login() : isset($_SESSION['user_id']);
+    $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
+
 } catch (Exception $e) {
-    error_log("Failed to load cart count: " . $e->getMessage());
+    error_log("Register page error: " . $e->getMessage());
+    // Continue loading the page even if some features fail
 }
 ?>
 
@@ -1009,7 +999,6 @@ try {
 		.alert-success {
 			background: #d1fae5;
 			color: #059669;
-		}
 			padding: 0 40px 30px;
 			overflow-y: auto !important;
 			overflow-x: hidden;

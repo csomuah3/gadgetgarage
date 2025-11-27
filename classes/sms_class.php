@@ -786,6 +786,46 @@ class SMSService extends db_connection {
         }
     }
 
+    /**
+     * Send admin notification SMS for new orders
+     */
+    public function sendAdminOrderNotificationSMS($order_id, $admin_phone, $template_data) {
+        try {
+            // Check if admin SMS is enabled
+            if (!defined('ADMIN_SMS_ENABLED') || !ADMIN_SMS_ENABLED) {
+                return ['success' => false, 'message' => 'Admin SMS disabled'];
+            }
+
+            // Format the admin phone number
+            $formatted_phone = format_phone_number($admin_phone);
+            if (!$formatted_phone) {
+                error_log("Admin SMS Error: Invalid phone number format: $admin_phone");
+                return ['success' => false, 'message' => 'Invalid admin phone number'];
+            }
+
+            // Get the SMS template
+            $template = get_sms_template('admin_new_order', 'en');
+            if (!$template) {
+                error_log("Admin SMS Error: Template not found for admin_new_order");
+                return ['success' => false, 'message' => 'SMS template not found'];
+            }
+
+            // Process template with data
+            $message = process_sms_template($template, $template_data);
+
+            error_log("Admin SMS: Sending to $formatted_phone - Message: $message");
+
+            // Send SMS using private method
+            $result = $this->sendSMS($formatted_phone, $message, 'admin_new_order', $order_id, null);
+
+            return $result;
+
+        } catch (Exception $e) {
+            $this->logError('Admin Order Notification SMS Error', $e->getMessage(), $order_id);
+            return ['success' => false, 'message' => 'Admin SMS sending failed: ' . $e->getMessage()];
+        }
+    }
+
     private function logError($context, $message, $reference_id = null) {
         error_log("[SMS Service] {$context}: {$message} (Ref: {$reference_id})");
     }

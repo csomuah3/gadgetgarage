@@ -144,6 +144,8 @@ class Product extends db_connection
     public function update_product($product_id, $product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity)
     {
         try {
+            error_log("Product update attempt - ID: $product_id, Title: $product_title, Image: $product_image");
+
             // If image is empty, don't update it
             if (empty($product_image)) {
                 $sql = "UPDATE products SET
@@ -151,7 +153,12 @@ class Product extends db_connection
                         product_color = ?, product_cat = ?, product_brand = ?, stock_quantity = ?
                         WHERE product_id = ?";
 
-                return $this->db_prepare_execute($sql, 'sdsssiiii', [
+                error_log("Executing update without image - Parameters: " . json_encode([
+                    $product_title, $product_price, $product_desc, $product_keywords,
+                    $product_color, $category_id, $brand_id, $stock_quantity, $product_id
+                ]));
+
+                $result = $this->db_prepare_execute($sql, 'sdsssiiii', [
                     $product_title,
                     $product_price,
                     $product_desc,
@@ -162,6 +169,9 @@ class Product extends db_connection
                     $stock_quantity,
                     $product_id
                 ]);
+
+                error_log("Update result (no image): " . ($result ? 'SUCCESS' : 'FAILED'));
+                return $result;
             } else {
                 $sql = "UPDATE products SET
                         product_title = ?, product_price = ?, product_desc = ?, product_image = ?,
@@ -169,7 +179,12 @@ class Product extends db_connection
                         stock_quantity = ?
                         WHERE product_id = ?";
 
-                return $this->db_prepare_execute($sql, 'sdssssiiii', [
+                error_log("Executing update with image - Parameters: " . json_encode([
+                    $product_title, $product_price, $product_desc, $product_image,
+                    $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity, $product_id
+                ]));
+
+                $result = $this->db_prepare_execute($sql, 'sdssssiiii', [
                     $product_title,
                     $product_price,
                     $product_desc,
@@ -181,9 +196,13 @@ class Product extends db_connection
                     $stock_quantity,
                     $product_id
                 ]);
+
+                error_log("Update result (with image): " . ($result ? 'SUCCESS' : 'FAILED'));
+                return $result;
             }
         } catch (Exception $e) {
             error_log("Update product error: " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             return false;
         }
     }

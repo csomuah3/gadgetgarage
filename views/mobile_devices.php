@@ -23,12 +23,12 @@ $all_products = get_all_products_ctr();
 
 // Filter for mobile device categories
 $mobile_categories = ['smartphones', 'ipads', 'tablets', 'Smartphones', 'iPads', 'Tablets', 'Phone', 'iPad', 'Tablet'];
-$mobile_products = array_filter($all_products, function($product) use ($mobile_categories) {
+$mobile_products = array_filter($all_products, function ($product) use ($mobile_categories) {
     return in_array($product['cat_name'], $mobile_categories) ||
-           stripos($product['product_title'], 'phone') !== false ||
-           stripos($product['product_title'], 'ipad') !== false ||
-           stripos($product['product_title'], 'tablet') !== false ||
-           stripos($product['cat_name'], 'mobile') !== false;
+        stripos($product['product_title'], 'phone') !== false ||
+        stripos($product['product_title'], 'ipad') !== false ||
+        stripos($product['product_title'], 'tablet') !== false ||
+        stripos($product['cat_name'], 'mobile') !== false;
 });
 
 // Get real categories and brands from database
@@ -53,21 +53,21 @@ $search_query = $_GET['search'] ?? '';
 $filtered_products = $mobile_products;
 
 if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($category_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
         return $product['cat_name'] === $category_filter;
     });
 }
 
 if ($brand_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function($product) use ($brand_filter) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
         return $product['brand_name'] === $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
-    $filtered_products = array_filter($filtered_products, function($product) use ($search_query) {
+    $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
         return stripos($product['product_title'], $search_query) !== false ||
-               stripos($product['product_desc'], $search_query) !== false;
+            stripos($product['product_desc'], $search_query) !== false;
     });
 }
 
@@ -1037,52 +1037,55 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         .price-slider-track {
             position: relative;
-            height: 4px;
-            background: #e5e7eb;
-            border-radius: 2px;
-            margin: 20px 0;
+            height: 6px;
+            background: #e2e8f0;
+            border-radius: 3px;
+            margin: 10px 0 20px 0;
         }
 
         .price-slider-range {
             position: absolute;
-            height: 4px;
-            background: #008060;
-            border-radius: 2px;
+            height: 6px;
+            background: #000000;
+            border-radius: 3px;
+            left: 0%;
+            right: 0%;
         }
 
         .price-slider {
             position: absolute;
+            top: -2px;
             width: 100%;
-            height: 4px;
+            height: 10px;
             background: transparent;
+            outline: none;
+            pointer-events: none;
             -webkit-appearance: none;
             appearance: none;
-            outline: none;
-            pointer-events: auto;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
         }
 
         .price-slider::-webkit-slider-thumb {
             -webkit-appearance: none;
             appearance: none;
-            width: 20px;
-            height: 20px;
-            background: #008060;
+            width: 18px;
+            height: 18px;
+            background: var(--royal-blue);
             border-radius: 50%;
             cursor: pointer;
+            pointer-events: auto;
             border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-slider::-moz-range-thumb {
-            width: 20px;
-            height: 20px;
-            background: #008060;
+            width: 18px;
+            height: 18px;
+            background: var(--royal-blue);
             border-radius: 50%;
             cursor: pointer;
+            pointer-events: auto;
             border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
         }
 
         .price-display {
@@ -1090,7 +1093,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             justify-content: space-between;
             align-items: center;
             font-weight: 600;
-            color: #000000;
+            color: var(--text-dark);
         }
 
         .price-separator {
@@ -1716,8 +1719,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-slider-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100" oninput="updatePriceDisplay()">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100" oninput="updatePriceDisplay()">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
                             </div>
                             <div class="price-display">
                                 <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
@@ -1843,21 +1846,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     position: relative;
                                     transform-origin: center;
                                 " onmouseover="this.style.transform='rotate(-2deg) scale(1.02)'; this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
-                                   onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+                                    onmouseout="this.style.transform='rotate(0deg) scale(1)'; this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
 
                                     <!-- Discount Badge -->
                                     <?php if ($discount_percentage > 0): ?>
-                                    <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
-                                        -<?php echo $discount_percentage; ?>%
-                                    </div>
+                                        <div style="position: absolute; top: 12px; left: 12px; background: #ef4444; color: white; padding: 6px 12px; border-radius: 20px; font-weight: 600; font-size: 0.8rem; z-index: 10;">
+                                            -<?php echo $discount_percentage; ?>%
+                                        </div>
                                     <?php endif; ?>
 
                                     <!-- Wishlist Heart -->
                                     <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
                                         <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>)"
-                                                style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
-                                                onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
-                                                onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
+                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                            onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
                                             <i class="far fa-heart" style="color: #6b7280; font-size: 16px;"></i>
                                         </button>
                                     </div>
@@ -1865,9 +1868,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <!-- Product Image -->
                                     <div style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb;">
                                         <img src="<?= get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product') ?>"
-                                             alt="<?= htmlspecialchars($product['product_title']) ?>"
-                                             style="max-width: 100%; max-height: 100%; object-fit: contain;"
-                                             onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200';">
+                                            alt="<?= htmlspecialchars($product['product_title']) ?>"
+                                            style="max-width: 100%; max-height: 100%; object-fit: contain;"
+                                            onerror="this.onerror=null; this.src='https://via.placeholder.com/300x200';">
                                     </div>
 
                                     <!-- Product Info -->
@@ -1879,7 +1882,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         <!-- Rating Stars -->
                                         <div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">
                                             <div style="display: flex; color: #fbbf24;">
-                                                <?php for($i = 1; $i <= 5; $i++): ?>
+                                                <?php for ($i = 1; $i <= 5; $i++): ?>
                                                     <i class="<?= $i <= floor($rating) ? 'fas' : 'far' ?> fa-star" style="font-size: 14px;"></i>
                                                 <?php endfor; ?>
                                             </div>
@@ -1892,16 +1895,16 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                                 GH₵<?= number_format($product['product_price'], 2) ?>
                                             </div>
                                             <?php if ($discount_percentage > 0): ?>
-                                            <div style="font-size: 0.9rem; color: #9ca3af; text-decoration: line-through;">
-                                                GH₵<?= number_format($original_price, 2) ?>
-                                            </div>
+                                                <div style="font-size: 0.9rem; color: #9ca3af; text-decoration: line-through;">
+                                                    GH₵<?= number_format($original_price, 2) ?>
+                                                </div>
                                             <?php endif; ?>
                                         </div>
 
                                         <!-- View Details Button -->
                                         <a href="single_product.php?id=<?= $product['product_id'] ?>" style="width: 100%; background: linear-gradient(135deg, #008060, #006b4e); color: white; border: none; padding: 12px 20px; border-radius: 8px; font-weight: 500; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none;"
-                                               onmouseover="this.style.background='linear-gradient(135deg, #006b4e, #008060)'; this.style.transform='translateY(-1px)';"
-                                               onmouseout="this.style.background='linear-gradient(135deg, #008060, #006b4e)'; this.style.transform='translateY(0)';">
+                                            onmouseover="this.style.background='linear-gradient(135deg, #006b4e, #008060)'; this.style.transform='translateY(-1px)';"
+                                            onmouseout="this.style.background='linear-gradient(135deg, #008060, #006b4e)'; this.style.transform='translateY(0)';">
                                             <i class="fas fa-eye"></i> View Details
                                         </a>
 
@@ -1921,235 +1924,308 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <?php endif; ?>
                 </div>
 
-            <!-- Pagination -->
-            <?php if ($total_pages > 1): ?>
-                <div class="pagination-container">
-                    <?php if ($current_page > 1): ?>
-                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $current_page - 1])) ?>" class="pagination-btn">
-                            <i class="fas fa-chevron-left"></i> Previous
-                        </a>
-                    <?php endif; ?>
+                <!-- Pagination -->
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination-container">
+                        <?php if ($current_page > 1): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $current_page - 1])) ?>" class="pagination-btn">
+                                <i class="fas fa-chevron-left"></i> Previous
+                            </a>
+                        <?php endif; ?>
 
-                    <?php
-                    $start_page = max(1, $current_page - 2);
-                    $end_page = min($total_pages, $current_page + 2);
+                        <?php
+                        $start_page = max(1, $current_page - 2);
+                        $end_page = min($total_pages, $current_page + 2);
 
-                    for ($i = $start_page; $i <= $end_page; $i++): ?>
-                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
-                           class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>">
-                            <?= $i ?>
-                        </a>
-                    <?php endfor; ?>
+                        for ($i = $start_page; $i <= $end_page; $i++): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $i])) ?>"
+                                class="pagination-btn <?= $i === $current_page ? 'active' : '' ?>">
+                                <?= $i ?>
+                            </a>
+                        <?php endfor; ?>
 
-                    <?php if ($current_page < $total_pages): ?>
-                        <a href="?<?= http_build_query(array_merge($_GET, ['page' => $current_page + 1])) ?>" class="pagination-btn">
-                            Next <i class="fas fa-chevron-right"></i>
-                        </a>
-                    <?php endif; ?>
-                </div>
-            <?php endif; ?>
+                        <?php if ($current_page < $total_pages): ?>
+                            <a href="?<?= http_build_query(array_merge($_GET, ['page' => $current_page + 1])) ?>" class="pagination-btn">
+                                Next <i class="fas fa-chevron-right"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
         </div>
-    </div>
 
-    <!-- JavaScript -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Dropdown functions
-        let dropdownTimeout;
+        <!-- JavaScript -->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+        <script>
+            // Dropdown functions
+            // Dropdown navigation functions with timeout delays
+            let dropdownTimeout;
+            let shopDropdownTimeout;
+            let moreDropdownTimeout;
+            let userDropdownTimeout;
 
-        function showDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdown.style.opacity = '1';
-                dropdown.style.visibility = 'visible';
-                dropdown.style.transform = 'translateY(0)';
-            }
-        }
-
-        function hideDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdownTimeout = setTimeout(() => {
-                    dropdown.style.opacity = '0';
-                    dropdown.style.visibility = 'hidden';
-                    dropdown.style.transform = 'translateY(-10px)';
-                }, 300);
-            }
-        }
-
-        function showShopDropdown() {
-            document.getElementById('shopCategoryDropdown').classList.add('show');
-        }
-
-        function hideShopDropdown() {
-            document.getElementById('shopCategoryDropdown').classList.remove('show');
-        }
-
-        function showMoreDropdown() {
-            document.getElementById('moreDropdown').classList.add('show');
-        }
-
-        function hideMoreDropdown() {
-            document.getElementById('moreDropdown').classList.remove('show');
-        }
-
-        // User Dropdown Functions
-        function toggleUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            dropdown.classList.toggle('show');
-        }
-
-        // Close dropdowns when clicking outside
-        document.addEventListener('click', function(event) {
-            const userDropdown = document.getElementById('userDropdownMenu');
-            const userAvatar = document.querySelector('.user-avatar');
-
-            if (userDropdown && !userAvatar.contains(event.target) && !userDropdown.contains(event.target)) {
-                userDropdown.classList.remove('show');
-            }
-        });
-
-        // Add to Cart Function
-        function addToCart(productId) {
-            <?php if ($is_logged_in): ?>
-                fetch('../actions/add_to_cart_action.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId + '&qty=1'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update cart badge
-                        const cartBadge = document.getElementById('cartBadge');
-                        if (cartBadge) {
-                            cartBadge.textContent = data.cart_count;
-                            cartBadge.style.display = data.cart_count > 0 ? 'block' : 'none';
-                        }
-
-                        // Show success message
-                        alert('Product added to cart successfully!');
-                    } else {
-                        alert('Error adding product to cart: ' + data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('An error occurred while adding the product to cart.');
-                });
-            <?php else: ?>
-                alert('Please login to add items to cart.');
-                window.location.href = '../login/login.php';
-            <?php endif; ?>
-        }
-
-        // Initialize cart badge
-        document.addEventListener('DOMContentLoaded', function() {
-            const cartBadge = document.getElementById('cartBadge');
-            if (cartBadge) {
-                cartBadge.textContent = <?= $cart_count ?>;
-                cartBadge.style.display = <?= $cart_count ?> > 0 ? 'block' : 'none';
-            }
-        });
-
-        // Promo Timer
-        function updatePromoTimer() {
-            const timer = document.getElementById('promoTimer');
-            if (timer) {
-                const endDate = new Date();
-                endDate.setDate(endDate.getDate() + 12);
-
-                const now = new Date().getTime();
-                const distance = endDate.getTime() - now;
-
-                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                timer.textContent = days + "d:" + hours.toString().padStart(2, '0') + "h:" +
-                                   minutes.toString().padStart(2, '0') + "m:" +
-                                   seconds.toString().padStart(2, '0') + "s";
-
-                if (distance < 0) {
-                    timer.textContent = "EXPIRED";
+            function showDropdown() {
+                const dropdown = document.getElementById('shopDropdown');
+                if (dropdown) {
+                    clearTimeout(dropdownTimeout);
+                    dropdown.classList.add('show');
                 }
             }
-        }
 
-        // Update timer every second
-        setInterval(updatePromoTimer, 1000);
-        updatePromoTimer();
-
-        // Advanced Filtering System
-        let currentFilters = {
-            search: '',
-            rating: '',
-            priceMin: 0,
-            priceMax: 10000,
-            categories: [],
-            brands: [],
-            sizes: [],
-            colors: []
-        };
-
-        function executeFilters() {
-            // Show loading state
-            const productGrid = document.getElementById('productGrid');
-            if (productGrid) {
-                productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Loading products...</div>';
+            function hideDropdown() {
+                const dropdown = document.getElementById('shopDropdown');
+                if (dropdown) {
+                    clearTimeout(dropdownTimeout);
+                    dropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
             }
 
-            // Apply filters via AJAX
-            applyFilters();
-        }
-
-        function applyFilters() {
-            const formData = new FormData();
-            formData.append('action', 'combined_filter');
-            formData.append('category_filter', 'Mobile'); // Fixed category for mobile page
-
-            // Add all filter values
-            if (currentFilters.search) formData.append('search_filter', currentFilters.search);
-            if (currentFilters.rating) formData.append('rating_filter', currentFilters.rating);
-            formData.append('price_min', currentFilters.priceMin);
-            formData.append('price_max', currentFilters.priceMax);
-            if (currentFilters.brands.length) formData.append('brand_filter', currentFilters.brands.join(','));
-            if (currentFilters.sizes.length) formData.append('size_filter', currentFilters.sizes.join(','));
-            if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
-
-            fetch('../actions/product_actions.php', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    updateProductGrid(data.products);
-                    updateResultsInfo(data.total_count);
-                } else {
-                    console.error('Filter error:', data.message);
+            function showShopDropdown() {
+                const dropdown = document.getElementById('shopCategoryDropdown');
+                if (dropdown) {
+                    clearTimeout(shopDropdownTimeout);
+                    dropdown.classList.add('show');
                 }
-            })
-            .catch(error => {
-                console.error('Network error:', error);
-                const productGrid = document.getElementById('productGrid');
-                if (productGrid) {
-                    productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>Error loading products. Please try again.</div>';
+            }
+
+            function hideShopDropdown() {
+                const dropdown = document.getElementById('shopCategoryDropdown');
+                if (dropdown) {
+                    clearTimeout(shopDropdownTimeout);
+                    shopDropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
+            }
+
+            function showMoreDropdown() {
+                const dropdown = document.getElementById('moreDropdown');
+                if (dropdown) {
+                    clearTimeout(moreDropdownTimeout);
+                    dropdown.classList.add('show');
+                }
+            }
+
+            function hideMoreDropdown() {
+                const dropdown = document.getElementById('moreDropdown');
+                if (dropdown) {
+                    clearTimeout(moreDropdownTimeout);
+                    moreDropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
+            }
+
+            function showUserDropdown() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown) {
+                    clearTimeout(userDropdownTimeout);
+                    dropdown.classList.add('show');
+                }
+            }
+
+            function hideUserDropdown() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown) {
+                    clearTimeout(userDropdownTimeout);
+                    userDropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
+            }
+
+            // Enhanced dropdown behavior
+            document.addEventListener('DOMContentLoaded', function() {
+                const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+                const brandsDropdown = document.getElementById('shopDropdown');
+
+                if (shopCategoriesBtn && brandsDropdown) {
+                    shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                    shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                    brandsDropdown.addEventListener('mouseenter', function() {
+                        clearTimeout(dropdownTimeout);
+                    });
+                    brandsDropdown.addEventListener('mouseleave', hideDropdown);
+                }
+
+                const userAvatar = document.querySelector('.user-avatar');
+                const userDropdown = document.getElementById('userDropdownMenu');
+
+                if (userAvatar && userDropdown) {
+                    userAvatar.addEventListener('mouseenter', showUserDropdown);
+                    userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                    userDropdown.addEventListener('mouseenter', function() {
+                        clearTimeout(userDropdownTimeout);
+                    });
+                    userDropdown.addEventListener('mouseleave', hideUserDropdown);
                 }
             });
-        }
 
-        function updateProductGrid(products) {
-            const productGrid = document.getElementById('productGrid');
-            if (!productGrid) return;
+            function showMoreDropdown() {
+                document.getElementById('moreDropdown').classList.add('show');
+            }
 
-            if (!products || products.length === 0) {
-                productGrid.innerHTML = `
+            function hideMoreDropdown() {
+                document.getElementById('moreDropdown').classList.remove('show');
+            }
+
+            // User Dropdown Functions
+            function toggleUserDropdown() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                dropdown.classList.toggle('show');
+            }
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(event) {
+                const userDropdown = document.getElementById('userDropdownMenu');
+                const userAvatar = document.querySelector('.user-avatar');
+
+                if (userDropdown && !userAvatar.contains(event.target) && !userDropdown.contains(event.target)) {
+                    userDropdown.classList.remove('show');
+                }
+            });
+
+            // Add to Cart Function
+            function addToCart(productId) {
+                <?php if ($is_logged_in): ?>
+                    fetch('../actions/add_to_cart_action.php', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'product_id=' + productId + '&qty=1'
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                // Update cart badge
+                                const cartBadge = document.getElementById('cartBadge');
+                                if (cartBadge) {
+                                    cartBadge.textContent = data.cart_count;
+                                    cartBadge.style.display = data.cart_count > 0 ? 'block' : 'none';
+                                }
+
+                                // Show success message
+                                alert('Product added to cart successfully!');
+                            } else {
+                                alert('Error adding product to cart: ' + data.message);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            alert('An error occurred while adding the product to cart.');
+                        });
+                <?php else: ?>
+                    alert('Please login to add items to cart.');
+                    window.location.href = '../login/login.php';
+                <?php endif; ?>
+            }
+
+            // Initialize cart badge
+            document.addEventListener('DOMContentLoaded', function() {
+                const cartBadge = document.getElementById('cartBadge');
+                if (cartBadge) {
+                    cartBadge.textContent = <?= $cart_count ?>;
+                    cartBadge.style.display = <?= $cart_count ?> > 0 ? 'block' : 'none';
+                }
+            });
+
+            // Promo Timer
+            function updatePromoTimer() {
+                const timer = document.getElementById('promoTimer');
+                if (timer) {
+                    const endDate = new Date();
+                    endDate.setDate(endDate.getDate() + 12);
+
+                    const now = new Date().getTime();
+                    const distance = endDate.getTime() - now;
+
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    timer.textContent = days + "d:" + hours.toString().padStart(2, '0') + "h:" +
+                        minutes.toString().padStart(2, '0') + "m:" +
+                        seconds.toString().padStart(2, '0') + "s";
+
+                    if (distance < 0) {
+                        timer.textContent = "EXPIRED";
+                    }
+                }
+            }
+
+            // Update timer every second
+            setInterval(updatePromoTimer, 1000);
+            updatePromoTimer();
+
+            // Advanced Filtering System
+            let currentFilters = {
+                search: '',
+                rating: '',
+                priceMin: 0,
+                priceMax: 10000,
+                categories: [],
+                brands: [],
+                sizes: [],
+                colors: []
+            };
+
+            function executeFilters() {
+                // Show loading state
+                const productGrid = document.getElementById('productGrid');
+                if (productGrid) {
+                    productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #64748b;"><i class="fas fa-spinner fa-spin fa-2x"></i><br><br>Loading products...</div>';
+                }
+
+                // Apply filters via AJAX
+                applyFilters();
+            }
+
+            function applyFilters() {
+                const formData = new FormData();
+                formData.append('action', 'combined_filter');
+                formData.append('category_filter', 'Mobile'); // Fixed category for mobile page
+
+                // Add all filter values
+                if (currentFilters.search) formData.append('search_filter', currentFilters.search);
+                if (currentFilters.rating) formData.append('rating_filter', currentFilters.rating);
+                formData.append('price_min', currentFilters.priceMin);
+                formData.append('price_max', currentFilters.priceMax);
+                if (currentFilters.brands.length) formData.append('brand_filter', currentFilters.brands.join(','));
+                if (currentFilters.sizes.length) formData.append('size_filter', currentFilters.sizes.join(','));
+                if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
+
+                fetch('../actions/product_actions.php', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            updateProductGrid(data.products);
+                            updateResultsInfo(data.total_count);
+                        } else {
+                            console.error('Filter error:', data.message);
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Network error:', error);
+                        const productGrid = document.getElementById('productGrid');
+                        if (productGrid) {
+                            productGrid.innerHTML = '<div style="text-align: center; padding: 40px; color: #ef4444;"><i class="fas fa-exclamation-triangle fa-2x"></i><br><br>Error loading products. Please try again.</div>';
+                        }
+                    });
+            }
+
+            function updateProductGrid(products) {
+                const productGrid = document.getElementById('productGrid');
+                if (!productGrid) return;
+
+                if (!products || products.length === 0) {
+                    productGrid.innerHTML = `
                     <div class="no-results">
                         <i class="fas fa-mobile-alt fa-4x mb-3" style="color: #cbd5e0;"></i>
                         <h3>No Mobile Devices Found</h3>
@@ -2159,16 +2235,16 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </button>
                     </div>
                 `;
-                return;
-            }
+                    return;
+                }
 
-            const productsHtml = products.map(product => {
-                const discount = Math.floor(Math.random() * 16) + 10;
-                const originalPrice = parseFloat(product.product_price) * (1 + discount / 100);
-                const rating = (Math.random() * 1 + 4).toFixed(1);
-                const imageUrl = product.image_url || generatePlaceholderUrl(product.product_title || 'Product', '400x300');
+                const productsHtml = products.map(product => {
+                    const discount = Math.floor(Math.random() * 16) + 10;
+                    const originalPrice = parseFloat(product.product_price) * (1 + discount / 100);
+                    const rating = (Math.random() * 1 + 4).toFixed(1);
+                    const imageUrl = product.image_url || generatePlaceholderUrl(product.product_title || 'Product', '400x300');
 
-                return `
+                    return `
                     <div class="modern-product-card" style="
                         background: white;
                         border-radius: 16px;
@@ -2235,265 +2311,268 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     </div>
                 `;
-            }).join('');
+                }).join('');
 
-            productGrid.innerHTML = productsHtml;
-        }
+                productGrid.innerHTML = productsHtml;
+            }
 
-        function updateResultsInfo(totalCount) {
-            const resultsInfo = document.getElementById('resultsInfo');
-            const resultsText = document.getElementById('resultsText');
+            function updateResultsInfo(totalCount) {
+                const resultsInfo = document.getElementById('resultsInfo');
+                const resultsText = document.getElementById('resultsText');
 
-            if (resultsInfo && resultsText) {
-                if (totalCount > 0) {
-                    resultsText.textContent = `Showing ${totalCount} mobile devices`;
-                    resultsInfo.style.display = 'block';
-                } else {
-                    resultsInfo.style.display = 'none';
+                if (resultsInfo && resultsText) {
+                    if (totalCount > 0) {
+                        resultsText.textContent = `Showing ${totalCount} mobile devices`;
+                        resultsInfo.style.display = 'block';
+                    } else {
+                        resultsInfo.style.display = 'none';
+                    }
                 }
             }
-        }
 
-        // Filter interaction handlers
-        function setupFilterHandlers() {
-            // Search input
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) {
-                searchInput.addEventListener('input', debounce(function() {
-                    currentFilters.search = this.value;
-                    executeFilters();
-                }, 500));
-            }
-
-            // Rating filters
-            document.querySelectorAll('.rating-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
-                    this.classList.add('active');
-                    currentFilters.rating = this.dataset.rating || '';
-                    executeFilters();
-                });
-            });
-
-            // Price sliders
-            const priceMin = document.getElementById('priceMin');
-            const priceMax = document.getElementById('priceMax');
-            const minDisplay = document.getElementById('minPriceDisplay');
-            const maxDisplay = document.getElementById('maxPriceDisplay');
-
-            if (priceMin && priceMax) {
-                function updatePriceDisplay() {
-                    const min = parseInt(priceMin.value);
-                    const max = parseInt(priceMax.value);
-
-                    if (min > max) {
-                        priceMin.value = max;
-                    }
-                    if (max < min) {
-                        priceMax.value = min;
-                    }
-
-                    currentFilters.priceMin = parseInt(priceMin.value);
-                    currentFilters.priceMax = parseInt(priceMax.value);
-
-                    if (minDisplay) minDisplay.textContent = `GH₵${currentFilters.priceMin}`;
-                    if (maxDisplay) maxDisplay.textContent = `GH₵${currentFilters.priceMax}`;
+            // Filter interaction handlers
+            function setupFilterHandlers() {
+                // Search input
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', debounce(function() {
+                        currentFilters.search = this.value;
+                        executeFilters();
+                    }, 500));
                 }
 
-                priceMin.addEventListener('input', debounce(function() {
-                    updatePriceDisplay();
-                    executeFilters();
-                }, 300));
+                // Rating filters
+                document.querySelectorAll('.rating-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+                        this.classList.add('active');
+                        currentFilters.rating = this.dataset.rating || '';
+                        executeFilters();
+                    });
+                });
 
-                priceMax.addEventListener('input', debounce(function() {
-                    updatePriceDisplay();
-                    executeFilters();
-                }, 300));
+                // Price sliders
+                const priceMin = document.getElementById('priceMin');
+                const priceMax = document.getElementById('priceMax');
+                const minDisplay = document.getElementById('minPriceDisplay');
+                const maxDisplay = document.getElementById('maxPriceDisplay');
 
-                updatePriceDisplay();
+                if (priceMin && priceMax) {
+                    function updatePriceDisplay() {
+                        const min = parseInt(priceMin.value);
+                        const max = parseInt(priceMax.value);
+
+                        if (min > max) {
+                            priceMin.value = max;
+                        }
+                        if (max < min) {
+                            priceMax.value = min;
+                        }
+
+                        currentFilters.priceMin = parseInt(priceMin.value);
+                        currentFilters.priceMax = parseInt(priceMax.value);
+
+                        if (minDisplay) minDisplay.textContent = `GH₵${currentFilters.priceMin}`;
+                        if (maxDisplay) maxDisplay.textContent = `GH₵${currentFilters.priceMax}`;
+                    }
+
+                    priceMin.addEventListener('input', debounce(function() {
+                        updatePriceDisplay();
+                        executeFilters();
+                    }, 300));
+
+                    priceMax.addEventListener('input', debounce(function() {
+                        updatePriceDisplay();
+                        executeFilters();
+                    }, 300));
+
+                    updatePriceDisplay();
+                }
+
+                // Category tags
+                document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const category = this.dataset.category;
+                        if (category === '') {
+                            currentFilters.categories = [];
+                            document.querySelectorAll('#categoryTags .tag-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                        } else {
+                            const allBtn = document.querySelector('#categoryTags .tag-btn[data-category=""]');
+                            if (allBtn) allBtn.classList.remove('active');
+
+                            this.classList.toggle('active');
+                            const index = currentFilters.categories.indexOf(category);
+                            if (index > -1) {
+                                currentFilters.categories.splice(index, 1);
+                            } else {
+                                currentFilters.categories.push(category);
+                            }
+
+                            if (currentFilters.categories.length === 0) {
+                                if (allBtn) allBtn.classList.add('active');
+                            }
+                        }
+                        executeFilters();
+                    });
+                });
+
+                // Brand tags
+                document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const brand = this.dataset.brand;
+                        if (brand === '') {
+                            currentFilters.brands = [];
+                            document.querySelectorAll('#brandTags .tag-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                        } else {
+                            const allBtn = document.querySelector('#brandTags .tag-btn[data-brand=""]');
+                            if (allBtn) allBtn.classList.remove('active');
+
+                            this.classList.toggle('active');
+                            const index = currentFilters.brands.indexOf(brand);
+                            if (index > -1) {
+                                currentFilters.brands.splice(index, 1);
+                            } else {
+                                currentFilters.brands.push(brand);
+                            }
+
+                            if (currentFilters.brands.length === 0) {
+                                if (allBtn) allBtn.classList.add('active');
+                            }
+                        }
+                        executeFilters();
+                    });
+                });
+
+                // Size tags
+                document.querySelectorAll('#sizeTags .tag-btn').forEach(btn => {
+                    btn.addEventListener('click', function() {
+                        const size = this.dataset.size;
+                        if (size === '') {
+                            currentFilters.sizes = [];
+                            document.querySelectorAll('#sizeTags .tag-btn').forEach(b => b.classList.remove('active'));
+                            this.classList.add('active');
+                        } else {
+                            const allBtn = document.querySelector('#sizeTags .tag-btn[data-size=""]');
+                            if (allBtn) allBtn.classList.remove('active');
+
+                            this.classList.toggle('active');
+                            const index = currentFilters.sizes.indexOf(size);
+                            if (index > -1) {
+                                currentFilters.sizes.splice(index, 1);
+                            } else {
+                                currentFilters.sizes.push(size);
+                            }
+
+                            if (currentFilters.sizes.length === 0) {
+                                if (allBtn) allBtn.classList.add('active');
+                            }
+                        }
+                        executeFilters();
+                    });
+                });
+
+                // Color filters
+                document.querySelectorAll('#colorTags .color-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const color = this.dataset.color;
+                        if (color === '') {
+                            currentFilters.colors = [];
+                            document.querySelectorAll('#colorTags .color-option').forEach(opt => opt.classList.remove('active'));
+                            this.classList.add('active');
+                        } else {
+                            const allOption = document.querySelector('#colorTags .color-option[data-color=""]');
+                            if (allOption) allOption.classList.remove('active');
+
+                            this.classList.toggle('active');
+                            const index = currentFilters.colors.indexOf(color);
+                            if (index > -1) {
+                                currentFilters.colors.splice(index, 1);
+                            } else {
+                                currentFilters.colors.push(color);
+                            }
+
+                            if (currentFilters.colors.length === 0) {
+                                if (allOption) allOption.classList.add('active');
+                            }
+                        }
+                        executeFilters();
+                    });
+                });
+
+                // Clear all filters
+                const clearAllBtn = document.getElementById('clearAllFilters');
+                if (clearAllBtn) {
+                    clearAllBtn.addEventListener('click', clearAllFilters);
+                }
             }
 
-            // Category tags
-            document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    if (category === '') {
-                        currentFilters.categories = [];
-                        document.querySelectorAll('#categoryTags .tag-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        const allBtn = document.querySelector('#categoryTags .tag-btn[data-category=""]');
-                        if (allBtn) allBtn.classList.remove('active');
-
-                        this.classList.toggle('active');
-                        const index = currentFilters.categories.indexOf(category);
-                        if (index > -1) {
-                            currentFilters.categories.splice(index, 1);
-                        } else {
-                            currentFilters.categories.push(category);
-                        }
-
-                        if (currentFilters.categories.length === 0) {
-                            if (allBtn) allBtn.classList.add('active');
-                        }
-                    }
-                    executeFilters();
-                });
-            });
-
-            // Brand tags
-            document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const brand = this.dataset.brand;
-                    if (brand === '') {
-                        currentFilters.brands = [];
-                        document.querySelectorAll('#brandTags .tag-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        const allBtn = document.querySelector('#brandTags .tag-btn[data-brand=""]');
-                        if (allBtn) allBtn.classList.remove('active');
-
-                        this.classList.toggle('active');
-                        const index = currentFilters.brands.indexOf(brand);
-                        if (index > -1) {
-                            currentFilters.brands.splice(index, 1);
-                        } else {
-                            currentFilters.brands.push(brand);
-                        }
-
-                        if (currentFilters.brands.length === 0) {
-                            if (allBtn) allBtn.classList.add('active');
-                        }
-                    }
-                    executeFilters();
-                });
-            });
-
-            // Size tags
-            document.querySelectorAll('#sizeTags .tag-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const size = this.dataset.size;
-                    if (size === '') {
-                        currentFilters.sizes = [];
-                        document.querySelectorAll('#sizeTags .tag-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        const allBtn = document.querySelector('#sizeTags .tag-btn[data-size=""]');
-                        if (allBtn) allBtn.classList.remove('active');
-
-                        this.classList.toggle('active');
-                        const index = currentFilters.sizes.indexOf(size);
-                        if (index > -1) {
-                            currentFilters.sizes.splice(index, 1);
-                        } else {
-                            currentFilters.sizes.push(size);
-                        }
-
-                        if (currentFilters.sizes.length === 0) {
-                            if (allBtn) allBtn.classList.add('active');
-                        }
-                    }
-                    executeFilters();
-                });
-            });
-
-            // Color filters
-            document.querySelectorAll('#colorTags .color-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    const color = this.dataset.color;
-                    if (color === '') {
-                        currentFilters.colors = [];
-                        document.querySelectorAll('#colorTags .color-option').forEach(opt => opt.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        const allOption = document.querySelector('#colorTags .color-option[data-color=""]');
-                        if (allOption) allOption.classList.remove('active');
-
-                        this.classList.toggle('active');
-                        const index = currentFilters.colors.indexOf(color);
-                        if (index > -1) {
-                            currentFilters.colors.splice(index, 1);
-                        } else {
-                            currentFilters.colors.push(color);
-                        }
-
-                        if (currentFilters.colors.length === 0) {
-                            if (allOption) allOption.classList.add('active');
-                        }
-                    }
-                    executeFilters();
-                });
-            });
-
-            // Clear all filters
-            const clearAllBtn = document.getElementById('clearAllFilters');
-            if (clearAllBtn) {
-                clearAllBtn.addEventListener('click', clearAllFilters);
-            }
-        }
-
-        function clearAllFilters() {
-            // Reset filter state
-            currentFilters = {
-                search: '',
-                rating: '',
-                priceMin: 0,
-                priceMax: 10000,
-                categories: [],
-                brands: [],
-                sizes: [],
-                colors: []
-            };
-
-            // Reset UI elements
-            const searchInput = document.getElementById('searchInput');
-            if (searchInput) searchInput.value = '';
-
-            document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
-            document.querySelector('.rating-option[data-rating=""]')?.classList.add('active');
-
-            const priceMin = document.getElementById('priceMin');
-            const priceMax = document.getElementById('priceMax');
-            if (priceMin) priceMin.value = 0;
-            if (priceMax) priceMax.value = 10000;
-
-            document.getElementById('minPriceDisplay').textContent = 'GH₵0';
-            document.getElementById('maxPriceDisplay').textContent = 'GH₵10,000';
-
-            // Reset all tag filters
-            document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
-            document.querySelectorAll('.tag-btn[data-category=""], .tag-btn[data-brand=""], .tag-btn[data-size=""]').forEach(btn => btn.classList.add('active'));
-
-            // Reset color filters
-            document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
-            document.querySelector('.color-option[data-color=""]')?.classList.add('active');
-
-            // Apply cleared filters
-            executeFilters();
-        }
-
-        function debounce(func, wait) {
-            let timeout;
-            return function executedFunction(...args) {
-                const later = () => {
-                    clearTimeout(timeout);
-                    func(...args);
+            function clearAllFilters() {
+                // Reset filter state
+                currentFilters = {
+                    search: '',
+                    rating: '',
+                    priceMin: 0,
+                    priceMax: 10000,
+                    categories: [],
+                    brands: [],
+                    sizes: [],
+                    colors: []
                 };
-                clearTimeout(timeout);
-                timeout = setTimeout(later, wait);
-            };
-        }
 
-        function generatePlaceholderUrl(text, size = '320x240') {
-            const [width, height] = size.split('x').map(Number);
-            const safeText = (text || 'Mobile Device').substring(0, 32).replace(/</g, '&lt;').replace(/>/g, '&gt;');
-            const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
+                // Reset UI elements
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) searchInput.value = '';
+
+                document.querySelectorAll('.rating-option').forEach(opt => opt.classList.remove('active'));
+                document.querySelector('.rating-option[data-rating=""]')?.classList.add('active');
+
+                const priceMin = document.getElementById('priceMin');
+                const priceMax = document.getElementById('priceMax');
+                if (priceMin) priceMin.value = 0;
+                if (priceMax) priceMax.value = 10000;
+
+                document.getElementById('minPriceDisplay').textContent = 'GH₵0';
+                document.getElementById('maxPriceDisplay').textContent = 'GH₵10,000';
+
+                // Reset all tag filters
+                document.querySelectorAll('.tag-btn').forEach(btn => btn.classList.remove('active'));
+                document.querySelectorAll('.tag-btn[data-category=""], .tag-btn[data-brand=""], .tag-btn[data-size=""]').forEach(btn => btn.classList.add('active'));
+
+                // Reset color filters
+                document.querySelectorAll('.color-option').forEach(opt => opt.classList.remove('active'));
+                document.querySelector('.color-option[data-color=""]')?.classList.add('active');
+
+                // Apply cleared filters
+                executeFilters();
+            }
+
+            function debounce(func, wait) {
+                let timeout;
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(timeout);
+                        func(...args);
+                    };
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                };
+            }
+
+            function generatePlaceholderUrl(text, size = '320x240') {
+                const [width, height] = size.split('x').map(Number);
+                const safeText = (text || 'Mobile Device').substring(0, 32).replace(/</g, '&lt;').replace(/>/g, '&gt;');
+                const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}">
                 <rect width="100%" height="100%" fill="#eef2ff"/>
                 <rect x="1" y="1" width="${width - 2}" height="${height - 2}" fill="none" stroke="#cbd5f5" stroke-width="2"/>
                 <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="${Math.max(Math.floor(height * 0.12), 14)}" fill="#1f2937" text-anchor="middle" dominant-baseline="middle">${safeText}</text>
             </svg>`;
-            return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
-        }\n\n        // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initializePriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
-        // Additional functions from login.php\n        // Account page navigation\n        function goToAccount() {\n            window.location.href = 'my_orders.php';\n        }\n\n        // Language change functionality\n        function changeLanguage(lang) {\n            // Language change functionality can be implemented here\n            console.log('Language changed to:', lang);\n        }\n\n        // Theme toggle functionality\n        function toggleTheme() {\n            const toggleSwitch = document.getElementById('themeToggle');\n            const body = document.body;\n\n            body.classList.toggle('dark-mode');\n            toggleSwitch.classList.toggle('active');\n\n            // Save theme preference to localStorage\n            const isDarkMode = body.classList.contains('dark-mode');\n            localStorage.setItem('darkMode', isDarkMode);\n        }\n\n        // Load theme preference on page load\n        document.addEventListener('DOMContentLoaded', function() {\n            const isDarkMode = localStorage.getItem('darkMode') === 'true';\n            const toggleSwitch = document.getElementById('themeToggle');\n\n            if (isDarkMode) {\n                document.body.classList.add('dark-mode');\n                if (toggleSwitch) {\n                    toggleSwitch.classList.add('active');\n                }\n            }\n        });\n\n        // Timeout variables\n        let shopDropdownTimeout;\n        let moreDropdownTimeout;\n    </script>
+                return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
+            }\
+            n\ n // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initializePriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
+            // Additional functions from login.php\n        // Account page navigation\n        function goToAccount() {\n            window.location.href = 'my_orders.php';\n        }\n\n        // Language change functionality\n        function changeLanguage(lang) {\n            // Language change functionality can be implemented here\n            console.log('Language changed to:', lang);\n        }\n\n        // Theme toggle functionality\n        function toggleTheme() {\n            const toggleSwitch = document.getElementById('themeToggle');\n            const body = document.body;\n\n            body.classList.toggle('dark-mode');\n            toggleSwitch.classList.toggle('active');\n\n            // Save theme preference to localStorage\n            const isDarkMode = body.classList.contains('dark-mode');\n            localStorage.setItem('darkMode', isDarkMode);\n        }\n\n        // Load theme preference on page load\n        document.addEventListener('DOMContentLoaded', function() {\n            const isDarkMode = localStorage.getItem('darkMode') === 'true';\n            const toggleSwitch = document.getElementById('themeToggle');\n\n            if (isDarkMode) {\n                document.body.classList.add('dark-mode');\n                if (toggleSwitch) {\n                    toggleSwitch.classList.add('active');\n                }\n            }\n        });\n\n        // Timeout variables\n        let shopDropdownTimeout;\n        let moreDropdownTimeout;\n    
+        </script>
 </body>
+
 </html>

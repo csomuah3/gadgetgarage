@@ -1452,6 +1452,32 @@ try {
 		// Timeout variables
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
+		let userDropdownTimeout;
+
+		function showUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				clearTimeout(userDropdownTimeout);
+				dropdown.classList.add('show');
+			}
+		}
+
+		function hideUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				clearTimeout(userDropdownTimeout);
+				userDropdownTimeout = setTimeout(() => {
+					dropdown.classList.remove('show');
+				}, 300);
+			}
+		}
+
+		function toggleUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			if (dropdown) {
+				dropdown.classList.toggle('show');
+			}
+		}
 
 		// Enhanced dropdown behavior
 		document.addEventListener('DOMContentLoaded', function() {
@@ -1472,6 +1498,19 @@ try {
 
 				// Hide dropdown when leaving dropdown area
 				dropdown.addEventListener('mouseleave', hideDropdown);
+			}
+
+			// User dropdown hover functionality
+			const userAvatar = document.querySelector('.user-avatar');
+			const userDropdown = document.getElementById('userDropdownMenu');
+			
+			if (userAvatar && userDropdown) {
+				userAvatar.addEventListener('mouseenter', showUserDropdown);
+				userAvatar.addEventListener('mouseleave', hideUserDropdown);
+				userDropdown.addEventListener('mouseenter', function() {
+					clearTimeout(userDropdownTimeout);
+				});
+				userDropdown.addEventListener('mouseleave', hideUserDropdown);
 			}
 		});
 

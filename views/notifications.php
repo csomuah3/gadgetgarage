@@ -1405,15 +1405,17 @@ $page_title = "Notifications - GadgetGarage";
 
     <script>
         // Dropdown functions
+        // Dropdown navigation functions with timeout delays
         let dropdownTimeout;
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
+        let userDropdownTimeout;
 
         function showDropdown() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
-                dropdown.style.opacity = '1';
-                dropdown.style.visibility = 'visible';
-                dropdown.style.transform = 'translateY(0)';
+                dropdown.classList.add('show');
             }
         }
 
@@ -1422,12 +1424,91 @@ $page_title = "Notifications - GadgetGarage";
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
                 dropdownTimeout = setTimeout(() => {
-                    dropdown.style.opacity = '0';
-                    dropdown.style.visibility = 'hidden';
-                    dropdown.style.transform = 'translateY(-10px)';
+                    dropdown.classList.remove('show');
                 }, 300);
             }
         }
+
+        function showShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function showMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Enhanced dropdown behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+            const brandsDropdown = document.getElementById('shopDropdown');
+            
+            if (shopCategoriesBtn && brandsDropdown) {
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(dropdownTimeout);
+                });
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+            }
+
+            const userAvatar = document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+            
+            if (userAvatar && userDropdown) {
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            }
+        });
 
         // Timer functionality
         function updateTimer() {

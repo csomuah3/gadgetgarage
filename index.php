@@ -6052,9 +6052,9 @@ try {
 				const data = await response.json();
 				
 				if (data.success) {
-					showNewsletterMessage(data.message || 'Successfully subscribed! You\'ll receive exclusive deals.', 'success');
+					showNewsletterMessage('Thank you for joining Gadget Garage Premium list!', 'success');
 					emailInput.value = '';
-					
+
 					// Reset button after 2 seconds
 					setTimeout(() => {
 						submitBtn.disabled = false;

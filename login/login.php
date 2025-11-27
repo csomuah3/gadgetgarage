@@ -1083,6 +1083,7 @@ try {
 			text-transform: uppercase;
 			margin-bottom: 20px;
 			pointer-events: auto;
+			text-align: center;
 		}
 
 		.welcome-signup-btn:hover,
@@ -1091,6 +1092,7 @@ try {
 			color: var(--gg-teal);
 			transform: translateY(-2px);
 			box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
+			text-decoration: none;
 		}
 
 		.welcome-button-message {
@@ -1730,7 +1732,7 @@ try {
 						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
 					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
-					<button type="button" class="welcome-signup-btn" id="welcomeSignupBtn" onclick="window.location.href='register.php';">Join GadgetGarage</button>
+					<a href="register.php" class="welcome-signup-btn" id="welcomeSignupBtn">Join Gadget Garage</a>
 					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
 

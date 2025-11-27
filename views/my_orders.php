@@ -3,20 +3,18 @@ try {
     require_once(__DIR__ . '/../settings/core.php');
     require_once(__DIR__ . '/../controllers/order_controller.php');
     require_once(__DIR__ . '/../controllers/cart_controller.php');
-    require_once(__DIR__ . '/../controllers/wishlist_controller.php');
+    require_once(__DIR__ . '/../helpers/image_helper.php');
 
     $is_logged_in = check_login();
-    $is_admin = false;
+    $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
+    $ip_address = $_SERVER['REMOTE_ADDR'];
 
     if (!$is_logged_in) {
         header("Location: ../login/login.php");
         exit;
     }
 
-    $is_admin = check_admin();
-    $customer_id = $_SESSION['user_id'];
-
-    // Get orders with error handling
+    // Get user orders
     $orders = [];
     try {
         $orders = get_user_orders_ctr($customer_id);
@@ -28,59 +26,43 @@ try {
         $orders = [];
     }
 
-    // Get cart count
-    $ip_address = $_SERVER['REMOTE_ADDR'];
-    $cart_count = 0;
+    // Get cart and wishlist counts for header
+    $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
+
+    $categories = [];
+    $brands = [];
+
     try {
-        $cart_count = get_cart_count_ctr($customer_id, $ip_address);
+        require_once(__DIR__ . '/../controllers/category_controller.php');
+        $categories = get_all_categories_ctr();
     } catch (Exception $e) {
-        error_log("Error fetching cart count: " . $e->getMessage());
+        error_log("Failed to load categories: " . $e->getMessage());
     }
 
-    // Get wishlist count
-    $wishlist_count = 0;
     try {
-        $wishlist_count = get_wishlist_count_ctr($customer_id);
+        require_once(__DIR__ . '/../controllers/brand_controller.php');
+        $brands = get_all_brands_ctr();
     } catch (Exception $e) {
-        error_log("Error fetching wishlist count: " . $e->getMessage());
+        error_log("Failed to load brands: " . $e->getMessage());
     }
 
 } catch (Exception $e) {
-    error_log("Critical error in my_orders.php: " . $e->getMessage());
-    error_log("Stack trace: " . $e->getTraceAsString());
+    die("Critical error: " . $e->getMessage());
+}
 
-    // Display user-friendly error message
-    ?>
-    <!DOCTYPE html>
-    <html lang="en">
-    <head>
-        <meta charset="UTF-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Error - Gadget Garage</title>
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-        <style>
-            body { background: #f8f9fa; }
-            .error-container { min-height: 100vh; display: flex; align-items: center; justify-content: center; }
-            .error-card { background: white; padding: 40px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.1); text-align: center; max-width: 500px; }
-        </style>
-    </head>
-    <body>
-        <div class="error-container">
-            <div class="error-card">
-                <i class="fas fa-exclamation-triangle text-warning" style="font-size: 3rem; margin-bottom: 20px;"></i>
-                <h3 class="mb-3">Oops! Something went wrong</h3>
-                <p class="text-muted mb-4">We're experiencing technical difficulties. Please try again later or contact support if the problem persists.</p>
-                <div class="d-grid gap-2">
-                    <a href="../index.php" class="btn btn-primary">Return Home</a>
-                    <a href="../views/cart.php" class="btn btn-outline-secondary">Go to Cart</a>
-                </div>
-            </div>
-        </div>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
-    </body>
-    </html>
-    <?php
-    exit();
+// Function to determine order status based on date
+function getOrderStatus($order_date) {
+    $order_timestamp = strtotime($order_date);
+    $current_timestamp = time();
+    $days_difference = floor(($current_timestamp - $order_timestamp) / (60 * 60 * 24));
+
+    if ($days_difference == 0) {
+        return "PROCESSING";
+    } elseif ($days_difference >= 2) {
+        return "OUT FOR DELIVERY";
+    } else {
+        return "PROCESSING";
+    }
 }
 ?>
 
@@ -88,15 +70,19 @@ try {
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>My Orders - Gadget Garage</title>
-	<link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
-	<link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-	<style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>My Orders - Gadget Garage</title>
+    <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
+    <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+    <link href="../css/dark-mode.css" rel="stylesheet">
+    <link href="../includes/header-styles.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
         * {
             margin: 0;
@@ -105,1296 +91,727 @@ try {
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background-color: #f8f9fa;
+            font-family: "Times New Roman", Times, serif;
+            background-color: #ffffff;
             color: #1a1a1a;
+            overflow-x: hidden;
         }
 
-        /* Promo Banner */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.45;
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Promotional Banner Styles - Same as cart */
         .promo-banner,
         .promo-banner2 {
             background: #001f3f !important;
             color: white;
+            padding: 6px 15px;
             text-align: center;
-            padding: 8px 0;
-            font-size: 14px;
-            font-weight: 500;
-            position: relative;
-            border-bottom: 1px solid #0066cc;
-        }
-
-        .promo-banner .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .promo-text {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .countdown-timer {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-weight: 600;
-        }
-
-        .countdown-timer .time-unit {
-            background: rgba(255, 255, 255, 0.1);
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-size: 12px;
-            min-width: 24px;
-            text-align: center;
-        }
-
-        /* Main Header */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            font-size: 1rem;
+            font-weight: 400;
             position: sticky;
             top: 0;
-            z-index: 1000;
-        }
-
-        .header-container {
-            padding: 12px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .header-top {
+            z-index: 1001;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 20px;
+            gap: 15px;
+            max-width: 100%;
         }
 
-        .logo {
-            text-decoration: none;
-            flex-shrink: 0;
-        }
-
-        .logo img {
-            height: 40px;
-            width: auto;
-            object-fit: contain;
-        }
-
-        .search-container {
-            flex: 1;
-            max-width: 500px;
-            margin: 0 20px;
-        }
-
-        .search-form {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 10px 45px 10px 15px;
-            border: 2px solid #e5e7eb;
-            border-radius: 25px;
-            font-size: 14px;
-            outline: none;
-            transition: all 0.3s ease;
-        }
-
-        .search-input:focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-        }
-
-        .search-btn {
-            position: absolute;
-            right: 5px;
-            background: linear-gradient(135deg, #3b82f6, #2563eb);
-            border: none;
-            color: white;
-            width: 35px;
-            height: 35px;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-        }
-
-        .search-btn:hover {
-            background: linear-gradient(135deg, #2563eb, #1d4ed8);
-            transform: scale(1.05);
-        }
-
-        .tech-revival {
-            background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .tech-revival:hover {
-            background: linear-gradient(135deg, #7c3aed, #6d28d9);
-            color: white;
-            transform: translateY(-1px);
-        }
-
-        .user-actions {
+        .promo-banner-left,
+        .promo-banner2 .promo-banner-left {
             display: flex;
             align-items: center;
             gap: 15px;
+            flex: 0 0 auto;
         }
 
-        .action-item {
-            position: relative;
-            color: #374151;
-            text-decoration: none;
-            padding: 8px;
-            border-radius: 8px;
-            transition: all 0.3s ease;
+        .promo-banner-center,
+        .promo-banner2 .promo-banner-center {
             display: flex;
-            flex-direction: column;
             align-items: center;
-            gap: 2px;
-            min-width: 50px;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
         }
 
-        .action-item:hover {
-            background: #f3f4f6;
-            color: #1f2937;
+        .promo-banner i,
+        .promo-banner2 i {
+            font-size: 1rem;
         }
 
-        .action-item i {
-            font-size: 18px;
-            margin-bottom: 2px;
+        .promo-banner .promo-text,
+        .promo-banner2 .promo-text {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
         }
 
-        .action-item span {
-            font-size: 11px;
+        .promo-timer {
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            font-size: 1.3rem;
             font-weight: 500;
+            margin: 0;
+            border: none;
+        }
+
+        .promo-shop-link {
+            color: white;
+            text-decoration: underline;
+            font-weight: 700;
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            font-size: 1.2rem;
+            flex: 0 0 auto;
+        }
+
+        .promo-shop-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Header Styles - Same as cart */
+        .main-header {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 38px;
+            z-index: 1000;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo img {
+            height: 50px !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .header-icon {
+            font-size: 1.3rem;
+            color: #4a5568;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .header-icon:hover {
+            color: #1a202c;
+            transform: scale(1.1);
         }
 
         .badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #ef4444;
+            top: -8px;
+            right: -8px;
+            background: #dc2626;
             color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
             border-radius: 50%;
             min-width: 18px;
             height: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 10px;
-            font-weight: 600;
         }
 
-        .dropdown {
-            position: relative;
-        }
-
-        .dropdown-menu {
-            position: absolute;
-            top: 100%;
-            right: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            min-width: 200px;
-            padding: 8px;
-            margin-top: 8px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
-            z-index: 1000;
-        }
-
-        .dropdown:hover .dropdown-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .dropdown-item {
-            display: block;
-            padding: 8px 12px;
-            color: #374151;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            font-size: 14px;
-        }
-
-        .dropdown-item:hover {
-            background: #f3f4f6;
-            color: #1f2937;
-        }
-
-        /* Navigation */
-        .main-nav {
-            background: #ffffff;
+        /* Navigation Bar - Same as cart */
+        .navbar {
+            background: #f8f9fa;
+            padding: 8px 0;
             border-bottom: 1px solid #e5e7eb;
-            padding: 0;
+            position: sticky;
+            top: 108px;
+            z-index: 999;
         }
 
-        .nav-container {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0;
-        }
-
-        .nav-links {
-            display: flex;
-            align-items: center;
-            list-style: none;
-            margin: 0;
-            padding: 0;
-            gap: 30px;
-        }
-
-        .nav-item {
-            position: relative;
-        }
-
-        .nav-link {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 15px 0;
-            color: #374151;
-            text-decoration: none;
+        .navbar-nav .nav-link {
+            color: #4a5568 !important;
             font-weight: 500;
-            font-size: 15px;
-            transition: all 0.3s ease;
-            white-space: nowrap;
-        }
-
-        .nav-link:hover {
-            color: #3b82f6;
-        }
-
-        .nav-link.has-dropdown::after {
-            content: '\f107';
-            font-family: 'Font Awesome 6 Free';
-            font-weight: 900;
-            margin-left: 4px;
-            font-size: 12px;
-            transition: transform 0.3s ease;
-        }
-
-        .nav-item:hover .nav-link.has-dropdown::after {
-            transform: rotate(180deg);
-        }
-
-        .mega-menu {
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
-            padding: 30px;
-            min-width: 600px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateX(-50%) translateY(-10px);
-            transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
-            z-index: 1000;
-        }
-
-        .nav-item:hover .mega-menu {
-            opacity: 1;
-            visibility: visible;
-            transform: translateX(-50%) translateY(0);
-        }
-
-        .mega-menu-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 25px;
-        }
-
-        .mega-menu-category h4 {
-            font-size: 16px;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .mega-menu-category h4 i {
-            color: #3b82f6;
-        }
-
-        .mega-menu-category ul {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .mega-menu-category li {
-            margin-bottom: 6px;
-        }
-
-        .mega-menu-category a {
-            color: #6b7280;
-            text-decoration: none;
-            padding: 4px 0;
-            display: block;
-            transition: all 0.2s ease;
-            font-size: 14px;
-        }
-
-        .mega-menu-category a:hover {
-            color: #3b82f6;
-            padding-left: 8px;
-        }
-
-        .brands-dropdown {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            background: white;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-            min-width: 250px;
-            padding: 15px;
-            opacity: 0;
-            visibility: hidden;
-            transform: translateY(-10px);
-            transition: all 0.3s ease;
-            border: 1px solid #e5e7eb;
-            z-index: 1000;
-        }
-
-        .nav-item:hover .brands-dropdown {
-            opacity: 1;
-            visibility: visible;
-            transform: translateY(0);
-        }
-
-        .brands-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 8px;
-        }
-
-        .brand-item {
-            padding: 8px 12px;
-            color: #374151;
-            text-decoration: none;
-            border-radius: 4px;
-            transition: all 0.2s ease;
-            font-size: 14px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .brand-item:hover {
-            background: #f3f4f6;
-            color: #1f2937;
-        }
-
-        .flash-deals {
-            background: linear-gradient(135deg, #f59e0b, #d97706);
-            color: white;
-            padding: 8px 16px;
-            border-radius: 20px;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            transition: all 0.3s ease;
-            margin-left: auto;
+            transition: color 0.3s ease;
             position: relative;
-            overflow: hidden;
         }
 
-        .flash-deals::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: left 0.6s;
+        .navbar-nav .nav-link:hover {
+            color: #000000 !important;
         }
 
-        .flash-deals:hover {
-            background: linear-gradient(135deg, #d97706, #b45309);
-            color: white;
-            transform: translateY(-1px);
+        /* My Orders Content */
+        .orders-content {
+            min-height: 60vh;
+            padding: 60px 0;
+            position: relative;
+            z-index: 1;
         }
 
-        .flash-deals:hover::before {
-            left: 100%;
-        }
-
-        /* Dark Mode Toggle */
-        .dark-mode-toggle {
-            background: #f3f4f6;
-            border: none;
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: #6b7280;
-        }
-
-        .dark-mode-toggle:hover {
-            background: #e5e7eb;
-            color: #374151;
-        }
-
-        /* Orders Content Styles */
-        .orders-container {
-            padding: 40px 0;
-            min-height: 80vh;
+        .orders-header {
+            text-align: center;
+            margin-bottom: 50px;
         }
 
         .orders-title {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 30px;
-            text-align: center;
+            font-size: 3rem;
+            font-weight: 900;
+            color: #000000;
+            margin-bottom: 20px;
+            letter-spacing: -1px;
+        }
+
+        .orders-container {
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         .order-card {
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-            margin-bottom: 20px;
-            overflow: hidden;
+            background: #ffffff;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            border: 1px solid #f1f5f9;
             transition: all 0.3s ease;
         }
 
         .order-card:hover {
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
         }
 
-        .order-header {
-            background: #f8f9ff;
-            padding: 1.5rem;
-            border-bottom: 1px solid #e2e8f0;
+        .order-status {
+            font-size: 1.2rem;
+            font-weight: 900;
+            margin-bottom: 20px;
+            color: #000000;
+            letter-spacing: 0.5px;
         }
 
-        .order-body {
-            padding: 1.5rem;
+        .order-status.processing {
+            color: #f59e0b;
         }
 
-        .order-id {
+        .order-status.out-for-delivery {
+            color: #10b981;
+        }
+
+        .order-images {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .order-image {
+            width: 80px;
+            height: 80px;
+            background: #f8fafc;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        .order-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .order-more {
+            width: 80px;
+            height: 80px;
+            background: #f1f5f9;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #64748b;
             font-weight: 600;
-            color: #1f2937;
-            font-size: 1.1rem;
-        }
-
-        .order-date {
-            color: #6b7280;
             font-size: 0.9rem;
         }
 
-        .order-status {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
+        .order-details {
+            color: #64748b;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            line-height: 1.5;
+        }
+
+        .order-number {
+            color: #1e293b;
             font-weight: 600;
-            text-transform: uppercase;
+            text-decoration: underline;
         }
 
-        .status-pending {
-            background: #fef3c7;
-            color: #92400e;
-        }
-
-        .status-processing {
-            background: #dbeafe;
-            color: #1e40af;
-        }
-
-        .status-shipped {
-            background: #dcfce7;
-            color: #166534;
-        }
-
-        .status-delivered {
-            background: #d1fae5;
-            color: #047857;
-        }
-
-        .order-total {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #008060;
-        }
-
-        .btn-view-details {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
+        .view-details-btn {
+            background: #e2e8f0;
+            color: #475569;
             border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
+            padding: 12px 30px;
+            border-radius: 25px;
             font-weight: 600;
-            cursor: pointer;
             transition: all 0.3s ease;
+            width: 100%;
         }
 
-        .btn-view-details:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
-            color: white;
-            transform: translateY(-1px);
+        .view-details-btn:hover {
+            background: #cbd5e1;
+            color: #334155;
         }
 
-        .empty-orders {
+        .no-orders {
             text-align: center;
             padding: 60px 20px;
+            color: #64748b;
         }
 
-        .empty-orders i {
+        .no-orders i {
             font-size: 4rem;
-            color: #e5e7eb;
+            color: #cbd5e1;
             margin-bottom: 20px;
         }
 
-        .empty-orders h3 {
-            font-size: 1.5rem;
-            color: #6b7280;
+        .no-orders h3 {
+            color: #475569;
             margin-bottom: 15px;
         }
 
-        .empty-orders p {
-            color: #9ca3af;
+        .no-orders p {
             margin-bottom: 30px;
         }
 
-        .shop-btn {
-            background: linear-gradient(135deg, #008060, #006b4e);
+        .start-shopping-btn {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             color: white;
-            padding: 12px 30px;
             border: none;
-            border-radius: 8px;
+            padding: 12px 30px;
+            border-radius: 25px;
             font-weight: 600;
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s ease;
         }
 
-        .shop-btn:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
+        .start-shopping-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
             color: white;
             transform: translateY(-2px);
         }
 
-        /* Mobile Responsive */
+        /* Footer Styles - Same as cart */
+        .main-footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 60px 0 20px;
+            margin-top: 0;
+        }
+
+        .footer-brand {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo img {
+            height: 50px !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+
+        .footer-description {
+            color: #6b7280;
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 48px;
+            height: 48px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: #2563EB;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 14px;
+        }
+
+        .footer-links li a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links li a:hover {
+            color: #2563EB;
+            transform: translateX(4px);
+        }
+
+        .footer-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+            margin: 40px 0 20px;
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Order Details Modal - Same as admin */
+        .order-modal {
+            z-index: 1060;
+        }
+
+        .order-modal .modal-content {
+            border-radius: 15px;
+            border: none;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
+        }
+
+        .order-modal .modal-header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            color: white;
+            border-radius: 15px 15px 0 0;
+            border-bottom: none;
+        }
+
+        .order-modal .modal-body {
+            padding: 30px;
+        }
+
+        .order-info-section {
+            margin-bottom: 25px;
+        }
+
+        .order-info-section h6 {
+            color: #1e293b;
+            font-weight: 700;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+
+        .order-items-table {
+            background: #f8fafc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .order-items-table table {
+            margin: 0;
+        }
+
+        .order-items-table th {
+            background: #e2e8f0;
+            color: #475569;
+            font-weight: 600;
+            border: none;
+            padding: 15px;
+        }
+
+        .order-items-table td {
+            padding: 15px;
+            border: none;
+            color: #64748b;
+        }
+
+        .order-total-section {
+            background: linear-gradient(135deg, #f1f5f9 0%, #e2e8f0 100%);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        .order-total-amount {
+            font-size: 2rem;
+            font-weight: 900;
+            color: #1e293b;
+        }
+
         @media (max-width: 768px) {
-            .header-top {
-                flex-wrap: wrap;
-                gap: 10px;
-            }
-
-            .search-container {
-                order: 3;
-                flex-basis: 100%;
-                margin: 10px 0 0 0;
-                max-width: none;
-            }
-
-            .nav-links {
-                display: none;
-            }
-
-            .mega-menu {
-                min-width: 90vw;
-                left: 5vw;
-                transform: none;
-            }
-
-            .nav-item:hover .mega-menu {
-                transform: none;
-            }
-
-            .mega-menu-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .user-actions {
-                gap: 10px;
-            }
-
-            .action-item span {
-                display: none;
-            }
-
             .orders-title {
                 font-size: 2rem;
             }
+
+            .order-card {
+                padding: 20px;
+            }
+
+            .order-images {
+                gap: 10px;
+            }
+
+            .order-image,
+            .order-more {
+                width: 60px;
+                height: 60px;
+            }
         }
-    }
-
-    /* Footer Styles */
-    .main-footer {
-        background: #ffffff;
-        border-top: 1px solid #e5e7eb;
-        padding: 60px 0 20px;
-        margin-top: 0;
-    }
-
-    .footer-brand {
-        margin-bottom: 30px;
-    }
-
-    .footer-logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 16px;
-    }
-
-    .footer-logo img {
-        height: 50px !important;
-        width: auto !important;
-        object-fit: contain !important;
-    }
-
-    .footer-logo .garage {
-        background: linear-gradient(135deg, #1E3A5F, #2563EB);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-    }
-
-    .footer-description {
-        color: #6b7280;
-        font-size: 1.1rem;
-        margin-bottom: 24px;
-        line-height: 1.7;
-    }
-
-    .social-links {
-        display: flex;
-        gap: 12px;
-    }
-
-    .social-link {
-        width: 48px;
-        height: 48px;
-        background: #f3f4f6;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #6b7280;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        font-size: 1.2rem;
-    }
-
-    .social-link:hover {
-        background: #2563EB;
-        color: white;
-        transform: translateY(-2px);
-    }
-
-    .footer-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 24px;
-    }
-
-    .footer-links {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-
-    .footer-links li {
-        margin-bottom: 14px;
-    }
-
-    .footer-links li a {
-        color: #6b7280;
-        text-decoration: none;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
-
-    .footer-links li a:hover {
-        color: #2563EB;
-        transform: translateX(4px);
-    }
-
-    .footer-divider {
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-        margin: 40px 0 20px;
-    }
-
-    .footer-bottom {
-        padding-top: 20px;
-    }
-
-    .copyright {
-        color: #6b7280;
-        font-size: 1rem;
-        margin: 0;
-    }
-
-    /* Newsletter Signup Section */
-    .newsletter-signup-section {
-        background: transparent;
-        padding: 0;
-        text-align: left;
-        max-width: 100%;
-        height: fit-content;
-    }
-
-    .newsletter-title {
-        color: #1f2937;
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 24px;
-    }
-
-    .newsletter-form {
-        display: flex;
-        width: 100%;
-        margin: 0 0 15px 0;
-        gap: 0;
-        border-radius: 50px;
-        overflow: hidden;
-        background: #e5e7eb;
-    }
-
-    .newsletter-input {
-        flex: 1;
-        padding: 14px 20px;
-        border: none;
-        outline: none;
-        font-size: 1rem;
-        color: #1a1a1a;
-        background: #e5e7eb;
-    }
-
-    .newsletter-input::placeholder {
-        color: #6b7280;
-    }
-
-    .newsletter-submit-btn {
-        width: 45px;
-        height: 45px;
-        min-width: 45px;
-        border: none;
-        background: #9ca3af;
-        color: #ffffff;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        font-size: 1.2rem;
-        padding: 0;
-    }
-
-    .newsletter-submit-btn:hover {
-        background: #6b7280;
-        transform: scale(1.05);
-    }
-
-    .newsletter-disclaimer {
-        color: #6b7280;
-        font-size: 0.85rem;
-        line-height: 1.6;
-        margin: 8px 0 0 0;
-        text-align: left;
-    }
-
-    .newsletter-disclaimer a {
-        color: #2563EB;
-        text-decoration: underline;
-        transition: color 0.3s ease;
-    }
-
-    .newsletter-disclaimer a:hover {
-        color: #1d4ed8;
-    }
-
-    @media (max-width: 991px) {
-        .newsletter-signup-section {
-            margin-top: 20px;
-        }
-    }
     </style>
 </head>
 
 <body>
-    <!-- Promo Banner -->
+    <!-- Promotional Banner -->
     <div class="promo-banner2">
-        <div class="container">
-            <div class="promo-text">
-                <i class="fas fa-bolt"></i>
-                <span>LIMITED TIME OFFER</span>
-            </div>
-            <div class="countdown-timer" id="promoCountdown">
-                <span>Ends in:</span>
-                <div class="time-unit" id="hours">00</div>
-                <span>:</span>
-                <div class="time-unit" id="minutes">00</div>
-                <span>:</span>
-                <div class="time-unit" id="seconds">00</div>
-            </div>
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
         </div>
+        <div class="promo-banner-center">
+            <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
     </div>
 
     <!-- Main Header -->
-    <header class="main-header">
-        <div class="container header-container">
-            <div class="header-top">
-                <!-- Logo -->
+    <header class="main-header animate__animated animate__fadeInDown">
+        <div class="container-fluid" style="padding: 0 120px 0 95px;">
+            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+                <!-- Logo - Far Left -->
                 <a href="../index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                        alt="Gadget Garage">
                 </a>
 
-                <!-- Search Bar -->
-                <div class="search-container">
-                    <form class="search-form" action="../product_search_result.php" method="GET">
-                        <input type="text" name="search" class="search-input" placeholder="Search for gadgets, phones, laptops..." required>
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search"></i>
+                <!-- Center Content -->
+                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                    <!-- Search Bar -->
+                    <div class="search-container" style="position: relative; width: 400px;">
+                        <input type="text" class="form-control search-input" id="headerSearchInput"
+                            placeholder="Search for products..." style="border-radius: 25px; padding: 12px 45px 12px 20px; border: 2px solid #e5e7eb; font-size: 0.95rem;">
+                        <button class="search-btn" type="button" onclick="performHeaderSearch()"
+                            style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #1E3A5F, #2563EB); border: none; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; color: white;">
+                            <i class="fas fa-search" style="font-size: 0.9rem;"></i>
                         </button>
-                    </form>
+                    </div>
+
+                    <!-- Contact Info -->
+                    <div class="tech-revival-text" style="color: #4a5568; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.5px;">
+                        <i class="fas fa-tools" style="margin-right: 8px; color: #059669;"></i>
+                        Tech Revival & Innovation Hub
+                    </div>
+
+                    <div class="contact-number" style="color: #1f2937; font-weight: 600; font-size: 1rem;">
+                        <i class="fas fa-phone" style="margin-right: 8px; color: #059669;"></i>
+                        +233 (0) 123 456 789
+                    </div>
                 </div>
 
-                <!-- Tech Revival -->
-                <a href="../repair_services.php" class="tech-revival">
-                    <i class="fas fa-tools"></i>
-                    Tech Revival
-                </a>
-
-                <!-- User Actions -->
-                <div class="user-actions">
-                    <?php if ($is_logged_in): ?>
-                        <!-- Wishlist -->
-                        <a href="../views/wishlist.php" class="action-item">
-                            <i class="fas fa-heart"></i>
-                            <span>Wishlist</span>
-                            <?php if ($wishlist_count > 0): ?>
-                                <span class="badge"><?php echo $wishlist_count; ?></span>
-                            <?php endif; ?>
+                <!-- Right side actions -->
+                <div class="header-actions">
+                    <a href="wishlist.php" class="header-icon">
+                        <i class="fas fa-heart"></i>
+                        <span class="badge" id="wishlist-count">0</span>
+                    </a>
+                    <a href="cart.php" class="header-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                        <span class="badge" id="cart-count"><?= $cart_count ?></span>
+                    </a>
+                    <div class="dropdown">
+                        <a href="#" class="header-icon dropdown-toggle" data-bs-toggle="dropdown">
+                            <i class="fas fa-user"></i>
                         </a>
-
-                        <!-- Cart -->
-                        <a href="../views/cart.php" class="action-item">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Cart</span>
-                            <?php if ($cart_count > 0): ?>
-                                <span class="badge"><?php echo $cart_count; ?></span>
-                            <?php endif; ?>
-                        </a>
-
-                        <!-- Account Dropdown -->
-                        <div class="dropdown">
-                            <a href="#" class="action-item">
-                                <i class="fas fa-user"></i>
-                                <span>Account</span>
-                            </a>
-                            <div class="dropdown-menu">
-                                <a href="../views/account.php" class="dropdown-item">My Profile</a>
-                                <a href="../views/my_orders.php" class="dropdown-item">My Orders</a>
-                                <a href="../track_order.php" class="dropdown-item">
-                                    <i class="fas fa-truck me-2"></i>Track Orders
-                                </a>
-                                <a href="../views/notifications.php" class="dropdown-item">Notifications</a>
-                                <?php if ($is_admin): ?>
-                                    <a href="../admin/dashboard.php" class="dropdown-item">Admin Panel</a>
-                                <?php endif; ?>
-                                <hr style="margin: 5px 0; border: none; border-top: 1px solid #e5e7eb;">
-                                <a href="../login/logout.php" class="dropdown-item">Logout</a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <!-- Login/Register -->
-                        <a href="../login/login.php" class="action-item">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
-                        </a>
-                        <a href="../views/register.php" class="action-item">
-                            <i class="fas fa-user-plus"></i>
-                            <span>Register</span>
-                        </a>
-                    <?php endif; ?>
-
-                    <!-- Dark Mode Toggle -->
-                    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="my_orders.php">My Orders</a></li>
+                            <li><a class="dropdown-item" href="wishlist.php">My Wishlist</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="../actions/logout.php">Logout</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
         </div>
-
-        <!-- Navigation -->
-        <nav class="main-nav">
-            <div class="container nav-container">
-                <ul class="nav-links">
-                    <!-- Shop Categories -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-th-large"></i>
-                            Shop Categories
-                        </a>
-                        <div class="mega-menu">
-                            <div class="mega-menu-grid">
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-mobile-alt"></i> Mobile Devices</h4>
-                                    <ul>
-                                        <li><a href="../views/mobile_devices.php?category=smartphones">Smartphones</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=tablets">Tablets</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=smartwatches">Smartwatches</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=accessories">Phone Accessories</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-laptop"></i> Computing</h4>
-                                    <ul>
-                                        <li><a href="../views/computing.php?category=laptops">Laptops</a></li>
-                                        <li><a href="../views/computing.php?category=desktops">Desktops</a></li>
-                                        <li><a href="../views/computing.php?category=components">Components</a></li>
-                                        <li><a href="../views/computing.php?category=peripherals">Peripherals</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-camera"></i> Photography</h4>
-                                    <ul>
-                                        <li><a href="../views/photography_video.php?category=cameras">Cameras</a></li>
-                                        <li><a href="../views/photography_video.php?category=lenses">Lenses</a></li>
-                                        <li><a href="../views/photography_video.php?category=tripods">Tripods</a></li>
-                                        <li><a href="../views/photography_video.php?category=accessories">Photo Accessories</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Brands -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-tags"></i>
-                            Brands
-                        </a>
-                        <div class="brands-dropdown">
-                            <div class="brands-grid">
-                                <a href="../views/all_product.php?brand=apple" class="brand-item">
-                                    <i class="fab fa-apple"></i> Apple
-                                </a>
-                                <a href="../views/all_product.php?brand=samsung" class="brand-item">
-                                    <i class="fas fa-mobile"></i> Samsung
-                                </a>
-                                <a href="../views/all_product.php?brand=sony" class="brand-item">
-                                    <i class="fas fa-tv"></i> Sony
-                                </a>
-                                <a href="../views/all_product.php?brand=canon" class="brand-item">
-                                    <i class="fas fa-camera"></i> Canon
-                                </a>
-                                <a href="../views/all_product.php?brand=hp" class="brand-item">
-                                    <i class="fas fa-laptop"></i> HP
-                                </a>
-                                <a href="../views/all_product.php?brand=dell" class="brand-item">
-                                    <i class="fas fa-desktop"></i> Dell
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Regular Navigation Links -->
-                    <li class="nav-item">
-                        <a href="../views/all_product.php" class="nav-link">
-                            <i class="fas fa-shopping-bag"></i>
-                            All Products
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/device_drop.php" class="nav-link">
-                            <i class="fas fa-recycle"></i>
-                            Device Drop
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/contact.php" class="nav-link">
-                            <i class="fas fa-envelope"></i>
-                            Contact
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Flash Deals -->
-                <a href="../views/flash_deals.php" class="flash-deals">
-                    <i class="fas fa-bolt"></i>
-                    Flash Deals
-                </a>
-            </div>
-        </nav>
     </header>
 
-    <!-- Orders Content -->
-    <div class="orders-container">
-        <div class="container">
-            <h1 class="orders-title">My Orders</h1>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid" style="padding: 0 120px;">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.php">Home</a>
+                    </li>
+                    <?php if (!empty($categories)): ?>
+                        <?php foreach (array_slice($categories, 0, 6) as $category): ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="../views/shop.php?category=<?= htmlspecialchars($category['cat_id']) ?>">
+                                    <?= htmlspecialchars($category['cat_name']) ?>
+                                </a>
+                            </li>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                    <li class="nav-item">
+                        <a class="nav-link" href="shop.php">All Products</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="contact.php">Contact</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
 
-            <?php if (empty($orders)): ?>
-                <div class="empty-orders">
-                    <i class="fas fa-box-open"></i>
-                    <h3>No orders found</h3>
-                    <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
-                    <a href="../views/all_product.php" class="shop-btn">Start Shopping</a>
-                </div>
-            <?php else: ?>
-                <?php foreach ($orders as $order): ?>
-                    <div class="order-card">
-                        <div class="order-header">
-                            <div class="row align-items-center">
-                                <div class="col-md-3">
-                                    <h5 class="order-id mb-1">Order #<?php echo $order['order_id']; ?></h5>
-                                    <div class="order-date"><?php echo date('M d, Y', strtotime($order['order_date'])); ?></div>
-                                </div>
-                                <div class="col-md-3">
-                                    <span class="order-status status-<?php echo strtolower($order['order_status']); ?>">
-                                        <?php echo $order['order_status']; ?>
-                                    </span>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="order-total">GH₵<?php echo number_format($order['total_amount'] ?? 0, 2); ?></div>
-                                </div>
-                                <div class="col-md-3 text-end">
-                                    <button class="btn-view-details" onclick="viewOrderDetails(<?php echo $order['order_id']; ?>)">
-                                        View Details
-                                    </button>
-                                </div>
+    <!-- My Orders Content -->
+    <main class="orders-content">
+        <div class="container">
+            <div class="orders-header">
+                <h1 class="orders-title">MY ORDERS</h1>
+            </div>
+
+            <div class="orders-container">
+                <?php if (!empty($orders)): ?>
+                    <?php foreach ($orders as $order): ?>
+                        <?php
+                        $order_status = getOrderStatus($order['order_date']);
+                        $order_items = get_order_details_ctr($order['order_id']);
+                        $total_items = count($order_items);
+                        ?>
+                        <div class="order-card">
+                            <div class="order-status <?= strtolower(str_replace(' ', '-', $order_status)) ?>">
+                                <?= $order_status ?>
                             </div>
+
+                            <div class="order-images">
+                                <?php
+                                $display_items = array_slice($order_items, 0, 4);
+                                foreach ($display_items as $item):
+                                ?>
+                                    <div class="order-image">
+                                        <img src="<?= get_image_url($item['product_image']) ?>"
+                                             alt="<?= htmlspecialchars($item['product_title']) ?>"
+                                             onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                                    </div>
+                                <?php endforeach; ?>
+
+                                <?php if ($total_items > 4): ?>
+                                    <div class="order-more">
+                                        + <?= $total_items - 4 ?> more
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <div class="order-details">
+                                Order <span class="order-number">#<?= htmlspecialchars($order['order_reference']) ?></span> •
+                                <strong>GH₵<?= number_format($order['total_amount'], 2) ?></strong> •
+                                <?= date('d. M/Y', strtotime($order['order_date'])) ?>
+                            </div>
+
+                            <button class="view-details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>)">
+                                View details
+                            </button>
                         </div>
-                        <div class="order-body">
-                            <div class="row align-items-center">
-                                <div class="col-md-12">
-                                    <p class="mb-0"><strong>Items:</strong> <?php echo $order['item_count'] ?? 1; ?> item(s)</p>
-                                    <p class="mb-0"><strong>Payment:</strong> <?php echo ucfirst($order['payment_method'] ?? 'Credit Card'); ?></p>
-                                </div>
+                    <?php endforeach; ?>
+                <?php else: ?>
+                    <div class="no-orders">
+                        <i class="fas fa-shopping-bag"></i>
+                        <h3>No Orders Yet</h3>
+                        <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                        <a href="../index.php" class="start-shopping-btn">Start Shopping</a>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </main>
+
+    <!-- Order Details Modal -->
+    <div class="modal fade order-modal" id="orderDetailsModal" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-receipt me-2"></i>
+                        Order Details
+                    </h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="orderDetailsContent">
+                        <div class="text-center">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
                             </div>
+                            <p class="mt-2">Loading order details...</p>
                         </div>
                     </div>
-                <?php endforeach; ?>
-            <?php endif; ?>
+                </div>
+            </div>
         </div>
     </div>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-
-    <script>
-        // Promo Banner Countdown Timer
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const endOfDay = new Date();
-            endOfDay.setHours(23, 59, 59, 999);
-            const distance = endOfDay.getTime() - now;
-
-            if (distance > 0) {
-                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-            }
-        }
-
-        // Update countdown every second
-        setInterval(updateCountdown, 1000);
-        updateCountdown(); // Initial call
-
-        // Dark Mode Toggle
-        function toggleDarkMode() {
-            const body = document.body;
-            const isDarkMode = body.getAttribute('data-theme') === 'dark';
-
-            if (isDarkMode) {
-                body.removeAttribute('data-theme');
-                localStorage.setItem('theme', 'light');
-            } else {
-                body.setAttribute('data-theme', 'dark');
-                localStorage.setItem('theme', 'dark');
-            }
-        }
-
-        // Load saved theme
-        document.addEventListener('DOMContentLoaded', function() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'dark') {
-                document.body.setAttribute('data-theme', 'dark');
-            }
-        });
-
-        // Search functionality
-        document.querySelector('.search-form').addEventListener('submit', function(e) {
-            const searchInput = document.querySelector('.search-input');
-            if (!searchInput.value.trim()) {
-                e.preventDefault();
-                searchInput.focus();
-            }
-        });
-
-        // View order details
-        function viewOrderDetails(orderId) {
-            // Placeholder for order details functionality
-            alert('Order details functionality would be implemented here for order #' + orderId);
-        }
-
-        // Dropdown navigation functions with timeout delays
-        let dropdownTimeout;
-        let shopDropdownTimeout;
-        let moreDropdownTimeout;
-        let userDropdownTimeout;
-
-        function showDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showShopDropdown() {
-            const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) {
-                clearTimeout(shopDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideShopDropdown() {
-            const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) {
-                clearTimeout(shopDropdownTimeout);
-                shopDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                moreDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                userDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function toggleUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
-        }
-
-        // Enhanced dropdown behavior
-        document.addEventListener('DOMContentLoaded', function() {
-            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
-            const brandsDropdown = document.getElementById('shopDropdown');
-            
-            if (shopCategoriesBtn && brandsDropdown) {
-                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
-                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
-                brandsDropdown.addEventListener('mouseenter', function() {
-                    clearTimeout(dropdownTimeout);
-                });
-                brandsDropdown.addEventListener('mouseleave', hideDropdown);
-            }
-
-            const userAvatar = document.querySelector('.user-avatar');
-            const userDropdown = document.getElementById('userDropdownMenu');
-            
-            if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('mouseenter', showUserDropdown);
-                userAvatar.addEventListener('mouseleave', hideUserDropdown);
-                userDropdown.addEventListener('mouseenter', function() {
-                    clearTimeout(userDropdownTimeout);
-                });
-                userDropdown.addEventListener('mouseleave', hideUserDropdown);
-            }
-        });
-    </script>
 
     <!-- Footer -->
     <footer class="main-footer">
@@ -1463,9 +880,6 @@ try {
                             <p class="newsletter-disclaimer">
                                 By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
                             </p>
-                            <p class="newsletter-disclaimer">
-                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
-                            </p>
                         </div>
                     </div>
                 </div>
@@ -1480,5 +894,145 @@ try {
             </div>
         </div>
     </footer>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
+    <script src="../js/header.js"></script>
+
+    <script>
+        // View Order Details Function
+        function viewOrderDetails(orderId) {
+            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+            modal.show();
+
+            // Fetch order details
+            fetch('../actions/get_order_details_action.php?id=' + orderId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        displayOrderDetails(data.order);
+                    } else {
+                        document.getElementById('orderDetailsContent').innerHTML =
+                            '<div class="alert alert-danger">Failed to load order details: ' + data.message + '</div>';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('orderDetailsContent').innerHTML =
+                        '<div class="alert alert-danger">Failed to load order details. Please try again.</div>';
+                });
+        }
+
+        // Display Order Details in Modal
+        function displayOrderDetails(order) {
+            const content = `
+                <div class="order-info-section">
+                    <h6><i class="fas fa-info-circle me-2"></i>Order Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Order ID:</strong> #${order.order_reference}</p>
+                            <p><strong>Order Date:</strong> ${new Date(order.order_date).toLocaleDateString()}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Tracking Number:</strong> ${order.tracking_number || 'N/A'}</p>
+                            <p><strong>Status:</strong>
+                                <span class="badge bg-${order.order_status === 'completed' ? 'success' : 'warning'}">
+                                    ${order.order_status || 'Processing'}
+                                </span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-info-section">
+                    <h6><i class="fas fa-user me-2"></i>Customer Information</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p><strong>Name:</strong> ${order.customer_name}</p>
+                            <p><strong>Email:</strong> ${order.customer_email}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <p><strong>Phone:</strong> ${order.customer_contact}</p>
+                            <p><strong>Location:</strong> ${order.customer_city}, ${order.customer_country}</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="order-info-section">
+                    <h6><i class="fas fa-shopping-cart me-2"></i>Order Items</h6>
+                    <div class="order-items-table">
+                        <table class="table table-borderless mb-0">
+                            <thead>
+                                <tr>
+                                    <th>Product</th>
+                                    <th>Quantity</th>
+                                    <th>Unit Price</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${order.items.map(item => `
+                                    <tr>
+                                        <td>${item.product_title}</td>
+                                        <td>${item.qty}</td>
+                                        <td>GH₵${parseFloat(item.product_price).toFixed(2)}</td>
+                                        <td>GH₵${(parseFloat(item.product_price) * parseInt(item.qty)).toFixed(2)}</td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="order-total-section">
+                    <h6 class="mb-3">Total Amount</h6>
+                    <div class="order-total-amount">GH₵${parseFloat(order.total_amount || order.payment_amount || 0).toFixed(2)}</div>
+                    <small class="text-muted">Currency: Ghana Cedis</small>
+                </div>
+            `;
+
+            document.getElementById('orderDetailsContent').innerHTML = content;
+        }
+
+        // Promo Timer
+        function updatePromoTimer() {
+            const timer = document.getElementById('promoTimer');
+            if (timer) {
+                const now = new Date();
+                const endOfDay = new Date(now);
+                endOfDay.setHours(23, 59, 59, 999);
+
+                const diff = endOfDay - now;
+
+                const hours = Math.floor(diff / (1000 * 60 * 60));
+                const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+                timer.textContent = `${hours.toString().padStart(2, '0')}h:${minutes.toString().padStart(2, '0')}m:${seconds.toString().padStart(2, '0')}s`;
+            }
+        }
+
+        // Update timer every second
+        setInterval(updatePromoTimer, 1000);
+        updatePromoTimer();
+
+        // Header search functionality
+        function performHeaderSearch() {
+            const searchInput = document.getElementById('headerSearchInput');
+            const searchTerm = searchInput.value.trim();
+
+            if (searchTerm) {
+                window.location.href = `shop.php?search=${encodeURIComponent(searchTerm)}`;
+            }
+        }
+
+        // Search on Enter key
+        document.getElementById('headerSearchInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                performHeaderSearch();
+            }
+        });
+    </script>
 </body>
 </html>

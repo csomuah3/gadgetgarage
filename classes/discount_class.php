@@ -9,7 +9,7 @@ class Discount extends db_connection
     public function get_all_discounts()
     {
         try {
-            $sql = "SELECT * FROM discount_codes ORDER BY created_at DESC";
+            $sql = "SELECT * FROM promo_codes ORDER BY created_at DESC";
             return $this->db_prepare_fetch_all($sql);
         } catch (Exception $e) {
             error_log("Get all discounts error: " . $e->getMessage());
@@ -23,7 +23,7 @@ class Discount extends db_connection
     public function get_discount_by_id($discount_id)
     {
         try {
-            $sql = "SELECT * FROM discount_codes WHERE promo_id = ?";
+            $sql = "SELECT * FROM promo_codes WHERE promo_id = ?";
             return $this->db_prepare_fetch_one($sql, 'i', [$discount_id]);
         } catch (Exception $e) {
             error_log("Get discount by ID error: " . $e->getMessage());
@@ -37,7 +37,7 @@ class Discount extends db_connection
     public function get_discount_by_code($promo_code)
     {
         try {
-            $sql = "SELECT * FROM discount_codes WHERE promo_code = ?";
+            $sql = "SELECT * FROM promo_codes WHERE promo_code = ?";
             return $this->db_prepare_fetch_one($sql, 's', [$promo_code]);
         } catch (Exception $e) {
             error_log("Get discount by code error: " . $e->getMessage());
@@ -62,7 +62,7 @@ class Discount extends db_connection
                 return ['status' => 'error', 'message' => 'Promo code already exists'];
             }
 
-            $sql = "INSERT INTO discount_codes (promo_code, promo_description, discount_type, discount_value, min_order_amount, max_discount_amount, start_date, end_date, usage_limit, used_count, is_active, created_at, updated_at)
+            $sql = "INSERT INTO promo_codes (promo_code, promo_description, discount_type, discount_value, min_order_amount, max_discount_amount, start_date, end_date, usage_limit, used_count, is_active, created_at, updated_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, NOW(), NOW())";
 
             $result = $this->db_prepare_execute($sql, 'sssdddssii', [
@@ -102,13 +102,13 @@ class Discount extends db_connection
             }
 
             // Check if promo code exists for other records
-            $sql_check = "SELECT promo_id FROM discount_codes WHERE promo_code = ? AND promo_id != ?";
+            $sql_check = "SELECT promo_id FROM promo_codes WHERE promo_code = ? AND promo_id != ?";
             $existing = $this->db_prepare_fetch_one($sql_check, 'si', [$promo_code, $promo_id]);
             if ($existing) {
                 return ['status' => 'error', 'message' => 'Promo code already exists'];
             }
 
-            $sql = "UPDATE discount_codes SET
+            $sql = "UPDATE promo_codes SET
                     promo_code = ?,
                     promo_description = ?,
                     discount_type = ?,
@@ -159,7 +159,7 @@ class Discount extends db_connection
                 return false;
             }
 
-            $sql = "DELETE FROM discount_codes WHERE promo_id = ?";
+            $sql = "DELETE FROM promo_codes WHERE promo_id = ?";
             $result = $this->db_prepare_execute($sql, 'i', [$promo_id]);
 
             if ($result) {
@@ -185,7 +185,7 @@ class Discount extends db_connection
                 return false;
             }
 
-            $sql = "UPDATE discount_codes SET is_active = NOT is_active, updated_at = NOW() WHERE promo_id = ?";
+            $sql = "UPDATE promo_codes SET is_active = NOT is_active, updated_at = NOW() WHERE promo_id = ?";
             $result = $this->db_prepare_execute($sql, 'i', [$promo_id]);
 
             if ($result) {
@@ -206,7 +206,7 @@ class Discount extends db_connection
     public function get_active_discounts()
     {
         try {
-            $sql = "SELECT * FROM discount_codes WHERE is_active = 1 AND start_date <= NOW() AND (end_date IS NULL OR end_date >= NOW()) ORDER BY created_at DESC";
+            $sql = "SELECT * FROM promo_codes WHERE is_active = 1 AND start_date <= NOW() AND (end_date IS NULL OR end_date >= NOW()) ORDER BY created_at DESC";
             return $this->db_prepare_fetch_all($sql);
         } catch (Exception $e) {
             error_log("Get active discounts error: " . $e->getMessage());

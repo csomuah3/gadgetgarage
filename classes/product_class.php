@@ -3,6 +3,12 @@ require_once __DIR__ . '/../settings/db_class.php';
 
 class Product extends db_connection
 {
+    public function __construct()
+    {
+        if ($this->db === null) {
+            $this->db_connect();
+        }
+    }
 
     /**
      * Add a new product to the database
@@ -10,34 +16,21 @@ class Product extends db_connection
     public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity)
     {
         try {
-            error_log("Attempting database connection...");
-            if (!$this->db_connect()) {
-                error_log("Add product error: Database connection failed");
-                error_log("Connection error: " . mysqli_connect_error());
-                return false;
-            }
-            error_log("Database connection successful");
+            error_log("Attempting to add product...");
+
+            // Escape all string inputs like categories do
+            $product_title = mysqli_real_escape_string($this->db, $product_title);
+            $product_desc = mysqli_real_escape_string($this->db, $product_desc);
+            $product_image = mysqli_real_escape_string($this->db, $product_image);
+            $product_keywords = mysqli_real_escape_string($this->db, $product_keywords);
+            $product_color = mysqli_real_escape_string($this->db, $product_color);
 
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    VALUES ('$product_title', '$product_price', '$product_desc', '$product_image', '$product_keywords', '$product_color', '$category_id', '$brand_id', '$stock_quantity')";
 
             error_log("Executing SQL: " . $sql);
-            error_log("With parameters: " . json_encode([
-                $product_title, $product_price, $product_desc, $product_image,
-                $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity
-            ]));
 
-            $result = $this->db_prepare_execute($sql, 'sdssssiii', [
-                $product_title,
-                $product_price,
-                $product_desc,
-                $product_image,
-                $product_keywords,
-                $product_color,
-                $category_id,
-                $brand_id,
-                $stock_quantity
-            ]);
+            $result = $this->db_query($sql);
 
             if ($result === false) {
                 error_log("Add product error: Failed to execute insert query");

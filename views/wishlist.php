@@ -271,11 +271,21 @@ if ($is_logged_in) {
             margin-top: 0;
         }
 
+        .footer-brand {
+            margin-bottom: 30px;
+        }
+
         .footer-logo {
             font-size: 1.8rem;
             font-weight: 700;
             color: #1f2937;
             margin-bottom: 16px;
+        }
+
+        .footer-logo img {
+            height: 50px !important;
+            width: auto !important;
+            object-fit: contain !important;
         }
 
         .footer-logo .garage {
@@ -289,9 +299,9 @@ if ($is_logged_in) {
 
         .footer-description {
             color: #6b7280;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             margin-bottom: 24px;
-            line-height: 1.6;
+            line-height: 1.7;
         }
 
         .social-links {
@@ -300,8 +310,8 @@ if ($is_logged_in) {
         }
 
         .social-link {
-            width: 40px;
-            height: 40px;
+            width: 48px;
+            height: 48px;
             background: #f3f4f6;
             border-radius: 50%;
             display: flex;
@@ -310,6 +320,7 @@ if ($is_logged_in) {
             color: #6b7280;
             text-decoration: none;
             transition: all 0.3s ease;
+            font-size: 1.2rem;
         }
 
         .social-link:hover {
@@ -319,10 +330,10 @@ if ($is_logged_in) {
         }
 
         .footer-title {
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 600;
             color: #1f2937;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .footer-links {
@@ -332,13 +343,13 @@ if ($is_logged_in) {
         }
 
         .footer-links li {
-            margin-bottom: 12px;
+            margin-bottom: 14px;
         }
 
         .footer-links li a {
             color: #6b7280;
             text-decoration: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
             transition: all 0.3s ease;
         }
 
@@ -360,7 +371,7 @@ if ($is_logged_in) {
 
         .copyright {
             color: #6b7280;
-            font-size: 0.9rem;
+            font-size: 1rem;
             margin: 0;
         }
 
@@ -375,9 +386,9 @@ if ($is_logged_in) {
 
         .newsletter-title {
             color: #1f2937;
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             font-weight: 600;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .newsletter-form {
@@ -392,10 +403,10 @@ if ($is_logged_in) {
 
         .newsletter-input {
             flex: 1;
-            padding: 12px 18px;
+            padding: 14px 20px;
             border: none;
             outline: none;
-            font-size: 0.9rem;
+            font-size: 1rem;
             color: #1a1a1a;
             background: #e5e7eb;
         }
@@ -428,8 +439,8 @@ if ($is_logged_in) {
 
         .newsletter-disclaimer {
             color: #6b7280;
-            font-size: 0.7rem;
-            line-height: 1.5;
+            font-size: 0.85rem;
+            line-height: 1.6;
             margin: 8px 0 0 0;
             text-align: left;
         }
@@ -985,10 +996,26 @@ if ($is_logged_in) {
         <div class="container">
             <div class="footer-content">
                 <div class="row align-items-start">
-                    <!-- Left Side: Navigation Links -->
-                    <div class="col-lg-8 col-md-12">
+                    <!-- First Column: Logo and Social -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <div class="footer-logo" style="margin-bottom: 20px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                                    alt="Gadget Garage">
+                            </div>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Navigation Links -->
+                    <div class="col-lg-5 col-md-12">
                         <div class="row">
-                            <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Get Help</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Help Center</a></li>
@@ -998,7 +1025,7 @@ if ($is_logged_in) {
                                     <li><a href="contact.php">Contact Us</a></li>
                                 </ul>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Company</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Careers</a></li>
@@ -1007,7 +1034,7 @@ if ($is_logged_in) {
                                     <li><a href="contact.php">Want to Collab?</a></li>
                                 </ul>
                             </div>
-                            <div class="col-lg-3 col-md-6 mb-4">
+                            <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Quick Links</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Size Guide</a></li>

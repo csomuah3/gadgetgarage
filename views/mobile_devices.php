@@ -1395,6 +1395,204 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 min-width: auto;
             }
         }
+
+        /* Footer Styles */
+        .main-footer {
+            background: #ffffff;
+            border-top: 1px solid #e5e7eb;
+            padding: 60px 0 20px;
+            margin-top: 0;
+        }
+
+        .footer-brand {
+            margin-bottom: 30px;
+        }
+
+        .footer-logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 16px;
+        }
+
+        .footer-logo img {
+            height: 50px !important;
+            width: auto !important;
+            object-fit: contain !important;
+        }
+
+        .footer-logo .garage {
+            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .footer-description {
+            color: #6b7280;
+            font-size: 1.1rem;
+            margin-bottom: 24px;
+            line-height: 1.7;
+        }
+
+        .social-links {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-link {
+            width: 48px;
+            height: 48px;
+            background: #f3f4f6;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6b7280;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+        }
+
+        .social-link:hover {
+            background: #2563EB;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .footer-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 24px;
+        }
+
+        .footer-links {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: 14px;
+        }
+
+        .footer-links li a {
+            color: #6b7280;
+            text-decoration: none;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .footer-links li a:hover {
+            color: #2563EB;
+            transform: translateX(4px);
+        }
+
+        .footer-divider {
+            border: none;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+            margin: 40px 0 20px;
+        }
+
+        .footer-bottom {
+            padding-top: 20px;
+        }
+
+        .copyright {
+            color: #6b7280;
+            font-size: 1rem;
+            margin: 0;
+        }
+
+        /* Newsletter Signup Section */
+        .newsletter-signup-section {
+            background: transparent;
+            padding: 0;
+            text-align: left;
+            max-width: 100%;
+            height: fit-content;
+        }
+
+        .newsletter-title {
+            color: #1f2937;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            width: 100%;
+            margin: 0 0 15px 0;
+            gap: 0;
+            border-radius: 50px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: #1a1a1a;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input::placeholder {
+            color: #6b7280;
+        }
+
+        .newsletter-submit-btn {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border: none;
+            background: #9ca3af;
+            color: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        .newsletter-submit-btn:hover {
+            background: #6b7280;
+            transform: scale(1.05);
+        }
+
+        .newsletter-disclaimer {
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0 0 0;
+            text-align: left;
+        }
+
+        .newsletter-disclaimer a {
+            color: #2563EB;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .newsletter-disclaimer a:hover {
+            color: #1d4ed8;
+        }
+
+        @media (max-width: 991px) {
+            .newsletter-signup-section {
+                margin-top: 20px;
+            }
+        }
     </style>
 </head>
 

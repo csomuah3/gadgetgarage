@@ -362,5 +362,32 @@ class Order extends db_connection
 
         return 'GG' . $year . $month . $day . $random;
     }
+
+    public function assign_tracking_number($order_id)
+    {
+        $order_id = mysqli_real_escape_string($this->db, $order_id);
+
+        // Check if order already has a tracking number
+        $check_sql = "SELECT tracking_number FROM orders WHERE order_id = $order_id";
+        $existing_tracking = $this->db_fetch_one($check_sql);
+
+        if ($existing_tracking && !empty($existing_tracking['tracking_number'])) {
+            // Order already has a tracking number
+            return $existing_tracking['tracking_number'];
+        }
+
+        // Generate new tracking number
+        $tracking_number = $this->generate_tracking_number();
+        $tracking_number = mysqli_real_escape_string($this->db, $tracking_number);
+
+        // Assign tracking number to order
+        $update_sql = "UPDATE orders SET tracking_number = '$tracking_number' WHERE order_id = $order_id";
+
+        if ($this->db_write_query($update_sql)) {
+            return $tracking_number;
+        }
+
+        return false;
+    }
 }
 ?>

@@ -174,7 +174,13 @@ try {
         if (!$payment_id) {
             throw new Exception('Failed to record payment');
         }
-        
+
+        // Assign tracking number after successful payment
+        $tracking_number = assign_tracking_number_ctr($order_id);
+        if (!$tracking_number) {
+            error_log("Failed to assign tracking number to order $order_id");
+        }
+
         // Update order status to completed
         update_order_status_ctr($order_id, 'completed');
         
@@ -278,6 +284,12 @@ try {
                     $payment_id = record_payment_ctr($customer_id, $order_id, $cart_total, 'GHS', 'paystack', $reference ?? 'test_' . time(), null, 'card');
                     
                     if ($payment_id) {
+                        // Assign tracking number after successful payment
+                        $tracking_number = assign_tracking_number_ctr($order_id);
+                        if (!$tracking_number) {
+                            error_log("Failed to assign tracking number to order $order_id (test mode)");
+                        }
+
                         update_order_status_ctr($order_id, 'completed');
                         empty_cart_ctr($customer_id, $ip_address);
 

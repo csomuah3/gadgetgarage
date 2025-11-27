@@ -144,6 +144,7 @@ try {
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
+	<link href="includes/header-styles.css" rel="stylesheet">
 	<link href="includes/chatbot-styles.css" rel="stylesheet">
 	<link href="css/dark-mode.css" rel="stylesheet">
 	<link href="views/circular-gallery.css" rel="stylesheet">
@@ -9285,7 +9286,9 @@ try {
 							<p style="margin-bottom: 10px;"><strong>Order ID:</strong> ${orderDetails?.invoice_no || orderDetails?.order_reference || orderId}</p>
 							<p style="margin-bottom: 10px;"><strong>Payment Reference:</strong> ${orderRef || 'N/A'}</p>
 							<p style="margin-bottom: 10px;"><strong>Total Amount:</strong> GH₵ ${orderDetails?.payment_amount || orderDetails?.total_amount || '0.00'}</p>
+							<p style="margin-bottom: 10px;"><strong>Tracking Number:</strong> ${orderDetails?.tracking_number || 'Generating...'}</p>
 							<p style="color: #10b981; margin-top: 15px;">Your order has been confirmed and will be processed shortly.</p>
+							<p style="color: #6b7280; font-size: 14px; margin-top: 10px;">You can track your order using the tracking number above.</p>
 						</div>
 					`,
 						icon: 'success',

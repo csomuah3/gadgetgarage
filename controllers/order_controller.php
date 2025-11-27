@@ -84,4 +84,10 @@ function get_all_orders_ctr()
     $order = new Order();
     return $order->get_all_orders();
 }
+
+function assign_tracking_number_ctr($order_id)
+{
+    $order = new Order();
+    return $order->assign_tracking_number($order_id);
+}
 ?>

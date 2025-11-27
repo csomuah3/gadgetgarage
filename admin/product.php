@@ -601,19 +601,24 @@ if (isset($_SESSION['error_message'])) {
         </div>
     </div>
 
-    <!-- Category Distribution -->
-    <!-- Category chart temporarily removed due to movement issues -->
+    <!-- Category Distribution Pie Chart -->
     <div class="col-lg-6">
         <div class="admin-card">
             <div class="card-header-custom">
-                <h5><i class="fas fa-list-alt me-2"></i>Category Overview</h5>
+                <h5><i class="fas fa-chart-pie me-2"></i>Category Distribution</h5>
             </div>
             <div class="card-body-custom">
-                <div class="category-stats">
-                    <?php foreach ($category_stats as $stat): ?>
-                        <div class="category-item">
-                            <span class="category-name"><?= htmlspecialchars($stat['name']) ?></span>
-                            <span class="category-count"><?= $stat['count'] ?> products</span>
+                <div class="chart-container" style="position: relative; height: 300px;">
+                    <canvas id="categoryChart"></canvas>
+                </div>
+                <div class="category-legend mt-3">
+                    <?php foreach ($category_stats as $index => $stat): ?>
+                        <div class="legend-item d-flex align-items-center mb-2">
+                            <div class="legend-color" style="width: 16px; height: 16px; border-radius: 50%; margin-right: 8px; background-color: <?php
+                                $colors = ['#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#6366f1'];
+                                echo $colors[$index % count($colors)];
+                            ?>;"></div>
+                            <span class="legend-text"><?= htmlspecialchars($stat['name']) ?> (<?= $stat['count'] ?> products)</span>
                         </div>
                     <?php endforeach; ?>
                 </div>
@@ -809,6 +814,56 @@ body.dark-mode .category-name {
 body.dark-mode .category-count {
     color: #9ca3af;
     background: rgba(96, 165, 250, 0.15);
+}
+
+/* Category chart legend styles */
+.category-legend {
+    max-height: 150px;
+    overflow-y: auto;
+    padding: 0 5px;
+}
+
+.legend-item {
+    padding: 8px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.legend-item:hover {
+    background: rgba(59, 130, 246, 0.05);
+    transform: translateX(5px);
+}
+
+.legend-text {
+    font-size: 14px;
+    font-weight: 500;
+    color: #374151;
+}
+
+.legend-color {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+}
+
+.legend-item:hover .legend-color {
+    transform: scale(1.1);
+}
+
+/* Chart container styling */
+.chart-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Dark mode legend styles */
+body.dark-mode .legend-text {
+    color: #e5e7eb;
+}
+
+body.dark-mode .legend-item:hover {
+    background: rgba(96, 165, 250, 0.1);
 }
 </style>
 
@@ -1657,6 +1712,83 @@ function animateCounters() {
 
 // Start counter animation when page loads
 document.addEventListener('DOMContentLoaded', animateCounters);
+
+// Category Distribution Pie Chart
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryCtx = document.getElementById('categoryChart');
+    if (categoryCtx) {
+        // Prepare data for pie chart
+        const categoryData = {
+            labels: [
+                <?php foreach ($category_stats as $stat): ?>
+                    '<?= htmlspecialchars($stat['name']) ?>',
+                <?php endforeach; ?>
+            ],
+            datasets: [{
+                data: [
+                    <?php foreach ($category_stats as $stat): ?>
+                        <?= $stat['count'] ?>,
+                    <?php endforeach; ?>
+                ],
+                backgroundColor: [
+                    '#3b82f6', '#ef4444', '#22c55e', '#f59e0b', '#8b5cf6',
+                    '#06b6d4', '#ec4899', '#84cc16', '#f97316', '#6366f1'
+                ],
+                borderColor: '#ffffff',
+                borderWidth: 2,
+                hoverOffset: 10
+            }]
+        };
+
+        const categoryChart = new Chart(categoryCtx, {
+            type: 'doughnut',
+            data: categoryData,
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false // We'll use custom legend below
+                    },
+                    tooltip: {
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        titleColor: '#ffffff',
+                        bodyColor: '#ffffff',
+                        borderColor: '#ffffff',
+                        borderWidth: 1,
+                        cornerRadius: 8,
+                        callbacks: {
+                            label: function(context) {
+                                const label = context.label || '';
+                                const value = context.parsed;
+                                const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                const percentage = total > 0 ? Math.round((value / total) * 100) : 0;
+                                return `${label}: ${value} products (${percentage}%)`;
+                            }
+                        }
+                    }
+                },
+                animation: {
+                    animateRotate: true,
+                    animateScale: true,
+                    duration: 1500,
+                    easing: 'easeOutQuart'
+                },
+                cutout: '50%', // Makes it a doughnut chart
+                elements: {
+                    arc: {
+                        hoverBorderWidth: 3
+                    }
+                }
+            }
+        });
+
+        // Add animation on hover
+        categoryCtx.addEventListener('mousemove', function() {
+            categoryChart.update('none');
+        });
+    }
+});
 </script>
 
 <?php include 'includes/admin_footer.php'; ?>

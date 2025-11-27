@@ -965,7 +965,7 @@ try {
         .cart-header h1 {
             font-size: 3.5rem !important;
             font-weight: 800 !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             margin-bottom: 1rem !important;
         }
 
@@ -997,7 +997,7 @@ try {
             height: 150px;
             object-fit: cover;
             border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
             transition: all 0.3s ease;
         }
 
@@ -1049,7 +1049,7 @@ try {
             background: linear-gradient(145deg, #f8fafc, #e2e8f0);
             padding: 10px 20px;
             border-radius: 50px;
-            box-shadow: inset 2px 2px 5px rgba(0,0,0,0.1);
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .quantity-btn {
@@ -1202,9 +1202,17 @@ try {
         }
 
         @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.1); }
-            100% { transform: scale(1); }
+            0% {
+                transform: scale(1);
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+            }
         }
 
         /* Enhanced Cart Item Content Styling */
@@ -1266,7 +1274,7 @@ try {
             font-size: 3rem !important;
             font-weight: 800 !important;
             color: #2d3748 !important;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1) !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.1) !important;
         }
 
         /* Enhanced Promo Code Section */
@@ -1332,10 +1340,11 @@ try {
             pointer-events: none;
             z-index: -1;
         }
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid #e5e7eb;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+
+        padding: 20px;
+        margin-bottom: 20px;
+        border: 1px solid #e5e7eb;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .promo-banner-card {
@@ -1484,7 +1493,7 @@ try {
         }
 
         .footer-logo img {
-            height: 80px !important;
+            height: 50px !important;
             width: auto !important;
             object-fit: contain !important;
         }
@@ -1665,7 +1674,9 @@ try {
 </head>
 
 <body>
-<script>console.log('JavaScript is working - body loaded');</script>
+    <script>
+        console.log('JavaScript is working - body loaded');
+    </script>
     <!-- Promotional Banner -->
     <div class="promo-banner2">
         <div class="promo-banner-left">
@@ -1984,9 +1995,9 @@ try {
                                 <div class="row g-0 align-items-center p-3">
                                     <div class="col-auto">
                                         <img src="<?php echo get_product_image_url($item['product_image']); ?>"
-                                             alt="<?php echo htmlspecialchars($item['product_title']); ?>"
-                                             class="product-image"
-                                             onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
+                                            alt="<?php echo htmlspecialchars($item['product_title']); ?>"
+                                            class="product-image"
+                                            onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
                                     </div>
                                     <div class="col ms-3">
                                         <div class="row">
@@ -1994,9 +2005,9 @@ try {
                                                 <h5 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h5>
                                                 <p class="text-muted mb-2 small"><?php echo htmlspecialchars($item['product_desc'] ?? ''); ?></p>
                                                 <?php if (isset($item['condition_type'])): ?>
-                                                <div class="condition-badge mb-2">
-                                                    <span class="badge bg-secondary">Condition: <?php echo ucfirst($item['condition_type']); ?></span>
-                                                </div>
+                                                    <div class="condition-badge mb-2">
+                                                        <span class="badge bg-secondary">Condition: <?php echo ucfirst($item['condition_type']); ?></span>
+                                                    </div>
                                                 <?php endif; ?>
                                                 <div class="fw-bold text-primary fs-5" id="unit-price-<?php echo $cart_item_id; ?>">
                                                     <?php
@@ -2013,21 +2024,21 @@ try {
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
-                                                           min="1" max="99" data-product-id="<?php echo $item['p_id']; ?>"
-                                                           onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value)">
+                                                        min="1" max="99" data-product-id="<?php echo $item['p_id']; ?>"
+                                                        onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value)">
                                                     <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
                                             </div>
                                             <div class="col-md-3 text-end">
-                                                <div class="fw-bold fs-5 text-success mb-2" id="total-price-<?php echo $cart_item_id; ?>" 
-                                                     data-unit-price="<?php 
-                                                        $price = (isset($item['final_price']) && $item['final_price'] > 0)
-                                                            ? $item['final_price']
-                                                            : $item['product_price'];
-                                                        echo $price;
-                                                     ?>">
+                                                <div class="fw-bold fs-5 text-success mb-2" id="total-price-<?php echo $cart_item_id; ?>"
+                                                    data-unit-price="<?php
+                                                                        $price = (isset($item['final_price']) && $item['final_price'] > 0)
+                                                                            ? $item['final_price']
+                                                                            : $item['product_price'];
+                                                                        echo $price;
+                                                                        ?>">
                                                     <?php
                                                     $price = (isset($item['final_price']) && $item['final_price'] > 0)
                                                         ? $item['final_price']
@@ -2036,7 +2047,7 @@ try {
                                                     ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
-                                                        onclick="removeItem(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
+                                                    onclick="removeItem(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
                                                     <i class="fas fa-times"></i> Remove
                                                 </button>
                                             </div>
@@ -2213,143 +2224,144 @@ try {
     <script src="../js/promo-code.js"></script>
 
     <script>
-    // Simple cart functionality - all complex code moved to new_cart_script.js
-    document.addEventListener('DOMContentLoaded', function() {
-        console.log('Cart page loaded successfully');
-
-        // Global functions for dropdown functionality
-        window.toggleUserDropdown = function() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) dropdown.classList.toggle('show');
-        };
-
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
-            const dropdown = document.getElementById('userDropdownMenu');
-            const avatar = document.querySelector('.user-avatar');
-            if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
-                dropdown.classList.remove('show');
-            }
-        });
-
-        // Checkout function
-        window.proceedToCheckout = function() {
-            window.location.href = 'checkout.php';
-        };
-
-        // Dropdown navigation functions with timeout delays
-        let dropdownTimeout;
-        let shopDropdownTimeout;
-        let moreDropdownTimeout;
-        let userDropdownTimeout;
-
-        function showDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showShopDropdown() {
-            const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) {
-                clearTimeout(shopDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideShopDropdown() {
-            const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) {
-                clearTimeout(shopDropdownTimeout);
-                shopDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                moreDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                userDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function toggleUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                dropdown.classList.toggle('show');
-            }
-        }
-
-        // Enhanced dropdown behavior
+        // Simple cart functionality - all complex code moved to new_cart_script.js
         document.addEventListener('DOMContentLoaded', function() {
-            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
-            const brandsDropdown = document.getElementById('shopDropdown');
-            
-            if (shopCategoriesBtn && brandsDropdown) {
-                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
-                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
-                brandsDropdown.addEventListener('mouseenter', function() {
+            console.log('Cart page loaded successfully');
+
+            // Global functions for dropdown functionality
+            window.toggleUserDropdown = function() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown) dropdown.classList.toggle('show');
+            };
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(event) {
+                const dropdown = document.getElementById('userDropdownMenu');
+                const avatar = document.querySelector('.user-avatar');
+                if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+                    dropdown.classList.remove('show');
+                }
+            });
+
+            // Checkout function
+            window.proceedToCheckout = function() {
+                window.location.href = 'checkout.php';
+            };
+
+            // Dropdown navigation functions with timeout delays
+            let dropdownTimeout;
+            let shopDropdownTimeout;
+            let moreDropdownTimeout;
+            let userDropdownTimeout;
+
+            function showDropdown() {
+                const dropdown = document.getElementById('shopDropdown');
+                if (dropdown) {
                     clearTimeout(dropdownTimeout);
-                });
-                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+                    dropdown.classList.add('show');
+                }
             }
 
-            const userAvatar = document.querySelector('.user-avatar');
-            const userDropdown = document.getElementById('userDropdownMenu');
-            
-            if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('mouseenter', showUserDropdown);
-                userAvatar.addEventListener('mouseleave', hideUserDropdown);
-                userDropdown.addEventListener('mouseenter', function() {
-                    clearTimeout(userDropdownTimeout);
-                });
-                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            function hideDropdown() {
+                const dropdown = document.getElementById('shopDropdown');
+                if (dropdown) {
+                    clearTimeout(dropdownTimeout);
+                    dropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
             }
+
+            function showShopDropdown() {
+                const dropdown = document.getElementById('shopCategoryDropdown');
+                if (dropdown) {
+                    clearTimeout(shopDropdownTimeout);
+                    dropdown.classList.add('show');
+                }
+            }
+
+            function hideShopDropdown() {
+                const dropdown = document.getElementById('shopCategoryDropdown');
+                if (dropdown) {
+                    clearTimeout(shopDropdownTimeout);
+                    shopDropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
+            }
+
+            function showMoreDropdown() {
+                const dropdown = document.getElementById('moreDropdown');
+                if (dropdown) {
+                    clearTimeout(moreDropdownTimeout);
+                    dropdown.classList.add('show');
+                }
+            }
+
+            function hideMoreDropdown() {
+                const dropdown = document.getElementById('moreDropdown');
+                if (dropdown) {
+                    clearTimeout(moreDropdownTimeout);
+                    moreDropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
+            }
+
+            function showUserDropdown() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown) {
+                    clearTimeout(userDropdownTimeout);
+                    dropdown.classList.add('show');
+                }
+            }
+
+            function hideUserDropdown() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown) {
+                    clearTimeout(userDropdownTimeout);
+                    userDropdownTimeout = setTimeout(() => {
+                        dropdown.classList.remove('show');
+                    }, 300);
+                }
+            }
+
+            function toggleUserDropdown() {
+                const dropdown = document.getElementById('userDropdownMenu');
+                if (dropdown) {
+                    dropdown.classList.toggle('show');
+                }
+            }
+
+            // Enhanced dropdown behavior
+            document.addEventListener('DOMContentLoaded', function() {
+                const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+                const brandsDropdown = document.getElementById('shopDropdown');
+
+                if (shopCategoriesBtn && brandsDropdown) {
+                    shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                    shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                    brandsDropdown.addEventListener('mouseenter', function() {
+                        clearTimeout(dropdownTimeout);
+                    });
+                    brandsDropdown.addEventListener('mouseleave', hideDropdown);
+                }
+
+                const userAvatar = document.querySelector('.user-avatar');
+                const userDropdown = document.getElementById('userDropdownMenu');
+
+                if (userAvatar && userDropdown) {
+                    userAvatar.addEventListener('mouseenter', showUserDropdown);
+                    userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                    userDropdown.addEventListener('mouseenter', function() {
+                        clearTimeout(userDropdownTimeout);
+                    });
+                    userDropdown.addEventListener('mouseleave', hideUserDropdown);
+                }
+            });
         });
-    });
     </script>
 
 </body>
+
 </html>

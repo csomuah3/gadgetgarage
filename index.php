@@ -168,7 +168,7 @@ try {
 		}
 
 		/* Promotional Banner Styles - Same as index */
-		.promo-banner2 {
+		.promo-banner {
 			background: #001f3f !important;
 			color: white;
 			padding: 6px 15px;
@@ -187,14 +187,14 @@ try {
 			max-width: 100%;
 		}
 
-		.promo-banner2 .promo-banner-left {
+		.promo-banner-left {
 			display: flex;
 			align-items: center;
 			gap: 15px;
 			flex: 0 0 auto;
 		}
 
-		.promo-banner2 .promo-banner-center {
+		.promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -202,17 +202,17 @@ try {
 			flex: 1;
 		}
 
-		.promo-banner2 i {
+		.promo-banner i {
 			font-size: 1rem;
 		}
 
-		.promo-banner2 .promo-text {
+		.promo-banner .promo-text {
 			font-size: 1rem;
 			font-weight: 400;
 			letter-spacing: 0.5px;
 		}
 
-		.promo-banner2 .promo-timer {
+		.promo-timer {
 			background: transparent;
 			padding: 0;
 			border-radius: 0;
@@ -222,7 +222,7 @@ try {
 			border: none;
 		}
 
-		.promo-banner2 .promo-shop-link {
+		.promo-shop-link {
 			color: white;
 			text-decoration: underline;
 			font-weight: 700;
@@ -232,7 +232,7 @@ try {
 			flex: 0 0 auto;
 		}
 
-		.promo-banner2 .promo-shop-link:hover {
+		.promo-shop-link:hover {
 			opacity: 0.8;
 		}
 
@@ -418,11 +418,11 @@ try {
 		}
 
 		.contact-number {
-			font-size: 1.1rem;
-			font-weight: 600;
-			color: #008060;
+			font-size: 1rem;
+			font-weight: 500;
+			color: #6b7280;
 			margin: 0;
-			margin-top: 4px;
+			line-height: 1.2;
 		}
 
 		.user-actions {
@@ -493,7 +493,97 @@ try {
 			min-width: 100px;
 		}
 
-		/* Brands Dropdown Styles */
+		/* Main Navigation - Copied from index.php */
+		.main-nav {
+			background: #ffffff;
+			border-bottom: 1px solid #e5e7eb;
+			padding: 12px 0;
+			position: sticky;
+			top: 85px;
+			z-index: 999;
+			box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+		}
+
+		.nav-menu {
+			display: flex;
+			align-items: center;
+			width: 100%;
+			padding-left: 280px;
+		}
+
+		.nav-item {
+			color: #1f2937;
+			text-decoration: none;
+			font-weight: 600;
+			padding: 16px 20px;
+			font-size: 1.3rem;
+			display: flex;
+			align-items: center;
+			gap: 6px;
+			transition: all 0.3s ease;
+			border-radius: 8px;
+			white-space: nowrap;
+		}
+
+		.nav-item:hover {
+			background: rgba(0, 128, 96, 0.1);
+			color: #008060;
+			transform: translateY(-2px);
+		}
+
+		.nav-item.flash-deal {
+			color: #ef4444;
+			font-weight: 700;
+			margin-left: auto;
+			padding-right: 600px;
+		}
+
+		.nav-item.flash-deal:hover {
+			color: #dc2626;
+		}
+
+		/* Blue Shop by Categories Button */
+		.shop-categories-btn {
+			position: relative;
+		}
+
+		.categories-button {
+			background: #4f63d2;
+			color: white;
+			border: none;
+			padding: 12px 20px;
+			border-radius: 6px;
+			font-weight: 600;
+			font-size: 1rem;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			cursor: pointer;
+			transition: all 0.3s ease;
+		}
+
+		.categories-button:hover {
+			background: #3d4fd1;
+		}
+
+		.categories-button i:last-child {
+			font-size: 0.8rem;
+			transition: transform 0.3s ease;
+		}
+
+		.shop-categories-btn:hover .categories-button i:last-child {
+			transform: rotate(180deg);
+		}
+
+		.nav-item.dropdown {
+			position: relative;
+		}
+
+		/* Dropdown Positioning */
+		.nav-dropdown {
+			position: relative;
+		}
+
 		.brands-dropdown {
 			position: absolute;
 			top: 100%;
@@ -509,6 +599,12 @@ try {
 			transform: translateY(-10px);
 			transition: all 0.3s ease;
 			z-index: 1000;
+		}
+
+		.shop-categories-btn:hover .brands-dropdown {
+			opacity: 1;
+			visibility: visible;
+			transform: translateY(0);
 		}
 
 		.brands-dropdown h4 {
@@ -542,25 +638,6 @@ try {
 		.brands-dropdown a:hover {
 			background: #f3f4f6;
 			color: #3b82f6;
-		}
-
-		/* Scrollbar styling for brands dropdown */
-		.brands-dropdown::-webkit-scrollbar {
-			width: 6px;
-		}
-
-		.brands-dropdown::-webkit-scrollbar-track {
-			background: #f1f1f1;
-			border-radius: 3px;
-		}
-
-		.brands-dropdown::-webkit-scrollbar-thumb {
-			background: #c1c1c1;
-			border-radius: 3px;
-		}
-
-		.brands-dropdown::-webkit-scrollbar-thumb:hover {
-			background: #a8a8a8;
 		}
 
 		.header-icon {
@@ -5014,15 +5091,15 @@ try {
 <body>
 
 	<!-- Promotional Banner -->
-	<div class="promo-banner2">
+	<div class="promo-banner">
 		<div class="promo-banner-left">
 			<i class="fas fa-bolt"></i>
 		</div>
 		<div class="promo-banner-center">
-			<span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
 			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
 		</div>
-		<a href="#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
+		<a href="#flash-deals" class="promo-shop-link">Shop Now</a>
 	</div>
 
 	<!-- Main Header -->
@@ -5086,25 +5163,9 @@ try {
 								<?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
 							</div>
 							<div class="dropdown-menu-custom" id="userDropdownMenu">
-								<a href="views/account.php" class="dropdown-item-custom">
+								<button class="dropdown-item-custom" onclick="goToAccount()">
 									<i class="fas fa-user"></i>
-									<span data-translate="account">Account</span>
-								</a>
-								<a href="views/my_orders.php" class="dropdown-item-custom">
-									<i class="fas fa-shopping-bag"></i>
-									<span data-translate="my_orders">My Orders</span>
-								</a>
-								<a href="track_order.php" class="dropdown-item-custom">
-									<i class="fas fa-truck"></i>
-									<span data-translate="track_orders">Track Orders</span>
-								</a>
-								<a href="views/notifications.php" class="dropdown-item-custom">
-									<i class="fas fa-bell"></i>
-									<span>Notifications</span>
-								</a>
-								<button class="dropdown-item-custom" onclick="openProfilePictureModal()">
-									<i class="fas fa-camera"></i>
-									<span>Profile Picture</span>
+									<span>Account</span>
 								</button>
 								<div class="dropdown-divider-custom"></div>
 								<div class="dropdown-item-custom">
@@ -5140,11 +5201,6 @@ try {
 						<a href="login/login.php" class="login-btn">
 							<i class="fas fa-user"></i>
 							Login
-						</a>
-						<!-- Register Button -->
-						<a href="login/register.php" class="login-btn" style="margin-left: 10px;">
-							<i class="fas fa-user-plus"></i>
-							Register
 						</a>
 					<?php endif; ?>
 				</div>
@@ -6274,17 +6330,16 @@ try {
 			}
 		}
 
-		// Dropdown functions - must be global for inline handlers
+		// Dropdown functions
 		let dropdownTimeout;
-		let shopDropdownTimeout;
-		let moreDropdownTimeout;
-		let userDropdownTimeout;
 
 		function showDropdown() {
 			const dropdown = document.getElementById('shopDropdown');
 			if (dropdown) {
 				clearTimeout(dropdownTimeout);
-				dropdown.style.cssText = 'opacity: 1 !important; visibility: visible !important; transform: translateY(0) !important;';
+				dropdown.style.opacity = '1';
+				dropdown.style.visibility = 'visible';
+				dropdown.style.transform = 'translateY(0)';
 			}
 		}
 
@@ -6293,10 +6348,92 @@ try {
 			if (dropdown) {
 				clearTimeout(dropdownTimeout);
 				dropdownTimeout = setTimeout(() => {
-					dropdown.style.cssText = 'opacity: 0 !important; visibility: hidden !important; transform: translateY(-10px) !important;';
+					dropdown.style.opacity = '0';
+					dropdown.style.visibility = 'hidden';
+					dropdown.style.transform = 'translateY(-10px)';
 				}, 300);
 			}
 		}
+
+		// Timer functionality
+		function updateTimer() {
+			const timerElement = document.getElementById('promoTimer');
+			if (timerElement) {
+				const now = new Date().getTime();
+				const nextDay = new Date();
+				nextDay.setDate(nextDay.getDate() + 1);
+				nextDay.setHours(0, 0, 0, 0);
+
+				const distance = nextDay.getTime() - now;
+
+				const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+				const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+				const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+				timerElement.innerHTML = days + "d:" +
+					(hours < 10 ? "0" : "") + hours + "h:" +
+					(minutes < 10 ? "0" : "") + minutes + "m:" +
+					(seconds < 10 ? "0" : "") + seconds + "s";
+			}
+		}
+
+		// Update timer every second
+		setInterval(updateTimer, 1000);
+		updateTimer(); // Initial call
+
+		// User dropdown functionality
+		function toggleUserDropdown() {
+			const dropdown = document.getElementById('userDropdownMenu');
+			dropdown.classList.toggle('show');
+		}
+
+		// Close dropdown when clicking outside
+		document.addEventListener('click', function(event) {
+			const dropdown = document.getElementById('userDropdownMenu');
+			const avatar = document.querySelector('.user-avatar');
+
+			if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+				dropdown.classList.remove('show');
+			}
+		});
+
+		// Account page navigation
+		function goToAccount() {
+			window.location.href = 'views/my_orders.php';
+		}
+
+		// Language change functionality
+		function changeLanguage(lang) {
+			// Language change functionality can be implemented here
+			console.log('Language changed to:', lang);
+		}
+
+		// Theme toggle functionality
+		function toggleTheme() {
+			const toggleSwitch = document.getElementById('themeToggle');
+			const body = document.body;
+
+			body.classList.toggle('dark-mode');
+			toggleSwitch.classList.toggle('active');
+
+			// Save theme preference to localStorage
+			const isDarkMode = body.classList.contains('dark-mode');
+			localStorage.setItem('darkMode', isDarkMode);
+		}
+
+		// Load theme preference on page load
+		document.addEventListener('DOMContentLoaded', function() {
+			const isDarkMode = localStorage.getItem('darkMode') === 'true';
+			const toggleSwitch = document.getElementById('themeToggle');
+
+			if (isDarkMode) {
+				document.body.classList.add('dark-mode');
+				if (toggleSwitch) {
+					toggleSwitch.classList.add('active');
+				}
+			}
+		});
 
 		// Shop Dropdown Functions
 		function showShopDropdown() {
@@ -6335,6 +6472,10 @@ try {
 				}, 300);
 			}
 		}
+
+		// Timeout variables
+		let shopDropdownTimeout;
+		let moreDropdownTimeout;
 
 		// Enhanced dropdown behavior - keep dropdowns open when hovering over them
 		document.addEventListener('DOMContentLoaded', function() {

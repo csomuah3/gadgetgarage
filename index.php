@@ -8572,75 +8572,137 @@ try {
 			showSimpleRatingPopup('TEST123');
 		}
 
-		// ULTRA SIMPLE rating using browser alerts/confirms
-		function showUltraSimpleRating(orderId) {
-			console.log('Showing ULTRA simple rating for order:', orderId);
+		// Sweet Alert rating popup
+		function showSweetAlertRating(orderId) {
+			console.log('Showing Sweet Alert rating for order:', orderId);
 
-			// Use basic browser dialogs - these ALWAYS work
+			// Show after 10 seconds delay on index page after payment
 			setTimeout(() => {
-				const userWantsToRate = confirm("Thank you for your order!\n\nWould you like to rate your experience?\n\n(Click OK to rate, Cancel to skip)");
-
-				if (userWantsToRate) {
-					// Show rating options using simple dialogs
-					let rating = null;
-
-					if (confirm("How satisfied are you?\n\nClick OK for 'Very Satisfied' or Cancel to see more options")) {
-						rating = 5;
-					} else {
-						const response = prompt("Please rate from 1-5:\n\n1 = Very Poor\n2 = Poor\n3 = Average\n4 = Good\n5 = Excellent\n\nEnter a number (1-5):");
-
-						const numRating = parseInt(response);
-						if (numRating >= 1 && numRating <= 5) {
-							rating = numRating;
-						} else {
-							rating = 3; // Default to average if invalid input
-						}
+				Swal.fire({
+					title: 'How satisfied are you?',
+					text: 'We\'d love to hear about your experience!',
+					icon: 'question',
+					showCancelButton: true,
+					confirmButtonText: 'Very Satisfied',
+					cancelButtonText: 'See More Options',
+					confirmButtonColor: '#10b981',
+					cancelButtonColor: '#6b7280',
+					allowOutsideClick: false,
+					allowEscapeKey: false
+				}).then((result) => {
+					if (result.isConfirmed) {
+						// User selected "Very Satisfied" (5 stars)
+						submitRating(orderId, 5);
+						showThankYouMessage(5);
+					} else if (result.dismiss === Swal.DismissReason.cancel) {
+						// Show rating options
+						showRatingOptions(orderId);
 					}
+				});
+			}, 10000); // 10 second delay
+		}
 
-					// Show thank you message
-					let message = '';
-					switch(rating) {
-						case 1:
-						case 2:
-							message = `Thank you for your ${rating}-star rating. We'll work to improve your experience!`;
-							break;
-						case 3:
-							message = `Thank you for your ${rating}-star rating. We appreciate your feedback!`;
-							break;
-						case 4:
-						case 5:
-							message = `Thank you for your ${rating}-star rating! We're so glad you had a great experience!`;
-							break;
-					}
+		function showRatingOptions(orderId) {
+			Swal.fire({
+				title: 'Rate Your Experience',
+				html: `
+					<div style="text-align: center; margin: 20px 0;">
+						<p style="margin-bottom: 20px; color: #374151;">Please select your rating:</p>
+						<div style="display: flex; justify-content: center; gap: 10px; margin: 20px 0;">
+							<button class="rating-btn" data-rating="1" style="padding: 10px 15px; border: 2px solid #ef4444; color: #ef4444; background: white; border-radius: 8px; cursor: pointer; transition: all 0.3s;">1 ⭐</button>
+							<button class="rating-btn" data-rating="2" style="padding: 10px 15px; border: 2px solid #f97316; color: #f97316; background: white; border-radius: 8px; cursor: pointer; transition: all 0.3s;">2 ⭐</button>
+							<button class="rating-btn" data-rating="3" style="padding: 10px 15px; border: 2px solid #eab308; color: #eab308; background: white; border-radius: 8px; cursor: pointer; transition: all 0.3s;">3 ⭐</button>
+							<button class="rating-btn" data-rating="4" style="padding: 10px 15px; border: 2px solid #22c55e; color: #22c55e; background: white; border-radius: 8px; cursor: pointer; transition: all 0.3s;">4 ⭐</button>
+							<button class="rating-btn" data-rating="5" style="padding: 10px 15px; border: 2px solid #10b981; color: #10b981; background: white; border-radius: 8px; cursor: pointer; transition: all 0.3s;">5 ⭐</button>
+						</div>
+					</div>
+				`,
+				showConfirmButton: false,
+				showCancelButton: true,
+				cancelButtonText: 'Skip Rating',
+				cancelButtonColor: '#6b7280',
+				allowOutsideClick: false,
+				allowEscapeKey: false,
+				didOpen: () => {
+					// Add click handlers to rating buttons
+					document.querySelectorAll('.rating-btn').forEach(btn => {
+						btn.addEventListener('click', function() {
+							const rating = parseInt(this.getAttribute('data-rating'));
+							submitRating(orderId, rating);
+							showThankYouMessage(rating);
+							Swal.close();
+						});
 
-					alert(message + "\n\nYour feedback helps us improve our service.");
-					console.log(`Ultra simple rating submitted: ${rating} stars for order ${orderId}`);
+						// Hover effects
+						btn.addEventListener('mouseenter', function() {
+							this.style.background = this.style.borderColor;
+							this.style.color = 'white';
+						});
 
-					// Optional: Send rating to server (if system is working)
-					try {
-						fetch('actions/submit_rating.php', {
-							method: 'POST',
-							headers: { 'Content-Type': 'application/json' },
-							body: JSON.stringify({
-								order_id: orderId,
-								rating: rating,
-								method: 'ultra_simple'
-							})
-						}).catch(e => console.log('Rating submission failed (non-critical):', e));
-					} catch (e) {
-						console.log('Rating system unavailable, but feedback recorded locally');
-					}
-				} else {
-					console.log('User skipped rating');
-					alert("Thank you! If you'd like to rate your experience later, you can contact our support team.");
+						btn.addEventListener('mouseleave', function() {
+							this.style.background = 'white';
+							this.style.color = this.style.borderColor;
+						});
+					});
 				}
-			}, 500); // Small delay to ensure smooth transition from Sweet Alert
+			});
+		}
+
+		function submitRating(orderId, rating) {
+			console.log(`Sweet Alert rating submitted: ${rating} stars for order ${orderId}`);
+
+			// Send rating to server
+			try {
+				fetch('actions/submit_rating.php', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						order_id: orderId,
+						rating: rating,
+						method: 'sweet_alert'
+					})
+				}).catch(e => console.log('Rating submission failed (non-critical):', e));
+			} catch (e) {
+				console.log('Rating system unavailable, but feedback recorded locally');
+			}
+		}
+
+		function showThankYouMessage(rating) {
+			let message = '';
+			let icon = 'success';
+
+			switch(rating) {
+				case 1:
+				case 2:
+					message = `Thank you for your ${rating}-star rating. We'll work to improve your experience!`;
+					icon = 'info';
+					break;
+				case 3:
+					message = `Thank you for your ${rating}-star rating. We appreciate your feedback!`;
+					icon = 'success';
+					break;
+				case 4:
+				case 5:
+					message = `Thank you for your ${rating}-star rating! We're so glad you had a great experience!`;
+					icon = 'success';
+					break;
+			}
+
+			Swal.fire({
+				title: 'Thank You!',
+				text: message,
+				icon: icon,
+				confirmButtonText: 'You\'re Welcome!',
+				confirmButtonColor: '#10b981',
+				timer: 4000,
+				timerProgressBar: true
+			});
 		}
 
 		// Global accessibility for testing
 		window.testRatingPopup = testRatingPopup;
 		window.testSimpleRatingPopup = testSimpleRatingPopup;
-		window.testUltraSimpleRating = function() { showUltraSimpleRating('TEST123'); };
+		window.testSweetAlertRating = function() { showSweetAlertRating('TEST123'); };
 		window.forceCloseRatingPopup = forceCloseRatingPopup;
 
 		// Show popup for logged-in users (limited to once every 5 hours)
@@ -8905,7 +8967,7 @@ try {
 			console.log('Showing rating popup for order:', orderId);
 
 			// Skip all fancy stuff and go straight to bulletproof method
-			showUltraSimpleRating(orderId);
+			showSweetAlertRating(orderId);
 		}
 
 		// Original fancy popup function

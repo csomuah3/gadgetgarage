@@ -698,13 +698,29 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                         <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
                                 <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="goToAccount()">
+                                <a href="../views/account.php" class="dropdown-item-custom">
                                     <i class="fas fa-user"></i>
-                                    <span>Account</span>
+                                    <span data-translate="account">Account</span>
+                                </a>
+                                <a href="../views/my_orders.php" class="dropdown-item-custom">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span data-translate="my_orders">My Orders</span>
+                                </a>
+                                <a href="../track_order.php" class="dropdown-item-custom">
+                                    <i class="fas fa-truck"></i>
+                                    <span data-translate="track_orders">Track your Order</span>
+                                </a>
+                                <a href="../views/notifications.php" class="dropdown-item-custom">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </a>
+                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Profile Picture</span>
                                 </button>
                                 <div class="dropdown-divider-custom"></div>
                                 <div class="dropdown-item-custom">
@@ -729,7 +745,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     </div>
                                 </div>
                                 <div class="dropdown-divider-custom"></div>
-                                <a href="login/logout.php" class="dropdown-item-custom">
+                                <a href="../login/logout.php" class="dropdown-item-custom">
                                     <i class="fas fa-sign-out-alt"></i>
                                     <span>Logout</span>
                                 </a>
@@ -737,9 +753,14 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     <?php else: ?>
                         <!-- Login Button -->
-                        <a href="login/login.php" class="login-btn">
+                        <a href="../login/login.php" class="login-btn">
                             <i class="fas fa-user"></i>
                             Login
+                        </a>
+                        <!-- Register Button -->
+                        <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
+                            <i class="fas fa-user-plus"></i>
+                            Register
                         </a>
                     <?php endif; ?>
                 </div>
@@ -831,25 +852,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     </div>
                 </div>
 
-                <a href="../views/repair_services.php" class="nav-item" data-translate="repair_studio">REPAIR STUDIO</a>
-                <a href="../views/device_drop.php" class="nav-item">DEVICE DROP</a>
+                <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+                <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
                 <!-- More Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
                     <a href="#" class="nav-item">
-                        MORE
+                        <span data-translate="more">MORE</span>
                         <i class="fas fa-chevron-down"></i>
                     </a>
                     <div class="simple-dropdown" id="moreDropdown">
                         <ul>
-                            <li><a href="#contact"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="#blog"><i class="fas fa-blog"></i> Blog</a></li>
+                            <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Flash Deal positioned at far right -->
-                <a href="flash_deals.php" class="nav-item flash-deal">⚡ FLASH DEAL</a>
+                <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
             </div>
         </div>
     </nav>
@@ -1920,7 +1941,27 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        // Header dropdown functions
+        // User dropdown functionality with hover
+        let userDropdownTimeout;
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
@@ -1943,18 +1984,60 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 brandsDropdown.addEventListener('mouseleave', hideDropdown);
             }
 
-            // User dropdown hover functionality
-            const userAvatar = document.querySelector('.user-avatar');
+            // User dropdown hover and click functionality
+            const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
 
             if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('mouseenter', showUserDropdown);
-                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                // Show dropdown on avatar hover
+                userAvatar.addEventListener('mouseenter', function(e) {
+                    e.stopPropagation();
+                    showUserDropdown();
+                });
+
+                // Hide dropdown when leaving avatar (with delay)
+                userAvatar.addEventListener('mouseleave', function(e) {
+                    e.stopPropagation();
+                    hideUserDropdown();
+                });
+
+                // Keep dropdown open when hovering over it
                 userDropdown.addEventListener('mouseenter', function() {
                     clearTimeout(userDropdownTimeout);
                 });
-                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+
+                // Hide dropdown when leaving dropdown area
+                userDropdown.addEventListener('mouseleave', function() {
+                    hideUserDropdown();
+                });
+
+                // Handle click on avatar to toggle dropdown
+                userAvatar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    // Clear any pending hide timeout
+                    clearTimeout(userDropdownTimeout);
+                    toggleUserDropdown();
+                });
             }
+
+            // Close dropdown when clicking outside (with slight delay to allow toggle to work)
+            document.addEventListener('click', function(event) {
+                setTimeout(function() {
+                    const dropdown = document.getElementById('userDropdownMenu');
+                    const avatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
+
+                    if (dropdown && avatar) {
+                        // Check if click is outside both dropdown and avatar
+                        const isClickInsideDropdown = dropdown.contains(event.target);
+                        const isClickOnAvatar = avatar.contains(event.target);
+
+                        if (!isClickInsideDropdown && !isClickOnAvatar) {
+                            dropdown.classList.remove('show');
+                        }
+                    }
+                }, 10);
+            });
         });
 
         function openProfilePictureModal() {

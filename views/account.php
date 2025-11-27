@@ -38,7 +38,6 @@ try {
     // Get user's name
     $user_name = $_SESSION['name'] ?? 'User';
     $first_name = explode(' ', $user_name)[0];
-
 } catch (Exception $e) {
     die("Critical error: " . $e->getMessage());
 }
@@ -362,8 +361,15 @@ try {
 
         /* Loading Animation */
         @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
         }
 
         .loading {
@@ -1225,7 +1231,7 @@ try {
                 <!-- Center Content -->
                 <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                     <!-- Search Bar -->
-                    <form class="search-container" method="GET" action="product_search_result.php">
+                    <form class="search-container" method="GET" action="../product_search_result.php">
                         <i class="fas fa-search search-icon"></i>
                         <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
                         <button type="submit" class="search-btn">
@@ -1249,7 +1255,7 @@ try {
                     <?php if (isset($_SESSION['user_id'])): ?>
                         <!-- Wishlist Icon -->
                         <div class="header-icon">
-                            <a href="wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-heart"></i>
                                 <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
                             </a>
@@ -1257,7 +1263,7 @@ try {
 
                         <!-- Cart Icon -->
                         <div class="header-icon">
-                            <a href="cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                                 <i class="fas fa-shopping-cart"></i>
                                 <?php if ($cart_count > 0): ?>
                                     <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
@@ -1269,13 +1275,29 @@ try {
 
                         <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
                                 <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="goToAccount()">
+                                <a href="../views/account.php" class="dropdown-item-custom">
                                     <i class="fas fa-user"></i>
-                                    <span>Account</span>
+                                    <span data-translate="account">Account</span>
+                                </a>
+                                <a href="../views/my_orders.php" class="dropdown-item-custom">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span data-translate="my_orders">My Orders</span>
+                                </a>
+                                <a href="../track_order.php" class="dropdown-item-custom">
+                                    <i class="fas fa-truck"></i>
+                                    <span data-translate="track_orders">Track your Order</span>
+                                </a>
+                                <a href="../views/notifications.php" class="dropdown-item-custom">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </a>
+                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Profile Picture</span>
                                 </button>
                                 <div class="dropdown-divider-custom"></div>
                                 <div class="dropdown-item-custom">
@@ -1312,6 +1334,11 @@ try {
                             <i class="fas fa-user"></i>
                             Login
                         </a>
+                        <!-- Register Button -->
+                        <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
+                            <i class="fas fa-user-plus"></i>
+                            Register
+                        </a>
                     <?php endif; ?>
                 </div>
             </div>
@@ -1334,17 +1361,17 @@ try {
                         <ul>
                             <?php if (!empty($brands)): ?>
                                 <?php foreach ($brands as $brand): ?>
-                                    <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                    <li><a href="../views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                                 <?php endforeach; ?>
                             <?php else: ?>
-                                <li><a href="all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                                <li><a href="all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                                <li><a href="all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                                <li><a href="all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                                <li><a href="all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                                <li><a href="all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                                <li><a href="all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                                <li><a href="all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                                <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                                <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                                <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                                <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                                <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                                <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                                <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                                <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
                             <?php endif; ?>
                         </ul>
                     </div>
@@ -1362,35 +1389,35 @@ try {
                         <div class="dropdown-content">
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                    <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
                                         <span data-translate="mobile_devices">Mobile Devices</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                    <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                    <li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
+                                    <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
                                         <span data-translate="computing">Computing</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                    <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                    <li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column">
                                 <h4>
-                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
+                                    <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
                                         <span data-translate="photography_video">Photography & Video</span>
                                     </a>
                                 </h4>
                                 <ul>
-                                    <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                    <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                    <li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                                 </ul>
                             </div>
                             <div class="dropdown-column featured">
@@ -1400,7 +1427,7 @@ try {
                                     <div class="featured-text">
                                         <strong>New Arrivals</strong>
                                         <p>Latest tech gadgets</p>
-                                        <a href="all_product.php" class="shop-now-btn">Shop</a>
+                                        <a href="../views/all_product.php" class="shop-now-btn">Shop </a>
                                     </div>
                                 </div>
                             </div>
@@ -1408,8 +1435,8 @@ try {
                     </div>
                 </div>
 
-                <a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-                <a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+                <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+                <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
                 <!-- More Dropdown -->
                 <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
@@ -1419,14 +1446,14 @@ try {
                     </a>
                     <div class="simple-dropdown" id="moreDropdown">
                         <ul>
-                            <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                            <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                         </ul>
                     </div>
                 </div>
 
                 <!-- Flash Deal positioned at far right -->
-                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+                <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
             </div>
         </div>
     </nav>
@@ -1686,7 +1713,7 @@ try {
         document.addEventListener('DOMContentLoaded', function() {
             const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
             const brandsDropdown = document.getElementById('shopDropdown');
-            
+
             if (shopCategoriesBtn && brandsDropdown) {
                 shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
                 shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
@@ -1698,7 +1725,7 @@ try {
 
             const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
-            
+
             if (userAvatar && userDropdown) {
                 userAvatar.addEventListener('mouseenter', showUserDropdown);
                 userAvatar.addEventListener('mouseleave', hideUserDropdown);
@@ -1726,9 +1753,9 @@ try {
                 const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
                 timerElement.innerHTML = days + "d:" +
-                                         (hours < 10 ? "0" : "") + hours + "h:" +
-                                         (minutes < 10 ? "0" : "") + minutes + "m:" +
-                                         (seconds < 10 ? "0" : "") + seconds + "s";
+                    (hours < 10 ? "0" : "") + hours + "h:" +
+                    (minutes < 10 ? "0" : "") + minutes + "m:" +
+                    (seconds < 10 ? "0" : "") + seconds + "s";
             }
         }
 
@@ -1736,25 +1763,123 @@ try {
         setInterval(updateTimer, 1000);
         updateTimer(); // Initial call
 
-        // User dropdown functionality
-        function toggleUserDropdown() {
+        // User dropdown functionality with hover
+        let userDropdownTimeout;
+        let dropdownTimeout;
+
+        function showUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
-            dropdown.classList.toggle('show');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
         }
 
-        // Close dropdown when clicking outside
-        document.addEventListener('click', function(event) {
+        function hideUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
-            const avatar = document.querySelector('.user-avatar');
-
-            if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
-                dropdown.classList.remove('show');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
             }
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        function showDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        // Add hover and click functionality to user dropdown
+        document.addEventListener('DOMContentLoaded', function() {
+            const userAvatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+
+            if (userAvatar && userDropdown) {
+                // Show dropdown on avatar hover
+                userAvatar.addEventListener('mouseenter', function(e) {
+                    e.stopPropagation();
+                    showUserDropdown();
+                });
+
+                // Hide dropdown when leaving avatar (with delay)
+                userAvatar.addEventListener('mouseleave', function(e) {
+                    e.stopPropagation();
+                    hideUserDropdown();
+                });
+
+                // Keep dropdown open when hovering over it
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+
+                // Hide dropdown when leaving dropdown area
+                userDropdown.addEventListener('mouseleave', function() {
+                    hideUserDropdown();
+                });
+
+                // Handle click on avatar to toggle dropdown
+                userAvatar.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    e.preventDefault();
+                    // Clear any pending hide timeout
+                    clearTimeout(userDropdownTimeout);
+                    toggleUserDropdown();
+                });
+            }
+
+            // Close dropdown when clicking outside (with slight delay to allow toggle to work)
+            document.addEventListener('click', function(event) {
+                setTimeout(function() {
+                    const dropdown = document.getElementById('userDropdownMenu');
+                    const avatar = document.getElementById('userAvatar') || document.querySelector('.user-avatar');
+
+                    if (dropdown && avatar) {
+                        // Check if click is outside both dropdown and avatar
+                        const isClickInsideDropdown = dropdown.contains(event.target);
+                        const isClickOnAvatar = avatar.contains(event.target);
+
+                        if (!isClickInsideDropdown && !isClickOnAvatar) {
+                            dropdown.classList.remove('show');
+                        }
+                    }
+                }, 10);
+            });
         });
 
-        // Account page navigation
-        function goToAccount() {
-            window.location.href = 'my_orders.php';
+        // Profile picture modal functionality
+        function openProfilePictureModal() {
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Profile Picture',
+                    text: 'Profile picture upload functionality will be implemented',
+                    icon: 'info',
+                    confirmButtonColor: '#D19C97',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                alert('Profile picture upload functionality will be implemented');
+            }
         }
 
         // Language change functionality
@@ -1832,4 +1957,5 @@ try {
         let moreDropdownTimeout;
     </script>
 </body>
+
 </html>

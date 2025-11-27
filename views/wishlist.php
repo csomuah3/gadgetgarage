@@ -267,209 +267,260 @@ if ($is_logged_in) {
 </head>
 
 <body>
-    <!-- Promo Banner -->
+    <!-- Promotional Banner -->
     <div class="promo-banner2">
-        <div class="container">
-            <div class="promo-text">
-                <i class="fas fa-bolt"></i>
-                <span>LIMITED TIME OFFER</span>
-            </div>
-            <div class="countdown-timer" id="promoCountdown">
-                <span>Ends in:</span>
-                <div class="time-unit" id="hours">00</div>
-                <span>:</span>
-                <div class="time-unit" id="minutes">00</div>
-                <span>:</span>
-                <div class="time-unit" id="seconds">00</div>
-            </div>
+        <div class="promo-banner-left">
+            <i class="fas fa-bolt"></i>
         </div>
+        <div class="promo-banner-center">
+            <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+        </div>
+        <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
     </div>
 
     <!-- Main Header -->
-    <header class="main-header">
-        <div class="container header-container">
-            <div class="header-top">
-                <!-- Logo -->
+    <header class="main-header animate__animated animate__fadeInDown">
+        <div class="container-fluid" style="padding: 0 120px 0 95px;">
+            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
+                <!-- Logo - Far Left -->
                 <a href="../index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
+                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                        alt="Gadget Garage">
                 </a>
 
-                <!-- Search Bar -->
-                <div class="search-container">
-                    <form class="search-form" action="../product_search_result.php" method="GET">
-                        <input type="text" name="search" class="search-input" placeholder="Search for gadgets, phones, laptops..." required>
+                <!-- Center Content -->
+                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
+                    <!-- Search Bar -->
+                    <form class="search-container" method="GET" action="../product_search_result.php">
+                        <i class="fas fa-search search-icon"></i>
+                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
                         <button type="submit" class="search-btn">
                             <i class="fas fa-search"></i>
                         </button>
                     </form>
+
+                    <!-- Tech Revival Section -->
+                    <div class="tech-revival-section">
+                        <i class="fas fa-recycle tech-revival-icon"></i>
+                        <div>
+                            <p class="tech-revival-text">Bring Retired Devices</p>
+                            <p class="contact-number">055-138-7578</p>
+                        </div>
+                    </div>
                 </div>
 
-                <!-- Tech Revival -->
-                <a href="../repair_services.php" class="tech-revival">
-                    <i class="fas fa-tools"></i>
-                    Tech Revival
-                </a>
-
-                <!-- User Actions -->
-                <div class="user-actions">
-                    <?php if ($is_logged_in): ?>
-                        <!-- Wishlist -->
-                        <a href="../views/wishlist.php" class="action-item">
-                            <i class="fas fa-heart"></i>
-                            <span>Wishlist</span>
-                            <?php if ($wishlist_count > 0): ?>
-                                <span class="badge"><?php echo $wishlist_count; ?></span>
-                            <?php endif; ?>
-                        </a>
-
-                        <!-- Cart -->
-                        <a href="../views/cart.php" class="action-item">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Cart</span>
-                            <?php if ($cart_count > 0): ?>
-                                <span class="badge"><?php echo $cart_count; ?></span>
-                            <?php endif; ?>
-                        </a>
-
-                        <!-- Account Dropdown -->
-                        <div class="dropdown">
-                            <a href="#" class="action-item">
-                                <i class="fas fa-user"></i>
-                                <span>Account</span>
+                <!-- User Actions - Far Right -->
+                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
+                    <?php if (isset($_SESSION['user_id'])): ?>
+                        <!-- Wishlist Icon -->
+                        <div class="header-icon">
+                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-heart"></i>
+                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
                             </a>
-                            <div class="dropdown-menu">
-                                <a href="../views/account.php" class="dropdown-item">My Profile</a>
-                                <a href="../views/my_orders.php" class="dropdown-item">My Orders</a>
-                                <a href="../views/notifications.php" class="dropdown-item">Notifications</a>
-                                <?php if ($is_admin): ?>
-                                    <a href="../admin/dashboard.php" class="dropdown-item">Admin Panel</a>
+                        </div>
+
+                        <!-- Cart Icon -->
+                        <div class="header-icon">
+                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                                <i class="fas fa-shopping-cart"></i>
+                                <?php if ($cart_count > 0): ?>
+                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                                <?php else: ?>
+                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
                                 <?php endif; ?>
-                                <hr style="margin: 5px 0; border: none; border-top: 1px solid #e5e7eb;">
-                                <a href="../login/logout.php" class="dropdown-item">Logout</a>
+                            </a>
+                        </div>
+
+                        <!-- User Avatar Dropdown -->
+                        <div class="user-dropdown">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" id="userAvatar">
+                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
+                            </div>
+                            <div class="dropdown-menu-custom" id="userDropdownMenu">
+                                <a href="../views/account.php" class="dropdown-item-custom">
+                                    <i class="fas fa-user"></i>
+                                    <span data-translate="account">Account</span>
+                                </a>
+                                <a href="../views/my_orders.php" class="dropdown-item-custom">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span data-translate="my_orders">My Orders</span>
+                                </a>
+                                <a href="../track_order.php" class="dropdown-item-custom">
+                                    <i class="fas fa-truck"></i>
+                                    <span data-translate="track_orders">Track your Order</span>
+                                </a>
+                                <a href="../views/notifications.php" class="dropdown-item-custom">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </a>
+                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Profile Picture</span>
+                                </button>
+                                <div class="dropdown-divider-custom"></div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-globe"></i>
+                                    <div class="language-selector">
+                                        <span>Language</span>
+                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
+                                            <option value="en">🇬🇧 EN</option>
+                                            <option value="es">🇪🇸 ES</option>
+                                            <option value="fr">🇫🇷 FR</option>
+                                            <option value="de">🇩🇪 DE</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="dropdown-item-custom">
+                                    <i class="fas fa-moon"></i>
+                                    <div class="theme-toggle">
+                                        <span>Dark Mode</span>
+                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
+                                            <div class="toggle-slider"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="dropdown-divider-custom"></div>
+                                <a href="../login/logout.php" class="dropdown-item-custom">
+                                    <i class="fas fa-sign-out-alt"></i>
+                                    <span>Logout</span>
+                                </a>
                             </div>
                         </div>
                     <?php else: ?>
-                        <!-- Login/Register -->
-                        <a href="../login/login.php" class="action-item">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
+                        <!-- Login Button -->
+                        <a href="../login/login.php" class="login-btn">
+                            <i class="fas fa-user"></i>
+                            Login
                         </a>
-                        <a href="../views/register.php" class="action-item">
+                        <!-- Register Button -->
+                        <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
                             <i class="fas fa-user-plus"></i>
-                            <span>Register</span>
+                            Register
                         </a>
                     <?php endif; ?>
-
-                    <!-- Dark Mode Toggle -->
-                    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
                 </div>
             </div>
         </div>
-
-        <!-- Navigation -->
-        <nav class="main-nav">
-            <div class="container nav-container">
-                <ul class="nav-links">
-                    <!-- Shop Categories -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-th-large"></i>
-                            Shop Categories
-                        </a>
-                        <div class="mega-menu">
-                            <div class="mega-menu-grid">
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-mobile-alt"></i> Mobile Devices</h4>
-                                    <ul>
-                                        <li><a href="../views/mobile_devices.php?category=smartphones">Smartphones</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=tablets">Tablets</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=smartwatches">Smartwatches</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=accessories">Phone Accessories</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-laptop"></i> Computing</h4>
-                                    <ul>
-                                        <li><a href="../views/computing.php?category=laptops">Laptops</a></li>
-                                        <li><a href="../views/computing.php?category=desktops">Desktops</a></li>
-                                        <li><a href="../views/computing.php?category=components">Components</a></li>
-                                        <li><a href="../views/computing.php?category=peripherals">Peripherals</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-camera"></i> Photography</h4>
-                                    <ul>
-                                        <li><a href="../views/photography_video.php?category=cameras">Cameras</a></li>
-                                        <li><a href="../views/photography_video.php?category=lenses">Lenses</a></li>
-                                        <li><a href="../views/photography_video.php?category=tripods">Tripods</a></li>
-                                        <li><a href="../views/photography_video.php?category=accessories">Photo Accessories</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Brands -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-tags"></i>
-                            Brands
-                        </a>
-                        <div class="brands-dropdown">
-                            <div class="brands-grid">
-                                <a href="../views/all_product.php?brand=apple" class="brand-item">
-                                    <i class="fab fa-apple"></i> Apple
-                                </a>
-                                <a href="../views/all_product.php?brand=samsung" class="brand-item">
-                                    <i class="fas fa-mobile"></i> Samsung
-                                </a>
-                                <a href="../views/all_product.php?brand=sony" class="brand-item">
-                                    <i class="fas fa-tv"></i> Sony
-                                </a>
-                                <a href="../views/all_product.php?brand=canon" class="brand-item">
-                                    <i class="fas fa-camera"></i> Canon
-                                </a>
-                                <a href="../views/all_product.php?brand=hp" class="brand-item">
-                                    <i class="fas fa-laptop"></i> HP
-                                </a>
-                                <a href="../views/all_product.php?brand=dell" class="brand-item">
-                                    <i class="fas fa-desktop"></i> Dell
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Regular Navigation Links -->
-                    <li class="nav-item">
-                        <a href="../views/all_product.php" class="nav-link">
-                            <i class="fas fa-shopping-bag"></i>
-                            All Products
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/device_drop.php" class="nav-link">
-                            <i class="fas fa-recycle"></i>
-                            Device Drop
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/contact.php" class="nav-link">
-                            <i class="fas fa-envelope"></i>
-                            Contact
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Flash Deals -->
-                <a href="../views/flash_deals.php" class="flash-deals">
-                    <i class="fas fa-bolt"></i>
-                    Flash Deals
-                </a>
-            </div>
-        </nav>
     </header>
+
+    <!-- Main Navigation -->
+    <nav class="main-nav">
+        <div class="container-fluid px-0">
+            <div class="nav-menu">
+                <!-- Shop by Brands Button -->
+                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
+                    <button class="categories-button">
+                        <i class="fas fa-tags"></i>
+                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <div class="brands-dropdown" id="shopDropdown">
+                        <h4>All Brands</h4>
+                        <ul>
+                            <?php
+                            require_once(__DIR__ . '/../controllers/brand_controller.php');
+                            $brands = get_all_brands_ctr();
+                            if (!empty($brands)): ?>
+                                <?php foreach ($brands as $brand): ?>
+                                    <li><a href="../views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                <?php endforeach; ?>
+                            <?php else: ?>
+                                <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                                <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                                <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                                <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                                <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                                <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                                <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                                <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                            <?php endif; ?>
+                        </ul>
+                    </div>
+                </div>
+
+                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+
+                <!-- Shop Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
+                    <a href="#" class="nav-item">
+                        <span data-translate="shop">SHOP</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="mega-dropdown" id="shopCategoryDropdown">
+                        <div class="dropdown-content">
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="mobile_devices">Mobile Devices</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                    <li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="computing">Computing</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                    <li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column">
+                                <h4>
+                                    <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
+                                        <span data-translate="photography_video">Photography & Video</span>
+                                    </a>
+                                </h4>
+                                <ul>
+                                    <li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                    <li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                </ul>
+                            </div>
+                            <div class="dropdown-column featured">
+                                <h4>Shop All</h4>
+                                <div class="featured-item">
+                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
+                                    <div class="featured-text">
+                                        <strong>New Arrivals</strong>
+                                        <p>Latest tech gadgets</p>
+                                        <a href="../views/all_product.php" class="shop-now-btn">Shop </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+                <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+
+                <!-- More Dropdown -->
+                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
+                    <a href="#" class="nav-item">
+                        <span data-translate="more">MORE</span>
+                        <i class="fas fa-chevron-down"></i>
+                    </a>
+                    <div class="simple-dropdown" id="moreDropdown">
+                        <ul>
+                            <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                            <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Flash Deal positioned at far right -->
+                <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+            </div>
+        </div>
+    </nav>
 
     <!-- Wishlist Content -->
     <div class="wishlist-container">
@@ -496,11 +547,11 @@ if ($is_logged_in) {
                         <div class="wishlist-item">
                             <div class="product-image-container">
                                 <img src="<?php echo htmlspecialchars($item['product_image'] ?: '../uploads/default-product.png'); ?>"
-                                     alt="<?php echo htmlspecialchars($item['product_title']); ?>"
-                                     class="product-image">
+                                    alt="<?php echo htmlspecialchars($item['product_title']); ?>"
+                                    class="product-image">
                                 <button class="remove-wishlist-btn"
-                                        onclick="removeFromWishlist(<?php echo $item['product_id']; ?>, this)"
-                                        title="Remove from wishlist">
+                                    onclick="removeFromWishlist(<?php echo $item['product_id']; ?>, this)"
+                                    title="Remove from wishlist">
                                     <i class="fas fa-times"></i>
                                 </button>
                             </div>
@@ -582,68 +633,69 @@ if ($is_logged_in) {
                 searchInput.focus();
             }
         });
+
         function removeFromWishlist(productId, button) {
             fetch('../actions/remove_from_wishlist.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'product_id=' + productId
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Remove the wishlist item from the page
-                    const wishlistItem = button.closest('.wishlist-item');
-                    wishlistItem.style.transition = 'all 0.3s ease';
-                    wishlistItem.style.opacity = '0';
-                    wishlistItem.style.transform = 'scale(0.8)';
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Remove the wishlist item from the page
+                        const wishlistItem = button.closest('.wishlist-item');
+                        wishlistItem.style.transition = 'all 0.3s ease';
+                        wishlistItem.style.opacity = '0';
+                        wishlistItem.style.transform = 'scale(0.8)';
 
-                    setTimeout(() => {
-                        wishlistItem.remove();
+                        setTimeout(() => {
+                            wishlistItem.remove();
 
-                        // Check if there are no more items
-                        const remainingItems = document.querySelectorAll('.wishlist-item');
-                        if (remainingItems.length === 0) {
-                            location.reload(); // Reload to show empty state
-                        }
-                    }, 300);
-                } else {
-                    alert(data.message || 'Failed to remove item from wishlist');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to remove item from wishlist');
-            });
+                            // Check if there are no more items
+                            const remainingItems = document.querySelectorAll('.wishlist-item');
+                            if (remainingItems.length === 0) {
+                                location.reload(); // Reload to show empty state
+                            }
+                        }, 300);
+                    } else {
+                        alert(data.message || 'Failed to remove item from wishlist');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to remove item from wishlist');
+                });
         }
 
         function addToCartFromWishlist(productId) {
             fetch('../actions/add_to_cart.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'product_id=' + productId + '&qty=1'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    // Show success message
-                    alert('Item added to cart successfully!');
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId + '&qty=1'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        alert('Item added to cart successfully!');
 
-                    // Optional: Show cart sidebar if available
-                    if (window.showCartSidebar) {
-                        window.showCartSidebar();
+                        // Optional: Show cart sidebar if available
+                        if (window.showCartSidebar) {
+                            window.showCartSidebar();
+                        }
+                    } else {
+                        alert(data.message || 'Failed to add item to cart');
                     }
-                } else {
-                    alert(data.message || 'Failed to add item to cart');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to add item to cart');
-            });
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Failed to add item to cart');
+                });
         }
 
         function viewProduct(productId) {
@@ -739,7 +791,7 @@ if ($is_logged_in) {
         document.addEventListener('DOMContentLoaded', function() {
             const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
             const brandsDropdown = document.getElementById('shopDropdown');
-            
+
             if (shopCategoriesBtn && brandsDropdown) {
                 shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
                 shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
@@ -751,7 +803,7 @@ if ($is_logged_in) {
 
             const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
-            
+
             if (userAvatar && userDropdown) {
                 userAvatar.addEventListener('mouseenter', showUserDropdown);
                 userAvatar.addEventListener('mouseleave', hideUserDropdown);

@@ -742,6 +742,10 @@ if (!check_login() || !check_admin()) {
                         <i class="fas fa-calendar"></i>
                         <span>Appointments</span>
                     </a>
+                    <a href="discount_codes.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'discount_codes.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-percentage"></i>
+                        <span>Discounts</span>
+                    </a>
                     <a href="../index.php?view_customer=1" class="nav-link">
                         <i class="fas fa-home"></i>
                         <span>Customer Homepage</span>

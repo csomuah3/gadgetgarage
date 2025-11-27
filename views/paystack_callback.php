@@ -184,9 +184,9 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                     // Clear promo code from localStorage
                     localStorage.removeItem('appliedPromo');
 
-                    // Redirect to success page or my_orders page
+                    // Redirect to index page for order confirmation and rating
                     setTimeout(() => {
-                        window.location.replace('my_orders.php?payment=success&order=' + encodeURIComponent(data.order_id) + '&ref=' + encodeURIComponent(reference));
+                        window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(data.order_id) + '&ref=' + encodeURIComponent(reference));
                     }, 2000);
 
                 } else {

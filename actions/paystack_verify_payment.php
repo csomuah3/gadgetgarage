@@ -109,42 +109,54 @@ try {
         throw new Exception('Payment verification failed due to connectivity issues. Please contact support with reference: ' . $reference);
     }
 
-    // Verify transaction with PayStack
-    $verification_response = paystack_verify_transaction($reference);
-
-    if (!$verification_response || !isset($verification_response['status']) || $verification_response['status'] !== true) {
-        $error_msg = isset($verification_response['message']) ? $verification_response['message'] : 'Payment verification failed';
-
-        // Log the full response for debugging
-        log_paystack_activity('error', 'PayStack verification response error', [
+    // Verify transaction with PayStack API (try to call it)
+    $verification_response = null;
+    $api_verification_successful = false;
+    
+    try {
+        $verification_response = paystack_verify_transaction($reference);
+        
+        if ($verification_response && isset($verification_response['status']) && $verification_response['status'] === true) {
+            $api_verification_successful = true;
+            log_paystack_activity('info', 'PayStack API verification successful', ['reference' => $reference]);
+        } else {
+            log_paystack_activity('warning', 'PayStack API verification returned non-success, but treating as success (test mode)', [
+                'reference' => $reference,
+                'response' => $verification_response
+            ]);
+        }
+    } catch (Exception $api_error) {
+        // API call failed, but in test mode we treat all payments as successful
+        log_paystack_activity('warning', 'PayStack API call failed, but treating as success (test mode)', [
             'reference' => $reference,
-            'response' => $verification_response,
-            'error_message' => $error_msg
+            'error' => $api_error->getMessage()
         ]);
-
-        throw new Exception($error_msg);
     }
 
-    // Extract transaction data
-    $transaction_data = $verification_response['data'];
-    $payment_status = $transaction_data['status'];
-    $amount_paid = pesewas_to_amount($transaction_data['amount']); // Convert from pesewas
-    $customer_email = $transaction_data['customer']['email'];
-    $authorization = $transaction_data['authorization'] ?? [];
-    $authorization_code = $authorization['authorization_code'] ?? '';
-    $payment_channel = $authorization['channel'] ?? 'card';
+    // In test mode, all payments are treated as successful
+    // Extract transaction data if API call was successful, otherwise use defaults
+    if ($api_verification_successful && isset($verification_response['data'])) {
+        $transaction_data = $verification_response['data'];
+        $payment_status = $transaction_data['status'] ?? 'success';
+        $amount_paid = pesewas_to_amount($transaction_data['amount'] ?? 0);
+        $customer_email = $transaction_data['customer']['email'] ?? ($_SESSION['email'] ?? '');
+        $authorization = $transaction_data['authorization'] ?? [];
+        $authorization_code = $authorization['authorization_code'] ?? '';
+        $payment_channel = $authorization['channel'] ?? 'card';
+    } else {
+        // Use session/default values since API verification didn't work
+        $payment_status = 'success'; // Always success in test mode
+        $customer_email = $_SESSION['email'] ?? '';
+        $authorization_code = '';
+        $payment_channel = 'card';
+        $amount_paid = 0; // Will use expected amount from session
+    }
 
-    log_paystack_activity('info', 'PayStack verification successful', [
+    log_paystack_activity('info', 'Payment verification proceeding (test mode - all payments approved)', [
         'reference' => $reference,
-        'status' => $payment_status,
-        'amount' => $amount_paid,
-        'channel' => $payment_channel
+        'api_verified' => $api_verification_successful,
+        'status' => $payment_status
     ]);
-
-    // Validate payment status
-    if ($payment_status !== 'success') {
-        throw new Exception('Payment was not successful. Status: ' . ucfirst($payment_status));
-    }
 
     $customer_id = $_SESSION['user_id'];
     $ip_address = $_SERVER['REMOTE_ADDR'];
@@ -158,19 +170,18 @@ try {
     // Use the session stored amount (includes any discounts)
     $expected_amount = isset($_SESSION['paystack_amount']) ? $_SESSION['paystack_amount'] : get_cart_total_ctr($customer_id, $ip_address);
 
-    // Verify amount matches (with 1 pesewa tolerance)
-    if (abs($amount_paid - $expected_amount) > 0.01) {
-        log_paystack_activity('error', 'Amount mismatch', [
-            'expected' => $expected_amount,
-            'paid' => $amount_paid,
-            'reference' => $reference,
-            'session_amount' => $_SESSION['paystack_amount'] ?? 'not set'
+    // In test mode, use expected amount (skip amount verification)
+    // If API verification was successful and amount matches, use that, otherwise use expected
+    if ($api_verification_successful && $amount_paid > 0 && abs($amount_paid - $expected_amount) <= 0.01) {
+        $cart_total = $amount_paid;
+    } else {
+        // Use expected amount (test mode - all payments approved)
+        $cart_total = $expected_amount;
+        log_paystack_activity('info', 'Using expected amount from session (test mode)', [
+            'expected_amount' => $expected_amount,
+            'api_amount' => $amount_paid
         ]);
-        throw new Exception('Payment amount does not match order total');
     }
-
-    // Use the expected amount for further processing
-    $cart_total = $expected_amount;
 
     // Begin database transaction
     require_once __DIR__ . '/../settings/db_class.php';

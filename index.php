@@ -28,6 +28,26 @@ try {
 	$ip_address = $_SERVER['REMOTE_ADDR'];
 	$cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
+	// Check for payment success parameters
+	$payment_success = isset($_GET['payment']) && $_GET['payment'] === 'success';
+	$order_id_from_payment = isset($_GET['order']) ? intval($_GET['order']) : null;
+	$payment_reference = isset($_GET['ref']) ? htmlspecialchars($_GET['ref']) : null;
+	
+	// Get order details if payment was successful
+	$order_details = null;
+	if ($payment_success && $order_id_from_payment) {
+		try {
+			require_once(__DIR__ . '/controllers/order_controller.php');
+			$order_details = get_order_by_id_ctr($order_id_from_payment);
+			// Verify order belongs to user
+			if ($order_details && isset($order_details['customer_id']) && $order_details['customer_id'] != $customer_id) {
+				$order_details = null; // Don't show order if it doesn't belong to user
+			}
+		} catch (Exception $e) {
+			error_log("Failed to load order details: " . $e->getMessage());
+		}
+	}
+
 	// Initialize arrays for navigation
 	$categories = [];
 	$brands = [];
@@ -4316,12 +4336,198 @@ try {
 			}
 		}
 
+		/* Newsletter Section Styles */
+		.newsletter-section {
+			background: linear-gradient(135deg, #008060 0%, #006b4e 100%);
+			padding: 60px 0;
+			margin-top: 80px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.newsletter-section::before {
+			content: '';
+			position: absolute;
+			top: -50%;
+			right: -10%;
+			width: 400px;
+			height: 400px;
+			background: rgba(255, 255, 255, 0.1);
+			border-radius: 50%;
+			z-index: 0;
+		}
+
+		.newsletter-section::after {
+			content: '';
+			position: absolute;
+			bottom: -30%;
+			left: -5%;
+			width: 300px;
+			height: 300px;
+			background: rgba(255, 255, 255, 0.08);
+			border-radius: 50%;
+			z-index: 0;
+		}
+
+		.newsletter-container {
+			position: relative;
+			z-index: 1;
+			max-width: 800px;
+			margin: 0 auto;
+			text-align: center;
+		}
+
+		.newsletter-icon-wrapper {
+			width: 80px;
+			height: 80px;
+			background: rgba(255, 255, 255, 0.2);
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			margin: 0 auto 25px;
+			backdrop-filter: blur(10px);
+		}
+
+		.newsletter-icon-wrapper i {
+			font-size: 2.5rem;
+			color: white;
+		}
+
+		.newsletter-title {
+			color: white;
+			font-size: 2.2rem;
+			font-weight: 700;
+			margin-bottom: 15px;
+			line-height: 1.2;
+		}
+
+		.newsletter-description {
+			color: rgba(255, 255, 255, 0.95);
+			font-size: 1.1rem;
+			margin-bottom: 35px;
+			line-height: 1.6;
+		}
+
+		.newsletter-form {
+			display: flex;
+			gap: 12px;
+			max-width: 600px;
+			margin: 0 auto;
+			background: white;
+			border-radius: 50px;
+			padding: 8px;
+			box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+		}
+
+		.newsletter-input {
+			flex: 1;
+			border: none;
+			padding: 18px 25px;
+			font-size: 1rem;
+			border-radius: 50px;
+			outline: none;
+			color: #1f2937;
+		}
+
+		.newsletter-input::placeholder {
+			color: #9ca3af;
+		}
+
+		.newsletter-submit-btn {
+			background: linear-gradient(135deg, #008060, #006b4e);
+			color: white;
+			border: none;
+			padding: 18px 35px;
+			border-radius: 50px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			white-space: nowrap;
+			box-shadow: 0 4px 15px rgba(0, 128, 96, 0.3);
+		}
+
+		.newsletter-submit-btn:hover {
+			background: linear-gradient(135deg, #006b4e, #008060);
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(0, 128, 96, 0.4);
+		}
+
+		.newsletter-submit-btn:active {
+			transform: translateY(0);
+		}
+
+		.newsletter-submit-btn:disabled {
+			opacity: 0.7;
+			cursor: not-allowed;
+		}
+
+		.newsletter-message {
+			margin-top: 20px;
+			padding: 12px 20px;
+			border-radius: 8px;
+			font-size: 0.95rem;
+			display: none;
+		}
+
+		.newsletter-message.success {
+			background: rgba(16, 185, 129, 0.2);
+			color: white;
+			border: 1px solid rgba(16, 185, 129, 0.4);
+			display: block;
+		}
+
+		.newsletter-message.error {
+			background: rgba(239, 68, 68, 0.2);
+			color: white;
+			border: 1px solid rgba(239, 68, 68, 0.4);
+			display: block;
+		}
+
+		.newsletter-privacy {
+			margin-top: 20px;
+			color: rgba(255, 255, 255, 0.8);
+			font-size: 0.85rem;
+		}
+
+		.newsletter-privacy i {
+			margin-right: 5px;
+		}
+
+		@media (max-width: 768px) {
+			.newsletter-title {
+				font-size: 1.8rem;
+			}
+
+			.newsletter-description {
+				font-size: 1rem;
+			}
+
+			.newsletter-form {
+				flex-direction: column;
+				border-radius: 15px;
+				padding: 15px;
+			}
+
+			.newsletter-input {
+				border-radius: 12px;
+				padding: 15px 20px;
+			}
+
+			.newsletter-submit-btn {
+				border-radius: 12px;
+				padding: 15px 25px;
+				width: 100%;
+			}
+		}
+
 		/* Footer Styles */
 		.main-footer {
 			background: #ffffff;
 			border-top: 1px solid #e5e7eb;
 			padding: 60px 0 20px;
-			margin-top: 80px;
+			margin-top: 0;
 		}
 
 		.footer-logo {
@@ -5772,6 +5978,113 @@ try {
 			</div>
 		</div>
 	</section>
+
+	<!-- Newsletter Section -->
+	<section class="newsletter-section">
+		<div class="container">
+			<div class="newsletter-container">
+				<div class="newsletter-icon-wrapper">
+					<i class="fas fa-envelope"></i>
+				</div>
+				<h2 class="newsletter-title">Be the First to Discover Amazing Mid-Week Deals!</h2>
+				<p class="newsletter-description">
+					Subscribe to our newsletter and get exclusive access to special offers, new arrivals, and limited-time deals delivered straight to your inbox.
+				</p>
+				<form class="newsletter-form" id="newsletterForm" onsubmit="subscribeNewsletterSection(event)">
+					<input 
+						type="email" 
+						class="newsletter-input" 
+						id="newsletterEmailInput"
+						placeholder="Enter your email address" 
+						required
+						autocomplete="email"
+					>
+					<button type="submit" class="newsletter-submit-btn" id="newsletterSubmitBtn">
+						<i class="fas fa-paper-plane"></i> Subscribe
+					</button>
+				</form>
+				<div class="newsletter-message" id="newsletterMessage"></div>
+				<p class="newsletter-privacy">
+					<i class="fas fa-lock"></i> We respect your privacy. Unsubscribe at any time.
+				</p>
+			</div>
+		</div>
+	</section>
+
+	<script>
+		async function subscribeNewsletterSection(event) {
+			event.preventDefault();
+			
+			const form = document.getElementById('newsletterForm');
+			const emailInput = document.getElementById('newsletterEmailInput');
+			const submitBtn = document.getElementById('newsletterSubmitBtn');
+			const messageDiv = document.getElementById('newsletterMessage');
+			
+			const email = emailInput.value.trim();
+			
+			if (!email) {
+				showNewsletterMessage('Please enter your email address', 'error');
+				return;
+			}
+			
+			// Validate email format
+			const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+			if (!emailRegex.test(email)) {
+				showNewsletterMessage('Please enter a valid email address', 'error');
+				return;
+			}
+			
+			// Disable button and show loading state
+			submitBtn.disabled = true;
+			submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subscribing...';
+			messageDiv.className = 'newsletter-message';
+			
+			try {
+				const response = await fetch('actions/subscribe_newsletter_action.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({ email: email })
+				});
+				
+				const data = await response.json();
+				
+				if (data.success) {
+					showNewsletterMessage(data.message || 'Successfully subscribed! You\'ll receive exclusive deals.', 'success');
+					emailInput.value = '';
+					
+					// Reset button after 2 seconds
+					setTimeout(() => {
+						submitBtn.disabled = false;
+						submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Subscribe';
+					}, 2000);
+				} else {
+					showNewsletterMessage(data.message || 'Failed to subscribe. Please try again.', 'error');
+					submitBtn.disabled = false;
+					submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Subscribe';
+				}
+			} catch (error) {
+				console.error('Newsletter subscription error:', error);
+				showNewsletterMessage('An error occurred. Please try again later.', 'error');
+				submitBtn.disabled = false;
+				submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Subscribe';
+			}
+		}
+		
+		function showNewsletterMessage(message, type) {
+			const messageDiv = document.getElementById('newsletterMessage');
+			messageDiv.textContent = message;
+			messageDiv.className = `newsletter-message ${type}`;
+			
+			// Auto-hide success messages after 5 seconds
+			if (type === 'success') {
+				setTimeout(() => {
+					messageDiv.className = 'newsletter-message';
+				}, 5000);
+			}
+		}
+	</script>
 
 	<!-- Footer -->
 	<footer class="main-footer">
@@ -8298,14 +8611,434 @@ try {
 				setTimeout(showFlashDealsPopup, 1500);
 			});
 		<?php endif; ?>
+	</script>
 
+	<style>
+		/* Rating Popup Styles */
+		.rating-popup-overlay {
+			position: fixed;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 100%;
+			background: rgba(0, 0, 0, 0.5);
+			backdrop-filter: blur(5px);
+			z-index: 10001;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+		}
+
+		.rating-popup-overlay.show {
+			display: flex;
+		}
+
+		.rating-popup {
+			background: white;
+			border-radius: 20px;
+			padding: 30px;
+			max-width: 500px;
+			width: 100%;
+			max-height: 90vh;
+			overflow-y: auto;
+			box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+			position: relative;
+		}
+
+		.rating-popup-header {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			margin-bottom: 25px;
+		}
+
+		.rating-popup-title {
+			font-size: 1.5rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin: 0;
+		}
+
+		.rating-close-btn {
+			background: none;
+			border: none;
+			font-size: 1.5rem;
+			color: #6b7280;
+			cursor: pointer;
+			padding: 5px;
+			line-height: 1;
+		}
+
+		.rating-close-btn:hover {
+			color: #1f2937;
+		}
+
+		.rating-question {
+			margin-bottom: 30px;
+		}
+
+		.rating-question-title {
+			font-size: 1rem;
+			font-weight: 500;
+			color: #374151;
+			margin-bottom: 15px;
+		}
+
+		.rating-stars {
+			display: flex;
+			gap: 8px;
+			margin-bottom: 10px;
+		}
+
+		.rating-star {
+			font-size: 2rem;
+			color: #d1d5db;
+			cursor: pointer;
+			transition: all 0.2s ease;
+		}
+
+		.rating-star:hover,
+		.rating-star.active {
+			color: #fbbf24;
+		}
+
+		.rating-labels {
+			display: flex;
+			justify-content: space-between;
+			font-size: 0.85rem;
+			color: #6b7280;
+			margin-top: 5px;
+		}
+
+		.rating-comment-section {
+			margin-top: 30px;
+		}
+
+		.rating-comment-input {
+			width: 100%;
+			min-height: 100px;
+			padding: 15px;
+			border: 2px solid #e5e7eb;
+			border-radius: 12px;
+			font-size: 0.95rem;
+			font-family: inherit;
+			resize: vertical;
+			transition: border-color 0.3s ease;
+		}
+
+		.rating-comment-input:focus {
+			outline: none;
+			border-color: #008060;
+		}
+
+		.rating-buttons {
+			display: flex;
+			gap: 12px;
+			margin-top: 25px;
+		}
+
+		.rating-btn {
+			flex: 1;
+			padding: 14px 24px;
+			border-radius: 12px;
+			font-size: 1rem;
+			font-weight: 600;
+			cursor: pointer;
+			transition: all 0.3s ease;
+			border: none;
+		}
+
+		.rating-btn-skip {
+			background: white;
+			color: #6b7280;
+			border: 2px solid #e5e7eb;
+		}
+
+		.rating-btn-skip:hover {
+			background: #f9fafb;
+			border-color: #d1d5db;
+		}
+
+		.rating-btn-done {
+			background: #008060;
+			color: white;
+		}
+
+		.rating-btn-done:hover {
+			background: #006b4e;
+			transform: translateY(-1px);
+			box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
+		}
+
+		.rating-btn-done:disabled {
+			opacity: 0.6;
+			cursor: not-allowed;
+			transform: none;
+		}
+
+		@media (max-width: 768px) {
+			.rating-popup {
+				padding: 20px;
+				border-radius: 15px;
+			}
+
+			.rating-popup-title {
+				font-size: 1.3rem;
+			}
+
+		.rating-star {
+			font-size: 1.8rem;
+		}
+	</style>
+
+	<script>
 		// Close popup with Escape key
 		document.addEventListener('keydown', function(e) {
 			if (e.key === 'Escape') {
 				closeFlashDealsPopup();
 			}
 		});
+
+		// Rating popup variables
+		let currentOrderId = null;
+		let easeRating = 0;
+		let satisfactionRating = 0;
+
+		// Set rating for ease or satisfaction
+		function setRating(type, rating) {
+			if (type === 'ease') {
+				easeRating = rating;
+				updateStars('easeStars', rating);
+				document.getElementById('easeRating').value = rating;
+			} else if (type === 'satisfaction') {
+				satisfactionRating = rating;
+				updateStars('satisfactionStars', rating);
+				document.getElementById('satisfactionRating').value = rating;
+			}
+		}
+
+		// Update star display
+		function updateStars(containerId, rating) {
+			const stars = document.querySelectorAll(`#${containerId} .rating-star`);
+			stars.forEach((star, index) => {
+				if (index < rating) {
+					star.textContent = '★';
+					star.classList.add('active');
+				} else {
+					star.textContent = '☆';
+					star.classList.remove('active');
+				}
+			});
+		}
+
+		// Show rating popup
+		function showRatingPopup(orderId) {
+			currentOrderId = orderId;
+			easeRating = 0;
+			satisfactionRating = 0;
+			if (document.getElementById('easeRating')) {
+				document.getElementById('easeRating').value = 0;
+				document.getElementById('satisfactionRating').value = 0;
+				document.getElementById('ratingComment').value = '';
+				updateStars('easeStars', 0);
+				updateStars('satisfactionStars', 0);
+				document.getElementById('ratingPopupOverlay').classList.add('show');
+			}
+		}
+
+		// Close rating popup
+		function closeRatingPopup() {
+			if (document.getElementById('ratingPopupOverlay')) {
+				document.getElementById('ratingPopupOverlay').classList.remove('show');
+				// Clean URL
+				if (window.history.replaceState) {
+					const url = new URL(window.location);
+					url.searchParams.delete('payment');
+					url.searchParams.delete('order');
+					url.searchParams.delete('ref');
+					window.history.replaceState({}, '', url);
+				}
+			}
+		}
+
+		// Skip rating
+		function skipRating() {
+			closeRatingPopup();
+		}
+
+		// Submit rating
+		async function submitRating(event) {
+			event.preventDefault();
+			
+			if (!currentOrderId) {
+				alert('Order ID is missing');
+				return;
+			}
+
+			const comment = document.getElementById('ratingComment').value.trim();
+			const doneBtn = document.getElementById('ratingDoneBtn');
+			
+			// Disable button
+			doneBtn.disabled = true;
+			doneBtn.textContent = 'Submitting...';
+
+			try {
+				const response = await fetch('actions/submit_rating_action.php', {
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify({
+						order_id: currentOrderId,
+						ease_rating: easeRating,
+						satisfaction_rating: satisfactionRating,
+						comment: comment
+					})
+				});
+
+				const data = await response.json();
+
+				if (data.success) {
+					if (typeof Swal !== 'undefined') {
+						Swal.fire({
+							title: 'Thank You!',
+							text: 'Your feedback has been submitted successfully.',
+							icon: 'success',
+							confirmButtonColor: '#008060',
+							timer: 2000
+						});
+					}
+					closeRatingPopup();
+				} else {
+					alert(data.message || 'Failed to submit rating. Please try again.');
+					doneBtn.disabled = false;
+					doneBtn.textContent = 'Done';
+				}
+			} catch (error) {
+				console.error('Rating submission error:', error);
+				alert('An error occurred. Please try again.');
+				doneBtn.disabled = false;
+				doneBtn.textContent = 'Done';
+			}
+		}
+
+		// Handle payment success
+		<?php if ($payment_success && $order_id_from_payment): ?>
+		document.addEventListener('DOMContentLoaded', function() {
+			const orderId = <?php echo json_encode($order_id_from_payment); ?>;
+			const orderRef = <?php echo json_encode($payment_reference); ?>;
+			const orderDetails = <?php echo json_encode($order_details); ?>;
+
+			// Show order confirmation Sweet Alert
+			if (typeof Swal !== 'undefined') {
+				Swal.fire({
+					title: 'Payment Successful!',
+					html: `
+						<div style="text-align: left; padding: 10px 0;">
+							<p style="margin-bottom: 10px;"><strong>Order ID:</strong> ${orderDetails?.invoice_no || orderDetails?.order_reference || orderId}</p>
+							<p style="margin-bottom: 10px;"><strong>Payment Reference:</strong> ${orderRef || 'N/A'}</p>
+							<p style="margin-bottom: 10px;"><strong>Total Amount:</strong> GH₵ ${orderDetails?.payment_amount || orderDetails?.total_amount || '0.00'}</p>
+							<p style="color: #10b981; margin-top: 15px;">Your order has been confirmed and will be processed shortly.</p>
+						</div>
+					`,
+					icon: 'success',
+					confirmButtonColor: '#008060',
+					confirmButtonText: 'Great!',
+					allowOutsideClick: false
+				}).then(() => {
+					// Send SMS notification
+					fetch('actions/send_order_sms_action.php', {
+						method: 'POST',
+						headers: {
+							'Content-Type': 'application/json',
+						},
+						body: JSON.stringify({
+							order_id: orderId
+						})
+					}).catch(err => {
+						console.log('SMS notification error (non-critical):', err);
+					});
+
+					// Show rating popup after confirmation
+					setTimeout(() => {
+						showRatingPopup(orderId);
+					}, 500);
+				});
+			} else {
+				// Fallback if SweetAlert not available
+				alert('Payment successful! Order ID: ' + orderId);
+				setTimeout(() => {
+					showRatingPopup(orderId);
+				}, 500);
+			}
+		});
+		<?php endif; ?>
 	</script>
+
+	<!-- Rating Popup -->
+	<div class="rating-popup-overlay" id="ratingPopupOverlay">
+		<div class="rating-popup">
+			<div class="rating-popup-header">
+				<h3 class="rating-popup-title">Rate your experience</h3>
+				<button class="rating-close-btn" onclick="closeRatingPopup()">×</button>
+			</div>
+
+			<form id="ratingForm" onsubmit="submitRating(event)">
+				<!-- Question 1: Transaction Ease -->
+				<div class="rating-question">
+					<div class="rating-question-title">How easy was it for you to complete your transaction?</div>
+					<div class="rating-stars" id="easeStars">
+						<span class="rating-star" data-rating="1" onclick="setRating('ease', 1)">☆</span>
+						<span class="rating-star" data-rating="2" onclick="setRating('ease', 2)">☆</span>
+						<span class="rating-star" data-rating="3" onclick="setRating('ease', 3)">☆</span>
+						<span class="rating-star" data-rating="4" onclick="setRating('ease', 4)">☆</span>
+						<span class="rating-star" data-rating="5" onclick="setRating('ease', 5)">☆</span>
+					</div>
+					<div class="rating-labels">
+						<span>Very difficult</span>
+						<span>Neither easy difficult</span>
+						<span>Very easy</span>
+					</div>
+					<input type="hidden" id="easeRating" name="ease_rating" value="0">
+				</div>
+
+				<!-- Question 2: Satisfaction -->
+				<div class="rating-question">
+					<div class="rating-question-title">How satisfied are you with this service?</div>
+					<div class="rating-stars" id="satisfactionStars">
+						<span class="rating-star" data-rating="1" onclick="setRating('satisfaction', 1)">☆</span>
+						<span class="rating-star" data-rating="2" onclick="setRating('satisfaction', 2)">☆</span>
+						<span class="rating-star" data-rating="3" onclick="setRating('satisfaction', 3)">☆</span>
+						<span class="rating-star" data-rating="4" onclick="setRating('satisfaction', 4)">☆</span>
+						<span class="rating-star" data-rating="5" onclick="setRating('satisfaction', 5)">☆</span>
+					</div>
+					<div class="rating-labels">
+						<span>Very dissatisfied</span>
+						<span>Neutral</span>
+						<span>Very satisfied</span>
+					</div>
+					<input type="hidden" id="satisfactionRating" name="satisfaction_rating" value="0">
+				</div>
+
+				<!-- Comment Section -->
+				<div class="rating-comment-section">
+					<div class="rating-question-title">Tell us the reason for your score</div>
+					<textarea 
+						class="rating-comment-input" 
+						id="ratingComment" 
+						name="comment" 
+						placeholder="Share your feedback (optional)"
+					></textarea>
+				</div>
+
+				<div class="rating-buttons">
+					<button type="button" class="rating-btn rating-btn-skip" onclick="skipRating()">Skip</button>
+					<button type="submit" class="rating-btn rating-btn-done" id="ratingDoneBtn">Done</button>
+				</div>
+			</form>
+		</div>
+	</div>
 
 </body>
 

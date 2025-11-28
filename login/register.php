@@ -1958,7 +1958,7 @@
 											id="phone_number"
 											name="phone_number"
 											class="form-control with-flag"
-											placeholder="       your phone number"
+											placeholder="          Phone number"
 											value=""
 											required>
 									</div>
@@ -2004,7 +2004,7 @@
 											id="password"
 											name="password"
 											class="form-control with-icon"
-											placeholder="       Create a password"
+											placeholder="Create a password"
 											required>
 										<i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
 									</div>

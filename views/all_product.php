@@ -45,15 +45,46 @@ $search_query = $_GET['search'] ?? '';
 
 $filtered_products = $all_products;
 
+// Improved category filtering with case-insensitive matching
 if ($category_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
-        return $product['cat_name'] === $category_filter;
+        // Direct match (case-insensitive)
+        if (strcasecmp($product['cat_name'], $category_filter) === 0) {
+            return true;
+        }
+
+        // Check for partial matches for common category names
+        $cat_lower = strtolower($product['cat_name']);
+        $filter_lower = strtolower($category_filter);
+
+        // Handle plural/singular variations
+        if ($filter_lower === 'smartphone' || $filter_lower === 'smartphones') {
+            return strpos($cat_lower, 'smartphone') !== false || strpos($cat_lower, 'phone') !== false;
+        }
+        if ($filter_lower === 'laptop' || $filter_lower === 'laptops') {
+            return strpos($cat_lower, 'laptop') !== false;
+        }
+        if ($filter_lower === 'camera' || $filter_lower === 'cameras') {
+            return strpos($cat_lower, 'camera') !== false;
+        }
+        if ($filter_lower === 'ipad' || $filter_lower === 'ipads') {
+            return strpos($cat_lower, 'ipad') !== false;
+        }
+        if ($filter_lower === 'desktop' || $filter_lower === 'desktops') {
+            return strpos($cat_lower, 'desktop') !== false;
+        }
+        if ($filter_lower === 'video_equipment' || $filter_lower === 'video equipment') {
+            return strpos($cat_lower, 'video') !== false;
+        }
+
+        return false;
     });
 }
 
+// Improved brand filtering with case-insensitive matching
 if ($brand_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
-        return $product['brand_name'] === $brand_filter;
+        return strcasecmp($product['brand_name'], $brand_filter) === 0;
     });
 }
 

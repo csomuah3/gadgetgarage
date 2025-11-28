@@ -18,17 +18,38 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get real products from database
+// Get products from database filtered by mobile device categories
+// Define mobile device categories (case-insensitive matching)
+$mobile_categories = [
+    'smartphones', 'ipads', 'tablets', 'mobile devices', 'phone', 'tablet', 'ipad',
+    'Smartphones', 'iPads', 'Tablets', 'Mobile Devices', 'Phone', 'Tablet', 'iPad'
+];
+
+// Get all products first
 $all_products = get_all_products_ctr();
 
-// Filter for mobile device categories
-$mobile_categories = ['smartphones', 'ipads', 'tablets', 'Smartphones', 'iPads', 'Tablets', 'Phone', 'iPad', 'Tablet'];
+// Filter for mobile device categories with improved logic
 $mobile_products = array_filter($all_products, function ($product) use ($mobile_categories) {
-    return in_array($product['cat_name'], $mobile_categories) ||
-        stripos($product['product_title'], 'phone') !== false ||
-        stripos($product['product_title'], 'ipad') !== false ||
-        stripos($product['product_title'], 'tablet') !== false ||
-        stripos($product['cat_name'], 'mobile') !== false;
+    // Check category name directly
+    if (in_array(strtolower($product['cat_name']), array_map('strtolower', $mobile_categories))) {
+        return true;
+    }
+
+    // Check if category name contains mobile-related keywords
+    $cat_lower = strtolower($product['cat_name']);
+    if (strpos($cat_lower, 'mobile') !== false ||
+        strpos($cat_lower, 'phone') !== false ||
+        strpos($cat_lower, 'tablet') !== false ||
+        strpos($cat_lower, 'ipad') !== false) {
+        return true;
+    }
+
+    // Fallback: check product title for mobile keywords
+    $title_lower = strtolower($product['product_title']);
+    return (strpos($title_lower, 'phone') !== false ||
+            strpos($title_lower, 'ipad') !== false ||
+            strpos($title_lower, 'tablet') !== false ||
+            strpos($title_lower, 'mobile') !== false);
 });
 
 // Get real categories and brands from database
@@ -1977,19 +1998,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     </div>
 
-                    <!-- Filter by Category -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Category</h6>
-                        <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
-                            <?php foreach ($categories as $category): ?>
-                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
-                                    <?php echo htmlspecialchars($category['cat_name']); ?>
-                                </button>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
                     <!-- Filter by Brand -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
@@ -2000,17 +2008,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <?php echo htmlspecialchars($brand['brand_name']); ?>
                                 </button>
                             <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- Filter by Size -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="size-filters">
-                            <button class="size-btn active" data-size="">All</button>
-                            <button class="size-btn" data-size="large">Large</button>
-                            <button class="size-btn" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="small">Small</button>
                         </div>
                     </div>
 
@@ -2414,9 +2411,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 rating: '',
                 priceMin: 0,
                 priceMax: 10000,
-                categories: [],
                 brands: [],
-                sizes: [],
                 colors: []
             };
 
@@ -2442,7 +2437,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 formData.append('price_min', currentFilters.priceMin);
                 formData.append('price_max', currentFilters.priceMax);
                 if (currentFilters.brands.length) formData.append('brand_filter', currentFilters.brands.join(','));
-                if (currentFilters.sizes.length) formData.append('size_filter', currentFilters.sizes.join(','));
                 if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
 
                 fetch('../actions/product_actions.php', {
@@ -2636,34 +2630,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     updatePriceDisplay();
                 }
 
-                // Category tags
-                document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const category = this.dataset.category;
-                        if (category === '') {
-                            currentFilters.categories = [];
-                            document.querySelectorAll('#categoryTags .tag-btn').forEach(b => b.classList.remove('active'));
-                            this.classList.add('active');
-                        } else {
-                            const allBtn = document.querySelector('#categoryTags .tag-btn[data-category=""]');
-                            if (allBtn) allBtn.classList.remove('active');
-
-                            this.classList.toggle('active');
-                            const index = currentFilters.categories.indexOf(category);
-                            if (index > -1) {
-                                currentFilters.categories.splice(index, 1);
-                            } else {
-                                currentFilters.categories.push(category);
-                            }
-
-                            if (currentFilters.categories.length === 0) {
-                                if (allBtn) allBtn.classList.add('active');
-                            }
-                        }
-                        executeFilters();
-                    });
-                });
-
                 // Brand tags
                 document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
                     btn.addEventListener('click', function() {
@@ -2685,34 +2651,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                             }
 
                             if (currentFilters.brands.length === 0) {
-                                if (allBtn) allBtn.classList.add('active');
-                            }
-                        }
-                        executeFilters();
-                    });
-                });
-
-                // Size tags
-                document.querySelectorAll('#sizeTags .tag-btn').forEach(btn => {
-                    btn.addEventListener('click', function() {
-                        const size = this.dataset.size;
-                        if (size === '') {
-                            currentFilters.sizes = [];
-                            document.querySelectorAll('#sizeTags .tag-btn').forEach(b => b.classList.remove('active'));
-                            this.classList.add('active');
-                        } else {
-                            const allBtn = document.querySelector('#sizeTags .tag-btn[data-size=""]');
-                            if (allBtn) allBtn.classList.remove('active');
-
-                            this.classList.toggle('active');
-                            const index = currentFilters.sizes.indexOf(size);
-                            if (index > -1) {
-                                currentFilters.sizes.splice(index, 1);
-                            } else {
-                                currentFilters.sizes.push(size);
-                            }
-
-                            if (currentFilters.sizes.length === 0) {
                                 if (allBtn) allBtn.classList.add('active');
                             }
                         }

@@ -18,8 +18,42 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products from database
+// Get products from database filtered by photography & video categories
+// Define photography & video device categories (case-insensitive matching)
+$photo_video_categories = [
+    'cameras', 'video equipment', 'video_equipment', 'photography', 'photo', 'lens', 'camcorder',
+    'Cameras', 'Video Equipment', 'Video_Equipment', 'Photography', 'Photo', 'Lens', 'Camcorder',
+    'photography & video', 'Photography & Video'
+];
+
+// Get all products first
 $all_products = get_all_products_ctr();
+
+// Filter for photography & video device categories with improved logic
+$photo_video_products = array_filter($all_products, function ($product) use ($photo_video_categories) {
+    // Check category name directly
+    if (in_array(strtolower($product['cat_name']), array_map('strtolower', $photo_video_categories))) {
+        return true;
+    }
+
+    // Check if category name contains photo/video-related keywords
+    $cat_lower = strtolower($product['cat_name']);
+    if (strpos($cat_lower, 'photo') !== false ||
+        strpos($cat_lower, 'video') !== false ||
+        strpos($cat_lower, 'camera') !== false ||
+        strpos($cat_lower, 'lens') !== false) {
+        return true;
+    }
+
+    // Fallback: check product title for photo/video keywords
+    $title_lower = strtolower($product['product_title']);
+    return (strpos($title_lower, 'camera') !== false ||
+            strpos($title_lower, 'video') !== false ||
+            strpos($title_lower, 'photography') !== false ||
+            strpos($title_lower, 'photo') !== false ||
+            strpos($title_lower, 'lens') !== false ||
+            strpos($title_lower, 'camcorder') !== false);
+});
 
 // Get all categories and brands from database
 try {
@@ -33,22 +67,6 @@ try {
 } catch (Exception $e) {
     $brands = [];
 }
-
-// Define photography & video categories
-$photo_video_categories = ['cameras', 'video_equipment', 'Cameras', 'Video Equipment', 'Camera', 'Video', 'Photography'];
-
-// Filter products for photography & video devices only
-$photo_video_products = array_filter($all_products, function ($product) use ($photo_video_categories) {
-    return in_array($product['cat_name'], $photo_video_categories) ||
-        stripos($product['product_title'], 'camera') !== false ||
-        stripos($product['product_title'], 'video') !== false ||
-        stripos($product['product_title'], 'photography') !== false ||
-        stripos($product['product_title'], 'photo') !== false ||
-        stripos($product['product_title'], 'lens') !== false ||
-        stripos($product['product_title'], 'camcorder') !== false ||
-        stripos($product['cat_name'], 'photo') !== false ||
-        stripos($product['cat_name'], 'video') !== false;
-});
 
 // Apply additional filters based on URL parameters
 $category_filter = $_GET['category'] ?? 'all';
@@ -1909,19 +1927,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     </div>
 
-                    <!-- Filter by Category -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Category</h6>
-                        <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
-                            <?php foreach ($categories as $category): ?>
-                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
-                                    <?php echo htmlspecialchars($category['cat_name']); ?>
-                                </button>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
                     <!-- Filter by Brand -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
@@ -1932,17 +1937,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <?php echo htmlspecialchars($brand['brand_name']); ?>
                                 </button>
                             <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- Filter by Size -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="size-filters">
-                            <button class="size-btn active" data-size="">All</button>
-                            <button class="size-btn" data-size="large">Large</button>
-                            <button class="size-btn" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="small">Small</button>
                         </div>
                     </div>
 
@@ -2233,7 +2227,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         function initPhotoFilters() {
             captureInitialState();
-            initCategoryFilter();
             initBrandFilter();
             initMobileFilterToggle();
             initPriceSlider();
@@ -2377,17 +2370,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             if (searchInput) searchInput.value = '';
             if (searchClearBtn) searchClearBtn.style.display = 'none';
             showApplyButtonWithChanges();
-        }
-
-        function initCategoryFilter() {
-            const categoryBtns = document.querySelectorAll('#categoryTags .tag-btn');
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    showApplyButtonWithChanges();
-                });
-            });
         }
 
         function initBrandFilter() {

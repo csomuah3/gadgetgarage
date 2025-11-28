@@ -18,8 +18,41 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products from database
+// Get products from database filtered by computing categories
+// Define computing device categories (case-insensitive matching)
+$computing_categories = [
+    'laptops', 'desktops', 'computing', 'computer', 'pc', 'macbook', 'imac',
+    'Laptops', 'Desktops', 'Computing', 'Computer', 'PC', 'MacBook', 'iMac'
+];
+
+// Get all products first
 $all_products = get_all_products_ctr();
+
+// Filter for computing device categories with improved logic
+$computing_products = array_filter($all_products, function ($product) use ($computing_categories) {
+    // Check category name directly
+    if (in_array(strtolower($product['cat_name']), array_map('strtolower', $computing_categories))) {
+        return true;
+    }
+
+    // Check if category name contains computing-related keywords
+    $cat_lower = strtolower($product['cat_name']);
+    if (strpos($cat_lower, 'computing') !== false ||
+        strpos($cat_lower, 'computer') !== false ||
+        strpos($cat_lower, 'laptop') !== false ||
+        strpos($cat_lower, 'desktop') !== false) {
+        return true;
+    }
+
+    // Fallback: check product title for computing keywords
+    $title_lower = strtolower($product['product_title']);
+    return (strpos($title_lower, 'laptop') !== false ||
+            strpos($title_lower, 'desktop') !== false ||
+            strpos($title_lower, 'computer') !== false ||
+            strpos($title_lower, 'macbook') !== false ||
+            strpos($title_lower, 'imac') !== false ||
+            strpos($title_lower, 'pc ') !== false);
+});
 
 // Get all categories and brands from database
 try {
@@ -33,21 +66,6 @@ try {
 } catch (Exception $e) {
     $brands = [];
 }
-
-// Define computing categories
-$computing_categories = ['laptops', 'desktops', 'Laptops', 'Desktops', 'Computer', 'PC', 'MacBook', 'iMac'];
-
-// Filter products for computing devices only
-$computing_products = array_filter($all_products, function ($product) use ($computing_categories) {
-    return in_array($product['cat_name'], $computing_categories) ||
-        stripos($product['product_title'], 'laptop') !== false ||
-        stripos($product['product_title'], 'desktop') !== false ||
-        stripos($product['product_title'], 'computer') !== false ||
-        stripos($product['product_title'], 'macbook') !== false ||
-        stripos($product['product_title'], 'imac') !== false ||
-        stripos($product['cat_name'], 'computing') !== false ||
-        stripos($product['cat_name'], 'computer') !== false;
-});
 
 // Apply additional filters based on URL parameters
 $category_filter = $_GET['category'] ?? 'all';
@@ -1204,19 +1222,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     </div>
 
-                    <!-- Filter by Category -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Category</h6>
-                        <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
-                            <?php foreach ($categories as $category): ?>
-                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
-                                    <?php echo htmlspecialchars($category['cat_name']); ?>
-                                </button>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
                     <!-- Filter by Brand -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
@@ -1227,17 +1232,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <?php echo htmlspecialchars($brand['brand_name']); ?>
                                 </button>
                             <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- Filter by Size -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="size-filters">
-                            <button class="size-btn active" data-size="">All</button>
-                            <button class="size-btn" data-size="large">Large</button>
-                            <button class="size-btn" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="small">Small</button>
                         </div>
                     </div>
 
@@ -1575,21 +1569,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         function initComputingFilters() {
-            initCategoryFilter();
             initBrandFilter();
             initMobileFilterToggle();
             initPriceSlider();
-        }
-
-        function initCategoryFilter() {
-            const categoryBtns = document.querySelectorAll('#categoryTags .tag-btn');
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    this.classList.add('active');
-                    showApplyButton();
-                });
-            });
         }
 
         function initBrandFilter() {
@@ -1750,9 +1732,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             rating: '',
             priceMin: 0,
             priceMax: 10000,
-            categories: [],
             brands: [],
-            sizes: [],
             colors: []
         };
 
@@ -1778,7 +1758,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             formData.append('price_min', currentFilters.priceMin);
             formData.append('price_max', currentFilters.priceMax);
             if (currentFilters.brands.length) formData.append('brand_filter', currentFilters.brands.join(','));
-            if (currentFilters.sizes.length) formData.append('size_filter', currentFilters.sizes.join(','));
             if (currentFilters.colors.length) formData.append('color_filter', currentFilters.colors.join(','));
 
             fetch('../actions/product_actions.php', {
@@ -1937,36 +1916,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Price sliders - use initPriceSlider from all_product.php
             initPriceSlider();
 
-            // Category tags
-            document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const category = this.dataset.category;
-                    if (category === '') {
-                        // "All" button
-                        currentFilters.categories = [];
-                        document.querySelectorAll('#categoryTags .tag-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        // Toggle specific category
-                        const allBtn = document.querySelector('#categoryTags .tag-btn[data-category=""]');
-                        if (allBtn) allBtn.classList.remove('active');
-
-                        this.classList.toggle('active');
-                        const index = currentFilters.categories.indexOf(category);
-                        if (index > -1) {
-                            currentFilters.categories.splice(index, 1);
-                        } else {
-                            currentFilters.categories.push(category);
-                        }
-
-                        if (currentFilters.categories.length === 0) {
-                            if (allBtn) allBtn.classList.add('active');
-                        }
-                    }
-                    executeFilters();
-                });
-            });
-
             // Brand tags
             document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
                 btn.addEventListener('click', function() {
@@ -1988,34 +1937,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         }
 
                         if (currentFilters.brands.length === 0) {
-                            if (allBtn) allBtn.classList.add('active');
-                        }
-                    }
-                    executeFilters();
-                });
-            });
-
-            // Size tags
-            document.querySelectorAll('#sizeTags .tag-btn').forEach(btn => {
-                btn.addEventListener('click', function() {
-                    const size = this.dataset.size;
-                    if (size === '') {
-                        currentFilters.sizes = [];
-                        document.querySelectorAll('#sizeTags .tag-btn').forEach(b => b.classList.remove('active'));
-                        this.classList.add('active');
-                    } else {
-                        const allBtn = document.querySelector('#sizeTags .tag-btn[data-size=""]');
-                        if (allBtn) allBtn.classList.remove('active');
-
-                        this.classList.toggle('active');
-                        const index = currentFilters.sizes.indexOf(size);
-                        if (index > -1) {
-                            currentFilters.sizes.splice(index, 1);
-                        } else {
-                            currentFilters.sizes.push(size);
-                        }
-
-                        if (currentFilters.sizes.length === 0) {
                             if (allBtn) allBtn.classList.add('active');
                         }
                     }

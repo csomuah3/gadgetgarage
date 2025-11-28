@@ -55,9 +55,11 @@ try {
 
     // Log the tracking attempt
     error_log("Attempting to track order: $order_reference for customer: $customer_id");
+    error_log("Session data: " . print_r($_SESSION, true));
 
     // Get order details using tracking function
     $tracking_result = get_order_tracking_details($order_reference);
+    error_log("Tracking result: " . print_r($tracking_result, true));
 
     if (!$tracking_result) {
         error_log("Tracking result is null for order: $order_reference");

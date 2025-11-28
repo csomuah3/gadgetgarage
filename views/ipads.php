@@ -2764,19 +2764,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     </div>
 
-                    <!-- Filter by Category -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Category</h6>
-                        <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
-                            <?php foreach ($categories as $category): ?>
-                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
-                                    <?php echo htmlspecialchars($category['cat_name']); ?>
-                                </button>
-                            <?php endforeach; ?>
-                        </div>
-                    </div>
-
                     <!-- Filter by Brand -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
@@ -2787,17 +2774,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                     <?php echo htmlspecialchars($brand['brand_name']); ?>
                                 </button>
                             <?php endforeach; ?>
-                        </div>
-                    </div>
-
-                    <!-- Filter by Size -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="size-filters">
-                            <button class="size-btn active" data-size="">All</button>
-                            <button class="size-btn" data-size="large">Large</button>
-                            <button class="size-btn" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="small">Small</button>
                         </div>
                     </div>
 
@@ -3449,9 +3425,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Initialize all filter components
             initPriceSlider();
             initRatingFilter();
-            initCategoryFilter();
             initTagFilters();
-            initSizeFilters();
             initColorFilters();
             initMobileFilters();
         }
@@ -3462,9 +3436,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 rating: '',
                 minPrice: 0,
                 maxPrice: 50000,
-                categories: [''],
                 brand: '',
-                size: '',
                 color: ''
             };
         }
@@ -3563,24 +3535,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             });
         }
 
-        function initCategoryFilter() {
-            // Category filters using tag buttons (same as brand filter)
-            const categoryBtns = document.querySelectorAll('#categoryTags .tag-btn');
-            categoryBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active from all category buttons
-                    categoryBtns.forEach(b => b.classList.remove('active'));
-                    // Add active to clicked button
-                    this.classList.add('active');
-
-                    const selectedCategory = this.getAttribute('data-category');
-                    if (initialState && selectedCategory !== initialState.categories[0]) {
-                        showApplyButton();
-                    }
-                });
-            });
-        }
-
         function initTagFilters() {
             // Brand filters
             const brandBtns = document.querySelectorAll('#brandTags .tag-btn');
@@ -3593,23 +3547,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                     const selectedBrand = this.getAttribute('data-brand');
                     if (initialState && selectedBrand !== initialState.brand) {
-                        showApplyButton();
-                    }
-                });
-            });
-        }
-
-        function initSizeFilters() {
-            const sizeBtns = document.querySelectorAll('.size-btn');
-            sizeBtns.forEach(btn => {
-                btn.addEventListener('click', function() {
-                    // Remove active from all size buttons
-                    sizeBtns.forEach(b => b.classList.remove('active'));
-                    // Add active to clicked button
-                    this.classList.add('active');
-
-                    const selectedSize = this.getAttribute('data-size');
-                    if (initialState && selectedSize !== initialState.size) {
                         showApplyButton();
                     }
                 });
@@ -3668,10 +3605,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const searchInput = document.getElementById('searchInput');
             const searchQuery = searchInput.value;
 
-            // Get selected category (single selection like brand)
-            const activeCategory = document.querySelector('#categoryTags .tag-btn.active');
-            const categoryId = activeCategory ? activeCategory.getAttribute('data-category') : '';
-
             // Get selected brand
             const activeBrand = document.querySelector('#brandTags .tag-btn.active');
             const brandId = activeBrand ? activeBrand.getAttribute('data-brand') : '';
@@ -3684,10 +3617,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const selectedRating = document.querySelector('input[name="rating_filter"]:checked');
             const rating = selectedRating ? selectedRating.value : '';
 
-            // Get size filter
-            const activeSize = document.querySelector('.size-btn.active');
-            const size = activeSize ? activeSize.getAttribute('data-size') : '';
-
             // Get color filter
             const activeColor = document.querySelector('.color-btn.active');
             const color = activeColor ? activeColor.getAttribute('data-color') : '';
@@ -3697,14 +3626,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Add filters to params
             if (searchQuery) params.append('query', searchQuery);
 
-            // Add single category
-            if (categoryId) params.append('cat_ids[]', categoryId);
-
             if (brandId) params.append('brand_ids[]', brandId);
             if (minPrice > 0) params.append('min_price', minPrice);
             if (maxPrice < 50000) params.append('max_price', maxPrice);
             if (rating) params.append('rating', rating);
-            if (size) params.append('size', size);
             if (color) params.append('color', color);
 
             params.append('action', 'combined_filter');
@@ -3782,9 +3707,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             // Update the initial state to current values to prevent showing apply button again
             const searchInput = document.getElementById('searchInput');
             const selectedRating = document.querySelector('input[name="rating_filter"]:checked');
-            const activeCategory = document.querySelector('#categoryTags .tag-btn.active');
             const activeBrand = document.querySelector('#brandTags .tag-btn.active');
-            const activeSize = document.querySelector('.size-btn.active');
             const activeColor = document.querySelector('.color-btn.active');
 
             initialState = {
@@ -3792,9 +3715,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 rating: selectedRating ? selectedRating.value : '',
                 minPrice: parseInt(document.getElementById('minPriceSlider').value),
                 maxPrice: parseInt(document.getElementById('maxPriceSlider').value),
-                categories: [activeCategory ? activeCategory.getAttribute('data-category') : ''],
                 brand: activeBrand ? activeBrand.getAttribute('data-brand') : '',
-                size: activeSize ? activeSize.getAttribute('data-size') : '',
                 color: activeColor ? activeColor.getAttribute('data-color') : ''
             };
         }
@@ -3912,23 +3833,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 document.getElementById('priceRange').style.left = '0%';
                 document.getElementById('priceRange').style.right = '0%';
 
-                // Reset category filter - activate "All" button
-                document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.getElementById('category_all_btn').classList.add('active');
-
                 // Reset brand filter - activate "All" button
                 document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
                     btn.classList.remove('active');
                 });
                 document.getElementById('brand_all_btn').classList.add('active');
-
-                // Reset size filter - activate first "All" button
-                document.querySelectorAll('.size-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector('.size-btn[data-size=""]').classList.add('active');
 
                 // Reset color filter - activate first "All" button
                 document.querySelectorAll('.color-btn').forEach(btn => {

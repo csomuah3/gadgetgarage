@@ -1183,8 +1183,24 @@
 			font-size: 1.1rem;
 		}
 
+		.password-toggle {
+			position: absolute;
+			right: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #6b7280;
+			font-size: 1.1rem;
+			cursor: pointer;
+			z-index: 2;
+			transition: color 0.3s ease;
+		}
+
+		.password-toggle:hover {
+			color: var(--gg-teal);
+		}
+
 		.form-control.with-icon {
-			padding-left: 50px;
+			padding-left: 55px;
 		}
 
 		.register-btn {
@@ -1860,7 +1876,7 @@
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
 						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Hello!</h1>
-					<p class="welcome-message" id="welcomeMessage">Register to use all features in our site</p>
+					<p class="welcome-message" id="welcomeMessage">Unlock exclusive deals and tech discoveries!</p>
 					<a href="login.php" class="welcome-signin-btn" id="welcomeSigninBtn">Log In</a>
 					<p class="welcome-button-message" id="welcomeButtonMessage">Log in to your existing account.</p>
 				</div>
@@ -1869,8 +1885,7 @@
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
-							<h2 class="form-title" id="formTitle">Register With</h2>
-							<p class="form-subtitle" id="formSubtitle">Fill Out The Following Info For Registration</p>
+							<h2 class="form-title" id="formTitle">Join Gadget Garage Today!</h2>
 						</div>
 
 						<!-- Social Login Buttons -->
@@ -1933,7 +1948,7 @@
 												id="phone_number"
 												name="phone_number"
 												class="form-control with-flag"
-												placeholder="your phone number"
+												placeholder="    your phone number"
 												value=""
 												required>
 										</div>
@@ -1963,7 +1978,7 @@
 												id="city"
 												name="city"
 												class="form-control with-icon"
-												placeholder="Enter your city"
+												placeholder="    Enter your city"
 												value=""
 												required>
 										</div>
@@ -1981,6 +1996,7 @@
 												class="form-control with-icon"
 												placeholder="Create a password"
 												required>
+											<i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
 										</div>
 									</div>
 
@@ -2149,6 +2165,22 @@
 		// Timeout variables
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
+
+		// Password toggle functionality
+		function togglePassword() {
+			const passwordField = document.getElementById('password');
+			const toggleIcon = document.getElementById('passwordToggle');
+
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				toggleIcon.classList.remove('fa-eye');
+				toggleIcon.classList.add('fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				toggleIcon.classList.remove('fa-eye-slash');
+				toggleIcon.classList.add('fa-eye');
+			}
+		}
 
 		// Handle signup form submission
 		document.addEventListener('DOMContentLoaded', function() {

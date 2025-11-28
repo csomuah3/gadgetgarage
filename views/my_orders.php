@@ -27,6 +27,9 @@ try {
     }
 
     // Get cart and wishlist counts for header
+    $cart_items = get_user_cart_ctr($customer_id, $ip_address);
+    $cart_total_raw = get_cart_total_ctr($customer_id, $ip_address);
+    $cart_total = $cart_total_raw ?: 0;
     $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
 
     $categories = [];
@@ -45,6 +48,10 @@ try {
     } catch (Exception $e) {
         error_log("Failed to load brands: " . $e->getMessage());
     }
+
+    // Get user's name for welcome message
+    $user_name = $_SESSION['name'] ?? 'User';
+    $first_name = explode(' ', $user_name)[0];
 
 } catch (Exception $e) {
     die("Critical error: " . $e->getMessage());
@@ -97,23 +104,7 @@ function getOrderStatus($order_date) {
             overflow-x: hidden;
         }
 
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.45;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        /* Promotional Banner Styles - Same as cart */
+        /* Promotional Banner Styles - EXACT COPY FROM CART */
         .promo-banner,
         .promo-banner2 {
             background: #001f3f !important;
@@ -135,6 +126,7 @@ function getOrderStatus($order_date) {
         }
 
         .promo-banner-left,
+        .promo-banner2 .promo-banner-left,
         .promo-banner2 .promo-banner-left {
             display: flex;
             align-items: center;
@@ -143,6 +135,7 @@ function getOrderStatus($order_date) {
         }
 
         .promo-banner-center,
+        .promo-banner2 .promo-banner-center,
         .promo-banner2 .promo-banner-center {
             display: flex;
             align-items: center;
@@ -187,7 +180,7 @@ function getOrderStatus($order_date) {
             opacity: 0.8;
         }
 
-        /* Header Styles - Same as cart */
+        /* Header Styles - EXACT COPY FROM CART */
         .main-header {
             background: #ffffff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
@@ -212,6 +205,49 @@ function getOrderStatus($order_date) {
             height: 50px !important;
             width: auto !important;
             object-fit: contain !important;
+        }
+
+        .search-container {
+            position: relative;
+            width: 400px;
+        }
+
+        .search-input {
+            border-radius: 25px;
+            padding: 12px 45px 12px 20px;
+            border: 2px solid #e5e7eb;
+            font-size: 0.95rem;
+            width: 100%;
+        }
+
+        .search-btn {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            border: none;
+            border-radius: 50%;
+            width: 35px;
+            height: 35px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+        }
+
+        .tech-revival-text {
+            color: #4a5568;
+            font-size: 0.95rem;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+        }
+
+        .contact-number {
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 1rem;
         }
 
         .header-actions {
@@ -249,7 +285,26 @@ function getOrderStatus($order_date) {
             justify-content: center;
         }
 
-        /* Navigation Bar - Same as cart */
+        .dropdown-menu {
+            border: none;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 15px;
+            padding: 1rem 0;
+        }
+
+        .dropdown-item {
+            padding: 12px 24px;
+            color: #4a5568;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .dropdown-item:hover {
+            background: #f7fafc;
+            color: #2d3748;
+        }
+
+        /* Navigation Bar - EXACT COPY FROM CART */
         .navbar {
             background: #f8f9fa;
             padding: 8px 0;
@@ -270,37 +325,115 @@ function getOrderStatus($order_date) {
             color: #000000 !important;
         }
 
-        /* My Orders Content */
-        .orders-content {
-            min-height: 60vh;
-            padding: 60px 0;
+        /* Account Layout */
+        .account-layout {
+            display: flex;
+            min-height: calc(100vh - 140px);
+            background: #f8fafc;
             position: relative;
-            z-index: 1;
+            margin-top: 0;
+        }
+
+        /* Account Sidebar Navigation */
+        .account-sidebar {
+            width: 280px;
+            background: #ffffff;
+            border-right: 1px solid #e2e8f0;
+            padding: 40px 0;
+            position: sticky;
+            top: 140px;
+            height: fit-content;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-nav {
+            padding: 0 20px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 16px 20px;
+            margin-bottom: 8px;
+            color: #4a5568;
+            text-decoration: none;
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .nav-item:hover {
+            background: #f7fafc;
+            color: #2d3748;
+            text-decoration: none;
+        }
+
+        .nav-item.active {
+            background: #edf2f7;
+            color: #2d3748;
+            font-weight: 600;
+        }
+
+        .nav-item.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: #3182ce;
+            border-radius: 0 2px 2px 0;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+            width: 20px;
+        }
+
+        .sign-out-item {
+            background: #fed7d7;
+            color: #c53030;
+            margin-top: 20px;
+        }
+
+        .sign-out-item:hover {
+            background: #feb2b2;
+            color: #9b2c2c;
+        }
+
+        /* Main Content */
+        .account-content {
+            flex: 1;
+            padding: 40px 60px;
+            max-width: calc(100% - 280px);
         }
 
         .orders-header {
-            text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 40px;
         }
 
         .orders-title {
-            font-size: 3rem;
+            font-size: 2.5rem;
             font-weight: 900;
-            color: #000000;
-            margin-bottom: 20px;
+            color: #1a202c;
+            margin-bottom: 10px;
             letter-spacing: -1px;
         }
 
-        .orders-container {
-            max-width: 800px;
-            margin: 0 auto;
+        .orders-subtitle {
+            color: #718096;
+            font-size: 1.1rem;
         }
 
+        /* Order Cards */
         .order-card {
             background: #ffffff;
             border-radius: 15px;
             padding: 30px;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid #f1f5f9;
             transition: all 0.3s ease;
@@ -312,10 +445,9 @@ function getOrderStatus($order_date) {
         }
 
         .order-status {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             font-weight: 900;
             margin-bottom: 20px;
-            color: #000000;
             letter-spacing: 0.5px;
         }
 
@@ -329,7 +461,7 @@ function getOrderStatus($order_date) {
 
         .order-images {
             display: flex;
-            gap: 15px;
+            gap: 12px;
             margin-bottom: 20px;
             flex-wrap: wrap;
         }
@@ -341,6 +473,7 @@ function getOrderStatus($order_date) {
             border-radius: 10px;
             overflow: hidden;
             border: 1px solid #e2e8f0;
+            flex-shrink: 0;
         }
 
         .order-image img {
@@ -359,7 +492,7 @@ function getOrderStatus($order_date) {
             justify-content: center;
             color: #64748b;
             font-weight: 600;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
 
         .order-details {
@@ -375,15 +508,25 @@ function getOrderStatus($order_date) {
             text-decoration: underline;
         }
 
+        .order-actions {
+            display: flex;
+            gap: 12px;
+        }
+
+        .action-btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
         .view-details-btn {
             background: #e2e8f0;
             color: #475569;
-            border: none;
-            padding: 12px 30px;
-            border-radius: 25px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            width: 100%;
         }
 
         .view-details-btn:hover {
@@ -391,9 +534,18 @@ function getOrderStatus($order_date) {
             color: #334155;
         }
 
+        .track-order-btn {
+            background: #3182ce;
+            color: white;
+        }
+
+        .track-order-btn:hover {
+            background: #2c5aa0;
+        }
+
         .no-orders {
             text-align: center;
-            padding: 60px 20px;
+            padding: 80px 40px;
             color: #64748b;
         }
 
@@ -406,22 +558,25 @@ function getOrderStatus($order_date) {
         .no-orders h3 {
             color: #475569;
             margin-bottom: 15px;
+            font-size: 1.5rem;
         }
 
         .no-orders p {
             margin-bottom: 30px;
+            font-size: 1.1rem;
         }
 
         .start-shopping-btn {
             background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
             color: white;
             border: none;
-            padding: 12px 30px;
+            padding: 15px 35px;
             border-radius: 25px;
             font-weight: 600;
             text-decoration: none;
             display: inline-block;
             transition: all 0.3s ease;
+            font-size: 1rem;
         }
 
         .start-shopping-btn:hover {
@@ -430,7 +585,7 @@ function getOrderStatus($order_date) {
             transform: translateY(-2px);
         }
 
-        /* Footer Styles - Same as cart */
+        /* Footer Styles - EXACT COPY FROM CART */
         .main-footer {
             background: #ffffff;
             border-top: 1px solid #e5e7eb;
@@ -533,7 +688,87 @@ function getOrderStatus($order_date) {
             margin: 0;
         }
 
-        /* Order Details Modal - Same as admin */
+        /* Newsletter Signup Section */
+        .newsletter-signup-section {
+            background: transparent;
+            padding: 0;
+            text-align: left;
+            max-width: 100%;
+            height: fit-content;
+        }
+
+        .newsletter-title {
+            color: #1f2937;
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 24px;
+        }
+
+        .newsletter-form {
+            display: flex;
+            width: 100%;
+            margin: 0 0 15px 0;
+            gap: 0;
+            border-radius: 50px;
+            overflow: hidden;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input {
+            flex: 1;
+            padding: 14px 20px;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+            color: #1a1a1a;
+            background: #e5e7eb;
+        }
+
+        .newsletter-input::placeholder {
+            color: #6b7280;
+        }
+
+        .newsletter-submit-btn {
+            width: 45px;
+            height: 45px;
+            min-width: 45px;
+            border: none;
+            background: #9ca3af;
+            color: #ffffff;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+            font-size: 1.2rem;
+            padding: 0;
+        }
+
+        .newsletter-submit-btn:hover {
+            background: #6b7280;
+            transform: scale(1.05);
+        }
+
+        .newsletter-disclaimer {
+            color: #6b7280;
+            font-size: 0.85rem;
+            line-height: 1.6;
+            margin: 8px 0 0 0;
+            text-align: left;
+        }
+
+        .newsletter-disclaimer a {
+            color: #2563EB;
+            text-decoration: underline;
+            transition: color 0.3s ease;
+        }
+
+        .newsletter-disclaimer a:hover {
+            color: #1d4ed8;
+        }
+
+        /* Order Details Modal */
         .order-modal {
             z-index: 1060;
         }
@@ -603,7 +838,28 @@ function getOrderStatus($order_date) {
             color: #1e293b;
         }
 
+        @media (max-width: 1200px) {
+            .account-content {
+                padding: 30px 40px;
+            }
+        }
+
         @media (max-width: 768px) {
+            .account-layout {
+                flex-direction: column;
+            }
+
+            .account-sidebar {
+                width: 100%;
+                position: relative;
+                top: 0;
+            }
+
+            .account-content {
+                max-width: 100%;
+                padding: 30px 20px;
+            }
+
             .orders-title {
                 font-size: 2rem;
             }
@@ -612,21 +868,15 @@ function getOrderStatus($order_date) {
                 padding: 20px;
             }
 
-            .order-images {
-                gap: 10px;
-            }
-
-            .order-image,
-            .order-more {
-                width: 60px;
-                height: 60px;
+            .order-actions {
+                flex-direction: column;
             }
         }
     </style>
 </head>
 
 <body>
-    <!-- Promotional Banner -->
+    <!-- Promotional Banner - EXACT COPY FROM CART -->
     <div class="promo-banner2">
         <div class="promo-banner-left">
             <i class="fas fa-bolt"></i>
@@ -638,7 +888,7 @@ function getOrderStatus($order_date) {
         <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
     </div>
 
-    <!-- Main Header -->
+    <!-- Main Header - EXACT COPY FROM CART -->
     <header class="main-header animate__animated animate__fadeInDown">
         <div class="container-fluid" style="padding: 0 120px 0 95px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
@@ -651,22 +901,21 @@ function getOrderStatus($order_date) {
                 <!-- Center Content -->
                 <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                     <!-- Search Bar -->
-                    <div class="search-container" style="position: relative; width: 400px;">
+                    <div class="search-container">
                         <input type="text" class="form-control search-input" id="headerSearchInput"
-                            placeholder="Search for products..." style="border-radius: 25px; padding: 12px 45px 12px 20px; border: 2px solid #e5e7eb; font-size: 0.95rem;">
-                        <button class="search-btn" type="button" onclick="performHeaderSearch()"
-                            style="position: absolute; right: 5px; top: 50%; transform: translateY(-50%); background: linear-gradient(135deg, #1E3A5F, #2563EB); border: none; border-radius: 50%; width: 35px; height: 35px; display: flex; align-items: center; justify-content: center; color: white;">
+                            placeholder="Search for products...">
+                        <button class="search-btn" type="button" onclick="performHeaderSearch()">
                             <i class="fas fa-search" style="font-size: 0.9rem;"></i>
                         </button>
                     </div>
 
                     <!-- Contact Info -->
-                    <div class="tech-revival-text" style="color: #4a5568; font-size: 0.95rem; font-weight: 500; letter-spacing: 0.5px;">
+                    <div class="tech-revival-text">
                         <i class="fas fa-tools" style="margin-right: 8px; color: #059669;"></i>
                         Tech Revival & Innovation Hub
                     </div>
 
-                    <div class="contact-number" style="color: #1f2937; font-weight: 600; font-size: 1rem;">
+                    <div class="contact-number">
                         <i class="fas fa-phone" style="margin-right: 8px; color: #059669;"></i>
                         +233 (0) 123 456 789
                     </div>
@@ -687,6 +936,7 @@ function getOrderStatus($order_date) {
                             <i class="fas fa-user"></i>
                         </a>
                         <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="account.php">Dashboard</a></li>
                             <li><a class="dropdown-item" href="my_orders.php">My Orders</a></li>
                             <li><a class="dropdown-item" href="wishlist.php">My Wishlist</a></li>
                             <li><hr class="dropdown-divider"></li>
@@ -698,7 +948,7 @@ function getOrderStatus($order_date) {
         </div>
     </header>
 
-    <!-- Navigation Bar -->
+    <!-- Navigation Bar - EXACT COPY FROM CART -->
     <nav class="navbar navbar-expand-lg">
         <div class="container-fluid" style="padding: 0 120px;">
             <div class="collapse navbar-collapse" id="navbarNav">
@@ -726,67 +976,106 @@ function getOrderStatus($order_date) {
         </div>
     </nav>
 
-    <!-- My Orders Content -->
-    <main class="orders-content">
-        <div class="container">
+    <!-- Account Layout with Sidebar -->
+    <div class="account-layout">
+        <!-- Account Sidebar Navigation -->
+        <aside class="account-sidebar">
+            <nav class="sidebar-nav">
+                <a href="account.php" class="nav-item">
+                    <i class="fas fa-tachometer-alt"></i>
+                    <span>Dashboard</span>
+                </a>
+                <a href="my_orders.php" class="nav-item active">
+                    <i class="fas fa-box"></i>
+                    <span>My orders</span>
+                </a>
+                <a href="track_order.php" class="nav-item">
+                    <i class="fas fa-truck"></i>
+                    <span>Track Orders</span>
+                </a>
+                <a href="profile.php" class="nav-item">
+                    <i class="fas fa-edit"></i>
+                    <span>My Info</span>
+                </a>
+                <a href="notifications.php" class="nav-item">
+                    <i class="fas fa-bell"></i>
+                    <span>Notifications</span>
+                </a>
+                <a href="help.php" class="nav-item">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Help Center</span>
+                </a>
+                <a href="../actions/logout.php" class="nav-item sign-out-item">
+                    <i class="fas fa-sign-out-alt"></i>
+                    <span>Sign Out</span>
+                </a>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="account-content">
             <div class="orders-header">
-                <h1 class="orders-title">MY ORDERS</h1>
+                <h1 class="orders-title">My Orders</h1>
+                <p class="orders-subtitle">Track and manage your purchases</p>
             </div>
 
-            <div class="orders-container">
-                <?php if (!empty($orders)): ?>
-                    <?php foreach ($orders as $order): ?>
-                        <?php
-                        $order_status = getOrderStatus($order['order_date']);
-                        $order_items = get_order_details_ctr($order['order_id']);
-                        $total_items = count($order_items);
-                        ?>
-                        <div class="order-card">
-                            <div class="order-status <?= strtolower(str_replace(' ', '-', $order_status)) ?>">
-                                <?= $order_status ?>
-                            </div>
+            <?php if (!empty($orders)): ?>
+                <?php foreach ($orders as $order): ?>
+                    <?php
+                    $order_status = getOrderStatus($order['order_date']);
+                    $order_items = get_order_details_ctr($order['order_id']);
+                    $total_items = count($order_items);
+                    ?>
+                    <div class="order-card">
+                        <div class="order-status <?= strtolower(str_replace(' ', '-', $order_status)) ?>">
+                            <?= $order_status ?>
+                        </div>
 
-                            <div class="order-images">
-                                <?php
-                                $display_items = array_slice($order_items, 0, 4);
-                                foreach ($display_items as $item):
-                                ?>
-                                    <div class="order-image">
-                                        <img src="<?= get_image_url($item['product_image']) ?>"
-                                             alt="<?= htmlspecialchars($item['product_title']) ?>"
-                                             onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
-                                    </div>
-                                <?php endforeach; ?>
+                        <div class="order-images">
+                            <?php
+                            $display_items = array_slice($order_items, 0, 4);
+                            foreach ($display_items as $item):
+                            ?>
+                                <div class="order-image">
+                                    <img src="<?= get_image_url($item['product_image']) ?>"
+                                         alt="<?= htmlspecialchars($item['product_title']) ?>"
+                                         onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                                </div>
+                            <?php endforeach; ?>
 
-                                <?php if ($total_items > 4): ?>
-                                    <div class="order-more">
-                                        + <?= $total_items - 4 ?> more
-                                    </div>
-                                <?php endif; ?>
-                            </div>
+                            <?php if ($total_items > 4): ?>
+                                <div class="order-more">
+                                    + <?= $total_items - 4 ?> more
+                                </div>
+                            <?php endif; ?>
+                        </div>
 
-                            <div class="order-details">
-                                Order <span class="order-number">#<?= htmlspecialchars($order['order_reference']) ?></span> •
-                                <strong>GH₵<?= number_format($order['total_amount'], 2) ?></strong> •
-                                <?= date('d. M/Y', strtotime($order['order_date'])) ?>
-                            </div>
+                        <div class="order-details">
+                            Order <span class="order-number">#<?= htmlspecialchars($order['invoice_no']) ?></span> •
+                            <strong>GH₵<?= number_format($order['total_amount'], 2) ?></strong> •
+                            <?= date('d. M/Y', strtotime($order['order_date'])) ?>
+                        </div>
 
-                            <button class="view-details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>)">
-                                View details
+                        <div class="order-actions">
+                            <button class="action-btn view-details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>)">
+                                <i class="fas fa-eye me-2"></i>View Details
+                            </button>
+                            <button class="action-btn track-order-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                <i class="fas fa-truck me-2"></i>Track Order
                             </button>
                         </div>
-                    <?php endforeach; ?>
-                <?php else: ?>
-                    <div class="no-orders">
-                        <i class="fas fa-shopping-bag"></i>
-                        <h3>No Orders Yet</h3>
-                        <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
-                        <a href="../index.php" class="start-shopping-btn">Start Shopping</a>
                     </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </main>
+                <?php endforeach; ?>
+            <?php else: ?>
+                <div class="no-orders">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>No Orders Yet</h3>
+                    <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                    <a href="../index.php" class="start-shopping-btn">Start Shopping</a>
+                </div>
+            <?php endif; ?>
+        </main>
+    </div>
 
     <!-- Order Details Modal -->
     <div class="modal fade order-modal" id="orderDetailsModal" tabindex="-1">
@@ -813,7 +1102,7 @@ function getOrderStatus($order_date) {
         </div>
     </div>
 
-    <!-- Footer -->
+    <!-- Footer - EXACT COPY FROM CART -->
     <footer class="main-footer">
         <div class="container">
             <div class="footer-content">
@@ -880,6 +1169,9 @@ function getOrderStatus($order_date) {
                             <p class="newsletter-disclaimer">
                                 By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
                             </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
                         </div>
                     </div>
                 </div>
@@ -922,6 +1214,12 @@ function getOrderStatus($order_date) {
                     document.getElementById('orderDetailsContent').innerHTML =
                         '<div class="alert alert-danger">Failed to load order details. Please try again.</div>';
                 });
+        }
+
+        // Track Order Function
+        function trackOrder(orderReference) {
+            // Redirect to tracking page with order reference
+            window.location.href = 'track_order.php?ref=' + encodeURIComponent(orderReference);
         }
 
         // Display Order Details in Modal
@@ -995,7 +1293,7 @@ function getOrderStatus($order_date) {
             document.getElementById('orderDetailsContent').innerHTML = content;
         }
 
-        // Promo Timer
+        // Promo Timer - EXACT COPY FROM CART
         function updatePromoTimer() {
             const timer = document.getElementById('promoTimer');
             if (timer) {
@@ -1017,7 +1315,7 @@ function getOrderStatus($order_date) {
         setInterval(updatePromoTimer, 1000);
         updatePromoTimer();
 
-        // Header search functionality
+        // Header search functionality - EXACT COPY FROM CART
         function performHeaderSearch() {
             const searchInput = document.getElementById('headerSearchInput');
             const searchTerm = searchInput.value.trim();

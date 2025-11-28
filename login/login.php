@@ -118,7 +118,7 @@ try {
 			font-family: "Times New Roman", Times, serif;
 			background-color: #ffffff;
 			color: #1a1a1a;
-			overflow-x: hidden;
+			overflow: hidden;
 		}
 
 		body::after {
@@ -980,8 +980,8 @@ try {
 
 		.auth-container {
 			width: 100%;
-			max-width: 1000px;
-			height: 650px;
+			max-width: 1200px;
+			height: 750px;
 			position: relative;
 			border-radius: 25px;
 			overflow: hidden;
@@ -1145,10 +1145,10 @@ try {
 		}
 
 		.form-title {
-			font-size: 2rem;
+			font-size: 2.5rem;
 			font-weight: 700;
 			color: var(--text-dark);
-			margin-bottom: 8px;
+			margin-bottom: 30px;
 			text-align: center;
 		}
 
@@ -1289,18 +1289,18 @@ try {
 			display: block;
 			font-weight: 600;
 			color: var(--text-dark);
-			margin-bottom: 10px;
-			font-size: 1rem;
+			margin-bottom: 12px;
+			font-size: 1.1rem;
 		}
 
 		.form-control {
 			width: 100%;
-			padding: 16px 20px 16px 50px;
+			padding: 20px 24px 20px 60px;
 			border: 2px solid #e5e7eb;
 			border-radius: 12px;
 			background: #f8fafc;
 			color: var(--text-dark);
-			font-size: 1rem;
+			font-size: 1.2rem;
 			transition: all 0.3s ease;
 			outline: none;
 		}
@@ -1325,6 +1325,22 @@ try {
 			z-index: 2;
 		}
 
+		.password-toggle {
+			position: absolute;
+			right: 18px;
+			top: 50%;
+			transform: translateY(-50%);
+			color: #6b7280;
+			font-size: 1.1rem;
+			cursor: pointer;
+			z-index: 2;
+			transition: color 0.3s ease;
+		}
+
+		.password-toggle:hover {
+			color: var(--gg-teal);
+		}
+
 		.ghana-flag {
 			position: absolute;
 			left: 18px;
@@ -1336,7 +1352,7 @@ try {
 		}
 
 		.form-control.with-icon {
-			padding-left: 55px;
+			padding-left: 65px;
 		}
 
 		.form-control.with-flag {
@@ -1348,15 +1364,15 @@ try {
 			background: var(--gradient-primary);
 			color: white;
 			border: none;
-			padding: 18px;
+			padding: 22px;
 			border-radius: 12px;
-			font-size: 1.1rem;
+			font-size: 1.3rem;
 			font-weight: 600;
 			cursor: pointer;
 			transition: all 0.3s ease;
 			position: relative;
 			overflow: hidden;
-			margin-top: 10px;
+			margin-top: 15px;
 		}
 
 		.submit-btn:hover {
@@ -1731,7 +1747,7 @@ try {
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPT_Image_Nov_19__2025__11_50_42_PM-removebg-preview.png"
 						alt="Gadget Garage Logo" class="brand-logo">
 					<h1 class="welcome-title" id="welcomeTitle">Welcome Back!</h1>
-					<p class="welcome-message" id="welcomeMessage">Provide your personal details to use all features</p>
+					<p class="welcome-message" id="welcomeMessage">Continue Shopping the best deals!</p>
 					<a href="register.php" class="welcome-signup-btn" id="welcomeSignupBtn">Join Gadget Garage</a>
 					<p class="welcome-button-message" id="welcomeButtonMessage">Join 1000's of customers that buy smart tech with smarter spending.</p>
 				</div>
@@ -1740,8 +1756,7 @@ try {
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
-							<h2 class="form-title" id="formTitle">Login With</h2>
-							<p class="form-subtitle" id="formSubtitle">Login With Your Email & Password</p>
+							<h2 class="form-title" id="formTitle">Login</h2>
 						</div>
 
 						<!-- Social Login Buttons -->
@@ -1808,6 +1823,7 @@ try {
 												class="form-control with-icon"
 												placeholder="Enter your password"
 												required>
+											<i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
 										</div>
 									</div>
 
@@ -1988,6 +2004,22 @@ try {
 		// Timeout variables
 		let shopDropdownTimeout;
 		let moreDropdownTimeout;
+
+		// Password toggle functionality
+		function togglePassword() {
+			const passwordField = document.getElementById('password');
+			const toggleIcon = document.getElementById('passwordToggle');
+
+			if (passwordField.type === 'password') {
+				passwordField.type = 'text';
+				toggleIcon.classList.remove('fa-eye');
+				toggleIcon.classList.add('fa-eye-slash');
+			} else {
+				passwordField.type = 'password';
+				toggleIcon.classList.remove('fa-eye-slash');
+				toggleIcon.classList.add('fa-eye');
+			}
+		}
 	</script>
 </body>
 

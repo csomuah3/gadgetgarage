@@ -61,7 +61,7 @@ body {
 .promo-banner .promo-text,
 .promo-banner2 .promo-text {
     font-size: 1rem;
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: 0.5px;
 }
 
@@ -216,7 +216,7 @@ body {
 
 .tech-revival-text {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #1f2937;
     margin: 0;
     letter-spacing: 0.5px;
@@ -225,7 +225,7 @@ body {
 
 .contact-number {
     font-size: 1.1rem;
-    font-weight: 600;
+    font-weight: 700;
     color: #008060;
     margin: 0;
     margin-top: 4px;
@@ -590,7 +590,7 @@ body.dark-mode .simple-dropdown ul li a:hover {
 .nav-item {
     color: #1f2937;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 700;
     padding: 16px 20px;
     display: flex;
     align-items: center;
@@ -628,7 +628,7 @@ body.dark-mode .simple-dropdown ul li a:hover {
     border: none;
     padding: 12px 20px;
     border-radius: 6px;
-    font-weight: 600;
+    font-weight: 700;
     font-size: 1rem;
     display: flex;
     align-items: center;

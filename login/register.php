@@ -1944,7 +1944,7 @@
 											id="email"
 											name="email"
 											class="form-control with-icon"
-											placeholder="       Enter your email"
+											placeholder="Enter your email"
 											value=""
 											required>
 									</div>

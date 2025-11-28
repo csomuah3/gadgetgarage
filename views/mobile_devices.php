@@ -18,38 +18,26 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get products from database filtered by mobile device categories
-// Define mobile device categories (case-insensitive matching)
-$mobile_categories = [
-    'smartphones', 'ipads', 'tablets', 'mobile devices', 'phone', 'tablet', 'ipad',
-    'Smartphones', 'iPads', 'Tablets', 'Mobile Devices', 'Phone', 'Tablet', 'iPad'
-];
-
-// Get all products first
+// Get all products and filter for mobile devices ONLY
 $all_products = get_all_products_ctr();
 
-// Filter for mobile device categories with improved logic
-$mobile_products = array_filter($all_products, function ($product) use ($mobile_categories) {
-    // Check category name directly
-    if (in_array(strtolower($product['cat_name']), array_map('strtolower', $mobile_categories))) {
-        return true;
-    }
+// Simple mobile filtering - ONLY show mobile-related products
+$mobile_products = array_filter($all_products, function ($product) {
+    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
 
-    // Check if category name contains mobile-related keywords
-    $cat_lower = strtolower($product['cat_name']);
-    if (strpos($cat_lower, 'mobile') !== false ||
-        strpos($cat_lower, 'phone') !== false ||
-        strpos($cat_lower, 'tablet') !== false ||
-        strpos($cat_lower, 'ipad') !== false) {
-        return true;
-    }
-
-    // Fallback: check product title for mobile keywords
-    $title_lower = strtolower($product['product_title']);
-    return (strpos($title_lower, 'phone') !== false ||
-            strpos($title_lower, 'ipad') !== false ||
-            strpos($title_lower, 'tablet') !== false ||
-            strpos($title_lower, 'mobile') !== false);
+    // Mobile categories and keywords
+    return (strpos($cat_name, 'smartphone') !== false ||
+            strpos($cat_name, 'mobile') !== false ||
+            strpos($cat_name, 'tablet') !== false ||
+            strpos($cat_name, 'ipad') !== false ||
+            strpos($cat_name, 'phone') !== false ||
+            strpos($title, 'iphone') !== false ||
+            strpos($title, 'samsung') !== false ||
+            strpos($title, 'smartphone') !== false ||
+            strpos($title, 'tablet') !== false ||
+            strpos($title, 'ipad') !== false ||
+            strpos($title, 'phone') !== false);
 });
 
 // Get real categories and brands from database

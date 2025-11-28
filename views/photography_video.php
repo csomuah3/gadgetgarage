@@ -18,41 +18,27 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get products from database filtered by photography & video categories
-// Define photography & video device categories (case-insensitive matching)
-$photo_video_categories = [
-    'cameras', 'video equipment', 'video_equipment', 'photography', 'photo', 'lens', 'camcorder',
-    'Cameras', 'Video Equipment', 'Video_Equipment', 'Photography', 'Photo', 'Lens', 'Camcorder',
-    'photography & video', 'Photography & Video'
-];
-
-// Get all products first
+// Get all products and filter for photography & video devices ONLY
 $all_products = get_all_products_ctr();
 
-// Filter for photography & video device categories with improved logic
-$photo_video_products = array_filter($all_products, function ($product) use ($photo_video_categories) {
-    // Check category name directly
-    if (in_array(strtolower($product['cat_name']), array_map('strtolower', $photo_video_categories))) {
-        return true;
-    }
+// Simple photo/video filtering - ONLY show photography/video-related products
+$photo_video_products = array_filter($all_products, function ($product) {
+    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
 
-    // Check if category name contains photo/video-related keywords
-    $cat_lower = strtolower($product['cat_name']);
-    if (strpos($cat_lower, 'photo') !== false ||
-        strpos($cat_lower, 'video') !== false ||
-        strpos($cat_lower, 'camera') !== false ||
-        strpos($cat_lower, 'lens') !== false) {
-        return true;
-    }
-
-    // Fallback: check product title for photo/video keywords
-    $title_lower = strtolower($product['product_title']);
-    return (strpos($title_lower, 'camera') !== false ||
-            strpos($title_lower, 'video') !== false ||
-            strpos($title_lower, 'photography') !== false ||
-            strpos($title_lower, 'photo') !== false ||
-            strpos($title_lower, 'lens') !== false ||
-            strpos($title_lower, 'camcorder') !== false);
+    // Photo/Video categories and keywords
+    return (strpos($cat_name, 'camera') !== false ||
+            strpos($cat_name, 'video') !== false ||
+            strpos($cat_name, 'photo') !== false ||
+            strpos($cat_name, 'lens') !== false ||
+            strpos($title, 'camera') !== false ||
+            strpos($title, 'video') !== false ||
+            strpos($title, 'photo') !== false ||
+            strpos($title, 'lens') !== false ||
+            strpos($title, 'canon') !== false ||
+            strpos($title, 'nikon') !== false ||
+            strpos($title, 'sony') !== false ||
+            strpos($title, 'camcorder') !== false);
 });
 
 // Get all categories and brands from database

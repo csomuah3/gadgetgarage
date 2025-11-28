@@ -18,40 +18,27 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get products from database filtered by computing categories
-// Define computing device categories (case-insensitive matching)
-$computing_categories = [
-    'laptops', 'desktops', 'computing', 'computer', 'pc', 'macbook', 'imac',
-    'Laptops', 'Desktops', 'Computing', 'Computer', 'PC', 'MacBook', 'iMac'
-];
-
-// Get all products first
+// Get all products and filter for computing devices ONLY
 $all_products = get_all_products_ctr();
 
-// Filter for computing device categories with improved logic
-$computing_products = array_filter($all_products, function ($product) use ($computing_categories) {
-    // Check category name directly
-    if (in_array(strtolower($product['cat_name']), array_map('strtolower', $computing_categories))) {
-        return true;
-    }
+// Simple computing filtering - ONLY show computing-related products
+$computing_products = array_filter($all_products, function ($product) {
+    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
 
-    // Check if category name contains computing-related keywords
-    $cat_lower = strtolower($product['cat_name']);
-    if (strpos($cat_lower, 'computing') !== false ||
-        strpos($cat_lower, 'computer') !== false ||
-        strpos($cat_lower, 'laptop') !== false ||
-        strpos($cat_lower, 'desktop') !== false) {
-        return true;
-    }
-
-    // Fallback: check product title for computing keywords
-    $title_lower = strtolower($product['product_title']);
-    return (strpos($title_lower, 'laptop') !== false ||
-            strpos($title_lower, 'desktop') !== false ||
-            strpos($title_lower, 'computer') !== false ||
-            strpos($title_lower, 'macbook') !== false ||
-            strpos($title_lower, 'imac') !== false ||
-            strpos($title_lower, 'pc ') !== false);
+    // Computing categories and keywords
+    return (strpos($cat_name, 'laptop') !== false ||
+            strpos($cat_name, 'desktop') !== false ||
+            strpos($cat_name, 'computing') !== false ||
+            strpos($cat_name, 'computer') !== false ||
+            strpos($title, 'laptop') !== false ||
+            strpos($title, 'desktop') !== false ||
+            strpos($title, 'computer') !== false ||
+            strpos($title, 'macbook') !== false ||
+            strpos($title, 'imac') !== false ||
+            strpos($title, 'pc ') !== false ||
+            strpos($title, 'hp ') !== false ||
+            strpos($title, 'dell') !== false);
 });
 
 // Get all categories and brands from database

@@ -525,102 +525,55 @@ if ($is_logged_in) {
     <div class="wishlist-container">
         <div class="container">
             <h1 class="wishlist-title">My Wishlist</h1>
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                        alt="Gadget Garage">
-                </a>
 
-                <!-- Center Content -->
-                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-                    <!-- Search Bar -->
-                    <form class="search-container" method="GET" action="../product_search_result.php">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-
-                    <!-- Tech Revival Section -->
-                    <div class="tech-revival-section">
-                        <i class="fas fa-recycle tech-revival-icon"></i>
-                        <div>
-                            <p class="tech-revival-text">Bring Retired Devices</p>
-                            <p class="contact-number">055-138-7578</p>
-                        </div>
-                    </div>
+            <?php if (!$is_logged_in): ?>
+                <div class="empty-wishlist">
+                    <i class="fas fa-user-lock" style="font-size: 4rem; color: #e5e7eb; margin-bottom: 20px;"></i>
+                    <h3>Please log in to view your wishlist</h3>
+                    <p>You need to be logged in to access your saved items.</p>
+                    <a href="login.php" class="shop-btn">Log In</a>
                 </div>
-
-                <!-- User Actions - Far Right -->
-                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
-                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-                    <?php if ($is_logged_in): ?>
-                        <!-- Wishlist Icon -->
-                        <div class="header-icon">
-                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-heart"></i>
-                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-                            </a>
-                        </div>
-
-                        <!-- Cart Icon -->
-                        <div class="header-icon">
-                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-shopping-cart"></i>
-                                <?php if ($cart_count > 0): ?>
-                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
-                                <?php else: ?>
-                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
-                                <?php endif; ?>
-                            </a>
-                        </div>
-
-                        <!-- User Avatar Dropdown -->
-                        <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
-                            </div>
-                            <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="goToAccount()">
-                                    <i class="fas fa-user"></i>
-                                    <span>Account</span>
+            <?php elseif (empty($wishlist_items)): ?>
+                <div class="empty-wishlist">
+                    <i class="fas fa-heart"></i>
+                    <h3>Your wishlist is empty</h3>
+                    <p>Start adding products to your wishlist to save them for later!</p>
+                    <a href="all_product.php" class="shop-btn">Start Shopping</a>
+                </div>
+            <?php else: ?>
+                <div class="wishlist-grid">
+                    <?php foreach ($wishlist_items as $item): ?>
+                        <div class="wishlist-item">
+                            <div class="product-image-container">
+                                <img src="<?php echo htmlspecialchars($item['product_image'] ?: '../uploads/default-product.png'); ?>"
+                                    alt="<?php echo htmlspecialchars($item['product_title']); ?>"
+                                    class="product-image">
+                                <button class="remove-wishlist-btn"
+                                    onclick="removeFromWishlist(<?php echo $item['product_id']; ?>, this)"
+                                    title="Remove from wishlist">
+                                    <i class="fas fa-times"></i>
                                 </button>
-                                <div class="dropdown-divider-custom"></div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-globe"></i>
-                                    <div class="language-selector">
-                                        <span>Language</span>
-                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                            <option value="en">🇬🇧 EN</option>
-                                            <option value="es">🇪🇸 ES</option>
-                                            <option value="fr">🇫🇷 FR</option>
-                                            <option value="de">🇩🇪 DE</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-moon"></i>
-                                    <div class="theme-toggle">
-                                        <span>Dark Mode</span>
-                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-                                            <div class="toggle-slider"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dropdown-divider-custom"></div>
-                                <a href="../login/logout.php" class="dropdown-item-custom">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Logout</span>
-                                </a>
+                            </div>
+
+                            <h3 class="product-title"><?php echo htmlspecialchars($item['product_title']); ?></h3>
+                            <div class="product-price">GH₵<?php echo number_format($item['product_price'], 2); ?></div>
+
+                            <div class="product-actions">
+                                <button class="add-to-cart-btn"
+                                    onclick="addToCart(<?php echo $item['product_id']; ?>)">
+                                    <i class="fas fa-shopping-cart"></i> Add to Cart
+                                </button>
+                                <button class="view-details-btn"
+                                    onclick="window.location.href='product_detail.php?id=<?php echo $item['product_id']; ?>'">
+                                    <i class="fas fa-eye"></i> View Details
+                                </button>
                             </div>
                         </div>
-                    <?php else: ?>
-                        <!-- Login Button -->
-                        <a href="../login/login.php" class="login-btn">
-                            <i class="fas fa-user"></i>
-                            Login
-                        </a>
-                    <?php endif; ?>
+                    <?php endforeach; ?>
                 </div>
+            <?php endif; ?>
+        </div>
+    </div>
             </div>
         </div>
     </header>

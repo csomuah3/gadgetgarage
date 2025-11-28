@@ -16,7 +16,19 @@ class Product extends db_connection
     public function add_product($product_title, $product_price, $product_desc, $product_image, $product_keywords, $product_color, $category_id, $brand_id, $stock_quantity)
     {
         try {
-            error_log("Attempting to add product...");
+            error_log("========== ADD PRODUCT START ==========");
+            error_log("Product Title: " . $product_title);
+            error_log("Product Price: " . $product_price);
+            error_log("Category ID: " . $category_id);
+            error_log("Brand ID: " . $brand_id);
+            error_log("Stock Quantity: " . $stock_quantity);
+
+            // Check database connection
+            if (!isset($this->db) || !$this->db) {
+                error_log("ERROR: Database connection not available");
+                return false;
+            }
+            error_log("Database connection: OK");
 
             // Escape all string inputs
             $product_title = mysqli_real_escape_string($this->db, $product_title);
@@ -28,23 +40,37 @@ class Product extends db_connection
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
                     VALUES ('$product_title', '$product_price', '$product_desc', '$product_image', '$product_keywords', '$product_color', '$category_id', '$brand_id', '$stock_quantity')";
 
-            error_log("Executing SQL: " . $sql);
+            error_log("SQL Query: " . $sql);
 
             // Use db_write_query for INSERT operations
             $result = $this->db_write_query($sql);
 
+            error_log("db_write_query result type: " . gettype($result));
+            error_log("db_write_query result value: " . var_export($result, true));
+
             if ($result === false) {
-                error_log("Add product error: Failed to execute insert query");
-                error_log("MySQL error: " . (isset($this->db) ? mysqli_error($this->db) : 'Database not connected'));
-                error_log("MySQL errno: " . (isset($this->db) ? mysqli_errno($this->db) : 'No error number'));
+                $mysql_error = mysqli_error($this->db);
+                $mysql_errno = mysqli_errno($this->db);
+                error_log("========== DATABASE ERROR ==========");
+                error_log("MySQL Error Number: " . $mysql_errno);
+                error_log("MySQL Error Message: " . $mysql_error);
+                error_log("Failed SQL: " . $sql);
+                error_log("=====================================");
+                return false;
             } else {
-                error_log("Product insertion successful, result: " . json_encode($result));
+                $inserted_id = mysqli_insert_id($this->db);
+                error_log("✅ Product inserted successfully!");
+                error_log("Inserted Product ID: " . $inserted_id);
+                error_log("========== ADD PRODUCT END ==========");
             }
 
             return $result;
         } catch (Exception $e) {
-            error_log("Add product error: " . $e->getMessage());
-            error_log("Stack trace: " . $e->getTraceAsString());
+            error_log("========== EXCEPTION IN ADD_PRODUCT ==========");
+            error_log("Exception Message: " . $e->getMessage());
+            error_log("Exception Code: " . $e->getCode());
+            error_log("Stack Trace: " . $e->getTraceAsString());
+            error_log("==============================================");
             return false;
         }
     }
@@ -83,6 +109,23 @@ class Product extends db_connection
         } catch (Exception $e) {
             error_log("Get last inserted ID error: " . $e->getMessage());
             return 0;
+        }
+    }
+
+    /**
+     * Get last MySQL error
+     */
+    public function get_last_error()
+    {
+        try {
+            if (!isset($this->db) || !$this->db) {
+                return 'No database connection';
+            }
+            $errno = mysqli_errno($this->db);
+            $error = mysqli_error($this->db);
+            return "Error $errno: $error";
+        } catch (Exception $e) {
+            return 'Unable to get error: ' . $e->getMessage();
         }
     }
 

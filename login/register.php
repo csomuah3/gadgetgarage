@@ -909,7 +909,7 @@
 
 		.form-control {
 			width: 100%;
-			padding: 16px 20px 16px 50px;
+			padding: 16px 20px 16px 50px !important;
 			border: 2px solid #e5e7eb;
 			border-radius: 12px;
 			background: #f8fafc;
@@ -956,11 +956,11 @@
 		}
 
 		.form-control.with-icon {
-			padding-left: 55px;
+			padding-left: 55px !important;
 		}
 
 		.form-control.with-flag {
-			padding-left: 55px;
+			padding-left: 55px !important;
 		}
 
 		.submit-btn {

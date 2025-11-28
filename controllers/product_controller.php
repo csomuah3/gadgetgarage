@@ -25,8 +25,20 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
                 return ['status' => 'success', 'message' => 'Product added successfully'];
             }
         } else {
-            error_log("Add product failed: add_product returned false or null");
-            return ['status' => 'error', 'message' => 'Database error: Could not add product to database'];
+            // Get actual MySQL error
+            $mysql_error = $product->get_last_error();
+            error_log("Add product failed: add_product returned false or null. MySQL Error: " . $mysql_error);
+            return [
+                'status' => 'error', 
+                'message' => 'Database error: Could not add product to database',
+                'debug' => [
+                    'mysql_error' => $mysql_error,
+                    'title' => $product_title,
+                    'price' => $product_price,
+                    'cat' => $category_id,
+                    'brand' => $brand_id
+                ]
+            ];
         }
     } catch (Exception $e) {
         error_log("Add product controller error: " . $e->getMessage());

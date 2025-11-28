@@ -7386,14 +7386,14 @@ try {
 	let slideTimer = null;
 		let currentSlide = 0;
 
-		function initSimpleCarousel() {
-			console.log('🔥 STARTING SIMPLE CAROUSEL');
+	function initSimpleCarousel() {
+		console.log('🔥 STARTING SIMPLE CAROUSEL');
 
-			const slides = document.querySelectorAll('.hero-slide');
-			const dots = document.querySelectorAll('.carousel-dot');
+		const slides = document.querySelectorAll('.hero-slide');
+		let dots = document.querySelectorAll('.carousel-dot');
 
-			console.log('Found slides:', slides.length);
-			console.log('Found dots:', dots.length);
+		console.log('Found slides:', slides.length);
+		console.log('Found dots:', dots.length);
 
 		if (slides.length === 0) {
 			console.error('❌ No slides found!');
@@ -7401,8 +7401,11 @@ try {
 			return;
 		}
 
-			function showSlideNumber(num) {
-				console.log('🎯 SWITCHING TO SLIDE:', num);
+		function showSlideNumber(num) {
+			console.log('🎯 SWITCHING TO SLIDE:', num);
+
+			// Re-query dots to get latest references
+			const currentDots = document.querySelectorAll('.carousel-dot');
 
 			// Hide ALL slides first
 			slides.forEach((slide, index) => {
@@ -7411,38 +7414,38 @@ try {
 			});
 
 			// Remove active from all dots
-			dots.forEach(dot => dot.classList.remove('active'));
+			currentDots.forEach(dot => dot.classList.remove('active'));
 
 			// Show current slide with proper display and active class
-				slides[num].style.display = 'grid';
+			slides[num].style.display = 'grid';
 			// Force reflow
 			slides[num].offsetHeight;
 			slides[num].classList.add('active');
 
 			// Activate current dot
-				if (dots[num]) {
-					dots[num].classList.add('active');
-				}
-
-				console.log('✅ NOW SHOWING:', slides[num].dataset.product);
+			if (currentDots[num]) {
+				currentDots[num].classList.add('active');
 			}
 
-			function goToNextSlide() {
+			console.log('✅ NOW SHOWING:', slides[num].dataset.product);
+		}
+
+		function goToNextSlide() {
 			console.log('⏭️ Going to next slide from', currentSlide, 'to', (currentSlide + 1) % slides.length);
 			const previousSlide = currentSlide;
-				currentSlide = (currentSlide + 1) % slides.length;
+			currentSlide = (currentSlide + 1) % slides.length;
 			
 			// Add exiting class to previous slide
 			if (slides[previousSlide]) {
 				slides[previousSlide].classList.add('exiting');
 			}
 			
-				showSlideNumber(currentSlide);
-			}
+			showSlideNumber(currentSlide);
+		}
 
-			// Show first slide immediately
+		// Show first slide immediately
 		console.log('Showing first slide...');
-			showSlideNumber(0);
+		showSlideNumber(0);
 
 		// Clear any existing timer
 		if (slideTimer) {
@@ -7461,41 +7464,51 @@ try {
 		console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
 		console.log('Timer ID:', slideTimer);
 
-		// Add click handlers for dots with better event handling
+		// Add click handlers for dots - SIMPLER APPROACH
 		console.log('Adding click handlers to dots...');
-		dots.forEach((dot, index) => {
-			// Remove any existing listeners
-			const newDot = dot.cloneNode(true);
-			dot.parentNode.replaceChild(newDot, dot);
+		
+		// Wait a bit to ensure DOM is ready
+		setTimeout(() => {
+			const allDots = document.querySelectorAll('.carousel-dot');
+			console.log('Re-queried dots:', allDots.length);
 			
-			newDot.addEventListener('click', function(e) {
-				e.preventDefault();
-				e.stopPropagation();
-				console.log('🎯 Dot clicked:', index, 'Current slide:', currentSlide);
+			allDots.forEach((dot, index) => {
+				console.log('Adding listener to dot', index);
 				
-				// Clear existing timer
-				if (slideTimer) {
-					clearInterval(slideTimer);
-					slideTimer = null;
-				}
+				dot.onclick = function(e) {
+					console.log('🎯 DOT CLICKED!!! Index:', index);
+					e.preventDefault();
+					e.stopPropagation();
+					
+					// Clear existing timer
+					if (slideTimer) {
+						clearInterval(slideTimer);
+						slideTimer = null;
+					}
+					
+					// Update to clicked slide
+					currentSlide = index;
+					showSlideNumber(currentSlide);
+					
+					// Restart timer
+					slideTimer = setInterval(() => {
+						goToNextSlide();
+					}, 5000);
+					
+					console.log('✅ Switched to slide', index);
+					return false;
+				};
 				
-				// Update to clicked slide
-				currentSlide = index;
-				showSlideNumber(currentSlide);
-				
-				// Restart timer
-				slideTimer = setInterval(() => {
-					goToNextSlide();
-				}, 5000);
-				
-				console.log('✅ Switched to slide', index);
+				// Also add mousedown for extra reliability
+				dot.onmousedown = function(e) {
+					console.log('🖱️ MOUSEDOWN on dot', index);
+				};
 			});
 			
-			console.log('Added click handler to dot', index);
-		});
+			console.log('✅ Click handlers added to all dots!');
+		}, 200);
 
 		console.log('✅ Carousel initialized successfully!');
-		console.log('All dots should be clickable now!');
 	}
 
 		// Featured on IG Carousel Function

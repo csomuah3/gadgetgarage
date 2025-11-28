@@ -2272,7 +2272,7 @@ try {
 		.circular-testimonial-card {
 			position: absolute !important;
 			width: 350px;
-			height: 320px;
+			height: 380px;
 			border-radius: 20px;
 			border: 1px solid rgba(255, 255, 255, 0.2);
 			background: linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.08)) !important;
@@ -2349,7 +2349,7 @@ try {
 
 			.circular-testimonial-card {
 				width: 340px;
-				height: 260px;
+				height: 300px;
 				padding: 25px;
 			}
 		}
@@ -2374,7 +2374,7 @@ try {
 
 			.circular-testimonial-card {
 				width: 300px;
-				height: 240px;
+				height: 280px;
 				padding: 20px;
 			}
 

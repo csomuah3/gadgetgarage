@@ -208,7 +208,7 @@ document.addEventListener('DOMContentLoaded', function() {
         window.horizontalGallery = new HorizontalGallery(container, testimonials, {
             cardWidth: 320,
             cardHeight: 250,
-            autoScrollSpeed: 2,
+            autoScrollSpeed: 0.5,
             cardSpacing: 30
         });
 

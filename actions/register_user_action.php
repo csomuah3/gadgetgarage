@@ -117,8 +117,16 @@ if ($isLogin) {
             exit;
         }
 
+        error_log("Register action - About to call register_user_ctr with: name=$name, email=$email, phone=$phone_number, country=$country, city=$city, role=$role");
+
         $res = register_user_ctr($name, $email, $password, $phone_number, $country, $city, $role);
         error_log("Register action - controller returned: " . json_encode($res));
+
+        // Force success response for testing
+        if (!$res || !is_array($res)) {
+            error_log("Register action - Got unexpected result type: " . gettype($res));
+            $res = ['status' => 'error', 'message' => 'Unexpected registration result'];
+        }
 
         if (is_bool($res)) {
             $res = $res

@@ -130,6 +130,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="../includes/header.css" rel="stylesheet">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -978,25 +979,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 </head>
 
 <body>
-    <!-- Promo Banner -->
-    <div class="promo-banner2">
-        <div class="container">
-            <div class="promo-text">
-                <i class="fas fa-bolt"></i>
-                <span>LIMITED TIME OFFER</span>
-            </div>
-            <div class="countdown-timer" id="promoCountdown">
-                <span>Ends in:</span>
-                <div class="time-unit" id="hours">00</div>
-                <span>:</span>
-                <div class="time-unit" id="minutes">00</div>
-                <span>:</span>
-                <div class="time-unit" id="seconds">00</div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Main Header -->
+    <?php include '../includes/header.php'; ?>
     <header class="main-header">
         <div class="container header-container">
             <div class="header-top">

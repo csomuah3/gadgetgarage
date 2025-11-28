@@ -1169,11 +1169,11 @@ try {
     </style>
 </head>
 <body>
+    <?php include '../includes/header.php'; ?>
+    
     <!-- Background Decorations -->
     <div class="bg-decoration bg-decoration-1"></div>
     <div class="bg-decoration bg-decoration-2"></div>
-
-    <!-- Promo Banner -->
     <div class="promo-banner2">
         <div class="container">
             <div class="promo-text">
@@ -1190,9 +1190,6 @@ try {
             </div>
         </div>
     </div>
-
-    <!-- Main Header -->
-    <header class="main-header">
         <div class="container header-container">
             <div class="header-top">
                 <!-- Logo -->

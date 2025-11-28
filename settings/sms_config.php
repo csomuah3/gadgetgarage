@@ -10,7 +10,7 @@ define('SMS_API_URL', 'https://sms.arkesel.com/api/v2/sms/send');
 define('SMS_SENDER_ID', 'Gadget-G'); // Max 11 characters for Arkesel
 
 // SMS Settings
-define('SMS_ENABLED', true);
+define('SMS_ENABLED', false); // Temporarily disabled for registration debugging
 define('SMS_MAX_RETRIES', 3);
 define('SMS_RETRY_DELAY', 300); // 5 minutes in seconds
 define('SMS_RATE_LIMIT', 100); // Max SMS per hour

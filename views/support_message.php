@@ -938,13 +938,7 @@ if ($_POST && isset($_POST['send_message'])) {
 </head>
 
 <body>
-    <!-- Promotional Banner -->
-    <div class="promo-banner2">
-        <i class="fas fa-shipping-fast"></i>
-        Free Next Day Delivery on Orders Above GH₵2,000!
-    </div>
-
-    <!-- Main Header -->
+    <?php include '../includes/header.php'; ?>
     <header class="main-header animate__animated animate__fadeInDown">
         <div class="container-fluid" style="padding: 0 40px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">

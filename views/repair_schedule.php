@@ -756,12 +756,11 @@ try {
     </style>
 </head>
 <body>
+    <?php include '../includes/header.php'; ?>
+    
     <!-- Background Decorations -->
     <div class="bg-decoration bg-decoration-1"></div>
     <div class="bg-decoration bg-decoration-2"></div>
-
-    <!-- Header -->
-    <header class="main-header">
         <div class="container">
             <div class="d-flex justify-content-between align-items-center">
                 <a href="../index.php" class="logo">

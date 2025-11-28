@@ -853,22 +853,7 @@ try {
 </head>
 
 <body>
-    <!-- Promotional Banner -->
-    <div class="promo-banner">
-        <div class="promo-banner-left">
-            <i class="fas fa-shipping-fast"></i>
-            <span>Free Shipping on Orders Over GH₵200</span>
-        </div>
-        <div class="promo-banner-center">
-            <strong>🎉 Black Friday Sale - Up to 50% Off Selected Items! 🎉</strong>
-        </div>
-        <div class="promo-banner-right">
-            <i class="fas fa-phone"></i>
-            <span>Support: +233 24 123 4567</span>
-        </div>
-    </div>
-
-    <!-- Main Header -->
+    <?php include '../includes/header.php'; ?>
     <header class="main-header">
         <div class="header-content">
             <a href="index.php" class="logo-container">

@@ -1582,23 +1582,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 </head>
 
 <body>
-    <!-- Promotional Banner -->
-    <div class="promo-banner2">
-        <div class="promo-banner-left">
-            <i class="fas fa-bolt"></i>
-        </div>
-        <div class="promo-banner-center">
-            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
-            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
-        </div>
-        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
-    </div>
-
+    <?php include '../includes/header.php'; ?>
+    
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles" id="floatingBubbles"></div>
-
-    <!-- Main Header -->
-    <header class="main-header animate__animated animate__fadeInDown">
+    <!-- Old header removed - using header.php include -->
+    <div style="display:none;">
         <div class="container-fluid" style="padding: 0 40px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->

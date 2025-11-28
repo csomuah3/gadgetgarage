@@ -15,17 +15,18 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
 
 // Get repair issue types
 try {
-    $db = new db_connection();
-    $db->db_connect();
-    $issue_types = $db->db_fetch_all("SELECT * FROM repair_issue_types ORDER BY issue_name");
+	$db = new db_connection();
+	$db->db_connect();
+	$issue_types = $db->db_fetch_all("SELECT * FROM repair_issue_types ORDER BY issue_name");
 } catch (Exception $e) {
-    $issue_types = [];
-    $error_message = "Unable to load repair services. Please try again later.";
+	$issue_types = [];
+	$error_message = "Unable to load repair services. Please try again later.";
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -35,10 +36,10 @@ try {
 	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-	
+
 	<!-- Reusable Header CSS -->
 	<link href="../includes/header.css" rel="stylesheet">
-	
+
 	<style>
 		/* Import Google Fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -59,7 +60,7 @@ try {
 
 		/* Promotional Banner Styles - Same as login */
 		.promo-banner,
-        .promo-banner2 {
+		.promo-banner2 {
 			background: #001f3f !important;
 			color: white;
 			padding: 6px 15px;
@@ -79,7 +80,7 @@ try {
 		}
 
 		.promo-banner-left,
-        .promo-banner2 .promo-banner-left {
+		.promo-banner2 .promo-banner-left {
 			display: flex;
 			align-items: center;
 			gap: 15px;
@@ -87,7 +88,7 @@ try {
 		}
 
 		.promo-banner-center,
-        .promo-banner2 .promo-banner-center {
+		.promo-banner2 .promo-banner-center {
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -96,12 +97,12 @@ try {
 		}
 
 		.promo-banner i,
-        .promo-banner2 i {
+		.promo-banner2 i {
 			font-size: 1rem;
 		}
 
 		.promo-banner .promo-text,
-        .promo-banner2 .promo-text {
+		.promo-banner2 .promo-text {
 			font-size: 1rem;
 			font-weight: 400;
 			letter-spacing: 0.5px;
@@ -1023,6 +1024,7 @@ try {
 				opacity: 0;
 				transform: translateY(20px);
 			}
+
 			to {
 				opacity: 1;
 				transform: translateY(0);
@@ -1056,291 +1058,293 @@ try {
 			}
 		}
 
-    /* Dark Mode Promotional Banner Styles */
-    @media (prefers-color-scheme: dark) {
-        .promo-banner,
-        .promo-banner2 {
-            background: linear-gradient(90deg, #1a202c, #2d3748);
-            color: #f7fafc;
-        }
-    }
+		/* Dark Mode Promotional Banner Styles */
+		@media (prefers-color-scheme: dark) {
 
-    /* Footer Styles */
-    .main-footer {
-        background: #ffffff;
-        border-top: 1px solid #e5e7eb;
-        padding: 60px 0 20px;
-        margin-top: 0;
-    }
+			.promo-banner,
+			.promo-banner2 {
+				background: linear-gradient(90deg, #1a202c, #2d3748);
+				color: #f7fafc;
+			}
+		}
 
-    .footer-brand {
-        margin-bottom: 30px;
-    }
+		/* Footer Styles */
+		.main-footer {
+			background: #ffffff;
+			border-top: 1px solid #e5e7eb;
+			padding: 60px 0 20px;
+			margin-top: 0;
+		}
 
-    .footer-logo {
-        font-size: 1.8rem;
-        font-weight: 700;
-        color: #1f2937;
-        margin-bottom: 16px;
-    }
+		.footer-brand {
+			margin-bottom: 30px;
+		}
 
-    .footer-logo img {
-        height: 50px !important;
-        width: auto !important;
-        object-fit: contain !important;
-    }
+		.footer-logo {
+			font-size: 1.8rem;
+			font-weight: 700;
+			color: #1f2937;
+			margin-bottom: 16px;
+		}
 
-    .footer-logo .garage {
-        background: linear-gradient(135deg, #1E3A5F, #2563EB);
-        color: white;
-        padding: 4px 8px;
-        border-radius: 6px;
-        font-size: 1rem;
-        font-weight: 600;
-    }
+		.footer-logo img {
+			height: 50px !important;
+			width: auto !important;
+			object-fit: contain !important;
+		}
 
-    .footer-description {
-        color: #6b7280;
-        font-size: 1.1rem;
-        margin-bottom: 24px;
-        line-height: 1.7;
-    }
+		.footer-logo .garage {
+			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			color: white;
+			padding: 4px 8px;
+			border-radius: 6px;
+			font-size: 1rem;
+			font-weight: 600;
+		}
 
-    .social-links {
-        display: flex;
-        gap: 12px;
-    }
+		.footer-description {
+			color: #6b7280;
+			font-size: 1.1rem;
+			margin-bottom: 24px;
+			line-height: 1.7;
+		}
 
-    .social-link {
-        width: 48px;
-        height: 48px;
-        background: #f3f4f6;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: #6b7280;
-        text-decoration: none;
-        transition: all 0.3s ease;
-        font-size: 1.2rem;
-    }
+		.social-links {
+			display: flex;
+			gap: 12px;
+		}
 
-    .social-link:hover {
-        background: #2563EB;
-        color: white;
-        transform: translateY(-2px);
-    }
+		.social-link {
+			width: 48px;
+			height: 48px;
+			background: #f3f4f6;
+			border-radius: 50%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			color: #6b7280;
+			text-decoration: none;
+			transition: all 0.3s ease;
+			font-size: 1.2rem;
+		}
 
-    .footer-title {
-        font-size: 1.3rem;
-        font-weight: 600;
-        color: #1f2937;
-        margin-bottom: 24px;
-    }
+		.social-link:hover {
+			background: #2563EB;
+			color: white;
+			transform: translateY(-2px);
+		}
 
-    .footer-links {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
+		.footer-title {
+			font-size: 1.3rem;
+			font-weight: 600;
+			color: #1f2937;
+			margin-bottom: 24px;
+		}
 
-    .footer-links li {
-        margin-bottom: 14px;
-    }
+		.footer-links {
+			list-style: none;
+			padding: 0;
+			margin: 0;
+		}
 
-    .footer-links li a {
-        color: #6b7280;
-        text-decoration: none;
-        font-size: 1rem;
-        transition: all 0.3s ease;
-    }
+		.footer-links li {
+			margin-bottom: 14px;
+		}
 
-    .footer-links li a:hover {
-        color: #2563EB;
-        transform: translateX(4px);
-    }
+		.footer-links li a {
+			color: #6b7280;
+			text-decoration: none;
+			font-size: 1rem;
+			transition: all 0.3s ease;
+		}
 
-    .footer-divider {
-        border: none;
-        height: 1px;
-        background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-        margin: 40px 0 20px;
-    }
+		.footer-links li a:hover {
+			color: #2563EB;
+			transform: translateX(4px);
+		}
 
-    .footer-bottom {
-        padding-top: 20px;
-    }
+		.footer-divider {
+			border: none;
+			height: 1px;
+			background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
+			margin: 40px 0 20px;
+		}
 
-    .copyright {
-        color: #6b7280;
-        font-size: 1rem;
-        margin: 0;
-    }
+		.footer-bottom {
+			padding-top: 20px;
+		}
 
-    /* Newsletter Signup Section */
-    .newsletter-signup-section {
-        background: transparent;
-        padding: 0;
-        text-align: left;
-        max-width: 100%;
-        height: fit-content;
-    }
+		.copyright {
+			color: #6b7280;
+			font-size: 1rem;
+			margin: 0;
+		}
 
-    .newsletter-title {
-        color: #1f2937;
-        font-size: 1.3rem;
-        font-weight: 600;
-        margin-bottom: 24px;
-    }
+		/* Newsletter Signup Section */
+		.newsletter-signup-section {
+			background: transparent;
+			padding: 0;
+			text-align: left;
+			max-width: 100%;
+			height: fit-content;
+		}
 
-    .newsletter-form {
-        display: flex;
-        width: 100%;
-        margin: 0 0 15px 0;
-        gap: 0;
-        border-radius: 50px;
-        overflow: hidden;
-        background: #e5e7eb;
-    }
+		.newsletter-title {
+			color: #1f2937;
+			font-size: 1.3rem;
+			font-weight: 600;
+			margin-bottom: 24px;
+		}
 
-    .newsletter-input {
-        flex: 1;
-        padding: 14px 20px;
-        border: none;
-        outline: none;
-        font-size: 1rem;
-        color: #1a1a1a;
-        background: #e5e7eb;
-    }
+		.newsletter-form {
+			display: flex;
+			width: 100%;
+			margin: 0 0 15px 0;
+			gap: 0;
+			border-radius: 50px;
+			overflow: hidden;
+			background: #e5e7eb;
+		}
 
-    .newsletter-input::placeholder {
-        color: #6b7280;
-    }
+		.newsletter-input {
+			flex: 1;
+			padding: 14px 20px;
+			border: none;
+			outline: none;
+			font-size: 1rem;
+			color: #1a1a1a;
+			background: #e5e7eb;
+		}
 
-    .newsletter-submit-btn {
-        width: 45px;
-        height: 45px;
-        min-width: 45px;
-        border: none;
-        background: #9ca3af;
-        color: #ffffff;
-        border-radius: 50%;
-        cursor: pointer;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        transition: all 0.3s ease;
-        font-size: 1.2rem;
-        padding: 0;
-    }
+		.newsletter-input::placeholder {
+			color: #6b7280;
+		}
 
-    .newsletter-submit-btn:hover {
-        background: #6b7280;
-        transform: scale(1.05);
-    }
+		.newsletter-submit-btn {
+			width: 45px;
+			height: 45px;
+			min-width: 45px;
+			border: none;
+			background: #9ca3af;
+			color: #ffffff;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.3s ease;
+			font-size: 1.2rem;
+			padding: 0;
+		}
 
-    .newsletter-disclaimer {
-        color: #6b7280;
-        font-size: 0.85rem;
-        line-height: 1.6;
-        margin: 8px 0 0 0;
-        text-align: left;
-    }
+		.newsletter-submit-btn:hover {
+			background: #6b7280;
+			transform: scale(1.05);
+		}
 
-    .newsletter-disclaimer a {
-        color: #2563EB;
-        text-decoration: underline;
-        transition: color 0.3s ease;
-    }
+		.newsletter-disclaimer {
+			color: #6b7280;
+			font-size: 0.85rem;
+			line-height: 1.6;
+			margin: 8px 0 0 0;
+			text-align: left;
+		}
 
-    .newsletter-disclaimer a:hover {
-        color: #1d4ed8;
-    }
+		.newsletter-disclaimer a {
+			color: #2563EB;
+			text-decoration: underline;
+			transition: color 0.3s ease;
+		}
 
-    @media (max-width: 991px) {
-        .newsletter-signup-section {
-            margin-top: 20px;
-        }
-    }
-    </style>
+		.newsletter-disclaimer a:hover {
+			color: #1d4ed8;
+		}
+
+		@media (max-width: 991px) {
+			.newsletter-signup-section {
+				margin-top: 20px;
+			}
+		}
+	</style>
 </head>
+
 <body>
 	<!-- Reusable Header Component -->
 	<?php include '../includes/header.php'; ?>
-	
+
 	<!-- Page Title -->
 	<h1 class="page-title">Device Repair Services</h1>
 
-    <!-- Hero Section -->
-    <section class="hero-section">
-        <div class="container">
-            <div class="d-flex justify-content-center align-items-center mb-3">
-                <i class="fas fa-tools me-2" style="color: #10b981; font-size: 1.5rem;"></i>
-                <span style="color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Professional Repair Services</span>
-            </div>
+	<!-- Hero Section -->
+	<section class="hero-section">
+		<div class="container">
+			<div class="d-flex justify-content-center align-items-center mb-3">
+				<i class="fas fa-tools me-2" style="color: #10b981; font-size: 1.5rem;"></i>
+				<span style="color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Professional Repair Services</span>
+			</div>
 
-            <h1 class="hero-title">Device Repair Services</h1>
-            <p class="hero-subtitle">Get your device repaired by certified experts. Schedule an appointment</p>
-            <p class="hero-description">within 24 hours and receive expert care.</p>
+			<h1 class="hero-title">Device Repair Services</h1>
+			<p class="hero-subtitle">Get your device repaired by certified experts. Schedule an appointment</p>
+			<p class="hero-description">within 24 hours and receive expert care.</p>
 
-            <!-- Progress Steps -->
-            <div class="progress-steps">
-                <div class="step active">
-                    <div class="step-number">1</div>
-                    <span>Issue Type</span>
-                </div>
-                <div class="step-separator"></div>
-                <div class="step">
-                    <div class="step-number">2</div>
-                    <span>Specialist</span>
-                </div>
-                <div class="step-separator"></div>
-                <div class="step">
-                    <div class="step-number">3</div>
-                    <span>Schedule</span>
-                </div>
-            </div>
-        </div>
-    </section>
+			<!-- Progress Steps -->
+			<div class="progress-steps">
+				<div class="step active">
+					<div class="step-number">1</div>
+					<span>Issue Type</span>
+				</div>
+				<div class="step-separator"></div>
+				<div class="step">
+					<div class="step-number">2</div>
+					<span>Specialist</span>
+				</div>
+				<div class="step-separator"></div>
+				<div class="step">
+					<div class="step-number">3</div>
+					<span>Schedule</span>
+				</div>
+			</div>
+		</div>
+	</section>
 
-    <!-- Issues Section -->
-    <section class="issues-section">
-        <div class="container">
-            <h2 class="section-title">What's wrong with your device?</h2>
+	<!-- Issues Section -->
+	<section class="issues-section">
+		<div class="container">
+			<h2 class="section-title">What's wrong with your device?</h2>
 
-            <?php if (isset($error_message)): ?>
-                <div class="alert alert-danger text-center mb-4">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    <?php echo $error_message; ?>
-                </div>
-            <?php endif; ?>
+			<?php if (isset($error_message)): ?>
+				<div class="alert alert-danger text-center mb-4">
+					<i class="fas fa-exclamation-triangle"></i>
+					<?php echo $error_message; ?>
+				</div>
+			<?php endif; ?>
 
-            <div class="issues-grid">
-                <?php foreach ($issue_types as $issue): ?>
-                    <div class="issue-card" onclick="goToSpecialist(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>')">
-                        <div class="issue-icon">
-                            <i class="<?php echo htmlspecialchars($issue['icon_class']); ?>"></i>
-                        </div>
-                        <h3 class="issue-title"><?php echo htmlspecialchars($issue['issue_name']); ?></h3>
-                        <p class="issue-description"><?php echo htmlspecialchars($issue['issue_description']); ?></p>
-                        <div class="issue-price">
-                            <div class="price-range">
-                                GH₵ <?php echo number_format($issue['estimated_cost_min'], 0); ?> -
-                                <?php echo number_format($issue['estimated_cost_max'], 0); ?>
-                            </div>
-                            <div class="price-label">Estimated Cost</div>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
-            </div>
-        </div>
-    </section>
+			<div class="issues-grid">
+				<?php foreach ($issue_types as $issue): ?>
+					<div class="issue-card" onclick="goToSpecialist(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>')">
+						<div class="issue-icon">
+							<i class="<?php echo htmlspecialchars($issue['icon_class']); ?>"></i>
+						</div>
+						<h3 class="issue-title"><?php echo htmlspecialchars($issue['issue_name']); ?></h3>
+						<p class="issue-description"><?php echo htmlspecialchars($issue['issue_description']); ?></p>
+						<div class="issue-price">
+							<div class="price-range">
+								GH₵ <?php echo number_format($issue['estimated_cost_min'], 0); ?> -
+								<?php echo number_format($issue['estimated_cost_max'], 0); ?>
+							</div>
+							<div class="price-label">Estimated Cost</div>
+						</div>
+					</div>
+				<?php endforeach; ?>
+			</div>
+		</div>
+	</section>
 
-    <!-- Continue Button -->
-    <button class="continue-btn" id="continueBtn" onclick="proceedToSpecialist()">
-        Continue
-        <i class="fas fa-arrow-right ms-2"></i>
-    </button>
+	<!-- Continue Button -->
+	<button class="continue-btn" id="continueBtn" onclick="proceedToSpecialist()">
+		Continue
+		<i class="fas fa-arrow-right ms-2"></i>
+	</button>
 
 	<!-- Scripts -->
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -1467,7 +1471,7 @@ try {
 
 			const userAvatar = document.querySelector('.user-avatar');
 			const userDropdown = document.getElementById('userDropdownMenu');
-			
+
 			if (userAvatar && userDropdown) {
 				userAvatar.addEventListener('mouseenter', window.showUserDropdown);
 				userAvatar.addEventListener('mouseleave', window.hideUserDropdown);
@@ -1534,7 +1538,13 @@ try {
 					confirmButtonText: 'OK'
 				});
 			} else {
-				Swal.fire({title: 'Feature Coming Soon', text: 'Profile picture upload functionality will be implemented', icon: 'info', confirmButtonColor: '#007bff', confirmButtonText: 'OK'});
+				Swal.fire({
+					title: 'Feature Coming Soon',
+					text: 'Profile picture upload functionality will be implemented',
+					icon: 'info',
+					confirmButtonColor: '#007bff',
+					confirmButtonText: 'OK'
+				});
 			}
 		}
 
@@ -1711,9 +1721,9 @@ try {
 				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 				timerElement.innerHTML = days + "d:" +
-								         (hours < 10 ? "0" : "") + hours + "h:" +
-								         (minutes < 10 ? "0" : "") + minutes + "m:" +
-								         (seconds < 10 ? "0" : "") + seconds + "s";
+					(hours < 10 ? "0" : "") + hours + "h:" +
+					(minutes < 10 ? "0" : "") + minutes + "m:" +
+					(seconds < 10 ? "0" : "") + seconds + "s";
 			}
 		}
 
@@ -1744,89 +1754,90 @@ try {
 		});
 	</script>
 
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="row align-items-start">
-                    <!-- First Column: Logo and Social -->
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="footer-brand">
-                            <div class="footer-logo" style="margin-bottom: 20px;">
-                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                    alt="Gadget Garage">
-                            </div>
-                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
-                            <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Navigation Links -->
-                    <div class="col-lg-5 col-md-12">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Get Help</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Help Center</a></li>
-                                    <li><a href="contact.php">Track Order</a></li>
-                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
-                                    <li><a href="terms_conditions.php">Returns</a></li>
-                                    <li><a href="contact.php">Contact Us</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Company</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Careers</a></li>
-                                    <li><a href="contact.php">About</a></li>
-                                    <li><a href="contact.php">Stores</a></li>
-                                    <li><a href="contact.php">Want to Collab?</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Quick Links</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Size Guide</a></li>
-                                    <li><a href="contact.php">Sitemap</a></li>
-                                    <li><a href="contact.php">Gift Cards</a></li>
-                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Right Side: Email Signup Form -->
-                    <div class="col-lg-4 col-md-12 mb-4">
-                        <div class="newsletter-signup-section">
-                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
-                            <form class="newsletter-form" id="newsletterForm">
-                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
-                                <button type="submit" class="newsletter-submit-btn">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </form>
-                            <p class="newsletter-disclaimer">
-                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
-                            </p>
-                            <p class="newsletter-disclaimer">
-                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <hr class="footer-divider">
-                <div class="footer-bottom">
-                    <div class="row align-items-center">
-                        <div class="col-md-12 text-center">
-                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="row align-items-start">
+					<!-- First Column: Logo and Social -->
+					<div class="col-lg-3 col-md-6 mb-4">
+						<div class="footer-brand">
+							<div class="footer-logo" style="margin-bottom: 20px;">
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+									alt="Gadget Garage">
+							</div>
+							<p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+							<div class="social-links">
+								<a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+							</div>
+						</div>
+					</div>
+					<!-- Navigation Links -->
+					<div class="col-lg-5 col-md-12">
+						<div class="row">
+							<div class="col-lg-4 col-md-6 mb-4">
+								<h5 class="footer-title">Get Help</h5>
+								<ul class="footer-links">
+									<li><a href="contact.php">Help Center</a></li>
+									<li><a href="contact.php">Track Order</a></li>
+									<li><a href="terms_conditions.php">Shipping Info</a></li>
+									<li><a href="terms_conditions.php">Returns</a></li>
+									<li><a href="contact.php">Contact Us</a></li>
+								</ul>
+							</div>
+							<div class="col-lg-4 col-md-6 mb-4">
+								<h5 class="footer-title">Company</h5>
+								<ul class="footer-links">
+									<li><a href="contact.php">Careers</a></li>
+									<li><a href="contact.php">About</a></li>
+									<li><a href="contact.php">Stores</a></li>
+									<li><a href="contact.php">Want to Collab?</a></li>
+								</ul>
+							</div>
+							<div class="col-lg-4 col-md-6 mb-4">
+								<h5 class="footer-title">Quick Links</h5>
+								<ul class="footer-links">
+									<li><a href="contact.php">Size Guide</a></li>
+									<li><a href="contact.php">Sitemap</a></li>
+									<li><a href="contact.php">Gift Cards</a></li>
+									<li><a href="contact.php">Check Gift Card Balance</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- Right Side: Email Signup Form -->
+					<div class="col-lg-4 col-md-12 mb-4">
+						<div class="newsletter-signup-section">
+							<h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+							<form class="newsletter-form" id="newsletterForm">
+								<input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+								<button type="submit" class="newsletter-submit-btn">
+									<i class="fas fa-arrow-right"></i>
+								</button>
+							</form>
+							<p class="newsletter-disclaimer">
+								By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+							</p>
+							<p class="newsletter-disclaimer">
+								By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+							</p>
+						</div>
+					</div>
+				</div>
+				<hr class="footer-divider">
+				<div class="footer-bottom">
+					<div class="row align-items-center">
+						<div class="col-md-12 text-center">
+							<p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
 </body>
+
 </html>

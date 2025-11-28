@@ -29,11 +29,15 @@ $registration_error = '';
 $registration_success = false;
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    error_log("=== Registration Attempt Started ===");
+
     $first_name = trim($_POST['first_name'] ?? '');
     $last_name = trim($_POST['last_name'] ?? '');
     $email = trim($_POST['email'] ?? '');
     $password = $_POST['password'] ?? '';
     $confirm_password = $_POST['confirm_password'] ?? '';
+
+    error_log("Registration data - Name: $first_name $last_name, Email: $email");
 
     if (empty($first_name) || empty($last_name) || empty($email) || empty($password) || empty($confirm_password)) {
         $registration_error = 'All fields are required.';
@@ -46,13 +50,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $db = new db_connection();
 
+        // Test database connection
+        if (!$db->db_connect()) {
+            error_log("Database connection failed during registration");
+            $registration_error = 'Database connection error. Please try again later.';
+            return;
+        }
+
+        error_log("Database connected successfully");
+
         // Check if user already exists
         $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
         $check_sql = "SELECT customer_id FROM customer WHERE customer_email = '$email_escaped'";
         $existing_user = $db->db_fetch_one($check_sql);
 
+        // Log check result
+        error_log("Checking if email exists: $email");
+        error_log("Existing user found: " . ($existing_user ? "YES (ID: {$existing_user['customer_id']})" : "NO"));
+
         if ($existing_user) {
-            $registration_error = 'An account with this email already exists.';
+            $registration_error = 'An account with this email already exists. Please login or use a different email.';
         } else {
             // Create new user
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
@@ -64,19 +81,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $insert_sql = "INSERT INTO customer (customer_name, customer_email, customer_pass, customer_contact, user_role, customer_country, customer_city, customer_address, date_created)
                           VALUES ('$full_name_escaped', '$email_escaped', '$hashed_password', '', 1, 'Ghana', 'Accra', '', NOW())";
 
-            if ($db->db_write_query($insert_sql)) {
+            $result = $db->db_write_query($insert_sql);
+
+            // Log the actual error for debugging
+            if ($result === false) {
+                error_log("Registration failed for email: $email");
+                error_log("MySQL Error: " . mysqli_error($db->db_conn()));
+                error_log("SQL: $insert_sql");
+            }
+
+            if ($result) {
                 // Auto-login the user
                 $user_id = $db->last_insert_id();
-                $_SESSION['user_id'] = $user_id;
-                $_SESSION['user_name'] = $full_name;
-                $_SESSION['user_email'] = $email;
-                $_SESSION['email'] = $email;
-                $_SESSION['role'] = 1;
-                $_SESSION['name'] = $full_name;
 
-                $registration_success = true;
+                if ($user_id) {
+                    $_SESSION['user_id'] = $user_id;
+                    $_SESSION['user_name'] = $full_name;
+                    $_SESSION['user_email'] = $email;
+                    $_SESSION['email'] = $email;
+                    $_SESSION['role'] = 1;
+                    $_SESSION['name'] = $full_name;
+
+                    $registration_success = true;
+                } else {
+                    error_log("Failed to get last insert ID");
+                    $registration_error = 'Registration failed: Could not retrieve user ID. Please try again.';
+                }
             } else {
-                $registration_error = 'Registration failed. Please try again.';
+                $registration_error = 'Registration failed. Please try again. If the problem persists, contact support.';
             }
         }
     }
@@ -87,19 +119,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <html lang="en">
 
 <head>
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Register - Gadget Garage</title>
-	<meta name="description" content="Create your Gadget Garage account to access premium tech devices and exclusive deals.">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register - Gadget Garage</title>
+    <meta name="description" content="Create your Gadget Garage account to access premium tech devices and exclusive deals.">
 
-	<!-- Favicon -->
-	<link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
-	<link rel="shortcut icon" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
+    <link rel="shortcut icon" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
 
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-	<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 
-	<style>
+    <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
         * {
@@ -1176,19 +1208,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <div class="form-group">
                     <label class="form-label" for="first_name">First Name</label>
                     <input type="text" class="form-control" id="first_name" name="first_name"
-                           value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>" required>
+                        value="<?php echo htmlspecialchars($_POST['first_name'] ?? ''); ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="last_name">Last Name</label>
                     <input type="text" class="form-control" id="last_name" name="last_name"
-                           value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>" required>
+                        value="<?php echo htmlspecialchars($_POST['last_name'] ?? ''); ?>" required>
                 </div>
 
                 <div class="form-group">
                     <label class="form-label" for="email">Email Address</label>
                     <input type="email" class="form-control" id="email" name="email"
-                           value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
+                        value="<?php echo htmlspecialchars($_POST['email'] ?? ''); ?>" required>
                 </div>
 
                 <div class="form-group">
@@ -1376,7 +1408,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         document.addEventListener('DOMContentLoaded', function() {
             const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
             const brandsDropdown = document.getElementById('shopDropdown');
-            
+
             if (shopCategoriesBtn && brandsDropdown) {
                 shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
                 shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
@@ -1388,7 +1420,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
-            
+
             if (userAvatar && userDropdown) {
                 userAvatar.addEventListener('mouseenter', showUserDropdown);
                 userAvatar.addEventListener('mouseleave', hideUserDropdown);
@@ -1485,4 +1517,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </footer>
 </body>
+
 </html>

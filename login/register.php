@@ -54,14 +54,18 @@
 			color: #1a1a1a;
 			overflow-x: hidden;
 		}
-		
+
 		/* Ensure all form elements use consistent font */
-		input, textarea, select, button {
+		input,
+		textarea,
+		select,
+		button {
 			font-family: "Times New Roman", Times, serif;
 			font-size: 1rem;
 		}
-		
-		input::placeholder, textarea::placeholder {
+
+		input::placeholder,
+		textarea::placeholder {
 			font-family: "Times New Roman", Times, serif;
 			font-size: 1rem;
 		}
@@ -915,7 +919,7 @@
 			transition: all 0.3s ease;
 			outline: none;
 		}
-		
+
 		.form-control::placeholder {
 			font-family: "Times New Roman", Times, serif;
 			font-size: 1rem;
@@ -1192,7 +1196,7 @@
 			transition: all 0.3s ease;
 			background: #f8fafc;
 		}
-		
+
 		.form-control::placeholder {
 			font-family: "Times New Roman", Times, serif;
 			font-size: 1rem;

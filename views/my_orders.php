@@ -2231,52 +2231,82 @@ function getOrderStatus($order_date) {
 
         // Cancel Order Function
         function cancelOrder(orderId, orderReference) {
-            // Confirm cancellation
-            if (!confirm(`Are you sure you want to cancel order #${orderReference}?\n\nThis action cannot be undone.`)) {
-                return;
-            }
+            // Confirm cancellation with SweetAlert
+            Swal.fire({
+                title: 'Cancel Order?',
+                html: `Are you sure you want to cancel order <strong>#${orderReference}</strong>?<br><br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    const cancelBtn = event.target.closest('button');
+                    const originalText = cancelBtn.innerHTML;
+                    cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+                    cancelBtn.disabled = true;
 
-            // Show loading state
-            const cancelBtn = event.target.closest('button');
-            const originalText = cancelBtn.innerHTML;
-            cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
-            cancelBtn.disabled = true;
+                    // Send cancellation request
+                    fetch('../actions/cancel_order_action.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            order_id: orderId,
+                            order_reference: orderReference
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Show success message with SweetAlert
+                            Swal.fire({
+                                title: 'Cancelled!',
+                                html: `Order <strong>#${orderReference}</strong> has been cancelled successfully.`,
+                                icon: 'success',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Reload the page to update order display
+                                window.location.reload();
+                            });
+                        } else {
+                            // Show error message with SweetAlert
+                            Swal.fire({
+                                title: 'Error!',
+                                text: `Failed to cancel order: ${data.message}`,
+                                icon: 'error',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            });
 
-            // Send cancellation request
-            fetch('../actions/cancel_order_action.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    order_id: orderId,
-                    order_reference: orderReference
-                })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.status === 'success') {
-                    // Show success message
-                    alert(`Order #${orderReference} has been cancelled successfully.`);
+                            // Reset button
+                            cancelBtn.innerHTML = originalText;
+                            cancelBtn.disabled = false;
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        
+                        // Show error message with SweetAlert
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to cancel order. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        });
 
-                    // Reload the page to update order display
-                    window.location.reload();
-                } else {
-                    // Show error message
-                    alert(`Failed to cancel order: ${data.message}`);
-
-                    // Reset button
-                    cancelBtn.innerHTML = originalText;
-                    cancelBtn.disabled = false;
+                        // Reset button
+                        cancelBtn.innerHTML = originalText;
+                        cancelBtn.disabled = false;
+                    });
                 }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Failed to cancel order. Please try again.');
-
-                // Reset button
-                cancelBtn.innerHTML = originalText;
-                cancelBtn.disabled = false;
             });
         }
 

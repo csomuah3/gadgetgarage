@@ -87,10 +87,14 @@ try {
             $product_images[] = $row;
         }
         $stmt->close();
+        
+        // Debug: Log how many images were found
+        error_log("Product ID $product_id - Found " . count($product_images) . " images in product_images table");
     }
 
     // If no images in product_images table, use the main product image as fallback
     if (empty($product_images) && !empty($product['product_image'])) {
+        error_log("Product ID $product_id - Using fallback product_image");
         $product_images[] = [
             'image_id' => 0,
             'image_url' => $product['product_image'],
@@ -1401,49 +1405,59 @@ try {
         /* Product Gallery Styles */
         .product-gallery {
             position: relative;
-            display: flex;
+            display: flex !important;
             height: 100%;
+            min-height: 500px;
             background: #f8f9fa;
             border-radius: 12px;
-            overflow: hidden;
+            overflow: visible;
+            border: 2px solid #e9ecef;
         }
 
         .thumbnail-container {
-            width: 100px;
-            background: #e9ecef;
-            border-right: 1px solid #dee2e6;
-            display: flex;
+            width: 110px;
+            background: #f8f9fa;
+            border-right: 2px solid #dee2e6;
+            display: flex !important;
             flex-direction: column;
+            visibility: visible !important;
+            min-height: 400px;
         }
 
         .thumbnail-list {
-            display: flex;
+            display: flex !important;
             flex-direction: column;
-            padding: 10px;
-            gap: 8px;
+            padding: 10px 5px;
+            gap: 12px;
             overflow-y: auto;
             max-height: 100%;
+            visibility: visible !important;
+            align-items: center;
         }
 
         .thumbnail-item {
             width: 80px;
+            display: block !important;
             height: 80px;
             border-radius: 8px;
             overflow: hidden;
             cursor: pointer;
-            border: 2px solid transparent;
+            border: 3px solid #dee2e6;
             transition: all 0.3s ease;
             position: relative;
+            background: white;
         }
 
         .thumbnail-item:hover {
-            border-color: #6c757d;
-            transform: scale(1.05);
+            border-color: #4285F4;
+            transform: scale(1.1);
+            box-shadow: 0 2px 8px rgba(66, 133, 244, 0.3);
         }
 
         .thumbnail-item.active {
-            border-color: #007bff;
-            box-shadow: 0 0 10px rgba(0, 123, 255, 0.3);
+            border-color: #4285F4;
+            border-width: 4px;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.4);
         }
 
         .thumbnail-item img {
@@ -1459,7 +1473,8 @@ try {
             align-items: center;
             justify-content: center;
             background: white;
-            overflow: hidden;
+            overflow: visible;
+            min-height: 500px;
         }
 
         .main-product-image {
@@ -1482,44 +1497,48 @@ try {
 
         .magnify-lens {
             position: absolute;
-            border: 3px solid #4285F4;
+            border: 4px solid #4285F4;
             border-radius: 50%;
             cursor: crosshair;
             width: 150px;
             height: 150px;
-            opacity: 0;
+            opacity: 0 !important;
             transition: opacity 0.3s ease;
             pointer-events: none;
-            background: rgba(66, 133, 244, 0.2);
-            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.4), 0 4px 15px rgba(0, 0, 0, 0.3);
-            z-index: 100;
+            background: rgba(66, 133, 244, 0.3);
+            box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.5), 0 6px 20px rgba(0, 0, 0, 0.4);
+            z-index: 10000;
             backdrop-filter: blur(2px);
+            display: block;
         }
 
         .magnify-lens.active {
-            opacity: 1;
+            opacity: 1 !important;
+            display: block !important;
         }
 
         .magnify-result {
-            position: fixed;
-            top: 150px;
-            right: 50px;
-            width: 350px;
-            height: 350px;
-            border: 4px solid #4285F4;
+            position: fixed !important;
+            top: 150px !important;
+            right: 50px !important;
+            width: 350px !important;
+            height: 350px !important;
+            border: 5px solid #4285F4 !important;
             border-radius: 12px;
-            background: white;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            background: white !important;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
             overflow: hidden;
-            opacity: 0;
-            visibility: hidden;
+            opacity: 0 !important;
+            visibility: hidden !important;
             transition: all 0.3s ease;
-            z-index: 10000;
+            z-index: 999999 !important;
+            display: block;
         }
 
         .magnify-result.active {
-            opacity: 1;
-            visibility: visible;
+            opacity: 1 !important;
+            visibility: visible !important;
+            display: block !important;
         }
 
         .magnify-result img {
@@ -1993,7 +2012,11 @@ try {
                         <!-- Thumbnail Gallery (Left Side) -->
                         <div class="thumbnail-container">
                             <div class="thumbnail-list" id="thumbnailList">
-                                <?php if (!empty($product_images) && count($product_images) > 1): ?>
+                                <?php if (!empty($product_images)): ?>
+                                    <?php 
+                                    // Debug output
+                                    echo "<!-- Found " . count($product_images) . " product images -->\n";
+                                    ?>
                                     <?php foreach ($product_images as $index => $image): ?>
                                         <?php
                                         $thumb_url = get_product_image_url($image['image_url'], $image['image_name'], '80x80');
@@ -2162,29 +2185,46 @@ try {
         // Product images array from PHP
         const productImages = <?php echo json_encode($product_images); ?>;
         let currentImageIndex = 0;
+        
+        // Debug: Log product images
+        console.log('📸 Product Images Loaded:', productImages);
+        console.log('📸 Total Images:', productImages ? productImages.length : 0);
 
         // Magnifying Glass Function
         function initializeMagnifyingGlass() {
-            const magnifyContainer = document.getElementById('magnifyContainer');
-            const mainImage = document.getElementById('mainProductImage');
-            const magnifyLens = document.getElementById('magnifyLens');
-            const magnifyResult = document.getElementById('magnifyResult');
-            const magnifyResultImage = document.getElementById('magnifyResultImage');
+            try {
+                console.log('🔍 Starting magnifying glass initialization...');
+                
+                const magnifyContainer = document.getElementById('magnifyContainer');
+                const mainImage = document.getElementById('mainProductImage');
+                const magnifyLens = document.getElementById('magnifyLens');
+                const magnifyResult = document.getElementById('magnifyResult');
+                const magnifyResultImage = document.getElementById('magnifyResultImage');
 
-            if (!magnifyContainer || !mainImage || !magnifyLens || !magnifyResult || !magnifyResultImage) {
-                console.log('Magnifying glass elements not found');
-                console.log('Container:', magnifyContainer);
-                console.log('Image:', mainImage);
-                console.log('Lens:', magnifyLens);
-                console.log('Result:', magnifyResult);
-                return;
-            }
-            
-            console.log('✅ Magnifying glass initialized successfully!');
+                if (!magnifyContainer || !mainImage || !magnifyLens || !magnifyResult || !magnifyResultImage) {
+                    console.error('❌ Magnifying glass elements not found:');
+                    console.log('Container:', magnifyContainer);
+                    console.log('Image:', mainImage);
+                    console.log('Lens:', magnifyLens);
+                    console.log('Result:', magnifyResult);
+                    console.log('Result Image:', magnifyResultImage);
+                    return;
+                }
+                
+                console.log('✅ All magnifying glass elements found!');
+                console.log('🔍 Main image src:', mainImage.src);
+                console.log('🔍 Main image dimensions:', mainImage.width, 'x', mainImage.height);
+                console.log('🔍 Container dimensions:', magnifyContainer.offsetWidth, 'x', magnifyContainer.offsetHeight);
 
             // Magnifying glass functionality
             function magnify() {
                 let cx, cy;
+
+                // Ensure magnifyResultImage has the same source as main image
+                if (magnifyResultImage.src !== mainImage.src) {
+                    magnifyResultImage.src = mainImage.src;
+                    console.log('🔍 Set magnify result image source to:', mainImage.src);
+                }
 
                 // Calculate the ratio between result DIV and lens
                 cx = magnifyResult.offsetWidth / magnifyLens.offsetWidth;
@@ -2193,6 +2233,9 @@ try {
                 // Set background properties for the result DIV
                 magnifyResultImage.style.width = (mainImage.width * cx) + "px";
                 magnifyResultImage.style.height = (mainImage.height * cx) + "px";
+                
+                console.log('🔍 Magnify ratios - cx:', cx, 'cy:', cy);
+                console.log('🔍 Result image size:', magnifyResultImage.style.width, magnifyResultImage.style.height);
 
                 // Mouse move function
                 function moveMagnifier(e) {
@@ -2225,10 +2268,8 @@ try {
 
                 function getCursorPos(e) {
                     const a = mainImage.getBoundingClientRect();
-                    const x = e.pageX - a.left;
-                    const y = e.pageY - a.top;
-                    x = x - window.pageXOffset;
-                    y = y - window.pageYOffset;
+                    let x = e.pageX - a.left - window.pageXOffset;
+                    let y = e.pageY - a.top - window.pageYOffset;
                     return {x: x, y: y};
                 }
 
@@ -2249,9 +2290,11 @@ try {
                 }
 
                 // Add event listeners
+                console.log('🔍 Adding event listeners to container...');
                 magnifyContainer.addEventListener('mouseenter', showMagnifier);
                 magnifyContainer.addEventListener('mouseleave', hideMagnifier);
                 magnifyContainer.addEventListener('mousemove', moveMagnifier);
+                console.log('✅ Mouse event listeners added');
 
                 // Touch events for mobile
                 magnifyContainer.addEventListener('touchstart', function(e) {
@@ -2278,7 +2321,14 @@ try {
             }
 
             // Initialize magnifying glass
+            console.log('🔍 Calling magnify() function...');
             magnify();
+            console.log('✅ Magnifying glass fully initialized!');
+            
+            } catch (error) {
+                console.error('❌ Error initializing magnifying glass:', error);
+                console.error('Error stack:', error.stack);
+            }
         }
 
         // Change main image function
@@ -3053,12 +3103,56 @@ try {
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded - Starting initialization');
+            
+            // Debug: Check thumbnail elements
+            const thumbnailList = document.getElementById('thumbnailList');
+            const thumbnailItems = document.querySelectorAll('.thumbnail-item');
+            console.log('🖼️ Thumbnail list element:', thumbnailList);
+            console.log('🖼️ Thumbnail items found:', thumbnailItems.length);
+            if (thumbnailList) {
+                console.log('🖼️ Thumbnail list HTML:', thumbnailList.innerHTML.substring(0, 200));
+            }
 
-            // Initialize magnifying glass
-            initializeMagnifyingGlass();
-
-            // Load product image
+            // Load product image first
             loadProductImage();
+            
+            // Wait for main image to load before initializing magnifying glass
+            const mainImageEl = document.getElementById('mainProductImage');
+            if (mainImageEl) {
+                if (mainImageEl.complete) {
+                    console.log('🔍 Main image already loaded, initializing magnifying glass');
+                    initializeMagnifyingGlass();
+                } else {
+                    console.log('🔍 Waiting for main image to load...');
+                    mainImageEl.addEventListener('load', function() {
+                        console.log('🔍 Main image loaded! Initializing magnifying glass');
+                        initializeMagnifyingGlass();
+                    });
+                }
+            } else {
+                console.log('⚠️ Main image element not found!');
+            }
+            
+            // Add manual test function
+            window.testMagnifier = function() {
+                const lens = document.getElementById('magnifyLens');
+                const result = document.getElementById('magnifyResult');
+                if (lens && result) {
+                    console.log('🧪 MANUAL TEST: Showing magnifier');
+                    lens.classList.add('active');
+                    result.classList.add('active');
+                    lens.style.left = '50%';
+                    lens.style.top = '50%';
+                    console.log('Lens classes:', lens.className);
+                    console.log('Lens style:', lens.style.cssText);
+                    console.log('Result classes:', result.className);
+                    console.log('Result style:', result.style.cssText);
+                } else {
+                    console.log('❌ TEST FAILED: Elements not found');
+                }
+            };
+            console.log('✨ Test function available: testMagnifier()');
+
 
             // Initialize condition-based pricing
             console.log('Initializing condition selection');

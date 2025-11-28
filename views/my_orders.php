@@ -65,8 +65,12 @@ function getOrderStatus($order_date) {
 
     if ($days_difference == 0) {
         return "PROCESSING";
+    } elseif ($days_difference >= 4) {
+        return "DELIVERED";
     } elseif ($days_difference >= 2) {
         return "OUT FOR DELIVERY";
+    } elseif ($days_difference >= 1) {
+        return "SHIPPED";
     } else {
         return "PROCESSING";
     }
@@ -1821,52 +1825,152 @@ function getOrderStatus($order_date) {
             </div>
 
             <?php if (!empty($orders)): ?>
-                <?php foreach ($orders as $order): ?>
-                    <?php
-                    $order_status = getOrderStatus($order['order_date']);
-                    $order_items = get_order_details_ctr($order['order_id']);
-                    $total_items = count($order_items);
-                    ?>
-                    <div class="order-card">
-                        <div class="order-status <?= strtolower(str_replace(' ', '-', $order_status)) ?>">
-                            <?= $order_status ?>
-                        </div>
+                <?php
+                // Separate orders by status
+                $processing_orders = [];
+                $delivered_orders = [];
 
-                        <div class="order-images">
-                            <?php
-                            $display_items = array_slice($order_items, 0, 4);
-                            foreach ($display_items as $item):
-                            ?>
-                                <div class="order-image">
-                                    <img src="<?= get_image_url($item['product_image']) ?>"
-                                         alt="<?= htmlspecialchars($item['product_title']) ?>"
-                                         onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                foreach ($orders as $order) {
+                    $order_status = getOrderStatus($order['order_date']);
+                    if ($order_status === 'DELIVERED') {
+                        $delivered_orders[] = $order;
+                    } else {
+                        $processing_orders[] = $order;
+                    }
+                }
+                ?>
+
+                <!-- Processing Orders Section -->
+                <div class="orders-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-hourglass-half"></i>
+                        PROCESSING
+                    </h2>
+
+                    <?php if (!empty($processing_orders)): ?>
+                        <div class="orders-grid">
+                            <?php foreach ($processing_orders as $order): ?>
+                                <?php
+                                $order_status = getOrderStatus($order['order_date']);
+                                $order_items = get_order_details_ctr($order['order_id']);
+                                $total_items = count($order_items);
+                                ?>
+                                <div class="order-card processing">
+                                    <div class="order-status <?= strtolower(str_replace(' ', '-', $order_status)) ?>">
+                                        <?= $order_status ?>
+                                    </div>
+
+                                    <div class="order-images">
+                                        <?php
+                                        $display_items = array_slice($order_items, 0, 4);
+                                        foreach ($display_items as $item):
+                                        ?>
+                                            <div class="order-image">
+                                                <img src="<?= get_image_url($item['product_image']) ?>"
+                                                     alt="<?= htmlspecialchars($item['product_title']) ?>"
+                                                     onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                                            </div>
+                                        <?php endforeach; ?>
+
+                                        <?php if ($total_items > 4): ?>
+                                            <div class="order-more">
+                                                + <?= $total_items - 4 ?> more
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="order-details">
+                                        Order <span class="order-number">#<?= htmlspecialchars($order['invoice_no']) ?></span> •
+                                        <strong>GH₵<?= number_format($order['total_amount'], 2) ?></strong> •
+                                        <?= date('d. M/Y', strtotime($order['order_date'])) ?>
+                                    </div>
+
+                                    <div class="order-actions">
+                                        <button class="action-btn track-order-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            <i class="fas fa-truck"></i>
+                                            Track Order
+                                        </button>
+                                        <button class="action-btn cancel-order-btn" onclick="cancelOrder(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            <i class="fas fa-times"></i>
+                                            Cancel Order
+                                        </button>
+                                    </div>
                                 </div>
                             <?php endforeach; ?>
+                        </div>
+                    <?php else: ?>
+                        <div class="empty-section">
+                            <i class="fas fa-clock"></i>
+                            <p>No processing orders</p>
+                        </div>
+                    <?php endif; ?>
+                </div>
 
-                            <?php if ($total_items > 4): ?>
-                                <div class="order-more">
-                                    + <?= $total_items - 4 ?> more
+                <!-- Delivered Orders Section -->
+                <div class="orders-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-check-circle"></i>
+                        DELIVERED
+                    </h2>
+
+                    <?php if (!empty($delivered_orders)): ?>
+                        <div class="orders-grid">
+                            <?php foreach ($delivered_orders as $order): ?>
+                                <?php
+                                $order_status = getOrderStatus($order['order_date']);
+                                $order_items = get_order_details_ctr($order['order_id']);
+                                $total_items = count($order_items);
+                                ?>
+                                <div class="order-card delivered">
+                                    <div class="order-status delivered">
+                                        DELIVERED
+                                    </div>
+
+                                    <div class="order-images">
+                                        <?php
+                                        $display_items = array_slice($order_items, 0, 4);
+                                        foreach ($display_items as $item):
+                                        ?>
+                                            <div class="order-image">
+                                                <img src="<?= get_image_url($item['product_image']) ?>"
+                                                     alt="<?= htmlspecialchars($item['product_title']) ?>"
+                                                     onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                                            </div>
+                                        <?php endforeach; ?>
+
+                                        <?php if ($total_items > 4): ?>
+                                            <div class="order-more">
+                                                + <?= $total_items - 4 ?> more
+                                            </div>
+                                        <?php endif; ?>
+                                    </div>
+
+                                    <div class="order-details">
+                                        Order <span class="order-number">#<?= htmlspecialchars($order['invoice_no']) ?></span> •
+                                        <strong>GH₵<?= number_format($order['total_amount'], 2) ?></strong> •
+                                        <?= date('d. M/Y', strtotime($order['order_date'])) ?>
+                                    </div>
+
+                                    <div class="order-actions">
+                                        <button class="action-btn track-order-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            <i class="fas fa-truck"></i>
+                                            Track Order
+                                        </button>
+                                        <button class="action-btn view-details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>)">
+                                            <i class="fas fa-eye"></i>
+                                            View Details
+                                        </button>
+                                    </div>
                                 </div>
-                            <?php endif; ?>
+                            <?php endforeach; ?>
                         </div>
-
-                        <div class="order-details">
-                            Order <span class="order-number">#<?= htmlspecialchars($order['invoice_no']) ?></span> •
-                            <strong>GH₵<?= number_format($order['total_amount'], 2) ?></strong> •
-                            <?= date('d. M/Y', strtotime($order['order_date'])) ?>
+                    <?php else: ?>
+                        <div class="empty-section">
+                            <i class="fas fa-box"></i>
+                            <p>No delivered orders</p>
                         </div>
-
-                        <div class="order-actions">
-                            <button class="action-btn view-details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>)">
-                                <i class="fas fa-eye me-2"></i>View Details
-                            </button>
-                            <button class="action-btn track-order-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>')">
-                                <i class="fas fa-truck me-2"></i>Track Order
-                            </button>
-                        </div>
-                    </div>
-                <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
             <?php else: ?>
                 <div class="no-orders">
                     <i class="fas fa-shopping-bag"></i>
@@ -2021,6 +2125,57 @@ function getOrderStatus($order_date) {
         function trackOrder(orderReference) {
             // Redirect to tracking page with order reference
             window.location.href = 'track_order.php?ref=' + encodeURIComponent(orderReference);
+        }
+
+        // Cancel Order Function
+        function cancelOrder(orderId, orderReference) {
+            // Confirm cancellation
+            if (!confirm(`Are you sure you want to cancel order #${orderReference}?\n\nThis action cannot be undone.`)) {
+                return;
+            }
+
+            // Show loading state
+            const cancelBtn = event.target.closest('button');
+            const originalText = cancelBtn.innerHTML;
+            cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+            cancelBtn.disabled = true;
+
+            // Send cancellation request
+            fetch('../actions/cancel_order_action.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    order_id: orderId,
+                    order_reference: orderReference
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    // Show success message
+                    alert(`Order #${orderReference} has been cancelled successfully.`);
+
+                    // Reload the page to update order display
+                    window.location.reload();
+                } else {
+                    // Show error message
+                    alert(`Failed to cancel order: ${data.message}`);
+
+                    // Reset button
+                    cancelBtn.innerHTML = originalText;
+                    cancelBtn.disabled = false;
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Failed to cancel order. Please try again.');
+
+                // Reset button
+                cancelBtn.innerHTML = originalText;
+                cancelBtn.disabled = false;
+            });
         }
 
         // Display Order Details in Modal

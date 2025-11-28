@@ -1704,44 +1704,44 @@ try {
 
 		.banner-media {
 			display: flex;
-		align-items: flex-start;
+			align-items: flex-start;
 			justify-content: center;
 			position: relative;
 			height: 100%;
 			min-height: 350px;
-		padding-top: 0px;
+			padding-top: 0px;
 		}
 
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-		max-height: 800px;
-		min-height: 700px;
-		max-width: 130%;
+			max-height: 800px;
+			min-height: 700px;
+			max-width: 130%;
 			object-fit: contain;
-		transform: translateY(-80px) translateX(0) scale(1.6);
+			transform: translateY(-80px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-		filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 		}
 
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-		transform: translateY(-80px) translateX(-30px) scale(1.5);
+			transform: translateY(-80px) translateX(-30px) scale(1.5);
 			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - initial state (hidden, off to the right) */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-		transform: translateY(-80px) translateX(60px) scale(1.4);
+			transform: translateY(-80px) translateX(60px) scale(1.4);
 		}
 
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-		transform: translateY(-80px) translateX(0) scale(1.6);
+			transform: translateY(-80px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
@@ -5455,10 +5455,10 @@ try {
 					</div>
 					<!-- Navigation Dots -->
 					<div class="hero-dots">
-						<span class="carousel-dot active" data-slide="0"></span>
-						<span class="carousel-dot" data-slide="1"></span>
-						<span class="carousel-dot" data-slide="2"></span>
-						<span class="carousel-dot" data-slide="3"></span>
+						<span class="carousel-dot active" data-slide="0" onclick="window.goToSlide(0); return false;"></span>
+						<span class="carousel-dot" data-slide="1" onclick="window.goToSlide(1); return false;"></span>
+						<span class="carousel-dot" data-slide="2" onclick="window.goToSlide(2); return false;"></span>
+						<span class="carousel-dot" data-slide="3" onclick="window.goToSlide(3); return false;"></span>
 					</div>
 				</div>
 
@@ -6325,13 +6325,13 @@ try {
 		document.addEventListener('DOMContentLoaded', function() {
 			const searchInput = document.querySelector('.search-input');
 			const searchBtn = document.querySelector('.search-btn');
-			
+
 			if (searchInput) {
 				searchInput.addEventListener('keypress', function(e) {
-			if (e.key === 'Enter') {
-				performSearch();
-			}
-		});
+					if (e.key === 'Enter') {
+						performSearch();
+					}
+				});
 			}
 
 			if (searchBtn) {
@@ -6587,17 +6587,17 @@ try {
 		// User dropdown functionality
 		function toggleUserDropdown() {
 			const dropdown = document.getElementById('userDropdownMenu');
-				dropdown.classList.toggle('show');
+			dropdown.classList.toggle('show');
 		}
 
 		// Close dropdown when clicking outside
 		document.addEventListener('click', function(event) {
-				const dropdown = document.getElementById('userDropdownMenu');
+			const dropdown = document.getElementById('userDropdownMenu');
 			const avatar = document.querySelector('.user-avatar');
 
 			if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
-						dropdown.classList.remove('show');
-					}
+				dropdown.classList.remove('show');
+			}
 		});
 
 		// Profile picture modal functionality
@@ -7372,144 +7372,133 @@ try {
 			// Featured on IG scroll animations
 			initFeaturedIGAnimations();
 
-		// Hero Carousel - Initialize once
+			// Hero Carousel - Initialize once
 			console.log('🚀 Starting hero carousel from DOMContentLoaded...');
-		setTimeout(() => {
-			initSimpleCarousel();
-		}, 100);
-		
-		// Initialize Featured IG Carousel
-		initFeaturedIgCarousel();
+			setTimeout(() => {
+				initSimpleCarousel();
+			}, 100);
+
+			// Initialize Featured IG Carousel
+			initFeaturedIgCarousel();
 		});
 
 		// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
-	let slideTimer = null;
+		let slideTimer = null;
 		let currentSlide = 0;
+		let carouselSlides = null;
+		let carouselDots = null;
 
-	function initSimpleCarousel() {
-		console.log('🔥 STARTING SIMPLE CAROUSEL');
+		// Global function for dot clicks
+		window.goToSlide = function(slideIndex) {
+			console.log('🎯 goToSlide called with index:', slideIndex);
 
-		const slides = document.querySelectorAll('.hero-slide');
-		let dots = document.querySelectorAll('.carousel-dot');
+			if (!carouselSlides || carouselSlides.length === 0) {
+				console.error('Slides not initialized yet');
+				return;
+			}
 
-		console.log('Found slides:', slides.length);
-		console.log('Found dots:', dots.length);
+			// Clear existing timer
+			if (slideTimer) {
+				clearInterval(slideTimer);
+				slideTimer = null;
+			}
 
-		if (slides.length === 0) {
-			console.error('❌ No slides found!');
-			setTimeout(initSimpleCarousel, 500);
-			return;
-		}
+			// Update to clicked slide
+			currentSlide = slideIndex;
+			showSlideNumber(currentSlide);
+
+			// Restart timer
+			slideTimer = setInterval(() => {
+				goToNextSlide();
+			}, 5000);
+
+			console.log('✅ Switched to slide', slideIndex);
+		};
 
 		function showSlideNumber(num) {
+			if (!carouselSlides || !carouselDots) return;
+
 			console.log('🎯 SWITCHING TO SLIDE:', num);
 
 			// Re-query dots to get latest references
-			const currentDots = document.querySelectorAll('.carousel-dot');
+			carouselDots = document.querySelectorAll('.carousel-dot');
 
 			// Hide ALL slides first
-			slides.forEach((slide, index) => {
+			carouselSlides.forEach((slide, index) => {
 				slide.classList.remove('active', 'exiting');
 				slide.style.display = 'none';
 			});
 
 			// Remove active from all dots
-			currentDots.forEach(dot => dot.classList.remove('active'));
+			carouselDots.forEach(dot => dot.classList.remove('active'));
 
 			// Show current slide with proper display and active class
-			slides[num].style.display = 'grid';
+			carouselSlides[num].style.display = 'grid';
 			// Force reflow
-			slides[num].offsetHeight;
-			slides[num].classList.add('active');
+			carouselSlides[num].offsetHeight;
+			carouselSlides[num].classList.add('active');
 
 			// Activate current dot
-			if (currentDots[num]) {
-				currentDots[num].classList.add('active');
+			if (carouselDots[num]) {
+				carouselDots[num].classList.add('active');
 			}
 
-			console.log('✅ NOW SHOWING:', slides[num].dataset.product);
+			console.log('✅ NOW SHOWING:', carouselSlides[num].dataset.product);
 		}
 
 		function goToNextSlide() {
-			console.log('⏭️ Going to next slide from', currentSlide, 'to', (currentSlide + 1) % slides.length);
+			if (!carouselSlides) return;
+
+			console.log('⏭️ Going to next slide from', currentSlide, 'to', (currentSlide + 1) % carouselSlides.length);
 			const previousSlide = currentSlide;
-			currentSlide = (currentSlide + 1) % slides.length;
-			
+			currentSlide = (currentSlide + 1) % carouselSlides.length;
+
 			// Add exiting class to previous slide
-			if (slides[previousSlide]) {
-				slides[previousSlide].classList.add('exiting');
+			if (carouselSlides[previousSlide]) {
+				carouselSlides[previousSlide].classList.add('exiting');
 			}
-			
+
 			showSlideNumber(currentSlide);
 		}
 
-		// Show first slide immediately
-		console.log('Showing first slide...');
-		showSlideNumber(0);
+		function initSimpleCarousel() {
+			console.log('🔥 STARTING SIMPLE CAROUSEL');
 
-		// Clear any existing timer
-		if (slideTimer) {
-			console.log('Clearing existing timer');
-			clearInterval(slideTimer);
-			slideTimer = null;
+			carouselSlides = document.querySelectorAll('.hero-slide');
+			carouselDots = document.querySelectorAll('.carousel-dot');
+
+			console.log('Found slides:', carouselSlides.length);
+			console.log('Found dots:', carouselDots.length);
+
+			if (carouselSlides.length === 0) {
+				console.error('❌ No slides found!');
+				setTimeout(initSimpleCarousel, 500);
+				return;
+			}
+
+			// Show first slide immediately
+			console.log('Showing first slide...');
+			showSlideNumber(0);
+
+			// Clear any existing timer
+			if (slideTimer) {
+				console.log('Clearing existing timer');
+				clearInterval(slideTimer);
+				slideTimer = null;
+			}
+
+			// Start timer - change every 5 seconds
+			console.log('Starting new timer...');
+			slideTimer = setInterval(() => {
+				console.log('Timer fired!');
+				goToNextSlide();
+			}, 5000);
+
+			console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
+			console.log('Timer ID:', slideTimer);
+			console.log('✅ Carousel initialized successfully!');
+			console.log('Dots have inline onclick handlers - should work now!');
 		}
-
-		// Start timer - change every 5 seconds
-		console.log('Starting new timer...');
-		slideTimer = setInterval(() => {
-			console.log('Timer fired!');
-			goToNextSlide();
-		}, 5000);
-
-		console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
-		console.log('Timer ID:', slideTimer);
-
-		// Add click handlers for dots - SIMPLER APPROACH
-		console.log('Adding click handlers to dots...');
-		
-		// Wait a bit to ensure DOM is ready
-		setTimeout(() => {
-			const allDots = document.querySelectorAll('.carousel-dot');
-			console.log('Re-queried dots:', allDots.length);
-			
-			allDots.forEach((dot, index) => {
-				console.log('Adding listener to dot', index);
-				
-				dot.onclick = function(e) {
-					console.log('🎯 DOT CLICKED!!! Index:', index);
-					e.preventDefault();
-					e.stopPropagation();
-					
-					// Clear existing timer
-					if (slideTimer) {
-						clearInterval(slideTimer);
-						slideTimer = null;
-					}
-					
-					// Update to clicked slide
-					currentSlide = index;
-					showSlideNumber(currentSlide);
-					
-					// Restart timer
-					slideTimer = setInterval(() => {
-						goToNextSlide();
-					}, 5000);
-					
-					console.log('✅ Switched to slide', index);
-					return false;
-				};
-				
-				// Also add mousedown for extra reliability
-				dot.onmousedown = function(e) {
-					console.log('🖱️ MOUSEDOWN on dot', index);
-				};
-			});
-			
-			console.log('✅ Click handlers added to all dots!');
-		}, 200);
-
-		console.log('✅ Carousel initialized successfully!');
-	}
 
 		// Featured on IG Carousel Function
 		function initFeaturedIgCarousel() {

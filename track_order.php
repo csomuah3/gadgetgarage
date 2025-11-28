@@ -7,7 +7,7 @@ $tracking_result = null;
 $error_message = '';
 
 // Check if tracking request
-if ($_GET['order'] ?? '') {
+if (!empty($_GET['order'])) {
     $search_value = trim($_GET['order']);
 
     error_log("Track order request for: " . $search_value);
@@ -1568,7 +1568,7 @@ try {
         <?php if ($error_message): ?>
             <div class="error-message">
                 <i class="fas fa-exclamation-triangle me-2"></i>
-                <?php echo htmlspecialchars($error_message); ?>
+                <?php echo $error_message; ?>
             </div>
         <?php endif; ?>
 

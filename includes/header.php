@@ -2,6 +2,15 @@
 // Header PHP - Reusable header component
 // This file contains the promo banner, main header, and navigation bar
 
+// Determine base path for links (works from both root and views directories)
+// Check the current script path to determine if we're in views/ directory
+$base_path = '';
+$current_script = $_SERVER['PHP_SELF'] ?? $_SERVER['SCRIPT_NAME'] ?? '';
+if (strpos($current_script, '/views/') !== false || strpos($current_script, 'views/') !== false) {
+    // If we're in a views page, go up one level
+    $base_path = '../';
+}
+
 // Get cart count and wishlist count if user is logged in
 if (!isset($cart_count)) {
     $cart_count = 0;
@@ -67,7 +76,7 @@ $is_logged_in = isset($_SESSION['user_id']);
         <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
         <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
     </div>
-    <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
+    <a href="<?php echo $base_path; ?>index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
 </div>
 
 <!-- Main Header -->
@@ -75,7 +84,7 @@ $is_logged_in = isset($_SESSION['user_id']);
     <div class="container-fluid" style="padding: 0 120px 0 95px;">
         <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
             <!-- Logo - Far Left -->
-            <a href="../index.php" class="logo">
+            <a href="<?php echo $base_path; ?>index.php" class="logo">
                 <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
                     alt="Gadget Garage">
             </a>
@@ -83,7 +92,7 @@ $is_logged_in = isset($_SESSION['user_id']);
             <!-- Center Content -->
             <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                 <!-- Search Bar -->
-                <form class="search-container" method="GET" action="../product_search_result.php">
+                <form class="search-container" method="GET" action="<?php echo $base_path; ?>product_search_result.php">
                     <i class="fas fa-search search-icon"></i>
                     <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
                     <button type="submit" class="search-btn">
@@ -107,7 +116,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                 <?php if ($is_logged_in): ?>
                     <!-- Wishlist Icon -->
                     <div class="header-icon">
-                        <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                        <a href="<?php echo $base_path; ?>views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-heart"></i>
                             <span class="wishlist-badge" id="wishlistBadge" style="display: <?php echo ($wishlist_count > 0) ? 'flex' : 'none'; ?>;">
                                 <?php echo $wishlist_count; ?>
@@ -117,7 +126,7 @@ $is_logged_in = isset($_SESSION['user_id']);
 
                     <!-- Cart Icon -->
                     <div class="header-icon">
-                        <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
+                        <a href="<?php echo $base_path; ?>views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-shopping-cart"></i>
                             <?php if ($cart_count > 0): ?>
                                 <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
@@ -133,19 +142,19 @@ $is_logged_in = isset($_SESSION['user_id']);
                             <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                         </div>
                         <div class="dropdown-menu-custom" id="userDropdownMenu">
-                            <a href="../views/account.php" class="dropdown-item-custom">
+                            <a href="<?php echo $base_path; ?>views/account.php" class="dropdown-item-custom">
                                 <i class="fas fa-user"></i>
                                 <span data-translate="account">Account</span>
                             </a>
-                            <a href="../views/my_orders.php" class="dropdown-item-custom">
+                            <a href="<?php echo $base_path; ?>views/my_orders.php" class="dropdown-item-custom">
                                 <i class="fas fa-shopping-bag"></i>
                                 <span data-translate="my_orders">My Orders</span>
                             </a>
-                            <a href="../track_order.php" class="dropdown-item-custom">
+                            <a href="<?php echo $base_path; ?>track_order.php" class="dropdown-item-custom">
                                 <i class="fas fa-truck"></i>
                                 <span data-translate="track_orders">Track Orders</span>
                             </a>
-                            <a href="../views/notifications.php" class="dropdown-item-custom">
+                            <a href="<?php echo $base_path; ?>views/notifications.php" class="dropdown-item-custom">
                                 <i class="fas fa-bell"></i>
                                 <span>Notifications</span>
                             </a>
@@ -176,7 +185,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                                 </div>
                             </div>
                             <div class="dropdown-divider-custom"></div>
-                            <a href="../login/logout.php" class="dropdown-item-custom">
+                            <a href="<?php echo $base_path; ?>login/logout.php" class="dropdown-item-custom">
                                 <i class="fas fa-sign-out-alt"></i>
                                 <span>Logout</span>
                             </a>
@@ -184,12 +193,12 @@ $is_logged_in = isset($_SESSION['user_id']);
                     </div>
                 <?php else: ?>
                     <!-- Login Button -->
-                    <a href="../login/login.php" class="login-btn">
+                    <a href="<?php echo $base_path; ?>login/login.php" class="login-btn">
                         <i class="fas fa-user"></i>
                         Login
                     </a>
                     <!-- Register Button -->
-                    <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
+                    <a href="<?php echo $base_path; ?>login/register.php" class="login-btn" style="margin-left: 10px;">
                         <i class="fas fa-user-plus"></i>
                         Register
                     </a>
@@ -215,23 +224,23 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <ul>
                         <?php if (!empty($brands)): ?>
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="../views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                             <?php endforeach; ?>
                         <?php else: ?>
-                            <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                            <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                            <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                            <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                            <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                            <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                            <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                            <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                            <li><a href="<?php echo $base_path; ?>views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>
             </div>
 
-            <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
+            <a href="<?php echo $base_path; ?>index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
             <!-- Shop Dropdown -->
             <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
@@ -243,35 +252,35 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <div class="dropdown-content">
                         <div class="dropdown-column">
                             <h4>
-                                <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                <a href="<?php echo $base_path; ?>views/mobile_devices.php" style="text-decoration: none; color: inherit;">
                                     <span data-translate="mobile_devices">Mobile Devices</span>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                <li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
                             <h4>
-                                <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
+                                <a href="<?php echo $base_path; ?>views/computing.php" style="text-decoration: none; color: inherit;">
                                     <span data-translate="computing">Computing</span>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                <li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
                             <h4>
-                                <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
+                                <a href="<?php echo $base_path; ?>views/photography_video.php" style="text-decoration: none; color: inherit;">
                                     <span data-translate="photography_video">Photography & Video</span>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                <li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column featured">
@@ -281,7 +290,7 @@ $is_logged_in = isset($_SESSION['user_id']);
                                 <div class="featured-text">
                                     <strong>New Arrivals</strong>
                                     <p>Latest tech gadgets</p>
-                                    <a href="../views/all_product.php" class="shop-now-btn">Shop </a>
+                                    <a href="<?php echo $base_path; ?>views/all_product.php" class="shop-now-btn">Shop </a>
                                 </div>
                             </div>
                         </div>
@@ -289,8 +298,8 @@ $is_logged_in = isset($_SESSION['user_id']);
                 </div>
             </div>
 
-            <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-            <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
+            <a href="<?php echo $base_path; ?>views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+            <a href="<?php echo $base_path; ?>views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
             <!-- More Dropdown -->
             <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
@@ -300,14 +309,14 @@ $is_logged_in = isset($_SESSION['user_id']);
                 </a>
                 <div class="simple-dropdown" id="moreDropdown">
                     <ul>
-                        <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                        <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
+                        <li><a href="<?php echo $base_path; ?>views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                        <li><a href="<?php echo $base_path; ?>views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Flash Deal positioned at far right -->
-            <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
+            <a href="<?php echo $base_path; ?>views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
         </div>
     </div>
 </nav>

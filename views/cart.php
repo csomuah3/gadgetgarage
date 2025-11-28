@@ -2413,7 +2413,7 @@ try {
         // Scroll to Top Button Functionality
         document.addEventListener('DOMContentLoaded', function() {
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            
+
             if (scrollToTopBtn) {
                 // Show/hide button based on scroll position
                 window.addEventListener('scroll', function() {

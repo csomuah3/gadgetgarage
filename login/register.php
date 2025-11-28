@@ -1896,6 +1896,8 @@
 							<h2 class="form-title" id="formTitle">Join Gadget Garage Today!</h2>
 						</div>
 
+						<p style="text-align: center; color: var(--text-light); font-size: 1rem; margin-bottom: 20px;">Sign up with socials</p>
+
 						<!-- Social Login Buttons -->
 						<div class="social-login">
 							<div class="social-buttons">

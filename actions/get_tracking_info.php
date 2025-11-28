@@ -78,7 +78,21 @@ try {
     $order = $tracking_result['order'];
 
     // Ensure the order belongs to the current customer
-    if ($order['customer_id'] != $customer_id) {
+    // Check by customer_id or email for better matching
+    $access_granted = false;
+
+    if ($order['customer_id'] == $customer_id) {
+        $access_granted = true;
+    } elseif (isset($_SESSION['email']) && isset($order['customer_email'])) {
+        // Check by email as backup (now available from the query)
+        $user_email = $_SESSION['email'];
+        if ($order['customer_email'] === $user_email) {
+            $access_granted = true;
+        }
+    }
+
+    if (!$access_granted) {
+        error_log("Access denied: Order customer_id=" . $order['customer_id'] . ", Session customer_id=$customer_id, Session email=" . ($_SESSION['email'] ?? 'none') . ", Order email=" . ($order['customer_email'] ?? 'none'));
         echo json_encode([
             'status' => 'error',
             'message' => 'Order not found or access denied'

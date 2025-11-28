@@ -2664,13 +2664,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         .scroll-to-top:active {
-            transform: translateY(-1px);
+            transform: translateX(-50%) translateY(-1px);
         }
 
         @media (max-width: 768px) {
             .scroll-to-top {
                 bottom: 20px;
-                right: 20px;
                 width: 45px;
                 height: 45px;
                 font-size: 18px;
@@ -5068,47 +5067,47 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <script>
         // Load wishlist status on page load
         <?php if ($is_logged_in): ?>
-        document.addEventListener('DOMContentLoaded', function() {
-            fetch('../actions/get_wishlist_status.php', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-                body: 'product_id=0'
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success && data.wishlist_items) {
-                    // Update wishlist badge
-                    const wishlistBadge = document.getElementById('wishlistBadge');
-                    if (wishlistBadge && data.count > 0) {
-                        wishlistBadge.textContent = data.count;
-                        wishlistBadge.style.display = 'flex';
-                    }
+            document.addEventListener('DOMContentLoaded', function() {
+                fetch('../actions/get_wishlist_status.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'product_id=0'
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success && data.wishlist_items) {
+                            // Update wishlist badge
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge && data.count > 0) {
+                                wishlistBadge.textContent = data.count;
+                                wishlistBadge.style.display = 'flex';
+                            }
 
-                    // Update wishlist heart buttons
-                    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
-                    wishlistButtons.forEach(button => {
-                        const onclickAttr = button.getAttribute('onclick');
-                        if (onclickAttr) {
-                            const match = onclickAttr.match(/toggleWishlist\((\d+)/);
-                            if (match) {
-                                const productId = parseInt(match[1]);
-                                if (data.wishlist_items.includes(productId)) {
-                                    button.classList.add('active');
-                                    const icon = button.querySelector('i');
-                                    if (icon) {
-                                        icon.className = 'fas fa-heart';
-                                        icon.style.color = '#ef4444';
+                            // Update wishlist heart buttons
+                            const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+                            wishlistButtons.forEach(button => {
+                                const onclickAttr = button.getAttribute('onclick');
+                                if (onclickAttr) {
+                                    const match = onclickAttr.match(/toggleWishlist\((\d+)/);
+                                    if (match) {
+                                        const productId = parseInt(match[1]);
+                                        if (data.wishlist_items.includes(productId)) {
+                                            button.classList.add('active');
+                                            const icon = button.querySelector('i');
+                                            if (icon) {
+                                                icon.className = 'fas fa-heart';
+                                                icon.style.color = '#ef4444';
+                                            }
+                                        }
                                     }
                                 }
-                            }
+                            });
                         }
-                    });
-                }
-            })
-            .catch(error => console.error('Error loading wishlist status:', error));
-        });
+                    })
+                    .catch(error => console.error('Error loading wishlist status:', error));
+            });
         <?php endif; ?>
 
         // Global function accessible from HTML onclick events
@@ -5129,38 +5128,38 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                 // Make AJAX call to remove from wishlist
                 fetch('../actions/remove_from_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update wishlist badge if exists
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count = Math.max(0, count - 1);
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update wishlist badge if exists
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count = Math.max(0, count - 1);
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                            }
+                        } else {
+                            // Revert if failed
+                            button.classList.add('active');
+                            icon.className = 'fas fa-heart';
+                            icon.style.color = '#ef4444';
+                            if (data.message) alert(data.message);
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         // Revert if failed
                         button.classList.add('active');
                         icon.className = 'fas fa-heart';
                         icon.style.color = '#ef4444';
-                        if (data.message) alert(data.message);
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Revert if failed
-                    button.classList.add('active');
-                    icon.className = 'fas fa-heart';
-                    icon.style.color = '#ef4444';
-                });
+                    });
             } else {
                 // Add to wishlist
                 button.classList.add('active');
@@ -5169,47 +5168,47 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
                 // Make AJAX call to add to wishlist
                 fetch('../actions/add_to_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Update wishlist badge
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count++;
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = 'flex';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            // Update wishlist badge
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count++;
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = 'flex';
+                            }
+                        } else {
+                            // Revert button state if failed
+                            button.classList.remove('active');
+                            icon.className = 'far fa-heart';
+                            icon.style.color = '#6b7280';
+                            if (data.message) {
+                                alert(data.message);
+                            }
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         // Revert button state if failed
                         button.classList.remove('active');
                         icon.className = 'far fa-heart';
                         icon.style.color = '#6b7280';
-                        if (data.message) {
-                            alert(data.message);
-                        }
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    // Revert button state if failed
-                    button.classList.remove('active');
-                    icon.className = 'far fa-heart';
-                    icon.style.color = '#6b7280';
-                });
+                    });
             }
         };
 
         // Scroll to Top Button Functionality
         document.addEventListener('DOMContentLoaded', function() {
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            
+
             if (scrollToTopBtn) {
                 // Show/hide button based on scroll position
                 window.addEventListener('scroll', function() {

@@ -14,6 +14,10 @@ try {
         exit;
     }
 
+    // Debug: Log session information
+    error_log("Session data: " . print_r($_SESSION, true));
+    error_log("Customer ID being used: " . $customer_id);
+
     // Get user orders
     $orders = [];
     try {
@@ -21,6 +25,7 @@ try {
         if (!$orders) {
             $orders = [];
         }
+        error_log("Orders found for customer $customer_id: " . count($orders));
     } catch (Exception $e) {
         error_log("Error fetching orders for customer $customer_id: " . $e->getMessage());
         $orders = [];

@@ -81,6 +81,14 @@ class Order extends db_connection
     {
         $customer_id = mysqli_real_escape_string($this->db, $customer_id);
 
+        // Get user email from session for additional matching
+        $user_email = '';
+        if (isset($_SESSION['email'])) {
+            $user_email = mysqli_real_escape_string($this->db, $_SESSION['email']);
+        }
+
+        error_log("Searching orders for customer_id: $customer_id, email: $user_email");
+
         $sql = "SELECT o.order_id,
                        o.customer_id,
                        o.invoice_no,
@@ -94,17 +102,28 @@ class Order extends db_connection
                            END, 0
                        ) as total_amount,
                        GROUP_CONCAT(DISTINCT p.payment_method) as payment_method,
-                       GROUP_CONCAT(DISTINCT p.currency) as currency
+                       GROUP_CONCAT(DISTINCT p.currency) as currency,
+                       c.customer_email
                 FROM orders o
                 LEFT JOIN orderdetails od ON o.order_id = od.order_id
                 LEFT JOIN products pr ON od.product_id = pr.product_id
                 LEFT JOIN payment p ON o.order_id = p.order_id
-                WHERE o.customer_id = $customer_id
-                GROUP BY o.order_id
-                ORDER BY o.order_date DESC";
+                LEFT JOIN customer c ON o.customer_id = c.customer_id
+                WHERE o.customer_id = '$customer_id'";
+
+        // Add email matching as backup if available
+        if (!empty($user_email)) {
+            $sql .= " OR c.customer_email = '$user_email'";
+        }
+
+        $sql .= " GROUP BY o.order_id
+                 ORDER BY o.order_date DESC";
+
+        error_log("Order query: " . $sql);
 
         try {
             $result = $this->db_fetch_all($sql);
+            error_log("Query returned " . (is_array($result) ? count($result) : 0) . " orders");
             return $result ? $result : [];
         } catch (Exception $e) {
             error_log("Error fetching user orders: " . $e->getMessage());
@@ -315,10 +334,12 @@ class Order extends db_connection
             // First, try to find the order by order_id or tracking_number
             $order_sql = "SELECT o.*,
                                  COALESCE(p.amt, 0) as total_amount,
-                                 COUNT(od.product_id) as item_count
+                                 COUNT(od.product_id) as item_count,
+                                 c.customer_email, c.customer_name
                           FROM orders o
                           LEFT JOIN payment p ON o.order_id = p.order_id
                           LEFT JOIN orderdetails od ON o.order_id = od.order_id
+                          LEFT JOIN customer c ON o.customer_id = c.customer_id
                           WHERE (o.order_id = '$search_value'
                              OR o.tracking_number = '$search_value'
                              OR o.invoice_no = '$search_value')

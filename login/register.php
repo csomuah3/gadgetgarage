@@ -1930,7 +1930,7 @@
 											id="name"
 											name="name"
 											class="form-control with-icon"
-											placeholder="Enter your full name"
+											placeholder="       Enter your full name"
 											value=""
 											required>
 									</div>
@@ -1944,7 +1944,7 @@
 											id="email"
 											name="email"
 											class="form-control with-icon"
-											placeholder="              Enter your email"
+											placeholder="       Enter your email"
 											value=""
 											required>
 									</div>
@@ -1958,7 +1958,7 @@
 											id="phone_number"
 											name="phone_number"
 											class="form-control with-flag"
-											placeholder="                 your phone number"
+											placeholder="       your phone number"
 											value=""
 											required>
 									</div>
@@ -1988,7 +1988,7 @@
 											id="city"
 											name="city"
 											class="form-control with-icon"
-											placeholder="    Enter your city"
+											placeholder="       Enter your city"
 											value=""
 											required>
 									</div>
@@ -2004,7 +2004,7 @@
 											id="password"
 											name="password"
 											class="form-control with-icon"
-											placeholder="Create a password"
+											placeholder="       Create a password"
 											required>
 										<i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
 									</div>

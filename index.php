@@ -7148,6 +7148,17 @@ try {
 				initSimpleCarousel();
 			}, 100);
 
+			// Backup initialization in case first attempt fails
+			setTimeout(() => {
+				const slides = document.querySelectorAll('.hero-slide');
+				if (slides.length > 0 && !document.querySelector('.hero-slide.active')) {
+					console.log('🔧 Backup initialization - no active slide found');
+					slides[0].classList.add('active');
+					const firstDot = document.querySelector('.carousel-dot');
+					if (firstDot) firstDot.classList.add('active');
+				}
+			}, 500);
+
 			// Initialize Featured IG Carousel
 			initFeaturedIgCarousel();
 		});
@@ -7246,8 +7257,16 @@ try {
 				return;
 			}
 
-			// Show first slide immediately
+			// Force reset all slides first
+			carouselSlides.forEach((slide, index) => {
+				slide.classList.remove('active');
+				slide.style.display = 'none';
+			});
+			carouselDots.forEach(dot => dot.classList.remove('active'));
+
+			// Show first slide immediately with force
 			console.log('Showing first slide...');
+			currentSlide = 0;
 			showSlideNumber(0);
 
 			// Clear any existing timer
@@ -7260,7 +7279,7 @@ try {
 			// Start timer - change every 5 seconds
 			console.log('Starting new timer...');
 			slideTimer = setInterval(() => {
-				console.log('Timer fired!');
+				console.log('⏰ Timer fired! Current slide:', currentSlide);
 				goToNextSlide();
 			}, 5000);
 

@@ -1420,11 +1420,4 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
 <body>
     <?php include '../includes/header.php'; ?>
-    
-        
-        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
-    </div>
 
-	
-
-	<!-- Main Navigation -->

@@ -567,12 +567,6 @@ if ($is_logged_in) {
             <?php endif; ?>
         </div>
     </div>
-    </header>
-
-    <!-- Main Navigation -->
-    
-
-    <!-- Wishlist Content -->
     <div class="wishlist-container">
         <div class="container">
             <h1 class="wishlist-title">My Wishlist</h1>

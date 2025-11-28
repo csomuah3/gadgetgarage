@@ -1675,122 +1675,6 @@ try {
 
 <body>
     <?php include '../includes/header.php'; ?>
-        <div class="container-fluid" style="padding: 0 40px;">
-            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-                <!-- Logo - Far Left -->
-                <a href="../index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                        alt="Gadget Garage">
-                </a>
-
-                <!-- Center Content -->
-                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-                    <!-- Search Bar -->
-                    <form class="search-container" method="GET" action="../product_search_result.php">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-
-                    <!-- Tech Revival Section -->
-                    <div class="tech-revival-section">
-                        <i class="fas fa-recycle tech-revival-icon"></i>
-                        <div>
-                            <p class="tech-revival-text">Bring Retired Devices</p>
-                            <p class="contact-number">055-138-7578</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- User Actions - Far Right -->
-                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
-                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-                    <?php if ($is_logged_in): ?>
-                        <!-- Wishlist Icon -->
-                        <div class="header-icon">
-                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-heart"></i>
-                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-                            </a>
-                        </div>
-
-                        <!-- Cart Icon -->
-                        <div class="header-icon">
-                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-shopping-cart"></i>
-                                <?php if ($cart_count > 0): ?>
-                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
-                                <?php else: ?>
-                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
-                                <?php endif; ?>
-                            </a>
-                        </div>
-
-                        <!-- User Avatar Dropdown -->
-                        <div class="user-dropdown">
-                            <?php
-                            $user_name = '';
-                            if ($is_logged_in && isset($_SESSION['user_name'])) {
-                                $user_name = $_SESSION['user_name'];
-                            } elseif ($is_logged_in && isset($_SESSION['name'])) {
-                                $user_name = $_SESSION['name'];
-                            } else {
-                                $user_name = 'User';
-                            }
-                            ?>
-                            <div class="user-avatar" title="<?= htmlspecialchars($user_name) ?>" onclick="toggleUserDropdown()">
-                                <?= strtoupper(substr($user_name, 0, 1)) ?>
-                            </div>
-                            <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="goToAccount()">
-                                    <i class="fas fa-user"></i>
-                                    <span>Account</span>
-                                </button>
-                                <div class="dropdown-divider-custom"></div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-globe"></i>
-                                    <div class="language-selector">
-                                        <span>Language</span>
-                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                            <option value="en">🇬🇧 EN</option>
-                                            <option value="es">🇪🇸 ES</option>
-                                            <option value="fr">🇫🇷 FR</option>
-                                            <option value="de">🇩🇪 DE</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-moon"></i>
-                                    <div class="theme-toggle">
-                                        <span>Dark Mode</span>
-                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-                                            <div class="toggle-slider"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dropdown-divider-custom"></div>
-                                <a href="../login/logout.php" class="dropdown-item-custom">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Logout</span>
-                                </a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <!-- Login Button -->
-                        <a href="../login/login.php" class="login-btn">
-                            <i class="fas fa-user"></i>
-                            Login
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Navigation -->
-    
 
     <div class="container mt-4" id="product-details">
 
@@ -2020,15 +1904,27 @@ try {
         // Magnifying Glass Function
         function initializeMagnifyingGlass() {
             try {
+                console.log('🔍 Initializing magnifying glass...');
                 const magnifyContainer = document.getElementById('magnifyContainer');
                 const mainImage = document.getElementById('mainProductImage');
                 const magnifyLens = document.getElementById('magnifyLens');
                 const magnifyResult = document.getElementById('magnifyResult');
                 const magnifyResultImage = document.getElementById('magnifyResultImage');
 
+                console.log('Elements found:', {
+                    container: !!magnifyContainer,
+                    image: !!mainImage,
+                    lens: !!magnifyLens,
+                    result: !!magnifyResult,
+                    resultImage: !!magnifyResultImage
+                });
+
                 if (!magnifyContainer || !mainImage || !magnifyLens || !magnifyResult || !magnifyResultImage) {
+                    console.error('❌ Missing magnifying glass elements');
                     return;
                 }
+
+                console.log('✅ All elements found, setting up magnifying glass');
 
             // Magnifying glass functionality
             function magnify() {
@@ -2081,20 +1977,24 @@ try {
 
                 // Show magnifying glass on mouse enter
                 function showMagnifier() {
+                    console.log('🔍 SHOW magnifier triggered');
                     magnifyLens.classList.add('active');
                     magnifyResult.classList.add('active');
                 }
 
                 // Hide magnifying glass on mouse leave
                 function hideMagnifier() {
+                    console.log('🔍 HIDE magnifier triggered');
                     magnifyLens.classList.remove('active');
                     magnifyResult.classList.remove('active');
                 }
 
                 // Add event listeners
+                console.log('🔍 Adding event listeners...');
                 magnifyContainer.addEventListener('mouseenter', showMagnifier);
                 magnifyContainer.addEventListener('mouseleave', hideMagnifier);
                 magnifyContainer.addEventListener('mousemove', moveMagnifier);
+                console.log('✅ Event listeners added');
 
                 // Touch events for mobile
                 magnifyContainer.addEventListener('touchstart', function(e) {
@@ -2901,13 +2801,32 @@ try {
 
         // Initialize page components
         document.addEventListener('DOMContentLoaded', function() {
-            // Initialize magnifying glass
-            setTimeout(() => {
-                initializeMagnifyingGlass();
-            }, 500);
+            console.log('🚀 DOM Content Loaded');
 
-            // Load product image
+            // Load product image first
             loadProductImage();
+
+            // Initialize magnifying glass after image loads
+            const mainImage = document.getElementById('mainProductImage');
+            if (mainImage) {
+                if (mainImage.complete) {
+                    console.log('📷 Image already loaded, initializing magnifier');
+                    initializeMagnifyingGlass();
+                } else {
+                    console.log('📷 Waiting for image to load...');
+                    mainImage.onload = function() {
+                        console.log('📷 Image loaded, initializing magnifier');
+                        initializeMagnifyingGlass();
+                    };
+                    // Fallback timeout
+                    setTimeout(() => {
+                        console.log('📷 Fallback timeout, initializing magnifier anyway');
+                        initializeMagnifyingGlass();
+                    }, 2000);
+                }
+            } else {
+                console.error('❌ Main image not found');
+            }
 
 
             // Initialize condition-based pricing

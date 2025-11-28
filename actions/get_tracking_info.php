@@ -84,10 +84,30 @@ try {
 
     if (!$tracking_result) {
         error_log("Tracking result is null for order: $order_reference");
-        echo json_encode([
-            'status' => 'error',
-            'message' => 'Order not found. Please check your order reference number.'
-        ]);
+
+        // Additional debug: try direct database query
+        try {
+            $debug_query = "SELECT order_id, invoice_no, customer_id FROM orders WHERE invoice_no LIKE '%$order_reference%' OR order_id = '$order_reference'";
+            $stmt = $pdo->prepare($debug_query);
+            $stmt->execute();
+            $debug_results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Order not found. Please check your order reference number.',
+                'debug_info' => [
+                    'searched_for' => $order_reference,
+                    'total_orders_found' => count($test_orders),
+                    'matching_orders' => $debug_results,
+                    'sample_orders' => array_slice($test_orders, 0, 3)
+                ]
+            ]);
+        } catch (Exception $e) {
+            echo json_encode([
+                'status' => 'error',
+                'message' => 'Order not found. Database error: ' . $e->getMessage()
+            ]);
+        }
         exit();
     }
 

@@ -1186,28 +1186,7 @@
 			font-family: "Times New Roman", Times, serif;
 		}
 
-		.form-control {
-			width: 100%;
-			padding: 18px 20px;
-			border: 2px solid #e5e7eb;
-			border-radius: 12px;
-			font-size: 1rem;
-			font-family: "Times New Roman", Times, serif;
-			transition: all 0.3s ease;
-			background: #f8fafc;
-		}
-
-		.form-control::placeholder {
-			font-family: "Times New Roman", Times, serif;
-			font-size: 1rem;
-		}
-
-		.form-control:focus {
-			outline: none;
-			border-color: #3b82f6;
-			background: white;
-			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-		}
+		/* REMOVED - Duplicate .form-control, ::placeholder, and :focus styles that were overriding the correct padding */
 
 		.input-group {
 			position: relative;

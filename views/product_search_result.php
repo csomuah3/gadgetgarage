@@ -1239,7 +1239,8 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         .scroll-to-top {
             position: fixed;
             bottom: 30px;
-            right: 30px;
+            left: 50%;
+            transform: translateX(-50%);
             width: 50px;
             height: 50px;
             background: linear-gradient(135deg, #1E3A5F, #2563EB);

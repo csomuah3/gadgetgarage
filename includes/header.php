@@ -1,76 +1,76 @@
 <?php
-// This file should be included after setting up the necessary variables:
-// $is_logged_in, $is_admin, $cart_count, $brands, $categories
+// Header PHP - Reusable header component
+// This file contains the promo banner, main header, and navigation bar
 
-// Include language configuration
-require_once __DIR__ . '/language_config.php';
-
-// Load brands and categories if not already loaded
-if (!isset($brands) || empty($brands)) {
-    try {
-        require_once __DIR__ . '/../controllers/brand_controller.php';
-        $brands = get_all_brands_ctr() ?: [];
-    } catch (Exception $e) {
-        $brands = [];
-        error_log("Failed to load brands in header: " . $e->getMessage());
-    }
-}
-
-if (!isset($categories) || empty($categories)) {
-    try {
-        require_once __DIR__ . '/../controllers/category_controller.php';
-        $categories = get_all_categories_ctr() ?: [];
-    } catch (Exception $e) {
-        $categories = [];
-        error_log("Failed to load categories in header: " . $e->getMessage());
-    }
-}
-
-// Initialize user state variables if not set
-if (!isset($is_logged_in)) {
-    require_once __DIR__ . '/../settings/core.php';
-    $is_logged_in = check_login();
-    $is_admin = $is_logged_in ? check_admin() : false;
-}
-
-// Get cart count for all users (logged in and guest)
+// Get cart count and wishlist count if user is logged in
 if (!isset($cart_count)) {
     $cart_count = 0;
-    try {
-        require_once __DIR__ . '/../controllers/cart_controller.php';
-
-        // Get customer ID if logged in, otherwise use null
-        $customer_id = ($is_logged_in && !$is_admin) ? $_SESSION['user_id'] : null;
-
-        // Get IP address for guest users
-        $ip_address = $_SERVER['REMOTE_ADDR'];
-
-        // Get cart count using the proper function that handles both logged in and guest users
-        $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
-    } catch (Exception $e) {
-        error_log("Failed to get cart count in header: " . $e->getMessage());
-        $cart_count = 0;
+    if (isset($_SESSION['user_id'])) {
+        try {
+            require_once(__DIR__ . '/../controllers/cart_controller.php');
+            $customer_id = $_SESSION['user_id'];
+            $ip_address = $_SERVER['REMOTE_ADDR'];
+            $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
+        } catch (Exception $e) {
+            error_log("Failed to load cart count: " . $e->getMessage());
+        }
     }
 }
+
+// Get categories for navigation
+if (!isset($categories)) {
+    $categories = [];
+    try {
+        require_once(__DIR__ . '/../controllers/category_controller.php');
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        error_log("Failed to load categories: " . $e->getMessage());
+    }
+}
+
+// Get brands for navigation
+if (!isset($brands)) {
+    $brands = [];
+    try {
+        require_once(__DIR__ . '/../controllers/brand_controller.php');
+        $brands = get_all_brands_ctr();
+    } catch (Exception $e) {
+        error_log("Failed to load brands: " . $e->getMessage());
+    }
+}
+
+// Check if user is logged in
+$is_logged_in = isset($_SESSION['user_id']);
 ?>
+
+<!-- Promotional Banner -->
+<div class="promo-banner2">
+    <div class="promo-banner-left">
+        <i class="fas fa-bolt"></i>
+    </div>
+    <div class="promo-banner-center">
+        <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
+        <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
+    </div>
+    <a href="../index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
+</div>
 
 <!-- Main Header -->
 <header class="main-header animate__animated animate__fadeInDown">
-    <div class="container-fluid" style="padding: 0 40px;">
+    <div class="container-fluid" style="padding: 0 120px 0 95px;">
         <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
             <!-- Logo - Far Left -->
-            <a href="index.php" class="logo">
+            <a href="../index.php" class="logo">
                 <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                     alt="Gadget Garage"
-                     style="height: 40px; width: auto; object-fit: contain;">
+                    alt="Gadget Garage">
             </a>
 
             <!-- Center Content -->
             <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                 <!-- Search Bar -->
-                <form class="search-container" method="GET" action="views/product_search_result.php">
+                <form class="search-container" method="GET" action="../product_search_result.php">
                     <i class="fas fa-search search-icon"></i>
-                    <input type="text" name="query" class="search-input" placeholder="<?= t('search_placeholder') ?>" required>
+                    <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
                     <button type="submit" class="search-btn">
                         <i class="fas fa-search"></i>
                     </button>
@@ -80,28 +80,33 @@ if (!isset($cart_count)) {
                 <div class="tech-revival-section">
                     <i class="fas fa-recycle tech-revival-icon"></i>
                     <div>
-                        <p class="tech-revival-text"><?= t('tech_revival') ?></p>
+                        <p class="tech-revival-text">Bring Retired Devices</p>
                         <p class="contact-number">055-138-7578</p>
                     </div>
                 </div>
             </div>
 
             <!-- User Actions - Far Right -->
-            <div class="user-actions" style="display: flex; align-items: center; gap: 12px;">
-                <span style="color: #ddd;">|</span>
+            <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
+                <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
                 <?php if ($is_logged_in): ?>
                     <!-- Wishlist Icon -->
                     <div class="header-icon">
-                        <a href="wishlist.php" style="color: inherit; text-decoration: none;">
+                        <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-heart"></i>
+                            <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
                         </a>
                     </div>
 
                     <!-- Cart Icon -->
                     <div class="header-icon">
-                        <a href="cart.php" style="color: inherit; text-decoration: none;">
+                        <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-shopping-cart"></i>
-                            <span class="cart-badge" id="cartBadge" style="<?php echo $cart_count > 0 ? '' : 'display: none;'; ?>"><?php echo $cart_count; ?></span>
+                            <?php if ($cart_count > 0): ?>
+                                <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
+                            <?php else: ?>
+                                <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
+                            <?php endif; ?>
                         </a>
                     </div>
 
@@ -111,6 +116,22 @@ if (!isset($cart_count)) {
                             <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                         </div>
                         <div class="dropdown-menu-custom" id="userDropdownMenu">
+                            <a href="../views/account.php" class="dropdown-item-custom">
+                                <i class="fas fa-user"></i>
+                                <span data-translate="account">Account</span>
+                            </a>
+                            <a href="../views/my_orders.php" class="dropdown-item-custom">
+                                <i class="fas fa-shopping-bag"></i>
+                                <span data-translate="my_orders">My Orders</span>
+                            </a>
+                            <a href="../track_order.php" class="dropdown-item-custom">
+                                <i class="fas fa-truck"></i>
+                                <span data-translate="track_orders">Track Orders</span>
+                            </a>
+                            <a href="../views/notifications.php" class="dropdown-item-custom">
+                                <i class="fas fa-bell"></i>
+                                <span>Notifications</span>
+                            </a>
                             <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
                                 <i class="fas fa-camera"></i>
                                 <span>Profile Picture</span>
@@ -119,67 +140,42 @@ if (!isset($cart_count)) {
                             <div class="dropdown-item-custom">
                                 <i class="fas fa-globe"></i>
                                 <div class="language-selector">
-                                    <span><?= t('language') ?></span>
+                                    <span>Language</span>
                                     <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                        <?php foreach ($available_languages as $lang_code => $lang_info): ?>
-                                            <option value="<?= $lang_code ?>" <?= ($current_language === $lang_code) ? 'selected' : '' ?>>
-                                                <?= $lang_info['flag'] ?> <?= $lang_info['code'] ?>
-                                            </option>
-                                        <?php endforeach; ?>
+                                        <option value="en">🇬🇧 EN</option>
+                                        <option value="es">🇪🇸 ES</option>
+                                        <option value="fr">🇫🇷 FR</option>
+                                        <option value="de">🇩🇪 DE</option>
                                     </select>
                                 </div>
                             </div>
                             <div class="dropdown-item-custom">
                                 <i class="fas fa-moon"></i>
                                 <div class="theme-toggle">
-                                    <span><?= t('dark_mode') ?></span>
+                                    <span>Dark Mode</span>
                                     <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
                                         <div class="toggle-slider"></div>
                                     </div>
                                 </div>
                             </div>
                             <div class="dropdown-divider-custom"></div>
-                            <a href="my_orders.php" class="dropdown-item-custom">
-                                <i class="fas fa-box"></i>
-                                <span><?= t('my_orders') ?></span>
-                            </a>
-                            <div class="dropdown-divider-custom"></div>
-                            <a href="wishlist.php" class="dropdown-item-custom">
-                                <i class="fas fa-heart"></i>
-                                <span><?= t('wishlist') ?></span>
-                            </a>
-                            <div class="dropdown-divider-custom"></div>
-                            <a href="notifications.php" class="dropdown-item-custom" onclick="showNotifications(); return false;">
-                                <i class="fas fa-bell"></i>
-                                <span><?= t('notifications') ?></span>
-                                <?php
-                                if ($is_logged_in && !$is_admin) {
-                                    require_once __DIR__ . '/../controllers/support_controller.php';
-                                    $unread_count = get_unread_notification_count_ctr($_SESSION['user_id']);
-                                    if ($unread_count > 0) {
-                                        echo '<span class="notification-badge">' . $unread_count . '</span>';
-                                    }
-                                }
-                                ?>
-                            </a>
-                            <?php if ($is_admin): ?>
-                                <div class="dropdown-divider-custom"></div>
-                                <a href="admin/category.php" class="dropdown-item-custom">
-                                    <i class="fas fa-cog"></i>
-                                    <span><?= t('admin_panel') ?></span>
-                                </a>
-                            <?php endif; ?>
-                            <div class="dropdown-divider-custom"></div>
-                            <a href="login/logout.php" class="dropdown-item-custom">
+                            <a href="../login/logout.php" class="dropdown-item-custom">
                                 <i class="fas fa-sign-out-alt"></i>
-                                <span><?= t('logout') ?></span>
+                                <span>Logout</span>
                             </a>
                         </div>
                     </div>
                 <?php else: ?>
-                    <!-- Not logged in: Register | Login -->
-                    <a href="login/register.php" class="login-btn me-2"><?= t('register') ?></a>
-                    <a href="login/login.php" class="login-btn"><?= t('login') ?></a>
+                    <!-- Login Button -->
+                    <a href="../login/login.php" class="login-btn">
+                        <i class="fas fa-user"></i>
+                        Login
+                    </a>
+                    <!-- Register Button -->
+                    <a href="../login/register.php" class="login-btn" style="margin-left: 10px;">
+                        <i class="fas fa-user-plus"></i>
+                        Register
+                    </a>
                 <?php endif; ?>
             </div>
         </div>
@@ -188,83 +184,87 @@ if (!isset($cart_count)) {
 
 <!-- Main Navigation -->
 <nav class="main-nav">
-    <div class="container">
+    <div class="container-fluid px-0">
         <div class="nav-menu">
             <!-- Shop by Brands Button -->
             <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
                 <button class="categories-button">
                     <i class="fas fa-tags"></i>
-                    <?= t('shop_by_brands') ?>
+                    <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
                     <i class="fas fa-chevron-down"></i>
                 </button>
                 <div class="brands-dropdown" id="shopDropdown">
-                    <h4><?= t('all_brands') ?></h4>
+                    <h4>All Brands</h4>
                     <ul>
-                        <?php if (!empty($brands) && count($brands) > 0): ?>
+                        <?php if (!empty($brands)): ?>
                             <?php foreach ($brands as $brand): ?>
-                                <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
+                                <li><a href="../views/all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
                             <?php endforeach; ?>
-                            <li class="divider"></li>
-                            <li><a href="all_product.php"><i class="fas fa-th-large"></i> <?= t('all_products') ?></a></li>
                         <?php else: ?>
-                            <li><a href="all_product.php"><i class="fas fa-th-large"></i> <?= t('all_products') ?></a></li>
-                            <li class="no-brands"><small>No brands available</small></li>
+                            <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+                            <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+                            <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+                            <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+                            <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+                            <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+                            <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+                            <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
                         <?php endif; ?>
                     </ul>
                 </div>
             </div>
 
-            <a href="index.php" class="nav-item"><?= t('home') ?></a>
+            <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
 
             <!-- Shop Dropdown -->
             <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
                 <a href="#" class="nav-item">
-                    <?= t('shop') ?>
+                    <span data-translate="shop">SHOP</span>
                     <i class="fas fa-chevron-down"></i>
                 </a>
                 <div class="mega-dropdown" id="shopCategoryDropdown">
                     <div class="dropdown-content">
                         <div class="dropdown-column">
                             <h4>
-                                <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                    <?= t('mobile_devices') ?>
+                                <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
+                                    <span data-translate="mobile_devices">Mobile Devices</span>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <?= t('smartphones') ?></a></li>
-                                <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <?= t('ipads') ?></a></li>
+                                <li><a href="../views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                <li><a href="../views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
                             <h4>
-                                <a href="computing.php" style="text-decoration: none; color: inherit;">
-                                    <?= t('computing') ?>
+                                <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
+                                    <span data-translate="computing">Computing</span>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <?= t('laptops') ?></a></li>
-                                <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <?= t('desktops') ?></a></li>
+                                <li><a href="../views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                <li><a href="../views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
                             <h4>
-                                <a href="photography_video.php" style="text-decoration: none; color: inherit;">
-                                    <?= t('photography_video') ?>
+                                <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
+                                    <span data-translate="photography_video">Photography & Video</span>
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <?= t('cameras') ?></a></li>
-                                <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <?= t('video_equipment') ?></a></li>
+                                <li><a href="../views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                <li><a href="../views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column featured">
-                            <h4><?= t('shop_all') ?></h4>
+                            <h4>Shop All</h4>
                             <div class="featured-item">
-                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="<?= t('new_arrivals') ?>">
+                                <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
                                 <div class="featured-text">
-                                    <strong><?= t('new_arrivals') ?></strong>
-                                    <p><?= t('latest_tech_gadgets') ?></p>
-                                    <a href="all_product.php" class="shop-now-btn"><?= t('shop_now') ?></a>
+                                    <strong>New Arrivals</strong>
+                                    <p>Latest tech gadgets</p>
+                                    <a href="../views/all_product.php" class="shop-now-btn">Shop </a>
                                 </div>
                             </div>
                         </div>
@@ -272,32 +272,148 @@ if (!isset($cart_count)) {
                 </div>
             </div>
 
-            <a href="repair_services.php" class="nav-item"><?= t('repair_studio') ?></a>
-            <a href="device_drop.php" class="nav-item"><?= t('device_drop') ?></a>
+            <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
+            <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
 
             <!-- More Dropdown -->
             <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
                 <a href="#" class="nav-item">
-                    <?= t('more') ?>
+                    <span data-translate="more">MORE</span>
                     <i class="fas fa-chevron-down"></i>
                 </a>
                 <div class="simple-dropdown" id="moreDropdown">
                     <ul>
-                        <li><a href="contact.php"><i class="fas fa-phone"></i> <?= t('contact') ?></a></li>
-                        <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> <?= t('terms_conditions') ?></a></li>
+                        <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
+                        <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
                     </ul>
                 </div>
             </div>
 
             <!-- Flash Deal positioned at far right -->
-            <a href="#" class="nav-item flash-deal"><?= t('flash_deal') ?></a>
+            <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
         </div>
     </div>
 </nav>
 
-<!-- Translation System Scripts -->
-<script src="js/translation.js"></script>
 <script>
-    // Initialize translation system with current language
-    window.currentLanguage = '<?= $current_language ?>';
+// Header JavaScript functionality
+document.addEventListener('DOMContentLoaded', function() {
+    // Global functions for dropdown functionality
+    window.toggleUserDropdown = function() {
+        const dropdown = document.getElementById('userDropdownMenu');
+        if (dropdown) dropdown.classList.toggle('show');
+    };
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(event) {
+        const dropdown = document.getElementById('userDropdownMenu');
+        const avatar = document.querySelector('.user-avatar');
+        if (dropdown && avatar && !dropdown.contains(event.target) && !avatar.contains(event.target)) {
+            dropdown.classList.remove('show');
+        }
+    });
+
+    // Dropdown navigation functions with timeout delays
+    let dropdownTimeout;
+    let shopDropdownTimeout;
+    let moreDropdownTimeout;
+    let userDropdownTimeout;
+
+    window.showDropdown = function() {
+        const dropdown = document.getElementById('shopDropdown');
+        if (dropdown) {
+            clearTimeout(dropdownTimeout);
+            dropdown.classList.add('show');
+        }
+    };
+
+    window.hideDropdown = function() {
+        const dropdown = document.getElementById('shopDropdown');
+        if (dropdown) {
+            clearTimeout(dropdownTimeout);
+            dropdownTimeout = setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        }
+    };
+
+    window.showShopDropdown = function() {
+        const dropdown = document.getElementById('shopCategoryDropdown');
+        if (dropdown) {
+            clearTimeout(shopDropdownTimeout);
+            dropdown.classList.add('show');
+        }
+    };
+
+    window.hideShopDropdown = function() {
+        const dropdown = document.getElementById('shopCategoryDropdown');
+        if (dropdown) {
+            clearTimeout(shopDropdownTimeout);
+            shopDropdownTimeout = setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        }
+    };
+
+    window.showMoreDropdown = function() {
+        const dropdown = document.getElementById('moreDropdown');
+        if (dropdown) {
+            clearTimeout(moreDropdownTimeout);
+            dropdown.classList.add('show');
+        }
+    };
+
+    window.hideMoreDropdown = function() {
+        const dropdown = document.getElementById('moreDropdown');
+        if (dropdown) {
+            clearTimeout(moreDropdownTimeout);
+            moreDropdownTimeout = setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        }
+    };
+
+    window.showUserDropdown = function() {
+        const dropdown = document.getElementById('userDropdownMenu');
+        if (dropdown) {
+            clearTimeout(userDropdownTimeout);
+            dropdown.classList.add('show');
+        }
+    };
+
+    window.hideUserDropdown = function() {
+        const dropdown = document.getElementById('userDropdownMenu');
+        if (dropdown) {
+            clearTimeout(userDropdownTimeout);
+            userDropdownTimeout = setTimeout(() => {
+                dropdown.classList.remove('show');
+            }, 300);
+        }
+    };
+
+    // Enhanced dropdown behavior
+    const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+    const brandsDropdown = document.getElementById('shopDropdown');
+
+    if (shopCategoriesBtn && brandsDropdown) {
+        shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+        shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+        brandsDropdown.addEventListener('mouseenter', function() {
+            clearTimeout(dropdownTimeout);
+        });
+        brandsDropdown.addEventListener('mouseleave', hideDropdown);
+    }
+
+    const userAvatar = document.querySelector('.user-avatar');
+    const userDropdown = document.getElementById('userDropdownMenu');
+
+    if (userAvatar && userDropdown) {
+        userAvatar.addEventListener('mouseenter', showUserDropdown);
+        userAvatar.addEventListener('mouseleave', hideUserDropdown);
+        userDropdown.addEventListener('mouseenter', function() {
+            clearTimeout(userDropdownTimeout);
+        });
+        userDropdown.addEventListener('mouseleave', hideUserDropdown);
+    }
+});
 </script>

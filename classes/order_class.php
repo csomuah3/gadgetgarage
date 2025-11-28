@@ -307,48 +307,63 @@ class Order extends db_connection
 
     public function get_order_tracking_details($search_value)
     {
-        $search_value = mysqli_real_escape_string($this->db, $search_value);
+        try {
+            $search_value = mysqli_real_escape_string($this->db, $search_value);
 
-        // First, try to find the order by order_id or tracking_number
-        $order_sql = "SELECT o.*,
-                             COALESCE(p.amt, 0) as total_amount,
-                             COUNT(od.product_id) as item_count
-                      FROM orders o
-                      LEFT JOIN payment p ON o.order_id = p.order_id
-                      LEFT JOIN orderdetails od ON o.order_id = od.order_id
-                      WHERE (o.order_id = '$search_value'
-                         OR o.tracking_number = '$search_value'
-                         OR o.invoice_no = '$search_value')
-                      GROUP BY o.order_id
-                      LIMIT 1";
+            error_log("Searching for order with value: " . $search_value);
 
-        // Execute the query and check for errors
-        if (!$this->db_query($order_sql)) {
-            error_log("Order tracking query failed: " . mysqli_error($this->db));
-            return null;
+            // First, try to find the order by order_id or tracking_number
+            $order_sql = "SELECT o.*,
+                                 COALESCE(p.amt, 0) as total_amount,
+                                 COUNT(od.product_id) as item_count
+                          FROM orders o
+                          LEFT JOIN payment p ON o.order_id = p.order_id
+                          LEFT JOIN orderdetails od ON o.order_id = od.order_id
+                          WHERE (o.order_id = '$search_value'
+                             OR o.tracking_number = '$search_value'
+                             OR o.invoice_no = '$search_value')
+                          GROUP BY o.order_id
+                          LIMIT 1";
+
+            error_log("Executing query: " . $order_sql);
+
+            // Execute the query and check for errors
+            if (!$this->db_query($order_sql)) {
+                $error = mysqli_error($this->db);
+                error_log("Order tracking query failed: " . $error);
+                throw new Exception("Database query failed: " . $error);
+            }
+
+            $order = mysqli_fetch_assoc($this->results);
+
+            if (!$order) {
+                error_log("No order found for search value: $search_value");
+                return null;
+            }
+
+            error_log("Order found: " . $order['order_id']);
+
+            // Get tracking history (optional - create empty array if table doesn't exist)
+            $tracking = [];
+            $tracking_sql = "SELECT * FROM order_tracking
+                             WHERE order_id = '{$order['order_id']}'
+                             ORDER BY status_date ASC";
+
+            if ($this->db_query($tracking_sql)) {
+                $tracking = $this->db_fetch_all($tracking_sql);
+                error_log("Found " . count($tracking) . " tracking entries");
+            } else {
+                error_log("No tracking table or tracking entries found");
+            }
+
+            return [
+                'order' => $order,
+                'tracking' => $tracking ?: []
+            ];
+        } catch (Exception $e) {
+            error_log("Exception in get_order_tracking_details: " . $e->getMessage());
+            throw $e;
         }
-
-        $order = mysqli_fetch_assoc($this->results);
-
-        if (!$order) {
-            error_log("No order found for search value: $search_value");
-            return null;
-        }
-
-        // Get tracking history (optional - create empty array if table doesn't exist)
-        $tracking = [];
-        $tracking_sql = "SELECT * FROM order_tracking
-                         WHERE order_id = '{$order['order_id']}'
-                         ORDER BY status_date ASC";
-
-        if ($this->db_query($tracking_sql)) {
-            $tracking = $this->db_fetch_all($tracking_sql);
-        }
-
-        return [
-            'order' => $order,
-            'tracking' => $tracking ?: []
-        ];
     }
 
     public function update_order_tracking($order_id, $status, $notes = null, $location = null, $updated_by = null)
@@ -457,7 +472,6 @@ class Order extends db_connection
             mysqli_autocommit($this->db, true);
 
             return true;
-
         } catch (Exception $e) {
             if ($this->db) {
                 mysqli_rollback($this->db);
@@ -468,4 +482,3 @@ class Order extends db_connection
         }
     }
 }
-?>

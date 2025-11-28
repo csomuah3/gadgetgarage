@@ -10,16 +10,26 @@ $error_message = '';
 if ($_GET['order'] ?? '') {
     $search_value = trim($_GET['order']);
 
+    error_log("Track order request for: " . $search_value);
+
     try {
         // Try to get order by order ID or tracking number
         $tracking_result = get_order_tracking_details($search_value);
 
-        if (!$tracking_result) {
+        error_log("Tracking result: " . print_r($tracking_result, true));
+
+        if (!$tracking_result || empty($tracking_result)) {
             $error_message = 'Order not found. Please check your order number or tracking number.';
+            error_log("No tracking result found for: " . $search_value);
         }
     } catch (Exception $e) {
         $error_message = 'Error retrieving order details. Please try again later.';
         error_log('Order tracking error: ' . $e->getMessage());
+        error_log('Stack trace: ' . $e->getTraceAsString());
+    } catch (Error $e) {
+        $error_message = 'System error. Please contact support.';
+        error_log('Fatal error in order tracking: ' . $e->getMessage());
+        error_log('Stack trace: ' . $e->getTraceAsString());
     }
 }
 

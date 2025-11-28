@@ -47,7 +47,7 @@
 /* Horizontal Gallery Container */
 .horizontal-gallery-wrapper {
     width: 100%;
-    height: 340px;
+    height: 450px;
     position: relative;
     overflow: hidden;
 }
@@ -199,7 +199,7 @@
     }
 
     .horizontal-gallery-wrapper {
-        height: 280px;
+        height: 400px;
     }
 
     .testimonial-text {
@@ -210,7 +210,7 @@
 @media (max-width: 768px) {
     .testimonials-section {
         padding: 40px 0;
-        min-height: 350px;
+        min-height: 400px;
     }
 
     .testimonials-section h2 {
@@ -225,7 +225,7 @@
     }
 
     .horizontal-gallery-wrapper {
-        height: 250px;
+        height: 360px;
     }
 
     .gallery-testimonial-card .card-inner {
@@ -250,7 +250,7 @@
 
 @media (max-width: 480px) {
     .horizontal-gallery-wrapper {
-        height: 220px;
+        height: 340px;
     }
 
     .testimonials-section h2 {

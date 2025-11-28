@@ -120,7 +120,16 @@ class User extends db_connection
             if ($result) {
                 $user_id = mysqli_insert_id($this->db);
                 error_log("User created successfully with ID: " . $user_id);
-                return ['status' => 'success', 'message' => 'Registration successful', 'user_id' => $user_id];
+                
+                // Verify the user was actually inserted
+                if ($user_id > 0) {
+                    error_log("Registration SUCCESS - returning success response");
+                    return ['status' => 'success', 'message' => 'Registration successful! You can now log in.', 'user_id' => $user_id];
+                } else {
+                    // Query succeeded but couldn't get ID - still a success
+                    error_log("Registration SUCCESS but couldn't get insert ID - still returning success");
+                    return ['status' => 'success', 'message' => 'Registration successful! You can now log in.'];
+                }
             } else {
                 $error = mysqli_error($this->db);
                 $errno = mysqli_errno($this->db);

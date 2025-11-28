@@ -1,9 +1,12 @@
 <?php
+// Start output buffering to catch any stray output
+ob_start();
+
 session_start();
 header('Content-Type: application/json');
 
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0); // Don't display errors in JSON response
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../controllers/user_controller.php';
@@ -15,6 +18,7 @@ if ($isLogin) {
     // HANDLE LOGIN REQUEST
     try {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
             exit;
         }
@@ -23,10 +27,12 @@ if ($isLogin) {
         $password = $_POST['password'] ?? '';
 
         if (empty($email) || empty($password)) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Please fill in all fields']);
             exit;
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid email format']);
             exit;
         }
@@ -56,15 +62,20 @@ if ($isLogin) {
             unset($result['user_data']);
         }
 
+        ob_clean();
         echo json_encode($result);
+        exit;
     } catch (Throwable $e) {
         error_log("Login error: " . $e->getMessage());
+        ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Login failed. Please try again.']);
+        exit;
     }
 } else {
     // HANDLE REGISTRATION REQUEST (unchanged)
     try {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
             exit;
         }
@@ -78,33 +89,41 @@ if ($isLogin) {
         $role         = (int)($_POST['role'] ?? 1);
 
         if (empty($name) || empty($email) || empty($password) || empty($phone_number) || empty($country) || empty($city)) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Please fill in all fields']);
             exit;
         }
         if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid email format']);
             exit;
         }
         if (strlen($password) < 6) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Password must be at least 6 characters long']);
             exit;
         }
         if (!preg_match('/^[0-9+\-\s()]+$/', $phone_number)) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid phone number format']);
             exit;
         }
         if (!in_array($role, [1, 2], true)) {
+            ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid role selected']);
             exit;
         }
 
         $res = register_user_ctr($name, $email, $password, $phone_number, $country, $city, $role);
+        error_log("Register action - controller returned: " . json_encode($res));
 
         if (is_bool($res)) {
             $res = $res
                 ? ['status' => 'success', 'message' => 'Registered successfully']
                 : ['status' => 'error', 'message' => 'Failed to register'];
         }
+
+        error_log("Register action - final response before SMS: " . json_encode($res));
 
         // Send welcome SMS if registration was successful
         if ($res['status'] === 'success') {
@@ -154,9 +173,16 @@ if ($isLogin) {
             }
         }
 
+        error_log("Register action - FINAL RESPONSE TO CLIENT: " . json_encode($res));
+        
+        // Clean any buffered output and send JSON
+        ob_clean();
         echo json_encode($res);
+        exit; // Make sure nothing else is output
     } catch (Throwable $e) {
         error_log("Registration error: " . $e->getMessage());
+        ob_clean();
         echo json_encode(['status' => 'error', 'message' => 'Registration failed. Please try again.']);
+        exit;
     }
 }

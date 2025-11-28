@@ -47,10 +47,18 @@ try {
 
     // Check if this payment has already been processed
     $db = new db_connection();
-    $db->db_connect();
+    $conn = $db->db_conn();
+
+    if (!$conn) {
+        throw new Exception('Database connection failed while checking payment status');
+    }
 
     $check_query = "SELECT * FROM payments WHERE paystack_reference = ?";
-    $stmt = $db->prepare($check_query);
+    $stmt = $conn->prepare($check_query);
+    if (!$stmt) {
+        throw new Exception('Failed to prepare payment lookup statement');
+    }
+
     $stmt->bind_param("s", $reference);
     $stmt->execute();
     $result = $stmt->get_result();

@@ -114,56 +114,15 @@ function getOrderStatus($order_date) {
         }
 
         /* Promotional Banner Styles - EXACT COPY FROM CART */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            padding: 6px 15px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 400;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            max-width: 100%;
-        }
+        
 
-        .promo-banner-left,
-        .promo-banner2 .promo-banner-left,
-        .promo-banner2 .promo-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 0 0 auto;
-        }
+        
 
-        .promo-banner-center,
-        .promo-banner2 .promo-banner-center,
-        .promo-banner2 .promo-banner-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex: 1;
-        }
+        
 
-        .promo-banner i,
-        .promo-banner2 i {
-            font-size: 1rem;
-        }
+        
 
-        .promo-banner .promo-text,
-        .promo-banner2 .promo-text {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
+        
 
         .promo-timer {
             background: transparent;
@@ -190,15 +149,7 @@ function getOrderStatus($order_date) {
         }
 
         /* Header Styles */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 38px;
-            z-index: 1000;
-            padding: 20px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
+        
 
         .logo {
             font-size: 2.2rem;
@@ -540,14 +491,9 @@ function getOrderStatus($order_date) {
             color: #e2e8f0;
         }
 
-        body.dark-mode .promo-banner {
-            background: #0f1419 !important;
-        }
+        body.dark-mode 
 
-        body.dark-mode .main-header {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            border-bottom-color: #4a5568;
-        }
+        body.dark-mode 
 
         body.dark-mode .logo,
         body.dark-mode .tech-revival-text,
@@ -618,10 +564,7 @@ function getOrderStatus($order_date) {
             color: #60a5fa;
         }
 
-        body.dark-mode .main-nav {
-            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
-            border-bottom-color: #4a5568;
-        }
+        body.dark-mode 
 
         body.dark-mode .nav-item {
             color: #e2e8f0;
@@ -670,15 +613,7 @@ function getOrderStatus($order_date) {
         }
 
         /* Main Navigation */
-        .main-nav {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 12px 0;
-            position: sticky;
-            top: 85px;
-            z-index: 999;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+        
 
         .nav-menu {
             display: flex;
@@ -1743,150 +1678,7 @@ function getOrderStatus($order_date) {
     </header>
 
     <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="container-fluid px-0">
-            <div class="nav-menu">
-                <!-- Shop by Brands Button -->
-                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
-                    <button class="categories-button">
-                        <i class="fas fa-tags"></i>
-                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="brands-dropdown" id="shopDropdown">
-                        <h4>All Brands</h4>
-                        <ul>
-                            <?php if (!empty($brands)): ?>
-                                <?php foreach ($brands as $brand): ?>
-                                    <li><a href="all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li><a href="all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                                <li><a href="all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                                <li><a href="all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                                <li><a href="all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                                <li><a href="all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                                <li><a href="all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                                <li><a href="all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                                <li><a href="all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
-
-                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
-
-                <!-- Shop Dropdown -->
-                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
-                    <a href="#" class="nav-item">
-                        <span data-translate="shop">SHOP</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="mega-dropdown" id="shopCategoryDropdown">
-                        <div class="dropdown-content">
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="mobile_devices">Mobile Devices</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                    <li><a href="all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="computing">Computing</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                    <li><a href="all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="photography_video">Photography & Video</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                    <li><a href="all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column featured">
-                                <h4>Shop All</h4>
-                                <div class="featured-item">
-                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
-                                    <div class="featured-text">
-                                        <strong>New Arrivals</strong>
-                                        <p>Latest tech gadgets</p>
-                                        <a href="all_product.php" class="shop-now-btn">Shop </a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-                <a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
-
-                <!-- More Dropdown -->
-                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
-                    <a href="#" class="nav-item">
-                        <span data-translate="more">MORE</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="simple-dropdown" id="moreDropdown">
-                        <ul>
-                            <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Flash Deal positioned at far right -->
-                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
-            </div>
-        </div>
-    <!-- Account Layout with Sidebar -->
-    <div class="account-layout">
-        <!-- Account Sidebar Navigation -->
-        <aside class="account-sidebar">
-            <nav class="sidebar-nav">
-                <a href="account.php" class="nav-item">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-                <a href="my_orders.php" class="nav-item active">
-                    <i class="fas fa-box"></i>
-                    <span>My orders</span>
-                </a>
-                <a href="track_order.php" class="nav-item">
-                    <i class="fas fa-truck"></i>
-                    <span>Track Orders</span>
-                </a>
-                <a href="profile.php" class="nav-item">
-                    <i class="fas fa-edit"></i>
-                    <span>My Info</span>
-                </a>
-                <a href="notifications.php" class="nav-item">
-                    <i class="fas fa-bell"></i>
-                    <span>Notifications</span>
-                </a>
-                <a href="help.php" class="nav-item">
-                    <i class="fas fa-question-circle"></i>
-                    <span>Help Center</span>
-                </a>
-                <a href="../login/logout.php" class="nav-item sign-out-item">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Sign Out</span>
-                </a>
-            </nav>
+    
         </aside>
 
         <!-- Main Content -->
@@ -2210,50 +2002,50 @@ function getOrderStatus($order_date) {
 
     <script>
         // View Order Details Function
-        function viewOrderDetails(orderId) {
-            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-            modal.show();
-
-            // Fetch order details
-            fetch('../actions/get_order_details_action.php?id=' + orderId)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        displayOrderDetails(data.order);
-                    } else {
-                        document.getElementById('orderDetailsContent').innerHTML =
-                            '<div class="alert alert-danger">Failed to load order details: ' + data.message + '</div>';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('orderDetailsContent').innerHTML =
-                        '<div class="alert alert-danger">Failed to load order details. Please try again.</div>';
-                });
-        }
-
-        // View Order Details Function
         function viewOrderDetails(orderId, orderReference) {
+            console.log('Loading order details for order ID:', orderId);
+
             // Fetch order details
             fetch(`../actions/get_order_details.php?order_id=${orderId}`)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        showOrderDetailsModal(data.order, orderReference);
-                    } else {
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    console.log('Raw response:', text);
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('Parsed JSON:', data);
+
+                        if (data.success) {
+                            showOrderDetailsModal(data.order, orderReference);
+                        } else {
+                            console.error('API returned error:', data.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Failed to load order details'
+                            });
+                        }
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                        console.error('Response text:', text);
                         Swal.fire({
                             icon: 'error',
                             title: 'Error',
-                            text: 'Failed to load order details'
+                            text: 'Invalid response from server'
                         });
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
+                    console.error('Fetch error:', error);
                     Swal.fire({
                         icon: 'error',
                         title: 'Error',
-                        text: 'Failed to load order details'
+                        text: 'Failed to load order details: ' + error.message
                     });
                 });
         }
@@ -2480,13 +2272,155 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Request Refund Function (Placeholder for now)
+        // Request Refund Function
         function requestRefund(orderId, orderReference) {
+            const refundFormHTML = `
+                <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h6 style="margin: 0 0 5px 0; color: #6c757d; font-size: 12px; text-transform: uppercase;">Order Reference</h6>
+                        <strong style="font-size: 16px; color: #212529;">#${orderReference}</strong>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Email *</label>
+                        <input type="email" id="email" name="email" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Phone *</label>
+                        <input type="tel" id="phone" name="phone" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Refund Amount (Optional)</label>
+                        <input type="number" id="refundAmount" name="refundAmount" step="0.01" min="0"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"
+                               placeholder="Leave blank for full refund">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Reason for Refund *</label>
+                        <textarea id="reasonForRefund" name="reasonForRefund" required rows="4"
+                                  style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; resize: vertical;"
+                                  placeholder="Please provide details about why you are requesting a refund..."></textarea>
+                    </div>
+                </form>
+            `;
+
             Swal.fire({
-                title: 'Refund Request',
-                html: `Request a refund for order <strong>#${orderReference}</strong>?<br><br><small>Refund functionality will be available soon.</small>`,
-                icon: 'info',
-                confirmButtonText: 'OK'
+                title: 'Request Refund',
+                html: refundFormHTML,
+                width: '700px',
+                showCancelButton: true,
+                confirmButtonText: 'Submit Request',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#f59e0b',
+                cancelButtonColor: '#6c757d',
+                showCloseButton: true,
+                allowOutsideClick: false,
+                preConfirm: () => {
+                    const form = document.getElementById('refundForm');
+                    const formData = new FormData(form);
+
+                    // Validate required fields
+                    const firstName = formData.get('firstName').trim();
+                    const lastName = formData.get('lastName').trim();
+                    const email = formData.get('email').trim();
+                    const phone = formData.get('phone').trim();
+                    const reason = formData.get('reasonForRefund').trim();
+
+                    if (!firstName || !lastName || !email || !phone || !reason) {
+                        Swal.showValidationMessage('Please fill in all required fields');
+                        return false;
+                    }
+
+                    // Validate email format
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        Swal.showValidationMessage('Please enter a valid email address');
+                        return false;
+                    }
+
+                    return {
+                        orderId: orderId,
+                        orderReference: orderReference,
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phone: phone,
+                        refundAmount: formData.get('refundAmount') || null,
+                        reason: reason
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Submitting Request...',
+                        html: 'Please wait while we process your refund request.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Submit refund request
+                    fetch('../actions/submit_refund_action.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.value)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: 'Request Submitted!',
+                                html: `Your refund request for order <strong>#${orderReference}</strong> has been submitted successfully.<br><br>
+                                       <strong>Reference ID:</strong> ${data.refund_id}<br><br>
+                                       You will receive an email confirmation shortly. Our team will review your request within 2-3 business days.`,
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#10b981'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Request Failed',
+                                text: data.message || 'There was an error submitting your refund request. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#ef4444'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Network Error',
+                            text: 'Unable to submit your request. Please check your internet connection and try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+                }
             });
         }
 

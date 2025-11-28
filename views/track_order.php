@@ -67,60 +67,16 @@ try {
         }
 
         /* Promotional Banner Styles */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            padding: 6px 15px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 400;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            max-width: 100%;
-        }
+        
 
-        .promo-banner-left,
-        .promo-banner2 .promo-banner-left,
-        .promo-banner2 .promo-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-        }
+        
 
-        .promo-banner-center,
-        .promo-banner2 .promo-banner-center {
-            flex: 1;
-            text-align: center;
-            font-weight: 500;
-            font-size: 0.9rem;
-        }
+        
 
-        .promo-banner-right,
-        .promo-banner2 .promo-banner-right {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.9rem;
-        }
+        
 
         /* Main Header Styles */
-        .main-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 15px 0;
-            position: sticky;
-            top: 32px;
-            z-index: 1000;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-        }
+        
 
         .header-content {
             display: flex;
@@ -828,10 +784,7 @@ try {
         }
 
         @media (max-width: 576px) {
-            .promo-banner-left,
-            .promo-banner-right {
-                display: none;
-            }
+            
 
             .timeline-item {
                 padding-left: 50px;
@@ -854,56 +807,7 @@ try {
 
 <body>
     <?php include '../includes/header.php'; ?>
-    <header class="main-header">
-        <div class="header-content">
-            <a href="index.php" class="logo-container">
-                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage" class="logo">
-            </a>
-
-            <div class="search-container">
-                <div class="search-wrapper">
-                    <input type="text" class="search-input" placeholder="Search for products, brands, categories..." id="searchInput">
-                    <button type="button" class="search-btn" onclick="performSearch()">
-                        <i class="fas fa-search"></i>
-                    </button>
-                </div>
-            </div>
-
-            <div class="header-icons">
-                <?php if ($is_logged_in): ?>
-                    <a href="cart.php" class="icon-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <?php if ($cart_count > 0): ?>
-                            <span class="cart-count"><?= $cart_count ?></span>
-                        <?php endif; ?>
-                    </a>
-
-                    <div class="user-dropdown dropdown">
-                        <a href="#" class="icon-btn" data-bs-toggle="dropdown" aria-expanded="false">
-                            <i class="fas fa-user"></i>
-                        </a>
-                        <ul class="dropdown-menu dropdown-menu-end">
-                            <li><a class="dropdown-item" href="account.php"><i class="fas fa-user-circle me-2"></i>My Account</a></li>
-                            <li><a class="dropdown-item" href="my_orders.php"><i class="fas fa-box me-2"></i>My Orders</a></li>
-                            <li><a class="dropdown-item" href="track_order.php"><i class="fas fa-truck me-2"></i>Track Orders</a></li>
-                            <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="../login/logout.php"><i class="fas fa-sign-out-alt me-2"></i>Logout</a></li>
-                        </ul>
-                    </div>
-                <?php else: ?>
-                    <a href="../login/user_login.php" class="icon-btn">
-                        <i class="fas fa-sign-in-alt"></i>
-                    </a>
-                    <a href="cart.php" class="icon-btn">
-                        <i class="fas fa-shopping-cart"></i>
-                        <?php if ($cart_count > 0): ?>
-                            <span class="cart-count"><?= $cart_count ?></span>
-                        <?php endif; ?>
-                    </a>
-                <?php endif; ?>
-            </div>
-        </div>
-    </header>
+    
 
     <!-- Navigation Bar -->
     <nav class="navbar navbar-expand-lg navbar-custom">

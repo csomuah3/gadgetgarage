@@ -113,73 +113,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="includes/chatbot-styles.css" rel="stylesheet">
     <style>
         /* Promotional Banner Styles - promo-banner2 */
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            padding: 6px 15px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 400;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            max-width: 100%;
-        }
+        
 
-        .promo-banner2 .promo-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 0 0 auto;
-        }
+        
 
-        .promo-banner2 .promo-banner-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex: 1;
-        }
+        
 
-        .promo-banner2 i {
-            font-size: 1rem;
-        }
+        
 
-        .promo-banner2 .promo-text {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
+        
 
-        .promo-banner2 .promo-timer {
-            background: transparent;
-            padding: 0;
-            border-radius: 0;
-            font-size: 1.3rem;
-            font-weight: 500;
-            margin: 0;
-            border: none;
-        }
+        
 
-        .promo-banner2 .promo-shop-link {
-            color: white;
-            text-decoration: underline;
-            font-weight: 700;
-            cursor: pointer;
-            transition: opacity 0.3s ease;
-            font-size: 1.2rem;
-            flex: 0 0 auto;
-        }
+        
 
-        .promo-banner2 .promo-shop-link:hover {
-            opacity: 0.8;
-        }
+        
 
         /* Floating Bubbles Animation */
         .floating-bubbles {
@@ -879,14 +827,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <?php include '../includes/header.php'; ?>
-    <div class="promo-banner2">
-        <div class="promo-banner-left">
-            <i class="fas fa-bolt"></i>
-        </div>
-        <div class="promo-banner-center">
-            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
-            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
-        </div>
+    
+        
         <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
     </div>
 

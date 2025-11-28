@@ -112,54 +112,15 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         /* Promotional Banner Styles - Same as index */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            padding: 6px 15px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 400;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            max-width: 100%;
-        }
+        
 
-        .promo-banner-left,
-        .promo-banner2 .promo-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 0 0 auto;
-        }
+        
 
-        .promo-banner-center,
-        .promo-banner2 .promo-banner-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex: 1;
-        }
+        
 
-        .promo-banner i,
-        .promo-banner2 i {
-            font-size: 1rem;
-        }
+        
 
-        .promo-banner .promo-text,
-        .promo-banner2 .promo-text {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
+        
 
         .promo-timer {
             background: transparent;
@@ -186,15 +147,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         /* Header Styles - Same as index */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 38px;
-            z-index: 1000;
-            padding: 20px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
+        
 
         .logo {
             font-size: 2.2rem;
@@ -309,15 +262,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         }
 
         /* Main Navigation - Copied from index.php */
-        .main-nav {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 12px 0;
-            position: sticky;
-            top: 85px;
-            z-index: 999;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+        
 
         .nav-menu {
             display: flex;
@@ -1393,117 +1338,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
     </header>
 
     <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="container-fluid px-0">
-            <div class="nav-menu">
-                <!-- Shop by Brands Button -->
-                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
-                    <button class="categories-button">
-                        <i class="fas fa-tags"></i>
-                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="brands-dropdown" id="shopDropdown">
-                        <h4>All Brands</h4>
-                        <ul>
-                            <?php if (!empty($brands)): ?>
-                                <?php foreach ($brands as $brand): ?>
-                                    <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li><a href="all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                                <li><a href="all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                                <li><a href="all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                                <li><a href="all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                                <li><a href="all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                                <li><a href="all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                                <li><a href="all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                                <li><a href="all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
-
-                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
-
-                <!-- Shop Dropdown -->
-                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
-                    <a href="#" class="nav-item">
-                        <span data-translate="shop">SHOP</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="mega-dropdown" id="shopCategoryDropdown">
-                        <div class="dropdown-content">
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="mobile_devices">Mobile Devices</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                    <li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="computing.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="computing">Computing</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                    <li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="photography_video.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="photography_video">Photography & Video</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                    <li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column featured">
-                                <h4>Shop All</h4>
-                                <div class="featured-item">
-                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
-                                    <div class="featured-text">
-                                        <strong>New Arrivals</strong>
-                                        <p>Latest tech gadgets</p>
-                                        <a href="all_product.php" class="shop-now-btn">Shop</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-                <a href="device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
-
-                <!-- More Dropdown -->
-                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
-                    <a href="#" class="nav-item">
-                        <span data-translate="more">MORE</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="simple-dropdown" id="moreDropdown">
-                        <ul>
-                            <li><a href="contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Flash Deal positioned at far right -->
-                <a href="flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
-            </div>
-        </div>
-    </nav>
+    
 
     <div class="container mt-4">
         <h1 class="page-title">Search Results</h1>

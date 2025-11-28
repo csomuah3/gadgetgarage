@@ -52,16 +52,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         }
 
         /* Header Styles */
-        .main-header {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-            padding: 16px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
+        
 
         .logo {
             font-size: 1.8rem;

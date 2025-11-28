@@ -74,25 +74,9 @@ if ($_POST && isset($_POST['send_message'])) {
         }
 
         /* Promo Banner */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            text-align: center;
-            padding: 8px 0;
-            font-size: 14px;
-            font-weight: 500;
-            position: relative;
-            border-bottom: 1px solid #0066cc;
-        }
+        
 
-        .promo-banner .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+        
 
         .promo-text {
             display: flex;
@@ -117,13 +101,7 @@ if ($_POST && isset($_POST['send_message'])) {
         }
 
         /* Main Header */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        
 
         .header-container {
             padding: 12px 0;
@@ -312,11 +290,7 @@ if ($_POST && isset($_POST['send_message'])) {
         }
 
         /* Navigation */
-        .main-nav {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 0;
-        }
+        
 
         .nav-container {
             display: flex;

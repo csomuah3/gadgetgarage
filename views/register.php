@@ -148,25 +148,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Promo Banner */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            text-align: center;
-            padding: 8px 0;
-            font-size: 14px;
-            font-weight: 500;
-            position: relative;
-            border-bottom: 1px solid #0066cc;
-        }
+        
 
-        .promo-banner .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+        
 
         .promo-text {
             display: flex;
@@ -191,13 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Main Header */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        
 
         .header-container {
             padding: 12px 0;
@@ -386,11 +364,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         /* Navigation */
-        .main-nav {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 0;
-        }
+        
 
         .nav-container {
             display: flex;
@@ -980,190 +954,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <body>
     <?php include '../includes/header.php'; ?>
-    <header class="main-header">
-        <div class="container header-container">
-            <div class="header-top">
-                <!-- Logo -->
-                <a href="../index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
-                </a>
-
-                <!-- Search Bar -->
-                <div class="search-container">
-                    <form class="search-form" action="../product_search_result.php" method="GET">
-                        <input type="text" name="search" class="search-input" placeholder="Search for gadgets, phones, laptops..." required>
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-                </div>
-
-                <!-- Tech Revival -->
-                <a href="../repair_services.php" class="tech-revival">
-                    <i class="fas fa-tools"></i>
-                    Tech Revival
-                </a>
-
-                <!-- User Actions -->
-                <div class="user-actions">
-                    <?php if ($is_logged_in): ?>
-                        <!-- Wishlist -->
-                        <a href="../views/wishlist.php" class="action-item">
-                            <i class="fas fa-heart"></i>
-                            <span>Wishlist</span>
-                            <?php if ($wishlist_count > 0): ?>
-                                <span class="badge"><?php echo $wishlist_count; ?></span>
-                            <?php endif; ?>
-                        </a>
-
-                        <!-- Cart -->
-                        <a href="../views/cart.php" class="action-item">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>Cart</span>
-                            <?php if ($cart_count > 0): ?>
-                                <span class="badge"><?php echo $cart_count; ?></span>
-                            <?php endif; ?>
-                        </a>
-
-                        <!-- Account Dropdown -->
-                        <div class="dropdown">
-                            <a href="#" class="action-item">
-                                <i class="fas fa-user"></i>
-                                <span>Account</span>
-                            </a>
-                            <div class="dropdown-menu">
-                                <a href="../views/account.php" class="dropdown-item">My Profile</a>
-                                <a href="../views/my_orders.php" class="dropdown-item">My Orders</a>
-                                <a href="../views/notifications.php" class="dropdown-item">Notifications</a>
-                                <?php if ($is_admin): ?>
-                                    <a href="../admin/dashboard.php" class="dropdown-item">Admin Panel</a>
-                                <?php endif; ?>
-                                <hr style="margin: 5px 0; border: none; border-top: 1px solid #e5e7eb;">
-                                <a href="../login/logout.php" class="dropdown-item">Logout</a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <!-- Login/Register -->
-                        <a href="../login/login.php" class="action-item">
-                            <i class="fas fa-sign-in-alt"></i>
-                            <span>Login</span>
-                        </a>
-                        <a href="../views/register.php" class="action-item">
-                            <i class="fas fa-user-plus"></i>
-                            <span>Register</span>
-                        </a>
-                    <?php endif; ?>
-
-                    <!-- Dark Mode Toggle -->
-                    <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
-                        <i class="fas fa-moon"></i>
-                    </button>
-                </div>
-            </div>
-        </div>
-
-        <!-- Navigation -->
-        <nav class="main-nav">
-            <div class="container nav-container">
-                <ul class="nav-links">
-                    <!-- Shop Categories -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-th-large"></i>
-                            Shop Categories
-                        </a>
-                        <div class="mega-menu">
-                            <div class="mega-menu-grid">
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-mobile-alt"></i> Mobile Devices</h4>
-                                    <ul>
-                                        <li><a href="../views/mobile_devices.php?category=smartphones">Smartphones</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=tablets">Tablets</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=smartwatches">Smartwatches</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=accessories">Phone Accessories</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-laptop"></i> Computing</h4>
-                                    <ul>
-                                        <li><a href="../views/computing.php?category=laptops">Laptops</a></li>
-                                        <li><a href="../views/computing.php?category=desktops">Desktops</a></li>
-                                        <li><a href="../views/computing.php?category=components">Components</a></li>
-                                        <li><a href="../views/computing.php?category=peripherals">Peripherals</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-camera"></i> Photography</h4>
-                                    <ul>
-                                        <li><a href="../views/photography_video.php?category=cameras">Cameras</a></li>
-                                        <li><a href="../views/photography_video.php?category=lenses">Lenses</a></li>
-                                        <li><a href="../views/photography_video.php?category=tripods">Tripods</a></li>
-                                        <li><a href="../views/photography_video.php?category=accessories">Photo Accessories</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Brands -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-tags"></i>
-                            Brands
-                        </a>
-                        <div class="brands-dropdown">
-                            <div class="brands-grid">
-                                <a href="../views/all_product.php?brand=apple" class="brand-item">
-                                    <i class="fab fa-apple"></i> Apple
-                                </a>
-                                <a href="../views/all_product.php?brand=samsung" class="brand-item">
-                                    <i class="fas fa-mobile"></i> Samsung
-                                </a>
-                                <a href="../views/all_product.php?brand=sony" class="brand-item">
-                                    <i class="fas fa-tv"></i> Sony
-                                </a>
-                                <a href="../views/all_product.php?brand=canon" class="brand-item">
-                                    <i class="fas fa-camera"></i> Canon
-                                </a>
-                                <a href="../views/all_product.php?brand=hp" class="brand-item">
-                                    <i class="fas fa-laptop"></i> HP
-                                </a>
-                                <a href="../views/all_product.php?brand=dell" class="brand-item">
-                                    <i class="fas fa-desktop"></i> Dell
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Regular Navigation Links -->
-                    <li class="nav-item">
-                        <a href="../views/all_product.php" class="nav-link">
-                            <i class="fas fa-shopping-bag"></i>
-                            All Products
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/device_drop.php" class="nav-link">
-                            <i class="fas fa-recycle"></i>
-                            Device Drop
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/contact.php" class="nav-link">
-                            <i class="fas fa-envelope"></i>
-                            Contact
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Flash Deals -->
-                <a href="../views/flash_deals.php" class="flash-deals">
-                    <i class="fas fa-bolt"></i>
-                    Flash Deals
-                </a>
-            </div>
-        </nav>
-    </header>
+    
 
     <!-- Registration Form Section -->
     <section class="register-section">

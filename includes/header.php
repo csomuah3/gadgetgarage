@@ -21,12 +21,12 @@ if (!isset($cart_count)) {
 if (!isset($wishlist_count)) {
     $wishlist_count = 0;
     if (isset($_SESSION['user_id'])) {
-        try {
+    try {
             require_once(__DIR__ . '/../controllers/wishlist_controller.php');
             $customer_id = $_SESSION['user_id'];
             $wishlist_count = get_wishlist_count_ctr($customer_id) ?: 0;
             error_log("Wishlist count for customer $customer_id: $wishlist_count");
-        } catch (Exception $e) {
+    } catch (Exception $e) {
             error_log("Failed to load wishlist count: " . $e->getMessage());
         }
     }

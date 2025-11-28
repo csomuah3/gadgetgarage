@@ -1,5 +1,6 @@
 <?php
 session_start();
+require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../controllers/order_controller.php';
 require_once __DIR__ . '/../helpers/image_helper.php';
 

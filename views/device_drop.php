@@ -87,54 +87,15 @@ try {
         }
 
         /* Promotional Banner Styles - Same as index */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            padding: 6px 15px;
-            text-align: center;
-            font-size: 1rem;
-            font-weight: 400;
-            position: sticky;
-            top: 0;
-            z-index: 1001;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 15px;
-            max-width: 100%;
-        }
+        
 
-        .promo-banner-left,
-        .promo-banner2 .promo-banner-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex: 0 0 auto;
-        }
+        
 
-        .promo-banner-center,
-        .promo-banner2 .promo-banner-center {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            flex: 1;
-        }
+        
 
-        .promo-banner i,
-        .promo-banner2 i {
-            font-size: 1rem;
-        }
+        
 
-        .promo-banner .promo-text,
-        .promo-banner2 .promo-text {
-            font-size: 1rem;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
+        
 
         .promo-timer {
             background: transparent;
@@ -161,15 +122,7 @@ try {
         }
 
         /* Header Styles - Same as index */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 38px;
-            z-index: 1000;
-            padding: 20px 0;
-            border-bottom: 1px solid #e5e7eb;
-        }
+        
 
         .logo {
             font-size: 2.2rem;
@@ -284,15 +237,7 @@ try {
         }
 
         /* Main Navigation - Copied from index.php */
-        .main-nav {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 12px 0;
-            position: sticky;
-            top: 85px;
-            z-index: 999;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-        }
+        
 
         .nav-menu {
             display: flex;

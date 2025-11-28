@@ -187,25 +187,9 @@ try {
         }
 
         /* Promo Banner */
-        .promo-banner,
-        .promo-banner2 {
-            background: #001f3f !important;
-            color: white;
-            text-align: center;
-            padding: 8px 0;
-            font-size: 14px;
-            font-weight: 500;
-            position: relative;
-            border-bottom: 1px solid #0066cc;
-        }
+        
 
-        .promo-banner .container {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
+        
 
         .promo-text {
             display: flex;
@@ -264,13 +248,7 @@ try {
         }
 
         /* Main Header */
-        .main-header {
-            background: #ffffff;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            position: sticky;
-            top: 0;
-            z-index: 1000;
-        }
+        
 
         .header-container {
             padding: 12px 0;
@@ -459,11 +437,7 @@ try {
         }
 
         /* Navigation */
-        .main-nav {
-            background: #ffffff;
-            border-bottom: 1px solid #e5e7eb;
-            padding: 0;
-        }
+        
 
         .nav-container {
             display: flex;
@@ -1174,12 +1148,7 @@ try {
     <!-- Background Decorations -->
     <div class="bg-decoration bg-decoration-1"></div>
     <div class="bg-decoration bg-decoration-2"></div>
-    <div class="promo-banner2">
-        <div class="container">
-            <div class="promo-text">
-                <i class="fas fa-bolt"></i>
-                <span>LIMITED TIME OFFER</span>
-            </div>
+    
             <div class="countdown-timer" id="promoCountdown">
                 <span>Ends in:</span>
                 <div class="time-unit" id="hours">00</div>
@@ -1272,106 +1241,7 @@ try {
         </div>
 
         <!-- Navigation -->
-        <nav class="main-nav">
-            <div class="container nav-container">
-                <ul class="nav-links">
-                    <!-- Shop Categories -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-th-large"></i>
-                            Shop Categories
-                        </a>
-                        <div class="mega-menu">
-                            <div class="mega-menu-grid">
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-mobile-alt"></i> Mobile Devices</h4>
-                                    <ul>
-                                        <li><a href="../views/mobile_devices.php?category=smartphones">Smartphones</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=tablets">Tablets</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=smartwatches">Smartwatches</a></li>
-                                        <li><a href="../views/mobile_devices.php?category=accessories">Phone Accessories</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-laptop"></i> Computing</h4>
-                                    <ul>
-                                        <li><a href="../views/computing.php?category=laptops">Laptops</a></li>
-                                        <li><a href="../views/computing.php?category=desktops">Desktops</a></li>
-                                        <li><a href="../views/computing.php?category=components">Components</a></li>
-                                        <li><a href="../views/computing.php?category=peripherals">Peripherals</a></li>
-                                    </ul>
-                                </div>
-                                <div class="mega-menu-category">
-                                    <h4><i class="fas fa-camera"></i> Photography</h4>
-                                    <ul>
-                                        <li><a href="../views/photography_video.php?category=cameras">Cameras</a></li>
-                                        <li><a href="../views/photography_video.php?category=lenses">Lenses</a></li>
-                                        <li><a href="../views/photography_video.php?category=tripods">Tripods</a></li>
-                                        <li><a href="../views/photography_video.php?category=accessories">Photo Accessories</a></li>
-                                    </ul>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Brands -->
-                    <li class="nav-item">
-                        <a href="#" class="nav-link has-dropdown">
-                            <i class="fas fa-tags"></i>
-                            Brands
-                        </a>
-                        <div class="brands-dropdown">
-                            <div class="brands-grid">
-                                <a href="../views/all_product.php?brand=apple" class="brand-item">
-                                    <i class="fab fa-apple"></i> Apple
-                                </a>
-                                <a href="../views/all_product.php?brand=samsung" class="brand-item">
-                                    <i class="fas fa-mobile"></i> Samsung
-                                </a>
-                                <a href="../views/all_product.php?brand=sony" class="brand-item">
-                                    <i class="fas fa-tv"></i> Sony
-                                </a>
-                                <a href="../views/all_product.php?brand=canon" class="brand-item">
-                                    <i class="fas fa-camera"></i> Canon
-                                </a>
-                                <a href="../views/all_product.php?brand=hp" class="brand-item">
-                                    <i class="fas fa-laptop"></i> HP
-                                </a>
-                                <a href="../views/all_product.php?brand=dell" class="brand-item">
-                                    <i class="fas fa-desktop"></i> Dell
-                                </a>
-                            </div>
-                        </div>
-                    </li>
-
-                    <!-- Regular Navigation Links -->
-                    <li class="nav-item">
-                        <a href="../views/all_product.php" class="nav-link">
-                            <i class="fas fa-shopping-bag"></i>
-                            All Products
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/device_drop.php" class="nav-link">
-                            <i class="fas fa-recycle"></i>
-                            Device Drop
-                        </a>
-                    </li>
-                    <li class="nav-item">
-                        <a href="../views/contact.php" class="nav-link">
-                            <i class="fas fa-envelope"></i>
-                            Contact
-                        </a>
-                    </li>
-                </ul>
-
-                <!-- Flash Deals -->
-                <a href="../views/flash_deals.php" class="flash-deals">
-                    <i class="fas fa-bolt"></i>
-                    Flash Deals
-                </a>
-            </div>
-        </nav>
+        
     </header>
 
     <!-- Back to Issues Button -->

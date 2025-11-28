@@ -50,6 +50,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
 
@@ -1486,7 +1487,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 </head>
 
 <body>
-    <!-- Promotional Banner -->
+    <?php include '../includes/header.php'; ?>
     <div class="promo-banner2">
         <div class="promo-banner-left">
             <i class="fas fa-bolt"></i>
@@ -1715,9 +1716,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 				<a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
 		</div>
-	</nav>
-
-    <!-- Contact Hero Section -->
+	<!-- Contact Hero Section -->
     <section class="contact-hero">
         <div class="container">
             <h1 class="hero-title animate__animated animate__fadeInDown">Get In Touch</h1>

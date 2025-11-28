@@ -88,6 +88,9 @@ if ($isLogin) {
         $city         = trim($_POST['city'] ?? '');
         $role         = (int)($_POST['role'] ?? 1);
 
+        // Debug: Log the received role value
+        error_log("Register action - received role: " . $role . " (type: " . gettype($role) . ")");
+
         if (empty($name) || empty($email) || empty($password) || empty($phone_number) || empty($country) || empty($city)) {
             ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Please fill in all fields']);

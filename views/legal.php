@@ -32,6 +32,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="css/dark-mode.css" rel="stylesheet">
+    <link href="../includes/header.css" rel="stylesheet">
 
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -708,8 +709,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="main-header">
+    <?php include '../includes/header.php'; ?>
         <div class="container">
             <div class="row align-items-center">
                 <div class="col-lg-3">
@@ -751,8 +751,6 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                 </div>
             </div>
         </div>
-    </header>
-
     <!-- Legal Page Content -->
     <div class="legal-container">
         <!-- Header Section -->

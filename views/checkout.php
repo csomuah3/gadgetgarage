@@ -53,6 +53,7 @@ try {
 	<link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
 	<link href="../includes/chatbot-styles.css" rel="stylesheet">
 	<link href="../css/dark-mode.css" rel="stylesheet">
+	<link href="../includes/header.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<style>
 		/* Import Google Fonts */
@@ -1430,23 +1431,10 @@ try {
 </head>
 
 <body>
-	<!-- Promotional Banner -->
-	<div class="promo-banner2">
-		<div class="promo-banner-left">
-			<i class="fas fa-bolt"></i>
-		</div>
-		<div class="promo-banner-center">
-			<span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
-			<span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
-		</div>
-		<a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
-	</div>
-
+	<?php include '../includes/header.php'; ?>
+	
 	<!-- Floating Bubbles Background -->
 	<div class="floating-bubbles" id="floatingBubbles"></div>
-
-	<!-- Main Header -->
-	<header class="main-header animate__animated animate__fadeInDown">
 		<div class="container-fluid" style="padding: 0 40px;">
 			<div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
 				<!-- Logo - Far Left -->
@@ -1663,9 +1651,6 @@ try {
 				<!-- Flash Deal positioned at far right -->
 				<a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
 			</div>
-		</div>
-	</nav>
-
 	<!-- Page Title -->
 	<h1 class="page-title">Checkout</h1>
 

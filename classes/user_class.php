@@ -65,7 +65,7 @@ class User extends db_connection
     public function createUser($name, $email, $password, $phone_number, $country, $city, $role = 1)
     {
         try {
-            error_log("CreateUser called with: name=$name, email=$email, phone=$phone_number, country=$country, city=$city, role=$role");
+            error_log("CreateUser called with: name=$name, email=$email, phone=$phone_number, country=$country, city=$city, role=$role (type: " . gettype($role) . ")");
 
             // Check if database connection exists
             if (!$this->db) {

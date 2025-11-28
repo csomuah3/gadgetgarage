@@ -2259,8 +2259,12 @@
 						console.log('Response headers:', [...response.headers.entries()]);
 
 						const responseText = await response.text();
-						console.log('Raw response length:', responseText.length);
-						console.log('Raw response:', responseText);
+						console.log('========== RAW RESPONSE DEBUG ==========');
+						console.log('Response length:', responseText.length);
+						console.log('First 100 chars:', responseText.substring(0, 100));
+						console.log('Last 100 chars:', responseText.substring(responseText.length - 100));
+						console.log('Full response:', responseText);
+						console.log('========================================');
 
 						// Check if response is empty
 						if (!responseText || responseText.trim() === '') {
@@ -2273,12 +2277,24 @@
 							const jsonMatch = responseText.match(/\{[\s\S]*\}/);
 							if (jsonMatch) {
 								result = JSON.parse(jsonMatch[0]);
-								console.log('Parsed JSON result:', result);
+								console.log('✅ Successfully parsed JSON:', result);
+
+								// Check if there was extra output before/after JSON
+								const extraBefore = responseText.substring(0, responseText.indexOf(jsonMatch[0]));
+								const extraAfter = responseText.substring(responseText.indexOf(jsonMatch[0]) + jsonMatch[0].length);
+
+								if (extraBefore.trim()) {
+									console.warn('⚠️ Extra output BEFORE JSON:', extraBefore);
+								}
+								if (extraAfter.trim()) {
+									console.warn('⚠️ Extra output AFTER JSON:', extraAfter);
+								}
 							} else {
+								console.error('❌ No JSON found in response');
 								throw new Error('No JSON found in response');
 							}
 						} catch (parseError) {
-							console.error('JSON parse error:', parseError);
+							console.error('❌ JSON parse error:', parseError);
 							console.error('Response text that failed to parse:', responseText);
 							throw new Error('Server returned invalid response. Please try again.');
 						}

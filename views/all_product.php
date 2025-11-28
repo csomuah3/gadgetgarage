@@ -116,7 +116,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    <link href="../includes/header-styles.css" rel="stylesheet">
+    <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
     <style>
@@ -2621,32 +2621,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 </head>
 
 <body>
-    <!-- Promotional Banner -->
-    <div class="promo-banner2">
-        <div class="promo-banner-left">
-            <i class="fas fa-bolt"></i>
-        </div>
-        <div class="promo-banner-center">
-            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
-            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
-        </div>
-        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
-    </div>
-
+    <?php include '../includes/header.php'; ?>
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles"></div>
 
-    <!-- Main Header -->
-    <header class="main-header animate__animated animate__fadeInDown">
-        <div class="container-fluid" style="padding: 0 40px;">
-            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-                <!-- Logo - Far Left -->
-                <a href="../index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                        alt="Gadget Garage">
-                </a>
-
-                <!-- Center Content -->
                 <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
                     <!-- Search Bar -->
                     <form class="search-container" method="GET" action="../product_search_result.php">
@@ -2852,9 +2830,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 <!-- Flash Deal positioned at far right -->
                 <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
             </div>
-        </div>
-    </nav>
-
     <!-- Page Title -->
     <div class="container-fluid">
         <div class="text-center py-3">

@@ -1765,8 +1765,9 @@ try {
 					<div class="form-container">
 						<div class="form-header">
 							<h2 class="form-title" id="formTitle">Login</h2>
-							<p class="login-socials-text">Login with Socials</p>
 						</div>
+
+						<p style="text-align: center; color: var(--text-light); font-size: 1rem; margin-bottom: 20px;">Login with Socials</p>
 
 						<!-- Social Login Buttons -->
 						<div class="social-login">

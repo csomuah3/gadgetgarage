@@ -1961,7 +1961,7 @@
 											id="name"
 											name="name"
 											class="form-control with-icon"
-											placeholder="       Enter your full name"
+											placeholder="Enter your full name"
 											value=""
 											required>
 									</div>
@@ -1989,7 +1989,7 @@
 											id="phone_number"
 											name="phone_number"
 											class="form-control with-flag"
-											placeholder="          Phone number"
+											placeholder="Phone number"
 											value=""
 											required>
 									</div>
@@ -2019,7 +2019,7 @@
 											id="city"
 											name="city"
 											class="form-control with-icon"
-											placeholder="       Enter your city"
+											placeholder="Enter your city"
 											value=""
 											required>
 									</div>
@@ -2277,32 +2277,53 @@
 						});
 
 						console.log('Response status:', response.status);
-						console.log('Response headers:', response.headers);
+						console.log('Response headers:', [...response.headers.entries()]);
 
 						const responseText = await response.text();
+						console.log('Raw response length:', responseText.length);
 						console.log('Raw response:', responseText);
+
+						// Check if response is empty
+						if (!responseText || responseText.trim() === '') {
+							throw new Error('Server returned empty response');
+						}
 
 						let result;
 						try {
-							result = JSON.parse(responseText);
+							// Try to find JSON in the response (in case there's extra output)
+							const jsonMatch = responseText.match(/\{[\s\S]*\}/);
+							if (jsonMatch) {
+								result = JSON.parse(jsonMatch[0]);
+								console.log('Parsed JSON result:', result);
+							} else {
+								throw new Error('No JSON found in response');
+							}
 						} catch (parseError) {
 							console.error('JSON parse error:', parseError);
-							throw new Error('Invalid JSON response: ' + responseText);
+							console.error('Response text that failed to parse:', responseText);
+							throw new Error('Server returned invalid response. Please try again.');
 						}
 
-						if (result.status === 'success') {
+						// Check for successful registration
+						if (result && result.status === 'success') {
+							console.log('✅ Registration successful!');
+
 							// Show success message
 							const alertDiv = document.createElement('div');
 							alertDiv.className = 'alert alert-success animate__animated animate__fadeInUp';
-							alertDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + result.message;
+							alertDiv.innerHTML = '<i class="fas fa-check-circle me-2"></i>' + (result.message || 'Registration successful! Redirecting to login...');
 							signupForm.parentNode.insertBefore(alertDiv, signupForm);
+
+							// Clear form
+							signupForm.reset();
 
 							// Redirect to login after 2 seconds
 							setTimeout(() => {
 								window.location.href = 'login.php';
 							}, 2000);
 						} else {
-							// Show error message (only one)
+							// Show error message
+							console.error('❌ Registration failed:', result);
 							const alertDiv = document.createElement('div');
 							alertDiv.className = 'alert alert-danger';
 							alertDiv.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>' + (result.message || 'Registration failed. Please try again.');

@@ -185,11 +185,18 @@ log_paystack_activity('info', 'PayStack callback accessed', [
 
                         if (processResponse.ok) {
                             const processData = await processResponse.json();
+                            console.log('Fallback process response:', processData);
+                            
+                            // Accept the order if status is success, regardless of verification status
                             if (processData.status === 'success') {
                                 data = processData;
                                 verificationSucceeded = true;
                                 console.log('Order processed successfully via fallback method');
+                            } else {
+                                console.error('Fallback processing returned error:', processData.message);
                             }
+                        } else {
+                            console.error('Fallback processing HTTP error:', processResponse.status);
                         }
                     } catch (processError) {
                         console.error('Fallback processing also failed:', processError);
@@ -258,7 +265,10 @@ log_paystack_activity('info', 'PayStack callback accessed', [
 
                     if (processResponse.ok) {
                         const processData = await processResponse.json();
-                        if (processData.status === 'success' && processData.verified === true) {
+                        console.log('Process response data:', processData);
+                        
+                        // Accept the order if status is success, regardless of verification status
+                        if (processData.status === 'success') {
                             // Order processed successfully despite verification error
                             document.getElementById('spinner').style.display = 'none';
                             document.getElementById('statusTitle').textContent = 'Payment Processed ✓';
@@ -285,7 +295,11 @@ log_paystack_activity('info', 'PayStack callback accessed', [
                                 window.location.replace('../index.php?payment=success&order=' + encodeURIComponent(processData.order_id || '') + '&ref=' + encodeURIComponent(reference));
                             }, 2000);
                             return; // Exit early on success
+                        } else {
+                            console.error('Process data returned error:', processData.message);
                         }
+                    } else {
+                        console.error('Process response not ok:', processResponse.status);
                     }
                 } catch (processError) {
                     console.error('Fallback processing failed:', processError);

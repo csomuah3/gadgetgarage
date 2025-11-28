@@ -3110,40 +3110,103 @@ try {
 
         // Add manual test function - MUST be global (outside DOMContentLoaded)
         window.testMagnifier = function() {
+            console.log('🔍 TEST MAGNIFIER BUTTON CLICKED!');
+            
             const lens = document.getElementById('magnifyLens');
             const result = document.getElementById('magnifyResult');
+            const resultImage = document.getElementById('magnifyResultImage');
+            const mainImage = document.getElementById('mainProductImage');
+            const container = document.getElementById('magnifyContainer');
             const debugInfo = document.getElementById('debugInfo');
             
-            if (lens && result) {
-                console.log('🧪 MANUAL TEST: Showing magnifier');
-                lens.classList.add('active');
-                result.classList.add('active');
-                lens.style.left = '200px';
-                lens.style.top = '200px';
-                
-                if (debugInfo) {
-                    debugInfo.innerHTML = `
-                        ✅ Elements found!<br>
-                        Lens classes: ${lens.className}<br>
-                        Lens computed opacity: ${window.getComputedStyle(lens).opacity}<br>
-                        Result classes: ${result.className}<br>
-                        Result computed opacity: ${window.getComputedStyle(result).opacity}<br>
-                        <small style="color:#ffeb3b;">Magnifier should now be visible!</small>
-                    `;
-                }
-                
-                console.log('Lens classes:', lens.className);
-                console.log('Lens computed opacity:', window.getComputedStyle(lens).opacity);
-                console.log('Result classes:', result.className);
-                console.log('Result computed opacity:', window.getComputedStyle(result).opacity);
-            } else {
-                console.log('❌ TEST FAILED: Elements not found');
+            console.log('Elements check:', {
+                lens: !!lens,
+                result: !!result,
+                resultImage: !!resultImage,
+                mainImage: !!mainImage,
+                container: !!container
+            });
+            
+            if (!lens || !result) {
+                console.error('❌ TEST FAILED: Elements not found');
                 if (debugInfo) {
                     debugInfo.innerHTML = '❌ Elements NOT found!<br>Lens: ' + (lens ? 'OK' : 'MISSING') + '<br>Result: ' + (result ? 'OK' : 'MISSING');
                 }
+                alert('Magnifier elements not found! Check console for details.');
+                return;
             }
+            
+            // Get container dimensions for positioning
+            const containerRect = container ? container.getBoundingClientRect() : { width: 400, height: 400 };
+            const centerX = containerRect.width / 2;
+            const centerY = containerRect.height / 2;
+            
+            console.log('🧪 MANUAL TEST: Showing magnifier at center');
+            
+            // Position lens at center of container
+            lens.style.left = (centerX - 75) + 'px';
+            lens.style.top = (centerY - 75) + 'px';
+            lens.style.display = 'block';
+            lens.style.opacity = '1';
+            lens.style.visibility = 'visible';
+            lens.classList.add('active');
+            
+            // Show result window
+            result.style.display = 'block';
+            result.style.opacity = '1';
+            result.style.visibility = 'visible';
+            result.classList.add('active');
+            
+            // Set up magnified image if main image exists
+            if (mainImage && resultImage) {
+                const mainImgSrc = mainImage.src;
+                if (resultImage.src !== mainImgSrc) {
+                    resultImage.src = mainImgSrc;
+                }
+                
+                // Calculate zoom ratio
+                const resultWidth = result.offsetWidth || 350;
+                const resultHeight = result.offsetHeight || 350;
+                const lensWidth = lens.offsetWidth || 150;
+                const lensHeight = lens.offsetHeight || 150;
+                
+                const cx = resultWidth / lensWidth;
+                const cy = resultHeight / lensHeight;
+                
+                // Position the magnified image
+                const imgWidth = mainImage.width * cx;
+                const imgHeight = mainImage.height * cy;
+                
+                resultImage.style.width = imgWidth + 'px';
+                resultImage.style.height = imgHeight + 'px';
+                resultImage.style.left = ((centerX * cx) - resultWidth / 2) * -1 + 'px';
+                resultImage.style.top = ((centerY * cy) - resultHeight / 2) * -1 + 'px';
+            }
+            
+            // Update debug info
+            if (debugInfo) {
+                const lensStyle = window.getComputedStyle(lens);
+                const resultStyle = window.getComputedStyle(result);
+                debugInfo.innerHTML = `
+                    ✅ Elements found!<br>
+                    Lens position: ${lens.style.left}, ${lens.style.top}<br>
+                    Lens opacity: ${lensStyle.opacity}<br>
+                    Lens display: ${lensStyle.display}<br>
+                    Result opacity: ${resultStyle.opacity}<br>
+                    Result display: ${resultStyle.display}<br>
+                    <small style="color:#ffeb3b;">Magnifier should now be visible!</small>
+                `;
+            }
+            
+            console.log('✅ Magnifier activated!');
+            console.log('Lens position:', lens.style.left, lens.style.top);
+            console.log('Lens computed opacity:', window.getComputedStyle(lens).opacity);
+            console.log('Result computed opacity:', window.getComputedStyle(result).opacity);
         };
+        
+        // Make sure function is available immediately
         console.log('✨ Test function available: testMagnifier()');
+        console.log('Function type:', typeof window.testMagnifier);
 
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
@@ -3173,14 +3236,31 @@ try {
                 const lens = document.getElementById('magnifyLens');
                 const result = document.getElementById('magnifyResult');
                 const container = document.getElementById('magnifyContainer');
+                const testButton = document.querySelector('button[onclick="testMagnifier()"]');
                 
                 if (debugInfo) {
                     debugInfo.innerHTML = `
                         Container: ${container ? '✅' : '❌'}<br>
                         Lens: ${lens ? '✅' : '❌'}<br>
                         Result: ${result ? '✅' : '❌'}<br>
+                        Test Button: ${testButton ? '✅' : '❌'}<br>
                         <small>Hover image or click TEST button</small>
                     `;
+                }
+                
+                // Add backup event listener to test button
+                if (testButton) {
+                    testButton.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        console.log('Test button clicked via event listener');
+                        if (typeof window.testMagnifier === 'function') {
+                            window.testMagnifier();
+                        } else {
+                            alert('testMagnifier function not found!');
+                        }
+                    });
+                    console.log('✅ Test button event listener attached');
                 }
             }, 1000);
 

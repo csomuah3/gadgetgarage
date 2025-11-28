@@ -99,12 +99,30 @@ try {
     
     $ip_address = $_SERVER['REMOTE_ADDR'];
     
+    log_paystack_activity('info', 'Starting order creation', [
+        'reference' => $reference,
+        'customer_id' => $customer_id,
+        'ip_address' => $ip_address
+    ]);
+    
     // Process cart to order
     $order_result = process_cart_to_order_without_payment_ctr($customer_id, $ip_address);
     
-    if ($order_result) {
+    log_paystack_activity('info', 'Order creation result', [
+        'reference' => $reference,
+        'result' => $order_result ? 'SUCCESS' : 'FAILED',
+        'order_data' => $order_result
+    ]);
+    
+    if ($order_result && isset($order_result['order_id'])) {
         $order_id = $order_result['order_id'];
         $cart_total = $order_result['total_amount'];
+        
+        log_paystack_activity('info', 'Recording payment', [
+            'reference' => $reference,
+            'order_id' => $order_id,
+            'amount' => $cart_total
+        ]);
         
         // Record payment (even if verification failed, we still record it)
         $payment_id = record_payment_ctr(
@@ -116,6 +134,12 @@ try {
             $reference
         );
         
+        log_paystack_activity('info', 'Payment recording result', [
+            'reference' => $reference,
+            'payment_id' => $payment_id,
+            'success' => $payment_id ? true : false
+        ]);
+        
         if ($payment_id) {
             // Update order status
             update_order_status_ctr($order_id, 'completed');
@@ -125,6 +149,11 @@ try {
             
             // Empty cart
             empty_cart_ctr($customer_id, $ip_address);
+            
+            log_paystack_activity('success', 'Order fully processed', [
+                'reference' => $reference,
+                'order_id' => $order_id
+            ]);
             
             echo json_encode([
                 'status' => 'success',
@@ -139,10 +168,19 @@ try {
             ]);
             exit();
         } else {
+            log_paystack_activity('error', 'Failed to record payment', [
+                'reference' => $reference,
+                'order_id' => $order_id
+            ]);
             throw new Exception('Failed to record payment');
         }
     } else {
-        throw new Exception('Failed to create order');
+        log_paystack_activity('error', 'Failed to create order - process_cart_to_order returned false or invalid', [
+            'reference' => $reference,
+            'customer_id' => $customer_id,
+            'order_result' => $order_result
+        ]);
+        throw new Exception('Failed to create order - cart may be empty or order creation failed');
     }
 
 } catch (Exception $e) {

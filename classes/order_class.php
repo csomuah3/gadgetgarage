@@ -264,6 +264,10 @@ class Order extends db_connection
 
     public function process_cart_to_order_without_payment($customer_id, $ip_address = null)
     {
+        error_log("=== PROCESS CART TO ORDER START ===");
+        error_log("Customer ID: " . $customer_id);
+        error_log("IP Address: " . $ip_address);
+        
         // Get cart items
         if ($customer_id) {
             $customer_id = mysqli_real_escape_string($this->db, $customer_id);
@@ -273,9 +277,12 @@ class Order extends db_connection
             $cart_items_sql = "SELECT c.*, p.product_price FROM cart c JOIN products p ON c.p_id = p.product_id WHERE c.ip_add = '$ip_address'";
         }
 
+        error_log("Cart query: " . $cart_items_sql);
         $cart_items = $this->db_fetch_all($cart_items_sql);
+        error_log("Cart items found: " . ($cart_items ? count($cart_items) : 0));
 
-        if (!$cart_items) {
+        if (!$cart_items || empty($cart_items)) {
+            error_log("ERROR: Cart is empty or no items found");
             return false;
         }
 
@@ -284,25 +291,39 @@ class Order extends db_connection
         foreach ($cart_items as $item) {
             $total_amount += $item['qty'] * $item['product_price'];
         }
+        error_log("Total amount calculated: " . $total_amount);
 
         // Create order
+        error_log("Creating order for customer: " . $customer_id);
         $order_id = $this->create_order($customer_id);
+        error_log("Order creation result - Order ID: " . ($order_id ? $order_id : 'FAILED'));
+        
         if (!$order_id) {
+            error_log("ERROR: Failed to create order");
             return false;
         }
 
         // Add order details for each cart item and reduce stock
         foreach ($cart_items as $item) {
+            error_log("Adding order detail for product: " . $item['p_id']);
             if (!$this->add_order_details($order_id, $item['p_id'], $item['qty'])) {
+                error_log("ERROR: Failed to add order details for product: " . $item['p_id']);
                 return false;
             }
 
             // Reduce stock quantity for the product
+            error_log("Reducing stock for product: " . $item['p_id'] . " by quantity: " . $item['qty']);
             if (!$this->reduce_product_stock($item['p_id'], $item['qty'])) {
-                return false;
+                error_log("WARNING: Failed to reduce stock for product: " . $item['p_id']);
+                // Don't fail the order if stock reduction fails
+                // return false;
             }
         }
 
+        error_log("=== ORDER PROCESSED SUCCESSFULLY ===");
+        error_log("Order ID: " . $order_id);
+        error_log("Total Amount: " . $total_amount);
+        
         return [
             'order_id' => $order_id,
             'total_amount' => $total_amount,

@@ -1081,12 +1081,49 @@ function getOrderStatus($order_date) {
             font-size: 1.1rem;
         }
 
+        /* Orders Section Styles */
+        .orders-section {
+            margin-bottom: 40px;
+        }
+
+        .section-title {
+            color: #1a1a1a;
+            font-size: 1.8rem;
+            font-weight: 800;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
+        }
+
+        .orders-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .empty-section {
+            text-align: center;
+            padding: 60px 20px;
+            color: #64748b;
+            background: #f8fafc;
+            border-radius: 12px;
+            border: 2px dashed #cbd5e1;
+        }
+
+        .empty-section i {
+            font-size: 3rem;
+            color: #cbd5e1;
+            margin-bottom: 15px;
+        }
+
+        .empty-section p {
+            font-size: 1.1rem;
+            margin: 0;
+        }
+
         /* Order Cards */
         .order-card {
             background: #ffffff;
             border-radius: 15px;
             padding: 30px;
-            margin-bottom: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid #f1f5f9;
             transition: all 0.3s ease;
@@ -1108,8 +1145,20 @@ function getOrderStatus($order_date) {
             color: #f59e0b;
         }
 
+        .order-status.shipped {
+            color: #3b82f6;
+        }
+
         .order-status.out-for-delivery {
             color: #10b981;
+        }
+
+        .order-status.delivered {
+            color: #059669;
+            background: #d1fae5;
+            padding: 8px 16px;
+            border-radius: 8px;
+            font-size: 0.9rem;
         }
 
         .order-images {
@@ -1194,6 +1243,20 @@ function getOrderStatus($order_date) {
 
         .track-order-btn:hover {
             background: #2c5aa0;
+        }
+
+        .cancel-order-btn {
+            background: #ef4444;
+            color: white;
+        }
+
+        .cancel-order-btn:hover {
+            background: #dc2626;
+        }
+
+        .cancel-order-btn:disabled {
+            background: #9ca3af;
+            cursor: not-allowed;
         }
 
         .no-orders {
@@ -1843,7 +1906,6 @@ function getOrderStatus($order_date) {
                 <!-- Processing Orders Section -->
                 <div class="orders-section">
                     <h2 class="section-title">
-                        <i class="fas fa-hourglass-half"></i>
                         PROCESSING
                     </h2>
 
@@ -1866,9 +1928,27 @@ function getOrderStatus($order_date) {
                                         foreach ($display_items as $item):
                                         ?>
                                             <div class="order-image">
-                                                <img src="<?= get_image_url($item['product_image']) ?>"
-                                                     alt="<?= htmlspecialchars($item['product_title']) ?>"
-                                                     onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                                                <?php
+                                                // Direct server URL approach for images
+                                                $product_image = $item['product_image'] ?? '';
+                                                if (!empty($product_image) && $product_image !== 'null') {
+                                                    // Clean filename and use server URL
+                                                    $clean_image = str_replace(['uploads/', 'images/', '../', './'], '', $product_image);
+                                                    $image_url = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' . ltrim($clean_image, '/');
+                                                } else {
+                                                    // Use placeholder with product title
+                                                    $product_title = htmlspecialchars($item['product_title'] ?? 'Tech Product');
+                                                    $image_url = "data:image/svg+xml;base64," . base64_encode('
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                                                            <rect width="100%" height="100%" fill="#f3f4f6"/>
+                                                            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="8" fill="#6b7280" text-anchor="middle" dominant-baseline="middle">Tech Product</text>
+                                                        </svg>
+                                                    ');
+                                                }
+                                                ?>
+                                                <img src="<?= $image_url ?>"
+                                                     alt="<?= htmlspecialchars($item['product_title'] ?? 'Product') ?>"
+                                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
                                             </div>
                                         <?php endforeach; ?>
 
@@ -1909,7 +1989,6 @@ function getOrderStatus($order_date) {
                 <!-- Delivered Orders Section -->
                 <div class="orders-section">
                     <h2 class="section-title">
-                        <i class="fas fa-check-circle"></i>
                         DELIVERED
                     </h2>
 
@@ -1932,9 +2011,27 @@ function getOrderStatus($order_date) {
                                         foreach ($display_items as $item):
                                         ?>
                                             <div class="order-image">
-                                                <img src="<?= get_image_url($item['product_image']) ?>"
-                                                     alt="<?= htmlspecialchars($item['product_title']) ?>"
-                                                     onerror="this.src='http://169.239.251.102:442/~chelsea.somuah/uploads/no-image.jpg'">
+                                                <?php
+                                                // Direct server URL approach for images
+                                                $product_image = $item['product_image'] ?? '';
+                                                if (!empty($product_image) && $product_image !== 'null') {
+                                                    // Clean filename and use server URL
+                                                    $clean_image = str_replace(['uploads/', 'images/', '../', './'], '', $product_image);
+                                                    $image_url = 'http://169.239.251.102:442/~chelsea.somuah/uploads/' . ltrim($clean_image, '/');
+                                                } else {
+                                                    // Use placeholder with product title
+                                                    $product_title = htmlspecialchars($item['product_title'] ?? 'Tech Product');
+                                                    $image_url = "data:image/svg+xml;base64," . base64_encode('
+                                                        <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80">
+                                                            <rect width="100%" height="100%" fill="#f3f4f6"/>
+                                                            <text x="50%" y="50%" font-family="Arial, sans-serif" font-size="8" fill="#6b7280" text-anchor="middle" dominant-baseline="middle">Tech Product</text>
+                                                        </svg>
+                                                    ');
+                                                }
+                                                ?>
+                                                <img src="<?= $image_url ?>"
+                                                     alt="<?= htmlspecialchars($item['product_title'] ?? 'Product') ?>"
+                                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
                                             </div>
                                         <?php endforeach; ?>
 

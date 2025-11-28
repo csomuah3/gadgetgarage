@@ -1342,8 +1342,8 @@ try {
 		gap: 28px;
 		/* spacing between cards */
 		align-items: stretch;
-		min-height: 700px;
-		/* increased height for larger product images */
+		min-height: 620px;
+		/* increased height for better text arrangement */
 	}
 
 	/* ——— Hero Carousel Wrapper ——— */
@@ -1351,7 +1351,7 @@ try {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		min-height: 700px;
+		min-height: 620px;
 		border-radius: 14px;
 		overflow: hidden;
 		background: #f0f4f8;
@@ -1708,42 +1708,42 @@ try {
 		justify-content: center;
 		position: relative;
 		height: 100%;
-		min-height: 450px;
+		min-height: 350px;
 	}
 
 	.banner-media .product-image {
 		width: auto;
 		height: auto;
-		max-height: 650px;
-		min-height: 550px;
-		max-width: 100%;
+		max-height: 750px;
+		min-height: 650px;
+		max-width: 120%;
 		object-fit: contain;
-		transform: translateY(0) translateX(0);
+		transform: translateY(0) translateX(0) scale(1.4);
 		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 			transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 		filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 	}
 
-		/* Image animations - fade out for exiting */
-		.hero-slide.exiting .product-image {
-			opacity: 0;
-			transform: translateY(0) translateX(-30px) scale(0.95);
-			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-		}
+	/* Image animations - fade out for exiting */
+	.hero-slide.exiting .product-image {
+		opacity: 0;
+		transform: translateY(0) translateX(-30px) scale(1.3);
+		transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+	}
 
-		/* Image animations - initial state (hidden, off to the right) */
-		.hero-slide:not(.active):not(.exiting) .product-image {
-			opacity: 0;
-			transform: translateY(0) translateX(60px) scale(0.9);
-		}
+	/* Image animations - initial state (hidden, off to the right) */
+	.hero-slide:not(.active):not(.exiting) .product-image {
+		opacity: 0;
+		transform: translateY(0) translateX(60px) scale(1.2);
+	}
 
-		/* Image animations - active state (visible, animated entrance) */
-		.hero-slide.active .product-image {
-			opacity: 1;
-			transform: translateY(0) translateX(0) scale(1);
-			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
-				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
-		}
+	/* Image animations - active state (visible, animated entrance) */
+	.hero-slide.active .product-image {
+		opacity: 1;
+		transform: translateY(0) translateX(0) scale(1.4);
+		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
+			transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
+	}
 
 		/* Navigation Dots */
 		.hero-dots {
@@ -7385,22 +7385,20 @@ try {
 		function showSlideNumber(num) {
 			console.log('🎯 SWITCHING TO SLIDE:', num);
 
-			// Hide ALL slides
+			// Hide ALL slides first
 			slides.forEach((slide, index) => {
 				slide.classList.remove('active', 'exiting');
-				if (index !== num) {
-					slide.style.display = 'none';
-				}
+				slide.style.display = 'none';
 			});
 
-			// Hide ALL dots
+			// Remove active from all dots
 			dots.forEach(dot => dot.classList.remove('active'));
 
-			// Show current slide with proper display
-			slides[num].classList.add('active');
+			// Show current slide with proper display and active class
 			slides[num].style.display = 'grid';
+			slides[num].classList.add('active');
 
-			// Show current dot
+			// Activate current dot
 			if (dots[num]) {
 				dots[num].classList.add('active');
 			}
@@ -7409,11 +7407,14 @@ try {
 		}
 
 		function goToNextSlide() {
+			console.log('⏭️ Going to next slide...');
 			const previousSlide = currentSlide;
 			currentSlide = (currentSlide + 1) % slides.length;
 			
-			// Add exiting class to previous slide for smooth transition
-			slides[previousSlide].classList.add('exiting');
+			// Add exiting class to previous slide
+			if (slides[previousSlide]) {
+				slides[previousSlide].classList.add('exiting');
+			}
 			
 			showSlideNumber(currentSlide);
 		}
@@ -7424,20 +7425,25 @@ try {
 		// Clear any existing timer
 		if (slideTimer) {
 			clearInterval(slideTimer);
+			slideTimer = null;
 		}
 
-		// Start timer - change every 4 seconds (increased for better viewing)
-		slideTimer = setInterval(goToNextSlide, 4000);
+		// Start timer - change every 5 seconds
+		slideTimer = setInterval(goToNextSlide, 5000);
 
-		console.log('🚀 TIMER STARTED - CHANGES EVERY 4 SECONDS');
+		console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
+		console.log('First slide should be visible now!');
 
 		// Add click handlers for dots
 		dots.forEach((dot, index) => {
 			dot.addEventListener('click', () => {
-				if (slideTimer) clearInterval(slideTimer);
+				console.log('Dot clicked:', index);
+				if (slideTimer) {
+					clearInterval(slideTimer);
+				}
 				currentSlide = index;
 				showSlideNumber(currentSlide);
-				slideTimer = setInterval(goToNextSlide, 4000);
+				slideTimer = setInterval(goToNextSlide, 5000);
 			});
 		});
 	}

@@ -3,6 +3,7 @@ echo "<!-- PHP is working -->";
 try {
     require_once(__DIR__ . '/../settings/core.php');
     require_once(__DIR__ . '/../controllers/cart_controller.php');
+    require_once(__DIR__ . '/../controllers/recommendation_controller.php');
     require_once(__DIR__ . '/../helpers/image_helper.php');
 
     $is_logged_in = check_login();
@@ -70,9 +71,11 @@ try {
 
         body {
             font-family: "Times New Roman", Times, serif;
-            background-color: #ffffff;
-            color: #1a1a1a;
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            color: #1a202c;
             overflow-x: hidden;
+            font-size: 18px;
+            line-height: 1.6;
         }
 
         /* Promotional Banner Styles */
@@ -881,12 +884,13 @@ try {
         }
 
         .cart-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #4285F4 0%, #3b82f6 100%);
             color: white;
             padding: 4rem 0;
-            margin-bottom: 2rem;
+            margin-bottom: 3rem;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 10px 40px rgba(66, 133, 244, 0.2);
         }
 
         .cart-header::before {
@@ -901,33 +905,37 @@ try {
         }
 
         .cart-header h1 {
-            font-size: 3.5rem !important;
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 4rem !important;
             font-weight: 800 !important;
             text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
             margin-bottom: 1rem !important;
+            letter-spacing: 1px;
         }
 
         .cart-header p {
-            font-size: 1.4rem !important;
+            font-family: "Times New Roman", Times, serif !important;
+            font-size: 1.6rem !important;
             opacity: 0.9;
             font-weight: 500;
         }
 
         .cart-item {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
+            background: #ffffff;
+            border-radius: 16px;
+            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.12);
+            margin-bottom: 2.5rem;
             overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            padding: 1.5rem;
+            transition: all 0.3s ease;
+            border: 2px solid rgba(66, 133, 244, 0.1);
+            padding: 2rem;
+            font-family: "Times New Roman", Times, serif;
         }
 
         .cart-item:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-            border-color: rgba(99, 102, 241, 0.3);
+            transform: translateY(-5px);
+            box-shadow: 0 15px 40px rgba(66, 133, 244, 0.2);
+            border-color: rgba(66, 133, 244, 0.3);
         }
 
         .product-image {
@@ -944,22 +952,23 @@ try {
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #4285F4, #3b82f6);
             border: none;
-            border-radius: 50px;
-            padding: 15px 40px;
+            border-radius: 12px;
+            padding: 18px 45px;
             font-weight: 700;
-            font-size: 1.2rem;
+            font-size: 1.3rem;
+            font-family: "Times New Roman", Times, serif;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            letter-spacing: 1.5px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.3);
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            background: linear-gradient(135deg, #3367d6, #2563eb);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(66, 133, 244, 0.4);
         }
 
         .btn-outline-danger {
@@ -1028,29 +1037,32 @@ try {
         }
 
         .cart-summary {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 25px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            padding: 3rem;
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(66, 133, 244, 0.15);
+            padding: 3.5rem;
             position: sticky;
             top: 120px;
-            border: 2px solid rgba(102, 126, 234, 0.1);
+            border: 3px solid rgba(66, 133, 244, 0.1);
             transition: all 0.3s ease;
+            font-family: "Times New Roman", Times, serif;
         }
 
         .cart-summary:hover {
             transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
-            border-color: rgba(102, 126, 234, 0.2);
+            box-shadow: 0 20px 50px rgba(66, 133, 244, 0.2);
+            border-color: rgba(66, 133, 244, 0.3);
         }
 
         .cart-summary h3 {
-            font-size: 2.2rem !important;
+            font-size: 2.5rem !important;
             font-weight: 800 !important;
-            color: #2d3748 !important;
-            margin-bottom: 1.5rem !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #1a202c !important;
+            margin-bottom: 2rem !important;
             text-align: center;
             position: relative;
+            letter-spacing: 1px;
         }
 
         .cart-summary h3::after {
@@ -1155,18 +1167,21 @@ try {
 
         /* Enhanced Cart Item Content Styling */
         .cart-item h5 {
-            font-size: 1.6rem !important;
-            font-weight: 700 !important;
-            color: #2d3748 !important;
-            margin-bottom: 0.8rem !important;
+            font-size: 1.8rem !important;
+            font-weight: 800 !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #1a202c !important;
+            margin-bottom: 1rem !important;
             line-height: 1.4 !important;
+            letter-spacing: 0.5px !important;
         }
 
         .cart-item .product-price {
-            font-size: 1.5rem !important;
+            font-size: 1.7rem !important;
             font-weight: 800 !important;
-            color: #667eea !important;
-            margin-bottom: 0.5rem !important;
+            font-family: "Times New Roman", Times, serif !important;
+            color: #4285F4 !important;
+            margin-bottom: 0.8rem !important;
         }
 
         .cart-item .text-muted {
@@ -1645,6 +1660,117 @@ try {
                 font-size: 18px;
             }
         }
+
+        .frequently-bought-section {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-top: 40px;
+        }
+
+        .section-title {
+            color: #1f2937;
+            font-weight: 700;
+            font-size: 1.5rem;
+            border-bottom: 3px solid #008060;
+            padding-bottom: 10px;
+            display: inline-block;
+        }
+
+        .recommended-product-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .recommended-product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border-color: #008060;
+        }
+
+        .product-image-wrapper {
+            width: 100%;
+            height: 200px;
+            overflow: hidden;
+            background: #f9fafb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .product-image-wrapper img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+
+        .recommended-product-card:hover .product-image-wrapper img {
+            transform: scale(1.1);
+        }
+
+        .product-info {
+            padding: 15px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .product-title {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            line-height: 1.4;
+        }
+
+        .product-title a {
+            color: inherit;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+
+        .product-title a:hover {
+            color: #008060;
+        }
+
+        .product-brand {
+            font-size: 0.85rem;
+            color: #6b7280;
+        }
+
+        .product-price {
+            margin-top: auto;
+        }
+
+        .price-amount {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #008060;
+        }
+
+        .add-to-cart-btn {
+            background: linear-gradient(135deg, #008060, #006b4e);
+            border: none;
+            padding: 10px;
+            border-radius: 8px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .add-to-cart-btn:hover {
+            background: linear-gradient(135deg, #006b4e, #008060);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
+        }
     </style>
 </head>
 
@@ -1851,6 +1977,60 @@ try {
                     </div>
                 </div>
             </div>
+
+            <?php if (!empty($cart_items)): 
+                $cart_product_ids = array_column($cart_items, 'p_id');
+                $cart_product_ids = array_map(function($id) {
+                    return preg_replace('/_\w+$/', '', $id);
+                }, $cart_product_ids);
+                $cart_product_ids = array_unique(array_filter($cart_product_ids, 'is_numeric'));
+                $recommended_products = !empty($cart_product_ids) ? get_frequently_bought_together_ctr($cart_product_ids) : [];
+            ?>
+                <?php if (!empty($recommended_products)): ?>
+                    <div class="container mt-5">
+                        <div class="frequently-bought-section">
+                            <h3 class="section-title mb-4">
+                                <i class="fas fa-shopping-bag me-2"></i>
+                                Frequently Bought Together
+                            </h3>
+                            <div class="row g-4">
+                                <?php foreach ($recommended_products as $product): ?>
+                                    <div class="col-lg-3 col-md-4 col-sm-6">
+                                        <div class="recommended-product-card">
+                                            <div class="product-image-wrapper">
+                                                <a href="single_product.php?pid=<?php echo $product['product_id']; ?>">
+                                                    <img src="<?php echo get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product'); ?>" 
+                                                         alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                                         class="product-image"
+                                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGM0Y0RjYiLz48cGF0aCBkPSJNNjAgODBMMTQwIDE0MEg2MFY4MFoiIGZpbGw9IiNEMUQ1REIiLz48Y2lyY2xlIGN4PSI4OCIgY3k9Ijg4IiByPSIxMiIgZmlsbD0iI0QxRDVEQiIvPjwvc3ZnPg=='; this.onerror=null;">
+                                                </a>
+                                            </div>
+                                            <div class="product-info">
+                                                <h5 class="product-title">
+                                                    <a href="single_product.php?pid=<?php echo $product['product_id']; ?>">
+                                                        <?php echo htmlspecialchars($product['product_title']); ?>
+                                                    </a>
+                                                </h5>
+                                                <?php if (!empty($product['brand_name'])): ?>
+                                                    <p class="product-brand text-muted small mb-2"><?php echo htmlspecialchars($product['brand_name']); ?></p>
+                                                <?php endif; ?>
+                                                <div class="product-price mb-3">
+                                                    <span class="price-amount">GH₵ <?php echo number_format($product['product_price'], 2); ?></span>
+                                                </div>
+                                                <button class="btn btn-primary w-100 add-to-cart-btn" 
+                                                        onclick="addRecommendedToCart(<?php echo $product['product_id']; ?>)">
+                                                    <i class="fas fa-cart-plus me-2"></i>
+                                                    Add to Cart
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+            <?php endif; ?>
         <?php endif; ?>
     </div>
 
@@ -1970,6 +2150,49 @@ try {
             // Checkout function
             window.proceedToCheckout = function() {
                 window.location.href = 'checkout.php';
+            };
+
+            window.addRecommendedToCart = function(productId) {
+                fetch('../actions/add_to_cart_action.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId + '&quantity=1'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Added to Cart!',
+                            text: data.message || 'Product added successfully',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        if (data.cart_count !== undefined) {
+                            const badge = document.getElementById('cartBadge');
+                            if (badge) {
+                                badge.textContent = data.cart_count;
+                                badge.style.display = data.cart_count > 0 ? 'flex' : 'none';
+                            }
+                        }
+                        setTimeout(() => location.reload(), 2000);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message || 'Failed to add product to cart'
+                        });
+                    }
+                })
+                .catch(error => {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Something went wrong. Please try again.'
+                    });
+                });
             };
 
             // Dropdown navigation functions with timeout delays

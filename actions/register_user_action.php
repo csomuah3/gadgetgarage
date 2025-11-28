@@ -3,11 +3,17 @@
 ob_start();
 
 session_start();
-header('Content-Type: application/json');
 
-ini_set('display_errors', 0); // Don't display errors in JSON response
+// Set JSON headers early and prevent caching
+header('Content-Type: application/json');
+header('Cache-Control: no-cache, must-revalidate');
+header('Pragma: no-cache');
+
+// Completely suppress error display for clean JSON response
+ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
-error_reporting(E_ALL);
+ini_set('log_errors', 1);
+error_reporting(0); // Suppress all errors from being displayed
 
 require_once __DIR__ . '/../controllers/user_controller.php';
 
@@ -17,7 +23,7 @@ $isLogin = !isset($_POST['name']) || empty($_POST['name']);
 if ($isLogin) {
     // HANDLE LOGIN REQUEST
     try {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
             exit;
@@ -62,19 +68,28 @@ if ($isLogin) {
             unset($result['user_data']);
         }
 
-        ob_clean();
+        // Ensure clean output
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
         echo json_encode($result);
         exit;
     } catch (Throwable $e) {
         error_log("Login error: " . $e->getMessage());
-        ob_clean();
+
+        // Ensure clean output
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
         echo json_encode(['status' => 'error', 'message' => 'Login failed. Please try again.']);
         exit;
     }
 } else {
     // HANDLE REGISTRATION REQUEST (unchanged)
     try {
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        if (!isset($_SERVER['REQUEST_METHOD']) || $_SERVER['REQUEST_METHOD'] !== 'POST') {
             ob_clean();
             echo json_encode(['status' => 'error', 'message' => 'Invalid request method']);
             exit;
@@ -141,7 +156,8 @@ if ($isLogin) {
             try {
                 require_once __DIR__ . '/../settings/sms_config.php';
 
-                if (defined('SMS_ENABLED') && SMS_ENABLED) {
+                // Temporarily disable SMS for registration to avoid errors during Brevo transition
+                if (defined('SMS_ENABLED') && SMS_ENABLED && false) {
                     require_once __DIR__ . '/../helpers/sms_helper.php';
 
                     // Get the customer ID from the registration result
@@ -185,14 +201,23 @@ if ($isLogin) {
         }
 
         error_log("Register action - FINAL RESPONSE TO CLIENT: " . json_encode($res));
-        
-        // Clean any buffered output and send JSON
-        ob_clean();
+
+        // Ensure clean output
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
+        // Send clean JSON response
         echo json_encode($res);
         exit; // Make sure nothing else is output
     } catch (Throwable $e) {
         error_log("Registration error: " . $e->getMessage());
-        ob_clean();
+
+        // Ensure clean output
+        while (ob_get_level()) {
+            ob_end_clean();
+        }
+
         echo json_encode(['status' => 'error', 'message' => 'Registration failed. Please try again.']);
         exit;
     }

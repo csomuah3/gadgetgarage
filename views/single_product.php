@@ -3108,6 +3108,43 @@ try {
         // Initialize condition selection for the new design (duplicate removal)
         // This function is now handled above
 
+        // Add manual test function - MUST be global (outside DOMContentLoaded)
+        window.testMagnifier = function() {
+            const lens = document.getElementById('magnifyLens');
+            const result = document.getElementById('magnifyResult');
+            const debugInfo = document.getElementById('debugInfo');
+            
+            if (lens && result) {
+                console.log('🧪 MANUAL TEST: Showing magnifier');
+                lens.classList.add('active');
+                result.classList.add('active');
+                lens.style.left = '200px';
+                lens.style.top = '200px';
+                
+                if (debugInfo) {
+                    debugInfo.innerHTML = `
+                        ✅ Elements found!<br>
+                        Lens classes: ${lens.className}<br>
+                        Lens computed opacity: ${window.getComputedStyle(lens).opacity}<br>
+                        Result classes: ${result.className}<br>
+                        Result computed opacity: ${window.getComputedStyle(result).opacity}<br>
+                        <small style="color:#ffeb3b;">Magnifier should now be visible!</small>
+                    `;
+                }
+                
+                console.log('Lens classes:', lens.className);
+                console.log('Lens computed opacity:', window.getComputedStyle(lens).opacity);
+                console.log('Result classes:', result.className);
+                console.log('Result computed opacity:', window.getComputedStyle(result).opacity);
+            } else {
+                console.log('❌ TEST FAILED: Elements not found');
+                if (debugInfo) {
+                    debugInfo.innerHTML = '❌ Elements NOT found!<br>Lens: ' + (lens ? 'OK' : 'MISSING') + '<br>Result: ' + (result ? 'OK' : 'MISSING');
+                }
+            }
+        };
+        console.log('✨ Test function available: testMagnifier()');
+
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded - Starting initialization');
@@ -3129,43 +3166,6 @@ try {
             
             // Load product image
             loadProductImage();
-            
-            // Add manual test function
-            window.testMagnifier = function() {
-                const lens = document.getElementById('magnifyLens');
-                const result = document.getElementById('magnifyResult');
-                const debugInfo = document.getElementById('debugInfo');
-                
-                if (lens && result) {
-                    console.log('🧪 MANUAL TEST: Showing magnifier');
-                    lens.classList.add('active');
-                    result.classList.add('active');
-                    lens.style.left = '200px';
-                    lens.style.top = '200px';
-                    
-                    if (debugInfo) {
-                        debugInfo.innerHTML = `
-                            ✅ Elements found!<br>
-                            Lens classes: ${lens.className}<br>
-                            Lens computed opacity: ${window.getComputedStyle(lens).opacity}<br>
-                            Result classes: ${result.className}<br>
-                            Result computed opacity: ${window.getComputedStyle(result).opacity}<br>
-                            <small style="color:#ffeb3b;">Magnifier should now be visible!</small>
-                        `;
-                    }
-                    
-                    console.log('Lens classes:', lens.className);
-                    console.log('Lens computed opacity:', window.getComputedStyle(lens).opacity);
-                    console.log('Result classes:', result.className);
-                    console.log('Result computed opacity:', window.getComputedStyle(result).opacity);
-                } else {
-                    console.log('❌ TEST FAILED: Elements not found');
-                    if (debugInfo) {
-                        debugInfo.innerHTML = '❌ Elements NOT found!<br>Lens: ' + (lens ? 'OK' : 'MISSING') + '<br>Result: ' + (result ? 'OK' : 'MISSING');
-                    }
-                }
-            };
-            console.log('✨ Test function available: testMagnifier()');
             
             // Update debug info on page load
             setTimeout(() => {
@@ -3326,15 +3326,16 @@ try {
             }
         }
 
-        function showMoreDropdown() {
+        // Make More dropdown functions globally available for inline handlers
+        window.showMoreDropdown = function() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideMoreDropdown() {
+        window.hideMoreDropdown = function() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
@@ -3342,7 +3343,7 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
         function showUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
@@ -3486,26 +3487,7 @@ try {
             }
         }
 
-        // More Dropdown Functions
-        function showMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                moreDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        // Timeout variables
+        // Timeout variables (duplicate removed - already defined above)
         let shopDropdownTimeout;
         let moreDropdownTimeout;
 

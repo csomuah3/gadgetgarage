@@ -17,6 +17,21 @@ if (!isset($cart_count)) {
     }
 }
 
+// Get wishlist count if not already set
+if (!isset($wishlist_count)) {
+    $wishlist_count = 0;
+    if (isset($_SESSION['user_id'])) {
+        try {
+            require_once(__DIR__ . '/../controllers/wishlist_controller.php');
+            $customer_id = $_SESSION['user_id'];
+            $wishlist_count = get_wishlist_count_ctr($customer_id) ?: 0;
+            error_log("Wishlist count for customer $customer_id: $wishlist_count");
+        } catch (Exception $e) {
+            error_log("Failed to load wishlist count: " . $e->getMessage());
+        }
+    }
+}
+
 // Get categories for navigation
 if (!isset($categories)) {
     $categories = [];
@@ -94,7 +109,9 @@ $is_logged_in = isset($_SESSION['user_id']);
                     <div class="header-icon">
                         <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
                             <i class="fas fa-heart"></i>
-                            <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
+                            <span class="wishlist-badge" id="wishlistBadge" style="display: <?php echo ($wishlist_count > 0) ? 'flex' : 'none'; ?>;">
+                                <?php echo $wishlist_count; ?>
+                            </span>
                         </a>
                     </div>
 
@@ -417,3 +434,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<!-- Wishlist Badge Update Script -->
+<script src="../js/wishlist.js"></script>

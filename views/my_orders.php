@@ -1102,6 +1102,8 @@ function getOrderStatus($order_date) {
         .orders-grid {
             display: grid;
             gap: 20px;
+            max-width: 1000px;
+            margin: 0 auto;
         }
 
         .empty-section {
@@ -1128,10 +1130,11 @@ function getOrderStatus($order_date) {
         .order-card {
             background: #ffffff;
             border-radius: 15px;
-            padding: 30px;
+            padding: 25px;
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
             border: 1px solid #f1f5f9;
             transition: all 0.3s ease;
+            max-width: 100%;
         }
 
         .order-card:hover {

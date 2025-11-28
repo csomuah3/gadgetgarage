@@ -1821,13 +1821,16 @@ try {
                                             </div>
                                             <div class="col-md-3 text-center">
                                                 <div class="quantity-control">
-                                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(<?php echo $item['p_id']; ?>)">
+                                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
-                                                        min="1" max="99" data-product-id="<?php echo $item['p_id']; ?>"
-                                                        onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value)">
-                                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>)">
+                                                        min="1" max="99" 
+                                                        data-product-id="<?php echo $item['p_id']; ?>"
+                                                        data-cart-item-id="<?php echo $cart_item_id; ?>"
+                                                        id="qty-<?php echo $cart_item_id; ?>"
+                                                        onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value, '<?php echo $cart_item_id; ?>')">
+                                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>

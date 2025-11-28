@@ -1970,6 +1970,14 @@ try {
                 <div class="col-lg-6">
                     <!-- Product Image Gallery -->
                     <div class="product-gallery">
+                        <!-- TEST BUTTON & DEBUG INFO - REMOVE AFTER TESTING -->
+                        <div style="position:absolute;top:10px;left:10px;z-index:99999;background:rgba(255,0,0,0.9);color:white;padding:15px;border-radius:8px;">
+                            <button onclick="testMagnifier()" style="background:white;color:red;padding:8px 15px;border:none;border-radius:5px;cursor:pointer;font-weight:bold;margin-bottom:10px;display:block;width:100%;">🔍 TEST MAGNIFIER</button>
+                            <div id="debugInfo" style="font-size:11px;line-height:1.4;max-width:200px;">
+                                <div>Checking...</div>
+                            </div>
+                        </div>
+                        
                         <!-- Main Image Display with Magnifying Glass -->
                         <div class="main-image-container">
                             <div class="magnify-container" id="magnifyContainer">
@@ -3113,45 +3121,68 @@ try {
                 console.log('🖼️ Thumbnail list HTML:', thumbnailList.innerHTML.substring(0, 200));
             }
 
-            // Load product image first
-            loadProductImage();
+            // Initialize magnifying glass immediately
+            console.log('🔍 Initializing magnifying glass on DOM load...');
+            setTimeout(() => {
+                initializeMagnifyingGlass();
+            }, 500);
             
-            // Wait for main image to load before initializing magnifying glass
-            const mainImageEl = document.getElementById('mainProductImage');
-            if (mainImageEl) {
-                if (mainImageEl.complete) {
-                    console.log('🔍 Main image already loaded, initializing magnifying glass');
-                    initializeMagnifyingGlass();
-                } else {
-                    console.log('🔍 Waiting for main image to load...');
-                    mainImageEl.addEventListener('load', function() {
-                        console.log('🔍 Main image loaded! Initializing magnifying glass');
-                        initializeMagnifyingGlass();
-                    });
-                }
-            } else {
-                console.log('⚠️ Main image element not found!');
-            }
+            // Load product image
+            loadProductImage();
             
             // Add manual test function
             window.testMagnifier = function() {
                 const lens = document.getElementById('magnifyLens');
                 const result = document.getElementById('magnifyResult');
+                const debugInfo = document.getElementById('debugInfo');
+                
                 if (lens && result) {
                     console.log('🧪 MANUAL TEST: Showing magnifier');
                     lens.classList.add('active');
                     result.classList.add('active');
-                    lens.style.left = '50%';
-                    lens.style.top = '50%';
+                    lens.style.left = '200px';
+                    lens.style.top = '200px';
+                    
+                    if (debugInfo) {
+                        debugInfo.innerHTML = `
+                            ✅ Elements found!<br>
+                            Lens classes: ${lens.className}<br>
+                            Lens computed opacity: ${window.getComputedStyle(lens).opacity}<br>
+                            Result classes: ${result.className}<br>
+                            Result computed opacity: ${window.getComputedStyle(result).opacity}<br>
+                            <small style="color:#ffeb3b;">Magnifier should now be visible!</small>
+                        `;
+                    }
+                    
                     console.log('Lens classes:', lens.className);
-                    console.log('Lens style:', lens.style.cssText);
+                    console.log('Lens computed opacity:', window.getComputedStyle(lens).opacity);
                     console.log('Result classes:', result.className);
-                    console.log('Result style:', result.style.cssText);
+                    console.log('Result computed opacity:', window.getComputedStyle(result).opacity);
                 } else {
                     console.log('❌ TEST FAILED: Elements not found');
+                    if (debugInfo) {
+                        debugInfo.innerHTML = '❌ Elements NOT found!<br>Lens: ' + (lens ? 'OK' : 'MISSING') + '<br>Result: ' + (result ? 'OK' : 'MISSING');
+                    }
                 }
             };
             console.log('✨ Test function available: testMagnifier()');
+            
+            // Update debug info on page load
+            setTimeout(() => {
+                const debugInfo = document.getElementById('debugInfo');
+                const lens = document.getElementById('magnifyLens');
+                const result = document.getElementById('magnifyResult');
+                const container = document.getElementById('magnifyContainer');
+                
+                if (debugInfo) {
+                    debugInfo.innerHTML = `
+                        Container: ${container ? '✅' : '❌'}<br>
+                        Lens: ${lens ? '✅' : '❌'}<br>
+                        Result: ${result ? '✅' : '❌'}<br>
+                        <small>Hover image or click TEST button</small>
+                    `;
+                }
+            }, 1000);
 
 
             // Initialize condition-based pricing

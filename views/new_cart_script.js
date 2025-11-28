@@ -18,8 +18,8 @@ class CartManager {
     }
 
     // Update quantity function
-    updateQuantity(productId, newQuantity) {
-        console.log('updateQuantity called:', productId, newQuantity);
+    updateQuantity(productId, newQuantity, cartItemId) {
+        console.log('updateQuantity called:', productId, newQuantity, cartItemId);
 
         // Validate quantity
         if (newQuantity < 1) {
@@ -62,22 +62,22 @@ class CartManager {
                 if (data.success) {
                     this.showSuccess(data.message);
                     this.updateCartDisplay(data);
-                    this.updateItemQuantity(productId, newQuantity, data.item_total);
+                    this.updateItemQuantity(productId, newQuantity, data.item_total, cartItemId);
                 } else {
                     this.showError(data.message || 'Failed to update quantity');
-                    this.resetQuantityInput(productId);
+                    this.resetQuantityInput(productId, cartItemId);
                 }
             } catch (parseError) {
                 console.error('JSON Parse Error:', parseError);
                 console.error('Raw response was:', text);
                 this.showError('Server returned invalid response');
-                this.resetQuantityInput(productId);
+                this.resetQuantityInput(productId, cartItemId);
             }
         })
         .catch(error => {
             console.error('Fetch Error:', error);
             this.showError('Failed to update quantity. Please try again.');
-            this.resetQuantityInput(productId);
+            this.resetQuantityInput(productId, cartItemId);
         });
     }
 
@@ -173,24 +173,24 @@ class CartManager {
     }
 
     // Increment quantity
-    incrementQuantity(productId) {
-        const input = document.querySelector(`input[data-product-id="${productId}"]`);
+    incrementQuantity(productId, cartItemId) {
+        const input = document.getElementById(`qty-${cartItemId}`);
         if (input) {
             const currentValue = parseInt(input.value) || 1;
             const newValue = Math.min(currentValue + 1, 99);
             input.value = newValue;
-            this.updateQuantity(productId, newValue);
+            this.updateQuantity(productId, newValue, cartItemId);
         }
     }
 
     // Decrement quantity
-    decrementQuantity(productId) {
-        const input = document.querySelector(`input[data-product-id="${productId}"]`);
+    decrementQuantity(productId, cartItemId) {
+        const input = document.getElementById(`qty-${cartItemId}`);
         if (input) {
             const currentValue = parseInt(input.value) || 1;
             const newValue = Math.max(currentValue - 1, 1);
             input.value = newValue;
-            this.updateQuantity(productId, newValue);
+            this.updateQuantity(productId, newValue, cartItemId);
         }
     }
 
@@ -265,22 +265,22 @@ class CartManager {
         }
     }
 
-    updateItemQuantity(productId, quantity, itemTotal) {
-        // Update the quantity input
-        const input = document.querySelector(`input[data-product-id="${productId}"]`);
+    updateItemQuantity(productId, quantity, itemTotal, cartItemId) {
+        // Update the quantity input using the specific cart item ID
+        const input = document.getElementById(`qty-${cartItemId}`);
         if (input) {
             input.value = quantity;
         }
 
-        // Update item total price
-        const totalPriceElement = document.querySelector(`[id*="total-price"][id*="${productId}"]`);
+        // Update item total price using the specific cart item ID
+        const totalPriceElement = document.getElementById(`total-price-${cartItemId}`);
         if (totalPriceElement) {
             totalPriceElement.textContent = `GH₵ ${itemTotal}`;
         }
     }
 
-    resetQuantityInput(productId) {
-        const input = document.querySelector(`input[data-product-id="${productId}"]`);
+    resetQuantityInput(productId, cartItemId) {
+        const input = document.getElementById(`qty-${cartItemId}`);
         if (input && input.defaultValue) {
             input.value = input.defaultValue;
         }
@@ -324,16 +324,16 @@ class CartManager {
 const cartManager = new CartManager();
 
 // Global functions for cart operations
-function updateQuantity(productId, quantity) {
-    cartManager.updateQuantity(productId, quantity);
+function updateQuantity(productId, quantity, cartItemId) {
+    cartManager.updateQuantity(productId, quantity, cartItemId);
 }
 
-function incrementQuantity(productId) {
-    cartManager.incrementQuantity(productId);
+function incrementQuantity(productId, cartItemId) {
+    cartManager.incrementQuantity(productId, cartItemId);
 }
 
-function decrementQuantity(productId) {
-    cartManager.decrementQuantity(productId);
+function decrementQuantity(productId, cartItemId) {
+    cartManager.decrementQuantity(productId, cartItemId);
 }
 
 function removeItem(productId, cartItemId) {

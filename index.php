@@ -1704,21 +1704,22 @@ try {
 
 	.banner-media {
 		display: flex;
-		align-items: center;
+		align-items: flex-start;
 		justify-content: center;
 		position: relative;
 		height: 100%;
 		min-height: 350px;
+		padding-top: 20px;
 	}
 
 	.banner-media .product-image {
 		width: auto;
 		height: auto;
-		max-height: 750px;
-		min-height: 650px;
-		max-width: 120%;
+		max-height: 800px;
+		min-height: 700px;
+		max-width: 130%;
 		object-fit: contain;
-		transform: translateY(0) translateX(0) scale(1.4);
+		transform: translateY(-30px) translateX(0) scale(1.6);
 		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 			transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 		filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -1727,20 +1728,20 @@ try {
 	/* Image animations - fade out for exiting */
 	.hero-slide.exiting .product-image {
 		opacity: 0;
-		transform: translateY(0) translateX(-30px) scale(1.3);
+		transform: translateY(-30px) translateX(-30px) scale(1.5);
 		transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 	}
 
 	/* Image animations - initial state (hidden, off to the right) */
 	.hero-slide:not(.active):not(.exiting) .product-image {
 		opacity: 0;
-		transform: translateY(0) translateX(60px) scale(1.2);
+		transform: translateY(-30px) translateX(60px) scale(1.4);
 	}
 
 	/* Image animations - active state (visible, animated entrance) */
 	.hero-slide.active .product-image {
 		opacity: 1;
-		transform: translateY(0) translateX(0) scale(1.4);
+		transform: translateY(-30px) translateX(0) scale(1.6);
 		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 			transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 	}
@@ -7358,14 +7359,16 @@ try {
 
 		// Hero Carousel - Initialize once
 		console.log('🚀 Starting hero carousel from DOMContentLoaded...');
-		initSimpleCarousel();
+		setTimeout(() => {
+			initSimpleCarousel();
+		}, 100);
 		
 		// Initialize Featured IG Carousel
 		initFeaturedIgCarousel();
 	});
 
 	// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
-	let slideTimer;
+	let slideTimer = null;
 	let currentSlide = 0;
 
 	function initSimpleCarousel() {
@@ -7379,6 +7382,7 @@ try {
 
 		if (slides.length === 0) {
 			console.error('❌ No slides found!');
+			setTimeout(initSimpleCarousel, 500);
 			return;
 		}
 
@@ -7396,6 +7400,8 @@ try {
 
 			// Show current slide with proper display and active class
 			slides[num].style.display = 'grid';
+			// Force reflow
+			slides[num].offsetHeight;
 			slides[num].classList.add('active');
 
 			// Activate current dot
@@ -7407,7 +7413,7 @@ try {
 		}
 
 		function goToNextSlide() {
-			console.log('⏭️ Going to next slide...');
+			console.log('⏭️ Going to next slide from', currentSlide, 'to', (currentSlide + 1) % slides.length);
 			const previousSlide = currentSlide;
 			currentSlide = (currentSlide + 1) % slides.length;
 			
@@ -7420,32 +7426,43 @@ try {
 		}
 
 		// Show first slide immediately
+		console.log('Showing first slide...');
 		showSlideNumber(0);
 
 		// Clear any existing timer
 		if (slideTimer) {
+			console.log('Clearing existing timer');
 			clearInterval(slideTimer);
 			slideTimer = null;
 		}
 
 		// Start timer - change every 5 seconds
-		slideTimer = setInterval(goToNextSlide, 5000);
+		console.log('Starting new timer...');
+		slideTimer = setInterval(() => {
+			console.log('Timer fired!');
+			goToNextSlide();
+		}, 5000);
 
 		console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
-		console.log('First slide should be visible now!');
+		console.log('Timer ID:', slideTimer);
 
 		// Add click handlers for dots
 		dots.forEach((dot, index) => {
-			dot.addEventListener('click', () => {
+			dot.addEventListener('click', (e) => {
+				e.preventDefault();
 				console.log('Dot clicked:', index);
 				if (slideTimer) {
 					clearInterval(slideTimer);
 				}
 				currentSlide = index;
 				showSlideNumber(currentSlide);
-				slideTimer = setInterval(goToNextSlide, 5000);
+				slideTimer = setInterval(() => {
+					goToNextSlide();
+				}, 5000);
 			});
 		});
+
+		console.log('✅ Carousel initialized successfully!');
 	}
 
 		// Featured on IG Carousel Function

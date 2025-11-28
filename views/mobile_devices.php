@@ -2769,7 +2769,146 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 return `data:image/svg+xml;base64,${btoa(unescape(encodeURIComponent(svg)))}`;
             }\
             n\ n // Enhanced Filter functionality\n        document.addEventListener('DOMContentLoaded', function() {\n            // Initialize price slider\n            initPriceSlider();\n            \n            // Category filter buttons\n            const categoryButtons = document.querySelectorAll('#categoryTags .tag-btn');\n            categoryButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Brand filter buttons\n            const brandButtons = document.querySelectorAll('#brandTags .tag-btn');\n            brandButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Size filter buttons\n            const sizeButtons = document.querySelectorAll('#sizeTags .size-btn');\n            sizeButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Color filter buttons\n            const colorButtons = document.querySelectorAll('#colorTags .color-btn');\n            colorButtons.forEach(button => {\n                button.addEventListener('click', function() {\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    this.classList.add('active');\n                });\n            });\n\n            // Apply filters button\n            const applyButton = document.getElementById('applyFilters');\n            if (applyButton) {\n                applyButton.addEventListener('click', function() {\n                    filterProducts();\n                });\n            }\n\n            // Clear filters\n            const clearButton = document.getElementById('clearFilters');\n            if (clearButton) {\n                clearButton.addEventListener('click', function() {\n                    // Reset all filters\n                    categoryButtons.forEach(btn => btn.classList.remove('active'));\n                    brandButtons.forEach(btn => btn.classList.remove('active'));\n                    sizeButtons.forEach(btn => btn.classList.remove('active'));\n                    colorButtons.forEach(btn => btn.classList.remove('active'));\n                    \n                    document.querySelector('#categoryTags .tag-btn[data-category=\"all\"]').classList.add('active');\n                    document.querySelector('#brandTags .tag-btn[data-brand=\"all\"]').classList.add('active');\n                    document.querySelector('#sizeTags .size-btn[data-size=\"all\"]').classList.add('active');\n                    document.querySelector('#colorTags .color-btn[data-color=\"all\"]').classList.add('active');\n                    \n                    document.getElementById('searchInput').value = '';\n                    \n                    // Reset rating\n                    const ratingInputs = document.querySelectorAll('input[name=\"rating_filter\"]');\n                    ratingInputs.forEach(input => input.checked = false);\n                    \n                    // Reset price sliders\n                    document.getElementById('minPriceSlider').value = 0;\n                    document.getElementById('maxPriceSlider').value = 50000;\n                    updatePriceDisplay();\n                    \n                    // Show all products\n                    filterProducts();\n                });\n            }\n        });\n\n        // Price slider functionality\n        function initializePriceSlider() {\n            const minSlider = document.getElementById('minPriceSlider');\n            const maxSlider = document.getElementById('maxPriceSlider');\n            const priceRange = document.getElementById('priceRange');\n\n            function updatePriceSlider() {\n                const minVal = parseInt(minSlider.value);\n                const maxVal = parseInt(maxSlider.value);\n\n                if (minVal > maxVal - 1000) {\n                    if (this === minSlider) {\n                        minSlider.value = maxVal - 1000;\n                    } else {\n                        maxSlider.value = minVal + 1000;\n                    }\n                }\n\n                const minPercent = ((minSlider.value - minSlider.min) / (minSlider.max - minSlider.min)) * 100;\n                const maxPercent = ((maxSlider.value - minSlider.min) / (maxSlider.max - minSlider.min)) * 100;\n\n                priceRange.style.left = minPercent + '%';\n                priceRange.style.width = (maxPercent - minPercent) + '%';\n\n                updatePriceDisplay();\n            }\n\n            minSlider.addEventListener('input', updatePriceSlider);\n            maxSlider.addEventListener('input', updatePriceSlider);\n            \n            updatePriceSlider();\n        }\n\n        function updatePriceDisplay() {\n            const minVal = parseInt(document.getElementById('minPriceSlider').value);\n            const maxVal = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            document.getElementById('priceMinDisplay').textContent = 'GH₵ ' + minVal.toLocaleString();\n            document.getElementById('priceMaxDisplay').textContent = 'GH₵ ' + maxVal.toLocaleString();\n        }\n\n        function filterProducts() {\n            const activeCategory = document.querySelector('#categoryTags .tag-btn.active')?.dataset.category || 'all';\n            const activeBrand = document.querySelector('#brandTags .tag-btn.active')?.dataset.brand || 'all';\n            const activeSize = document.querySelector('#sizeTags .size-btn.active')?.dataset.size || 'all';\n            const activeColor = document.querySelector('#colorTags .color-btn.active')?.dataset.color || 'all';\n            const searchTerm = document.getElementById('searchInput').value.toLowerCase();\n            const selectedRating = document.querySelector('input[name=\"rating_filter\"]:checked')?.value;\n            const minPrice = parseInt(document.getElementById('minPriceSlider').value);\n            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);\n            \n            const productCards = document.querySelectorAll('.modern-product-card');\n            let visibleCount = 0;\n            \n            productCards.forEach(card => {\n                const title = card.querySelector('h3').textContent.toLowerCase();\n                const priceText = card.querySelector('[style*=\"font-size: 1.3rem\"]').textContent;\n                const price = parseFloat(priceText.replace('GH₵', '').replace(',', ''));\n                \n                // Check if product matches filters\n                let matchesCategory = activeCategory === 'all' || title.includes(activeCategory.toLowerCase());\n                let matchesBrand = activeBrand === 'all' || title.includes(activeBrand.toLowerCase());\n                let matchesSearch = searchTerm === '' || title.includes(searchTerm);\n                let matchesPrice = price >= minPrice && price <= maxPrice;\n                let matchesSize = activeSize === 'all'; // Size logic can be enhanced based on product data\n                let matchesColor = activeColor === 'all'; // Color logic can be enhanced based on product data\n                let matchesRating = !selectedRating; // Rating logic can be enhanced based on product data\n                \n                if (matchesCategory && matchesBrand && matchesSearch && matchesPrice && matchesSize && matchesColor && matchesRating) {\n                    card.style.display = 'block';\n                    visibleCount++;\n                } else {\n                    card.style.display = 'none';\n                }\n            });\n            \n            // Update count display\n            const countDisplay = document.querySelector('.product-count');\n            if (countDisplay) {\n                countDisplay.innerHTML = `<i class=\"fas fa-mobile-alt\" style=\"margin-right: 8px;\"></i>Showing ${visibleCount} mobile devices`;\n            }\n        }
-            // Additional functions from login.php\n        // Account page navigation\n        function goToAccount() {\n            window.location.href = 'my_orders.php';\n        }\n\n        // Language change functionality\n        function changeLanguage(lang) {\n            // Language change functionality can be implemented here\n            console.log('Language changed to:', lang);\n        }\n\n        // Theme toggle functionality\n        function toggleTheme() {\n            const toggleSwitch = document.getElementById('themeToggle');\n            const body = document.body;\n\n            body.classList.toggle('dark-mode');\n            toggleSwitch.classList.toggle('active');\n\n            // Save theme preference to localStorage\n            const isDarkMode = body.classList.contains('dark-mode');\n            localStorage.setItem('darkMode', isDarkMode);\n        }\n\n        // Load theme preference on page load\n        document.addEventListener('DOMContentLoaded', function() {\n            const isDarkMode = localStorage.getItem('darkMode') === 'true';\n            const toggleSwitch = document.getElementById('themeToggle');\n\n            if (isDarkMode) {\n                document.body.classList.add('dark-mode');\n                if (toggleSwitch) {\n                    toggleSwitch.classList.add('active');\n                }\n            }\n        });\n\n        // Timeout variables\n        let shopDropdownTimeout;\n        let moreDropdownTimeout;\n    
+            // Additional functions from login.php\n        // Account page navigation\n        function goToAccount() {\n            window.location.href = 'my_orders.php';\n        }\n\n        // Language change functionality\n        function changeLanguage(lang) {\n            // Language change functionality can be implemented here\n            console.log('Language changed to:', lang);\n        }\n\n        // Theme toggle functionality\n        function toggleTheme() {\n            const toggleSwitch = document.getElementById('themeToggle');\n            const body = document.body;\n\n            body.classList.toggle('dark-mode');\n            toggleSwitch.classList.toggle('active');\n\n            // Save theme preference to localStorage\n            const isDarkMode = body.classList.contains('dark-mode');\n            localStorage.setItem('darkMode', isDarkMode);\n        }\n\n        // Load theme preference on page load\n        document.addEventListener('DOMContentLoaded', function() {\n            const isDarkMode = localStorage.getItem('darkMode') === 'true';\n            const toggleSwitch = document.getElementById('themeToggle');\n\n            if (isDarkMode) {\n                document.body.classList.add('dark-mode');\n                if (toggleSwitch) {\n                    toggleSwitch.classList.add('active');\n                }\n            }\n        });\n\n        // Timeout variables\n        let shopDropdownTimeout;\n        let moreDropdownTimeout;\n        // Wishlist functionality
+        window.toggleWishlist = function(productId, button) {
+            <?php if (!$is_logged_in): ?>
+                window.location.href = '../login/login.php';
+                return;
+            <?php endif; ?>
+
+            const icon = button.querySelector('i');
+            const isActive = button.classList.contains('active');
+
+            if (isActive) {
+                // Remove from wishlist
+                button.classList.remove('active');
+                icon.className = 'far fa-heart';
+                icon.style.color = '#6b7280';
+
+                // Make AJAX call to remove from wishlist
+                fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge if exists
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count = Math.max(0, count - 1);
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    } else {
+                        // Revert if failed
+                        button.classList.add('active');
+                        icon.className = 'fas fa-heart';
+                        icon.style.color = '#ef4444';
+                        if (data.message) alert(data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert if failed
+                    button.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                    icon.style.color = '#ef4444';
+                });
+            } else {
+                // Add to wishlist
+                button.classList.add('active');
+                icon.className = 'fas fa-heart';
+                icon.style.color = '#ef4444';
+
+                // Make AJAX call to add to wishlist
+                fetch('../actions/add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Update wishlist badge
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count++;
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = 'flex';
+                        }
+                    } else {
+                        // Revert button state if failed
+                        button.classList.remove('active');
+                        icon.className = 'far fa-heart';
+                        icon.style.color = '#6b7280';
+                        if (data.message) {
+                            alert(data.message);
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    // Revert button state if failed
+                    button.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                    icon.style.color = '#6b7280';
+                });
+            }
+        };
+
+        // Load wishlist status on page load
+        <?php if ($is_logged_in): ?>
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('../actions/get_wishlist_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'product_id=0'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.wishlist_items) {
+                    // Update wishlist badge
+                    const wishlistBadge = document.getElementById('wishlistBadge');
+                    if (wishlistBadge && data.count > 0) {
+                        wishlistBadge.textContent = data.count;
+                        wishlistBadge.style.display = 'flex';
+                    }
+
+                    // Update wishlist heart buttons
+                    const wishlistButtons = document.querySelectorAll('.wishlist-btn');
+                    wishlistButtons.forEach(button => {
+                        const onclickAttr = button.getAttribute('onclick');
+                        if (onclickAttr) {
+                            const match = onclickAttr.match(/toggleWishlist\((\d+)/);
+                            if (match) {
+                                const productId = parseInt(match[1]);
+                                if (data.wishlist_items.includes(productId)) {
+                                    button.classList.add('active');
+                                    const icon = button.querySelector('i');
+                                    if (icon) {
+                                        icon.className = 'fas fa-heart';
+                                        icon.style.color = '#ef4444';
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            })
+            .catch(error => console.error('Error loading wishlist status:', error));
+        });
+        <?php endif; ?>
+
         </script>
 
     <!-- Footer -->

@@ -54,6 +54,17 @@
 			color: #1a1a1a;
 			overflow-x: hidden;
 		}
+		
+		/* Ensure all form elements use consistent font */
+		input, textarea, select, button {
+			font-family: "Times New Roman", Times, serif;
+			font-size: 1rem;
+		}
+		
+		input::placeholder, textarea::placeholder {
+			font-family: "Times New Roman", Times, serif;
+			font-size: 1rem;
+		}
 
 		body::after {
 			content: '';
@@ -787,6 +798,7 @@
 		.form-title {
 			font-size: 2.5rem;
 			font-weight: 700;
+			font-family: "Times New Roman", Times, serif;
 			color: var(--text-dark);
 			margin-bottom: 10px;
 			text-align: center;
@@ -888,6 +900,7 @@
 			color: var(--text-dark);
 			margin-bottom: 10px;
 			font-size: 1rem;
+			font-family: "Times New Roman", Times, serif;
 		}
 
 		.form-control {
@@ -898,8 +911,14 @@
 			background: #f8fafc;
 			color: var(--text-dark);
 			font-size: 1rem;
+			font-family: "Times New Roman", Times, serif;
 			transition: all 0.3s ease;
 			outline: none;
+		}
+		
+		.form-control::placeholder {
+			font-family: "Times New Roman", Times, serif;
+			font-size: 1rem;
 		}
 
 		.form-control:focus {
@@ -947,7 +966,8 @@
 			border: none;
 			padding: 18px;
 			border-radius: 12px;
-			font-size: 1.1rem;
+			font-size: 1rem;
+			font-family: "Times New Roman", Times, serif;
 			font-weight: 600;
 			cursor: pointer;
 			transition: all 0.3s ease;
@@ -1158,7 +1178,8 @@
 			font-weight: 600;
 			color: #374151;
 			margin-bottom: 8px;
-			font-size: 1.1rem;
+			font-size: 1rem;
+			font-family: "Times New Roman", Times, serif;
 		}
 
 		.form-control {
@@ -1166,9 +1187,15 @@
 			padding: 18px 20px;
 			border: 2px solid #e5e7eb;
 			border-radius: 12px;
-			font-size: 1.1rem;
+			font-size: 1rem;
+			font-family: "Times New Roman", Times, serif;
 			transition: all 0.3s ease;
 			background: #f8fafc;
+		}
+		
+		.form-control::placeholder {
+			font-family: "Times New Roman", Times, serif;
+			font-size: 1rem;
 		}
 
 		.form-control:focus {

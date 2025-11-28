@@ -1469,19 +1469,20 @@ try {
             border-radius: 0;
             cursor: crosshair;
             transition: all 0.3s ease;
+            display: block;
         }
 
         /* Magnifying Glass Styles */
         .magnify-container {
             position: relative;
             display: inline-block;
-            overflow: hidden;
+            overflow: visible;
             border-radius: 8px;
         }
 
         .magnify-lens {
             position: absolute;
-            border: 2px solid #4285F4;
+            border: 3px solid #4285F4;
             border-radius: 50%;
             cursor: crosshair;
             width: 150px;
@@ -1489,8 +1490,10 @@ try {
             opacity: 0;
             transition: opacity 0.3s ease;
             pointer-events: none;
-            background: rgba(66, 133, 244, 0.1);
-            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+            background: rgba(66, 133, 244, 0.2);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.4), 0 4px 15px rgba(0, 0, 0, 0.3);
+            z-index: 100;
+            backdrop-filter: blur(2px);
         }
 
         .magnify-lens.active {
@@ -1498,20 +1501,20 @@ try {
         }
 
         .magnify-result {
-            position: absolute;
-            top: 20px;
-            right: 20px;
-            width: 200px;
-            height: 200px;
-            border: 2px solid #4285F4;
+            position: fixed;
+            top: 150px;
+            right: 50px;
+            width: 350px;
+            height: 350px;
+            border: 4px solid #4285F4;
             border-radius: 12px;
             background: white;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             overflow: hidden;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            z-index: 10;
+            z-index: 10000;
         }
 
         .magnify-result.active {
@@ -2170,8 +2173,14 @@ try {
 
             if (!magnifyContainer || !mainImage || !magnifyLens || !magnifyResult || !magnifyResultImage) {
                 console.log('Magnifying glass elements not found');
+                console.log('Container:', magnifyContainer);
+                console.log('Image:', mainImage);
+                console.log('Lens:', magnifyLens);
+                console.log('Result:', magnifyResult);
                 return;
             }
+            
+            console.log('✅ Magnifying glass initialized successfully!');
 
             // Magnifying glass functionality
             function magnify() {
@@ -2193,6 +2202,11 @@ try {
                     const pos = getCursorPos(e);
                     let x = pos.x;
                     let y = pos.y;
+                    
+                    // Debug: Log position (only occasionally to avoid spam)
+                    if (Math.random() < 0.05) {
+                        console.log('Mouse position:', x, y);
+                    }
 
                     // Prevent the magnifying glass from being positioned outside the image
                     if (x > mainImage.width - (magnifyLens.offsetWidth / 2)) { x = mainImage.width - (magnifyLens.offsetWidth / 2); }
@@ -2220,12 +2234,16 @@ try {
 
                 // Show magnifying glass on mouse enter
                 function showMagnifier() {
+                    console.log('🔍 Magnifier SHOW triggered');
                     magnifyLens.classList.add('active');
                     magnifyResult.classList.add('active');
+                    console.log('Lens classes:', magnifyLens.className);
+                    console.log('Result classes:', magnifyResult.className);
                 }
 
                 // Hide magnifying glass on mouse leave
                 function hideMagnifier() {
+                    console.log('🔍 Magnifier HIDE triggered');
                     magnifyLens.classList.remove('active');
                     magnifyResult.classList.remove('active');
                 }

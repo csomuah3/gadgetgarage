@@ -57,6 +57,27 @@ try {
     error_log("Attempting to track order: $order_reference for customer: $customer_id");
     error_log("Session data: " . print_r($_SESSION, true));
 
+    // Test database connection first
+    try {
+        $pdo = new PDO("mysql:host=" . SERVER . ";dbname=" . DATABASE, USERNAME, PASSWD);
+        $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        error_log("Database connection successful");
+
+        // Quick test to see what orders exist
+        $test_query = "SELECT order_id, invoice_no, customer_id FROM orders LIMIT 5";
+        $stmt = $pdo->prepare($test_query);
+        $stmt->execute();
+        $test_orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        error_log("Found " . count($test_orders) . " test orders: " . print_r($test_orders, true));
+    } catch (PDOException $e) {
+        error_log("Database connection failed: " . $e->getMessage());
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Database connection error. Please try again later.'
+        ]);
+        exit();
+    }
+
     // Get order details using tracking function
     $tracking_result = get_order_tracking_details($order_reference);
     error_log("Tracking result: " . print_r($tracking_result, true));

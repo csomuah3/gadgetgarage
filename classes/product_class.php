@@ -86,9 +86,9 @@ class Product extends db_connection
     }
 
     /**
-     * Get all products
+     * Get all products (without category/brand names - for internal use)
      */
-    public function get_all_products()
+    public function get_all_products_basic()
     {
         try {
             $sql = "SELECT * FROM products ORDER BY product_id DESC";
@@ -96,6 +96,27 @@ class Product extends db_connection
         } catch (Exception $e) {
             error_log("Get all products error: " . $e->getMessage());
             return [];
+        }
+    }
+
+    /**
+     * Get all products with category and brand names
+     */
+    public function get_all_products()
+    {
+        try {
+            $sql = "SELECT p.*,
+                           c.cat_name,
+                           b.brand_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.product_cat = c.cat_id
+                    LEFT JOIN brands b ON p.product_brand = b.brand_id
+                    ORDER BY p.product_id DESC";
+            return $this->db_prepare_fetch_all($sql);
+        } catch (Exception $e) {
+            error_log("Get all products with details error: " . $e->getMessage());
+            // Fallback to basic product data
+            return $this->get_all_products_basic();
         }
     }
 
@@ -119,7 +140,14 @@ class Product extends db_connection
     public function get_products_by_category($category_id)
     {
         try {
-            $sql = "SELECT * FROM products WHERE product_cat = ? ORDER BY product_id DESC";
+            $sql = "SELECT p.*,
+                           c.cat_name,
+                           b.brand_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.product_cat = c.cat_id
+                    LEFT JOIN brands b ON p.product_brand = b.brand_id
+                    WHERE p.product_cat = ?
+                    ORDER BY p.product_id DESC";
             return $this->db_prepare_fetch_all($sql, 'i', [$category_id]);
         } catch (Exception $e) {
             error_log("Get products by category error: " . $e->getMessage());
@@ -133,7 +161,14 @@ class Product extends db_connection
     public function get_products_by_brand($brand_id)
     {
         try {
-            $sql = "SELECT * FROM products WHERE product_brand = ? ORDER BY product_id DESC";
+            $sql = "SELECT p.*,
+                           c.cat_name,
+                           b.brand_name
+                    FROM products p
+                    LEFT JOIN categories c ON p.product_cat = c.cat_id
+                    LEFT JOIN brands b ON p.product_brand = b.brand_id
+                    WHERE p.product_brand = ?
+                    ORDER BY p.product_id DESC";
             return $this->db_prepare_fetch_all($sql, 'i', [$brand_id]);
         } catch (Exception $e) {
             error_log("Get products by brand error: " . $e->getMessage());

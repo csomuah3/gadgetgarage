@@ -1893,8 +1893,7 @@
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
-							<h2 class="form-title" id="formTitle">Register</h2>
-							<p class="signup-socials-text">Sign up with socials</p>
+							<h2 class="form-title" id="formTitle">Join Gadget Garage Today!</h2>
 						</div>
 
 						<!-- Social Login Buttons -->

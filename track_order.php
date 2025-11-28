@@ -1650,15 +1650,16 @@ try {
         let moreDropdownTimeout;
         let userDropdownTimeout;
 
-        function showDropdown() {
+        // Make functions global
+        window.showDropdown = function() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideDropdown() {
+        window.hideDropdown = function() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
@@ -1666,17 +1667,17 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function showShopDropdown() {
+        window.showShopDropdown = function() {
             const dropdown = document.getElementById('shopCategoryDropdown');
             if (dropdown) {
                 clearTimeout(shopDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideShopDropdown() {
+        window.hideShopDropdown = function() {
             const dropdown = document.getElementById('shopCategoryDropdown');
             if (dropdown) {
                 clearTimeout(shopDropdownTimeout);
@@ -1684,17 +1685,17 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function showMoreDropdown() {
+        window.showMoreDropdown = function() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideMoreDropdown() {
+        window.hideMoreDropdown = function() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
@@ -1702,17 +1703,17 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function showUserDropdown() {
+        window.showUserDropdown = function() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 clearTimeout(userDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideUserDropdown() {
+        window.hideUserDropdown = function() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 clearTimeout(userDropdownTimeout);
@@ -1720,7 +1721,7 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
         function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');

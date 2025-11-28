@@ -316,27 +316,38 @@ class Order extends db_connection
                       FROM orders o
                       LEFT JOIN payment p ON o.order_id = p.order_id
                       LEFT JOIN orderdetails od ON o.order_id = od.order_id
-                      WHERE o.order_id = '$search_value'
+                      WHERE (o.order_id = '$search_value'
                          OR o.tracking_number = '$search_value'
-                         OR o.invoice_no = '$search_value'
-                      GROUP BY o.order_id";
+                         OR o.invoice_no = '$search_value')
+                      GROUP BY o.order_id
+                      LIMIT 1";
 
-        $order = $this->db_fetch_one($order_sql);
-
-        if (!$order) {
+        // Execute the query and check for errors
+        if (!$this->db_query($order_sql)) {
+            error_log("Order tracking query failed: " . mysqli_error($this->db));
             return null;
         }
 
-        // Get tracking history
+        $order = mysqli_fetch_assoc($this->results);
+
+        if (!$order) {
+            error_log("No order found for search value: $search_value");
+            return null;
+        }
+
+        // Get tracking history (optional - create empty array if table doesn't exist)
+        $tracking = [];
         $tracking_sql = "SELECT * FROM order_tracking
                          WHERE order_id = '{$order['order_id']}'
                          ORDER BY status_date ASC";
 
-        $tracking = $this->db_fetch_all($tracking_sql);
+        if ($this->db_query($tracking_sql)) {
+            $tracking = $this->db_fetch_all($tracking_sql);
+        }
 
         return [
             'order' => $order,
-            'tracking' => $tracking
+            'tracking' => $tracking ?: []
         ];
     }
 

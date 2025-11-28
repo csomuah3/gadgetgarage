@@ -1335,28 +1335,28 @@ try {
 			background: #ffffff;
 		}
 
-	.hero-grid {
-		display: grid;
-		grid-template-columns: 3.5fr 1fr;
-		/* much wider left + narrow right */
-		gap: 28px;
-		/* spacing between cards */
-		align-items: stretch;
-		min-height: 620px;
-		/* increased height for better text arrangement */
-	}
+		.hero-grid {
+			display: grid;
+			grid-template-columns: 3.5fr 1fr;
+			/* much wider left + narrow right */
+			gap: 28px;
+			/* spacing between cards */
+			align-items: stretch;
+			min-height: 620px;
+			/* increased height for better text arrangement */
+		}
 
-	/* ——— Hero Carousel Wrapper ——— */
-	.hero-carousel-wrapper {
-		position: relative;
-		width: 100%;
-		height: 100%;
-		min-height: 620px;
-		border-radius: 14px;
-		overflow: hidden;
-		background: #f0f4f8;
-		/* Fallback background */
-	}
+		/* ——— Hero Carousel Wrapper ——— */
+		.hero-carousel-wrapper {
+			position: relative;
+			width: 100%;
+			height: 100%;
+			min-height: 620px;
+			border-radius: 14px;
+			overflow: hidden;
+			background: #f0f4f8;
+			/* Fallback background */
+		}
 
 		.hero-carousel {
 			position: relative;
@@ -1702,49 +1702,49 @@ try {
 			color: #1a6b47;
 		}
 
-	.banner-media {
-		display: flex;
+		.banner-media {
+			display: flex;
 		align-items: flex-start;
-		justify-content: center;
-		position: relative;
-		height: 100%;
-		min-height: 350px;
-		padding-top: 20px;
-	}
+			justify-content: center;
+			position: relative;
+			height: 100%;
+			min-height: 350px;
+		padding-top: 0px;
+		}
 
-	.banner-media .product-image {
-		width: auto;
-		height: auto;
+		.banner-media .product-image {
+			width: auto;
+			height: auto;
 		max-height: 800px;
 		min-height: 700px;
 		max-width: 130%;
-		object-fit: contain;
-		transform: translateY(-30px) translateX(0) scale(1.6);
-		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-			transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+			object-fit: contain;
+		transform: translateY(-80px) translateX(0) scale(1.6);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 		filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
-	}
+		}
 
-	/* Image animations - fade out for exiting */
-	.hero-slide.exiting .product-image {
-		opacity: 0;
-		transform: translateY(-30px) translateX(-30px) scale(1.5);
-		transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
-	}
+		/* Image animations - fade out for exiting */
+		.hero-slide.exiting .product-image {
+			opacity: 0;
+		transform: translateY(-80px) translateX(-30px) scale(1.5);
+			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
+		}
 
-	/* Image animations - initial state (hidden, off to the right) */
-	.hero-slide:not(.active):not(.exiting) .product-image {
-		opacity: 0;
-		transform: translateY(-30px) translateX(60px) scale(1.4);
-	}
+		/* Image animations - initial state (hidden, off to the right) */
+		.hero-slide:not(.active):not(.exiting) .product-image {
+			opacity: 0;
+		transform: translateY(-80px) translateX(60px) scale(1.4);
+		}
 
-	/* Image animations - active state (visible, animated entrance) */
-	.hero-slide.active .product-image {
-		opacity: 1;
-		transform: translateY(-30px) translateX(0) scale(1.6);
-		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
-			transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
-	}
+		/* Image animations - active state (visible, animated entrance) */
+		.hero-slide.active .product-image {
+			opacity: 1;
+		transform: translateY(-80px) translateX(0) scale(1.6);
+			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
+				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
+		}
 
 		/* Navigation Dots */
 		.hero-dots {
@@ -1754,27 +1754,42 @@ try {
 			transform: translateX(-50%);
 			display: flex;
 			gap: 12px;
-			z-index: 20;
+			z-index: 100;
+			pointer-events: all;
 		}
 
 		.carousel-dot {
-			width: 12px;
-			height: 12px;
+			width: 16px;
+			height: 16px;
 			border-radius: 50%;
-			background: rgba(255, 255, 255, 0.4);
+			background: rgba(255, 255, 255, 0.5);
 			cursor: pointer;
 			transition: all 0.3s ease;
-			border: 2px solid transparent;
+			border: 2px solid rgba(255, 255, 255, 0.3);
+			pointer-events: all;
+			position: relative;
+		}
+
+		.carousel-dot::before {
+			content: '';
+			position: absolute;
+			top: -8px;
+			left: -8px;
+			right: -8px;
+			bottom: -8px;
+			cursor: pointer;
 		}
 
 		.carousel-dot.active {
-			background: rgba(255, 255, 255, 0.9);
-			transform: scale(1.2);
+			background: rgba(255, 255, 255, 1);
+			transform: scale(1.3);
+			border-color: rgba(255, 255, 255, 0.8);
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
 		}
 
 		.carousel-dot:hover {
-			background: rgba(255, 255, 255, 0.7);
-			transform: scale(1.1);
+			background: rgba(255, 255, 255, 0.8);
+			transform: scale(1.2);
 		}
 
 		/* ——— Right column (two stacked cards) ——— */
@@ -7354,31 +7369,31 @@ try {
 				document.getElementById('themeToggle').classList.add('active');
 			}
 
-		// Featured on IG scroll animations
-		initFeaturedIGAnimations();
+			// Featured on IG scroll animations
+			initFeaturedIGAnimations();
 
 		// Hero Carousel - Initialize once
-		console.log('🚀 Starting hero carousel from DOMContentLoaded...');
+			console.log('🚀 Starting hero carousel from DOMContentLoaded...');
 		setTimeout(() => {
 			initSimpleCarousel();
 		}, 100);
 		
 		// Initialize Featured IG Carousel
 		initFeaturedIgCarousel();
-	});
+		});
 
-	// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
+		// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
 	let slideTimer = null;
-	let currentSlide = 0;
+		let currentSlide = 0;
 
-	function initSimpleCarousel() {
-		console.log('🔥 STARTING SIMPLE CAROUSEL');
+		function initSimpleCarousel() {
+			console.log('🔥 STARTING SIMPLE CAROUSEL');
 
-		const slides = document.querySelectorAll('.hero-slide');
-		const dots = document.querySelectorAll('.carousel-dot');
+			const slides = document.querySelectorAll('.hero-slide');
+			const dots = document.querySelectorAll('.carousel-dot');
 
-		console.log('Found slides:', slides.length);
-		console.log('Found dots:', dots.length);
+			console.log('Found slides:', slides.length);
+			console.log('Found dots:', dots.length);
 
 		if (slides.length === 0) {
 			console.error('❌ No slides found!');
@@ -7386,8 +7401,8 @@ try {
 			return;
 		}
 
-		function showSlideNumber(num) {
-			console.log('🎯 SWITCHING TO SLIDE:', num);
+			function showSlideNumber(num) {
+				console.log('🎯 SWITCHING TO SLIDE:', num);
 
 			// Hide ALL slides first
 			slides.forEach((slide, index) => {
@@ -7399,35 +7414,35 @@ try {
 			dots.forEach(dot => dot.classList.remove('active'));
 
 			// Show current slide with proper display and active class
-			slides[num].style.display = 'grid';
+				slides[num].style.display = 'grid';
 			// Force reflow
 			slides[num].offsetHeight;
 			slides[num].classList.add('active');
 
 			// Activate current dot
-			if (dots[num]) {
-				dots[num].classList.add('active');
+				if (dots[num]) {
+					dots[num].classList.add('active');
+				}
+
+				console.log('✅ NOW SHOWING:', slides[num].dataset.product);
 			}
 
-			console.log('✅ NOW SHOWING:', slides[num].dataset.product);
-		}
-
-		function goToNextSlide() {
+			function goToNextSlide() {
 			console.log('⏭️ Going to next slide from', currentSlide, 'to', (currentSlide + 1) % slides.length);
 			const previousSlide = currentSlide;
-			currentSlide = (currentSlide + 1) % slides.length;
+				currentSlide = (currentSlide + 1) % slides.length;
 			
 			// Add exiting class to previous slide
 			if (slides[previousSlide]) {
 				slides[previousSlide].classList.add('exiting');
 			}
 			
-			showSlideNumber(currentSlide);
-		}
+				showSlideNumber(currentSlide);
+			}
 
-		// Show first slide immediately
+			// Show first slide immediately
 		console.log('Showing first slide...');
-		showSlideNumber(0);
+			showSlideNumber(0);
 
 		// Clear any existing timer
 		if (slideTimer) {
@@ -7446,23 +7461,41 @@ try {
 		console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
 		console.log('Timer ID:', slideTimer);
 
-		// Add click handlers for dots
+		// Add click handlers for dots with better event handling
+		console.log('Adding click handlers to dots...');
 		dots.forEach((dot, index) => {
-			dot.addEventListener('click', (e) => {
+			// Remove any existing listeners
+			const newDot = dot.cloneNode(true);
+			dot.parentNode.replaceChild(newDot, dot);
+			
+			newDot.addEventListener('click', function(e) {
 				e.preventDefault();
-				console.log('Dot clicked:', index);
+				e.stopPropagation();
+				console.log('🎯 Dot clicked:', index, 'Current slide:', currentSlide);
+				
+				// Clear existing timer
 				if (slideTimer) {
 					clearInterval(slideTimer);
+					slideTimer = null;
 				}
+				
+				// Update to clicked slide
 				currentSlide = index;
 				showSlideNumber(currentSlide);
+				
+				// Restart timer
 				slideTimer = setInterval(() => {
 					goToNextSlide();
 				}, 5000);
+				
+				console.log('✅ Switched to slide', index);
 			});
+			
+			console.log('Added click handler to dot', index);
 		});
 
 		console.log('✅ Carousel initialized successfully!');
+		console.log('All dots should be clickable now!');
 	}
 
 		// Featured on IG Carousel Function

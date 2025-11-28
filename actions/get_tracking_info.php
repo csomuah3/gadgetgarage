@@ -25,11 +25,19 @@ if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
 
 // Get POST data
 $input = json_decode(file_get_contents('php://input'), true);
-if (!$input) {
+if (!$input || !is_array($input)) {
     $input = $_POST;
 }
 
-$order_reference = isset($input['order_reference']) ? trim($input['order_reference']) : '';
+$order_reference = '';
+if (isset($input['order_reference'])) {
+    $order_reference = trim($input['order_reference']);
+} elseif (isset($_POST['order_reference'])) {
+    $order_reference = trim($_POST['order_reference']);
+}
+
+// Log the received data for debugging
+error_log("Order tracking request - Order reference: " . $order_reference);
 
 // Validate order reference
 if (!$order_reference) {
@@ -43,13 +51,26 @@ if (!$order_reference) {
 try {
     $customer_id = $_SESSION['user_id'];
 
+    // Log the tracking attempt
+    error_log("Attempting to track order: $order_reference for customer: $customer_id");
+
     // Get order details using tracking function
     $tracking_result = get_order_tracking_details($order_reference);
 
-    if (!$tracking_result || !isset($tracking_result['order'])) {
+    if (!$tracking_result) {
+        error_log("Tracking result is null for order: $order_reference");
         echo json_encode([
             'status' => 'error',
-            'message' => 'Order not found or access denied'
+            'message' => 'Order not found. Please check your order reference number.'
+        ]);
+        exit();
+    }
+
+    if (!isset($tracking_result['order'])) {
+        error_log("No order data in tracking result for: $order_reference");
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Order data not found. Please contact support.'
         ]);
         exit();
     }
@@ -84,7 +105,8 @@ try {
 
     // Generate tracking number if not exists
     if (empty($order['tracking_number'])) {
-        $tracking_number = 'TRK' . strtoupper(substr($order['order_reference'], -8)) . rand(100, 999);
+        $invoice_ref = $order['invoice_no'] ?? $order_reference;
+        $tracking_number = 'TRK' . strtoupper(substr($invoice_ref, -8)) . rand(100, 999);
 
         // Update order with tracking number
         try {

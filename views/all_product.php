@@ -2653,118 +2653,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 </div>
             </div>
         </div>
-    </header>
-
-    <!-- Main Navigation -->
-    <nav class="main-nav">
-        <div class="container-fluid px-0">
-            <div class="nav-menu">
-                <!-- Shop by Brands Button -->
-                <div class="shop-categories-btn" onmouseenter="showDropdown()" onmouseleave="hideDropdown()">
-                    <button class="categories-button">
-                        <i class="fas fa-tags"></i>
-                        <span data-translate="shop_by_brands">SHOP BY BRANDS</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
-                    <div class="brands-dropdown" id="shopDropdown">
-                        <h4>All Brands</h4>
-                        <ul>
-                            <?php if (!empty($brands)): ?>
-                                <?php foreach ($brands as $brand): ?>
-                                    <li><a href="../all_product.php?brand=<?php echo urlencode($brand['brand_id']); ?>"><i class="fas fa-tag"></i> <?php echo htmlspecialchars($brand['brand_name']); ?></a></li>
-                                <?php endforeach; ?>
-                            <?php else: ?>
-                                <li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-                                <li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-                                <li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-                                <li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-                                <li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-                                <li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-                                <li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-                                <li><a href="../views/all_product.php?brand=Microsoft"><i class="fas fa-tag"></i> Microsoft</a></li>
-                            <?php endif; ?>
-                        </ul>
-                    </div>
-                </div>
-
-                <a href="../index.php" class="nav-item"><span data-translate="home">HOME</span></a>
-
-                <!-- Shop Dropdown -->
-                <div class="nav-dropdown" onmouseenter="showShopDropdown()" onmouseleave="hideShopDropdown()">
-                    <a href="#" class="nav-item">
-                        <span data-translate="shop">SHOP</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="mega-dropdown" id="shopCategoryDropdown">
-                        <div class="dropdown-content">
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="../views/mobile_devices.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="mobile_devices">Mobile Devices</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="../all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                    <li><a href="../all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="../views/computing.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="computing">Computing</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="../all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                    <li><a href="../all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column">
-                                <h4>
-                                    <a href="../views/photography_video.php" style="text-decoration: none; color: inherit;">
-                                        <span data-translate="photography_video">Photography & Video</span>
-                                    </a>
-                                </h4>
-                                <ul>
-                                    <li><a href="../all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                    <li><a href="../all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
-                                </ul>
-                            </div>
-                            <div class="dropdown-column featured">
-                                <h4>Shop All</h4>
-                                <div class="featured-item">
-                                    <img src="https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?w=120&h=80&fit=crop&crop=center" alt="New Arrivals">
-                                    <div class="featured-text">
-                                        <strong>New Arrivals</strong>
-                                        <p>Latest tech gadgets</p>
-                                        <a href="../views/all_product.php" class="shop-now-btn">Shop</a>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <a href="../views/repair_services.php" class="nav-item"><span data-translate="repair_studio">REPAIR STUDIO</span></a>
-                <a href="../views/device_drop.php" class="nav-item"><span data-translate="device_drop">DEVICE DROP</span></a>
-
-                <!-- More Dropdown -->
-                <div class="nav-dropdown" onmouseenter="showMoreDropdown()" onmouseleave="hideMoreDropdown()">
-                    <a href="#" class="nav-item">
-                        <span data-translate="more">MORE</span>
-                        <i class="fas fa-chevron-down"></i>
-                    </a>
-                    <div class="simple-dropdown" id="moreDropdown">
-                        <ul>
-                            <li><a href="../views/contact.php"><i class="fas fa-phone"></i> Contact</a></li>
-                            <li><a href="../views/terms_conditions.php"><i class="fas fa-file-contract"></i> Terms & Conditions</a></li>
-                        </ul>
-                    </div>
-                </div>
-
-                <!-- Flash Deal positioned at far right -->
-                <a href="../views/flash_deals.php" class="nav-item flash-deal">⚡ <span data-translate="flash_deal">FLASH DEAL</span></a>
-            </div>
     <!-- Page Title -->
     <div class="container-fluid">
         <div class="text-center py-3">
@@ -3601,6 +3489,19 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const minDisplay = document.getElementById('priceMinDisplay');
             const maxDisplay = document.getElementById('priceMaxDisplay');
             const rangeDisplay = document.getElementById('priceRange');
+            
+            console.log('🎚️ Price Slider Init:', {
+                minSlider: !!minSlider,
+                maxSlider: !!maxSlider,
+                minDisplay: !!minDisplay,
+                maxDisplay: !!maxDisplay,
+                rangeDisplay: !!rangeDisplay
+            });
+            
+            if (!minSlider || !maxSlider || !minDisplay || !maxDisplay || !rangeDisplay) {
+                console.error('❌ Price slider elements not found!');
+                return;
+            }
 
             function updatePriceDisplay() {
                 const minVal = parseInt(minSlider.value);
@@ -3667,8 +3568,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         function initCategoryFilter() {
             // Category filters using tag buttons (same as brand filter)
             const categoryBtns = document.querySelectorAll('#categoryTags .tag-btn');
+            console.log('🏷️ Category buttons found:', categoryBtns.length);
+            
             categoryBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
+                    console.log('Category clicked:', this.getAttribute('data-category'));
                     // Remove active from all category buttons
                     categoryBtns.forEach(b => b.classList.remove('active'));
                     // Add active to clicked button
@@ -3685,8 +3589,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         function initTagFilters() {
             // Brand filters
             const brandBtns = document.querySelectorAll('#brandTags .tag-btn');
+            console.log('🏢 Brand buttons found:', brandBtns.length);
+            
             brandBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
+                    console.log('Brand clicked:', this.getAttribute('data-brand'));
                     // Remove active from all brand buttons
                     brandBtns.forEach(b => b.classList.remove('active'));
                     // Add active to clicked button
@@ -3958,9 +3865,21 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const searchInput = document.getElementById('searchInput');
             const clearFilters = document.getElementById('clearFilters');
             const applyFiltersBtn = document.getElementById('applyFilters');
+            
+            console.log('🚀 Filter System Init:', {
+                searchInput: !!searchInput,
+                clearFilters: !!clearFilters,
+                applyFiltersBtn: !!applyFiltersBtn
+            });
+
+            if (!applyFiltersBtn) {
+                console.error('❌ Apply filters button not found!');
+                return;
+            }
 
             // Initialize new filter system
             setTimeout(() => {
+                console.log('🔧 Initializing filters...');
                 initNewFilters();
             }, 100);
 
@@ -3968,6 +3887,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             // Apply Filters button click handler
             applyFiltersBtn.addEventListener('click', function() {
+                console.log('🎯 Apply Filters clicked!');
                 executeFilters();
             });
 

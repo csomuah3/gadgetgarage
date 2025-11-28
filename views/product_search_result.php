@@ -111,7 +111,7 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
             pointer-events: none;
         }
 
-        /* Promotional Banner Styles - Same as index */
+        
         
 
         

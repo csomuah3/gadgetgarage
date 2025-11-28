@@ -49,14 +49,24 @@ try {
         ];
     }
 
+    // Calculate total from items if no payment amount is available
+    $total_amount = 0;
+    foreach ($items as $item) {
+        $total_amount += $item['subtotal'];
+    }
+
+    // Use payment amount if available, otherwise use calculated total
+    $final_amount = $order['payment_amount'] ? (float)$order['payment_amount'] : $total_amount;
+
     // Prepare complete order data
     $order_data = [
         'order_id' => $order['order_id'],
         'invoice_no' => $order['invoice_no'],
         'order_date' => $order['order_date'],
         'order_status' => $order['order_status'],
-        'payment_amount' => $order['payment_amount'],
-        'currency' => $order['currency'],
+        'payment_amount' => $final_amount,
+        'total_amount' => $final_amount, // Add total_amount as well
+        'currency' => $order['currency'] ?: 'GHS',
         'payment_date' => $order['payment_date'],
         'items' => $items
     ];

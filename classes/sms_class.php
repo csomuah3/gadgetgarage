@@ -1,6 +1,6 @@
 <?php
 /**
- * SMS Service Class for Arkesel Integration
+ * SMS Service Class for Brevo Integration
  * Handles all SMS functionality including order confirmations, cart abandonment, etc.
  */
 
@@ -40,9 +40,9 @@ class SMSService extends db_connection {
         }
 
         // Use config constants as fallback
-        $this->api_key = $this->settings['arkesel_api_key'] ?? SMS_API_KEY;
-        $this->api_url = $this->settings['arkesel_api_url'] ?? SMS_API_URL;
-        $this->sender_id = $this->settings['arkesel_sender_id'] ?? SMS_SENDER_ID;
+        $this->api_key = $this->settings['brevo_api_key'] ?? SMS_API_KEY;
+        $this->api_url = $this->settings['brevo_api_url'] ?? SMS_API_URL;
+        $this->sender_id = $this->settings['brevo_sender_id'] ?? SMS_SENDER_ID;
     }
 
     /**
@@ -290,17 +290,16 @@ class SMSService extends db_connection {
                 throw new Exception('Rate limit exceeded for this phone number');
             }
 
-            // Prepare API request - Arkesel v2 uses POST with JSON body
-            // Arkesel might accept phone with or without +, try without + first
-            $phone_for_api = str_replace('+', '', $formatted_phone);
-            
+            // Prepare API request - Brevo API format
+            // Brevo requires international format with + sign
             $api_data = [
-                'sender' => $this->sender_id,
-                'message' => $message,
-                'recipients' => [$phone_for_api] // Try without + sign
+                'type' => 'transactional',
+                'content' => $message,
+                'recipient' => $formatted_phone, // Brevo expects +233 format
+                'sender' => $this->sender_id
             ];
             
-            error_log("Phone for API (without +): $phone_for_api");
+            error_log("Phone for Brevo API: $formatted_phone");
 
             // Log SMS attempt
             $log_id = $this->logSMSAttempt($order_id, $customer_id, $formatted_phone, $message_type, $message);
@@ -333,7 +332,7 @@ class SMSService extends db_connection {
             $curl_info = curl_getinfo($ch);
             curl_close($ch);
             
-            error_log("=== ARKESEL API RESPONSE ===");
+            error_log("=== BREVO API RESPONSE ===");
             error_log("HTTP Code: $http_code");
             error_log("cURL Error: " . ($error ? $error : 'None'));
             error_log("Response (first 500 chars): " . substr($response, 0, 500));

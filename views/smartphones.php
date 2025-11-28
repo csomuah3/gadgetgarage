@@ -149,7 +149,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             pointer-events: none;
         }
 
-        /* Promotional Banner Styles - Same as index */
+        
         
 
         

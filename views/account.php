@@ -1326,7 +1326,6 @@ try {
             <ul class="sidebar-nav">
                 <li><a href="account.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                 <li><a href="my_orders.php"><i class="fas fa-box"></i>My Orders</a></li>
-                <li><a href="track_order.php"><i class="fas fa-truck"></i>Track Orders</a></li>
                 <li><a href="account_info.php"><i class="fas fa-user-edit"></i>My Info</a></li>
                 <li><a href="notifications.php"><i class="fas fa-bell"></i>Notifications</a></li>
                 <li><a href="help_center.php"><i class="fas fa-question-circle"></i>Help Center</a></li>
@@ -1385,10 +1384,6 @@ try {
                             <i class="fas fa-box"></i>
                             <span>View My Orders</span>
                         </a>
-                        <a href="track_order.php" class="action-btn">
-                            <i class="fas fa-truck"></i>
-                            <span>Track an Order</span>
-                        </a>
                         <a href="cart.php" class="action-btn">
                             <i class="fas fa-shopping-cart"></i>
                             <span>View Cart</span>
@@ -1439,7 +1434,6 @@ try {
                                 <h5 class="footer-title">Get Help</h5>
                                 <ul class="footer-links">
                                     <li><a href="contact.php">Help Center</a></li>
-                                    <li><a href="contact.php">Track Order</a></li>
                                     <li><a href="terms_conditions.php">Shipping Info</a></li>
                                     <li><a href="terms_conditions.php">Returns</a></li>
                                     <li><a href="contact.php">Contact Us</a></li>

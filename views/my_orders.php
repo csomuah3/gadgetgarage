@@ -113,7 +113,7 @@ function getOrderStatus($order_date) {
             overflow-x: hidden;
         }
 
-        /* Promotional Banner Styles - EXACT COPY FROM CART */
+        
         
 
         

@@ -1,16 +1,16 @@
 <?php
 /**
  * SMS Configuration File
- * Arkesel API configuration and SMS settings
+ * Brevo (formerly Sendinblue) API configuration and SMS settings
  */
 
-// Arkesel API Configuration
-define('SMS_API_KEY', 'b05TRXV3bWJ2WnBlZmNXc2lMT28');
-define('SMS_API_URL', 'https://sms.arkesel.com/api/v2/sms/send');
-define('SMS_SENDER_ID', 'Gadget-G'); // Max 11 characters for Arkesel
+// Brevo API Configuration
+define('SMS_API_KEY', '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');
+define('SMS_API_URL', 'https://api.brevo.com/v3/transactionalSMS/sms');
+define('SMS_SENDER_ID', 'Gadget-G'); // Your sender name
 
 // SMS Settings
-define('SMS_ENABLED', false); // Temporarily disabled for registration debugging
+define('SMS_ENABLED', true); // Re-enabled with Brevo integration
 define('SMS_MAX_RETRIES', 3);
 define('SMS_RETRY_DELAY', 300); // 5 minutes in seconds
 define('SMS_RATE_LIMIT', 100); // Max SMS per hour

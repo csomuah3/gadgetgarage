@@ -216,9 +216,9 @@ try {
 
         .search-input:focus {
             outline: none;
-            border-color: #2563EB;
+            border-color: #008060;
             background: white;
-            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
         }
 
         .search-icon {
@@ -226,7 +226,7 @@ try {
             left: 18px;
             top: 50%;
             transform: translateY(-50%);
-            color: #2563EB;
+            color: #008060;
             font-size: 1.1rem;
         }
 
@@ -235,7 +235,7 @@ try {
             right: 6px;
             top: 50%;
             transform: translateY(-50%);
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border: none;
             padding: 8px 16px;
             border-radius: 20px;
@@ -246,7 +246,7 @@ try {
         }
 
         .search-btn:hover {
-            background: linear-gradient(135deg, #2563EB, #1E3A5F);
+            background: linear-gradient(135deg, #006b4e, #008060);
             transform: translateY(-50%) scale(1.05);
         }
 
@@ -273,7 +273,7 @@ try {
 
         .tech-revival-icon {
             font-size: 1.2rem;
-            color: #2563EB;
+            color: #008060;
             transition: transform 0.3s ease;
         }
 
@@ -293,7 +293,7 @@ try {
         .contact-number {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #2563EB;
+            color: #008060;
             margin: 0;
             margin-top: 4px;
         }
@@ -306,38 +306,62 @@ try {
 
         .header-icon {
             position: relative;
-            width: 48px;
-            height: 48px;
+            padding: 14px;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            color: #1f2937;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #374151;
-            font-size: 1.3rem;
-            transition: all 0.3s ease;
-            border-radius: 50%;
+        }
+
+        .header-icon i {
+            font-size: 1.8rem;
+            font-weight: 700;
+            stroke-width: 2;
+            -webkit-text-stroke: 1px currentColor;
         }
 
         .header-icon:hover {
-            background: rgba(37, 99, 235, 0.1);
-            transform: scale(1.1);
+            background: rgba(0, 128, 96, 0.15);
+            color: #008060;
+            transform: scale(1.15);
+            box-shadow: 0 4px 12px rgba(0, 128, 96, 0.2);
         }
 
-        .wishlist-badge,
         .cart-badge {
             position: absolute;
-            top: -2px;
-            right: -2px;
-            background: #ef4444;
+            top: 4px;
+            right: 4px;
+            background: linear-gradient(135deg, #006b4e, #008060);
             color: white;
-            border-radius: 50%;
-            width: 20px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 600;
-            border: 2px solid white;
+            font-size: 1rem;
+            font-weight: 100;
+            padding: 5px 9px;
+            border-radius: 14px;
+            min-width: 26px;
+            text-align: center;
+            border: 3px solid white;
+            box-shadow: none;
+            line-height: 1;
+        }
+
+        .wishlist-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background: linear-gradient(135deg, #ef4444, #dc2626);
+            color: white;
+            font-size: 1rem;
+            font-weight: 100;
+            padding: 5px 9px;
+            border-radius: 14px;
+            min-width: 26px;
+            text-align: center;
+            border: 3px solid white;
+            box-shadow: none;
+            line-height: 1;
         }
 
         .user-dropdown {
@@ -347,7 +371,7 @@ try {
         .user-avatar {
             width: 48px;
             height: 48px;
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            background: linear-gradient(135deg, #008060, #006b4e);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -357,11 +381,13 @@ try {
             font-size: 1.3rem;
             cursor: pointer;
             transition: all 0.3s ease;
+            box-shadow: 0 3px 10px rgba(0, 128, 96, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
         .user-avatar:hover {
             transform: scale(1.15);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.5);
+            box-shadow: 0 5px 15px rgba(0, 128, 96, 0.5);
         }
 
         .dropdown-menu-custom {
@@ -370,16 +396,16 @@ try {
             right: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(37, 99, 235, 0.2);
+            border: 1px solid rgba(139, 95, 191, 0.2);
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(37, 99, 235, 0.15);
+            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
             padding: 15px 0;
             min-width: 220px;
+            z-index: 1000;
             opacity: 0;
             visibility: hidden;
             transform: translateY(-10px);
             transition: all 0.3s ease;
-            z-index: 1000;
         }
 
         .dropdown-menu-custom.show {
@@ -403,8 +429,8 @@ try {
         }
 
         .dropdown-item-custom:hover {
-            background: rgba(37, 99, 235, 0.1);
-            color: #2563EB;
+            background: rgba(139, 95, 191, 0.1);
+            color: #008060;
             transform: translateX(3px);
         }
 
@@ -416,12 +442,48 @@ try {
 
         .dropdown-divider-custom {
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(139, 95, 191, 0.2), transparent);
             margin: 8px 0;
         }
 
+        .theme-toggle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            width: 40px;
+            height: 20px;
+            background: #e2e8f0;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-switch.active {
+            background: linear-gradient(135deg, #008060, #006b4e);
+        }
+
+        .toggle-slider {
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            width: 16px;
+            height: 16px;
+            background: white;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .toggle-switch.active .toggle-slider {
+            transform: translateX(20px);
+        }
+
         .login-btn {
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             border: none;
             padding: 10px 20px;
@@ -433,9 +495,15 @@ try {
         }
 
         .login-btn:hover {
-            background: linear-gradient(135deg, #2563EB, #1E3A5F);
+            background: linear-gradient(135deg, #006b4e, #008060);
             transform: translateY(-1px);
             color: white;
+        }
+
+        .language-selector {
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         /* Navigation Separator Styles */
@@ -494,9 +562,9 @@ try {
             transition: all 0.3s ease;
         }
 
-        .simple-dropdown a:hover {
+        .simple-dropdown ul li a:hover {
             background: #f3f4f6;
-            color: #2563EB;
+            color: #008060;
         }
 
         .flash-deal-spacer {
@@ -561,7 +629,7 @@ try {
 
         .brands-dropdown a:hover {
             background: #f3f4f6;
-            color: #2563EB;
+            color: #008060;
         }
 
         .brands-dropdown a i {
@@ -601,8 +669,8 @@ try {
         }
 
         .nav-item:hover {
-            background: rgba(37, 99, 235, 0.08);
-            color: #2563EB;
+            background: rgba(0, 128, 96, 0.1);
+            color: #008060;
             transform: translateY(-2px);
         }
 
@@ -623,7 +691,7 @@ try {
         }
 
         .categories-button {
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
+            background: #4f63d2;
             color: white;
             border: none;
             padding: 12px 20px;
@@ -740,7 +808,7 @@ try {
         }
 
         .dropdown-column ul li a:hover {
-            color: #2563EB;
+            color: #008060;
             transform: translateX(4px);
         }
 
@@ -790,18 +858,18 @@ try {
         }
 
         .shop-now-btn {
-            background: #2563EB;
+            background: #008060;
             color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
+            padding: 6px 12px;
+            border-radius: 4px;
             text-decoration: none;
-            font-size: 0.6rem;
-            font-weight: 500;
+            font-size: 0.8rem;
+            font-weight: 600;
             transition: all 0.3s ease;
         }
 
         .shop-now-btn:hover {
-            background: #374151;
+            background: #006b4e;
             color: white;
         }
 
@@ -836,7 +904,7 @@ try {
         }
 
         .toggle-switch.active {
-            background: #2563EB;
+            background: linear-gradient(135deg, #008060, #006b4e);
         }
 
         .toggle-slider {
@@ -1186,10 +1254,10 @@ try {
             <i class="fas fa-bolt"></i>
         </div>
         <div class="promo-banner-center">
-            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
+            <span class="promo-text" data-translate="black_friday_deals">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS! </span>
             <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
         </div>
-        <a href="index.php#flash-deals" class="promo-shop-link">Shop Now</a>
+        <a href="index.php#flash-deals" class="promo-shop-link" data-translate="shop_now">Shop Now</a>
     </div>
 
     <!-- Floating Bubbles Background -->
@@ -1197,7 +1265,7 @@ try {
 
     <!-- Main Header -->
     <header class="main-header animate__animated animate__fadeInDown">
-        <div class="container-fluid" style="padding: 0 40px;">
+        <div class="container-fluid" style="padding: 0 120px 0 95px;">
             <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
                 <!-- Logo - Far Left -->
                 <a href="index.php" class="logo">
@@ -1229,7 +1297,7 @@ try {
                 <!-- User Actions - Far Right -->
                 <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
                     <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-                    <?php if ($is_logged_in): ?>
+                    <?php if (isset($_SESSION['user_id'])): ?>
                         <!-- Wishlist Icon -->
                         <div class="header-icon">
                             <a href="views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
@@ -1252,13 +1320,29 @@ try {
 
                         <!-- User Avatar Dropdown -->
                         <div class="user-dropdown">
-                            <div class="user-avatar" id="userAvatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>">
+                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
                                 <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
                             </div>
                             <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="goToAccount()">
+                                <a href="views/account.php" class="dropdown-item-custom">
                                     <i class="fas fa-user"></i>
-                                    <span>Account</span>
+                                    <span data-translate="account">Account</span>
+                                </a>
+                                <a href="views/my_orders.php" class="dropdown-item-custom">
+                                    <i class="fas fa-shopping-bag"></i>
+                                    <span data-translate="my_orders">My Orders</span>
+                                </a>
+                                <a href="track_order.php" class="dropdown-item-custom">
+                                    <i class="fas fa-truck"></i>
+                                    <span data-translate="track_orders">Track Orders</span>
+                                </a>
+                                <a href="views/notifications.php" class="dropdown-item-custom">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </a>
+                                <button class="dropdown-item-custom" onclick="openProfilePictureModal()">
+                                    <i class="fas fa-camera"></i>
+                                    <span>Profile Picture</span>
                                 </button>
                                 <div class="dropdown-divider-custom"></div>
                                 <div class="dropdown-item-custom">
@@ -1294,6 +1378,11 @@ try {
                         <a href="login/login.php" class="login-btn">
                             <i class="fas fa-user"></i>
                             Login
+                        </a>
+                        <!-- Register Button -->
+                        <a href="login/register.php" class="login-btn" style="margin-left: 10px;">
+                            <i class="fas fa-user-plus"></i>
+                            Register
                         </a>
                     <?php endif; ?>
                 </div>
@@ -1747,6 +1836,173 @@ try {
             // Language change logic can be added here
             console.log('Language changed to:', lang);
         }
+        // Timer functionality
+        function updateTimer() {
+            const timerElement = document.getElementById('promoTimer');
+            if (timerElement) {
+                const now = new Date().getTime();
+                const nextDay = new Date();
+                nextDay.setDate(nextDay.getDate() + 1);
+                nextDay.setHours(0, 0, 0, 0);
+
+                const distance = nextDay.getTime() - now;
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60 * 60)) / 1000);
+
+                timerElement.textContent = `${days}d:${hours}h:${minutes}m:${seconds}s`;
+            }
+        }
+
+        setInterval(updateTimer, 1000);
+        updateTimer();
+
+        // Dropdown navigation functions with timeout delays
+        let dropdownTimeout;
+        let shopDropdownTimeout;
+        let moreDropdownTimeout;
+        let userDropdownTimeout;
+
+        function showDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideDropdown() {
+            const dropdown = document.getElementById('shopDropdown');
+            if (dropdown) {
+                clearTimeout(dropdownTimeout);
+                dropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function showShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideShopDropdown() {
+            const dropdown = document.getElementById('shopCategoryDropdown');
+            if (dropdown) {
+                clearTimeout(shopDropdownTimeout);
+                shopDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function showMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideMoreDropdown() {
+            const dropdown = document.getElementById('moreDropdown');
+            if (dropdown) {
+                clearTimeout(moreDropdownTimeout);
+                moreDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function showUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                dropdown.classList.add('show');
+            }
+        }
+
+        function hideUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                clearTimeout(userDropdownTimeout);
+                userDropdownTimeout = setTimeout(() => {
+                    dropdown.classList.remove('show');
+                }, 300);
+            }
+        }
+
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdownMenu');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        // Enhanced dropdown behavior
+        document.addEventListener('DOMContentLoaded', function() {
+            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
+            const brandsDropdown = document.getElementById('shopDropdown');
+
+            if (shopCategoriesBtn && brandsDropdown) {
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(dropdownTimeout);
+                });
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+            }
+
+            const userAvatar = document.querySelector('.user-avatar');
+            const userDropdown = document.getElementById('userDropdownMenu');
+
+            if (userAvatar && userDropdown) {
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseenter', function() {
+                    clearTimeout(userDropdownTimeout);
+                });
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+            }
+        });
+
+        // Language and theme functions
+        function changeLanguage(lang) {
+            console.log('Language changed to:', lang);
+        }
+
+        function toggleTheme() {
+            const toggle = document.getElementById('themeToggle');
+            const body = document.body;
+            if (toggle) {
+                toggle.classList.toggle('active');
+                body.classList.toggle('dark-mode');
+                localStorage.setItem('darkMode', body.classList.contains('dark-mode'));
+            }
+        }
+
+        function openProfilePictureModal() {
+            console.log('Open profile picture modal');
+        }
+
+        function goToAccount() {
+            window.location.href = 'views/account.php';
+        }
+
+        // Load dark mode preference
+        document.addEventListener('DOMContentLoaded', function() {
+            const darkMode = localStorage.getItem('darkMode') === 'true';
+            const toggle = document.getElementById('themeToggle');
+            if (darkMode && toggle) {
+                toggle.classList.add('active');
+                document.body.classList.add('dark-mode');
+            }
+        });
     </script>
 </body>
 

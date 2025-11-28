@@ -539,13 +539,13 @@ if (isset($_SESSION['error_message'])) {
                                 <div class="dropdown-search">
                                     <input type="text" placeholder="Search categories..." class="dropdown-search-input" id="categorySearch">
                                 </div>
-                                <div class="dropdown-option selected" data-value="1">Laptops</div>
+                                <div class="dropdown-option selected" data-value="12">Laptops</div>
                                 <?php foreach ($categories as $category): ?>
                                     <div class="dropdown-option" data-value="<?= $category['cat_id'] ?>"><?= htmlspecialchars($category['cat_name']) ?></div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <input type="hidden" id="product_cat" name="product_cat" value="1">
+                        <input type="hidden" id="product_cat" name="product_cat" value="12">
                     </div>
 
                     <div class="form-group">
@@ -559,13 +559,13 @@ if (isset($_SESSION['error_message'])) {
                                 <div class="dropdown-search">
                                     <input type="text" placeholder="Search brands..." class="dropdown-search-input" id="brandSearch">
                                 </div>
-                                <div class="dropdown-option selected" data-value="1">Lenovo Laptop</div>
+                                <div class="dropdown-option selected" data-value="25">Lenovo Laptop</div>
                                 <?php foreach ($brands as $brand): ?>
                                     <div class="dropdown-option" data-value="<?= $brand['brand_id'] ?>"><?= htmlspecialchars($brand['brand_name']) ?></div>
                                 <?php endforeach; ?>
                             </div>
                         </div>
-                        <input type="hidden" id="product_brand" name="product_brand" value="1">
+                        <input type="hidden" id="product_brand" name="product_brand" value="25">
                     </div>
 
                     <div class="form-group">

@@ -1220,11 +1220,13 @@ function getOrderStatus($order_date) {
 
         .order-actions {
             display: flex;
-            gap: 12px;
+            gap: 10px;
+            flex-wrap: wrap;
         }
 
         .action-btn {
             flex: 1;
+            min-width: 100px;
             padding: 12px 20px;
             border: none;
             border-radius: 8px;
@@ -1234,23 +1236,35 @@ function getOrderStatus($order_date) {
             cursor: pointer;
         }
 
-        .view-details-btn {
+        .details-btn {
             background: #e2e8f0;
             color: #475569;
         }
 
-        .view-details-btn:hover {
+        .details-btn:hover {
             background: #cbd5e1;
             color: #334155;
+            transform: translateY(-2px);
         }
 
-        .track-order-btn {
+        .track-btn {
             background: #3182ce;
             color: white;
         }
 
-        .track-order-btn:hover {
+        .track-btn:hover {
             background: #2c5aa0;
+            transform: translateY(-2px);
+        }
+
+        .refund-btn {
+            background: #f59e0b;
+            color: white;
+        }
+
+        .refund-btn:hover {
+            background: #d97706;
+            transform: translateY(-2px);
         }
 
         .cancel-order-btn {
@@ -1260,6 +1274,7 @@ function getOrderStatus($order_date) {
 
         .cancel-order-btn:hover {
             background: #dc2626;
+            transform: translateY(-2px);
         }
 
         .cancel-order-btn:disabled {
@@ -1974,13 +1989,17 @@ function getOrderStatus($order_date) {
                                     </div>
 
                                     <div class="order-actions">
-                                        <button class="action-btn track-order-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>')">
-                                            <i class="fas fa-truck"></i>
-                                            Track Order
+                                        <button class="action-btn details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            Details
+                                        </button>
+                                        <button class="action-btn track-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>', '<?= htmlspecialchars($order['order_date']) ?>')">
+                                            Track
+                                        </button>
+                                        <button class="action-btn refund-btn" onclick="requestRefund(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            Refund
                                         </button>
                                         <button class="action-btn cancel-order-btn" onclick="cancelOrder(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
-                                            <i class="fas fa-times"></i>
-                                            Cancel Order
+                                            Cancel
                                         </button>
                                     </div>
                                 </div>
@@ -2057,13 +2076,14 @@ function getOrderStatus($order_date) {
                                     </div>
 
                                     <div class="order-actions">
-                                        <button class="action-btn track-order-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>')">
-                                            <i class="fas fa-truck"></i>
-                                            Track Order
+                                        <button class="action-btn details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            Details
                                         </button>
-                                        <button class="action-btn view-details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>)">
-                                            <i class="fas fa-eye"></i>
-                                            View Details
+                                        <button class="action-btn track-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>', '<?= htmlspecialchars($order['order_date']) ?>')">
+                                            Track
+                                        </button>
+                                        <button class="action-btn refund-btn" onclick="requestRefund(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
+                                            Refund
                                         </button>
                                     </div>
                                 </div>
@@ -2226,10 +2246,262 @@ function getOrderStatus($order_date) {
                 });
         }
 
-        // Track Order Function
-        function trackOrder(orderReference) {
-            // Redirect to tracking page with order reference
-            window.location.href = 'track_order.php?ref=' + encodeURIComponent(orderReference);
+        // View Order Details Function
+        function viewOrderDetails(orderId, orderReference) {
+            // Fetch order details
+            fetch(`../actions/get_order_details.php?order_id=${orderId}`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        showOrderDetailsModal(data.order, orderReference);
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to load order details'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to load order details'
+                    });
+                });
+        }
+
+        // Show Order Details Modal
+        function showOrderDetailsModal(order, orderReference) {
+            const orderDate = new Date(order.order_date);
+            const estimatedDelivery = new Date(orderDate);
+            estimatedDelivery.setDate(estimatedDelivery.getDate() + 4);
+            
+            const formatDate = (date) => {
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${days[date.getDay()]}, ${date.getDate()}. ${months[date.getMonth()].toUpperCase()}`;
+            };
+
+            // Calculate delivery status
+            const daysSinceOrder = Math.floor((new Date() - orderDate) / (1000 * 60 * 60 * 24));
+            let currentStep = 0;
+            if (daysSinceOrder >= 4) currentStep = 4;
+            else if (daysSinceOrder >= 2) currentStep = 3;
+            else if (daysSinceOrder >= 1) currentStep = 2;
+            else currentStep = 1;
+
+            const progressPercentage = (currentStep / 4) * 100;
+
+            const modalHTML = `
+                <div style="text-align: left; max-width: 900px; margin: 0 auto;">
+                    <!-- Delivery Progress -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+                        <h6 style="margin: 0 0 10px 0; font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase;">Estimated Delivery:</h6>
+                        <h3 style="margin: 0 0 20px 0; font-size: 24px; font-weight: bold; color: #212529;">${formatDate(estimatedDelivery)}</h3>
+                        
+                        <div style="background: #e9ecef; height: 8px; border-radius: 20px; margin-bottom: 15px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #28a745, #20c997); height: 100%; width: ${progressPercentage}%; transition: width 0.3s ease;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; gap: 10px;">
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 1 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">✓</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 1 ? '#212529' : '#6c757d'}; font-weight: 600;">Ordered</div>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 2 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">✓</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 2 ? '#212529' : '#6c757d'}; font-weight: 600;">Shipped</div>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 3 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">${currentStep >= 3 ? '✓' : '○'}</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 3 ? '#212529' : '#6c757d'}; font-weight: 600;">Arriving Soon</div>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 4 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">${currentStep >= 4 ? '✓' : '○'}</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 4 ? '#212529' : '#6c757d'}; font-weight: 600;">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Info -->
+                    <div style="background: white; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Order #</div>
+                                <div style="font-weight: 600;">${orderReference}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Date Placed</div>
+                                <div style="font-weight: 600;">${new Date(order.order_date).toLocaleString()}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Total</div>
+                                <div style="font-weight: 600; color: #28a745;">GH₵${parseFloat(order.total_amount).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Three Columns -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                        <!-- Delivery Address -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h6 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; color: #495057;">Delivery Address</h6>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.6;">${order.customer_name || 'N/A'}<br>${order.customer_city || ''}<br>${order.customer_country || 'Ghana'}</p>
+                        </div>
+
+                        <!-- Shipping Methods -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h6 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; color: #495057;">Shipping Methods</h6>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.6;">In Transit<br>Standard Delivery</p>
+                        </div>
+
+                        <!-- Billing Address -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h6 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; color: #495057;">Billing Address</h6>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.6;">${order.customer_name || 'N/A'}<br>${order.customer_city || ''}<br>${order.customer_country || 'Ghana'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Product List -->
+                    <div style="background: white; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px;">
+                        <h6 style="font-size: 15px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">Product in Order</h6>
+                        <p style="font-size: 13px; color: #6c757d; margin-bottom: 15px;">Once your package is delivered, drop us a review!</p>
+                        
+                        ${order.items ? order.items.map(item => `
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                                <img src="${item.product_image || '../images/placeholder.jpg'}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" alt="${item.product_title}">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">${item.product_title}</div>
+                                    <div style="font-size: 13px; color: #6c757d;">Size: ${item.size || 'N/A'}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 700; font-size: 16px; color: #212529;">GH₵${parseFloat(item.product_price).toFixed(2)}</div>
+                                    <div style="font-size: 13px; color: #6c757d;">Qty: ${item.qty}</div>
+                                </div>
+                            </div>
+                        `).join('') : '<p>No items found</p>'}
+                    </div>
+                </div>
+            `;
+
+            Swal.fire({
+                title: `Order #${orderReference}`,
+                html: modalHTML,
+                width: '1000px',
+                showCloseButton: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Close',
+                customClass: {
+                    popup: 'order-details-modal',
+                    confirmButton: 'btn btn-primary'
+                }
+            });
+        }
+
+        // Track Order Function - Horizontal Timeline
+        function trackOrder(orderReference, orderDate) {
+            const orderDateTime = new Date(orderDate);
+            const now = new Date();
+            const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
+
+            // Calculate status times
+            const orderConfirmedTime = new Date(orderDateTime);
+            const packagePreparedTime = new Date(orderDateTime);
+            packagePreparedTime.setDate(packagePreparedTime.getDate() + 1);
+            const inTransitTime = new Date(orderDateTime);
+            inTransitTime.setDate(inTransitTime.getDate() + 2);
+            const outForDeliveryTime = new Date(orderDateTime);
+            outForDeliveryTime.setDate(outForDeliveryTime.getDate() + 4);
+
+            const formatDateTime = (date) => {
+                const day = date.getDate();
+                const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+                const time = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                return `${day} ${month}<br>${time}`;
+            };
+
+            let currentStep = 0;
+            if (daysSinceOrder >= 4) currentStep = 4;
+            else if (daysSinceOrder >= 2) currentStep = 3;
+            else if (daysSinceOrder >= 1) currentStep = 2;
+            else currentStep = 1;
+
+            const trackingHTML = `
+                <div style="padding: 30px; max-width: 900px; margin: 0 auto;">
+                    <div style="position: relative; padding: 40px 0;">
+                        <!-- Timeline Line -->
+                        <div style="position: absolute; top: 70px; left: 50px; right: 50px; height: 4px; background: #e9ecef;"></div>
+                        <div style="position: absolute; top: 70px; left: 50px; width: ${((currentStep - 1) / 3) * 100}%; height: 4px; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.5s ease;"></div>
+
+                        <!-- Timeline Steps -->
+                        <div style="display: flex; justify-content: space-between; position: relative; z-index: 1;">
+                            <!-- Order Confirmed -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 1 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 1 ? '✓' : '1'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 1 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Order confirmed</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(orderConfirmedTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Order placed and confirmed</div>
+                            </div>
+
+                            <!-- Package Prepared -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 2 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 2 ? '✓' : '2'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 2 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Package prepared</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(packagePreparedTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Packed and handed to carrier</div>
+                            </div>
+
+                            <!-- In Transit -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 3 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 3 ? '✓' : '3'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 3 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">In transit</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(inTransitTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Package in transit</div>
+                            </div>
+
+                            <!-- Out for Delivery -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 4 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 4 ? '✓' : '4'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 4 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Out for delivery</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(outForDeliveryTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Will be delivered today</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            Swal.fire({
+                title: `Track Order #${orderReference}`,
+                html: trackingHTML,
+                width: '1000px',
+                showCloseButton: true,
+                showConfirmButton: true,
+                confirmButtonText: 'Close',
+                customClass: {
+                    popup: 'tracking-modal'
+                }
+            });
+        }
+
+        // Request Refund Function (Placeholder for now)
+        function requestRefund(orderId, orderReference) {
+            Swal.fire({
+                title: 'Refund Request',
+                html: `Request a refund for order <strong>#${orderReference}</strong>?<br><br><small>Refund functionality will be available soon.</small>`,
+                icon: 'info',
+                confirmButtonText: 'OK'
+            });
         }
 
         // Cancel Order Function

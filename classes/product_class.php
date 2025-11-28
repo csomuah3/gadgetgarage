@@ -18,7 +18,7 @@ class Product extends db_connection
         try {
             error_log("Attempting to add product...");
 
-            // Escape all string inputs like categories do
+            // Escape all string inputs
             $product_title = mysqli_real_escape_string($this->db, $product_title);
             $product_desc = mysqli_real_escape_string($this->db, $product_desc);
             $product_image = mysqli_real_escape_string($this->db, $product_image);
@@ -30,7 +30,8 @@ class Product extends db_connection
 
             error_log("Executing SQL: " . $sql);
 
-            $result = $this->db_query($sql);
+            // Use db_write_query for INSERT operations
+            $result = $this->db_write_query($sql);
 
             if ($result === false) {
                 error_log("Add product error: Failed to execute insert query");

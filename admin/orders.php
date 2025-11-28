@@ -736,6 +736,17 @@ function viewOrderDetails(orderId) {
                                 font-weight: 700;
                                 margin: 10px 0;
                             }
+                            .swal-close-button {
+                                font-size: 32px !important;
+                                color: #999 !important;
+                                font-weight: 300 !important;
+                                opacity: 1 !important;
+                                transition: all 0.3s ease !important;
+                            }
+                            .swal-close-button:hover {
+                                color: #333 !important;
+                                transform: scale(1.1) !important;
+                            }
                             @media (max-width: 768px) {
                                 .order-info-row { grid-template-columns: 1fr; }
                             }
@@ -840,11 +851,15 @@ function viewOrderDetails(orderId) {
                     title: `<i class="fas fa-file-invoice text-primary me-2"></i>Order #${order.order_id}`,
                     html: orderDetailsHTML,
                     showCancelButton: false,
+                    showCloseButton: true,
                     confirmButtonText: '<i class="fas fa-times me-2"></i>Close',
                     width: '950px',
+                    allowOutsideClick: true,
+                    allowEscapeKey: true,
                     customClass: {
                         popup: 'order-details-popup',
-                        confirmButton: 'btn btn-secondary btn-lg'
+                        confirmButton: 'btn btn-secondary btn-lg',
+                        closeButton: 'swal-close-button'
                     },
                     showClass: {
                         popup: 'animate__animated animate__fadeInDown'

@@ -166,10 +166,24 @@ class Order extends db_connection
 
     public function generate_invoice_number()
     {
-        // Generate a simple 6-7 digit invoice number to ensure it fits in any integer column
-        // Format: HHMMSSRR (hour, minute, second, 2-digit random)
-        // This will generate numbers like: 14532301 (max 8 digits)
-        return date('His') . str_pad(rand(1, 99), 2, '0', STR_PAD_LEFT);
+        // Generate a simple 6-digit invoice number for consistency
+        // Format: DDMMRR (day, month, 2-digit random) followed by sequential number
+        // This will generate numbers like: 165250, 165251, etc.
+
+        // Get current date components
+        $day = date('d');
+        $month = date('m');
+
+        // Get next sequential number from database
+        $count_sql = "SELECT COUNT(*) as order_count FROM orders WHERE DATE(order_date) = CURDATE()";
+        $result = $this->db_fetch_one($count_sql);
+        $daily_count = $result ? $result['order_count'] + 1 : 1;
+
+        // Format: DDMMNN (day + month + daily count)
+        $invoice_number = $day . $month . str_pad($daily_count, 2, '0', STR_PAD_LEFT);
+
+        error_log("Generated invoice number: " . $invoice_number);
+        return $invoice_number;
     }
 
     public function generate_order_reference()
@@ -331,6 +345,12 @@ class Order extends db_connection
 
             error_log("Searching for order with value: " . $search_value);
 
+            // Try multiple search patterns for invoice numbers
+            $clean_search = str_replace(['#', ' '], '', $search_value); // Remove # and spaces
+            $with_hash = '#' . $clean_search; // Add # prefix
+
+            error_log("Original search: '$search_value', Clean search: '$clean_search', With hash: '$with_hash'");
+
             // First, try to find the order by order_id or tracking_number
             $order_sql = "SELECT o.*,
                                  COALESCE(p.amt, 0) as total_amount,
@@ -342,7 +362,12 @@ class Order extends db_connection
                           LEFT JOIN customer c ON o.customer_id = c.customer_id
                           WHERE (o.order_id = '$search_value'
                              OR o.tracking_number = '$search_value'
-                             OR o.invoice_no = '$search_value')
+                             OR o.invoice_no = '$search_value'
+                             OR o.invoice_no = '$clean_search'
+                             OR o.invoice_no = '$with_hash'
+                             OR REPLACE(o.invoice_no, '#', '') = '$clean_search'
+                             OR CONCAT('#', o.invoice_no) = '$search_value'
+                             OR o.invoice_no LIKE '%$clean_search%')
                           GROUP BY o.order_id
                           LIMIT 1";
 

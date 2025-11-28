@@ -65,6 +65,54 @@ try {
     exit();
 }
 
+// Get product images from product_images table
+$product_images = [];
+try {
+    require_once(__DIR__ . '/../settings/db_class.php');
+    $db = new db_connection();
+    if ($db->db_connect()) {
+        $conn = $db->db_conn();
+
+        $stmt = $conn->prepare("
+            SELECT image_id, image_url, image_name, is_primary, sort_order
+            FROM product_images
+            WHERE product_id = ?
+            ORDER BY is_primary DESC, sort_order ASC, image_id ASC
+        ");
+        $stmt->bind_param('i', $product_id);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        while ($row = $result->fetch_assoc()) {
+            $product_images[] = $row;
+        }
+        $stmt->close();
+    }
+
+    // If no images in product_images table, use the main product image as fallback
+    if (empty($product_images) && !empty($product['product_image'])) {
+        $product_images[] = [
+            'image_id' => 0,
+            'image_url' => $product['product_image'],
+            'image_name' => $product['product_title'] ?? 'Product Image',
+            'is_primary' => 1,
+            'sort_order' => 0
+        ];
+    }
+} catch (Exception $e) {
+    error_log("Product images retrieval error: " . $e->getMessage());
+    // Fallback to main product image
+    if (!empty($product['product_image'])) {
+        $product_images[] = [
+            'image_id' => 0,
+            'image_url' => $product['product_image'],
+            'image_name' => $product['product_title'] ?? 'Product Image',
+            'is_primary' => 1,
+            'sort_order' => 0
+        ];
+    }
+}
+
 // Category-based pricing configuration
 $categoryPricing = [
     'Smartphones' => ['excellent' => 0, 'good' => 2000, 'fair' => 3500],
@@ -1411,6 +1459,7 @@ try {
             align-items: center;
             justify-content: center;
             background: white;
+            overflow: hidden;
         }
 
         .main-product-image {
@@ -1418,6 +1467,104 @@ try {
             max-height: 100%;
             object-fit: contain;
             border-radius: 0;
+            cursor: crosshair;
+            transition: all 0.3s ease;
+        }
+
+        /* Magnifying Glass Styles */
+        .magnify-container {
+            position: relative;
+            display: inline-block;
+            overflow: hidden;
+            border-radius: 8px;
+        }
+
+        .magnify-lens {
+            position: absolute;
+            border: 2px solid #4285F4;
+            border-radius: 50%;
+            cursor: crosshair;
+            width: 150px;
+            height: 150px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            background: rgba(66, 133, 244, 0.1);
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+        }
+
+        .magnify-lens.active {
+            opacity: 1;
+        }
+
+        .magnify-result {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            width: 200px;
+            height: 200px;
+            border: 2px solid #4285F4;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 10;
+        }
+
+        .magnify-result.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .magnify-result img {
+            width: auto;
+            height: auto;
+            position: absolute;
+        }
+
+        /* Thumbnail Gallery Styles */
+        .thumbnail-gallery {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            overflow-x: auto;
+        }
+
+        .thumbnail-item {
+            flex-shrink: 0;
+            width: 80px;
+            height: 80px;
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+            border: 2px solid #e9ecef;
+            transition: all 0.3s ease;
+            opacity: 0.7;
+        }
+
+        .thumbnail-item:hover {
+            border-color: #4285F4;
+            transform: scale(1.05);
+            opacity: 1;
+        }
+
+        .thumbnail-item.active {
+            border-color: #4285F4;
+            opacity: 1;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.3);
+        }
+
+        .thumbnail-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
         }
 
         .gallery-arrow {
@@ -1801,21 +1948,37 @@ try {
                 <div class="col-lg-6">
                     <!-- Product Image Gallery -->
                     <div class="product-gallery">
-                        <!-- Main Image Display -->
+                        <!-- Main Image Display with Magnifying Glass -->
                         <div class="main-image-container">
-                            <?php
-                            $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product', '600x400');
-                            $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '600x400');
-                            ?>
-                            <img src="<?php echo htmlspecialchars($image_url); ?>" id="mainProductImage"
-                                alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                                class="main-product-image"
-                                data-product-id="<?php echo $product['product_id']; ?>"
-                                data-product-image="<?php echo htmlspecialchars($product['product_image'] ?? ''); ?>"
-                                data-product-title="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
-                                onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
+                            <div class="magnify-container" id="magnifyContainer">
+                                <?php
+                                // Get the primary image or first available image
+                                $primary_image = !empty($product_images) ? $product_images[0] : null;
+                                if ($primary_image) {
+                                    $image_url = get_product_image_url($primary_image['image_url'], $primary_image['image_name'], '600x400');
+                                } else {
+                                    $image_url = generate_placeholder_url($product['product_title'] ?? 'Product', '600x400');
+                                }
+                                ?>
+                                <img src="<?php echo htmlspecialchars($image_url); ?>"
+                                     id="mainProductImage"
+                                     alt="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>"
+                                     class="main-product-image"
+                                     data-product-id="<?php echo $product['product_id']; ?>"
+                                     data-product-title="<?php echo htmlspecialchars($product['product_title'] ?? 'Product'); ?>">
 
-                            <!-- Navigation Arrows -->
+                                <!-- Magnifying Lens -->
+                                <div class="magnify-lens" id="magnifyLens"></div>
+
+                                <!-- Magnified Result Window -->
+                                <div class="magnify-result" id="magnifyResult">
+                                    <img src="<?php echo htmlspecialchars($image_url); ?>"
+                                         id="magnifyResultImage"
+                                         alt="Magnified view">
+                                </div>
+                            </div>
+
+                            <!-- Navigation Arrows (if needed) -->
                             <button class="gallery-arrow gallery-arrow-left" onclick="previousImage()" style="display: none;">
                                 <i class="fas fa-chevron-up"></i>
                             </button>
@@ -1827,7 +1990,22 @@ try {
                         <!-- Thumbnail Gallery (Left Side) -->
                         <div class="thumbnail-container">
                             <div class="thumbnail-list" id="thumbnailList">
-                                <!-- Thumbnails will be loaded here dynamically -->
+                                <?php if (!empty($product_images) && count($product_images) > 1): ?>
+                                    <?php foreach ($product_images as $index => $image): ?>
+                                        <?php
+                                        $thumb_url = get_product_image_url($image['image_url'], $image['image_name'], '80x80');
+                                        $active_class = $index === 0 ? 'active' : '';
+                                        ?>
+                                        <div class="thumbnail-item <?php echo $active_class; ?>"
+                                             onclick="changeMainImage(<?php echo $index; ?>)"
+                                             data-image-url="<?php echo htmlspecialchars($image['image_url']); ?>"
+                                             data-thumb-url="<?php echo htmlspecialchars($thumb_url); ?>"
+                                             data-index="<?php echo $index; ?>">
+                                            <img src="<?php echo htmlspecialchars($thumb_url); ?>"
+                                                 alt="<?php echo htmlspecialchars($image['image_name']); ?>">
+                                        </div>
+                                    <?php endforeach; ?>
+                                <?php endif; ?>
                             </div>
                         </div>
                     </div>
@@ -1977,6 +2155,151 @@ try {
             good: <?php echo $goodPrice; ?>,
             fair: <?php echo $fairPrice; ?>
         };
+
+        // Product images array from PHP
+        const productImages = <?php echo json_encode($product_images); ?>;
+        let currentImageIndex = 0;
+
+        // Magnifying Glass Function
+        function initializeMagnifyingGlass() {
+            const magnifyContainer = document.getElementById('magnifyContainer');
+            const mainImage = document.getElementById('mainProductImage');
+            const magnifyLens = document.getElementById('magnifyLens');
+            const magnifyResult = document.getElementById('magnifyResult');
+            const magnifyResultImage = document.getElementById('magnifyResultImage');
+
+            if (!magnifyContainer || !mainImage || !magnifyLens || !magnifyResult || !magnifyResultImage) {
+                console.log('Magnifying glass elements not found');
+                return;
+            }
+
+            // Magnifying glass functionality
+            function magnify() {
+                let cx, cy;
+
+                // Calculate the ratio between result DIV and lens
+                cx = magnifyResult.offsetWidth / magnifyLens.offsetWidth;
+                cy = magnifyResult.offsetHeight / magnifyLens.offsetHeight;
+
+                // Set background properties for the result DIV
+                magnifyResultImage.style.width = (mainImage.width * cx) + "px";
+                magnifyResultImage.style.height = (mainImage.height * cx) + "px";
+
+                // Mouse move function
+                function moveMagnifier(e) {
+                    e.preventDefault();
+
+                    // Get the cursor's x and y positions
+                    const pos = getCursorPos(e);
+                    let x = pos.x;
+                    let y = pos.y;
+
+                    // Prevent the magnifying glass from being positioned outside the image
+                    if (x > mainImage.width - (magnifyLens.offsetWidth / 2)) { x = mainImage.width - (magnifyLens.offsetWidth / 2); }
+                    if (x < magnifyLens.offsetWidth / 2) { x = magnifyLens.offsetWidth / 2; }
+                    if (y > mainImage.height - (magnifyLens.offsetHeight / 2)) { y = mainImage.height - (magnifyLens.offsetHeight / 2); }
+                    if (y < magnifyLens.offsetHeight / 2) { y = magnifyLens.offsetHeight / 2; }
+
+                    // Set the position of the magnifying glass
+                    magnifyLens.style.left = (x - magnifyLens.offsetWidth / 2) + "px";
+                    magnifyLens.style.top = (y - magnifyLens.offsetHeight / 2) + "px";
+
+                    // Display what the magnifying glass "sees"
+                    magnifyResultImage.style.left = ((x * cx) - magnifyResult.offsetWidth / 2) * -1 + "px";
+                    magnifyResultImage.style.top = ((y * cy) - magnifyResult.offsetHeight / 2) * -1 + "px";
+                }
+
+                function getCursorPos(e) {
+                    const a = mainImage.getBoundingClientRect();
+                    const x = e.pageX - a.left;
+                    const y = e.pageY - a.top;
+                    x = x - window.pageXOffset;
+                    y = y - window.pageYOffset;
+                    return {x: x, y: y};
+                }
+
+                // Show magnifying glass on mouse enter
+                function showMagnifier() {
+                    magnifyLens.classList.add('active');
+                    magnifyResult.classList.add('active');
+                }
+
+                // Hide magnifying glass on mouse leave
+                function hideMagnifier() {
+                    magnifyLens.classList.remove('active');
+                    magnifyResult.classList.remove('active');
+                }
+
+                // Add event listeners
+                magnifyContainer.addEventListener('mouseenter', showMagnifier);
+                magnifyContainer.addEventListener('mouseleave', hideMagnifier);
+                magnifyContainer.addEventListener('mousemove', moveMagnifier);
+
+                // Touch events for mobile
+                magnifyContainer.addEventListener('touchstart', function(e) {
+                    e.preventDefault();
+                    showMagnifier();
+                });
+
+                magnifyContainer.addEventListener('touchend', function(e) {
+                    e.preventDefault();
+                    hideMagnifier();
+                });
+
+                magnifyContainer.addEventListener('touchmove', function(e) {
+                    e.preventDefault();
+                    const touch = e.touches[0];
+                    const mouseEvent = new MouseEvent('mousemove', {
+                        clientX: touch.clientX,
+                        clientY: touch.clientY,
+                        pageX: touch.pageX,
+                        pageY: touch.pageY
+                    });
+                    moveMagnifier(mouseEvent);
+                });
+            }
+
+            // Initialize magnifying glass
+            magnify();
+        }
+
+        // Change main image function
+        function changeMainImage(index) {
+            if (index < 0 || index >= productImages.length) return;
+
+            currentImageIndex = index;
+            const selectedImage = productImages[index];
+            const mainImage = document.getElementById('mainProductImage');
+            const magnifyResultImage = document.getElementById('magnifyResultImage');
+
+            if (mainImage && selectedImage) {
+                // Update main image
+                const newImageUrl = generateImageUrl(selectedImage.image_url, selectedImage.image_name, '600x400');
+                mainImage.src = newImageUrl;
+                mainImage.alt = selectedImage.image_name;
+
+                // Update magnified image
+                if (magnifyResultImage) {
+                    magnifyResultImage.src = newImageUrl;
+                }
+
+                // Update thumbnail active state
+                document.querySelectorAll('.thumbnail-item').forEach((thumb, thumbIndex) => {
+                    thumb.classList.toggle('active', thumbIndex === index);
+                });
+
+                // Re-initialize magnifying glass for new image
+                setTimeout(() => {
+                    initializeMagnifyingGlass();
+                }, 100);
+            }
+        }
+
+        // Helper function to generate image URLs (similar to PHP function)
+        function generateImageUrl(imagePath, imageName, size) {
+            // Simple URL generation - adjust based on your image helper function
+            return imagePath; // You may need to adjust this based on your get_product_image_url function
+        }
 
         // SIMPLE TEST FUNCTION - for debugging
         window.testClick = function() {
@@ -2712,6 +3035,9 @@ try {
         // Add some interactivity
         document.addEventListener('DOMContentLoaded', function() {
             console.log('DOM Content Loaded - Starting initialization');
+
+            // Initialize magnifying glass
+            initializeMagnifyingGlass();
 
             // Load product image
             loadProductImage();

@@ -1267,18 +1267,17 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
 
         .scroll-to-top:hover {
             background: linear-gradient(135deg, #2563EB, #1E3A5F);
-            transform: translateY(-3px);
+            transform: translateX(-50%) translateY(-3px);
             box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
         }
 
         .scroll-to-top:active {
-            transform: translateY(-1px);
+            transform: translateX(-50%) translateY(-1px);
         }
 
         @media (max-width: 768px) {
             .scroll-to-top {
                 bottom: 20px;
-                right: 20px;
                 width: 45px;
                 height: 45px;
                 font-size: 18px;

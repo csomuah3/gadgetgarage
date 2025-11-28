@@ -608,22 +608,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 30px;
         }
 
         .form-label {
             font-weight: 600;
             color: #374151;
-            margin-bottom: 8px;
+            margin-bottom: 12px;
             display: block;
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 15px;
+            padding: 15px 20px;
             border: 2px solid #e5e7eb;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 16px;
             outline: none;
             transition: all 0.3s ease;
         }
@@ -638,13 +638,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             background: linear-gradient(135deg, #008060, #006b4e);
             color: white;
             border: none;
-            padding: 12px;
+            padding: 15px;
             border-radius: 8px;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
             transition: all 0.3s ease;
-            margin-top: 20px;
+            margin-top: 30px;
         }
 
         .btn-register i {
@@ -681,7 +681,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         .login-link {
             text-align: center;
-            margin-top: 20px;
+            margin-top: 30px;
             color: #6b7280;
         }
 

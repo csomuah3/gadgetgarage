@@ -1428,7 +1428,7 @@ try {
             max-height: 100%;
             object-fit: contain;
             border-radius: 0;
-            cursor: crosshair;
+            cursor: zoom-in;
             transition: all 0.3s ease;
             display: block;
         }
@@ -1445,7 +1445,7 @@ try {
             position: absolute;
             border: 4px solid #4285F4;
             border-radius: 50%;
-            cursor: crosshair;
+            cursor: zoom-in;
             width: 150px;
             height: 150px;
             opacity: 0 !important;

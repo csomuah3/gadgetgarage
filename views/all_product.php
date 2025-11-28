@@ -2982,17 +2982,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         </div>
                     </div>
 
-                    <!-- Filter by Size -->
-                    <div class="filter-group">
-                        <h6 class="filter-subtitle">Filter By Size</h6>
-                        <div class="size-filters">
-                            <button class="size-btn active" data-size="">All</button>
-                            <button class="size-btn" data-size="large">Large</button>
-                            <button class="size-btn" data-size="medium">Medium</button>
-                            <button class="size-btn" data-size="small">Small</button>
-                        </div>
-                    </div>
-
                     <!-- Filter by Color -->
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Color</h6>
@@ -3663,7 +3652,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             initRatingFilter();
             initCategoryFilter();
             initTagFilters();
-            initSizeFilters();
             initColorFilters();
             initMobileFilters();
         }

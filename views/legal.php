@@ -1131,7 +1131,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
                             <div class="footer-logo" style="margin-bottom: 20px;">
                                 <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
                                     alt="Gadget Garage">
-                            </div>
+        </div>
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">
                                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>

@@ -360,3 +360,114 @@ function getNotificationIcon(type) {
         default: return 'fa-info-circle';
     }
 }
+
+/**
+ * Initialize SweetAlert2-based logout confirmation
+ * Applies to all links that point to login/logout.php (any relative path)
+ */
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        // Inject custom styles for the logout dialog buttons (once per page)
+        (function injectLogoutStyles() {
+            if (document.getElementById('gg-logout-styles')) return;
+            const style = document.createElement('style');
+            style.id = 'gg-logout-styles';
+            style.textContent = `
+                .swal2-popup.gg-logout-popup .swal2-title {
+                    font-size: 1.5rem;
+                    font-weight: 700;
+                    color: #1f2937;
+                }
+
+                .swal2-popup.gg-logout-popup .swal2-html-container {
+                    font-size: 0.95rem;
+                    color: #4b5563;
+                    margin-top: 0.5rem;
+                    margin-bottom: 1rem;
+                }
+
+                .swal2-actions .gg-logout-keep-shopping {
+                    background: linear-gradient(135deg, #008060, #006b4e);
+                    color: #ffffff;
+                    font-weight: 700;
+                    font-size: 1rem;
+                    padding: 0.7rem 1.9rem;
+                    border-radius: 999px;
+                    border: none;
+                    margin: 0 0.5rem;
+                }
+
+                .swal2-actions .gg-logout-keep-shopping:hover {
+                    filter: brightness(1.05);
+                    transform: translateY(-1px);
+                }
+
+                .swal2-actions .gg-logout-leave {
+                    background: #ffffff;
+                    color: #6b7280;
+                    font-weight: 500;
+                    font-size: 0.9rem;
+                    padding: 0.45rem 1.3rem;
+                    border-radius: 999px;
+                    border: 1px solid #d1d5db;
+                    margin: 0 0.5rem;
+                }
+
+                .swal2-actions .gg-logout-leave:hover {
+                    background: #f3f4f6;
+                }
+            `;
+            document.head.appendChild(style);
+        })();
+
+        // Attach confirmation to all logout links
+        const logoutLinks = document.querySelectorAll('a[href*="login/logout.php"]');
+        if (!logoutLinks.length) return;
+
+        logoutLinks.forEach(link => {
+            // Avoid attaching multiple listeners
+            if (link.dataset.ggLogoutBound === 'true') return;
+            link.dataset.ggLogoutBound = 'true';
+
+            link.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                const targetHref = link.getAttribute('href') || '';
+                // Resolve to absolute URL so redirects are always correct
+                const logoutUrl = new URL(targetHref, window.location.href).toString();
+
+                // If SweetAlert2 is not available, fallback to direct navigation
+                if (typeof Swal === 'undefined') {
+                    window.location.href = logoutUrl;
+                    return;
+                }
+
+                Swal.fire({
+                    title: 'Are you sure you want to log out?',
+                    html: 'You can stay and <strong>shop a little more</strong>, or leave and log out.',
+                    icon: 'question',
+                    showCancelButton: true,
+                    // Cancel = stay (big button), Confirm = leave (smaller)
+                    cancelButtonText: 'Shop a little more',
+                    confirmButtonText: 'Leave',
+                    reverseButtons: true,
+                    focusCancel: true,
+                    buttonsStyling: false,
+                    customClass: {
+                        popup: 'gg-logout-popup',
+                        cancelButton: 'gg-logout-keep-shopping',
+                        confirmButton: 'gg-logout-leave'
+                    }
+                }).then(result => {
+                    if (result.isConfirmed) {
+                        // "Leave" -> go to logout script, which will redirect to login
+                        window.location.href = logoutUrl;
+                    }
+                    // "Shop a little more" (cancel) -> do nothing, stay on page
+                });
+            });
+        });
+    } catch (err) {
+        console.error('Error initializing logout confirmation:', err);
+    }
+});

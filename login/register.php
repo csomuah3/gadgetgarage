@@ -623,8 +623,8 @@
 
 		.auth-container {
 			width: 100%;
-			max-width: 1000px;
-			height: 650px;
+			max-width: 1200px;
+			height: 750px;
 			position: relative;
 			border-radius: 25px;
 			overflow: hidden;
@@ -785,11 +785,19 @@
 		}
 
 		.form-title {
-			font-size: 2rem;
+			font-size: 2.5rem;
 			font-weight: 700;
 			color: var(--text-dark);
-			margin-bottom: 8px;
+			margin-bottom: 10px;
 			text-align: center;
+		}
+
+		.signup-socials-text {
+			text-align: center;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			color: var(--text-light);
+			font-size: 1rem;
 		}
 
 		.form-subtitle {
@@ -1076,12 +1084,12 @@
 			cursor: pointer;
 		}
 
-		.custom-checkbox input:checked + .checkbox-mark {
+		.custom-checkbox input:checked+.checkbox-mark {
 			opacity: 1;
 			transform: scale(1);
 		}
 
-		.custom-checkbox input:checked ~ .custom-checkbox {
+		.custom-checkbox input:checked~.custom-checkbox {
 			border-color: #3b82f6;
 			background: #3b82f6;
 		}
@@ -1098,7 +1106,7 @@
 			pointer-events: none;
 		}
 
-		.checkbox-group input:checked ~ .custom-checkbox {
+		.checkbox-group input:checked~.custom-checkbox {
 			border-color: #3b82f6;
 			background: #3b82f6;
 		}
@@ -1773,14 +1781,14 @@
 					<div class="brands-dropdown" id="shopDropdown">
 						<h4>All Brands</h4>
 						<ul>
-								<li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
-								<li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
-								<li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
-								<li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
-								<li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
-								<li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
-								<li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
-								<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
+							<li><a href="../views/all_product.php?brand=Apple"><i class="fas fa-tag"></i> Apple</a></li>
+							<li><a href="../views/all_product.php?brand=Samsung"><i class="fas fa-tag"></i> Samsung</a></li>
+							<li><a href="../views/all_product.php?brand=HP"><i class="fas fa-tag"></i> HP</a></li>
+							<li><a href="../views/all_product.php?brand=Dell"><i class="fas fa-tag"></i> Dell</a></li>
+							<li><a href="../views/all_product.php?brand=Sony"><i class="fas fa-tag"></i> Sony</a></li>
+							<li><a href="../views/all_product.php?brand=Canon"><i class="fas fa-tag"></i> Canon</a></li>
+							<li><a href="../views/all_product.php?brand=Nikon"><i class="fas fa-tag"></i> Nikon</a></li>
+							<li><a href="#"><i class="fas fa-tag"></i> Microsoft</a></li>
 						</ul>
 					</div>
 				</div>
@@ -1885,7 +1893,8 @@
 				<div class="form-panel">
 					<div class="form-container">
 						<div class="form-header">
-							<h2 class="form-title" id="formTitle">Join Gadget Garage Today!</h2>
+							<h2 class="form-title" id="formTitle">Register</h2>
+							<p class="signup-socials-text">Sign up with socials</p>
 						</div>
 
 						<!-- Social Login Buttons -->
@@ -1912,98 +1921,98 @@
 						<!-- Signup Form -->
 						<div id="signupForm" class="form-content" style="display: block;">
 							<form method="POST" id="registerForm">
-									<div class="form-group">
-										<label for="name" class="form-label">Full Name</label>
-										<div class="input-group">
-											<i class="fas fa-user input-icon"></i>
-											<input type="text"
-												id="name"
-												name="name"
-												class="form-control with-icon"
-												placeholder="Enter your full name"
-												value=""
-												required>
-										</div>
+								<div class="form-group">
+									<label for="name" class="form-label">Full Name</label>
+									<div class="input-group">
+										<i class="fas fa-user input-icon"></i>
+										<input type="text"
+											id="name"
+											name="name"
+											class="form-control with-icon"
+											placeholder="Enter your full name"
+											value=""
+											required>
 									</div>
+								</div>
 
-									<div class="form-group">
-										<label for="email" class="form-label">Email</label>
-										<div class="input-group">
-											<i class="fas fa-envelope input-icon"></i>
-											<input type="email"
-												id="email"
-												name="email"
-												class="form-control with-icon"
-												placeholder="Enter your email"
-												value=""
-												required>
-										</div>
+								<div class="form-group">
+									<label for="email" class="form-label">Email</label>
+									<div class="input-group">
+										<i class="fas fa-envelope input-icon"></i>
+										<input type="email"
+											id="email"
+											name="email"
+											class="form-control with-icon"
+											placeholder="Enter your email"
+											value=""
+											required>
 									</div>
+								</div>
 
-									<div class="form-group">
-										<label for="phone_number" class="form-label">Phone Number</label>
-										<div class="input-group">
-											<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
-											<input type="tel"
-												id="phone_number"
-												name="phone_number"
-												class="form-control with-flag"
-												placeholder="    your phone number"
-												value=""
-												required>
-										</div>
+								<div class="form-group">
+									<label for="phone_number" class="form-label">Phone Number</label>
+									<div class="input-group">
+										<img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 300 200'%3E%3Crect width='300' height='67' fill='%23CE1126'/%3E%3Crect y='67' width='300' height='67' fill='%23FCD116'/%3E%3Crect y='133' width='300' height='67' fill='%23006B3F'/%3E%3Cpolygon points='150,80 160,110 190,110 170,130 180,160 150,140 120,160 130,130 110,110 140,110' fill='%23000'/%3E%3C/svg%3E" alt="Ghana Flag" class="ghana-flag">
+										<input type="tel"
+											id="phone_number"
+											name="phone_number"
+											class="form-control with-flag"
+											placeholder="    your phone number"
+											value=""
+											required>
 									</div>
+								</div>
 
-									<div class="form-group">
-										<label for="country" class="form-label">Country</label>
-										<div class="input-group">
-											<i class="fas fa-globe input-icon"></i>
-											<select id="country" name="country" class="form-control with-icon" required>
-												<option value="">Select Country</option>
-												<option value="Ghana" selected>Ghana</option>
-												<option value="Nigeria">Nigeria</option>
-												<option value="USA">United States</option>
-												<option value="UK">United Kingdom</option>
-												<option value="Canada">Canada</option>
-												<option value="Australia">Australia</option>
-											</select>
-										</div>
+								<div class="form-group">
+									<label for="country" class="form-label">Country</label>
+									<div class="input-group">
+										<i class="fas fa-globe input-icon"></i>
+										<select id="country" name="country" class="form-control with-icon" required>
+											<option value="">Select Country</option>
+											<option value="Ghana" selected>Ghana</option>
+											<option value="Nigeria">Nigeria</option>
+											<option value="USA">United States</option>
+											<option value="UK">United Kingdom</option>
+											<option value="Canada">Canada</option>
+											<option value="Australia">Australia</option>
+										</select>
 									</div>
+								</div>
 
-									<div class="form-group">
-										<label for="city" class="form-label">City</label>
-										<div class="input-group">
-											<i class="fas fa-map-marker-alt input-icon"></i>
-											<input type="text"
-												id="city"
-												name="city"
-												class="form-control with-icon"
-												placeholder="    Enter your city"
-												value=""
-												required>
-										</div>
+								<div class="form-group">
+									<label for="city" class="form-label">City</label>
+									<div class="input-group">
+										<i class="fas fa-map-marker-alt input-icon"></i>
+										<input type="text"
+											id="city"
+											name="city"
+											class="form-control with-icon"
+											placeholder="    Enter your city"
+											value=""
+											required>
 									</div>
+								</div>
 
-									<input type="hidden" name="role" value="1">
+								<input type="hidden" name="role" value="1">
 
-									<div class="form-group">
-										<label for="password" class="form-label">Password</label>
-										<div class="input-group">
-											<i class="fas fa-lock input-icon"></i>
-											<input type="password"
-												id="password"
-												name="password"
-												class="form-control with-icon"
-												placeholder="Create a password"
-												required>
-											<i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
-										</div>
+								<div class="form-group">
+									<label for="password" class="form-label">Password</label>
+									<div class="input-group">
+										<i class="fas fa-lock input-icon"></i>
+										<input type="password"
+											id="password"
+											name="password"
+											class="form-control with-icon"
+											placeholder="Create a password"
+											required>
+										<i class="fas fa-eye password-toggle" id="passwordToggle" onclick="togglePassword()"></i>
 									</div>
+								</div>
 
-									<button type="submit" class="submit-btn">
-										SIGN UP
-									</button>
-								</form>
+								<button type="submit" class="submit-btn">
+									SIGN UP
+								</button>
+							</form>
 						</div>
 
 					</div>
@@ -2061,9 +2070,9 @@
 				const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
 				timerElement.innerHTML = days + "d:" +
-										 (hours < 10 ? "0" : "") + hours + "h:" +
-										 (minutes < 10 ? "0" : "") + minutes + "m:" +
-										 (seconds < 10 ? "0" : "") + seconds + "s";
+					(hours < 10 ? "0" : "") + hours + "h:" +
+					(minutes < 10 ? "0" : "") + minutes + "m:" +
+					(seconds < 10 ? "0" : "") + seconds + "s";
 			}
 		}
 

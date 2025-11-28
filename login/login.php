@@ -1148,8 +1148,16 @@ try {
 			font-size: 2.5rem;
 			font-weight: 700;
 			color: var(--text-dark);
-			margin-bottom: 30px;
+			margin-bottom: 10px;
 			text-align: center;
+		}
+
+		.login-socials-text {
+			text-align: center;
+			margin-top: 10px;
+			margin-bottom: 20px;
+			color: var(--text-light);
+			font-size: 1rem;
 		}
 
 		.form-subtitle {
@@ -1757,6 +1765,7 @@ try {
 					<div class="form-container">
 						<div class="form-header">
 							<h2 class="form-title" id="formTitle">Login</h2>
+							<p class="login-socials-text">Login with Socials</p>
 						</div>
 
 						<!-- Social Login Buttons -->

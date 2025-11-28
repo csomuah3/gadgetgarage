@@ -4189,7 +4189,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     cancelButtonText: 'Cancel'
                 }).then((result) => {
                     if (result.isConfirmed) {
-                        window.location.href = 'login/logout.php';
+                        window.location.href = '../login/logout.php';
                     }
                 });
             }

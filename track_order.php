@@ -1859,21 +1859,21 @@ try {
         setInterval(updateTimer, 1000);
         updateTimer();
 
-        // Dropdown navigation functions with timeout delays
+        // Dropdown navigation functions with timeout delays - MUST BE GLOBAL for inline handlers
         let dropdownTimeout;
         let shopDropdownTimeout;
         let moreDropdownTimeout;
         let userDropdownTimeout;
 
-        function showDropdown() {
+        window.showDropdown = function() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideDropdown() {
+        window.hideDropdown = function() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
@@ -1881,17 +1881,17 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function showShopDropdown() {
+        window.showShopDropdown = function() {
             const dropdown = document.getElementById('shopCategoryDropdown');
             if (dropdown) {
                 clearTimeout(shopDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideShopDropdown() {
+        window.hideShopDropdown = function() {
             const dropdown = document.getElementById('shopCategoryDropdown');
             if (dropdown) {
                 clearTimeout(shopDropdownTimeout);
@@ -1899,17 +1899,17 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function showMoreDropdown() {
+        window.showMoreDropdown = function() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideMoreDropdown() {
+        window.hideMoreDropdown = function() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
@@ -1917,17 +1917,17 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function showUserDropdown() {
+        window.showUserDropdown = function() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 clearTimeout(userDropdownTimeout);
                 dropdown.classList.add('show');
             }
-        }
+        };
 
-        function hideUserDropdown() {
+        window.hideUserDropdown = function() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 clearTimeout(userDropdownTimeout);
@@ -1935,14 +1935,14 @@ try {
                     dropdown.classList.remove('show');
                 }, 300);
             }
-        }
+        };
 
-        function toggleUserDropdown() {
+        window.toggleUserDropdown = function() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 dropdown.classList.toggle('show');
             }
-        }
+        };
 
         // Enhanced dropdown behavior
         document.addEventListener('DOMContentLoaded', function() {
@@ -1950,24 +1950,24 @@ try {
             const brandsDropdown = document.getElementById('shopDropdown');
 
             if (shopCategoriesBtn && brandsDropdown) {
-                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
-                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
+                shopCategoriesBtn.addEventListener('mouseenter', window.showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', window.hideDropdown);
                 brandsDropdown.addEventListener('mouseenter', function() {
                     clearTimeout(dropdownTimeout);
                 });
-                brandsDropdown.addEventListener('mouseleave', hideDropdown);
+                brandsDropdown.addEventListener('mouseleave', window.hideDropdown);
             }
 
             const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
 
             if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('mouseenter', showUserDropdown);
-                userAvatar.addEventListener('mouseleave', hideUserDropdown);
+                userAvatar.addEventListener('mouseenter', window.showUserDropdown);
+                userAvatar.addEventListener('mouseleave', window.hideUserDropdown);
                 userDropdown.addEventListener('mouseenter', function() {
                     clearTimeout(userDropdownTimeout);
                 });
-                userDropdown.addEventListener('mouseleave', hideUserDropdown);
+                userDropdown.addEventListener('mouseleave', window.hideUserDropdown);
             }
         });
 

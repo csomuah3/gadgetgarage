@@ -19,8 +19,24 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get real products from database
+// Get all products and filter for SMARTPHONES ONLY
 $all_products = get_all_products_ctr();
+
+// Filter for smartphones specifically
+$smartphone_products = array_filter($all_products, function ($product) {
+    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+
+    // Smartphone-specific filtering
+    return (strpos($cat_name, 'smartphone') !== false ||
+            strpos($cat_name, 'phone') !== false ||
+            strpos($title, 'iphone') !== false ||
+            strpos($title, 'smartphone') !== false ||
+            strpos($title, 'phone') !== false ||
+            (strpos($title, 'samsung') !== false && strpos($title, 'galaxy') !== false) ||
+            strpos($title, 'pixel') !== false ||
+            strpos($title, 'oneplus') !== false);
+});
 
 // Get real categories and brands from database
 try {
@@ -35,15 +51,13 @@ try {
     $brands = [];
 }
 
-// Products and categories fetched from database above
-
 // Filter products based on URL parameters
 $category_filter = $_GET['category'] ?? 'all';
 $brand_filter = $_GET['brand'] ?? 'all';
 $condition_filter = $_GET['condition'] ?? 'all';
 $search_query = $_GET['search'] ?? '';
 
-$filtered_products = $all_products;
+$filtered_products = $smartphone_products;
 
 if ($category_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {

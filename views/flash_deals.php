@@ -4677,9 +4677,76 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         }
 
-        // Update timer every second
-        setInterval(updateTimer, 1000);
-        updateTimer(); // Initial call
+        // Large Flash Deals Countdown Timer - 10 days active countdown
+        function updateFlashCountdown() {
+            const flashDaysElement = document.getElementById('flashDays');
+            const flashHoursElement = document.getElementById('flashHours');
+            const flashMinutesElement = document.getElementById('flashMinutes');
+            const flashSecondsElement = document.getElementById('flashSeconds');
+
+            if (flashDaysElement && flashHoursElement && flashMinutesElement && flashSecondsElement) {
+                // Set end date to 10 days from now
+                const now = new Date().getTime();
+                const endDate = new Date();
+                endDate.setDate(endDate.getDate() + 10);
+                endDate.setHours(23, 59, 59, 999); // End at the end of the 10th day
+
+                const distance = endDate.getTime() - now;
+
+                if (distance > 0) {
+                    // Calculate time units
+                    const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                    const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                    const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                    const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                    // Update the display with animation for seconds
+                    if (flashSecondsElement.textContent !== seconds.toString().padStart(2, '0')) {
+                        animateCounterChange(flashSecondsElement, seconds.toString().padStart(2, '0'));
+                    }
+
+                    // Update other units without animation unless they change
+                    if (flashDaysElement.textContent !== days.toString().padStart(2, '0')) {
+                        flashDaysElement.textContent = days.toString().padStart(2, '0');
+                    }
+                    if (flashHoursElement.textContent !== hours.toString().padStart(2, '0')) {
+                        animateCounterChange(flashHoursElement, hours.toString().padStart(2, '0'));
+                    }
+                    if (flashMinutesElement.textContent !== minutes.toString().padStart(2, '0')) {
+                        animateCounterChange(flashMinutesElement, minutes.toString().padStart(2, '0'));
+                    }
+                } else {
+                    // Deal expired
+                    flashDaysElement.textContent = '00';
+                    flashHoursElement.textContent = '00';
+                    flashMinutesElement.textContent = '00';
+                    flashSecondsElement.textContent = '00';
+                }
+            }
+        }
+
+        // Animate counter changes
+        function animateCounterChange(element, newValue) {
+            element.style.transform = 'scale(1.2)';
+            element.style.color = '#ffd700';
+            element.style.transition = 'all 0.2s ease';
+
+            setTimeout(() => {
+                element.textContent = newValue;
+                element.style.transform = 'scale(1)';
+                element.style.color = '#ffffff';
+            }, 200);
+        }
+
+        // Update both timers every second
+        setInterval(() => {
+            updateTimer();
+            updateFlashCountdown();
+        }, 1000);
+
+        // Initial calls
+        updateTimer();
+        updateFlashCountdown();
 
         // Account page navigation
         function goToAccount() {

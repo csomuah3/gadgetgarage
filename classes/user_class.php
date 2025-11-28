@@ -87,15 +87,16 @@ class User extends db_connection
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             error_log("Password hashed successfully");
 
-            // Insert user with all required fields
+            // Insert user with all required fields including customer_address
             $sql = "INSERT INTO customer (
-                        customer_name, 
-                        customer_email, 
-                        customer_pass, 
-                        customer_contact, 
-                        user_role, 
+                        customer_name,
+                        customer_email,
+                        customer_pass,
+                        customer_contact,
+                        user_role,
                         customer_country,
-                        customer_city
+                        customer_city,
+                        customer_address
                     ) VALUES (
                         '" . mysqli_real_escape_string($this->db, $name) . "',
                         '" . mysqli_real_escape_string($this->db, $email) . "',
@@ -103,7 +104,8 @@ class User extends db_connection
                         '" . mysqli_real_escape_string($this->db, $phone_number) . "',
                         '" . intval($role) . "',
                         '" . mysqli_real_escape_string($this->db, $country) . "',
-                        '" . mysqli_real_escape_string($this->db, $city) . "'
+                        '" . mysqli_real_escape_string($this->db, $city) . "',
+                        ''
                     )";
 
             error_log("Insert SQL: " . $sql);
@@ -155,7 +157,7 @@ class User extends db_connection
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
 
             // Try with common default values for typical required fields
-            $sql = "INSERT INTO customer SET 
+            $sql = "INSERT INTO customer SET
                         customer_name = '" . mysqli_real_escape_string($this->db, $name) . "',
                         customer_email = '" . mysqli_real_escape_string($this->db, $email) . "',
                         customer_pass = '" . mysqli_real_escape_string($this->db, $hashed_password) . "',
@@ -163,8 +165,7 @@ class User extends db_connection
                         user_role = " . intval($role) . ",
                         customer_country = 'Ghana',
                         customer_city = 'Accra',
-                        customer_address = '',
-                        date_created = NOW()";
+                        customer_address = ''";
 
             if ($this->db_write_query($sql)) {
                 $user_id = mysqli_insert_id($this->db);

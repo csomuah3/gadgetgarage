@@ -6,6 +6,7 @@ ini_set('display_errors', 1);
 require_once(__DIR__ . '/../settings/core.php');
 require_once(__DIR__ . '/../controllers/cart_controller.php');
 require_once(__DIR__ . '/../controllers/wishlist_controller.php');
+require_once(__DIR__ . '/../helpers/image_helper.php');
 
 // Check login status
 $is_logged_in = check_login();
@@ -545,7 +546,7 @@ if ($is_logged_in) {
                     <?php foreach ($wishlist_items as $item): ?>
                         <div class="wishlist-item">
                             <div class="product-image-container">
-                                <img src="<?php echo htmlspecialchars($item['product_image'] ?: '../uploads/default-product.png'); ?>"
+                                <img src="<?php echo get_product_image_url($item['product_image'] ?? '', $item['product_title'] ?? 'Product'); ?>"
                                     alt="<?php echo htmlspecialchars($item['product_title']); ?>"
                                     class="product-image">
                                 <button class="remove-wishlist-btn"
@@ -713,7 +714,7 @@ if ($is_logged_in) {
                     <?php foreach ($wishlist_items as $item): ?>
                         <div class="wishlist-item">
                             <div class="product-image-container">
-                                <img src="<?php echo htmlspecialchars($item['product_image'] ?: '../uploads/default-product.png'); ?>"
+                                <img src="<?php echo get_product_image_url($item['product_image'] ?? '', $item['product_title'] ?? 'Product'); ?>"
                                     alt="<?php echo htmlspecialchars($item['product_title']); ?>"
                                     class="product-image">
                                 <button class="remove-wishlist-btn"

@@ -647,6 +647,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             margin-top: 20px;
         }
 
+        .btn-register i {
+            margin-right: 8px;
+        }
+
         .btn-register:hover {
             background: linear-gradient(135deg, #006b4e, #008060);
             transform: translateY(-2px);
@@ -657,6 +661,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border-radius: 8px;
             margin-bottom: 20px;
             font-weight: 500;
+        }
+
+        .alert i {
+            margin-right: 8px;
         }
 
         .alert-danger {

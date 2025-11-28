@@ -1140,8 +1140,9 @@ try {
 		}
 
 		.form-header {
-			text-align: center;
+			text-align: center !important;
 			margin-bottom: 30px;
+			width: 100%;
 		}
 
 		.form-title {
@@ -1149,7 +1150,9 @@ try {
 			font-weight: 700;
 			color: var(--text-dark);
 			margin-bottom: 10px;
-			text-align: center;
+			text-align: center !important;
+			width: 100%;
+			display: block;
 		}
 
 		.login-socials-text {

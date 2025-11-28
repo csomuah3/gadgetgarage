@@ -87,7 +87,7 @@ class User extends db_connection
             $hashed_password = password_hash($password, PASSWORD_DEFAULT);
             error_log("Password hashed successfully");
 
-            // Insert user with all required fields
+            // Insert user with all required fields including SMS and phone verification defaults
             $sql = "INSERT INTO customer (
                         customer_name,
                         customer_email,
@@ -95,7 +95,10 @@ class User extends db_connection
                         customer_contact,
                         user_role,
                         customer_country,
-                        customer_city
+                        customer_city,
+                        sms_notifications,
+                        sms_marketing,
+                        phone_verified
                     ) VALUES (
                         '" . mysqli_real_escape_string($this->db, $name) . "',
                         '" . mysqli_real_escape_string($this->db, $email) . "',
@@ -103,36 +106,44 @@ class User extends db_connection
                         '" . mysqli_real_escape_string($this->db, $phone_number) . "',
                         '" . intval($role) . "',
                         '" . mysqli_real_escape_string($this->db, $country) . "',
-                        '" . mysqli_real_escape_string($this->db, $city) . "'
+                        '" . mysqli_real_escape_string($this->db, $city) . "',
+                        1,
+                        1,
+                        0
                     )";
 
             error_log("Insert SQL: " . $sql);
 
             $result = $this->db_write_query($sql);
+            error_log("SQL execution result: " . ($result ? 'true' : 'false'));
+
             if ($result) {
                 $user_id = mysqli_insert_id($this->db);
                 error_log("User created successfully with ID: " . $user_id);
                 return ['status' => 'success', 'message' => 'Registration successful', 'user_id' => $user_id];
             } else {
                 $error = mysqli_error($this->db);
-                error_log("Insert failed with error: " . $error);
+                $errno = mysqli_errno($this->db);
+                error_log("Insert failed with error (errno $errno): " . $error);
+                error_log("Failed SQL: " . $sql);
 
                 // Check if there are more required fields
                 if (strpos($error, "doesn't have a default value") !== false) {
                     // Try to get table structure to see what's required
-                    $describe = $this->db->query("DESCRIBE customer");
+                    $describe = mysqli_query($this->db, "DESCRIBE customer");
                     $required_fields = [];
                     if ($describe) {
-                        while ($row = $describe->fetch_assoc()) {
+                        while ($row = mysqli_fetch_assoc($describe)) {
                             if ($row['Null'] == 'NO' && $row['Default'] === null && $row['Extra'] != 'auto_increment') {
                                 $required_fields[] = $row['Field'];
                             }
                         }
+                        error_log("Required fields found: " . implode(', ', $required_fields));
                     }
                     return ['status' => 'error', 'message' => 'Missing required fields: ' . implode(', ', $required_fields)];
                 }
 
-                return ['status' => 'error', 'message' => 'Database insert failed: ' . $error];
+                return ['status' => 'error', 'message' => 'Database insert failed: ' . $error . ' (errno: ' . $errno . ')'];
             }
         } catch (Exception $e) {
             error_log("CreateUser exception: " . $e->getMessage());

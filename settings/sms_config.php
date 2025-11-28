@@ -5,7 +5,9 @@
  */
 
 // Brevo API Configuration
-define('SMS_API_KEY', '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');
+// API Key should be set via environment variable or separate config file
+// For production, use: define('SMS_API_KEY', getenv('SENDINBLUE_API_KEY') ?: '');
+define('SMS_API_KEY', getenv('SENDINBLUE_API_KEY') ?: 'YOUR_API_KEY_HERE');
 define('SMS_API_URL', 'https://api.brevo.com/v3/transactionalSMS/sms');
 define('SMS_SENDER_ID', 'Gadget-G'); // Your sender name
 

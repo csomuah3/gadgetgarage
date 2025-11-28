@@ -19,7 +19,38 @@ if ($_GET['order'] ?? '') {
         error_log("Tracking result: " . print_r($tracking_result, true));
 
         if (!$tracking_result || empty($tracking_result)) {
-            $error_message = 'Order not found. Please check your order number or tracking number.';
+            // Additional debug: try direct database query
+            try {
+                $pdo = new PDO("mysql:host=" . SERVER . ";dbname=" . DATABASE, USERNAME, PASSWD);
+                $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+
+                // Get sample orders
+                $test_query = "SELECT order_id, invoice_no, customer_id FROM orders LIMIT 5";
+                $stmt = $pdo->prepare($test_query);
+                $stmt->execute();
+                $sample_orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                // Try to find matching orders
+                $debug_query = "SELECT order_id, invoice_no, customer_id FROM orders WHERE invoice_no LIKE '%$search_value%' OR order_id = '$search_value'";
+                $stmt = $pdo->prepare($debug_query);
+                $stmt->execute();
+                $matching_orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                $error_message = 'Order not found. Please check your order number or tracking number.<br><br>';
+                $error_message .= '<strong>Debug Info:</strong><br>';
+                $error_message .= 'Searched for: ' . htmlspecialchars($search_value) . '<br>';
+                $error_message .= 'Total orders in database: ' . count($sample_orders) . '<br>';
+                $error_message .= 'Matching orders: ' . count($matching_orders) . '<br>';
+                if (!empty($sample_orders)) {
+                    $error_message .= 'Sample order references: ';
+                    foreach (array_slice($sample_orders, 0, 3) as $order) {
+                        $error_message .= $order['invoice_no'] . ' ';
+                    }
+                }
+
+            } catch (Exception $e) {
+                $error_message = 'Order not found. Database error: ' . $e->getMessage();
+            }
             error_log("No tracking result found for: " . $search_value);
         }
     } catch (Exception $e) {

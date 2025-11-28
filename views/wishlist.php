@@ -40,6 +40,10 @@ if ($is_logged_in) {
     <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    
+    <!-- Reusable Header CSS -->
+    <link href="../includes/header.css" rel="stylesheet">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -513,27 +517,14 @@ if ($is_logged_in) {
 </head>
 
 <body>
-    <!-- Promotional Banner -->
-    <div class="promo-banner2">
-        <div class="promo-banner-left">
-            <i class="fas fa-bolt"></i>
-        </div>
-        <div class="promo-banner-center">
-            <span class="promo-text">BLACK FRIDAY DEALS STOREWIDE! SHOP AMAZING DISCOUNTS!</span>
-            <span class="promo-timer" id="promoTimer">12d:00h:00m:00s</span>
-        </div>
-        <a href="../index.php#flash-deals" class="promo-shop-link">Shop Now</a>
-    </div>
-
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>
-
-    <!-- Main Header -->
-    <header class="main-header animate__animated animate__fadeInDown">
-        <div class="container-fluid" style="padding: 0 40px;">
-            <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-                <!-- Logo - Far Left -->
-                <a href="../index.php" class="logo">
+    <!-- Reusable Header Component -->
+    <?php include '../includes/header.php'; ?>
+    
+    
+    <!-- Wishlist Content -->
+    <div class="wishlist-container">
+        <div class="container">
+            <h1 class="wishlist-title">My Wishlist</h1>
                     <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
                         alt="Gadget Garage">
                 </a>

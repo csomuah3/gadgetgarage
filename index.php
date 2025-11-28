@@ -1335,28 +1335,28 @@ try {
 			background: #ffffff;
 		}
 
-		.hero-grid {
-			display: grid;
-			grid-template-columns: 3.5fr 1fr;
-			/* much wider left + narrow right */
-			gap: 28px;
-			/* spacing between cards */
-			align-items: stretch;
-			min-height: 620px;
-			/* increased height for better text arrangement */
-		}
+	.hero-grid {
+		display: grid;
+		grid-template-columns: 3.5fr 1fr;
+		/* much wider left + narrow right */
+		gap: 28px;
+		/* spacing between cards */
+		align-items: stretch;
+		min-height: 700px;
+		/* increased height for larger product images */
+	}
 
-		/* ——— Hero Carousel Wrapper ——— */
-		.hero-carousel-wrapper {
-			position: relative;
-			width: 100%;
-			height: 100%;
-			min-height: 620px;
-			border-radius: 14px;
-			overflow: hidden;
-			background: #f0f4f8;
-			/* Fallback background */
-		}
+	/* ——— Hero Carousel Wrapper ——— */
+	.hero-carousel-wrapper {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		min-height: 700px;
+		border-radius: 14px;
+		overflow: hidden;
+		background: #f0f4f8;
+		/* Fallback background */
+	}
 
 		.hero-carousel {
 			position: relative;
@@ -1702,26 +1702,27 @@ try {
 			color: #1a6b47;
 		}
 
-		.banner-media {
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			position: relative;
-			height: 100%;
-			min-height: 350px;
-		}
+	.banner-media {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		position: relative;
+		height: 100%;
+		min-height: 450px;
+	}
 
-		.banner-media .product-image {
-			width: auto;
-			height: auto;
-			max-height: 480px;
-			min-height: 420px;
-			max-width: 100%;
-			object-fit: contain;
-			transform: translateY(0) translateX(0);
-			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-		}
+	.banner-media .product-image {
+		width: auto;
+		height: auto;
+		max-height: 650px;
+		min-height: 550px;
+		max-width: 100%;
+		object-fit: contain;
+		transform: translateY(0) translateX(0);
+		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+			transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+		filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
+	}
 
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
@@ -7352,77 +7353,94 @@ try {
 				document.getElementById('themeToggle').classList.add('active');
 			}
 
-			// Featured on IG scroll animations
-			initFeaturedIGAnimations();
+		// Featured on IG scroll animations
+		initFeaturedIGAnimations();
 
-			// Hero Carousel - Super Simple Version
-			console.log('🚀 Starting hero carousel from DOMContentLoaded...');
-			initSimpleCarousel();
-		});
-
-		// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
-		let slideTimer;
-		let currentSlide = 0;
-
-		function initSimpleCarousel() {
-			console.log('🔥 STARTING SIMPLE CAROUSEL');
-
-			const slides = document.querySelectorAll('.hero-slide');
-			const dots = document.querySelectorAll('.carousel-dot');
-
-			console.log('Found slides:', slides.length);
-			console.log('Found dots:', dots.length);
-
-			if (slides.length === 0) return;
-
-			function showSlideNumber(num) {
-				console.log('🎯 SWITCHING TO SLIDE:', num);
-
-				// Hide ALL slides
-				for (let i = 0; i < slides.length; i++) {
-					slides[i].classList.remove('active');
-					slides[i].style.display = 'none';
-				}
-
-				// Hide ALL dots
-				for (let i = 0; i < dots.length; i++) {
-					dots[i].classList.remove('active');
-				}
-
-				// Show current slide
-				slides[num].classList.add('active');
-				slides[num].style.display = 'grid';
-
-				// Show current dot
-				if (dots[num]) {
-					dots[num].classList.add('active');
-				}
-
-				console.log('✅ NOW SHOWING:', slides[num].dataset.product);
-			}
-
-			function goToNextSlide() {
-				currentSlide = (currentSlide + 1) % slides.length;
-				showSlideNumber(currentSlide);
-			}
-
-			// Show first slide immediately
-			showSlideNumber(0);
-
-			// Start timer - change every 2 seconds
-			if (slideTimer) clearInterval(slideTimer);
-			slideTimer = setInterval(goToNextSlide, 2000);
-
-			console.log('🚀 TIMER STARTED - CHANGES EVERY 2 SECONDS');
-		}
-
-		// FORCE START IMMEDIATELY
-		setTimeout(initSimpleCarousel, 500);
-		setTimeout(initSimpleCarousel, 1500);
-		setTimeout(initSimpleCarousel, 3000);
+		// Hero Carousel - Initialize once
+		console.log('🚀 Starting hero carousel from DOMContentLoaded...');
+		initSimpleCarousel();
+		
 		// Initialize Featured IG Carousel
 		initFeaturedIgCarousel();
+	});
+
+	// SUPER SIMPLE CAROUSEL - GUARANTEED TO WORK
+	let slideTimer;
+	let currentSlide = 0;
+
+	function initSimpleCarousel() {
+		console.log('🔥 STARTING SIMPLE CAROUSEL');
+
+		const slides = document.querySelectorAll('.hero-slide');
+		const dots = document.querySelectorAll('.carousel-dot');
+
+		console.log('Found slides:', slides.length);
+		console.log('Found dots:', dots.length);
+
+		if (slides.length === 0) {
+			console.error('❌ No slides found!');
+			return;
+		}
+
+		function showSlideNumber(num) {
+			console.log('🎯 SWITCHING TO SLIDE:', num);
+
+			// Hide ALL slides
+			slides.forEach((slide, index) => {
+				slide.classList.remove('active', 'exiting');
+				if (index !== num) {
+					slide.style.display = 'none';
+				}
+			});
+
+			// Hide ALL dots
+			dots.forEach(dot => dot.classList.remove('active'));
+
+			// Show current slide with proper display
+			slides[num].classList.add('active');
+			slides[num].style.display = 'grid';
+
+			// Show current dot
+			if (dots[num]) {
+				dots[num].classList.add('active');
+			}
+
+			console.log('✅ NOW SHOWING:', slides[num].dataset.product);
+		}
+
+		function goToNextSlide() {
+			const previousSlide = currentSlide;
+			currentSlide = (currentSlide + 1) % slides.length;
+			
+			// Add exiting class to previous slide for smooth transition
+			slides[previousSlide].classList.add('exiting');
+			
+			showSlideNumber(currentSlide);
+		}
+
+		// Show first slide immediately
+		showSlideNumber(0);
+
+		// Clear any existing timer
+		if (slideTimer) {
+			clearInterval(slideTimer);
+		}
+
+		// Start timer - change every 4 seconds (increased for better viewing)
+		slideTimer = setInterval(goToNextSlide, 4000);
+
+		console.log('🚀 TIMER STARTED - CHANGES EVERY 4 SECONDS');
+
+		// Add click handlers for dots
+		dots.forEach((dot, index) => {
+			dot.addEventListener('click', () => {
+				if (slideTimer) clearInterval(slideTimer);
+				currentSlide = index;
+				showSlideNumber(currentSlide);
+				slideTimer = setInterval(goToNextSlide, 4000);
+			});
 		});
+	}
 
 		// Featured on IG Carousel Function
 		function initFeaturedIgCarousel() {

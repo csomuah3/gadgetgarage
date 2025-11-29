@@ -1364,7 +1364,7 @@ try {
 			height: 100%;
 		}
 
-		/* ——— Hero Slide (Main Banner) - SPLIT SCREEN REVEAL ——— */
+		/* ——— Hero Slide (Main Banner) - KEN BURNS EFFECT ——— */
 		.hero-slide {
 			display: none;
 			grid-template-columns: 1.5fr 1fr;
@@ -1387,130 +1387,162 @@ try {
 			opacity: 1 !important;
 			visibility: visible !important;
 			z-index: 2;
+			animation: fadeIn 1.2s ease-out forwards;
 		}
 
-		/* Split-screen reveal animations */
-		.hero-slide.active .banner-copy {
-			animation: slideInFromLeft 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+		@keyframes fadeIn {
+			from { opacity: 0; }
+			to { opacity: 1; }
 		}
 
-		.hero-slide.active .banner-media {
-			animation: slideInFromRight 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+		/* Ken Burns effect - Slow zoom + pan on product image */
+		.hero-slide.active .product-image {
+			animation: kenBurnsZoomPan 8s ease-out forwards;
+			transform-origin: center center;
 		}
 
-		/* Stagger text elements inside banner-copy */
+		@keyframes kenBurnsZoomPan {
+			0% {
+				transform: scale(1.2) translateX(-3%);
+				opacity: 0;
+			}
+			10% {
+				opacity: 1;
+			}
+			100% {
+				transform: scale(1) translateX(0);
+				opacity: 1;
+			}
+		}
+
+		/* Alternate zoom direction for variety */
+		.hero-slide[data-product="iphone"] .product-image {
+			animation: kenBurnsZoomPanAlt 8s ease-out forwards;
+		}
+
+		.hero-slide[data-product="samsung"] .product-image {
+			animation: kenBurnsZoomPanAlt 8s ease-out forwards;
+		}
+
+		@keyframes kenBurnsZoomPanAlt {
+			0% {
+				transform: scale(1.25) translateX(3%) translateY(-2%);
+				opacity: 0;
+			}
+			10% {
+				opacity: 1;
+			}
+			100% {
+				transform: scale(1) translateX(0) translateY(0);
+				opacity: 1;
+			}
+		}
+
+		/* Staggered text fade-in with subtle movement */
 		.hero-slide.active .brand-logo-section {
-			animation: fadeInUp 0.8s ease-out 0.2s forwards;
+			animation: textFadeInUp 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
 			opacity: 0;
 		}
 
-		.hero-slide.active .text-line {
-			animation: fadeInUp 0.6s ease-out forwards;
+		.hero-slide.active .banner-text-stack .text-line {
+			animation: textFadeInUp 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
 			opacity: 0;
 		}
 
-		.hero-slide.active .text-line:nth-child(1) { animation-delay: 0.3s; }
-		.hero-slide.active .text-line:nth-child(2) { animation-delay: 0.4s; }
-		.hero-slide.active .text-line:nth-child(3) { animation-delay: 0.5s; }
-		.hero-slide.active .text-line:nth-child(4) { animation-delay: 0.6s; }
-		.hero-slide.active .text-line:nth-child(5) { animation-delay: 0.7s; }
-		.hero-slide.active .text-line:nth-child(6) { animation-delay: 0.8s; }
-		.hero-slide.active .text-line:nth-child(7) { animation-delay: 0.9s; }
+		/* Individual text line delays for stagger effect */
+		.hero-slide.active .banner-text-stack .text-line:nth-child(1) { animation-delay: 0.5s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(2) { animation-delay: 0.65s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(3) { animation-delay: 0.8s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(4) { animation-delay: 0.95s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(5) { animation-delay: 1.1s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(6) { animation-delay: 1.25s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(7) { animation-delay: 1.4s; }
 
 		.hero-slide.active .social-buttons {
-			animation: fadeInUp 0.6s ease-out 1s forwards;
+			animation: textFadeInUp 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.6s forwards;
 			opacity: 0;
 		}
 
 		.hero-slide.active .btn-primary {
-			animation: fadeInUp 0.6s ease-out 1.1s forwards;
+			animation: btnFadeInScale 0.8s cubic-bezier(0.22, 0.61, 0.36, 1) 1.8s forwards;
 			opacity: 0;
+			transform: scale(0.95);
 		}
 
-		/* Product image zoom in */
-		.hero-slide.active .product-image {
-			animation: zoomIn 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
-			transform: scale(0.8);
-			opacity: 0;
-		}
-
-		@keyframes slideInFromLeft {
+		@keyframes textFadeInUp {
 			from {
-				transform: translateX(-100%);
 				opacity: 0;
+				transform: translateY(20px);
 			}
 			to {
-				transform: translateX(0);
 				opacity: 1;
-			}
-		}
-
-		@keyframes slideInFromRight {
-			from {
-				transform: translateX(100%);
-				opacity: 0;
-			}
-			to {
-				transform: translateX(0);
-				opacity: 1;
-			}
-		}
-
-		@keyframes fadeInUp {
-			from {
-				transform: translateY(30px);
-				opacity: 0;
-			}
-			to {
 				transform: translateY(0);
-				opacity: 1;
 			}
 		}
 
-		@keyframes zoomIn {
+		@keyframes btnFadeInScale {
 			from {
-				transform: scale(0.8);
 				opacity: 0;
+				transform: scale(0.95) translateY(10px);
 			}
 			to {
-				transform: scale(1);
 				opacity: 1;
+				transform: scale(1) translateY(0);
 			}
 		}
 
-		.hero-slide.exiting {
+		/* Subtle background gradient animation */
+		.hero-slide.active::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: inherit;
 			opacity: 0;
-			visibility: hidden;
-			transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+			animation: bgFadeIn 1.5s ease-out forwards;
+			z-index: -1;
 		}
 
-		.hero-slide.exiting .banner-copy {
-			animation: slideOutToLeft 0.6s ease-in forwards;
-		}
-
-		.hero-slide.exiting .banner-media {
-			animation: slideOutToRight 0.6s ease-in forwards;
-		}
-
-		@keyframes slideOutToLeft {
+		@keyframes bgFadeIn {
 			from {
-				transform: translateX(0);
+				opacity: 0;
+			}
+			to {
+				opacity: 1;
+			}
+		}
+
+		/* Smooth exit with fade out */
+		.hero-slide.exiting {
+			animation: fadeOut 0.8s ease-in forwards;
+		}
+
+		@keyframes fadeOut {
+			from {
 				opacity: 1;
 			}
 			to {
-				transform: translateX(-100%);
 				opacity: 0;
+				visibility: hidden;
 			}
 		}
 
-		@keyframes slideOutToRight {
+		/* Add subtle parallax effect to banner-copy */
+		.hero-slide.active .banner-copy {
+			animation: subtleFloat 1.2s ease-out forwards;
+			opacity: 0;
+		}
+
+		@keyframes subtleFloat {
 			from {
-				transform: translateX(0);
-				opacity: 1;
+				opacity: 0;
+				transform: translateX(-10px);
 			}
 			to {
-				transform: translateX(100%);
-				opacity: 0;
+				opacity: 1;
+				transform: translateX(0);
 			}
 		}
 
@@ -7906,14 +7938,14 @@ try {
 			closeNewsletter();
 		}
 
-		// ==================== HERO CAROUSEL AUTO-SLIDE - SPLIT SCREEN REVEAL ====================
+		// ==================== HERO CAROUSEL - KEN BURNS EFFECT ====================
 		let currentSlide = 0;
 		let heroSlideInterval = null;
 		const heroSlides = document.querySelectorAll('.hero-slide');
 		const heroDots = document.querySelectorAll('.carousel-dot');
 		const totalSlides = heroSlides.length;
 
-		// Function to show specific slide with split-screen reveal
+		// Function to show specific slide with Ken Burns effect
 		function showHeroSlide(index) {
 			// Mark current active slide as exiting
 			const currentActiveSlide = document.querySelector('.hero-slide.active');
@@ -7923,7 +7955,7 @@ try {
 				// Remove exiting class after animation completes
 				setTimeout(() => {
 					currentActiveSlide.classList.remove('active', 'exiting');
-				}, 600);
+				}, 800);
 			}
 
 			// Remove active class from all slides and dots
@@ -7934,7 +7966,7 @@ try {
 			});
 			heroDots.forEach(dot => dot.classList.remove('active'));
 
-			// Add active class to new slide and dot after a small delay
+			// Add active class to new slide and dot
 			setTimeout(() => {
 				if (heroSlides[index]) {
 					heroSlides[index].classList.add('active');
@@ -7959,7 +7991,8 @@ try {
 
 		// Start auto-sliding
 		function startHeroAutoSlide() {
-			heroSlideInterval = setInterval(nextHeroSlide, 6000); // Change slide every 6 seconds (longer for split animation)
+			// 8 seconds to allow Ken Burns animation to complete
+			heroSlideInterval = setInterval(nextHeroSlide, 8000);
 		}
 
 		// Stop auto-sliding
@@ -7992,7 +8025,7 @@ try {
 		}
 
 		// Log for debugging
-		console.log('🎬 Hero split-screen carousel initialized with', totalSlides, 'slides');
+		console.log('🎬 Ken Burns hero carousel initialized with', totalSlides, 'slides');
 
 		// Show newsletter popup after 5 seconds if not shown before
 		setTimeout(function() {
@@ -9867,4 +9900,5 @@ try {
 
 </body>
 
+</html>
 </html>

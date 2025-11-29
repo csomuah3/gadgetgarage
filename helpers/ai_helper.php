@@ -246,7 +246,7 @@ class AIHelper {
             $prompt .= "   " . substr($product['product_desc'], 0, 100) . "...\n\n";
         }
         
-        $prompt .= "Based on the customer's context, recommend 6 products that would be most relevant and appealing.\n";
+        $prompt .= "Based on the customer's context, recommend 4 products that would be most relevant and appealing.\n";
         $prompt .= "Return ONLY a comma-separated list of product titles (exactly as they appear above), nothing else.\n";
         $prompt .= "Example format: iPhone 15 Pro, Samsung Galaxy S24, MacBook Pro 14\"\n";
         $prompt .= "Focus on products that complement what they're interested in or similar quality/price range.";
@@ -262,15 +262,15 @@ class AIHelper {
                     if (stripos($product['product_title'], $title) !== false || stripos($title, $product['product_title']) !== false) {
                         if (!in_array($product['product_id'], array_column($recommended_products, 'product_id'))) {
                             $recommended_products[] = $product;
-                            if (count($recommended_products) >= 6) break 2;
+                            if (count($recommended_products) >= 4) break 2;
                         }
                     }
                 }
             }
             
             // If AI didn't return enough, fill with random products
-            if (count($recommended_products) < 6) {
-                $remaining = 6 - count($recommended_products);
+            if (count($recommended_products) < 4) {
+                $remaining = 4 - count($recommended_products);
                 $available = array_filter($all_products, function($p) use ($recommended_products) {
                     return !in_array($p['product_id'], array_column($recommended_products, 'product_id'));
                 });
@@ -278,12 +278,12 @@ class AIHelper {
                 $recommended_products = array_merge($recommended_products, array_slice($available, 0, $remaining));
             }
             
-            return array_slice($recommended_products, 0, 6);
+            return array_slice($recommended_products, 0, 4);
         } catch (Exception $e) {
             error_log("AI Recommendation Error: " . $e->getMessage());
             // Fallback: return random products
             shuffle($all_products);
-            return array_slice($all_products, 0, 6);
+            return array_slice($all_products, 0, 4);
         }
     }
 }

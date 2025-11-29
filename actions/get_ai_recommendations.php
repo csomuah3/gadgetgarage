@@ -75,7 +75,7 @@ try {
     try {
         $all_products = get_all_products_ctr();
         shuffle($all_products);
-        $fallback_products = array_slice($all_products, 0, 6);
+        $fallback_products = array_slice($all_products, 0, 4);
         
         foreach ($fallback_products as &$product) {
             $product['image_url'] = get_product_image_url(

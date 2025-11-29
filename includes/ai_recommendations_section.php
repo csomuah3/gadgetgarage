@@ -13,7 +13,7 @@
 			</p>
 		</div>
 
-		<div id="aiRecommendationsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px;">
+		<div id="aiRecommendationsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;">
 			<!-- Loading state -->
 			<div id="aiRecommendationsLoading" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
 				<i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #2563eb; margin-bottom: 20px;"></i>

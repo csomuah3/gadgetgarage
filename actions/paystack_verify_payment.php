@@ -70,6 +70,23 @@ try {
                 // Empty cart
                 empty_cart_ctr($customer_id, $ip_address);
 
+                // Send customer order confirmation SMS
+                if (defined('SMS_ENABLED') && SMS_ENABLED) {
+                    try {
+                        require_once __DIR__ . '/../helpers/sms_helper.php';
+                        $customer_sms_result = send_order_confirmation_sms($order_id);
+                        if ($customer_sms_result) {
+                            error_log("Customer order confirmation SMS sent successfully for order ID: $order_id");
+                        } else {
+                            error_log("Failed to send customer order confirmation SMS for order ID: $order_id");
+                        }
+                    } catch (Exception $customer_sms_error) {
+                        // Log but don't fail the order
+                        error_log('Customer SMS notification error: ' . $customer_sms_error->getMessage());
+                        error_log('Customer SMS error trace: ' . $customer_sms_error->getTraceAsString());
+                    }
+                }
+
                 // Send admin SMS notification for new order
                 if (defined('ADMIN_SMS_ENABLED') && ADMIN_SMS_ENABLED && defined('ADMIN_NEW_ORDER_SMS_ENABLED') && ADMIN_NEW_ORDER_SMS_ENABLED) {
                     try {

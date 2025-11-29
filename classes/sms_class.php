@@ -64,21 +64,51 @@ class SMSService extends db_connection {
             $delivery_days = intval($this->settings['delivery_days'] ?? 4); // Default to 4 days (middle of 3-5 range)
             $delivery_date = $this->calculateDeliveryDate($delivery_days);
 
-            // Get message template
-            $customer_language = $this->getCustomerLanguage($customer_id);
-            $template = $this->getMessageTemplate('order_confirmation', $customer_language);
+            // Get customer name and order amount for template
+            $db = new db_connection();
+            $customer_query = "SELECT customer_name FROM customer WHERE customer_id = " . intval($customer_id);
+            $customer_data = $db->db_fetch_one($customer_query);
+            $customer_name = $customer_data['customer_name'] ?? 'Customer';
+            
+            // Get order total amount
+            $payment_query = "SELECT amt FROM payment WHERE order_id = " . intval($order_id) . " ORDER BY payment_date DESC LIMIT 1";
+            $payment_data = $db->db_fetch_one($payment_query);
+            $order_amount = $payment_data ? number_format($payment_data['amt'], 2) : '0.00';
 
-            // If no template found, use default template with delivery timeframe
-            if (!$template) {
-                $template = "Thank you for your order! Order #{order_number} has been confirmed. Your order will be delivered within 3-5 business days (estimated: {delivery_date}). Track your order: {track_url}";
+            // Get message template from config file
+            require_once(__DIR__ . '/../settings/sms_config.php');
+            global $sms_templates;
+            $customer_language = $this->getCustomerLanguage($customer_id);
+            $template = null;
+            
+            if (isset($sms_templates['order_confirmation'][$customer_language])) {
+                $template = $sms_templates['order_confirmation'][$customer_language];
+            } elseif (isset($sms_templates['order_confirmation']['en'])) {
+                $template = $sms_templates['order_confirmation']['en'];
             }
+
+            // If no template found, use default template
+            if (!$template) {
+                $template = "Hi {name}! Your order #{order_id} has been confirmed. Total: GH¢{amount}. Delivery: {delivery_date}. Track: {tracking_url}";
+            }
+
+            // Get tracking URL from config
+            global $sms_urls;
+            if (!isset($sms_urls)) {
+                require_once(__DIR__ . '/../settings/sms_config.php');
+            }
+            $tracking_url = ($sms_urls['tracking_base'] ?? '') . $order_id;
 
             // Replace variables in template
             $message = $this->replaceTemplateVariables($template, [
+                'name' => $customer_name,
+                'order_id' => $order_id,
                 'order_number' => $order_id,
+                'amount' => $order_amount,
                 'delivery_date' => $delivery_date,
                 'delivery_timeframe' => '3-5 business days',
-                'track_url' => $this->generateTrackingUrl($order_id)
+                'track_url' => $tracking_url,
+                'tracking_url' => $tracking_url
             ]);
 
             // Send SMS
@@ -269,12 +299,19 @@ class SMSService extends db_connection {
     }
 
     /**
-     * Core SMS sending function using Arkesel API
+     * Core SMS sending function using Brevo API
      */
     private function sendSMS($phone_number, $message, $message_type, $order_id = null, $customer_id = null) {
         try {
+            // Validate API key is set
+            if (empty($this->api_key) || $this->api_key === 'YOUR_API_KEY_HERE') {
+                error_log("SMS Error: API key not configured! Please set your Brevo API key in sms_config.php");
+                throw new Exception('SMS API key not configured. Please set your Brevo API key.');
+            }
+
             // Log original phone number
-            error_log("SMS sendSMS called - Original phone: $phone_number, Message type: $message_type");
+            error_log("=== SMS SENDING ATTEMPT ===");
+            error_log("Original phone: $phone_number, Message type: $message_type");
             
             // Validate and format phone number
             $formatted_phone = format_phone_number($phone_number);
@@ -283,94 +320,96 @@ class SMSService extends db_connection {
                 throw new Exception('Invalid phone number format: ' . $phone_number);
             }
             
-            error_log("SMS Phone formatted: $phone_number -> $formatted_phone");
+            error_log("Phone formatted: $phone_number -> $formatted_phone");
 
-            // Check rate limiting (simplified - always allows for now)
+            // Check rate limiting
             if (!$this->checkRateLimit($formatted_phone)) {
                 throw new Exception('Rate limit exceeded for this phone number');
             }
 
-            // Prepare API request - Brevo API format
-            // Brevo requires international format with + sign
+            // Prepare API request - CORRECT Brevo API format (based on official documentation)
+            // Endpoint: /v3/transactionalSMS/send
+            // Remove + from phone number if present (Brevo expects just numbers with country code)
+            $recipient_number = str_replace('+', '', $formatted_phone);
+            
             $api_data = [
-                'type' => 'transactional',
-                'content' => $message,
-                'recipient' => $formatted_phone, // Brevo expects +233 format
-                'sender' => $this->sender_id
+                'sender' => $this->sender_id, // Sender name/ID (max 11 alphanumeric or 15 numeric, must be pre-approved)
+                'recipient' => $recipient_number, // Mobile number with country code (no + sign, e.g., 233551387578)
+                'content' => $message, // SMS content (auto-split if > 160 chars)
+                'type' => 'transactional' // 'transactional' or 'marketing'
+                // Optional: 'tag', 'webUrl', 'unicodeEnabled', 'organisationPrefix'
             ];
             
-            error_log("Phone for Brevo API: $formatted_phone");
+            error_log("=== BREVO SMS API REQUEST ===");
+            error_log("API URL: " . $this->api_url);
+            error_log("Sender: " . $this->sender_id);
+            error_log("Recipient: $recipient_number (formatted from: $formatted_phone)");
+            error_log("Message length: " . strlen($message) . " characters");
+            error_log("Request Data: " . json_encode($api_data, JSON_PRETTY_PRINT));
 
             // Log SMS attempt
             $log_id = $this->logSMSAttempt($order_id, $customer_id, $formatted_phone, $message_type, $message);
-            
-            error_log("=== SMS SENDING ATTEMPT ===");
-            error_log("API URL: " . $this->api_url);
-            error_log("API Key: " . substr($this->api_key, 0, 10) . "...");
-            error_log("Sender ID: " . $this->sender_id);
-            error_log("Recipient: $formatted_phone");
-            error_log("Message length: " . strlen($message));
-            error_log("Request Data: " . json_encode($api_data, JSON_PRETTY_PRINT));
 
-            // Send HTTP request using POST with JSON
+            // Send HTTP request to Brevo API (CORRECT ENDPOINT: /send)
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $this->api_url);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($api_data));
             curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'api-key: ' . $this->api_key
+                'accept: application/json',
+                'api-key: ' . $this->api_key,
+                'content-type: application/json'
             ]);
             curl_setopt($ch, CURLOPT_TIMEOUT, 30);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
             curl_setopt($ch, CURLOPT_USERAGENT, 'GadgetGarage SMS Service 1.0');
 
             $response = curl_exec($ch);
             $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            $error = curl_error($ch);
-            $curl_info = curl_getinfo($ch);
+            $curl_error = curl_error($ch);
             curl_close($ch);
             
             error_log("=== BREVO API RESPONSE ===");
             error_log("HTTP Code: $http_code");
-            error_log("cURL Error: " . ($error ? $error : 'None'));
-            error_log("Response (first 500 chars): " . substr($response, 0, 500));
+            error_log("cURL Error: " . ($curl_error ? $curl_error : 'None'));
             error_log("Full Response: " . $response);
 
-            if ($error) {
-                error_log("cURL Error: $error");
-                throw new Exception('cURL Error: ' . $error);
+            if ($curl_error) {
+                error_log("cURL Error: $curl_error");
+                throw new Exception('cURL Error: ' . $curl_error);
             }
 
             // Parse response
             $response_data = json_decode($response, true);
             
-            error_log("Arkesel API Response Data: " . json_encode($response_data));
+            error_log("Brevo API Response Data: " . json_encode($response_data));
 
-            // Arkesel API returns 200 on success, check response structure
+            // Check Brevo API response
             if ($http_code === 200 || $http_code === 201) {
-                // Arkesel success can be indicated by:
-                // 1. status === 'success'
-                // 2. code === 200
-                // 3. data array with message info
-                // 4. Or just HTTP 200 with valid JSON
-                
+                // Brevo success responses
+                // Success can be indicated by: messageId field, or 201 Created status
                 $is_success = false;
-                $error_msg = 'Unknown error from Arkesel API';
+                $error_msg = 'Unknown error from Brevo API';
                 
-                if (isset($response_data['status']) && $response_data['status'] === 'success') {
+                // Check for success indicators
+                if (isset($response_data['messageId'])) {
                     $is_success = true;
-                } elseif (isset($response_data['code']) && $response_data['code'] == 200) {
+                } elseif ($http_code === 201) {
+                    // 201 Created usually means success in Brevo
                     $is_success = true;
-                } elseif (isset($response_data['data']) && is_array($response_data['data'])) {
+                } elseif (isset($response_data['status']) && $response_data['status'] === 'sent') {
                     $is_success = true;
-                } elseif (empty($response_data) || !isset($response_data['status'])) {
-                    // Sometimes Arkesel returns 200 with just data, no status field
-                    // If we got 200 and valid JSON, assume success
+                } elseif (empty($response_data)) {
+                    // Sometimes Brevo returns empty response on success
                     $is_success = true;
                 } else {
-                    $error_msg = $response_data['message'] ?? ($response_data['error'] ?? 'Unknown error');
+                    // Check for error messages
+                    $error_msg = $response_data['message'] ?? 
+                                ($response_data['error'] ?? 
+                                ($response_data['code'] ?? 'Unknown error'));
+                    error_log("Brevo API Error Details: " . json_encode($response_data));
                 }
                 
                 if ($is_success) {
@@ -378,7 +417,7 @@ class SMSService extends db_connection {
                     $this->updateSMSLog($log_id, 'sent', $response_data);
                     $this->updateRateLimit($formatted_phone);
 
-                    error_log("SMS sent successfully to $formatted_phone");
+                    error_log("✅ SMS sent successfully to $formatted_phone");
                     return [
                         'success' => true,
                         'message' => 'SMS sent successfully',
@@ -386,14 +425,19 @@ class SMSService extends db_connection {
                         'response' => $response_data
                     ];
                 } else {
-                    // Arkesel returned error
-                    error_log("Arkesel API Error: $error_msg");
+                    // Brevo returned error
+                    error_log("❌ Brevo API Error: $error_msg");
                     error_log("Full response: " . json_encode($response_data));
-                    throw new Exception('Arkesel API Error: ' . $error_msg);
+                    throw new Exception('Brevo API Error: ' . $error_msg);
                 }
             } else {
-                error_log("HTTP Error $http_code: $response");
-                throw new Exception('HTTP Error ' . $http_code . ': ' . substr($response, 0, 200));
+                // HTTP error
+                $error_details = $response;
+                if ($response_data) {
+                    $error_details = json_encode($response_data);
+                }
+                error_log("❌ HTTP Error $http_code: " . substr($error_details, 0, 500));
+                throw new Exception('Brevo API HTTP Error ' . $http_code . ': ' . substr($error_details, 0, 200));
             }
 
         } catch (Exception $e) {

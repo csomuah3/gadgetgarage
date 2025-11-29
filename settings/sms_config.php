@@ -1,4 +1,5 @@
 <?php
+
 /**
  * SMS Configuration File
  * Brevo (formerly Sendinblue) API configuration and SMS settings
@@ -7,9 +8,14 @@
 // Brevo API Configuration
 // API Key should be set via environment variable or separate config file
 // For production, use: define('SMS_API_KEY', getenv('SENDINBLUE_API_KEY') ?: '');
-define('SMS_API_KEY', getenv('SENDINBLUE_API_KEY') ?: 'YOUR_API_KEY_HERE');
-define('SMS_API_URL', 'https://api.brevo.com/v3/transactionalSMS/sms');
-define('SMS_SENDER_ID', 'Gadget-G'); // Your sender name
+// IMPORTANT: Replace 'YOUR_API_KEY_HERE' with your actual Brevo API key from https://app.brevo.com/settings/keys/api
+define('SMS_API_KEY', getenv('SENDINBLUE_API_KEY') ?: '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');
+// Brevo Transactional SMS API endpoint (CORRECT - uses /send not /sms)
+define('SMS_API_URL', 'https://api.brevo.com/v3/transactionalSMS/send');
+// Sender ID: Must be approved in Brevo dashboard (SMS → Sender IDs)
+// Max 11 alphanumeric characters OR 15 numeric characters
+// Options: "Gadget-G" (8 chars) or "GadgetGarage" (11 chars) - use whichever is approved in Brevo
+define('SMS_SENDER_ID', 'Gadget-G'); // Change to "GadgetGarage" if that's what's approved in Brevo
 
 // SMS Settings
 define('SMS_ENABLED', true); // Re-enabled with Brevo integration

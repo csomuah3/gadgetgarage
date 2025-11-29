@@ -734,6 +734,10 @@ if (!check_login() || !check_admin()) {
                         <i class="fas fa-trademark"></i>
                         <span>Brands</span>
                     </a>
+                    <a href="refunds_ratings.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'refunds_ratings.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-star-half-alt"></i>
+                        <span>Refunds &amp; Ratings</span>
+                    </a>
                     <a href="support_messages.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'support_messages.php' ? 'active' : ''; ?>">
                         <i class="fas fa-headset"></i>
                         <span>Support</span>

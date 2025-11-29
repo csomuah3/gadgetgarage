@@ -82,6 +82,16 @@ $total_pages = ceil($total_products / $products_per_page);
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
 $products_to_display = array_slice($filtered_products, $offset, $products_per_page);
+
+// Configure filters for iPads/Tablets (individual category page)
+$filter_config = [
+    'show_category_filter' => false,  // Hide category filter (already on iPads page)
+    'show_brand_filter' => true,      // Show brand filter only
+    'show_price_filter' => true,      // Show price slider
+    'show_rating_filter' => true,     // Show ratings
+    'fixed_category_id' => 2,         // Fixed to tablets/iPads category
+    'allowed_categories' => []
+];
 ?>
 
 <!DOCTYPE html>
@@ -100,6 +110,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
     <link href="../css/product-card.css" rel="stylesheet">
+    
+    <!-- NEW: Product Filters CSS -->
+    <link href="../css/product-filters.css" rel="stylesheet">
+    
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 
@@ -1753,6 +1767,75 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <?php include '../includes/header.php'; ?>
+
+    <!-- Main Content with Filters -->
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Left: Filters Sidebar (3 columns) -->
+            <div class="col-lg-3">
+                <?php include '../includes/product-filters.php'; ?>
+            </div>
+
+            <!-- Right: Products Grid (9 columns) -->
+            <div class="col-lg-9 product-grid-container">
+                <h2 style="margin-bottom: 20px; color: #1f2937;">iPads & Tablets</h2>
+                
+                <!-- Product Count -->
+                <div class="product-count" style="padding: 15px 20px; background: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
+                    <i class="fas fa-box" style="margin-right: 8px; color: #2563eb;"></i>
+                    Showing <strong><?php echo count($products_to_display); ?></strong> of <strong><?php echo $total_products; ?></strong> products
+                </div>
+
+                <!-- Products Grid -->
+                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                    <?php foreach ($products_to_display as $product): ?>
+                        <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
+                            <div class="product-image-container" style="position: relative; overflow: hidden; background: #f9fafb;">
+                                <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
+                                     alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                     class="product-image"
+                                     style="width: 100%; height: 280px; object-fit: cover;"
+                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4=';">
+                            </div>
+                            <div class="product-content" style="padding: 15px;">
+                                <h5 class="product-title" style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
+                                    <?php echo htmlspecialchars($product['product_title']); ?>
+                                </h5>
+                                <div class="product-price" style="font-size: 1.3rem; font-weight: 700; color: #2563eb; margin-bottom: 10px;">
+                                    GH₵ <?php echo number_format($product['product_price'], 2); ?>
+                                </div>
+                                <div class="product-meta" style="display: flex; gap: 10px; font-size: 0.85rem; color: #6b7280;">
+                                    <span><i class="fas fa-store"></i> <?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?></span>
+                                </div>
+                            </div>
+                        </div>
+                    <?php endforeach; ?>
+                </div>
+
+                <!-- Pagination (if needed) -->
+                <?php if ($total_pages > 1): ?>
+                <div class="pagination" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;">
+                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
+                        <a href="?page=<?php echo $i; ?>"
+                           style="padding: 10px 15px; border: 1px solid #e5e7eb; border-radius: 6px; text-decoration: none; color: <?php echo $i == $current_page ? 'white' : '#1f2937'; ?>; background: <?php echo $i == $current_page ? '#2563eb' : 'white'; ?>;">
+                            <?php echo $i; ?>
+                        </a>
+                    <?php endfor; ?>
+                </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Product Filters JavaScript -->
+    <script src="../js/product-filters.js"></script>
+    <script>
+        function viewProduct(productId) {
+            window.location.href = 'single_product.php?pid=' + productId;
+        }
+    </script>
+</body>
+</html>
     
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles"></div>

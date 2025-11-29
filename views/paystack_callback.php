@@ -32,7 +32,7 @@ log_paystack_activity('info', 'PayStack callback accessed', [
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
             min-height: 100vh;
             display: flex;
             align-items: center;
@@ -54,8 +54,8 @@ log_paystack_activity('info', 'PayStack callback accessed', [
             display: inline-block;
             width: 60px;
             height: 60px;
-            border: 5px solid #f3f4f6;
-            border-top: 5px solid #007bff;
+            border: 5px solid #e0f2fe;
+            border-top: 5px solid #2563eb;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin-bottom: 30px;
@@ -72,14 +72,14 @@ log_paystack_activity('info', 'PayStack callback accessed', [
         }
 
         .reference {
-            background: #f8f9fa;
+            background: #eff6ff;
             padding: 15px;
             border-radius: 8px;
             margin: 25px 0;
             word-break: break-all;
             font-family: 'Courier New', monospace;
             font-size: 14px;
-            color: #495057;
+            color: #1e40af;
         }
     </style>
 </head>

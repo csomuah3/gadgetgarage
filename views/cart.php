@@ -918,189 +918,31 @@ try {
             font-weight: 400;
         }
 
-        .cart-item {
-            background: #ffffff;
-            border-radius: 0;
-            box-shadow: none;
-            margin-bottom: 0;
-            overflow: visible;
-            transition: none;
-            border: none;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 2rem 0;
-            font-family: "Times New Roman", Times, serif;
-        }
-
-        .cart-item:hover {
-            transform: none;
-            box-shadow: none;
-            border-color: #e2e8f0;
-        }
-
-        .product-image {
-            width: 100px;
-            height: 100px;
-            object-fit: cover;
-            border-radius: 12px;
-            box-shadow: none;
-            transition: none;
-        }
-
-        .cart-item:hover .product-image {
-            transform: none;
-        }
-
+        /* Only add blue colors - keep all original functionality */
         .btn-primary {
             background: #4285F4;
-            border: none;
-            border-radius: 0;
-            padding: 16px 32px;
-            font-weight: 500;
-            font-size: 1rem;
-            font-family: "Times New Roman", Times, serif;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: none;
-            color: #ffffff;
-            pointer-events: auto !important;
-            cursor: pointer !important;
         }
 
         .btn-primary:hover {
             background: #3367d6;
-            transform: none;
-            box-shadow: none;
-            color: #ffffff;
-        }
-
-        .btn-outline-danger {
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            border-radius: 4px;
-            padding: 6px 12px;
-            font-weight: 400;
-            font-size: 0.875rem;
-            transition: all 0.3s ease;
-            background: transparent;
-            pointer-events: auto !important;
-            cursor: pointer !important;
-        }
-
-        .btn-outline-danger:hover {
-            background: #f3f4f6;
-            color: #374151;
-            transform: none;
-            box-shadow: none;
-            border-color: #9ca3af;
-        }
-
-        .quantity-control {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: transparent;
-            padding: 0;
-            border-radius: 0;
-            box-shadow: none;
         }
 
         .quantity-btn {
-            background: #f3f4f6;
-            border: 2px solid #4285F4;
-            color: #4285F4;
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            font-weight: 500;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            box-shadow: none;
-            pointer-events: auto !important;
-            cursor: pointer !important;
+            background: #4285F4;
         }
 
         .quantity-btn:hover {
-            background: #4285F4;
-            transform: none;
-            box-shadow: none;
-            color: #ffffff;
+            background: #3367d6;
         }
 
-        .quantity-input {
-            width: 60px;
-            text-align: center;
-            border: 2px solid #4285F4;
-            border-radius: 4px;
-            padding: 8px 4px;
-            font-size: 1rem;
-            font-weight: 500;
-            background: white;
-            transition: all 0.3s ease;
-        }
-
-        .quantity-input:focus {
-            border-color: #4285F4;
-            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3);
-            outline: none;
-        }
-
-        /* Container styling for clean layout */
-        .container.py-4 {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        /* Clean cart layout - Single unified container */
-        .col-lg-8 {
-            background: #ffffff;
-            padding: 2rem;
-            border: 2px solid #4285F4;
-            border-radius: 8px;
-        }
-
-        .col-lg-4 .cart-summary {
-            margin-top: 0;
-            border: 2px solid #4285F4;
-            border-radius: 8px;
-        }
-
-        /* Back button styling */
         .btn-outline-primary {
-            border: 2px solid #4285F4;
+            border-color: #4285F4;
             color: #4285F4;
-            background: transparent;
-            border-radius: 4px;
-            padding: 12px 24px;
-            font-size: 0.875rem;
-            font-weight: 500;
-            text-decoration: none;
-            transition: all 0.3s ease;
         }
 
         .btn-outline-primary:hover {
             background: #4285F4;
-            border-color: #4285F4;
-            color: #ffffff;
-            transform: none;
-        }
-
-        /* Empty cart button */
-        button.btn.btn-outline-danger {
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            background: transparent;
-            border-radius: 4px;
-            padding: 8px 16px;
-            font-size: 0.875rem;
-            font-weight: 400;
-        }
-
-        button.btn.btn-outline-danger:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
-            color: #374151;
+            color: white;
         }
 
         /* Hide radio button descriptions to match reference image */
@@ -1110,56 +952,18 @@ try {
             display: none !important;
         }
 
-        /* Restore and style discount section */
-        .promo-section-redesign,
-        .promo-input-container {
-            display: block !important;
-            visibility: visible !important;
+        /* Add blue colors to cart elements */
+        .cart-item h5 {
+            color: #4285F4 !important;
         }
 
-        /* Add discount text */
-        .promo-section-redesign::before {
-            content: "Discount Code";
-            display: block;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 0.75rem;
-            font-family: "Times New Roman", Times, serif;
+        .cart-item .fw-bold {
+            color: #4285F4 !important;
         }
 
-        .promo-input-redesign {
-            border: 2px solid #4285F4 !important;
-            border-radius: 4px !important;
-            padding: 12px 16px !important;
-            font-size: 1rem !important;
-            background: #ffffff !important;
-            color: #1a202c !important;
-            outline: none !important;
-            flex: 1 !important;
-            pointer-events: auto !important;
-        }
-
-        .promo-input-redesign:focus {
-            border-color: #4285F4 !important;
-            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3) !important;
-        }
-
-        .promo-apply-btn {
-            background: #10b981 !important;
-            color: white !important;
-            border: none !important;
-            padding: 12px 24px !important;
-            font-weight: 600 !important;
-            font-size: 1rem !important;
-            cursor: pointer !important;
-            transition: all 0.3s ease !important;
-            border-radius: 4px !important;
-            pointer-events: auto !important;
-        }
-
-        .promo-apply-btn:hover {
-            background: #059669 !important;
+        .cart-summary h3,
+        .cart-summary h4 {
+            color: #4285F4 !important;
         }
 
         /* Style radio buttons to match reference */

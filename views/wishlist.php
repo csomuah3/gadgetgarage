@@ -44,6 +44,7 @@ if ($is_logged_in) {
     
     <!-- Reusable Header CSS -->
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/account_sidebar.css" rel="stylesheet">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -513,7 +514,13 @@ if ($is_logged_in) {
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
     
-    
+    <!-- Account Layout -->
+    <div class="main-content">
+        <!-- Account Sidebar -->
+        <?php include '../includes/account_sidebar.php'; ?>
+        
+        <!-- Main Content -->
+        <main class="content-area">
     <!-- Wishlist Content -->
     <div class="wishlist-container">
         <div class="container">

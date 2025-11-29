@@ -1243,6 +1243,19 @@ try {
         @media (max-width: 992px) {
             .dashboard-sections {
                 grid-template-columns: 1fr;
+                gap: 20px;
+            }
+
+            .dashboard-section:first-child {
+                padding-right: 0;
+                border-right: none;
+                padding-bottom: 20px;
+                border-bottom: 2px solid #e5e7eb;
+            }
+
+            .dashboard-section:last-child {
+                padding-left: 0;
+                padding-top: 20px;
             }
         }
 

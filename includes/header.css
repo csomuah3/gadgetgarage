@@ -7,23 +7,34 @@
 }
 
 body {
-    font-family: "Times New Roman", Times, serif;
+    font-family: "Times New Roman", Times, serif !important;
     background-color: #ffffff;
     color: #1a1a1a;
     overflow-x: hidden;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
+    font-weight: 400;
+}
+
+/* Ensure all elements use Times New Roman */
+*, *::before, *::after {
+    font-family: "Times New Roman", Times, serif !important;
 }
 
 /* Ensure proper font weights for headings */
 h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
+    font-weight: 700 !important;
     letter-spacing: 0.3px;
 }
 
 strong, b {
-    font-weight: 700;
+    font-weight: 700 !important;
+}
+
+/* Ensure buttons and inputs use proper font */
+button, input, select, textarea, a, span, p, div {
+    font-family: "Times New Roman", Times, serif !important;
 }
 
 /* Promotional Banner Styles */
@@ -31,12 +42,15 @@ strong, b {
 .promo-banner2 {
     background: #001f3f !important;
     color: white;
-    padding: 6px 15px;
+    padding: 6px 20px;
     text-align: center;
     font-size: 1rem;
     font-weight: 400;
-    position: sticky;
+    position: fixed;
     top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
     z-index: 1001;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     height: 32px;
@@ -44,7 +58,7 @@ strong, b {
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    max-width: 100%;
+    margin: 0;
 }
 
 .promo-banner-left,
@@ -107,10 +121,12 @@ strong, b {
     background: #ffffff;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     position: sticky;
-    top: 38px;
+    top: 32px;
     z-index: 1000;
     padding: 20px 0;
     border-bottom: 1px solid #e5e7eb;
+    margin: 0;
+    width: 100%;
 }
 
 .logo {
@@ -605,9 +621,11 @@ body.dark-mode .simple-dropdown ul li a:hover {
     border-bottom: 1px solid #e5e7eb;
     padding: 12px 0;
     position: sticky;
-    top: 85px;
+    top: 80px;
     z-index: 999;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin: 0;
+    width: 100%;
 }
 
 .nav-menu {

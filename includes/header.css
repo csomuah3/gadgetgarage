@@ -17,8 +17,8 @@ body {
     font-weight: 400;
 }
 
-/* Ensure all elements use Times New Roman */
-*, *::before, *::after {
+/* Ensure all elements use Times New Roman EXCEPT icons */
+*:not(i):not(.fa):not(.fas):not(.far):not(.fal):not(.fab) {
     font-family: "Times New Roman", Times, serif !important;
 }
 
@@ -32,9 +32,12 @@ strong, b {
     font-weight: 700 !important;
 }
 
-/* Ensure buttons and inputs use proper font */
-button, input, select, textarea, a, span, p, div {
-    font-family: "Times New Roman", Times, serif !important;
+/* Ensure FontAwesome icons use correct font */
+i[class*="fa-"], 
+.fa, .fas, .far, .fal, .fab,
+i.fa, i.fas, i.far, i.fal, i.fab {
+    font-family: "Font Awesome 6 Free", "Font Awesome 6 Pro", "FontAwesome" !important;
+    font-style: normal;
 }
 
 /* Promotional Banner Styles */

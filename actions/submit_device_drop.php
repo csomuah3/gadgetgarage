@@ -59,6 +59,15 @@ try {
     $phone = preg_replace('/[^0-9+]/', '', $phone);
     $pickup_address = isset($_POST['address']) ? trim($_POST['address']) : null;
 
+    // Handle AI valuation data (if provided)
+    $ai_valuation = isset($_POST['ai_valuation']) && !empty($_POST['ai_valuation']) ?
+                   floatval($_POST['ai_valuation']) : null;
+    $payment_method = isset($_POST['payment_method']) ? trim($_POST['payment_method']) : null;
+    $final_amount = isset($_POST['final_amount']) && !empty($_POST['final_amount']) ?
+                   floatval($_POST['final_amount']) : null;
+    $condition_grade = isset($_POST['condition_grade']) ? trim($_POST['condition_grade']) : null;
+    $value_reasoning = isset($_POST['value_reasoning']) ? trim($_POST['value_reasoning']) : null;
+
     // Validate email
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         throw new Exception('Invalid email address');
@@ -88,13 +97,22 @@ try {
     $phone = mysqli_real_escape_string($db->db_conn(), $phone);
     $pickup_address = $pickup_address ? "'" . mysqli_real_escape_string($db->db_conn(), $pickup_address) . "'" : 'NULL';
 
+    // Escape AI valuation data
+    $ai_valuation_sql = $ai_valuation !== null ? floatval($ai_valuation) : 'NULL';
+    $payment_method_sql = $payment_method ? "'" . mysqli_real_escape_string($db->db_conn(), $payment_method) . "'" : 'NULL';
+    $final_amount_sql = $final_amount !== null ? floatval($final_amount) : 'NULL';
+    $condition_grade_sql = $condition_grade ? "'" . mysqli_real_escape_string($db->db_conn(), $condition_grade) . "'" : 'NULL';
+    $value_reasoning_sql = $value_reasoning ? "'" . mysqli_real_escape_string($db->db_conn(), $value_reasoning) . "'" : 'NULL';
+
     // Insert device drop request using direct SQL
     $sql = "INSERT INTO device_drop_requests (
         device_type, device_brand, device_model, condition_status,
-        description, asking_price, first_name, last_name, email, phone, pickup_address
+        description, asking_price, first_name, last_name, email, phone, pickup_address,
+        ai_valuation, payment_method, final_amount, condition_grade, value_reasoning
     ) VALUES (
         '$device_type', '$device_brand', '$device_model', '$condition',
-        $description, $asking_price, '$first_name', '$last_name', '$email', '$phone', $pickup_address
+        $description, $asking_price, '$first_name', '$last_name', '$email', '$phone', $pickup_address,
+        $ai_valuation_sql, $payment_method_sql, $final_amount_sql, $condition_grade_sql, $value_reasoning_sql
     )";
 
     if (!$db->db_write_query($sql)) {
@@ -102,6 +120,45 @@ try {
     }
 
     $request_id = mysqli_insert_id($db->db_conn());
+
+    // Create store credit if user selected store credit payment
+    if ($payment_method === 'store_credit' && $final_amount > 0) {
+        // First, check if user exists in our system (assuming they logged in)
+        session_start();
+
+        if (isset($_SESSION['user_id'])) {
+            $user_id = $_SESSION['user_id'];
+        } else {
+            // If user is not logged in, check if they have an account by email
+            $user_check_sql = "SELECT customer_id FROM customers WHERE customer_email = '$email' LIMIT 1";
+            $user_result = $db->db_fetch_one($user_check_sql);
+            $user_id = $user_result ? $user_result['customer_id'] : null;
+        }
+
+        if ($user_id) {
+            // Generate credit reference ID
+            $credit_reference = 'DDC' . str_pad($request_id, 6, '0', STR_PAD_LEFT);
+
+            // Insert store credit
+            $credit_sql = "INSERT INTO store_credits (
+                customer_id, amount, source_type, source_reference,
+                description, expires_at, created_at
+            ) VALUES (
+                $user_id, $final_amount_sql, 'device_drop', '$credit_reference',
+                'Store credit from device drop request #$request_id',
+                DATE_ADD(NOW(), INTERVAL 1 YEAR), NOW()
+            )";
+
+            if ($db->db_write_query($credit_sql)) {
+                error_log("Store credit created for user $user_id: GH₵$final_amount");
+            } else {
+                error_log("Failed to create store credit: " . mysqli_error($db->db_conn()));
+                // Don't fail the entire transaction for this
+            }
+        } else {
+            error_log("No user found for email $email - store credit will be created manually");
+        }
+    }
 
     // Handle uploaded images
     if (!empty($_FILES)) {

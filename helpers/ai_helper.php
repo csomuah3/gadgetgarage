@@ -346,6 +346,65 @@ class AIHelper {
             return array_slice($all_products, 0, 4);
         }
     }
+
+    /**
+     * Assess device value for trade-in/drop-off using AI
+     * Returns detailed valuation with cash and store credit options
+     */
+    public function assessDeviceValue($device_type, $brand, $model, $condition, $issues = '') {
+        $device_type = trim($device_type ?: 'Device');
+        $brand = trim($brand ?: 'Unknown brand');
+        $model = trim($model ?: '');
+        $condition = trim($condition ?: 'fair');
+        $issues = trim($issues ?: 'None mentioned');
+
+        if (empty($device_type) || empty($brand)) {
+            throw new Exception("Device type and brand are required for valuation.");
+        }
+
+        $prompt = "You are a device valuation expert at Gadget Garage, a tech store in Accra, Ghana.\n";
+        $prompt .= "A customer wants to trade in their device for cash or store credit.\n\n";
+        $prompt .= "Device Information:\n";
+        $prompt .= "- Type: {$device_type}\n";
+        $prompt .= "- Brand: {$brand}\n";
+        if (!empty($model)) {
+            $prompt .= "- Model: {$model}\n";
+        }
+        $prompt .= "- Condition: {$condition}\n";
+        $prompt .= "- Issues/Description: {$issues}\n\n";
+
+        $prompt .= "Valuation Guidelines:\n";
+        $prompt .= "- Use realistic market prices for Ghana in Ghana cedis (GH₵)\n";
+        $prompt .= "- Consider device age, condition, market demand, and local resale value\n";
+        $prompt .= "- Store credit offers 10% bonus over cash value\n";
+        $prompt .= "- Be conservative but fair in valuation\n";
+        $prompt .= "- Consider depreciation, wear and tear, and local market conditions\n\n";
+
+        $prompt .= "Condition Multipliers:\n";
+        $prompt .= "- Excellent (like new): 85-90% of current retail\n";
+        $prompt .= "- Good (minor wear): 70-80% of current retail\n";
+        $prompt .= "- Fair (visible wear, some issues): 50-65% of current retail\n";
+        $prompt .= "- Poor (major issues, significant damage): 20-40% of current retail\n\n";
+
+        $prompt .= "Respond ONLY in valid JSON with this exact structure (no explanations, no extra text):\n";
+        $prompt .= "{\n";
+        $prompt .= "  \"cash_value\": 250,\n";
+        $prompt .= "  \"credit_value\": 275,\n";
+        $prompt .= "  \"original_retail_estimate\": 800,\n";
+        $prompt .= "  \"condition_grade\": \"Good\",\n";
+        $prompt .= "  \"value_reasoning\": \"Brief explanation of how the value was determined\",\n";
+        $prompt .= "  \"market_comparison\": \"How this compares to current market prices\",\n";
+        $prompt .= "  \"recommendations\": \"Any advice for the customer about the offer\"\n";
+        $prompt .= "}\n";
+
+        try {
+            $response = $this->callOpenAI($prompt, 400);
+            return trim($response);
+        } catch (Exception $e) {
+            error_log("AI Device Valuation Error: " . $e->getMessage());
+            throw new Exception("Unable to assess device value at this time. Please try again.");
+        }
+    }
 }
 ?>
 

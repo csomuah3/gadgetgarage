@@ -1005,6 +1005,224 @@ try {
                 margin-top: 20px;
             }
         }
+
+        /* AI Valuation Result Styles */
+        .valuation-card {
+            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            border: 2px solid #3b82f6;
+            border-radius: 16px;
+            padding: 2rem;
+            margin-top: 2rem;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+            animation: slideUp 0.5s ease-out;
+        }
+
+        .valuation-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .valuation-header h3 {
+            color: #1e40af;
+            font-size: 1.5rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .condition-badge {
+            background: #10b981;
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: 600;
+            font-size: 0.9rem;
+        }
+
+        .value-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .value-option {
+            background: white;
+            border: 2px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .value-option:hover {
+            border-color: #3b82f6;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.15);
+        }
+
+        .value-option.selected {
+            border-color: #10b981;
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.2);
+        }
+
+        .value-option.recommended::before {
+            content: "RECOMMENDED";
+            position: absolute;
+            top: -8px;
+            right: 15px;
+            background: #f59e0b;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .value-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .value-header h4 {
+            color: #1f2937;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bonus-badge {
+            background: #10b981;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+
+        .value-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1e40af;
+            margin-bottom: 0.5rem;
+        }
+
+        .value-description {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .valuation-details {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .detail-item {
+            margin-bottom: 1rem;
+        }
+
+        .detail-item:last-child {
+            margin-bottom: 0;
+        }
+
+        .detail-item strong {
+            color: #1e40af;
+            font-size: 0.95rem;
+        }
+
+        .detail-item p {
+            margin: 0.5rem 0 0 0;
+            color: #4b5563;
+            line-height: 1.5;
+        }
+
+        .valuation-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .accept-valuation-btn {
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .accept-valuation-btn:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(16, 185, 129, 0.3);
+        }
+
+        .decline-valuation-btn {
+            background: #f3f4f6;
+            color: #6b7280;
+            border: 2px solid #e5e7eb;
+            padding: 12px 24px;
+            border-radius: 10px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .decline-valuation-btn:hover {
+            background: #e5e7eb;
+            color: #4b5563;
+            transform: translateY(-2px);
+        }
+
+        .submit-btn.valuation-accepted {
+            background: linear-gradient(135deg, #10b981, #059669);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .value-options {
+                grid-template-columns: 1fr;
+            }
+
+            .valuation-actions {
+                flex-direction: column;
+            }
+
+            .value-amount {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 
@@ -1574,6 +1792,213 @@ try {
                 hideSuccessModal();
             }
         });
+
+        // AI Valuation functionality
+        let currentValuation = null;
+
+        document.getElementById('getAIValuationBtn').addEventListener('click', async function() {
+            // Get form data
+            const deviceType = document.getElementById('device_type').value;
+            const brand = document.getElementById('brand').value;
+            const model = document.getElementById('model').value;
+            const condition = document.querySelector('input[name="condition"]:checked')?.value;
+            const description = document.getElementById('description').value;
+
+            // Validate required fields
+            if (!deviceType || !brand || !condition) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Missing Information',
+                    text: 'Please fill in device type, brand, and condition before getting valuation.',
+                    confirmButtonColor: '#3B82F6'
+                });
+                return;
+            }
+
+            // Show loading state
+            const btn = this;
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Getting AI Valuation...';
+            btn.disabled = true;
+
+            try {
+                const response = await fetch('../actions/device_valuation.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        device_type: deviceType,
+                        brand: brand,
+                        model: model,
+                        condition: condition,
+                        description: description
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.status === 'success') {
+                    currentValuation = result.valuation;
+                    displayValuationResult(result);
+                } else {
+                    throw new Error(result.message || 'Failed to get valuation');
+                }
+
+            } catch (error) {
+                console.error('Valuation error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Valuation Failed',
+                    text: error.message || 'Unable to get device valuation. Please try again.',
+                    confirmButtonColor: '#3B82F6'
+                });
+            } finally {
+                // Restore button
+                btn.innerHTML = originalText;
+                btn.disabled = false;
+            }
+        });
+
+        function displayValuationResult(result) {
+            const resultContainer = document.getElementById('aiValuationResult');
+            const valuation = result.valuation;
+
+            const html = `
+                <div class="valuation-card">
+                    <div class="valuation-header">
+                        <h3><i class="fas fa-robot"></i> AI Device Valuation</h3>
+                        <div class="condition-badge">${valuation.condition_grade}</div>
+                    </div>
+
+                    <div class="value-options">
+                        <div class="value-option" data-payment="cash">
+                            <div class="value-header">
+                                <h4><i class="fas fa-money-bill-wave"></i> Cash Payment</h4>
+                            </div>
+                            <div class="value-amount">GH₵ ${valuation.cash_value.toFixed(2)}</div>
+                            <div class="value-description">Immediate cash payment</div>
+                        </div>
+
+                        <div class="value-option recommended" data-payment="store_credit">
+                            <div class="value-header">
+                                <h4><i class="fas fa-gift"></i> Store Credit</h4>
+                                <span class="bonus-badge">+10% BONUS</span>
+                            </div>
+                            <div class="value-amount">GH₵ ${valuation.credit_value.toFixed(2)}</div>
+                            <div class="value-description">+GH₵ ${valuation.bonus_amount.toFixed(2)} bonus value</div>
+                        </div>
+                    </div>
+
+                    <div class="valuation-details">
+                        <div class="detail-item">
+                            <strong>Value Reasoning:</strong>
+                            <p>${valuation.value_reasoning}</p>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Market Comparison:</strong>
+                            <p>${valuation.market_comparison}</p>
+                        </div>
+                        <div class="detail-item">
+                            <strong>Recommendations:</strong>
+                            <p>${valuation.recommendations}</p>
+                        </div>
+                    </div>
+
+                    <div class="valuation-actions">
+                        <button type="button" class="accept-valuation-btn" onclick="acceptValuation()">
+                            <i class="fas fa-check"></i> Accept This Valuation
+                        </button>
+                        <button type="button" class="decline-valuation-btn" onclick="declineValuation()">
+                            <i class="fas fa-times"></i> Get New Valuation
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            resultContainer.innerHTML = html;
+            resultContainer.style.display = 'block';
+
+            // Add click handlers for payment options
+            document.querySelectorAll('.value-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove previous selection
+                    document.querySelectorAll('.value-option').forEach(opt => opt.classList.remove('selected'));
+                    // Add selection to clicked option
+                    this.classList.add('selected');
+                });
+            });
+
+            // Scroll to result
+            resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        }
+
+        function acceptValuation() {
+            const selectedPayment = document.querySelector('.value-option.selected')?.dataset.payment;
+
+            if (!selectedPayment) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Select Payment Method',
+                    text: 'Please select either Cash or Store Credit payment option.',
+                    confirmButtonColor: '#3B82F6'
+                });
+                return;
+            }
+
+            // Set hidden form fields
+            const valuationData = {
+                ai_valuation: selectedPayment === 'cash' ? currentValuation.cash_value : currentValuation.credit_value,
+                payment_method: selectedPayment,
+                final_amount: selectedPayment === 'cash' ? currentValuation.cash_value : currentValuation.credit_value,
+                condition_grade: currentValuation.condition_grade,
+                value_reasoning: currentValuation.value_reasoning
+            };
+
+            // Add hidden inputs to form
+            Object.keys(valuationData).forEach(key => {
+                let input = document.getElementById('hidden_' + key);
+                if (!input) {
+                    input = document.createElement('input');
+                    input.type = 'hidden';
+                    input.id = 'hidden_' + key;
+                    input.name = key;
+                    document.getElementById('deviceDropForm').appendChild(input);
+                }
+                input.value = valuationData[key];
+            });
+
+            // Show success message and enable form submission
+            Swal.fire({
+                icon: 'success',
+                title: 'Valuation Accepted!',
+                text: `You've selected ${selectedPayment === 'cash' ? 'cash payment' : 'store credit'} for GH₵ ${valuationData.final_amount.toFixed(2)}. You can now submit your device drop request.`,
+                confirmButtonColor: '#3B82F6'
+            });
+
+            // Update submit button to show acceptance
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-check"></i> Submit Device Drop Request';
+            submitBtn.classList.add('valuation-accepted');
+        }
+
+        function declineValuation() {
+            document.getElementById('aiValuationResult').style.display = 'none';
+            currentValuation = null;
+
+            // Remove hidden inputs
+            ['ai_valuation', 'payment_method', 'final_amount', 'condition_grade', 'value_reasoning'].forEach(field => {
+                const input = document.getElementById('hidden_' + field);
+                if (input) input.remove();
+            });
+
+            Swal.fire({
+                icon: 'info',
+                title: 'Valuation Declined',
+                text: 'You can adjust your device details and get a new valuation.',
+                confirmButtonColor: '#3B82F6'
+            });
+        }
     </script>
 
 </body>

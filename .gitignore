@@ -2,4 +2,5 @@ uploads/
 settings/db_cred.php
 settings/sms_config.php
 settings/ai_config.php
+ai_config_FOR_SERVER.php
 settings/ai_config.php

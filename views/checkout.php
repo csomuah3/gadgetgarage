@@ -952,3 +952,647 @@ try {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="js/dark-mode.js"></script>
 	<script src="js/checkout.js"></script>
+
+	<style>
+		/* Footer and Chat Styles */
+		.main-footer {
+			background: #ffffff;
+			border-top: 1px solid #e5e7eb;
+			padding: 60px 0 20px;
+			margin-top: 80px;
+		}
+		.footer-logo { font-size: 1.8rem; font-weight: 700; color: #1f2937; margin-bottom: 16px; }
+		.footer-logo .garage { background: linear-gradient(135deg, #000000, #333333); color: white; padding: 4px 8px; border-radius: 6px; font-size: 1rem; font-weight: 600; }
+		.footer-description { color: #6b7280; font-size: 0.95rem; margin-bottom: 24px; line-height: 1.6; }
+		.social-links { display: flex; gap: 12px; }
+		.social-link { width: 40px; height: 40px; background: #f3f4f6; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: #6b7280; text-decoration: none; transition: all 0.3s ease; }
+		.social-link:hover { background: #000000; color: white; transform: translateY(-2px); }
+		.footer-title { font-size: 1.1rem; font-weight: 600; color: #1f2937; margin-bottom: 20px; }
+		.footer-links { list-style: none; padding: 0; margin: 0; }
+		.footer-links li { margin-bottom: 12px; }
+		.footer-links li a { color: #6b7280; text-decoration: none; font-size: 0.9rem; transition: all 0.3s ease; }
+		.footer-links li a:hover { color: #000000; transform: translateX(4px); }
+		.footer-divider { border: none; height: 1px; background: linear-gradient(90deg, transparent, #e5e7eb, transparent); margin: 40px 0 20px; }
+		.footer-bottom { padding-top: 20px; }
+		.copyright { color: #6b7280; font-size: 0.9rem; margin: 0; }
+		.live-chat-widget { position: fixed; bottom: 20px; left: 20px; z-index: 1000; }
+		.chat-trigger { width: 60px; height: 60px; background: #000000; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 1.5rem; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15); transition: all 0.3s ease; }
+		.chat-trigger:hover { background: #374151; transform: scale(1.1); }
+		.chat-panel { position: absolute; bottom: 80px; left: 0; width: 350px; height: 450px; background: white; border-radius: 12px; box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15); border: 1px solid #e5e7eb; display: none; flex-direction: column; }
+		.chat-panel.active { display: flex; }
+		.chat-header { padding: 16px 20px; background: #000000; color: white; border-radius: 12px 12px 0 0; display: flex; justify-content: space-between; align-items: center; }
+		.chat-header h4 { margin: 0; font-size: 1.1rem; font-weight: 600; }
+		.chat-close { background: none; border: none; color: white; font-size: 1.2rem; cursor: pointer; padding: 0; }
+		.chat-body { flex: 1; padding: 20px; overflow-y: auto; }
+		.chat-message { margin-bottom: 16px; }
+		.chat-message.bot p { background: #f3f4f6; padding: 12px 16px; border-radius: 18px; margin: 0; color: #374151; font-size: 0.9rem; }
+		.chat-footer { padding: 16px 20px; border-top: 1px solid #e5e7eb; display: flex; gap: 12px; }
+		.chat-input { flex: 1; padding: 12px 16px; border: 1px solid #e5e7eb; border-radius: 25px; outline: none; font-size: 0.9rem; }
+		.chat-input:focus { border-color: #000000; }
+		.chat-send { width: 40px; height: 40px; background: #000000; color: white; border: none; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.3s ease; }
+		.chat-send:hover { background: #374151; }
+		.scroll-to-top {
+			position: fixed;
+			bottom: 30px;
+			left: 50%;
+			transform: translateX(-50%);
+			width: 50px;
+			height: 50px;
+			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			color: white;
+			border: none;
+			border-radius: 50%;
+			cursor: pointer;
+			display: none;
+			align-items: center;
+			justify-content: center;
+			font-size: 20px;
+			box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+			z-index: 1000;
+			transition: all 0.3s ease;
+			opacity: 0;
+			visibility: hidden;
+		}
+		.scroll-to-top.show {
+			display: flex;
+			opacity: 1;
+			visibility: visible;
+		}
+		.scroll-to-top:hover {
+			background: linear-gradient(135deg, #2563EB, #1E3A5F);
+			transform: translateX(-50%) translateY(-3px);
+			box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
+		}
+		@media (max-width: 768px) {
+			.scroll-to-top {
+				bottom: 20px;
+				width: 45px;
+				height: 45px;
+				font-size: 18px;
+			}
+		}
+	</style>
+
+	<script>
+		function toggleLiveChat() {
+			document.getElementById('chatPanel').classList.toggle('active');
+		}
+		function sendChatMessage() {
+			const chatInput = document.querySelector('.chat-input');
+			const chatBody = document.querySelector('.chat-body');
+			const message = chatInput.value.trim();
+			if (message) {
+				const userMessage = document.createElement('div');
+				userMessage.className = 'chat-message user';
+				userMessage.innerHTML = `<p style="background: #000000; color: white; padding: 12px 16px; border-radius: 18px; margin: 0; font-size: 0.9rem; text-align: right;">${message}</p>`;
+				chatBody.appendChild(userMessage);
+				chatInput.value = '';
+				setTimeout(() => {
+					const botMessage = document.createElement('div');
+					botMessage.className = 'chat-message bot';
+					botMessage.innerHTML = `<p>I can help you complete your order! Any questions about payment or shipping?</p>`;
+					chatBody.appendChild(botMessage);
+					chatBody.scrollTop = chatBody.scrollHeight;
+				}, 1000);
+				chatBody.scrollTop = chatBody.scrollHeight;
+			}
+		}
+		document.addEventListener('DOMContentLoaded', function() {
+			const chatInput = document.querySelector('.chat-input');
+			const chatSend = document.querySelector('.chat-send');
+			if (chatInput && chatSend) {
+				chatInput.addEventListener('keypress', function(e) {
+					if (e.key === 'Enter') sendChatMessage();
+				});
+				chatSend.addEventListener('click', sendChatMessage);
+			}
+		});
+	</script>
+
+	<!-- Live Chat Widget -->
+	<div class="live-chat-widget" id="liveChatWidget">
+		<div class="chat-trigger" onclick="toggleLiveChat()">
+			<i class="fas fa-comments"></i>
+		</div>
+		<div class="chat-panel" id="chatPanel">
+			<div class="chat-header">
+				<h4>Live Chat</h4>
+				<button class="chat-close" onclick="toggleLiveChat()">
+					<i class="fas fa-times"></i>
+				</button>
+			</div>
+			<div class="chat-body">
+				<div class="chat-message bot">
+					<p>Ready to complete your order? I'm here to help with any checkout questions!</p>
+				</div>
+			</div>
+			<div class="chat-footer">
+				<input type="text" class="chat-input" placeholder="Need help with checkout?">
+				<button class="chat-send">
+					<i class="fas fa-paper-plane"></i>
+				</button>
+			</div>
+		</div>
+	</div>
+
+	<!-- Footer -->
+	<footer class="main-footer">
+		<div class="container">
+			<div class="footer-content">
+				<div class="row align-items-start">
+					<!-- First Column: Logo and Social -->
+					<div class="col-lg-3 col-md-6 mb-4">
+						<div class="footer-brand">
+							<div class="footer-logo" style="margin-bottom: 20px;">
+								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+									alt="Gadget Garage">
+							</div>
+							<p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+							<div class="social-links">
+								<a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+								<a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+							</div>
+						</div>
+					</div>
+					<!-- Navigation Links -->
+					<div class="col-lg-5 col-md-12">
+						<div class="row">
+							<div class="col-lg-4 col-md-6 mb-4">
+								<h5 class="footer-title">Get Help</h5>
+								<ul class="footer-links">
+									<li><a href="contact.php">Help Center</a></li>
+									<li><a href="contact.php">Track Order</a></li>
+									<li><a href="terms_conditions.php">Shipping Info</a></li>
+									<li><a href="terms_conditions.php">Returns</a></li>
+									<li><a href="contact.php">Contact Us</a></li>
+								</ul>
+							</div>
+							<div class="col-lg-4 col-md-6 mb-4">
+								<h5 class="footer-title">Company</h5>
+								<ul class="footer-links">
+									<li><a href="contact.php">Careers</a></li>
+									<li><a href="contact.php">About</a></li>
+									<li><a href="contact.php">Stores</a></li>
+									<li><a href="contact.php">Want to Collab?</a></li>
+								</ul>
+							</div>
+							<div class="col-lg-4 col-md-6 mb-4">
+								<h5 class="footer-title">Quick Links</h5>
+								<ul class="footer-links">
+									<li><a href="contact.php">Size Guide</a></li>
+									<li><a href="contact.php">Sitemap</a></li>
+									<li><a href="contact.php">Gift Cards</a></li>
+									<li><a href="contact.php">Check Gift Card Balance</a></li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<!-- Right Side: Email Signup Form -->
+					<div class="col-lg-4 col-md-12 mb-4">
+						<div class="newsletter-signup-section">
+							<h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+							<form class="newsletter-form" id="newsletterForm">
+								<input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+								<button type="submit" class="newsletter-submit-btn">
+									<i class="fas fa-arrow-right"></i>
+								</button>
+							</form>
+							<p class="newsletter-disclaimer">
+								By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+							</p>
+							<p class="newsletter-disclaimer">
+								By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+							</p>
+						</div>
+					</div>
+				</div>
+				<hr class="footer-divider">
+				<div class="footer-bottom">
+					<div class="row align-items-center">
+						<div class="col-md-12 text-center">
+							<p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<script>
+		// Scroll to Top Button Functionality
+		document.addEventListener('DOMContentLoaded', function() {
+			const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+			
+			if (scrollToTopBtn) {
+				// Show/hide button based on scroll position
+				window.addEventListener('scroll', function() {
+					if (window.pageYOffset > 300) {
+						scrollToTopBtn.classList.add('show');
+					} else {
+						scrollToTopBtn.classList.remove('show');
+					}
+				});
+
+				// Scroll to top when button is clicked
+				scrollToTopBtn.addEventListener('click', function() {
+					window.scrollTo({
+						top: 0,
+						behavior: 'smooth'
+					});
+				});
+			}
+		});
+	</script>
+
+	<!-- Scroll to Top Button -->
+	<button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+		<i class="fas fa-arrow-up"></i>
+	</button>
+
+	<script>
+		// Check for payment success or error messages on page load
+		function checkForPaymentStatus() {
+			const urlParams = new URLSearchParams(window.location.search);
+			const paymentStatus = urlParams.get('payment');
+			const orderId = urlParams.get('order');
+			const error = urlParams.get('error');
+			const reason = urlParams.get('reason');
+
+			// Check for payment success
+			if (paymentStatus === 'success' && orderId) {
+				const orderData = sessionStorage.getItem('orderData');
+				let orderInfo = null;
+				
+				if (orderData) {
+					try {
+						orderInfo = JSON.parse(orderData);
+					} catch (e) {
+						console.error('Error parsing order data:', e);
+					}
+				}
+
+				Swal.fire({
+					title: 'Order Placed Successfully! 🎉',
+					html: `
+						<div style="text-align: left;">
+							<p style="font-size: 16px; margin-bottom: 15px;">
+								<strong>Your order has been confirmed!</strong>
+							</p>
+							<p style="margin-bottom: 10px;">
+								<strong>Order Number:</strong> ${orderInfo?.order_reference || orderId}
+							</p>
+							<p style="margin-bottom: 10px;">
+								<strong>Total Amount:</strong> GH₵ ${orderInfo?.total_amount || '0.00'}
+							</p>
+							<p style="margin-bottom: 10px;">
+								<strong>Payment Method:</strong> ${orderInfo?.payment_method || 'PayStack'}
+							</p>
+							<p style="margin-top: 15px; color: #28a745; font-weight: 600;">
+								✓ Your order will be delivered within 3-5 business days
+							</p>
+							<p style="margin-top: 10px; font-size: 14px; color: #6c757d;">
+								You will receive an SMS confirmation shortly.
+							</p>
+						</div>
+					`,
+					icon: 'success',
+					confirmButtonText: 'Continue Shopping',
+					confirmButtonColor: '#28a745',
+					allowOutsideClick: false,
+					allowEscapeKey: false
+				}).then((result) => {
+					sessionStorage.removeItem('orderData');
+					const newUrl = window.location.pathname;
+					history.replaceState(null, null, newUrl);
+					window.location.replace('../index.php');
+				});
+				return;
+			}
+
+			// Check for payment errors
+			if (error || (paymentStatus === 'failed')) {
+				let title = 'Payment Error';
+				let message = reason ? decodeURIComponent(reason) : 'There was an issue with your payment.';
+
+				if (error) {
+					switch(error) {
+						case 'cancelled':
+							title = 'Payment Cancelled';
+							message = 'Your payment was cancelled. You can try again when ready.';
+							break;
+						case 'verification_failed':
+							title = 'Payment Verification Failed';
+							message = 'We could not verify your payment. Please try again or contact support.';
+							break;
+						case 'connection_error':
+							title = 'Connection Error';
+							message = 'There was a connection error while processing your payment. Please try again.';
+							break;
+						default:
+							message = decodeURIComponent(error);
+					}
+				}
+
+				Swal.fire({
+					title: title,
+					text: message,
+					icon: 'error',
+					confirmButtonText: 'Try Again',
+					confirmButtonColor: '#dc3545'
+				}).then(() => {
+					const newUrl = window.location.pathname;
+					history.replaceState(null, null, newUrl);
+				});
+			}
+		}
+
+		const BASE_PATH = '<?php echo dirname($_SERVER['PHP_SELF']); ?>';
+		const ACTIONS_PATH = BASE_PATH.replace('/views', '') + '/actions/';
+
+		document.addEventListener('DOMContentLoaded', function() {
+			checkForPaymentStatus();
+
+			const savedLanguage = localStorage.getItem('selectedLanguage');
+			if (savedLanguage) {
+				const languageSelect = document.querySelector('.language-selector select');
+				if (languageSelect) {
+					languageSelect.value = savedLanguage;
+				}
+			}
+
+			const isDarkMode = localStorage.getItem('darkMode') === 'true';
+			if (isDarkMode) {
+				document.body.classList.add('dark-mode');
+				const toggleSwitch = document.getElementById('themeToggle');
+				if (toggleSwitch) {
+					toggleSwitch.classList.add('active');
+				}
+			}
+
+			createFloatingBubbles();
+			checkAndApplyPromoFromCart();
+		});
+
+		if (document.readyState !== 'loading') {
+			checkAndApplyPromoFromCart();
+		}
+
+		function checkAndApplyPromoFromCart() {
+			console.log('Checking for promo code in localStorage...');
+			const appliedPromo = localStorage.getItem('appliedPromo');
+			console.log('Raw localStorage value:', appliedPromo);
+			
+			if (appliedPromo) {
+				try {
+					const promoData = JSON.parse(appliedPromo);
+					console.log('Promo data parsed successfully:', promoData);
+
+					const discountRow = document.getElementById('discountRow');
+					if (discountRow) {
+						discountRow.style.display = 'flex';
+						
+						const discountLabel = document.getElementById('discountLabel');
+						if (discountLabel) {
+							if (promoData.discount_type === 'fixed') {
+								discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>Discount (' + (promoData.promo_code || 'Discount') + '):';
+							} else {
+								discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>Discount (' + promoData.discount_value + '%):';
+							}
+						}
+						
+						const discountAmountElement = document.getElementById('discountAmount');
+						if (discountAmountElement) {
+							discountAmountElement.textContent = '-GH₵ ' + promoData.discount_amount.toFixed(2);
+						}
+						
+						const finalTotalElement = document.getElementById('finalTotal');
+						if (finalTotalElement) {
+							finalTotalElement.textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+						}
+					}
+
+					const subtotalElement = document.getElementById('subtotal');
+					if (subtotalElement) {
+						subtotalElement.textContent = 'GH₵ ' + promoData.original_total.toFixed(2);
+					}
+
+					const completeOrderBtn = document.getElementById('simulatePaymentBtn');
+					if (completeOrderBtn) {
+						completeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Complete Order - GH₵ ' + promoData.new_total.toFixed(2);
+					}
+
+					const checkoutTotalDisplay = document.getElementById('checkoutTotalDisplay');
+					if (checkoutTotalDisplay) {
+						checkoutTotalDisplay.textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+					}
+
+					if (typeof window !== 'undefined') {
+						window.discountedTotal = promoData.new_total;
+						window.originalTotal = promoData.original_total;
+						window.discountAmount = promoData.discount_amount;
+						window.appliedPromoCode = promoData.promo_code;
+					}
+
+					console.log('Promo applied successfully. New total:', promoData.new_total);
+				} catch (error) {
+					console.error('Error applying promo from cart:', error);
+					localStorage.removeItem('appliedPromo');
+				}
+			} else {
+				console.log('No promo code found in localStorage');
+			}
+		}
+
+		function createFloatingBubbles() {
+			const bubblesContainer = document.getElementById('floatingBubbles');
+			const bubbleCount = 50;
+
+			for (let i = 0; i < bubbleCount; i++) {
+				const bubble = document.createElement('div');
+				bubble.className = 'bubble';
+
+				let size;
+				const sizeCategory = Math.random();
+				if (sizeCategory < 0.5) {
+					size = Math.random() * 20 + 15;
+					bubble.classList.add('bubble-small');
+				} else if (sizeCategory < 0.8) {
+					size = Math.random() * 25 + 35;
+					bubble.classList.add('bubble-medium');
+				} else {
+					size = Math.random() * 30 + 60;
+					bubble.classList.add('bubble-large');
+				}
+
+				bubble.style.width = size + 'px';
+				bubble.style.height = size + 'px';
+				bubble.style.left = Math.random() * 100 + '%';
+
+				let duration;
+				if (size < 35) {
+					duration = Math.random() * 8 + 12;
+				} else if (size < 60) {
+					duration = Math.random() * 6 + 15;
+				} else {
+					duration = Math.random() * 4 + 18;
+				}
+				bubble.style.animationDuration = duration + 's';
+
+				const delay = Math.random() * 15;
+				bubble.style.animationDelay = delay + 's';
+
+				let opacity;
+				if (size < 35) {
+					opacity = Math.random() * 0.3 + 0.4;
+				} else if (size < 60) {
+					opacity = Math.random() * 0.3 + 0.5;
+				} else {
+					opacity = Math.random() * 0.2 + 0.6;
+				}
+				bubble.style.opacity = opacity;
+
+				bubblesContainer.appendChild(bubble);
+			}
+		}
+
+		let selectedPaymentMethod = 'paystack-mobile';
+
+		document.addEventListener('DOMContentLoaded', function() {
+			console.log('Checkout page loaded, setting up payment options...');
+
+			const paymentOptions = document.querySelectorAll('.payment-option');
+			console.log('Found payment options:', paymentOptions.length);
+
+			if (paymentOptions.length > 0) {
+				paymentOptions[0].classList.add('selected');
+				selectedPaymentMethod = paymentOptions[0].getAttribute('data-method');
+				console.log('Default payment method set to:', selectedPaymentMethod);
+			}
+
+			paymentOptions.forEach((option, index) => {
+				console.log('Setting up payment option:', index, option.getAttribute('data-method'));
+				option.addEventListener('click', function(e) {
+					e.preventDefault();
+					console.log('Payment option clicked:', this.getAttribute('data-method'));
+
+					paymentOptions.forEach(opt => opt.classList.remove('selected'));
+					this.classList.add('selected');
+					selectedPaymentMethod = this.getAttribute('data-method');
+					console.log('Selected payment method:', selectedPaymentMethod);
+				});
+			});
+
+			const checkoutButton = document.getElementById('simulatePaymentBtn');
+			console.log('Found checkout button:', !!checkoutButton);
+			if (checkoutButton) {
+				checkoutButton.addEventListener('click', function(e) {
+					e.preventDefault();
+					console.log('Checkout button clicked, processing payment...');
+					processCheckout();
+				});
+			}
+		});
+
+		function processCheckout() {
+			console.log('Session data check:');
+			console.log('User ID: <?php echo isset($_SESSION['user_id']) ? $_SESSION['user_id'] : 'NOT SET'; ?>');
+			console.log('Email: <?php echo isset($_SESSION['email']) ? $_SESSION['email'] : 'NOT SET'; ?>');
+			console.log('Name: <?php echo isset($_SESSION['name']) ? $_SESSION['name'] : 'NOT SET'; ?>');
+
+			const customerEmail = '<?php echo isset($_SESSION['email']) ? $_SESSION['email'] : ''; ?>';
+			console.log('Customer email for payment:', customerEmail);
+
+			if (!customerEmail) {
+				Swal.fire({
+					icon: 'error',
+					title: 'Login Required',
+					text: 'Please login to complete your purchase.',
+					showCancelButton: true,
+					confirmButtonText: 'Login Now',
+					cancelButtonText: 'Cancel'
+				}).then((result) => {
+					if (result.isConfirmed) {
+						window.location.href = 'login/login.php';
+					}
+				});
+				return;
+			}
+
+			const appliedPromo = localStorage.getItem('appliedPromo');
+			let totalAmount = <?php echo $cart_total; ?>;
+
+			if (appliedPromo) {
+				try {
+					const promoData = JSON.parse(appliedPromo);
+					totalAmount = promoData.new_total;
+				} catch (error) {
+					console.error('Error parsing promo data:', error);
+				}
+			}
+
+			Swal.fire({
+				title: 'Processing Payment...',
+				html: `
+					<div class="text-center">
+						<div class="spinner-border text-primary" role="status">
+							<span class="visually-hidden">Loading...</span>
+						</div>
+						<p class="mt-3">Redirecting to PayStack...</p>
+					</div>
+				`,
+				allowOutsideClick: false,
+				allowEscapeKey: false,
+				showConfirmButton: false
+			});
+
+			fetch('../actions/paystack_init_transaction.php', {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify({
+					email: customerEmail,
+					total_amount: totalAmount,
+					payment_method: selectedPaymentMethod
+				})
+			})
+			.then(response => response.json())
+			.then(data => {
+				console.log('Payment initialization response:', data);
+
+				if (data.status === 'success') {
+					Swal.close();
+					localStorage.removeItem('appliedPromo');
+					window.location.href = data.authorization_url;
+				} else {
+					console.error('Payment initialization failed:', data);
+
+					let errorText = data.message || 'Failed to initialize payment';
+					if (data.debug) {
+						console.log('Debug info:', data.debug);
+						errorText += '\n\nDebug Info:\n' + JSON.stringify(data.debug, null, 2);
+					}
+
+					Swal.fire({
+						icon: 'error',
+						title: 'Payment Error',
+						text: errorText,
+						footer: 'Check browser console for more details'
+					});
+				}
+			})
+			.catch(error => {
+				console.error('Payment initialization error:', error);
+				Swal.fire({
+					icon: 'error',
+					title: 'Error',
+					text: 'Failed to initialize payment. Please try again.'
+				});
+			});
+		}
+	</script>
+
+</body>
+</html>

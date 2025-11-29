@@ -870,6 +870,8 @@ if ($is_logged_in) {
 
     <!-- AI Recommendations Section -->
     <?php include '../includes/ai_recommendations_section.php'; ?>
+        </main>
+    </div>
 
     <!-- Footer -->
     <footer class="main-footer">

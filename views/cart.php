@@ -918,31 +918,180 @@ try {
             font-weight: 400;
         }
 
-        /* Only add blue colors - keep all original functionality */
+        .cart-item {
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: none;
+            margin-bottom: 0;
+            overflow: visible;
+            transition: none;
+            border: none;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 2rem 0;
+            font-family: "Times New Roman", Times, serif;
+        }
+
+        .cart-item:hover {
+            transform: none;
+            box-shadow: none;
+            border-color: #e2e8f0;
+        }
+
+        .product-image {
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 12px;
+            box-shadow: none;
+            transition: none;
+        }
+
+        .cart-item:hover .product-image {
+            transform: none;
+        }
+
         .btn-primary {
             background: #4285F4;
+            border: none;
+            border-radius: 0;
+            padding: 16px 32px;
+            font-weight: 500;
+            font-size: 1rem;
+            font-family: "Times New Roman", Times, serif;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: none;
+            color: #ffffff;
         }
 
         .btn-primary:hover {
             background: #3367d6;
+            transform: none;
+            box-shadow: none;
+            color: #ffffff;
+        }
+
+        .btn-outline-danger {
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: 400;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+            background: transparent;
+        }
+
+        .btn-outline-danger:hover {
+            background: #f3f4f6;
+            color: #374151;
+            transform: none;
+            box-shadow: none;
+            border-color: #9ca3af;
+        }
+
+        .quantity-control {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .quantity-btn {
-            background: #4285F4;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            font-weight: 400;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: none;
         }
 
         .quantity-btn:hover {
-            background: #3367d6;
+            background: #e5e7eb;
+            transform: none;
+            box-shadow: none;
+            color: #374151;
         }
 
-        .btn-outline-primary {
+        .quantity-input {
+            width: 60px;
+            text-align: center;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 8px 4px;
+            font-size: 1rem;
+            font-weight: 400;
+            background: white;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-input:focus {
             border-color: #4285F4;
-            color: #4285F4;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+            outline: none;
+        }
+
+        /* Container styling for clean layout */
+        .container.py-4 {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Clean cart layout */
+        .col-lg-8 {
+            background: #ffffff;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .col-lg-4 .cart-summary {
+            margin-top: 0;
+        }
+
+        /* Back button styling */
+        .btn-outline-primary {
+            border: 1px solid #d1d5db;
+            color: #374151;
+            background: transparent;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 0.875rem;
+            font-weight: 400;
+            text-decoration: none;
+            transition: all 0.3s ease;
         }
 
         .btn-outline-primary:hover {
-            background: #4285F4;
-            color: white;
+            background: #f3f4f6;
+            border-color: #9ca3af;
+            color: #374151;
+            transform: none;
+        }
+
+        /* Empty cart button */
+        button.btn.btn-outline-danger {
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            background: transparent;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+
+        button.btn.btn-outline-danger:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+            color: #374151;
         }
 
         /* Hide radio button descriptions to match reference image */
@@ -950,20 +1099,6 @@ try {
         .cart-item .form-check-label,
         .cart-item .condition-description {
             display: none !important;
-        }
-
-        /* Add blue colors to cart elements */
-        .cart-item h5 {
-            color: #4285F4 !important;
-        }
-
-        .cart-item .fw-bold {
-            color: #4285F4 !important;
-        }
-
-        .cart-summary h3,
-        .cart-summary h4 {
-            color: #4285F4 !important;
         }
 
         /* Style radio buttons to match reference */
@@ -978,31 +1113,11 @@ try {
         .cart-summary h3,
         .cart-summary h4 {
             color: #4285F4 !important;
-            font-weight: 600 !important;
         }
 
-        /* Add blue to total amount and all cart summary values */
-        .cart-summary .fs-5.fw-bold.text-primary,
-        .cart-summary .fw-bold,
-        .cart-summary .text-success {
+        /* Add blue to total amount */
+        .cart-summary .fs-5.fw-bold.text-primary {
             color: #4285F4 !important;
-            font-weight: 600 !important;
-        }
-
-        /* Cart Items header styling */
-        .col-lg-8 h4 {
-            color: #4285F4 !important;
-            font-weight: 600 !important;
-            font-size: 1.25rem !important;
-        }
-
-        /* Divider lines in blue */
-        .cart-item {
-            border-bottom: 1px solid rgba(66, 133, 244, 0.2) !important;
-        }
-
-        .cart-summary hr {
-            border-color: rgba(66, 133, 244, 0.3) !important;
         }
 
         .cart-summary {
@@ -1141,7 +1256,7 @@ try {
             font-size: 1.1rem !important;
             font-weight: 500 !important;
             font-family: "Times New Roman", Times, serif !important;
-            color: #4285F4 !important;
+            color: #1a202c !important;
             margin-bottom: 0.5rem !important;
             line-height: 1.4 !important;
             letter-spacing: 0 !important;
@@ -2315,9 +2430,6 @@ try {
             }
         });
     </script>
-
-    <!-- AI Recommendations Section -->
-    <?php include '../includes/ai_recommendations_section.php'; ?>
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">

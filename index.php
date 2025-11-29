@@ -5455,31 +5455,6 @@ try {
 		</div>
 	</section>
 
-	<!-- AI-Powered Recommendations Section -->
-	<section class="ai-recommendations-section" style="background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%); padding: 80px 0; margin: 60px 0;">
-		<div class="container">
-			<div class="section-header text-center mb-5">
-				<div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
-					<i class="fas fa-brain" style="font-size: 2.5rem; color: #2563eb;"></i>
-					<h2 class="section-title" style="font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #1e3a8a, #2563eb); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; margin: 0;">
-						Recommended for You
-					</h2>
-				</div>
-				<p class="section-subtitle" style="font-size: 1.2rem; color: #64748b; max-width: 600px; margin: 0 auto;">
-					AI-powered personalized recommendations just for you
-				</p>
-			</div>
-
-			<div id="aiRecommendationsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px;">
-				<!-- Loading state -->
-				<div id="aiRecommendationsLoading" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
-					<i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #2563eb; margin-bottom: 20px;"></i>
-					<p style="font-size: 1.2rem; color: #64748b;">AI is analyzing your preferences...</p>
-				</div>
-			</div>
-		</div>
-	</section>
-
 	<!-- Camera & Video Equipment Promo -->
 	<!-- DJI Osmo Pocket 3 Promo -->
 	<section class="smart-band-promo">
@@ -6146,8 +6121,6 @@ try {
 				searchBtn.addEventListener('click', performSearch);
 			}
 
-			// Load AI Recommendations
-			loadAIRecommendations();
 		});
 
 		// Load AI-Powered Recommendations

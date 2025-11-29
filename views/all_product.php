@@ -3113,7 +3113,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             applyBtn.disabled = true;
             applyBtn.classList.remove('has-changes');
 
-            fetch('actions/product_actions.php?' + params.toString())
+            fetch('../actions/product_actions.php?' + params.toString())
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Network response was not ok: ' + response.status);
@@ -3229,7 +3229,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         ${product.brand_name || 'N/A'}
                     </span>
                 </div>
-                <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${product.product_id}, '${product.product_title.replace(/'/g, "\\'")}', ${product.product_price}, '${product.image_url || ('http://169.239.251.102:442/~chelsea.somuah/uploads/' + (product.product_image || ''))}')"
+                <button class="add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(${product.product_id}, '${product.product_title.replace(/'/g, "\\'")}', ${product.product_price}, '${product.image_url || ('http://169.239.251.102:442/~chelsea.somuah/uploads/' + (product.product_image || ''))}')">
                     <i class="fas fa-shopping-cart"></i>
                     Add to Cart
                 </button>

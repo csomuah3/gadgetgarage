@@ -979,99 +979,102 @@ try {
         }
 
         .cart-item {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
-            margin-bottom: 2rem;
-            overflow: hidden;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            border: 1px solid rgba(99, 102, 241, 0.1);
-            padding: 1.5rem;
+            background: #ffffff;
+            border-radius: 0;
+            box-shadow: none;
+            margin-bottom: 0;
+            overflow: visible;
+            transition: none;
+            border: none;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 2rem 0;
         }
 
         .cart-item:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
-            border-color: rgba(99, 102, 241, 0.3);
+            transform: none;
+            box-shadow: none;
+            border-color: #e5e7eb;
         }
 
         .product-image {
-            width: 150px;
-            height: 150px;
+            width: 120px;
+            height: 120px;
             object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
+            border-radius: 0;
+            border: none;
+            box-shadow: none;
+            transition: none;
         }
 
         .cart-item:hover .product-image {
-            transform: scale(1.05);
+            transform: none;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: #4285F4;
             border: none;
-            border-radius: 50px;
-            padding: 15px 40px;
-            font-weight: 700;
-            font-size: 1.2rem;
+            border-radius: 8px;
+            padding: 12px 30px;
+            font-weight: 600;
+            font-size: 1rem;
             text-transform: uppercase;
-            letter-spacing: 1px;
-            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            box-shadow: none;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-            transform: translateY(-3px) scale(1.05);
-            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
+            background: #3367d6;
+            transform: none;
+            box-shadow: none;
         }
 
         .btn-outline-danger {
-            border: 3px solid #ff6b6b;
-            color: #ff6b6b;
-            border-radius: 25px;
-            padding: 12px 25px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            border-radius: 6px;
+            padding: 8px 16px;
+            font-weight: 400;
+            font-size: 0.875rem;
             transition: all 0.3s ease;
             background: transparent;
         }
 
         .btn-outline-danger:hover {
-            background: #ff6b6b;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            background: #f3f4f6;
+            color: #374151;
+            transform: none;
+            box-shadow: none;
+            border-color: #9ca3af;
         }
 
         .quantity-control {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: linear-gradient(145deg, #f8fafc, #e2e8f0);
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+            gap: 8px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .quantity-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 1.2rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            font-weight: 400;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: none;
         }
 
         .quantity-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-            transform: scale(1.15);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: #e5e7eb;
+            transform: none;
+            box-shadow: none;
         }
 
         .quantity-input {

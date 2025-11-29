@@ -3,7 +3,6 @@ echo "<!-- PHP is working -->";
 try {
     require_once(__DIR__ . '/../settings/core.php');
     require_once(__DIR__ . '/../controllers/cart_controller.php');
-    require_once(__DIR__ . '/../controllers/recommendation_controller.php');
     require_once(__DIR__ . '/../helpers/image_helper.php');
 
     $is_logged_in = check_login();
@@ -71,11 +70,9 @@ try {
 
         body {
             font-family: "Times New Roman", Times, serif;
-            background: #f7fafc;
-            color: #1a202c;
+            background-color: #ffffff;
+            color: #1a1a1a;
             overflow-x: hidden;
-            font-size: 16px;
-            line-height: 1.6;
         }
 
         /* Promotional Banner Styles */
@@ -884,11 +881,12 @@ try {
         }
 
         .cart-header {
-            background: #ffffff;
-            color: #1a202c;
-            padding: 2rem 0 1rem 0;
-            margin-bottom: 0;
-            border-bottom: 1px solid #e2e8f0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
         }
 
         .cart-header::before {
@@ -903,253 +901,156 @@ try {
         }
 
         .cart-header h1 {
-            font-family: "Times New Roman", Times, serif !important;
-            font-size: 2.5rem !important;
-            font-weight: 400 !important;
-            color: #1a202c !important;
-            margin-bottom: 0.5rem !important;
-            letter-spacing: -0.5px;
+            font-size: 3.5rem !important;
+            font-weight: 800 !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem !important;
         }
 
         .cart-header p {
-            font-family: "Times New Roman", Times, serif !important;
-            font-size: 1rem !important;
-            color: #6b7280 !important;
-            font-weight: 400;
+            font-size: 1.4rem !important;
+            opacity: 0.9;
+            font-weight: 500;
         }
 
         .cart-item {
-            background: #ffffff;
-            border-radius: 0;
-            box-shadow: none;
-            margin-bottom: 0;
-            overflow: visible;
-            transition: none;
-            border: none;
-            border-bottom: 1px solid #e2e8f0;
-            padding: 2rem 0;
-            font-family: "Times New Roman", Times, serif;
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            border: 1px solid rgba(99, 102, 241, 0.1);
+            padding: 1.5rem;
         }
 
         .cart-item:hover {
-            transform: none;
-            box-shadow: none;
-            border-color: #e2e8f0;
+            transform: translateY(-8px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(99, 102, 241, 0.2);
+            border-color: rgba(99, 102, 241, 0.3);
         }
 
         .product-image {
-            width: 100px;
-            height: 100px;
+            width: 150px;
+            height: 150px;
             object-fit: cover;
-            border-radius: 0;
-            border: none;
-            box-shadow: none;
-            transition: none;
+            border-radius: 15px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
         }
 
         .cart-item:hover .product-image {
-            transform: none;
+            transform: scale(1.05);
         }
 
         .btn-primary {
-            background: #4285F4;
+            background: linear-gradient(135deg, #667eea, #764ba2);
             border: none;
-            border-radius: 0;
-            padding: 16px 32px;
-            font-weight: 500;
-            font-size: 1rem;
-            font-family: "Times New Roman", Times, serif;
+            border-radius: 50px;
+            padding: 15px 40px;
+            font-weight: 700;
+            font-size: 1.2rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            transition: all 0.3s ease;
-            box-shadow: none;
-            color: #ffffff;
+            transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
         }
 
         .btn-primary:hover {
-            background: #3367d6;
-            transform: none;
-            box-shadow: none;
-            color: #ffffff;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 15px 35px rgba(102, 126, 234, 0.4);
         }
 
         .btn-outline-danger {
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            border-radius: 4px;
-            padding: 6px 12px;
-            font-weight: 400;
-            font-size: 0.875rem;
+            border: 3px solid #ff6b6b;
+            color: #ff6b6b;
+            border-radius: 25px;
+            padding: 12px 25px;
+            font-weight: 600;
+            font-size: 1.1rem;
             transition: all 0.3s ease;
             background: transparent;
         }
 
         .btn-outline-danger:hover {
-            background: #f3f4f6;
-            color: #374151;
-            transform: none;
-            box-shadow: none;
-            border-color: #9ca3af;
+            background: #ff6b6b;
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
         }
 
         .quantity-control {
             display: flex;
             align-items: center;
-            gap: 8px;
-            background: transparent;
-            padding: 0;
-            border-radius: 0;
-            box-shadow: none;
+            gap: 15px;
+            background: linear-gradient(145deg, #f8fafc, #e2e8f0);
+            padding: 10px 20px;
+            border-radius: 50px;
+            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .quantity-btn {
-            background: #f3f4f6;
-            border: 1px solid #d1d5db;
-            color: #374151;
-            width: 32px;
-            height: 32px;
-            border-radius: 4px;
-            font-weight: 400;
-            font-size: 1rem;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            color: white;
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            font-weight: 700;
+            font-size: 1.2rem;
             transition: all 0.3s ease;
-            box-shadow: none;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
         }
 
         .quantity-btn:hover {
-            background: #e5e7eb;
-            transform: none;
-            box-shadow: none;
-            color: #374151;
+            background: linear-gradient(135deg, #764ba2, #667eea);
+            transform: scale(1.15);
+            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
         }
 
         .quantity-input {
-            width: 60px;
+            width: 80px;
             text-align: center;
-            border: 1px solid #d1d5db;
-            border-radius: 4px;
-            padding: 8px 4px;
-            font-size: 1rem;
-            font-weight: 400;
+            border: 3px solid #e2e8f0;
+            border-radius: 15px;
+            padding: 12px 8px;
+            font-size: 1.3rem;
+            font-weight: 600;
             background: white;
             transition: all 0.3s ease;
         }
 
         .quantity-input:focus {
-            border-color: #4285F4;
-            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
             outline: none;
         }
 
-        /* Container styling for clean layout */
-        .container.py-4 {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem 1rem;
-        }
-
-        /* Clean cart layout */
-        .col-lg-8 {
-            background: #ffffff;
-            padding: 2rem;
-            border: 1px solid #e2e8f0;
-        }
-
-        .col-lg-4 .cart-summary {
-            margin-top: 0;
-        }
-
-        /* Back button styling */
-        .btn-outline-primary {
-            border: 1px solid #d1d5db;
-            color: #374151;
-            background: transparent;
-            border-radius: 4px;
-            padding: 12px 24px;
-            font-size: 0.875rem;
-            font-weight: 400;
-            text-decoration: none;
+        .cart-summary {
+            background: linear-gradient(145deg, #ffffff, #f8fafc);
+            border-radius: 25px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            position: sticky;
+            top: 120px;
+            border: 2px solid rgba(102, 126, 234, 0.1);
             transition: all 0.3s ease;
         }
 
-        .btn-outline-primary:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
-            color: #374151;
-            transform: none;
-        }
-
-        /* Empty cart button */
-        button.btn.btn-outline-danger {
-            border: 1px solid #d1d5db;
-            color: #6b7280;
-            background: transparent;
-            border-radius: 4px;
-            padding: 8px 16px;
-            font-size: 0.875rem;
-            font-weight: 400;
-        }
-
-        button.btn.btn-outline-danger:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
-            color: #374151;
-        }
-
-        /* Hide radio button descriptions to match reference image */
-        .cart-item input[type="radio"] + label,
-        .cart-item .form-check-label,
-        .cart-item .condition-description {
-            display: none !important;
-        }
-
-        /* Style radio buttons to match reference */
-        .cart-item input[type="radio"] {
-            width: 16px;
-            height: 16px;
-            margin-right: 8px;
-            accent-color: #4285F4;
-        }
-
-        /* Add blue color to cart totals header */
-        .cart-summary h3,
-        .cart-summary h4 {
-            color: #4285F4 !important;
-        }
-
-        /* Add blue to total amount */
-        .cart-summary .fs-5.fw-bold.text-primary {
-            color: #4285F4 !important;
-        }
-
-        .cart-summary {
-            background: #ffffff;
-            border-radius: 0;
-            box-shadow: none;
-            padding: 2rem;
-            position: sticky;
-            top: 120px;
-            border: 1px solid #e2e8f0;
-            transition: none;
-            font-family: "Times New Roman", Times, serif;
-        }
-
         .cart-summary:hover {
-            transform: none;
-            box-shadow: none;
-            border-color: #e2e8f0;
+            transform: translateY(-5px);
+            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
+            border-color: rgba(102, 126, 234, 0.2);
         }
 
-        .cart-summary h3,
-        .cart-summary h4 {
-            font-size: 1.25rem !important;
-            font-weight: 500 !important;
-            font-family: "Times New Roman", Times, serif !important;
-            color: #6b7280 !important;
+        .cart-summary h3 {
+            font-size: 2.2rem !important;
+            font-weight: 800 !important;
+            color: #2d3748 !important;
             margin-bottom: 1.5rem !important;
-            text-align: left;
+            text-align: center;
             position: relative;
-            letter-spacing: 0;
-            text-transform: uppercase;
         }
 
         .cart-summary h3::after {
@@ -1254,77 +1155,56 @@ try {
 
         /* Enhanced Cart Item Content Styling */
         .cart-item h5 {
-            font-size: 1.1rem !important;
-            font-weight: 500 !important;
-            font-family: "Times New Roman", Times, serif !important;
-            color: #1a202c !important;
-            margin-bottom: 0.5rem !important;
+            font-size: 1.6rem !important;
+            font-weight: 700 !important;
+            color: #2d3748 !important;
+            margin-bottom: 0.8rem !important;
             line-height: 1.4 !important;
-            letter-spacing: 0 !important;
         }
 
-        .cart-item .product-price,
-        .cart-item .fw-bold {
-            font-size: 1.1rem !important;
-            font-weight: 600 !important;
-            font-family: "Times New Roman", Times, serif !important;
-            color: #4285F4 !important;
+        .cart-item .product-price {
+            font-size: 1.5rem !important;
+            font-weight: 800 !important;
+            color: #667eea !important;
             margin-bottom: 0.5rem !important;
-        }
-
-        .cart-item .text-success {
-            color: #4285F4 !important;
         }
 
         .cart-item .text-muted {
-            font-size: 0.875rem !important;
-            color: #6b7280 !important;
-            font-weight: 400 !important;
+            font-size: 1.1rem !important;
+            color: #718096 !important;
+            font-weight: 500 !important;
         }
 
         .cart-item .badge {
-            font-size: 0.75rem !important;
-            padding: 0.25rem 0.5rem !important;
-            border-radius: 4px !important;
-            font-weight: 500 !important;
-            background-color: #f3f4f6 !important;
-            color: #374151 !important;
-            border: none !important;
+            font-size: 1rem !important;
+            padding: 0.6rem 1.2rem !important;
+            border-radius: 20px !important;
+            font-weight: 600 !important;
         }
 
         .cart-item .card-text {
-            font-size: 0.875rem !important;
-            line-height: 1.4 !important;
-            color: #6b7280 !important;
+            font-size: 1.2rem !important;
+            line-height: 1.6 !important;
+            color: #4a5568 !important;
         }
 
         /* Cart Summary Styling */
         .cart-summary .list-group-item {
-            font-size: 1rem !important;
-            padding: 0.75rem 0 !important;
+            font-size: 1.3rem !important;
+            padding: 1rem 1.5rem !important;
             border: none !important;
             background: transparent !important;
         }
 
         .cart-summary .fw-bold {
-            font-size: 1rem !important;
-            font-weight: 600 !important;
-            color: #1a202c !important;
+            font-size: 1.6rem !important;
+            font-weight: 800 !important;
+            color: #2d3748 !important;
         }
 
         .cart-summary .text-success {
-            font-size: 1rem !important;
-            font-weight: 600 !important;
-            color: #1a202c !important;
-        }
-
-        .cart-summary .d-flex {
-            margin-bottom: 0.75rem;
-        }
-
-        .cart-summary hr {
-            margin: 1.5rem 0;
-            border-color: #e2e8f0;
+            font-size: 1.8rem !important;
+            font-weight: 800 !important;
         }
 
         /* Page Title Styling */
@@ -1385,7 +1265,19 @@ try {
             position: relative;
         }
 
-        /* Removed body::before overlay - was blocking interactions */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image:
+                radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.02) 0%, transparent 50%),
+                radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.02) 0%, transparent 50%);
+            pointer-events: none;
+            z-index: -1;
+        }
 
         padding: 20px;
         margin-bottom: 20px;
@@ -1405,16 +1297,6 @@ try {
             font-size: 13px;
             font-weight: 600;
             letter-spacing: 0.5px;
-        }
-
-        .promo-section-redesign::before {
-            content: "Discount Code";
-            display: block;
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1a202c;
-            margin-bottom: 0.75rem;
-            font-family: "Times New Roman", Times, serif;
         }
 
         .promo-input-container {
@@ -1763,117 +1645,6 @@ try {
                 font-size: 18px;
             }
         }
-
-        .frequently-bought-section {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
-            margin-top: 40px;
-        }
-
-        .section-title {
-            color: #1f2937;
-            font-weight: 700;
-            font-size: 1.5rem;
-            border-bottom: 3px solid #008060;
-            padding-bottom: 10px;
-            display: inline-block;
-        }
-
-        .recommended-product-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .recommended-product-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
-            border-color: #008060;
-        }
-
-        .product-image-wrapper {
-            width: 100%;
-            height: 200px;
-            overflow: hidden;
-            background: #f9fafb;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .product-image-wrapper img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: transform 0.3s ease;
-        }
-
-        .recommended-product-card:hover .product-image-wrapper img {
-            transform: scale(1.1);
-        }
-
-        .product-info {
-            padding: 15px;
-            flex-grow: 1;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .product-title {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 8px;
-            line-height: 1.4;
-        }
-
-        .product-title a {
-            color: inherit;
-            text-decoration: none;
-            transition: color 0.3s ease;
-        }
-
-        .product-title a:hover {
-            color: #008060;
-        }
-
-        .product-brand {
-            font-size: 0.85rem;
-            color: #6b7280;
-        }
-
-        .product-price {
-            margin-top: auto;
-        }
-
-        .price-amount {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: #008060;
-        }
-
-        .add-to-cart-btn {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border: none;
-            padding: 10px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            margin-top: 10px;
-        }
-
-        .add-to-cart-btn:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
-        }
     </style>
 </head>
 
@@ -1882,6 +1653,12 @@ try {
     <?php include '../includes/header.php'; ?>
     
     <!-- Cart Content -->
+    <!-- Page Title -->
+    <div class="container-fluid">
+        <div class="text-center py-3">
+            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Shopping Cart</h1>
+        </div>
+    </div>
 
     <div class="cart-header">
         <div class="container">
@@ -1952,18 +1729,8 @@ try {
                                                 <h5 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h5>
                                                 <p class="text-muted mb-2 small"><?php echo htmlspecialchars($item['product_desc'] ?? ''); ?></p>
                                                 <?php if (isset($item['condition_type'])): ?>
-                                                    <div class="condition-selector-wrapper mb-2">
-                                                        <label for="condition-<?php echo $cart_item_id; ?>" style="font-size: 0.9rem; color: #6b7280; margin-bottom: 4px; display: block;">Condition:</label>
-                                                        <select id="condition-<?php echo $cart_item_id; ?>" 
-                                                                class="form-select form-select-sm condition-dropdown" 
-                                                                data-cart-item-id="<?php echo $cart_item_id; ?>"
-                                                                data-product-id="<?php echo $item['p_id']; ?>"
-                                                                onchange="updateCondition(this)"
-                                                                style="max-width: 200px; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem;">
-                                                            <option value="excellent" <?php echo ($item['condition_type'] === 'excellent') ? 'selected' : ''; ?>>Excellent - 100%</option>
-                                                            <option value="good" <?php echo ($item['condition_type'] === 'good') ? 'selected' : ''; ?>>Good - 90%</option>
-                                                            <option value="fair" <?php echo ($item['condition_type'] === 'fair') ? 'selected' : ''; ?>>Fair - 80%</option>
-                                                        </select>
+                                                    <div class="condition-badge mb-2">
+                                                        <span class="badge bg-secondary">Condition: <?php echo ucfirst($item['condition_type']); ?></span>
                                                     </div>
                                                 <?php endif; ?>
                                                 <div class="fw-bold text-primary fs-5" id="unit-price-<?php echo $cart_item_id; ?>">
@@ -1977,7 +1744,7 @@ try {
                                             </div>
                                             <div class="col-md-3 text-center">
                                                 <div class="quantity-control">
-                                                    <button type="button" class="quantity-btn" onclick="decrementQuantityByCartId('qty-<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
+                                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
@@ -1985,8 +1752,8 @@ try {
                                                         data-product-id="<?php echo $item['p_id']; ?>"
                                                         data-cart-item-id="<?php echo $cart_item_id; ?>"
                                                         id="qty-<?php echo $cart_item_id; ?>"
-                                                        onchange="updateQuantityByCartId('qty-<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>, this.value)">
-                                                    <button type="button" class="quantity-btn" onclick="incrementQuantityByCartId('qty-<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
+                                                        onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value, '<?php echo $cart_item_id; ?>')">
+                                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
@@ -2007,7 +1774,7 @@ try {
                                                     ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
-                                                    onclick="removeFromCartByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
+                                                    onclick="removeItem(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
                                                     <i class="fas fa-times"></i> Remove
                                                 </button>
                                             </div>
@@ -2084,60 +1851,6 @@ try {
                     </div>
                 </div>
             </div>
-
-            <?php if (!empty($cart_items)): 
-                $cart_product_ids = array_column($cart_items, 'p_id');
-                $cart_product_ids = array_map(function($id) {
-                    return preg_replace('/_\w+$/', '', $id);
-                }, $cart_product_ids);
-                $cart_product_ids = array_unique(array_filter($cart_product_ids, 'is_numeric'));
-                $recommended_products = !empty($cart_product_ids) ? get_frequently_bought_together_ctr($cart_product_ids) : [];
-            ?>
-                <?php if (!empty($recommended_products)): ?>
-                    <div class="container mt-5">
-                        <div class="frequently-bought-section">
-                            <h3 class="section-title mb-4">
-                                <i class="fas fa-shopping-bag me-2"></i>
-                                Frequently Bought Together
-                            </h3>
-                            <div class="row g-4">
-                                <?php foreach ($recommended_products as $product): ?>
-                                    <div class="col-lg-3 col-md-4 col-sm-6">
-                                        <div class="recommended-product-card">
-                                            <div class="product-image-wrapper">
-                                                <a href="single_product.php?pid=<?php echo $product['product_id']; ?>">
-                                                    <img src="<?php echo get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product'); ?>" 
-                                                         alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                                         class="product-image"
-                                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgdmlld0JveD0iMCAwIDIwMCAyMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjIwMCIgaGVpZ2h0PSIyMDAiIGZpbGw9IiNGM0Y0RjYiLz48cGF0aCBkPSJNNjAgODBMMTQwIDE0MEg2MFY4MFoiIGZpbGw9IiNEMUQ1REIiLz48Y2lyY2xlIGN4PSI4OCIgY3k9Ijg4IiByPSIxMiIgZmlsbD0iI0QxRDVEQiIvPjwvc3ZnPg=='; this.onerror=null;">
-                                                </a>
-                                            </div>
-                                            <div class="product-info">
-                                                <h5 class="product-title">
-                                                    <a href="single_product.php?pid=<?php echo $product['product_id']; ?>">
-                                                        <?php echo htmlspecialchars($product['product_title']); ?>
-                                                    </a>
-                                                </h5>
-                                                <?php if (!empty($product['brand_name'])): ?>
-                                                    <p class="product-brand text-muted small mb-2"><?php echo htmlspecialchars($product['brand_name']); ?></p>
-                                                <?php endif; ?>
-                                                <div class="product-price mb-3">
-                                                    <span class="price-amount">GH₵ <?php echo number_format($product['product_price'], 2); ?></span>
-                                                </div>
-                                                <button class="btn btn-primary w-100 add-to-cart-btn" 
-                                                        onclick="addRecommendedToCart(<?php echo $product['product_id']; ?>)">
-                                                    <i class="fas fa-cart-plus me-2"></i>
-                                                    Add to Cart
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            <?php endif; ?>
         <?php endif; ?>
     </div>
 
@@ -2257,209 +1970,6 @@ try {
             // Checkout function
             window.proceedToCheckout = function() {
                 window.location.href = 'checkout.php';
-            };
-
-            // Cart quantity functions - defined globally for button onclick
-            window.incrementQuantityByCartId = function(cartItemId, productId) {
-                const input = document.getElementById(cartItemId);
-                if (input) {
-                    const currentValue = parseInt(input.value) || 1;
-                    const newValue = Math.min(currentValue + 1, 99);
-                    input.value = newValue;
-                    
-                    // Update display and server
-                    updateCartItemPrice(cartItemId, newValue);
-                }
-            };
-
-            window.decrementQuantityByCartId = function(cartItemId, productId) {
-                const input = document.getElementById(cartItemId);
-                if (input) {
-                    const currentValue = parseInt(input.value) || 1;
-                    const newValue = Math.max(currentValue - 1, 1);
-                    input.value = newValue;
-                    
-                    // Update display and server
-                    updateCartItemPrice(cartItemId, newValue);
-                }
-            };
-
-            window.updateQuantityByCartId = function(cartItemId, productId, quantity) {
-                quantity = parseInt(quantity);
-                if (quantity < 1) quantity = 1;
-                if (quantity > 99) quantity = 99;
-                
-                const input = document.getElementById(cartItemId);
-                if (input) input.value = quantity;
-                
-                // Update display
-                updateCartItemPrice(cartItemId, quantity);
-            };
-
-            window.removeFromCartByCartId = function(cartItemId, productId) {
-                Swal.fire({
-                    title: 'Remove Item?',
-                    text: 'Are you sure you want to remove this item from your cart?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    cancelButtonColor: '#6c757d',
-                    confirmButtonText: 'Yes, remove it!',
-                    cancelButtonText: 'Cancel'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        // Just reload for now - backend handles removal
-                        location.reload();
-                    }
-                });
-            };
-
-            window.updateCondition = function(selectElement) {
-                const cartItemId = selectElement.getAttribute('data-cart-item-id');
-                const newCondition = selectElement.value;
-                
-                // Get unit price element
-                const unitPriceElement = document.getElementById('unit-price-' + cartItemId);
-                if (!unitPriceElement) return;
-                
-                // Get current price
-                let currentPriceText = unitPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
-                let currentPrice = parseFloat(currentPriceText);
-                
-                // Calculate multiplier based on condition
-                let multiplier = 1.0;
-                switch (newCondition) {
-                    case 'excellent': multiplier = 1.0; break;
-                    case 'good': multiplier = 0.9; break;
-                    case 'fair': multiplier = 0.8; break;
-                }
-                
-                // Calculate new price
-                let newPrice = currentPrice * multiplier;
-                unitPriceElement.textContent = `GH₵ ${newPrice.toFixed(2)}`;
-                
-                // Update total for this item
-                const quantityInput = document.getElementById(`qty-${cartItemId}`);
-                if (quantityInput) {
-                    const quantity = parseInt(quantityInput.value) || 1;
-                    const totalPriceElement = document.getElementById('total-price-' + cartItemId);
-                    if (totalPriceElement) {
-                        totalPriceElement.textContent = `GH₵ ${(newPrice * quantity).toFixed(2)}`;
-                    }
-                }
-                
-                // Recalculate cart totals
-                updateAllCartTotals();
-                
-                Swal.fire({
-                    icon: 'success',
-                    title: 'Condition Updated!',
-                    text: `Changed to ${newCondition.charAt(0).toUpperCase() + newCondition.slice(1)}`,
-                    timer: 2000,
-                    showConfirmButton: false,
-                    toast: true,
-                    position: 'top-end'
-                });
-            };
-
-            window.emptyCart = function() {
-                Swal.fire({
-                    title: 'Empty Cart?',
-                    text: 'Are you sure you want to remove all items?',
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonColor: '#dc3545',
-                    confirmButtonText: 'Yes, empty it!'
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        location.reload();
-                    }
-                });
-            };
-
-            // Helper: Update item price display
-            function updateCartItemPrice(cartItemId, quantity) {
-                const unitPriceElement = document.getElementById('unit-price-' + cartItemId.replace('qty-', ''));
-                const totalPriceElement = document.getElementById('total-price-' + cartItemId.replace('qty-', ''));
-                
-                if (unitPriceElement && totalPriceElement) {
-                    let unitPriceText = unitPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
-                    const unitPrice = parseFloat(unitPriceText);
-                    
-                    if (!isNaN(unitPrice)) {
-                        const newTotal = unitPrice * quantity;
-                        totalPriceElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
-                        
-                        // Update cart totals
-                        updateAllCartTotals();
-                    }
-                }
-            }
-
-            // Helper: Update all cart totals
-            function updateAllCartTotals() {
-                let total = 0;
-                const cartItems = document.querySelectorAll('.cart-item');
-                
-                cartItems.forEach(item => {
-                    const totalPriceElement = item.querySelector('[id^="total-price-"]');
-                    if (totalPriceElement) {
-                        let priceText = totalPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
-                        const itemTotal = parseFloat(priceText);
-                        if (!isNaN(itemTotal)) {
-                            total += itemTotal;
-                        }
-                    }
-                });
-                
-                const cartTotal = document.getElementById('cartTotal');
-                const cartSubtotal = document.getElementById('cartSubtotal');
-                
-                if (cartTotal) cartTotal.textContent = `GH₵ ${total.toFixed(2)}`;
-                if (cartSubtotal) cartSubtotal.textContent = `GH₵ ${total.toFixed(2)}`;
-            }
-
-            window.addRecommendedToCart = function(productId) {
-                fetch('../actions/add_to_cart_action.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId + '&quantity=1'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Added to Cart!',
-                            text: data.message || 'Product added successfully',
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                        if (data.cart_count !== undefined) {
-                            const badge = document.getElementById('cartBadge');
-                            if (badge) {
-                                badge.textContent = data.cart_count;
-                                badge.style.display = data.cart_count > 0 ? 'flex' : 'none';
-                            }
-                        }
-                        setTimeout(() => location.reload(), 2000);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.message || 'Failed to add product to cart'
-                        });
-                    }
-                })
-                .catch(error => {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Something went wrong. Please try again.'
-                    });
-                });
             };
 
             // Dropdown navigation functions with timeout delays

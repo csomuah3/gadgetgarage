@@ -947,65 +947,6 @@ function getNotificationIcon(type) {
     }
 }
 
-// NEW: Update product condition in cart
-function updateCondition(selectElement) {
-    const cartItemId = selectElement.getAttribute('data-cart-item-id');
-    const productId = selectElement.getAttribute('data-product-id');
-    const newCondition = selectElement.value;
-
-    console.log('Condition change:', { cartItemId, productId, newCondition });
-
-    // Get the base price from the product (we'll calculate from the current unit price)
-    const unitPriceElement = document.getElementById('unit-price-' + cartItemId);
-    if (!unitPriceElement) {
-        console.error('Unit price element not found:', cartItemId);
-        return;
-    }
-
-    let currentPriceText = unitPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
-    let currentPrice = parseFloat(currentPriceText);
-    
-    // Calculate base price (assuming current is already adjusted)
-    // We need to reverse-calculate the base price from the current condition
-    const cartItem = document.querySelector(`[data-cart-item-id="${cartItemId}"]`);
-    const currentCondition = selectElement.options[selectElement.selectedIndex].value;
-    
-    // Calculate new price based on condition
-    let basePrice = currentPrice; // We'll use current price as estimate
-    let multiplier = 1.0;
-    
-    switch (newCondition) {
-        case 'excellent':
-            multiplier = 1.0; // 100%
-            break;
-        case 'good':
-            multiplier = 0.9; // 90%
-            break;
-        case 'fair':
-            multiplier = 0.8; // 80%
-            break;
-    }
-
-    // For simplicity, treat current price as 100% and adjust
-    let newPrice = currentPrice * multiplier;
-
-    // Update the display immediately
-    unitPriceElement.textContent = `GH₵ ${newPrice.toFixed(2)}`;
-
-    // Update quantity input to trigger price recalculation
-    const quantityInput = document.getElementById(`qty-${cartItemId}`);
-    if (quantityInput) {
-        const quantity = parseInt(quantityInput.value) || 1;
-        updateItemPriceDisplayByCartId(cartItemId, quantity);
-    }
-
-    // Show notification
-    showNotification(`Condition updated to ${newCondition.charAt(0).toUpperCase() + newCondition.slice(1)}`, 'success');
-
-    // TODO: Send to server to update cart with new condition
-    // This would require a new backend endpoint
-}
-
 // Add CSS for animations and modal styles
 const style = document.createElement('style');
 style.textContent = `

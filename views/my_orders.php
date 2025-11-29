@@ -96,6 +96,7 @@ function getOrderStatus($order_date) {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/account_sidebar.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -135,119 +136,9 @@ function getOrderStatus($order_date) {
             margin-top: 0;
         }
 
-        /* Account Sidebar Navigation - Modern Minimalistic */
-        .account-sidebar {
-            width: 240px;
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            border-right: 1px solid #e5e7eb;
-            padding: 25px 0;
-            position: sticky;
-            top: 140px;
-            height: fit-content;
-            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.04);
-            position: relative;
-        }
-
-        .account-sidebar::after {
-            content: '';
-            position: absolute;
-            right: -2px;
-            top: 0;
-            bottom: 0;
-            width: 2px;
-            background: #e5e7eb;
-        }
-
-        .sidebar-header {
-            padding: 0 20px 25px;
-            margin-bottom: 15px;
-        }
-
-        .sidebar-title {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1f2937;
-            margin: 0;
-            letter-spacing: -0.3px;
-        }
-
-        .sidebar-nav {
-            padding: 0;
-            list-style: none;
-            margin: 0;
-        }
-
-        .sidebar-nav li {
-            margin: 0;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 16px 20px;
-            margin: 2px 12px;
-            color: #64748b;
-            text-decoration: none;
-            border-radius: 12px;
-            font-weight: 500;
-            font-size: 15px;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            position: relative;
-            letter-spacing: -0.2px;
-        }
-
-        .nav-item:hover {
-            background: #eff6ff;
-            color: #2563EB;
-            text-decoration: none;
-            transform: translateX(4px);
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
-        }
-
-        .nav-item.active {
-            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
-            color: #ffffff;
-            font-weight: 600;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
-        }
-
-        .nav-item.active::before {
-            display: none;
-        }
-
-        .nav-item i {
-            font-size: 15px;
-            width: 18px;
-            text-align: center;
-            background: rgba(37, 99, 235, 0.1);
-            padding: 8px;
-            border-radius: 8px;
-        }
-
-        .nav-item.active i {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .sign-out-item {
-            background: transparent;
-            color: #64748b;
             margin-top: 8px;
         }
 
-        .sign-out-item:hover {
-            background: #fee2e2;
-            color: #dc2626;
-            transform: translateX(4px);
-        }
-
-        .sign-out-item i {
-            background: rgba(220, 38, 38, 0.1);
-        }
-
-        .sign-out-item:hover i {
-            background: rgba(220, 38, 38, 0.2);
-        }
 
         /* Main Content */
         .account-content {
@@ -866,34 +757,6 @@ function getOrderStatus($order_date) {
                 flex-direction: column;
             }
 
-            .account-sidebar {
-                width: 100%;
-                position: relative;
-                top: 0;
-                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-                border-right: none;
-                border-bottom: 1px solid #e5e7eb;
-            }
-
-            .account-sidebar::after {
-                display: none;
-            }
-
-            .sidebar-nav {
-                display: flex;
-                overflow-x: auto;
-                padding: 0 15px;
-                gap: 8px;
-            }
-
-            .sidebar-nav li {
-                flex-shrink: 0;
-            }
-
-            .nav-item {
-                white-space: nowrap;
-                margin: 2px 4px;
-            }
 
             .account-content {
                 max-width: 100%;
@@ -938,19 +801,7 @@ function getOrderStatus($order_date) {
     <!-- Account Layout -->
     <div class="account-layout">
         <!-- Account Sidebar -->
-        <aside class="account-sidebar">
-            <div class="sidebar-header">
-                <h2 class="sidebar-title">My Account</h2>
-            </div>
-            <ul class="sidebar-nav">
-                <li><a href="account.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                <li><a href="my_orders.php" class="active"><i class="fas fa-box"></i>My Orders</a></li>
-                <li><a href="wishlist.php"><i class="fas fa-heart"></i>My Wishlist</a></li>
-                <li><a href="compare.php"><i class="fas fa-balance-scale"></i>Compare</a></li>
-                <li><a href="help_center.php"><i class="fas fa-question-circle"></i>Help Center</a></li>
-                <li><a href="../login/logout.php" class="sign-out-item"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
-            </ul>
-        </aside>
+        <?php include '../includes/account_sidebar.php'; ?>
 
         <!-- Main Content -->
         <main class="account-content">

@@ -963,6 +963,8 @@ try {
             transition: all 0.3s ease;
             box-shadow: none;
             color: #ffffff;
+            pointer-events: auto !important;
+            cursor: pointer !important;
         }
 
         .btn-primary:hover {
@@ -981,6 +983,8 @@ try {
             font-size: 0.875rem;
             transition: all 0.3s ease;
             background: transparent;
+            pointer-events: auto !important;
+            cursor: pointer !important;
         }
 
         .btn-outline-danger:hover {
@@ -1012,6 +1016,8 @@ try {
             font-size: 1rem;
             transition: all 0.3s ease;
             box-shadow: none;
+            pointer-events: auto !important;
+            cursor: pointer !important;
         }
 
         .quantity-btn:hover {
@@ -1111,6 +1117,17 @@ try {
             visibility: visible !important;
         }
 
+        /* Add discount text */
+        .promo-section-redesign::before {
+            content: "Discount Code";
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            font-family: "Times New Roman", Times, serif;
+        }
+
         .promo-input-redesign {
             border: 2px solid #4285F4 !important;
             border-radius: 4px !important;
@@ -1120,6 +1137,7 @@ try {
             color: #1a202c !important;
             outline: none !important;
             flex: 1 !important;
+            pointer-events: auto !important;
         }
 
         .promo-input-redesign:focus {
@@ -1137,6 +1155,7 @@ try {
             cursor: pointer !important;
             transition: all 0.3s ease !important;
             border-radius: 4px !important;
+            pointer-events: auto !important;
         }
 
         .promo-apply-btn:hover {

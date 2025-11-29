@@ -3,6 +3,8 @@ echo "<!-- PHP is working -->";
 try {
     require_once(__DIR__ . '/../settings/core.php');
     require_once(__DIR__ . '/../controllers/cart_controller.php');
+    require_once(__DIR__ . '/../controllers/wishlist_controller.php');
+    require_once(__DIR__ . '/../controllers/product_controller.php');
     require_once(__DIR__ . '/../helpers/image_helper.php');
 
     $is_logged_in = check_login();
@@ -20,6 +22,15 @@ try {
     $cart_total_raw = get_cart_total_ctr($customer_id, $ip_address);
     $cart_total = $cart_total_raw ?: 0;
     $cart_count = get_cart_count_ctr($customer_id, $ip_address) ?: 0;
+
+    // Get wishlist items
+    $wishlist_items = get_wishlist_items_ctr($customer_id);
+    $wishlist_items = array_slice($wishlist_items, 0, 4); // Limit to 4 items for dashboard
+
+    // Get random products for "Recommended for You"
+    $all_products = get_all_products_ctr();
+    shuffle($all_products);
+    $recommended_products = array_slice($all_products, 0, 6); // Get 6 random products
 
     $categories = [];
     $brands = [];
@@ -891,23 +902,25 @@ try {
 
         .account-sidebar {
             width: 280px;
-            background: white;
+            background: linear-gradient(180deg, #1e3a8a 0%, #1e40af 100%);
             padding: 30px 0;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            border-right: 1px solid #e0e0e0;
+            box-shadow: 2px 0 15px rgba(30, 58, 138, 0.3);
+            border-right: 1px solid #1e3a8a;
+            min-height: calc(100vh - 114px);
         }
 
         .sidebar-header {
             padding: 0 30px 30px;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.2);
             margin-bottom: 20px;
         }
 
         .sidebar-title {
             font-size: 24px;
-            font-weight: 600;
-            color: #2c3e50;
+            font-weight: 700;
+            color: #ffffff;
             margin: 0;
+            letter-spacing: 0.5px;
         }
 
         .sidebar-nav {
@@ -924,23 +937,26 @@ try {
             display: flex;
             align-items: center;
             padding: 15px 30px;
-            color: #546e7a;
+            color: rgba(255, 255, 255, 0.85);
             text-decoration: none;
             transition: all 0.3s ease;
             font-weight: 500;
             border-left: 4px solid transparent;
+            font-size: 15px;
         }
 
         .sidebar-nav a:hover {
-            background: #f8f9fa;
-            color: #667eea;
-            border-left-color: #667eea;
+            background: rgba(255, 255, 255, 0.1);
+            color: #ffffff;
+            border-left-color: #60a5fa;
+            transform: translateX(3px);
         }
 
         .sidebar-nav a.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-left-color: #764ba2;
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+            border-left-color: #60a5fa;
+            font-weight: 600;
         }
 
         .sidebar-nav i {
@@ -956,32 +972,32 @@ try {
         }
 
         .page-header {
-            background: white;
+            background: linear-gradient(135deg, #ffffff 0%, #eff6ff 100%);
             padding: 30px;
             border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 4px 15px rgba(37, 99, 235, 0.1);
             margin-bottom: 30px;
+            border-left: 4px solid #2563eb;
         }
 
         .page-title {
             font-size: 28px;
-            font-weight: 600;
-            color: #2c3e50;
+            font-weight: 700;
+            color: #1e3a8a;
             margin: 0;
+            letter-spacing: 0.5px;
         }
 
         .page-subtitle {
-            color: #7f8c8d;
+            color: #64748b;
             margin: 5px 0 0;
             font-size: 16px;
         }
 
         /* Dashboard Content */
         .dashboard-container {
-            background: white;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            background: transparent;
+            padding: 0;
         }
 
         .welcome-section {
@@ -989,14 +1005,15 @@ try {
         }
 
         .welcome-title {
-            font-size: 32px;
-            font-weight: 600;
-            color: #2c3e50;
-            margin-bottom: 10px;
+            font-size: 36px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+            letter-spacing: 1px;
         }
 
         .welcome-subtitle {
-            color: #7f8c8d;
+            color: #64748b;
             font-size: 16px;
         }
 
@@ -1008,22 +1025,23 @@ try {
         }
 
         .stat-card {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #ffffff 0%, #f0f7ff 100%);
             padding: 25px;
             border-radius: 12px;
-            border-left: 4px solid #667eea;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-left: 4px solid #2563eb;
+            box-shadow: 0 2px 10px rgba(37, 99, 235, 0.1);
             transition: all 0.3s ease;
         }
 
         .stat-card:hover {
             transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 8px 25px rgba(37, 99, 235, 0.2);
+            border-left-color: #1d4ed8;
         }
 
         .stat-icon {
             font-size: 28px;
-            color: #667eea;
+            color: #2563eb;
             margin-bottom: 15px;
         }
 
@@ -1073,10 +1091,136 @@ try {
         }
 
         .action-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-            color: #667eea;
+            border-color: #2563eb;
+            background: #eff6ff;
+            color: #2563eb;
             transform: translateY(-2px);
+        }
+
+        /* Dashboard Sections */
+        .dashboard-sections {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .dashboard-section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+        }
+
+        .section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e3a8a;
+            margin: 0;
+            letter-spacing: 0.5px;
+        }
+
+        .section-view-all {
+            color: #2563eb;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .section-view-all:hover {
+            color: #1d4ed8;
+            text-decoration: underline;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+        }
+
+        .product-card {
+            background: #f8fafc;
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+        }
+
+        .product-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.15);
+            border-color: #2563eb;
+        }
+
+        .product-image-container {
+            width: 100%;
+            height: 150px;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .product-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            object-fit: contain;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 8px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .product-price {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .empty-section {
+            text-align: center;
+            padding: 40px 20px;
+            color: #6b7280;
+        }
+
+        .empty-section i {
+            font-size: 48px;
+            color: #d1d5db;
+            margin-bottom: 15px;
+        }
+
+        .empty-section p {
+            font-size: 16px;
+            margin: 0;
+        }
+
+        @media (max-width: 992px) {
+            .dashboard-sections {
+                grid-template-columns: 1fr;
+            }
         }
 
         .action-btn i {
@@ -1326,10 +1470,10 @@ try {
             <ul class="sidebar-nav">
                 <li><a href="account.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                 <li><a href="my_orders.php"><i class="fas fa-box"></i>My Orders</a></li>
-                <li><a href="account_info.php"><i class="fas fa-user-edit"></i>My Info</a></li>
-                <li><a href="notifications.php"><i class="fas fa-bell"></i>Notifications</a></li>
+                <li><a href="wishlist.php"><i class="fas fa-heart"></i>My Wishlist</a></li>
+                <li><a href="compare.php"><i class="fas fa-balance-scale"></i>Compare</a></li>
                 <li><a href="help_center.php"><i class="fas fa-question-circle"></i>Help Center</a></li>
-                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i>Sign Out</a></li>
+                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
             </ul>
         </aside>
 
@@ -1342,64 +1486,73 @@ try {
 
             <div class="dashboard-container">
                 <div class="welcome-section">
-                    <h2 class="welcome-title">Hello, <?= htmlspecialchars($first_name) ?>!</h2>
-                    <p class="welcome-subtitle">Here's an overview of your account activity</p>
+                    <h2 class="welcome-title">HI, <?= strtoupper(htmlspecialchars($first_name)) ?>!</h2>
                 </div>
 
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-shopping-bag"></i>
+                <div class="dashboard-sections">
+                    <!-- Wishlist Section -->
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3 class="section-title">WISHLIST</h3>
+                            <?php if (!empty($wishlist_items)): ?>
+                                <a href="wishlist.php" class="section-view-all">View all</a>
+                            <?php endif; ?>
                         </div>
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">Total Orders</div>
+                        <?php if (!empty($wishlist_items)): ?>
+                            <div class="products-grid">
+                                <?php foreach ($wishlist_items as $item): 
+                                    $product_image_url = get_product_image_url($item['product_image'] ?? '', $item['product_title'] ?? '');
+                                ?>
+                                    <div class="product-card">
+                                        <a href="single_product.php?pid=<?= $item['product_id'] ?>" style="text-decoration: none; color: inherit;">
+                                            <div class="product-image-container">
+                                                <img src="<?= htmlspecialchars($product_image_url) ?>" alt="<?= htmlspecialchars($item['product_title']) ?>">
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="product-title"><?= htmlspecialchars($item['product_title']) ?></div>
+                                                <div class="product-price">GH₵<?= number_format($item['product_price'], 2) ?></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="empty-section">
+                                <i class="fas fa-heart"></i>
+                                <p>Your wishlist is empty</p>
+                            </div>
+                        <?php endif; ?>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-truck"></i>
-                        </div>
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">Pending Deliveries</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-star"></i>
-                        </div>
-                        <div class="stat-value">0</div>
-                        <div class="stat-label">Reviews Written</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="stat-icon">
-                            <i class="fas fa-shopping-cart"></i>
-                        </div>
-                        <div class="stat-value"><?= $cart_count ?></div>
-                        <div class="stat-label">Items in Cart</div>
-                    </div>
-                </div>
 
-                <div class="quick-actions">
-                    <h3 class="actions-title">Quick Actions</h3>
-                    <div class="actions-grid">
-                        <a href="my_orders.php" class="action-btn">
-                            <i class="fas fa-box"></i>
-                            <span>View My Orders</span>
-                        </a>
-                        <a href="cart.php" class="action-btn">
-                            <i class="fas fa-shopping-cart"></i>
-                            <span>View Cart</span>
-                        </a>
-                        <a href="products.php" class="action-btn">
-                            <i class="fas fa-shopping-bag"></i>
-                            <span>Browse Products</span>
-                        </a>
-                        <a href="account_info.php" class="action-btn">
-                            <i class="fas fa-user-edit"></i>
-                            <span>Edit Profile</span>
-                        </a>
-                        <a href="help_center.php" class="action-btn">
-                            <i class="fas fa-question-circle"></i>
-                            <span>Get Help</span>
-                        </a>
+                    <!-- Recommended for You Section -->
+                    <div class="dashboard-section">
+                        <div class="section-header">
+                            <h3 class="section-title">RECOMMENDED FOR YOU</h3>
+                        </div>
+                        <?php if (!empty($recommended_products)): ?>
+                            <div class="products-grid">
+                                <?php foreach ($recommended_products as $product): 
+                                    $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
+                                ?>
+                                    <div class="product-card">
+                                        <a href="single_product.php?pid=<?= $product['product_id'] ?>" style="text-decoration: none; color: inherit;">
+                                            <div class="product-image-container">
+                                                <img src="<?= htmlspecialchars($product_image_url) ?>" alt="<?= htmlspecialchars($product['product_title']) ?>">
+                                            </div>
+                                            <div class="product-info">
+                                                <div class="product-title"><?= htmlspecialchars($product['product_title']) ?></div>
+                                                <div class="product-price">GH₵<?= number_format($product['product_price'], 2) ?></div>
+                                            </div>
+                                        </a>
+                                    </div>
+                                <?php endforeach; ?>
+                            </div>
+                        <?php else: ?>
+                            <div class="empty-section">
+                                <i class="fas fa-box-open"></i>
+                                <p>No recommendations available</p>
+                            </div>
+                        <?php endif; ?>
                     </div>
                 </div>
             </div>

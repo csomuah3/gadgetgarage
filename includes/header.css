@@ -6,6 +6,11 @@
     box-sizing: border-box;
 }
 
+html {
+    margin: 0;
+    padding: 0;
+}
+
 body {
     font-family: "Times New Roman", Times, serif !important;
     background-color: #ffffff;
@@ -15,6 +20,8 @@ body {
     -moz-osx-font-smoothing: grayscale;
     text-rendering: optimizeLegibility;
     font-weight: 400;
+    margin: 0 !important;
+    padding: 0 !important;
 }
 
 /* Ensure all elements use Times New Roman EXCEPT icons */
@@ -49,11 +56,12 @@ i.fa, i.fas, i.far, i.fal, i.fab {
     text-align: center;
     font-size: 1rem;
     font-weight: 400;
-    position: fixed;
+    position: sticky;
     top: 0;
     left: 0;
     right: 0;
-    width: 100%;
+    width: 100vw;
+    margin-left: calc(-50vw + 50%);
     z-index: 1001;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
     height: 32px;
@@ -61,7 +69,6 @@ i.fa, i.fas, i.far, i.fal, i.fab {
     align-items: center;
     justify-content: space-between;
     gap: 15px;
-    margin: 0;
 }
 
 .promo-banner-left,

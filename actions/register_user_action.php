@@ -149,56 +149,7 @@ if ($isLogin) {
                 : ['status' => 'error', 'message' => 'Failed to register'];
         }
 
-        error_log("Register action - final response before SMS: " . json_encode($res));
-
-        // Send welcome SMS if registration was successful
-        if ($res['status'] === 'success') {
-            try {
-                require_once __DIR__ . '/../settings/sms_config.php';
-
-                // Temporarily disable SMS for registration to avoid errors during Brevo transition
-                if (defined('SMS_ENABLED') && SMS_ENABLED && false) {
-                    require_once __DIR__ . '/../helpers/sms_helper.php';
-
-                    // Get the customer ID from the registration result
-                    $customer_id = $res['user_id'] ?? null;
-
-                    // If user_id not in result, query database
-                    if (!$customer_id) {
-                        require_once __DIR__ . '/../settings/db_class.php';
-                        $db = new db_connection();
-                        if ($db->db_connect()) {
-                            $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
-                            $customer_query = "SELECT customer_id FROM customer WHERE customer_email = '$email_escaped' ORDER BY customer_id DESC LIMIT 1";
-                            $customer_result = $db->db_fetch_one($customer_query);
-                            
-                            if ($customer_result) {
-                                $customer_id = $customer_result['customer_id'];
-                            }
-                        }
-                    }
-
-                    if ($customer_id) {
-                        $sms_sent = send_welcome_registration_sms(
-                            $customer_id,
-                            $name,
-                            $phone_number
-                        );
-
-                        if ($sms_sent) {
-                            error_log('Welcome SMS sent successfully to new user: ' . $email . ' (ID: ' . $customer_id . ')');
-                        } else {
-                            error_log('Welcome SMS failed for new user: ' . $email . ' (ID: ' . $customer_id . ')');
-                        }
-                    } else {
-                        error_log('Welcome SMS skipped - could not get customer_id for: ' . $email);
-                    }
-                }
-            } catch (Exception $sms_error) {
-                // Don't fail registration if SMS fails
-                error_log('Welcome SMS error during registration: ' . $sms_error->getMessage());
-            }
-        }
+        error_log("Register action - final response: " . json_encode($res));
 
         error_log("Register action - FINAL RESPONSE TO CLIENT: " . json_encode($res));
 

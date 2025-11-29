@@ -83,7 +83,7 @@ try {
 
         body {
             font-family: "Times New Roman", Times, serif;
-            background-color: #ffffff;
+            background-color: transparent;
             color: #1a1a1a;
             overflow-x: hidden;
             position: relative;
@@ -915,7 +915,7 @@ try {
         .main-content {
             display: flex;
             min-height: calc(100vh - 114px);
-            background: #f8f9fa;
+            background: transparent;
             align-items: flex-start;
             padding: 20px;
             gap: 20px;
@@ -1038,7 +1038,7 @@ try {
             flex: 1;
             padding: 25px 30px;
             overflow-y: auto;
-            background: rgba(255, 255, 255, 0.95);
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 16px;
             margin: 20px 20px 20px 0;
             position: relative;

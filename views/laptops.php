@@ -109,8 +109,6 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
     <link href="../css/dark-mode.css" rel="stylesheet">
     <link href="../css/product-card.css" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-
         /* Color Scheme Variables */
         :root {
             --light-blue: #E8F0FE;

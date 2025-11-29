@@ -1200,11 +1200,12 @@ if (!function_exists('generate_product_highlights')) {
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(280px, 1fr));
-            gap: 20px;
-            margin-bottom: 50px;
+            grid-template-columns: repeat(4, minmax(300px, 1fr));
+            gap: 18px;
+            margin: 0;
+            margin-bottom: 60px;
             width: 100%;
-            padding: 0 10px;
+            padding: 0;
         }
 
         .modern-product-card {
@@ -1241,8 +1242,22 @@ if (!function_exists('generate_product_highlights')) {
             padding: 26px 30px 32px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 18px;
             flex: 1;
+            height: 100%;
+        }
+
+        .product-card-top {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .product-card-bottom {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .product-highlights {
@@ -1299,14 +1314,14 @@ if (!function_exists('generate_product_highlights')) {
         }
 
         #productContent {
-            padding-left: 10px;
-            padding-right: 10px;
+            padding-left: 0;
+            padding-right: 0;
         }
 
         .container-fluid {
             max-width: 100%;
-            padding-left: 10px;
-            padding-right: 10px;
+            padding-left: 0;
+            padding-right: 0;
         }
 
         @media (max-width: 1600px) {
@@ -2292,87 +2307,91 @@ if (!function_exists('generate_product_highlights')) {
 
                                     <!-- Product Content -->
                                     <div class="product-card-body">
-                                        <!-- Product Title -->
-                                        <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
-                                            <?php echo htmlspecialchars($product['product_title']); ?>
-                                        </h3>
+                                        <div class="product-card-top">
+                                            <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
+                                                <?php echo htmlspecialchars($product['product_title']); ?>
+                                            </h3>
 
+                                            <div style="display: flex; align-items: center;">
+                                                <div style="color: #fbbf24; margin-right: 8px;">
+                                                    <?php
+                                                    $full_stars = floor($rating);
+                                                    $half_star = $rating - $full_stars >= 0.5;
 
-                                        <!-- Rating -->
-                                        <div style="display: flex; align-items: center; margin-bottom: 15px;">
-                                            <div style="color: #fbbf24; margin-right: 8px;">
-                                                <?php
-                                                $full_stars = floor($rating);
-                                                $half_star = $rating - $full_stars >= 0.5;
-
-                                                for ($i = 0; $i < $full_stars; $i++) {
-                                                    echo '<i class="fas fa-star"></i>';
-                                                }
-                                                if ($half_star) {
-                                                    echo '<i class="fas fa-star-half-alt"></i>';
-                                                    $full_stars++;
-                                                }
-                                                for ($i = $full_stars; $i < 5; $i++) {
-                                                    echo '<i class="far fa-star"></i>';
-                                                }
-                                                ?>
+                                                    for ($i = 0; $i < $full_stars; $i++) {
+                                                        echo '<i class="fas fa-star"></i>';
+                                                    }
+                                                    if ($half_star) {
+                                                        echo '<i class="fas fa-star-half-alt"></i>';
+                                                        $full_stars++;
+                                                    }
+                                                    for ($i = $full_stars; $i < 5; $i++) {
+                                                        echo '<i class="far fa-star"></i>';
+                                                    }
+                                                    ?>
+                                                </div>
+                                                <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
                                             </div>
-                                            <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
+
+                                            <?php if (!empty($highlights)): ?>
+                                                <ul class="product-highlights">
+                                                    <?php foreach ($highlights as $highlight): ?>
+                                                        <li><?php echo htmlspecialchars($highlight); ?></li>
+                                                    <?php endforeach; ?>
+                                                </ul>
+                                            <?php endif; ?>
                                         </div>
 
-                                        <?php if (!empty($highlights)): ?>
-                                            <ul class="product-highlights">
-                                                <?php foreach ($highlights as $highlight): ?>
-                                                    <li><?php echo htmlspecialchars($highlight); ?></li>
-                                                <?php endforeach; ?>
-                                            </ul>
-                                        <?php endif; ?>
+                                        <div class="product-card-bottom">
+                                            <?php
+                                            $stock_quantity = isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 10;
+                                            if ($stock_quantity <= 0):
+                                            ?>
+                                                <div>
+                                                    <span style="background: #ef4444; color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                                                        <i class="fas fa-times-circle" style="margin-right: 4px;"></i>Out of Stock
+                                                    </span>
+                                                </div>
+                                            <?php endif; ?>
 
-                                        <!-- Stock Status - Only show if out of stock -->
-                                        <?php
-                                        $stock_quantity = isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 10;
-                                        if ($stock_quantity <= 0):
-                                        ?>
-                                            <div style="margin-bottom: 12px;">
-                                                <span style="background: #ef4444; color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                                                    <i class="fas fa-times-circle" style="margin-right: 4px;"></i>Out of Stock
-                                                </span>
+                                            <?php if ($show_customer_activity): ?>
+                                                <div class="customer-activity-pill">
+                                                    <i class="fas fa-eye"></i>
+                                                    <span><?php echo htmlspecialchars($activity_message); ?></span>
+                                                </div>
+                                            <?php endif; ?>
+
+                                            <div>
+                                                <div style="display: flex; align-items: baseline; gap: 12px;">
+                                                    <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 900;">
+                                                        GH₵<?php echo number_format($product['product_price'], 0); ?>
+                                                    </span>
+                                                    <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through; font-weight: 600;">
+                                                        GH₵<?php echo number_format($original_price, 0); ?>
+                                                    </span>
+                                                </div>
+                                                <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px; line-height: 1.4;">
+                                                    Limited time offer - While supplies last
+                                                </div>
                                             </div>
-                                        <?php endif; ?>
 
-                                        <?php if ($show_customer_activity): ?>
-                                            <div class="customer-activity-pill">
-                                                <i class="fas fa-eye"></i>
-                                                <span><?php echo htmlspecialchars($activity_message); ?></span>
-                                            </div>
-                                        <?php endif; ?>
+                                            <?php if ($stock_quantity > 0): ?>
+                                                <button onclick="viewProductDetails(<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>)"
+                                                    data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
+                                                    style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                                                    <i class="fas fa-eye"></i>
+                                                    View Details
+                                                </button>
+                                            <?php else: ?>
+                                                <button onclick="showOutOfStockAlert()"
+                                                    disabled
+                                                    style="width: 100%; background: #94a3b8; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: not-allowed; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
+                                                    <i class="fas fa-times-circle"></i>
+                                                    Out of Stock
+                                                </button>
+                                            <?php endif; ?>
 
-                                        <!-- Pricing -->
-                                        <div style="margin-bottom: 25px;">
-                                            <div style="display: flex; align-items: center; gap: 12px;">
-                                                <span style="color: #4f46e5; font-size: 1.75rem; font-weight: 900;">
-                                                    GH₵<?php echo number_format($product['product_price'], 0); ?>
-                                                </span>
-                                                <span style="color: #9ca3af; font-size: 1.2rem; text-decoration: line-through; font-weight: 600;">
-                                                    GH₵<?php echo number_format($original_price, 0); ?>
-                                                </span>
-                                            </div>
-                                            <div style="color: #6b7280; font-size: 0.85rem; margin-top: 4px; line-height: 1.4; word-wrap: break-word; overflow: visible; min-height: 36px; white-space: normal; display: block; width: 100%;">
-                                                Limited time offer - While supplies last
-                                            </div>
-                                        </div>
-
-                                        <!-- View Details Button -->
-                                        <?php if ($stock_quantity > 0): ?>
-                                            <button onclick="viewProductDetails(<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>)"
-                                                data-product-id="<?php echo isset($product['product_id']) ? $product['product_id'] : 0; ?>"
-                                                style="width: 100%; background: #4f46e5; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px;">
-                                                <i class="fas fa-eye"></i>
-                                                View Details
-                                            </button>
-
-                                            <!-- Installment Payment Info -->
-                                            <div style="margin-top: 12px; text-align: center;">
+                                            <div style="text-align: center;">
                                                 <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
                                                     Pay in installment, with only your Ghana Card
                                                 </p>
@@ -2380,24 +2399,7 @@ if (!function_exists('generate_product_highlights')) {
                                                     Contact us to Enroll in GadgetGarage's installment Plans
                                                 </p>
                                             </div>
-                                        <?php else: ?>
-                                            <button onclick="showOutOfStockAlert()"
-                                                disabled
-                                                style="width: 100%; background: #94a3b8; color: white; border: none; padding: 15px; border-radius: 12px; font-size: 1.1rem; font-weight: 600; cursor: not-allowed; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 8px; opacity: 0.6;">
-                                                <i class="fas fa-times-circle"></i>
-                                                Out of Stock
-                                            </button>
-
-                                            <!-- Installment Payment Info -->
-                                            <div style="margin-top: 12px; text-align: center;">
-                                                <p style="font-size: 0.75rem; color: #6b7280; margin: 4px 0; line-height: 1.3;">
-                                                    Pay in installment, with only your Ghana Card
-                                                </p>
-                                                <p style="font-size: 0.7rem; color: #9ca3af; margin: 4px 0; line-height: 1.3;">
-                                                    Contact us to Enroll in GadgetGarage's installment Plans
-                                                </p>
-                                            </div>
-                                        <?php endif; ?>
+                                        </div>
                                     </div>
                                 </div>
                             <?php endforeach; ?>

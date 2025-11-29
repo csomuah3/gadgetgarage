@@ -886,21 +886,12 @@ try {
 			}
 		}
 
-		// Repair services specific functionality
-		// Direct navigation function - goes straight to specialist page
-		function goToSpecialist(issueId, issueName) {
-			// Navigate directly to specialist selection page
-			// Both files are in the same directory (views/), so use relative path
-			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
-			console.log('Navigating to:', url);
-			window.location.href = url;
-		}
-
-		// Keep the old functions for backward compatibility if needed
+		// Global variables for repair service selection
 		let selectedIssue = null;
 		let selectedIssueName = '';
 
-		function selectIssue(issueId, issueName) {
+		// Make selectIssue function globally available
+		window.selectIssue = function(issueId, issueName) {
 			// Remove previous selection
 			document.querySelectorAll('.issue-card').forEach(card => {
 				card.classList.remove('selected');
@@ -908,27 +899,35 @@ try {
 				card.style.border = '';
 			});
 
-			// Select current issue - find the clicked card
-			const cards = document.querySelectorAll('.issue-card');
-			cards.forEach(card => {
-				if (card.onclick && card.onclick.toString().includes(`selectIssue(${issueId}`)) {
-					card.classList.add('selected');
-					card.style.background = '#eff6ff';
-					card.style.border = '2px solid #2563EB';
-				}
-			});
+			// Find and select the clicked card
+			const clickedCard = event.currentTarget;
+			clickedCard.classList.add('selected');
+			clickedCard.style.background = '#eff6ff';
+			clickedCard.style.border = '2px solid #2563EB';
 
 			selectedIssue = issueId;
 			selectedIssueName = issueName;
+
+			console.log('Selected issue:', issueId, issueName);
 
 			// Show continue button
 			const continueBtn = document.getElementById('continueBtn');
 			if (continueBtn) {
 				continueBtn.classList.add('show');
 			}
-		}
+		};
 
-		function proceedToSpecialist() {
+		// Direct navigation function - goes straight to specialist page
+		window.goToSpecialist = function(issueId, issueName) {
+			// Navigate directly to specialist selection page
+			// Both files are in the same directory (views/), so use relative path
+			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
+			console.log('Navigating to:', url);
+			window.location.href = url;
+		};
+
+		// Make proceedToSpecialist function globally available
+		window.proceedToSpecialist = function() {
 			if (selectedIssue) {
 				// Both files are in views/ directory, so relative path works
 				const url = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
@@ -937,7 +936,7 @@ try {
 			} else {
 				alert('Please select an issue first');
 			}
-		}
+		};
 
 		// Timer functionality for promo banner
 		function updateTimer() {

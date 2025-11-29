@@ -57,7 +57,7 @@ try {
 
     // Check if refund exists
     $check_sql = "SELECT refund_id, status, order_id FROM refund_requests WHERE refund_id = ?";
-    $existing_refund = $db->db_fetch_one($check_sql, [$refund_id]);
+    $existing_refund = $db->db_prepare_fetch_one($check_sql, 'i', [$refund_id]);
 
     if (!$existing_refund) {
         echo json_encode([
@@ -74,8 +74,7 @@ try {
                    updated_at = NOW()
                    WHERE refund_id = ?";
 
-    $params = [$new_status, $admin_notes, $refund_id];
-    $result = $db->db_query($update_sql, $params);
+    $result = $db->db_prepare_execute($update_sql, 'ssi', [$new_status, $admin_notes, $refund_id]);
 
     if ($result) {
         echo json_encode([

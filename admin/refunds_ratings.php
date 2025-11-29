@@ -501,15 +501,44 @@ foreach ($refund_trend_rows as $row) {
             ? 'Are you sure you want to APPROVE this refund?'
             : 'Are you sure you want to REJECT this refund?';
 
-        if (!confirm(confirmMessage)) {
+        const confirmResult = await Swal.fire({
+            title: status === 'approved' ? 'Approve Refund?' : 'Reject Refund?',
+            text: confirmMessage,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonColor: status === 'approved' ? '#22c55e' : '#ef4444',
+            cancelButtonColor: '#6b7280',
+            confirmButtonText: status === 'approved' ? 'Yes, Approve' : 'Yes, Reject',
+            cancelButtonText: 'Cancel'
+        });
+
+        if (!confirmResult.isConfirmed) {
             return;
         }
 
         // Get admin notes if rejecting
         let adminNotes = '';
         if (status === 'rejected') {
-            adminNotes = prompt('Please provide a reason for rejection (optional):');
-            if (adminNotes === null) return; // User cancelled
+            const notesResult = await Swal.fire({
+                title: 'Rejection Reason',
+                text: 'Please provide a reason for rejection (optional):',
+                input: 'textarea',
+                inputPlaceholder: 'Enter reason for rejection...',
+                showCancelButton: true,
+                confirmButtonColor: '#ef4444',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Submit',
+                cancelButtonText: 'Cancel',
+                inputValidator: (value) => {
+                    // Optional field, no validation needed
+                    return null;
+                }
+            });
+
+            if (!notesResult.isConfirmed) {
+                return; // User cancelled
+            }
+            adminNotes = notesResult.value || '';
         }
 
         try {
@@ -528,13 +557,31 @@ foreach ($refund_trend_rows as $row) {
             const result = await response.json();
 
             if (result.status === 'success') {
-                alert('Refund status updated successfully!');
+                await Swal.fire({
+                    title: 'Success!',
+                    text: 'Refund status updated successfully!',
+                    icon: 'success',
+                    confirmButtonColor: '#22c55e',
+                    confirmButtonText: 'OK'
+                });
                 location.reload(); // Refresh the page to show updated data
             } else {
-                alert('Error: ' + result.message);
+                await Swal.fire({
+                    title: 'Error!',
+                    text: result.message || 'Failed to update refund status',
+                    icon: 'error',
+                    confirmButtonColor: '#ef4444',
+                    confirmButtonText: 'OK'
+                });
             }
         } catch (error) {
-            alert('Error updating refund status: ' + error.message);
+            await Swal.fire({
+                title: 'Error!',
+                text: 'Error updating refund status: ' + error.message,
+                icon: 'error',
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'OK'
+            });
         }
     }
 
@@ -544,7 +591,13 @@ foreach ($refund_trend_rows as $row) {
         const refund = refunds.find(r => parseInt(r.refund_id) === refundId);
 
         if (!refund) {
-            alert('Refund not found');
+            Swal.fire({
+                title: 'Not Found',
+                text: 'Refund not found',
+                icon: 'error',
+                confirmButtonColor: '#ef4444',
+                confirmButtonText: 'OK'
+            });
             return;
         }
 

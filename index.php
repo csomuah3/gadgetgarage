@@ -1379,7 +1379,8 @@ try {
 			height: 100%;
 			opacity: 0;
 			visibility: hidden;
-			transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+			transform: scale(0.98);
+			transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out, transform 0.8s ease-in-out;
 			z-index: 1;
 		}
 
@@ -1387,13 +1388,27 @@ try {
 			display: grid !important;
 			opacity: 1 !important;
 			visibility: visible !important;
+			transform: scale(1) !important;
 			z-index: 2;
+			animation: slideIn 0.8s ease-out forwards;
+		}
+
+		@keyframes slideIn {
+			from {
+				opacity: 0;
+				transform: scale(0.95) translateX(30px);
+			}
+			to {
+				opacity: 1;
+				transform: scale(1) translateX(0);
+			}
 		}
 
 		.hero-slide.exiting {
 			opacity: 0;
 			visibility: hidden;
-			transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
+			transform: scale(0.98) translateX(-30px);
+			transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out, transform 0.6s ease-in-out;
 		}
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
@@ -7788,7 +7803,73 @@ try {
 			closeNewsletter();
 		}
 
-		// Hero banner functionality (no slideshow needed)
+		// ==================== HERO CAROUSEL AUTO-SLIDE ====================
+		let currentSlide = 0;
+		let heroSlideInterval = null;
+		const heroSlides = document.querySelectorAll('.hero-slide');
+		const heroDots = document.querySelectorAll('.carousel-dot');
+		const totalSlides = heroSlides.length;
+
+		// Function to show specific slide
+		function showHeroSlide(index) {
+			// Remove active class from all slides and dots
+			heroSlides.forEach(slide => slide.classList.remove('active'));
+			heroDots.forEach(dot => dot.classList.remove('active'));
+
+			// Add active class to current slide and dot
+			if (heroSlides[index]) {
+				heroSlides[index].classList.add('active');
+				heroDots[index].classList.add('active');
+			}
+
+			currentSlide = index;
+		}
+
+		// Function to go to next slide
+		function nextHeroSlide() {
+			currentSlide = (currentSlide + 1) % totalSlides;
+			showHeroSlide(currentSlide);
+		}
+
+		// Function to go to previous slide
+		function prevHeroSlide() {
+			currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+			showHeroSlide(currentSlide);
+		}
+
+		// Start auto-sliding
+		function startHeroAutoSlide() {
+			heroSlideInterval = setInterval(nextHeroSlide, 5000); // Change slide every 5 seconds
+		}
+
+		// Stop auto-sliding
+		function stopHeroAutoSlide() {
+			if (heroSlideInterval) {
+				clearInterval(heroSlideInterval);
+				heroSlideInterval = null;
+			}
+		}
+
+		// Add click handlers to dots
+		heroDots.forEach((dot, index) => {
+			dot.addEventListener('click', () => {
+				showHeroSlide(index);
+				stopHeroAutoSlide();
+				startHeroAutoSlide(); // Restart auto-slide
+			});
+		});
+
+		// Pause auto-slide on hover
+		const heroCarousel = document.getElementById('heroCarousel');
+		if (heroCarousel) {
+			heroCarousel.addEventListener('mouseenter', stopHeroAutoSlide);
+			heroCarousel.addEventListener('mouseleave', startHeroAutoSlide);
+		}
+
+		// Start auto-sliding on page load
+		if (totalSlides > 1) {
+			startHeroAutoSlide();
+		}
 
 		// Show newsletter popup after 5 seconds if not shown before
 		setTimeout(function() {

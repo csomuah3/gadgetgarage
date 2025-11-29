@@ -68,6 +68,8 @@ try {
 
 		body {
 			font-family: "Times New Roman", Times, serif;
+			font-size: 1.1rem;
+			font-weight: 600;
 			background-color: #ffffff;
 			color: #1a1a1a;
 			overflow-x: hidden;
@@ -94,9 +96,9 @@ try {
 		/* Page Title */
 		.page-title {
 			text-align: center;
-			padding: 20px 0;
-			font-size: 2.5rem;
-			font-weight: 700;
+			padding: 5px 0;
+			font-size: 2.8rem;
+			font-weight: 800;
 			color: #1f2937;
 			margin: 0;
 		}
@@ -104,8 +106,8 @@ try {
 		.checkout-header {
 			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 			color: #1f2937;
-			padding: 1.5rem 0;
-			margin-bottom: 1rem;
+			padding: 0.5rem 0;
+			margin-bottom: 0.5rem;
 		}
 
 		.checkout-steps {
@@ -557,7 +559,7 @@ try {
 	<!-- Page Title -->
 	<h1 class="page-title">Checkout</h1>
 
-	<div class="checkout-header">
+	<div class="checkout-header" style="margin-top: 10px;">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-12">

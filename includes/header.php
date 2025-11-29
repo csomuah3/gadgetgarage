@@ -79,10 +79,6 @@ if (!isset($brands)) {
 
 // Check if user is logged in
 $is_logged_in = isset($_SESSION['user_id']);
-
-// Check if we're on index.php (show logo) or other pages (show gradient)
-$current_page = basename($_SERVER['PHP_SELF']);
-$is_index_page = ($current_page === 'index.php');
 ?>
 
 <!-- Promotional Banner -->
@@ -101,28 +97,11 @@ $is_index_page = ($current_page === 'index.php');
 <header class="main-header animate__animated animate__fadeInDown">
     <div class="container-fluid" style="padding: 0 120px 0 95px;">
         <div class="d-flex align-items-center w-100 header-container" style="justify-content: space-between;">
-            <!-- Logo or Gradient - Far Left -->
-            <?php if ($is_index_page): ?>
-                <!-- Show logo on index page -->
-                <a href="<?php echo $base_path; ?>index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                        alt="Gadget Garage">
-                </a>
-            <?php else: ?>
-                <!-- Show gradient on all other pages -->
-                <a href="<?php echo $base_path; ?>index.php" class="logo-gradient" style="
-                    display: block;
-                    width: 200px;
-                    height: 60px;
-                    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 50%, #60a5fa 100%);
-                    border-radius: 12px;
-                    text-decoration: none;
-                    transition: transform 0.3s ease, box-shadow 0.3s ease;
-                    box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
-                " onmouseover="this.style.transform='scale(1.05)'; this.style.boxShadow='0 6px 16px rgba(30, 58, 138, 0.4)';" 
-                   onmouseout="this.style.transform='scale(1)'; this.style.boxShadow='0 4px 12px rgba(30, 58, 138, 0.3)';">
-                </a>
-            <?php endif; ?>
+            <!-- Logo - Far Left -->
+            <a href="<?php echo $base_path; ?>index.php" class="logo">
+                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                    alt="Gadget Garage">
+            </a>
 
             <!-- Center Content -->
             <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">

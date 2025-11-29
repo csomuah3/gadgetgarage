@@ -129,11 +129,11 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             left: 0;
             width: 100%;
             height: 100%;
-            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
+            background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%);
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            opacity: 0.45;
+            opacity: 0.97;
             z-index: -1;
             pointer-events: none;
         }

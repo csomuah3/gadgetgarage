@@ -841,7 +841,7 @@ body.dark-mode .simple-dropdown ul li a:hover {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 1000;
+    z-index: 10000;
 }
 
 .mega-dropdown.show {

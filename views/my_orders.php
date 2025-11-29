@@ -394,56 +394,56 @@ function getOrderStatus($order_date) {
 
         .details-btn {
             background: #E0E7FF;
-            color: #4F46E5;
+            color: #1e3a8a;
         }
 
         .details-btn:hover {
             background: #C7D2FE;
-            color: #4338CA;
+            color: #1e3a8a;
         }
 
         .track-btn {
-            background: #4F46E5;
+            background: #2563EB;
             color: white;
         }
 
         .track-btn:hover {
-            background: #4338CA;
+            background: #1d4ed8;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .refund-btn {
-            background: #8B5CF6;
+            background: #3b82f6;
             color: white;
         }
 
         .refund-btn:hover {
-            background: #7C3AED;
+            background: #2563EB;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
         }
 
         .rate-btn {
-            background: #10B981;
+            background: #60a5fa;
             color: white;
         }
 
         .rate-btn:hover {
-            background: #059669;
+            background: #3b82f6;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(96, 165, 250, 0.3);
         }
 
         .cancel-order-btn {
-            background: #F43F5E;
+            background: #1e3a8a;
             color: white;
         }
 
         .cancel-order-btn:hover {
-            background: #E11D48;
+            background: #1e40af;
             transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
+            box-shadow: 0 4px 12px rgba(30, 58, 138, 0.3);
         }
 
         .cancel-order-btn:disabled {
@@ -1120,7 +1120,8 @@ function getOrderStatus($order_date) {
 
     <script>
         // View Order Details Function
-        function viewOrderDetails(orderId, orderReference) {
+        // View Order Details Function (Make globally available)
+        window.viewOrderDetails = function(orderId, orderReference) {
             console.log('Loading order details for order ID:', orderId);
 
             // Fetch order details
@@ -1296,8 +1297,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Track Order Function - Horizontal Timeline
-        function trackOrder(orderReference, orderDate) {
+        // Track Order Function - Horizontal Timeline (Make globally available)
+        window.trackOrder = function(orderReference, orderDate) {
             const orderDateTime = new Date(orderDate);
             const now = new Date();
             const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
@@ -1390,8 +1391,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Request Refund Function
-        function requestRefund(orderId, orderReference) {
+        // Request Refund Function (Make globally available)
+        window.requestRefund = function(orderId, orderReference) {
             const refundFormHTML = `
                 <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -1542,8 +1543,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Cancel Order Function
-        function cancelOrder(orderId, orderReference) {
+        // Cancel Order Function (Make globally available)
+        window.cancelOrder = function(orderId, orderReference) {
             // Confirm cancellation with SweetAlert
             Swal.fire({
                 title: 'Cancel Order?',
@@ -1892,7 +1893,8 @@ function getOrderStatus($order_date) {
 
         // Load dark mode preference
         // Open Rating Modal Function
-        async function openRatingModal(orderId) {
+        // Open Rating Modal Function (Make globally available)
+        window.openRatingModal = async function(orderId) {
             try {
                 // Fetch order details
                 const response = await fetch(`../actions/get_order_details.php?order_id=${orderId}`);

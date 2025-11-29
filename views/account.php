@@ -912,29 +912,6 @@ try {
             color: white;
         }
 
-        /* Main Content Styles */
-        .main-content {
-            display: flex;
-            min-height: calc(100vh - 114px);
-            background: transparent;
-            align-items: flex-start;
-            padding: 20px;
-            gap: 20px;
-            position: relative;
-            z-index: 1;
-        }
-
-
-        .content-area {
-            flex: 1;
-            padding: 25px 30px;
-            overflow-y: auto;
-            background: rgba(255, 255, 255, 0.85);
-            border-radius: 16px;
-            margin: 20px 20px 20px 0;
-            position: relative;
-            z-index: 1;
-        }
 
         .page-header {
             background: transparent;

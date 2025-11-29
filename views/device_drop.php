@@ -87,112 +87,267 @@ try {
         }
 
         .device-drop-container {
-            padding: 40px 0;
+            padding: 60px 0;
             min-height: 80vh;
         }
 
         .page-title {
-            font-size: 2.5rem;
+            font-size: 2.75rem;
             font-weight: 700;
             color: #1f2937;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             text-align: center;
+            letter-spacing: -0.5px;
         }
 
         .page-subtitle {
             color: #6b7280;
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             text-align: center;
-            margin-bottom: 40px;
-            max-width: 600px;
+            margin-bottom: 50px;
+            max-width: 700px;
             margin-left: auto;
             margin-right: auto;
+            line-height: 1.7;
+        }
+
+        /* Progress Indicator */
+        .form-progress {
+            max-width: 800px;
+            margin: 0 auto 50px;
+            background: white;
+            padding: 30px 40px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .progress-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+        }
+
+        .progress-steps::before {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: #e5e7eb;
+            z-index: 0;
+        }
+
+        .progress-step {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step:hover .step-number {
+            transform: scale(1.1);
+        }
+
+        .step-number {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            color: #9ca3af;
+            margin-bottom: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .progress-step.active .step-number {
+            background: #2563EB;
+            border-color: #2563EB;
+            color: white;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+        }
+
+        .step-label {
+            font-size: 0.85rem;
+            color: #9ca3af;
+            font-weight: 500;
+            text-align: center;
+        }
+
+        .progress-step.active .step-label {
+            color: #2563EB;
+            font-weight: 600;
         }
 
         .form-container {
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            max-width: 800px;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            max-width: 900px;
             margin: 0 auto;
         }
 
         .form-section {
-            margin-bottom: 30px;
+            margin-bottom: 45px;
+            padding: 35px;
+            background: #fafbfc;
+            border-radius: 16px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.3s ease;
+        }
+
+        .form-section:hover {
+            border-color: #d1d5db;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e5e7eb;
+        }
+
+        .section-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563EB, #1e40af);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.3rem;
+            margin-right: 16px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         .section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
+            font-size: 1.5rem;
+            font-weight: 700;
             color: #1f2937;
-            margin-bottom: 15px;
-            padding-bottom: 8px;
-            border-bottom: 2px solid #008060;
-            display: inline-block;
+            margin: 0;
+            letter-spacing: -0.3px;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .form-label {
             display: block;
-            font-weight: 500;
+            font-weight: 600;
             color: #374151;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
+            letter-spacing: 0.2px;
+        }
+
+        .form-label.required::after {
+            content: ' *';
+            color: #ef4444;
         }
 
         .form-input,
         .form-select,
         .form-textarea {
             width: 100%;
-            padding: 12px 16px;
+            padding: 14px 18px;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 10px;
             font-size: 1rem;
             transition: all 0.3s ease;
-            background: #f9fafb;
+            background: white;
+            color: #1f2937;
+            font-family: inherit;
+        }
+
+        .form-input:hover,
+        .form-select:hover,
+        .form-textarea:hover {
+            border-color: #d1d5db;
         }
 
         .form-input:focus,
         .form-select:focus,
         .form-textarea:focus {
             outline: none;
-            border-color: #008060;
+            border-color: #2563EB;
             background: white;
-            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
+            box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .form-input::placeholder,
+        .form-textarea::placeholder {
+            color: #9ca3af;
         }
 
         .form-textarea {
             resize: vertical;
-            min-height: 100px;
+            min-height: 120px;
+            line-height: 1.6;
         }
 
         .condition-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-top: 10px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 15px;
         }
 
         .condition-option {
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 20px;
+            border-radius: 12px;
+            padding: 24px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f9fafb;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .condition-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: transparent;
+            transition: all 0.3s ease;
         }
 
         .condition-option:hover {
-            border-color: #008060;
-            background: #f0fdf4;
+            border-color: #2563EB;
+            background: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+        }
+
+        .condition-option:hover::before {
+            background: #2563EB;
         }
 
         .condition-option.selected {
-            border-color: #008060;
-            background: #ecfdf5;
+            border-color: #2563EB;
+            background: #dbeafe;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.2);
+        }
+
+        .condition-option.selected::before {
+            background: #2563EB;
         }
 
         .condition-option input[type="radio"] {
@@ -200,51 +355,104 @@ try {
         }
 
         .condition-title {
-            font-weight: 600;
+            font-weight: 700;
             color: #1f2937;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .condition-title::before {
+            content: '✓';
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #e5e7eb;
+            color: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .condition-option.selected .condition-title::before {
+            background: #2563EB;
+            color: white;
         }
 
         .condition-description {
             font-size: 0.9rem;
             color: #6b7280;
-            line-height: 1.4;
+            line-height: 1.6;
+            margin-top: 8px;
         }
 
         .image-upload {
             border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 40px 20px;
+            border-radius: 12px;
+            padding: 50px 30px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f9fafb;
+            background: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .image-upload::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.05), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .image-upload:hover::before {
+            left: 100%;
         }
 
         .image-upload:hover {
-            border-color: #008060;
-            background: #f0fdf4;
+            border-color: #2563EB;
+            background: #eff6ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
         }
 
         .image-upload.dragover {
-            border-color: #008060;
-            background: #ecfdf5;
+            border-color: #2563EB;
+            background: #dbeafe;
+            transform: scale(1.02);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
         }
 
         .upload-icon {
-            font-size: 3rem;
+            font-size: 3.5rem;
             color: #9ca3af;
-            margin-bottom: 15px;
+            margin-bottom: 18px;
+            transition: all 0.3s ease;
+        }
+
+        .image-upload:hover .upload-icon {
+            color: #2563EB;
+            transform: scale(1.1);
         }
 
         .upload-text {
-            color: #6b7280;
+            color: #374151;
             margin-bottom: 10px;
+            font-weight: 600;
+            font-size: 1.1rem;
         }
 
         .upload-subtext {
             font-size: 0.9rem;
-            color: #9ca3af;
+            color: #6b7280;
         }
 
         #imagePreview {
@@ -264,6 +472,7 @@ try {
             width: 100%;
             height: 120px;
             object-fit: cover;
+            border-radius: 8px;
         }
 
         .preview-remove {
@@ -281,23 +490,33 @@ try {
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, #008060, #006b4e);
+            background: linear-gradient(135deg, #2563EB, #1e40af);
             color: white;
-            padding: 16px 40px;
+            padding: 18px 40px;
             border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.15rem;
             cursor: pointer;
             transition: all 0.3s ease;
             width: 100%;
-            margin-top: 20px;
+            margin-top: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            letter-spacing: 0.3px;
+            box-shadow: 0 4px 16px rgba(37, 99, 235, 0.3);
         }
 
         .submit-btn:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0, 128, 96, 0.3);
+            background: linear-gradient(135deg, #1e40af, #2563EB);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(-1px);
         }
 
         .submit-btn:disabled {
@@ -308,42 +527,60 @@ try {
         }
 
         .process-info {
-            background: #eff6ff;
-            border-left: 4px solid #3b82f6;
-            padding: 20px;
-            border-radius: 8px;
-            margin-top: 20px;
+            background: linear-gradient(135deg, #eff6ff, #dbeafe);
+            border-left: 5px solid #3b82f6;
+            padding: 28px;
+            border-radius: 12px;
+            margin-top: 35px;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.1);
         }
 
         .process-info h4 {
             color: #1e40af;
-            margin-bottom: 10px;
-            font-size: 1.1rem;
-            font-weight: 600;
+            margin-bottom: 14px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .process-info h4 i {
+            font-size: 1.3rem;
         }
 
         .process-info p {
             color: #1e3a8a;
             margin: 0;
-            line-height: 1.5;
+            line-height: 1.8;
+            font-size: 1rem;
         }
 
         /* Checkbox Styles */
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 14px;
+            margin-top: 10px;
+        }
+
         .checkbox-option {
             display: flex;
             align-items: center;
-            padding: 12px 16px;
+            padding: 16px 18px;
             border: 2px solid #e5e7eb;
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
-            background: #f9fafb;
+            background: white;
             position: relative;
         }
 
         .checkbox-option:hover {
-            border-color: #008060;
-            background: #f0fdf4;
+            border-color: #2563EB;
+            background: #eff6ff;
+            transform: translateX(4px);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
         }
 
         .checkbox-option input[type="checkbox"] {
@@ -363,8 +600,8 @@ try {
         }
 
         .checkbox-option input[type="checkbox"]:checked+.checkmark {
-            background: #008060;
-            border-color: #008060;
+            background: #2563EB;
+            border-color: #2563EB;
         }
 
         .checkbox-option input[type="checkbox"]:checked+.checkmark::after {
@@ -379,8 +616,18 @@ try {
         }
 
         .checkbox-option input[type="checkbox"]:checked~span:not(.checkmark) {
-            color: #008060;
-            font-weight: 500;
+            color: #2563EB;
+            font-weight: 600;
+        }
+
+        .checkbox-option input[type="checkbox"]:checked~.checkmark {
+            background: #2563EB;
+            border-color: #2563EB;
+        }
+
+        .checkbox-option input[type="checkbox"]:checked {
+            background: #dbeafe;
+            border-color: #2563EB;
         }
 
         /* Success Modal Styles */
@@ -480,12 +727,64 @@ try {
         }
 
         @media (max-width: 768px) {
-            .form-container {
-                padding: 20px;
+            .device-drop-container {
+                padding: 40px 0;
             }
 
-            .condition-grid {
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .page-subtitle {
+                font-size: 1rem;
+                margin-bottom: 30px;
+            }
+
+            .form-progress {
+                padding: 20px;
+                margin-bottom: 30px;
+            }
+
+            .step-label {
+                font-size: 0.75rem;
+            }
+
+            .step-number {
+                width: 35px;
+                height: 35px;
+                font-size: 0.9rem;
+            }
+
+            .form-container {
+                padding: 25px 20px;
+                border-radius: 16px;
+            }
+
+            .form-section {
+                padding: 25px 20px;
+                margin-bottom: 30px;
+            }
+
+            .section-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 12px;
+            }
+
+            .section-icon {
+                width: 40px;
+                height: 40px;
+                font-size: 1.1rem;
+            }
+
+            .section-title {
+                font-size: 1.3rem;
+            }
+
+            .condition-grid,
+            .checkbox-grid {
                 grid-template-columns: 1fr;
+                gap: 12px;
             }
 
             .success-modal {
@@ -712,14 +1011,45 @@ try {
                 Submit your device information for evaluation. We'll review your submission and get back to you within 3-7 business days to schedule a pickup appointment.
             </p>
 
+            <!-- Progress Indicator -->
+            <div class="form-progress">
+                <div class="progress-steps">
+                    <div class="progress-step active" data-step="1">
+                        <div class="step-number">1</div>
+                        <div class="step-label">Device Info</div>
+                    </div>
+                    <div class="progress-step" data-step="2">
+                        <div class="step-number">2</div>
+                        <div class="step-label">Condition</div>
+                    </div>
+                    <div class="progress-step" data-step="3">
+                        <div class="step-number">3</div>
+                        <div class="step-label">Details</div>
+                    </div>
+                    <div class="progress-step" data-step="4">
+                        <div class="step-number">4</div>
+                        <div class="step-label">Photos</div>
+                    </div>
+                    <div class="progress-step" data-step="5">
+                        <div class="step-number">5</div>
+                        <div class="step-label">Contact</div>
+                    </div>
+                </div>
+            </div>
+
             <div class="form-container">
                 <form id="deviceDropForm" enctype="multipart/form-data" method="POST">
                     <!-- Device Information Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Device Information</h3>
+                    <div class="form-section" data-section="1">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+                            <h3 class="section-title">Device Information</h3>
+                        </div>
 
                         <div class="form-group">
-                            <label for="deviceType" class="form-label">Device Type *</label>
+                            <label for="deviceType" class="form-label required">Device Type</label>
                             <select id="deviceType" name="device_type" class="form-select" required>
                                 <option value="">Select Device Type</option>
                                 <option value="smartphone">Smartphone</option>
@@ -731,20 +1061,25 @@ try {
                         </div>
 
                         <div class="form-group">
-                            <label for="deviceBrand" class="form-label">Brand *</label>
+                            <label for="deviceBrand" class="form-label required">Brand</label>
                             <input type="text" id="deviceBrand" name="device_brand" class="form-input" placeholder="e.g., Apple, Samsung, Dell, Sony" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="deviceModel" class="form-label">Model *</label>
+                            <label for="deviceModel" class="form-label required">Model</label>
                             <input type="text" id="deviceModel" name="device_model" class="form-input" placeholder="e.g., iPhone 12 Pro, Galaxy S21, MacBook Pro 2020" required>
+                        </div>
                     </div>
-                </div>
 
                     <!-- Condition Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Device Condition</h3>
-                        <label class="form-label">Select the condition that best describes your device *</label>
+                    <div class="form-section" data-section="2">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-clipboard-check"></i>
+                            </div>
+                            <h3 class="section-title">Device Condition</h3>
+                        </div>
+                        <label class="form-label required">Select the condition that best describes your device</label>
 
                         <div class="condition-grid">
                             <div class="condition-option" onclick="selectCondition('excellent')">
@@ -774,12 +1109,17 @@ try {
                                         </div>
 
                     <!-- Description Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Additional Details</h3>
+                    <div class="form-section" data-section="3">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <h3 class="section-title">Additional Details</h3>
+                        </div>
 
                         <div class="form-group">
                             <label class="form-label">Why are you giving up this device? (Select all that apply)</label>
-                            <div class="checkbox-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 12px; margin-top: 10px;">
+                            <div class="checkbox-grid">
                                 <label class="checkbox-option">
                                     <input type="checkbox" name="reasons[]" value="upgraded_to_newer_model">
                                     <span class="checkmark"></span>
@@ -831,16 +1171,21 @@ try {
                         <div class="form-group">
                             <label for="askingPrice" class="form-label">Asking Price (Optional)</label>
                             <div style="position: relative;">
-                                <span style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #6b7280; font-weight: 500;">GH₵</span>
-                                <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in GH₵" min="0" step="0.01" style="padding-left: 50px;">
+                                <span style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #6b7280; font-weight: 600; z-index: 1;">GH₵</span>
+                                <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in GH₵" min="0" step="0.01" style="padding-left: 55px;">
                             </div>
-                            <small style="color: #6b7280; font-size: 0.9rem;">Leave blank if you prefer our evaluation</small>
+                            <small style="color: #6b7280; font-size: 0.9rem; margin-top: 6px; display: block;">Leave blank if you prefer our evaluation</small>
                         </div>
-                </div>
+                    </div>
 
                     <!-- Image Upload Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Device Photos</h3>
+                    <div class="form-section" data-section="4">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-camera"></i>
+                            </div>
+                            <h3 class="section-title">Device Photos</h3>
+                        </div>
 
                         <div class="form-group">
                             <label class="form-label">Upload images of your device (Recommended)</label>
@@ -855,30 +1200,35 @@ try {
                     </div>
 
                     <!-- Contact Information Section -->
-                    <div class="form-section">
-                        <h3 class="section-title">Contact Information</h3>
+                    <div class="form-section" data-section="5">
+                        <div class="section-header">
+                            <div class="section-icon">
+                                <i class="fas fa-user"></i>
+                            </div>
+                            <h3 class="section-title">Contact Information</h3>
+                        </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div class="form-group">
-                                <label for="firstName" class="form-label">First Name *</label>
+                                <label for="firstName" class="form-label required">First Name</label>
                                 <input type="text" id="firstName" name="first_name" class="form-input" 
                                     value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_name'] ?? '') : ''; ?>" required>
                             </div>
 
                             <div class="form-group">
-                                <label for="lastName" class="form-label">Last Name *</label>
+                                <label for="lastName" class="form-label required">Last Name</label>
                                 <input type="text" id="lastName" name="last_name" class="form-input" required>
                             </div>
                         </div>
 
                         <div class="form-group">
-                            <label for="email" class="form-label">Email Address *</label>
+                            <label for="email" class="form-label required">Email Address</label>
                             <input type="email" id="email" name="email" class="form-input" 
                                 value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['user_email'] ?? '') : ''; ?>" required>
                         </div>
 
                         <div class="form-group">
-                            <label for="phone" class="form-label">Phone Number *</label>
+                            <label for="phone" class="form-label required">Phone Number</label>
                             <input type="tel" id="phone" name="phone" class="form-input" 
                                 value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_contact'] ?? '') : ''; ?>" 
                                 placeholder="(xxx) xxx-xxxx" required>
@@ -930,6 +1280,55 @@ try {
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.js"></script>
     <script src="../js/dark-mode.js"></script>
     <script>
+        // Progress indicator functionality
+        function updateProgress() {
+            const sections = document.querySelectorAll('.form-section');
+            const steps = document.querySelectorAll('.progress-step');
+            
+            sections.forEach((section, index) => {
+                const sectionNumber = parseInt(section.getAttribute('data-section'));
+                const inputs = section.querySelectorAll('input, select, textarea');
+                let hasValue = false;
+                
+                inputs.forEach(input => {
+                    if (input.type === 'checkbox' || input.type === 'radio') {
+                        if (input.checked) hasValue = true;
+                    } else if (input.value.trim() !== '') {
+                        hasValue = true;
+                    }
+                });
+                
+                if (hasValue && sectionNumber <= steps.length) {
+                    steps[sectionNumber - 1].classList.add('active');
+                }
+            });
+        }
+
+        // Update progress on input
+        document.addEventListener('DOMContentLoaded', function() {
+            const form = document.getElementById('deviceDropForm');
+            const inputs = form.querySelectorAll('input, select, textarea');
+            
+            inputs.forEach(input => {
+                input.addEventListener('input', updateProgress);
+                input.addEventListener('change', updateProgress);
+            });
+            
+            // Initial progress update
+            updateProgress();
+            
+            // Scroll to section on progress step click
+            document.querySelectorAll('.progress-step').forEach(step => {
+                step.addEventListener('click', function() {
+                    const stepNumber = this.getAttribute('data-step');
+                    const section = document.querySelector(`.form-section[data-section="${stepNumber}"]`);
+                    if (section) {
+                        section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+
         // Condition selection functionality
         function selectCondition(condition) {
             // Remove selected class from all options
@@ -942,6 +1341,9 @@ try {
 
             // Check the radio button
             document.getElementById(condition).checked = true;
+            
+            // Update progress
+            updateProgress();
         }
 
         // Image preview functionality

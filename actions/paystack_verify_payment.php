@@ -70,6 +70,17 @@ try {
                 // Empty cart
                 empty_cart_ctr($customer_id, $ip_address);
 
+                // Send admin SMS notification for new order
+                if (defined('ADMIN_SMS_ENABLED') && ADMIN_SMS_ENABLED && defined('ADMIN_NEW_ORDER_SMS_ENABLED') && ADMIN_NEW_ORDER_SMS_ENABLED) {
+                    try {
+                        require_once __DIR__ . '/../helpers/sms_helper.php';
+                        send_admin_new_order_sms($order_id);
+                    } catch (Exception $admin_sms_error) {
+                        // Log but don't fail the order
+                        error_log('Admin SMS notification error: ' . $admin_sms_error->getMessage());
+                    }
+                }
+
                 // Clear session data
                 unset($_SESSION['paystack_reference']);
                 unset($_SESSION['paystack_amount']);

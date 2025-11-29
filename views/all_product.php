@@ -2888,8 +2888,19 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                         </div>
                                     <?php endif; ?>
 
-                                    <!-- Wishlist Heart -->
-                                    <div style="position: absolute; top: 12px; right: 12px; z-index: 10;">
+                                    <!-- Wishlist Heart & Compare Button -->
+                                    <div style="position: absolute; top: 12px; right: 12px; z-index: 10; display: flex; gap: 8px;">
+                                        <!-- Compare Button -->
+                                        <button onclick="event.stopPropagation(); addToCompare(<?php echo $product['product_id']; ?>, '<?php echo htmlspecialchars($product['product_title']); ?>')"
+                                            class="compare-btn"
+                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                            onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
+                                            onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';"
+                                            title="Add to Compare">
+                                            <i class="fas fa-balance-scale" style="color: #2563eb; font-size: 14px;"></i>
+                                        </button>
+                                        
+                                        <!-- Wishlist Heart -->
                                         <?php
                                         $is_in_wishlist = false;
                                         if ($is_logged_in) {
@@ -3085,6 +3096,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <script src="../js/cart.js"></script>
     <script src="../js/header.js"></script>
     <script src="../js/chatbot.js"></script>
+    <script src="../js/compare.js"></script>
     <script>
         // Define functions first before DOM content loads
         function viewProduct(productId) {

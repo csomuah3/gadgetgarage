@@ -41,6 +41,20 @@ if (!isset($wishlist_count)) {
     }
 }
 
+// Get compare count if not already set
+if (!isset($compare_count)) {
+    $compare_count = 0;
+    if (isset($_SESSION['user_id'])) {
+        try {
+            require_once(__DIR__ . '/../controllers/compare_controller.php');
+            $customer_id = $_SESSION['user_id'];
+            $compare_count = get_compare_count_ctr($customer_id) ?: 0;
+        } catch (Exception $e) {
+            error_log("Failed to load compare count: " . $e->getMessage());
+        }
+    }
+}
+
 // Get categories for navigation
 if (!isset($categories)) {
     $categories = [];
@@ -121,6 +135,18 @@ $is_logged_in = isset($_SESSION['user_id']);
                             <span class="wishlist-badge" id="wishlistBadge" style="display: <?php echo ($wishlist_count > 0) ? 'flex' : 'none'; ?>;">
                                 <?php echo $wishlist_count; ?>
                             </span>
+                        </a>
+                    </div>
+
+                    <!-- Compare Icon -->
+                    <div class="header-icon">
+                        <a href="<?php echo $base_path; ?>views/compare.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;" title="Compare Products">
+                            <i class="fas fa-balance-scale"></i>
+                            <?php if ($compare_count > 0): ?>
+                                <span class="compare-badge" id="compareBadge"><?php echo $compare_count; ?></span>
+                            <?php else: ?>
+                                <span class="compare-badge" id="compareBadge" style="display: none;">0</span>
+                            <?php endif; ?>
                         </a>
                     </div>
 

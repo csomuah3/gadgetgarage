@@ -20,7 +20,7 @@ define('SMS_QUEUE_ENABLED', true);
 
 // Admin Settings
 define('ADMIN_SMS_ENABLED', true);
-define('ADMIN_PHONE_NUMBER', '+233551387578');
+define('ADMIN_PHONE_NUMBER', '0551387578'); // Will be formatted to +233551387578 automatically
 define('ADMIN_NEW_ORDER_SMS_ENABLED', true);
 
 // Cart Abandonment Settings

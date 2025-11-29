@@ -63,6 +63,19 @@ try {
         }
     }
 
+    // Send admin SMS notification for new order
+    if (defined('ADMIN_SMS_ENABLED') && ADMIN_SMS_ENABLED && defined('ADMIN_NEW_ORDER_SMS_ENABLED') && ADMIN_NEW_ORDER_SMS_ENABLED) {
+        try {
+            send_admin_new_order_sms($order_result['order_id']);
+        } catch (Exception $admin_sms_error) {
+            // Log but don't fail the order
+            log_sms_activity('error', 'Failed to send admin new order SMS', [
+                'order_id' => $order_result['order_id'],
+                'error' => $admin_sms_error->getMessage()
+            ]);
+        }
+    }
+
     echo json_encode([
         'success' => true,
         'message' => 'Order processed successfully',

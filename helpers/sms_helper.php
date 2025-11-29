@@ -750,10 +750,10 @@ function send_admin_new_order_sms($order_id) {
         $db->db_connect();
 
         $order_query = "SELECT o.*, c.customer_name, c.customer_contact as customer_phone, c.customer_email,
-                               p.payment_method, p.amount as payment_amount
+                               p.payment_method, p.amt as payment_amount
                         FROM orders o
                         LEFT JOIN customer c ON o.customer_id = c.customer_id
-                        LEFT JOIN payments p ON o.order_id = p.order_id
+                        LEFT JOIN payment p ON o.order_id = p.order_id
                         WHERE o.order_id = " . intval($order_id);
 
         $order = $db->db_fetch_one($order_query);
@@ -764,7 +764,7 @@ function send_admin_new_order_sms($order_id) {
         }
 
         // Get order items count
-        $items_query = "SELECT COUNT(*) as items_count FROM order_details WHERE order_id = " . intval($order_id);
+        $items_query = "SELECT COUNT(*) as items_count FROM orderdetails WHERE order_id = " . intval($order_id);
         $items_result = $db->db_fetch_one($items_query);
         $items_count = $items_result ? $items_result['items_count'] : 0;
 
@@ -777,11 +777,23 @@ function send_admin_new_order_sms($order_id) {
 
         // Prepare template data
         global $sms_urls;
+        
+        // Calculate total amount from order details if payment_amount is not available
+        $total_amount = $order['payment_amount'] ?? 0;
+        if ($total_amount == 0) {
+            $total_query = "SELECT SUM(od.qty * p.product_price) as total 
+                           FROM orderdetails od 
+                           JOIN products p ON od.product_id = p.product_id 
+                           WHERE od.order_id = " . intval($order_id);
+            $total_result = $db->db_fetch_one($total_query);
+            $total_amount = $total_result['total'] ?? 0;
+        }
+        
         $template_data = [
             'order_id' => $order['order_id'],
             'customer_name' => $order['customer_name'] ?: 'Guest Customer',
             'customer_phone' => $order['customer_phone'] ?: 'No phone',
-            'amount' => number_format($order['order_total'] ?: $order['payment_amount'] ?: 0, 2),
+            'amount' => number_format($total_amount, 2),
             'items_count' => $items_count,
             'payment_method' => $order['payment_method'] ?: 'Unknown',
             'admin_url' => $sms_urls['admin_orders'] . $order_id

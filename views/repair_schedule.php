@@ -171,9 +171,25 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: #ffffff;
+            background-color: var(--pure-white, #ffffff);
             color: #1f2937;
             min-height: 100vh;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.97;
+            z-index: -1;
+            pointer-events: none;
         }
 
         /* Hide decorative bubbles */

@@ -22,16 +22,7 @@ if (isset($_POST['update_tracking'])) {
     if (update_order_tracking_ctr($order_id, $new_status, $notes, $location, $updated_by)) {
         $success_message = "Order tracking updated successfully!";
 
-        // Send SMS notification if enabled
-        try {
-            require_once __DIR__ . '/../helpers/sms_helper.php';
-            if (defined('SMS_ENABLED') && SMS_ENABLED) {
-                send_order_status_update_sms($order_id, $new_status);
-            }
-        } catch (Exception $sms_error) {
-            // Log SMS error but don't fail the update
-            error_log('SMS notification error: ' . $sms_error->getMessage());
-        }
+        // SMS functionality removed
     } else {
         $error_message = "Failed to update order tracking.";
     }

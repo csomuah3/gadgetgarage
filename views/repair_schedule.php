@@ -68,56 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['submit_appointment'])
             // Get the last inserted ID using mysqli_insert_id
             $appointment_id = mysqli_insert_id($db->db_conn());
             
-            // Send SMS confirmation if SMS is enabled
-            if (defined('SMS_ENABLED') && SMS_ENABLED) {
-                try {
-                    require_once __DIR__ . '/../helpers/sms_helper.php';
-                    
-                    // Get customer name
-                    $customer_name = 'Customer';
-                    $customer_id_int = ($customer_id && $customer_id !== 'NULL') ? intval($customer_id) : null;
-                    if ($customer_id_int) {
-                        $customer_query = "SELECT customer_name FROM customer WHERE customer_id = $customer_id_int";
-                        $customer_data = $db->db_fetch_one($customer_query);
-                        if ($customer_data) {
-                            $customer_name = $customer_data['customer_name'];
-                        }
-                    }
-                    
-                    // Get specialist and issue names from database
-                    $specialist_query = "SELECT specialist_name FROM specialists WHERE specialist_id = $specialist_id";
-                    $specialist_data = $db->db_fetch_one($specialist_query);
-                    $specialist_name = $specialist_data['specialist_name'] ?? 'Our Specialist';
-                    
-                    $issue_query = "SELECT issue_name FROM repair_issue_types WHERE issue_id = $issue_id";
-                    $issue_data = $db->db_fetch_one($issue_query);
-                    $issue_name = $issue_data['issue_name'] ?? 'Device Repair';
-                    
-                    // Send SMS - use cleaned phone number
-                    error_log("Attempting to send appointment SMS - Appointment ID: $appointment_id, Original Phone: $customer_phone, Cleaned Phone: $customer_phone_clean, Name: $customer_name");
-                    $sms_sent = send_appointment_confirmation_sms(
-                        $appointment_id,
-                        $customer_name,
-                        $customer_phone_clean, // Use cleaned phone number
-                        $appointment_date,
-                        $appointment_time,
-                        $specialist_name,
-                        $issue_name
-                    );
-                    
-                    error_log("SMS send result: " . ($sms_sent ? 'SUCCESS' : 'FAILED'));
-                    
-                    if ($sms_sent) {
-                        $success_message .= " A confirmation SMS has been sent to your phone.";
-                    } else {
-                        error_log("SMS sending failed for appointment ID: $appointment_id");
-                    }
-                } catch (Exception $sms_error) {
-                    // SMS error is not critical, continue
-                    error_log('Appointment SMS error: ' . $sms_error->getMessage());
-                    error_log('SMS error stack trace: ' . $sms_error->getTraceAsString());
-                }
-            }
+            // SMS functionality removed
         } else {
             $error_message = "Failed to schedule appointment. Please try again.";
         }

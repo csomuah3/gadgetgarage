@@ -113,22 +113,18 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="includes/chatbot-styles.css" rel="stylesheet">
     <link href="../css/product-card.css" rel="stylesheet">
     <style>
-        
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
-        
-
-        
-
-        
-
-        
-
-        
-
-        
-
-        
+        body {
+            font-family: "Times New Roman", Times, serif;
+            background-color: #ffffff;
+            color: #1a1a1a;
+            overflow-x: hidden;
+        }
 
         /* Floating Bubbles Animation */
         .floating-bubbles {
@@ -831,3 +827,59 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles"></div>
+
+    <script>
+        // Floating bubbles animation
+        function createFloatingBubbles() {
+            const bubblesContainer = document.querySelector('.floating-bubbles');
+            if (!bubblesContainer) return;
+
+            const numberOfBubbles = 15;
+            for (let i = 0; i < numberOfBubbles; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 60 + 20;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.animationDelay = Math.random() * 15 + 's';
+                bubble.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingBubbles();
+            
+            // Scroll to top button functionality
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            
+            if (scrollToTopBtn) {
+                // Show/hide button based on scroll position
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > 300) {
+                        scrollToTopBtn.classList.add('show');
+                    } else {
+                        scrollToTopBtn.classList.remove('show');
+                    }
+                });
+
+                // Scroll to top when button is clicked
+                scrollToTopBtn.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
+    </script>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+</body>
+
+</html>

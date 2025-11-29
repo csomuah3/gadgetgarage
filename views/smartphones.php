@@ -698,7 +698,7 @@ $filter_config = [
             background: #ffffff;
             border-top: 1px solid #e5e7eb;
             padding: 60px 0 20px;
-            margin-top: 0;
+            margin-top: 150px;
         }
 
         .footer-brand {
@@ -3472,111 +3472,7 @@ $filter_config = [
             createFloatingBubbles();
         });
 
-        // Add functions for hover-based dropdowns (matching index.php)
-        // Dropdown navigation functions with timeout delays
-        let dropdownTimeout;
-        let shopDropdownTimeout;
-        let moreDropdownTimeout;
-        let userDropdownTimeout;
-
-        function showDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideDropdown() {
-            const dropdown = document.getElementById('shopDropdown');
-            if (dropdown) {
-                clearTimeout(dropdownTimeout);
-                dropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showShopDropdown() {
-            const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) {
-                clearTimeout(shopDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideShopDropdown() {
-            const dropdown = document.getElementById('shopCategoryDropdown');
-            if (dropdown) {
-                clearTimeout(shopDropdownTimeout);
-                shopDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideMoreDropdown() {
-            const dropdown = document.getElementById('moreDropdown');
-            if (dropdown) {
-                clearTimeout(moreDropdownTimeout);
-                moreDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        function showUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                dropdown.classList.add('show');
-            }
-        }
-
-        function hideUserDropdown() {
-            const dropdown = document.getElementById('userDropdownMenu');
-            if (dropdown) {
-                clearTimeout(userDropdownTimeout);
-                userDropdownTimeout = setTimeout(() => {
-                    dropdown.classList.remove('show');
-                }, 300);
-            }
-        }
-
-        // Enhanced dropdown behavior
-        document.addEventListener('DOMContentLoaded', function() {
-            const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
-            const brandsDropdown = document.getElementById('shopDropdown');
-
-            if (shopCategoriesBtn && brandsDropdown) {
-                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
-                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
-                brandsDropdown.addEventListener('mouseenter', function() {
-                    clearTimeout(dropdownTimeout);
-                });
-                brandsDropdown.addEventListener('mouseleave', hideDropdown);
-            }
-
-            const userAvatar = document.querySelector('.user-avatar');
-            const userDropdown = document.getElementById('userDropdownMenu');
-
-            if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('mouseenter', showUserDropdown);
-                userAvatar.addEventListener('mouseleave', hideUserDropdown);
-                userDropdown.addEventListener('mouseenter', function() {
-                    clearTimeout(userDropdownTimeout);
-                });
-                userDropdown.addEventListener('mouseleave', hideUserDropdown);
-            }
-        });
+        // Dropdown functions are now in header.php - removed duplicate code
 
         // Timer functionality
         function updateTimer() {

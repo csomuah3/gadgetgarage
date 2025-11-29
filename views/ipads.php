@@ -1833,7 +1833,58 @@ $filter_config = [
         function viewProduct(productId) {
             window.location.href = 'single_product.php?pid=' + productId;
         }
+
+        // Floating bubbles animation
+        function createFloatingBubbles() {
+            const bubblesContainer = document.querySelector('.floating-bubbles');
+            if (!bubblesContainer) return;
+
+            const numberOfBubbles = 15;
+            for (let i = 0; i < numberOfBubbles; i++) {
+                const bubble = document.createElement('div');
+                bubble.classList.add('bubble');
+                const size = Math.random() * 60 + 20;
+                bubble.style.width = size + 'px';
+                bubble.style.height = size + 'px';
+                bubble.style.left = Math.random() * 100 + '%';
+                bubble.style.animationDelay = Math.random() * 15 + 's';
+                bubble.style.animationDuration = (Math.random() * 10 + 15) + 's';
+                bubblesContainer.appendChild(bubble);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            createFloatingBubbles();
+            
+            // Scroll to top button functionality
+            const scrollToTopBtn = document.getElementById('scrollToTopBtn');
+            
+            if (scrollToTopBtn) {
+                // Show/hide button based on scroll position
+                window.addEventListener('scroll', function() {
+                    if (window.pageYOffset > 300) {
+                        scrollToTopBtn.classList.add('show');
+                    } else {
+                        scrollToTopBtn.classList.remove('show');
+                    }
+                });
+
+                // Scroll to top when button is clicked
+                scrollToTopBtn.addEventListener('click', function() {
+                    window.scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        });
     </script>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
 </body>
 </html>
     

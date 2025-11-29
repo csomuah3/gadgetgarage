@@ -1391,8 +1391,13 @@ try {
 		}
 
 		@keyframes fadeIn {
-			from { opacity: 0; }
-			to { opacity: 1; }
+			from {
+				opacity: 0;
+			}
+
+			to {
+				opacity: 1;
+			}
 		}
 
 		/* Ken Burns effect - Slow zoom + pan on product image */
@@ -1406,9 +1411,11 @@ try {
 				transform: scale(1.2) translateX(-3%);
 				opacity: 0;
 			}
+
 			10% {
 				opacity: 1;
 			}
+
 			100% {
 				transform: scale(1) translateX(0);
 				opacity: 1;
@@ -1429,9 +1436,11 @@ try {
 				transform: scale(1.25) translateX(3%) translateY(-2%);
 				opacity: 0;
 			}
+
 			10% {
 				opacity: 1;
 			}
+
 			100% {
 				transform: scale(1) translateX(0) translateY(0);
 				opacity: 1;
@@ -1450,13 +1459,33 @@ try {
 		}
 
 		/* Individual text line delays for stagger effect */
-		.hero-slide.active .banner-text-stack .text-line:nth-child(1) { animation-delay: 0.5s; }
-		.hero-slide.active .banner-text-stack .text-line:nth-child(2) { animation-delay: 0.65s; }
-		.hero-slide.active .banner-text-stack .text-line:nth-child(3) { animation-delay: 0.8s; }
-		.hero-slide.active .banner-text-stack .text-line:nth-child(4) { animation-delay: 0.95s; }
-		.hero-slide.active .banner-text-stack .text-line:nth-child(5) { animation-delay: 1.1s; }
-		.hero-slide.active .banner-text-stack .text-line:nth-child(6) { animation-delay: 1.25s; }
-		.hero-slide.active .banner-text-stack .text-line:nth-child(7) { animation-delay: 1.4s; }
+		.hero-slide.active .banner-text-stack .text-line:nth-child(1) {
+			animation-delay: 0.5s;
+		}
+
+		.hero-slide.active .banner-text-stack .text-line:nth-child(2) {
+			animation-delay: 0.65s;
+		}
+
+		.hero-slide.active .banner-text-stack .text-line:nth-child(3) {
+			animation-delay: 0.8s;
+		}
+
+		.hero-slide.active .banner-text-stack .text-line:nth-child(4) {
+			animation-delay: 0.95s;
+		}
+
+		.hero-slide.active .banner-text-stack .text-line:nth-child(5) {
+			animation-delay: 1.1s;
+		}
+
+		.hero-slide.active .banner-text-stack .text-line:nth-child(6) {
+			animation-delay: 1.25s;
+		}
+
+		.hero-slide.active .banner-text-stack .text-line:nth-child(7) {
+			animation-delay: 1.4s;
+		}
 
 		.hero-slide.active .social-buttons {
 			animation: textFadeInUp 0.7s cubic-bezier(0.22, 0.61, 0.36, 1) 1.6s forwards;
@@ -1474,6 +1503,7 @@ try {
 				opacity: 0;
 				transform: translateY(20px);
 			}
+
 			to {
 				opacity: 1;
 				transform: translateY(0);
@@ -1485,6 +1515,7 @@ try {
 				opacity: 0;
 				transform: scale(0.95) translateY(10px);
 			}
+
 			to {
 				opacity: 1;
 				transform: scale(1) translateY(0);
@@ -1509,6 +1540,7 @@ try {
 			from {
 				opacity: 0;
 			}
+
 			to {
 				opacity: 1;
 			}
@@ -1523,6 +1555,7 @@ try {
 			from {
 				opacity: 1;
 			}
+
 			to {
 				opacity: 0;
 				visibility: hidden;
@@ -1540,6 +1573,7 @@ try {
 				opacity: 0;
 				transform: translateX(-10px);
 			}
+
 			to {
 				opacity: 1;
 				transform: translateX(0);
@@ -6277,7 +6311,7 @@ try {
 		async function loadAIRecommendations() {
 			const container = document.getElementById('aiRecommendationsContainer');
 			const loading = document.getElementById('aiRecommendationsLoading');
-			
+
 			if (!container) return;
 
 			try {
@@ -7482,7 +7516,7 @@ try {
 
 			// Get current active slide
 			const currentActive = document.querySelector('.hero-slide.active');
-			
+
 			// Add exiting class to current slide if it exists
 			if (currentActive && currentActive !== carouselSlides[num]) {
 				currentActive.classList.add('exiting');
@@ -7510,10 +7544,10 @@ try {
 			targetSlide.style.display = 'grid';
 			targetSlide.style.opacity = '0';
 			targetSlide.style.visibility = 'visible';
-			
+
 			// Force reflow
 			targetSlide.offsetHeight;
-			
+
 			// Add active class and trigger transition
 			setTimeout(() => {
 				targetSlide.classList.add('active');
@@ -7571,7 +7605,7 @@ try {
 				slide.style.opacity = '0';
 				slide.style.visibility = 'hidden';
 			});
-			
+
 			carouselDots.forEach(dot => dot.classList.remove('active'));
 
 			// Show first slide immediately
@@ -7584,7 +7618,7 @@ try {
 				// Remove any existing event listeners by cloning
 				const newDot = dot.cloneNode(true);
 				dot.parentNode.replaceChild(newDot, dot);
-				
+
 				// Add multiple event handlers for maximum compatibility
 				newDot.addEventListener('click', function(e) {
 					e.preventDefault();
@@ -7593,7 +7627,7 @@ try {
 					window.goToSlide(index);
 					return false;
 				});
-				
+
 				// Add keyboard support
 				newDot.addEventListener('keydown', function(e) {
 					if (e.key === 'Enter' || e.key === ' ') {
@@ -7602,7 +7636,7 @@ try {
 						window.goToSlide(index);
 					}
 				});
-				
+
 				// Also set onclick for maximum compatibility
 				newDot.onclick = function(e) {
 					e.preventDefault();
@@ -7951,7 +7985,7 @@ try {
 			const currentActiveSlide = document.querySelector('.hero-slide.active');
 			if (currentActiveSlide && currentActiveSlide !== heroSlides[index]) {
 				currentActiveSlide.classList.add('exiting');
-				
+
 				// Remove exiting class after animation completes
 				setTimeout(() => {
 					currentActiveSlide.classList.remove('active', 'exiting');
@@ -9901,4 +9935,5 @@ try {
 </body>
 
 </html>
+
 </html>

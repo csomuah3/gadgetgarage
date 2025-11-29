@@ -1420,4 +1420,5 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
 <body>
     <?php include '../includes/header.php'; ?>
+    
 

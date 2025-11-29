@@ -1017,7 +1017,7 @@ try {
                     <div class="progress-step active" data-step="1">
                         <div class="step-number">1</div>
                         <div class="step-label">Device Info</div>
-                    </div>
+                        </div>
                     <div class="progress-step" data-step="2">
                         <div class="step-number">2</div>
                         <div class="step-label">Condition</div>
@@ -1034,8 +1034,8 @@ try {
                         <div class="step-number">5</div>
                         <div class="step-label">Contact</div>
                     </div>
+                    </div>
                 </div>
-            </div>
 
             <div class="form-container">
                 <form id="deviceDropForm" enctype="multipart/form-data" method="POST">
@@ -1063,22 +1063,22 @@ try {
                         <div class="form-group">
                             <label for="deviceBrand" class="form-label required">Brand</label>
                             <input type="text" id="deviceBrand" name="device_brand" class="form-input" placeholder="e.g., Apple, Samsung, Dell, Sony" required>
-                        </div>
+                            </div>
 
                         <div class="form-group">
                             <label for="deviceModel" class="form-label required">Model</label>
                             <input type="text" id="deviceModel" name="device_model" class="form-input" placeholder="e.g., iPhone 12 Pro, Galaxy S21, MacBook Pro 2020" required>
-                        </div>
-                    </div>
+                                    </div>
+                                </div>
 
                     <!-- Condition Section -->
                     <div class="form-section" data-section="2">
                         <div class="section-header">
                             <div class="section-icon">
                                 <i class="fas fa-clipboard-check"></i>
-                            </div>
+                                        </div>
                             <h3 class="section-title">Device Condition</h3>
-                        </div>
+                                    </div>
                         <label class="form-label required">Select the condition that best describes your device</label>
 
                         <div class="condition-grid">
@@ -1088,14 +1088,14 @@ try {
                                 <div class="condition-description">
                                     Device looks and functions like new. No visible scratches, dents, or wear. Screen is pristine. All buttons and ports work perfectly. Battery life is excellent.
                                 </div>
-                        </div>
+                            </div>
 
                             <div class="condition-option" onclick="selectCondition('good')">
                                 <input type="radio" name="condition" value="good" id="good" required>
                                 <div class="condition-title">Good</div>
                                 <div class="condition-description">
                                     Device has minor cosmetic wear but functions normally. May have light scratches or small scuffs. Screen is in good condition. All features work properly. Battery life is good.
-                                </div>
+                        </div>
                         </div>
 
                             <div class="condition-option" onclick="selectCondition('fair')">
@@ -1203,17 +1203,17 @@ try {
                     <div class="form-section" data-section="5">
                         <div class="section-header">
                             <div class="section-icon">
-                                <i class="fas fa-user"></i>
-                            </div>
+                            <i class="fas fa-user"></i>
+                </div>
                             <h3 class="section-title">Contact Information</h3>
-                        </div>
+            </div>
 
                         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                             <div class="form-group">
                                 <label for="firstName" class="form-label required">First Name</label>
                                 <input type="text" id="firstName" name="first_name" class="form-input" 
                                     value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_name'] ?? '') : ''; ?>" required>
-                            </div>
+        </div>
 
                             <div class="form-group">
                                 <label for="lastName" class="form-label required">Last Name</label>

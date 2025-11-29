@@ -458,7 +458,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // Enhanced dropdown behavior
+    // Enhanced dropdown behavior - Brands Dropdown
     const shopCategoriesBtn = document.querySelector('.shop-categories-btn');
     const brandsDropdown = document.getElementById('shopDropdown');
 
@@ -469,8 +469,44 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(dropdownTimeout);
         });
         brandsDropdown.addEventListener('mouseleave', hideDropdown);
+        console.log('Brands dropdown listeners attached');
+    } else {
+        console.error('Brands dropdown elements not found:', {shopCategoriesBtn, brandsDropdown});
     }
 
+    // Shop Category Dropdown
+    const shopNavDropdown = document.querySelector('.nav-dropdown:has(#shopCategoryDropdown)');
+    const shopCategoryDropdown = document.getElementById('shopCategoryDropdown');
+
+    if (shopNavDropdown && shopCategoryDropdown) {
+        shopNavDropdown.addEventListener('mouseenter', showShopDropdown);
+        shopNavDropdown.addEventListener('mouseleave', hideShopDropdown);
+        shopCategoryDropdown.addEventListener('mouseenter', function() {
+            clearTimeout(shopDropdownTimeout);
+        });
+        shopCategoryDropdown.addEventListener('mouseleave', hideShopDropdown);
+        console.log('Shop category dropdown listeners attached');
+    } else {
+        console.error('Shop category dropdown elements not found:', {shopNavDropdown, shopCategoryDropdown});
+    }
+
+    // More Dropdown
+    const moreNavDropdown = document.querySelector('.nav-dropdown:has(#moreDropdown)');
+    const moreDropdown = document.getElementById('moreDropdown');
+
+    if (moreNavDropdown && moreDropdown) {
+        moreNavDropdown.addEventListener('mouseenter', showMoreDropdown);
+        moreNavDropdown.addEventListener('mouseleave', hideMoreDropdown);
+        moreDropdown.addEventListener('mouseenter', function() {
+            clearTimeout(moreDropdownTimeout);
+        });
+        moreDropdown.addEventListener('mouseleave', hideMoreDropdown);
+        console.log('More dropdown listeners attached');
+    } else {
+        console.error('More dropdown elements not found:', {moreNavDropdown, moreDropdown});
+    }
+
+    // User Avatar Dropdown
     const userAvatar = document.querySelector('.user-avatar');
     const userDropdown = document.getElementById('userDropdownMenu');
 
@@ -481,6 +517,7 @@ document.addEventListener('DOMContentLoaded', function() {
             clearTimeout(userDropdownTimeout);
         });
         userDropdown.addEventListener('mouseleave', hideUserDropdown);
+        console.log('User dropdown listeners attached');
     }
 });
 </script>

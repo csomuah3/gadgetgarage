@@ -294,6 +294,7 @@ try {
         .form-input::placeholder,
         .form-textarea::placeholder {
             color: #9ca3af;
+            font-size: 1.2rem;
         }
 
         .form-textarea {

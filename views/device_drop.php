@@ -1176,13 +1176,24 @@ try {
                                 </div>
 
                         <div class="form-group">
-                            <label for="askingPrice" class="form-label">Asking Price (Optional)</label>
-                            <div style="position: relative;">
-                                <span style="position: absolute; left: 18px; top: 50%; transform: translateY(-50%); color: #6b7280; font-weight: 600; z-index: 1;">GH₵</span>
-                                <input type="number" id="askingPrice" name="asking_price" class="form-input" placeholder="Enter amount in GH₵" min="0" step="0.01" style="padding-left: 55px;">
-                            </div>
-                            <small style="color: #6b7280; font-size: 0.9rem; margin-top: 6px; display: block;">Leave blank if you prefer our evaluation</small>
+                            <label for="deviceDescription" class="form-label">Additional Details & Issues</label>
+                            <textarea id="deviceDescription" name="description" class="form-textarea" rows="4" 
+                                placeholder="Describe any issues, damage, or special features of your device..."></textarea>
                         </div>
+
+                        <!-- AI Valuation Button -->
+                        <div class="form-group" style="text-align: center; margin-top: 2rem;">
+                            <button type="button" id="getAIValuationBtn" class="ai-valuation-btn">
+                                <i class="fas fa-robot me-2"></i>
+                                Get Instant AI Valuation
+                            </button>
+                            <p style="color: #6b7280; font-size: 0.9rem; margin-top: 0.75rem;">
+                                <i class="fas fa-info-circle"></i> Our AI will analyze your device and provide an instant quote
+                            </p>
+                        </div>
+
+                        <!-- AI Valuation Result (Hidden initially) -->
+                        <div id="aiValuationResult" style="display: none; margin-top: 2rem;"></div>
                     </div>
 
                     <!-- Image Upload Section -->

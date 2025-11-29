@@ -1200,8 +1200,8 @@ if (!function_exists('generate_product_highlights')) {
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(300px, 1fr));
-            gap: 18px;
+            grid-template-columns: repeat(4, minmax(320px, 1fr));
+            gap: 20px;
             margin: 0;
             margin-bottom: 60px;
             width: 100%;
@@ -1324,6 +1324,11 @@ if (!function_exists('generate_product_highlights')) {
             padding-right: 0;
         }
 
+        .product-layout-row {
+            --bs-gutter-x: 0;
+            margin: 0;
+        }
+
         @media (max-width: 1600px) {
             .product-grid {
                 grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -1438,6 +1443,7 @@ if (!function_exists('generate_product_highlights')) {
             line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
+            line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
@@ -1562,7 +1568,7 @@ if (!function_exists('generate_product_highlights')) {
         }
 
         /* Main Navigation */
-        
+
 
         .nav-menu {
             display: flex;
@@ -2033,7 +2039,7 @@ if (!function_exists('generate_product_highlights')) {
 
     <div class="container-fluid mt-4">
 
-        <div class="row">
+        <div class="row product-layout-row">
             <!-- Left Sidebar - Filters -->
             <div class="col-lg-2 col-md-4" id="filterSidebar">
                 <div class="filters-sidebar">
@@ -2272,7 +2278,7 @@ if (!function_exists('generate_product_highlights')) {
                                             title="Add to Compare">
                                             <i class="fas fa-balance-scale" style="color: #2563eb; font-size: 18px;"></i>
                                         </button>
-                                        
+
                                         <!-- Wishlist Heart -->
                                         <?php
                                         $is_in_wishlist = false;
@@ -2783,7 +2789,7 @@ if (!function_exists('generate_product_highlights')) {
             console.log('⚡ applyFilters() alias called, forwarding to executeFilters()');
             executeFilters();
         }
-        
+
         // Test that JavaScript is loading
         console.log('✅✅✅ ALL_PRODUCT.PHP JAVASCRIPT LOADED - VERSION 2.0 ✅✅✅');
 
@@ -2846,7 +2852,7 @@ if (!function_exists('generate_product_highlights')) {
             const minDisplay = document.getElementById('priceMinDisplay');
             const maxDisplay = document.getElementById('priceMaxDisplay');
             const rangeDisplay = document.getElementById('priceRange');
-            
+
             console.log('🎚️ Price Slider Init:', {
                 minSlider: !!minSlider,
                 maxSlider: !!maxSlider,
@@ -2854,7 +2860,7 @@ if (!function_exists('generate_product_highlights')) {
                 maxDisplay: !!maxDisplay,
                 rangeDisplay: !!rangeDisplay
             });
-            
+
             if (!minSlider || !maxSlider || !minDisplay || !maxDisplay || !rangeDisplay) {
                 console.error('❌ Price slider elements not found!');
                 return;
@@ -2926,7 +2932,7 @@ if (!function_exists('generate_product_highlights')) {
             // Category filters using tag buttons (same as brand filter)
             const categoryBtns = document.querySelectorAll('#categoryTags .tag-btn');
             console.log('🏷️ Category buttons found:', categoryBtns.length);
-            
+
             categoryBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     console.log('Category clicked:', this.getAttribute('data-category'));
@@ -2947,7 +2953,7 @@ if (!function_exists('generate_product_highlights')) {
             // Brand filters
             const brandBtns = document.querySelectorAll('#brandTags .tag-btn');
             console.log('🏢 Brand buttons found:', brandBtns.length);
-            
+
             brandBtns.forEach(btn => {
                 btn.addEventListener('click', function() {
                     console.log('Brand clicked:', this.getAttribute('data-brand'));
@@ -3142,11 +3148,11 @@ if (!function_exists('generate_product_highlights')) {
 
         document.addEventListener('DOMContentLoaded', function() {
             console.log('🌟🌟🌟 FILTER SYSTEM LOADING - VERSION 2.0 🌟🌟🌟');
-            
+
             const searchInput = document.getElementById('searchInput');
             const clearFilters = document.getElementById('clearFilters');
             const applyFiltersBtn = document.getElementById('applyFilters');
-            
+
             console.log('🚀 Filter System Init:', {
                 searchInput: !!searchInput,
                 clearFilters: !!clearFilters,
@@ -3504,10 +3510,8 @@ if (!function_exists('generate_product_highlights')) {
                 });
             }
         }
-        }
 
-        document.addEventListener('DOMContentLoaded', function() {
-        });
+        document.addEventListener('DOMContentLoaded', function() {});
 
         // Dropdown functions are now in header.php - removed duplicate code
 
@@ -3588,7 +3592,6 @@ if (!function_exists('generate_product_highlights')) {
 
         // Load wishlist status
         loadWishlistStatus();
-        });
 
         function loadWishlistStatus() {
             fetch('../actions/get_wishlist_status.php')
@@ -3651,7 +3654,7 @@ if (!function_exists('generate_product_highlights')) {
     <div class="container mt-5 mb-5">
         <h2 style="text-align: center; margin-bottom: 30px; color: #1f2937; font-weight: 700;">RECOMMENDED FOR YOU</h2>
         <div class="row">
-            <?php foreach ($recommended_products as $product): 
+            <?php foreach ($recommended_products as $product):
                 $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
             ?>
                 <div class="col-lg-4 col-md-6 mb-3">

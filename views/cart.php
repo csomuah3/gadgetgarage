@@ -1078,59 +1078,53 @@ try {
         }
 
         .quantity-input {
-            width: 80px;
+            width: 60px;
             text-align: center;
-            border: 3px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 12px 8px;
-            font-size: 1.3rem;
-            font-weight: 600;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 6px;
+            font-size: 1rem;
+            font-weight: 400;
             background: white;
             transition: all 0.3s ease;
         }
 
         .quantity-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4285F4;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
             outline: none;
         }
 
         .cart-summary {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 25px;
-            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.1);
-            padding: 3rem;
+            background: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            padding: 1.5rem;
             position: sticky;
-            top: 120px;
-            border: 2px solid rgba(102, 126, 234, 0.1);
-            transition: all 0.3s ease;
+            top: 100px;
+            border: 1px solid #e5e7eb;
+            transition: none;
         }
 
         .cart-summary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 25px 50px rgba(102, 126, 234, 0.15);
-            border-color: rgba(102, 126, 234, 0.2);
+            transform: none;
+            box-shadow: none;
+            border-color: #e5e7eb;
         }
 
         .cart-summary h3 {
-            font-size: 2.2rem !important;
-            font-weight: 800 !important;
-            color: #2d3748 !important;
+            font-size: 1.25rem !important;
+            font-weight: 600 !important;
+            color: #1f2937 !important;
             margin-bottom: 1.5rem !important;
-            text-align: center;
+            text-align: left;
             position: relative;
+            border-bottom: 1px solid #e5e7eb;
+            padding-bottom: 0.75rem;
         }
 
         .cart-summary h3::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 60px;
-            height: 4px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 2px;
+            display: none;
         }
 
         .empty-cart {

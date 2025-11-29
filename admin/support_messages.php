@@ -19,12 +19,18 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (isset($_POST['update_status'])) {
         $message_id = intval($_POST['message_id']);
         $new_status = $_POST['status'];
-        $assigned_to = $_POST['assigned_to'] ?: null;
+        $response = trim($_POST['response'] ?? '');
 
-        if (update_support_message_status_ctr($message_id, $new_status, $assigned_to)) {
-            $success_message = "Message status updated successfully.";
+        // Update status
+        if (update_support_message_status_ctr($message_id, $new_status, null)) {
+            // If response is provided, save it as admin response
+            if (!empty($response)) {
+                $admin_id = $_SESSION['user_id'] ?? null;
+                add_admin_response_ctr($message_id, $response, $admin_id);
+            }
+            $success_message = "Status updated successfully.";
         } else {
-            $error_message = "Failed to update message status.";
+            $error_message = "Failed to update status.";
         }
     }
 
@@ -289,16 +295,28 @@ try {
                                                         echo $subject_labels[$message['subject'] ?? 'general'] ?? ($message['subject'] ?? 'General');
                                                         ?>
                                                     </span>
-                                                    <strong><?= htmlspecialchars($message['customer_name'] ?? 'Unknown Customer') ?></strong>
+                                                    <strong><?= htmlspecialchars($message['customer_name'] ?? $message['full_name'] ?? 'Unknown Customer') ?></strong>
                                                 </div>
-                                                <?php if (!empty($message['customer_email'])): ?>
-                                                    <small class="text-muted"><i class="fas fa-envelope me-1"></i><?= htmlspecialchars($message['customer_email']) ?></small>
+                                                <?php if (!empty($message['customer_email'] ?? $message['email'] ?? '')): ?>
+                                                    <small class="text-muted"><i class="fas fa-envelope me-1"></i><?= htmlspecialchars($message['customer_email'] ?? $message['email'] ?? '') ?></small>
                                                 <?php endif; ?>
                                             </div>
                                         </div>
                                         <div class="d-flex align-items-center gap-3">
                                             <span class="status-badge status-<?= $message['status'] ?? 'new' ?>">
-                                                <?= ucfirst(str_replace('_', ' ', $message['status'] ?? 'new')) ?>
+                                                <?php
+                                                $status = $message['status'] ?? 'new';
+                                                $status_labels = [
+                                                    'reached_out_via_mail' => 'Reached Out via Mail',
+                                                    'reached_out_via_call' => 'Reached Out via Call',
+                                                    'reached_out_via_text' => 'Reached Out via Text',
+                                                    'new' => 'New',
+                                                    'in_progress' => 'In Progress',
+                                                    'resolved' => 'Resolved',
+                                                    'closed' => 'Closed'
+                                                ];
+                                                echo $status_labels[$status] ?? ucfirst(str_replace('_', ' ', $status));
+                                                ?>
                                             </span>
                                             <small class="text-muted"><?= date('M j, Y g:i A', strtotime($message['created_at'])) ?></small>
                                         </div>
@@ -354,7 +372,7 @@ try {
                                                 <div class="form-group">
                                                     <label for="response" class="form-label-modern">Your Response</label>
                                                     <textarea class="form-control-modern" name="response" rows="5"
-                                                              placeholder="Type your response to the customer..." required></textarea>
+                                                              placeholder="Summary of what you told the customer..." required></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -382,16 +400,15 @@ try {
                                                 <div class="form-group mb-3">
                                                     <label for="status" class="form-label-modern">Status</label>
                                                     <select class="form-control-modern" name="status" required>
-                                                        <option value="new" <?= ($message['status'] ?? 'new') === 'new' ? 'selected' : '' ?>>New</option>
-                                                        <option value="in_progress" <?= ($message['status'] ?? '') === 'in_progress' ? 'selected' : '' ?>>In Progress</option>
-                                                        <option value="resolved" <?= ($message['status'] ?? '') === 'resolved' ? 'selected' : '' ?>>Resolved</option>
-                                                        <option value="closed" <?= ($message['status'] ?? '') === 'closed' ? 'selected' : '' ?>>Closed</option>
+                                                        <option value="reached_out_via_mail" <?= ($message['status'] ?? '') === 'reached_out_via_mail' ? 'selected' : '' ?>>Reached Out via Mail</option>
+                                                        <option value="reached_out_via_call" <?= ($message['status'] ?? '') === 'reached_out_via_call' ? 'selected' : '' ?>>Reached Out via Call</option>
+                                                        <option value="reached_out_via_text" <?= ($message['status'] ?? '') === 'reached_out_via_text' ? 'selected' : '' ?>>Reached Out via Text</option>
                                                     </select>
                                                 </div>
                                                 <div class="form-group">
-                                                    <label for="assigned_to" class="form-label-modern">Assign To (Optional)</label>
-                                                    <input type="number" class="form-control-modern" name="assigned_to"
-                                                           placeholder="Admin ID" value="<?= $message['assigned_to'] ?? '' ?>">
+                                                    <label for="response" class="form-label-modern">Response</label>
+                                                    <textarea class="form-control-modern" name="response" rows="4"
+                                                              placeholder="Summary of what you told the customer..." required></textarea>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -564,6 +581,21 @@ try {
 .status-closed {
     background: #f3f4f6;
     color: #374151;
+}
+
+.status-reached_out_via_mail {
+    background: #dbeafe;
+    color: #1e40af;
+}
+
+.status-reached_out_via_call {
+    background: #dcfce7;
+    color: #166534;
+}
+
+.status-reached_out_via_text {
+    background: #fef3c7;
+    color: #92400e;
 }
 
 .message-text {

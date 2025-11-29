@@ -58,6 +58,15 @@ try {
 			overflow-x: hidden;
 		}
 
+		/* Hide bubbles */
+		#floatingBubbles,
+		.bubble,
+		.bubble-small,
+		.bubble-medium,
+		.bubble-large {
+			display: none !important;
+		}
+
 		/* Header styles are now in header.css */
 
 		/* Repair Services Specific Styles */
@@ -69,21 +78,21 @@ try {
 		}
 
 		.hero-title {
-			font-size: 3rem;
+			font-size: 2.5rem;
 			font-weight: 700;
-			color: #047857;
+			color: #1e3a8a;
 			margin-bottom: 1rem;
 		}
 
 		.hero-subtitle {
-			font-size: 1.2rem;
-			color: #065f46;
+			font-size: 1.1rem;
+			color: #2563EB;
 			margin-bottom: 0.5rem;
 		}
 
 		.hero-description {
-			color: #6b7280;
-			font-size: 1.1rem;
+			color: #64748b;
+			font-size: 1rem;
 			max-width: 600px;
 			margin: 0 auto;
 		}
@@ -105,19 +114,21 @@ try {
 		}
 
 		.step-number {
-			width: 30px;
-			height: 30px;
-			border-radius: 50%;
-			background: linear-gradient(135deg, #008060, #006b4e);
-			color: white;
+			width: 32px;
+			height: 32px;
+			border-radius: 8px;
+			background: #e5e7eb;
+			color: #64748b;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			font-weight: 600;
+			font-size: 0.875rem;
 		}
 
 		.step.active .step-number {
-			background: linear-gradient(135deg, #047857, #059669);
+			background: #2563EB;
+			color: white;
 		}
 
 		.step-separator {
@@ -134,10 +145,10 @@ try {
 
 		.section-title {
 			text-align: center;
-			font-size: 2.5rem;
+			font-size: 2rem;
 			font-weight: 700;
-			color: #047857;
-			margin-bottom: 3rem;
+			color: #1e3a8a;
+			margin-bottom: 2.5rem;
 		}
 
 		.issues-grid {
@@ -149,56 +160,48 @@ try {
 		}
 
 		.issue-card {
-			background: rgba(255, 255, 255, 0.95);
-			backdrop-filter: blur(20px);
-			border-radius: 20px;
+			background: #ffffff;
+			border-radius: 12px;
 			padding: 2rem;
-			border: 1px solid rgba(0, 128, 96, 0.1);
-			box-shadow: 0 4px 20px rgba(0, 128, 96, 0.05);
-			transition: all 0.3s ease;
+			border: 1px solid #e5e7eb;
+			box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+			transition: all 0.2s ease;
 			cursor: pointer;
 			position: relative;
-			overflow: hidden;
 		}
 
 		.issue-card::before {
-			content: '';
-			position: absolute;
-			top: 0;
-			left: 0;
-			right: 0;
-			height: 4px;
-			background: linear-gradient(135deg, #008060, #006b4e);
-			transform: scaleX(0);
-			transition: transform 0.3s ease;
+			display: none;
 		}
 
 		.issue-card:hover {
-			transform: translateY(-8px);
-			box-shadow: 0 8px 30px rgba(0, 128, 96, 0.15);
+			border-color: #2563EB;
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+			transform: translateY(-2px);
 		}
 
-		.issue-card:hover::before {
-			transform: scaleX(1);
+		.issue-card.selected {
+			border-color: #2563EB;
+			background: #eff6ff;
 		}
 
 		.issue-icon {
-			width: 80px;
-			height: 80px;
-			border-radius: 20px;
+			width: 64px;
+			height: 64px;
+			border-radius: 12px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			margin: 0 auto 1.5rem;
-			font-size: 2rem;
+			font-size: 1.75rem;
 			color: white;
-			background: linear-gradient(135deg, #008060, #006b4e);
+			background: linear-gradient(135deg, #2563EB, #1e40af);
 		}
 
 		.issue-title {
-			font-size: 1.5rem;
-			font-weight: 700;
-			color: #047857;
+			font-size: 1.25rem;
+			font-weight: 600;
+			color: #1f2937;
 			margin-bottom: 1rem;
 			text-align: center;
 		}
@@ -218,7 +221,7 @@ try {
 		.price-range {
 			font-size: 1.1rem;
 			font-weight: 600;
-			color: #059669;
+			color: #2563EB;
 		}
 
 		.price-label {
@@ -228,26 +231,26 @@ try {
 		}
 
 		.continue-btn {
-			background: linear-gradient(135deg, #008060, #006b4e);
+			background: linear-gradient(135deg, #2563EB, #1e40af);
 			color: white;
 			border: none;
-			padding: 15px 40px;
-			border-radius: 50px;
-			font-size: 1.1rem;
+			padding: 14px 32px;
+			border-radius: 8px;
+			font-size: 1rem;
 			font-weight: 600;
 			position: fixed;
 			bottom: 30px;
 			right: 30px;
-			box-shadow: 0 4px 20px rgba(0, 128, 96, 0.3);
-			transition: all 0.3s ease;
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+			transition: all 0.2s ease;
 			z-index: 1000;
 			display: none;
 		}
 
 		.continue-btn:hover {
-			background: linear-gradient(135deg, #059669, #006b4e);
+			background: linear-gradient(135deg, #1e40af, #2563EB);
 			transform: translateY(-2px);
-			box-shadow: 0 6px 25px rgba(0, 128, 96, 0.4);
+			box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
 		}
 
 		.continue-btn.show {
@@ -511,8 +514,8 @@ try {
 	<section class="hero-section">
 		<div class="container">
 			<div class="d-flex justify-content-center align-items-center mb-3">
-				<i class="fas fa-tools me-2" style="color: #10b981; font-size: 1.5rem;"></i>
-				<span style="color: #10b981; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Professional Repair Services</span>
+				<i class="fas fa-tools me-2" style="color: #2563EB; font-size: 1.5rem;"></i>
+				<span style="color: #2563EB; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Professional Repair Services</span>
 			</div>
 
 			<h1 class="hero-title">Device Repair Services</h1>
@@ -820,8 +823,8 @@ try {
 				document.getElementById('themeToggle').classList.add('active');
 			}
 
-			// Create floating bubbles
-			createFloatingBubbles();
+			// Create floating bubbles - DISABLED
+			// createFloatingBubbles();
 		});
 
 		// Create 40+ floating bubbles with different sizes and animations
@@ -911,8 +914,8 @@ try {
 			// Select current issue
 			if (event && event.currentTarget) {
 				event.currentTarget.classList.add('selected');
-				event.currentTarget.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
-				event.currentTarget.style.border = '2px solid #008060';
+				event.currentTarget.style.background = '#eff6ff';
+				event.currentTarget.style.border = '2px solid #2563EB';
 			}
 
 			selectedIssue = issueId;
@@ -973,7 +976,7 @@ try {
 			document.querySelectorAll('.issue-card').forEach(card => {
 				card.addEventListener('mouseenter', function() {
 					if (!this.classList.contains('selected')) {
-						this.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
+						this.style.background = '#f8fafc';
 					}
 				});
 

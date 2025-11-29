@@ -171,62 +171,35 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
-            color: #065f46;
+            background: #ffffff;
+            color: #1f2937;
             min-height: 100vh;
         }
 
-        /* Animated Background */
-        .bg-decoration {
-            position: fixed;
-            border-radius: 50%;
-            pointer-events: none;
-            z-index: 1;
-            opacity: 0.6;
-        }
-
-        .bg-decoration-1 {
-            width: 200px;
-            height: 200px;
-            background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), rgba(52, 211, 153, 0.1));
-            top: 10%;
-            right: 15%;
-            animation: float 8s ease-in-out infinite;
-        }
-
+        /* Hide decorative bubbles */
+        .bg-decoration,
+        .bg-decoration-1,
         .bg-decoration-2 {
-            width: 150px;
-            height: 150px;
-            background: linear-gradient(135deg, rgba(52, 211, 153, 0.08), rgba(16, 185, 129, 0.08));
-            bottom: 20%;
-            left: 10%;
-            animation: float 10s ease-in-out infinite reverse;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0px) rotate(0deg); }
-            25% { transform: translateY(-20px) rotate(90deg); }
-            50% { transform: translateY(-10px) rotate(180deg); }
-            75% { transform: translateY(-15px) rotate(270deg); }
+            display: none !important;
         }
 
         /* Header styles now imported from header-styles.css */
 
         .btn-back {
-            background: linear-gradient(135deg, #6b7280, #9ca3af);
+            background: #64748b;
             color: white;
             border: none;
             padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
             display: inline-flex;
             align-items: center;
             gap: 8px;
         }
 
         .btn-back:hover {
-            background: linear-gradient(135deg, #4b5563, #6b7280);
+            background: #475569;
             color: white;
             transform: translateY(-1px);
         }
@@ -256,24 +229,25 @@ try {
         }
 
         .step-number {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: #e5e7eb;
-            color: #6b7280;
+            color: #64748b;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 0.875rem;
         }
 
         .step.completed .step-number {
-            background: linear-gradient(135deg, #10b981, #34d399);
+            background: #10b981;
             color: white;
         }
 
         .step.active .step-number {
-            background: linear-gradient(135deg, #047857, #059669);
+            background: #2563EB;
             color: white;
         }
 
@@ -291,9 +265,9 @@ try {
         }
 
         .section-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: #047857;
+            color: #1e3a8a;
             margin-bottom: 2rem;
             text-align: center;
         }
@@ -307,18 +281,17 @@ try {
         }
 
         .appointment-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 2rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .card-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #047857;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
@@ -331,23 +304,23 @@ try {
 
         .form-label {
             font-weight: 600;
-            color: #065f46;
+            color: #374151;
             margin-bottom: 0.5rem;
             display: block;
         }
 
         .form-control {
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             padding: 12px 16px;
             font-size: 1rem;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.2s ease;
+            background: #ffffff;
         }
 
         .form-control:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
             outline: none;
         }
 
@@ -360,24 +333,24 @@ try {
 
         .time-slot {
             padding: 12px;
-            border: 2px solid #e2e8f0;
+            border: 1px solid #e5e7eb;
             border-radius: 8px;
             text-align: center;
             cursor: pointer;
-            transition: all 0.3s ease;
-            background: rgba(255, 255, 255, 0.9);
+            transition: all 0.2s ease;
+            background: #ffffff;
             font-weight: 500;
         }
 
         .time-slot:hover {
-            border-color: #10b981;
-            background: rgba(16, 185, 129, 0.05);
+            border-color: #2563EB;
+            background: #eff6ff;
         }
 
         .time-slot.selected {
-            border-color: #10b981;
-            background: linear-gradient(135deg, #ecfdf5, #d1fae5);
-            color: #047857;
+            border-color: #2563EB;
+            background: #eff6ff;
+            color: #1e3a8a;
         }
 
         .time-slot.unavailable {
@@ -428,25 +401,25 @@ try {
 
         .summary-value {
             font-weight: 600;
-            color: #047857;
+            color: #2563EB;
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, #10b981, #34d399);
+            background: linear-gradient(135deg, #2563EB, #1e40af);
             color: white;
             border: none;
-            padding: 15px 30px;
-            border-radius: 12px;
-            font-size: 1.1rem;
+            padding: 14px 30px;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             width: 100%;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .submit-btn:hover {
-            background: linear-gradient(135deg, #059669, #10b981);
+            background: linear-gradient(135deg, #1e40af, #2563EB);
             transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.3);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .submit-btn:disabled {
@@ -473,8 +446,8 @@ try {
         }
 
         .terms-conditions .form-check:hover {
-            border-color: #10b981;
-            box-shadow: 0 2px 8px rgba(16, 185, 129, 0.1);
+            border-color: #2563EB;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
         }
 
         .terms-conditions .form-check-input {
@@ -485,13 +458,13 @@ try {
         }
 
         .terms-conditions .form-check-input:checked {
-            background-color: #10b981;
-            border-color: #10b981;
+            background-color: #2563EB;
+            border-color: #2563EB;
         }
 
         .terms-conditions .form-check-input:focus {
-            border-color: #10b981;
-            box-shadow: 0 0 0 0.25rem rgba(16, 185, 129, 0.25);
+            border-color: #2563EB;
+            box-shadow: 0 0 0 0.25rem rgba(37, 99, 235, 0.25);
         }
 
         .terms-conditions .form-check-label {
@@ -503,7 +476,7 @@ try {
         }
 
         .terms-conditions .form-check-label:hover {
-            color: #047857;
+            color: #2563EB;
         }
 
         .success-modal {
@@ -807,8 +780,8 @@ try {
             <?php if (isset($success_message)): ?>
                 <div class="success-modal">
                     <div class="success-content">
-                        <i class="fas fa-check-circle" style="font-size: 4rem; color: #10b981; margin-bottom: 1rem;"></i>
-                        <h3 style="color: #047857; margin-bottom: 1rem;">Appointment Scheduled!</h3>
+                        <i class="fas fa-check-circle" style="font-size: 4rem; color: #2563EB; margin-bottom: 1rem;"></i>
+                        <h3 style="color: #1e3a8a; margin-bottom: 1rem;">Appointment Scheduled!</h3>
                         <p style="color: #6b7280; margin-bottom: 2rem;">Your repair appointment has been successfully scheduled. You will receive an SMS confirmation and we'll call you when it's time for your appointment.</p>
                         <a href="../index.php" class="btn btn-primary">Return to Home</a>
                     </div>
@@ -924,7 +897,7 @@ try {
 
                         <!-- Terms and Conditions -->
                         <div style="margin-top: 2rem; padding-top: 2rem; border-top: 2px solid #e2e8f0;">
-                            <h6 style="color: #047857; font-weight: 600; margin-bottom: 1rem;">
+                            <h6 style="color: #1e3a8a; font-weight: 600; margin-bottom: 1rem;">
                                 <i class="fas fa-file-contract me-2"></i>
                                 Terms & Conditions
                             </h6>

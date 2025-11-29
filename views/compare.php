@@ -81,125 +81,119 @@ $user_name = $_SESSION['name'] ?? 'User';
         }
 
         body {
-            font-family: "Times New Roman", Times, serif;
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #f8fafc;
             min-height: 100vh;
         }
 
         .compare-container {
-            padding: 40px 0;
+            padding: 2rem 0;
             min-height: calc(100vh - 200px);
         }
 
         .page-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
             color: #1e3a8a;
-            margin-bottom: 10px;
+            margin-bottom: 8px;
             text-align: center;
         }
 
         .page-subtitle {
             text-align: center;
             color: #64748b;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+            margin-bottom: 2rem;
+            font-size: 0.95rem;
+            font-weight: 400;
         }
 
         /* AI Analysis Section */
         .ai-analysis-section {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 40px;
-            box-shadow: 0 10px 40px rgba(30, 58, 138, 0.3);
-            position: relative;
-            overflow: hidden;
+            background: #ffffff;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
         }
 
         .ai-analysis-section::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -10%;
-            width: 300px;
-            height: 300px;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
-            border-radius: 50%;
+            display: none;
         }
 
         .ai-header {
             display: flex;
             align-items: center;
-            gap: 15px;
-            margin-bottom: 25px;
-            position: relative;
-            z-index: 1;
+            gap: 12px;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .ai-icon {
-            width: 50px;
-            height: 50px;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 12px;
+            width: 44px;
+            height: 44px;
+            background: #eff6ff;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            color: white;
+            font-size: 20px;
+            color: #2563EB;
         }
 
         .ai-title {
-            color: white;
-            font-size: 1.8rem;
-            font-weight: 700;
+            color: #1f2937;
+            font-size: 1.25rem;
+            font-weight: 600;
             margin: 0;
         }
 
         .ai-subtitle {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.95rem;
+            color: #64748b;
+            font-size: 0.875rem;
             margin: 0;
+            font-weight: 400;
         }
 
         .ai-content {
-            background: rgba(255, 255, 255, 0.95);
-            border-radius: 15px;
-            padding: 30px;
-            color: #1f2937;
-            line-height: 1.8;
-            position: relative;
-            z-index: 1;
+            background: #f8fafc;
+            border-radius: 8px;
+            padding: 1.5rem;
+            color: #374151;
+            line-height: 1.7;
+            border: 1px solid #e5e7eb;
         }
 
         .ai-content h1,
         .ai-content h2,
         .ai-content h3 {
             color: #1e3a8a;
-            margin-top: 20px;
-            margin-bottom: 10px;
+            margin-top: 1.25rem;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
         }
 
         .ai-content h1 {
-            font-size: 1.6rem;
+            font-size: 1.25rem;
         }
 
         .ai-content h2 {
-            font-size: 1.4rem;
+            font-size: 1.125rem;
         }
 
         .ai-content h3 {
-            font-size: 1.2rem;
+            font-size: 1rem;
         }
 
         .ai-content ul,
         .ai-content ol {
-            margin-left: 20px;
-            margin-bottom: 15px;
+            margin-left: 1.25rem;
+            margin-bottom: 1rem;
         }
 
         .ai-content li {
-            margin-bottom: 8px;
+            margin-bottom: 0.5rem;
         }
 
         .ai-content strong {
@@ -209,8 +203,8 @@ $user_name = $_SESSION['name'] ?? 'User';
 
         .ai-loading {
             text-align: center;
-            padding: 40px;
-            color: white;
+            padding: 2.5rem;
+            color: #64748b;
         }
 
         .ai-loading i {
@@ -232,13 +226,14 @@ $user_name = $_SESSION['name'] ?? 'User';
         /* Comparison Table */
         .comparison-table {
             background: white;
-            border-radius: 20px;
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
         }
 
         .product-column {
-            padding: 30px;
+            padding: 2rem;
             border-right: 1px solid #e5e7eb;
             display: flex;
             flex-direction: column;
@@ -251,14 +246,15 @@ $user_name = $_SESSION['name'] ?? 'User';
 
         .product-image-wrapper {
             width: 100%;
-            height: 250px;
+            height: 220px;
             background: #f8fafc;
-            border-radius: 15px;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 20px;
+            margin-bottom: 1.5rem;
             overflow: hidden;
+            border: 1px solid #e5e7eb;
         }
 
         .product-image-wrapper img {
@@ -268,150 +264,158 @@ $user_name = $_SESSION['name'] ?? 'User';
         }
 
         .product-name {
-            font-size: 1.3rem;
-            font-weight: 700;
+            font-size: 1.125rem;
+            font-weight: 600;
             color: #1f2937;
-            margin-bottom: 15px;
-            min-height: 60px;
+            margin-bottom: 1rem;
+            min-height: 52px;
+            line-height: 1.4;
         }
 
         .product-price {
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
-            color: #2563eb;
-            margin-bottom: 20px;
+            color: #2563EB;
+            margin-bottom: 1.25rem;
         }
 
         .product-brand {
             display: inline-block;
             background: #eff6ff;
-            color: #1e3a8a;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            font-size: 0.9rem;
+            color: #2563EB;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            font-size: 0.875rem;
         }
 
         .product-category {
             display: inline-block;
             background: #f0fdf4;
-            color: #166534;
-            padding: 8px 15px;
-            border-radius: 8px;
-            font-weight: 600;
-            margin-bottom: 15px;
-            margin-left: 10px;
-            font-size: 0.9rem;
+            color: #10b981;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-weight: 500;
+            margin-bottom: 0.75rem;
+            margin-left: 0.5rem;
+            font-size: 0.875rem;
         }
 
         .product-description {
-            color: #6b7280;
+            color: #64748b;
             line-height: 1.6;
-            margin-bottom: 20px;
-            font-size: 0.95rem;
+            margin-bottom: 1.5rem;
+            font-size: 0.875rem;
         }
 
         .product-actions {
             display: flex;
-            gap: 10px;
+            gap: 0.75rem;
             flex-wrap: wrap;
             margin-top: auto;
-            padding-top: 20px;
+            padding-top: 1.5rem;
         }
 
         .btn-view {
             flex: 1;
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: #2563EB;
             color: white;
             border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
         }
 
         .btn-view:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(37, 99, 235, 0.3);
+            background: #1e40af;
             color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         .btn-remove {
             background: #fee2e2;
             color: #dc2626;
             border: none;
-            padding: 12px 20px;
-            border-radius: 10px;
+            padding: 10px 16px;
+            border-radius: 8px;
             font-weight: 600;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
         }
 
         .btn-remove:hover {
             background: #fecaca;
-            transform: translateY(-2px);
+            color: #b91c1c;
         }
 
         /* Empty State */
         .empty-compare {
             text-align: center;
-            padding: 80px 20px;
+            padding: 4rem 2rem;
             background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            border: 1px solid #e5e7eb;
         }
 
         .empty-compare i {
-            font-size: 80px;
-            color: #d1d5db;
-            margin-bottom: 20px;
+            font-size: 64px;
+            color: #cbd5e1;
+            margin-bottom: 1.5rem;
         }
 
         .empty-compare h3 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             color: #1f2937;
-            margin-bottom: 10px;
+            margin-bottom: 0.75rem;
+            font-weight: 600;
         }
 
         .empty-compare p {
-            color: #6b7280;
-            margin-bottom: 30px;
-            font-size: 1.1rem;
+            color: #64748b;
+            margin-bottom: 2rem;
+            font-size: 1rem;
         }
 
         .btn-browse {
-            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            background: #2563EB;
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 12px;
+            padding: 12px 32px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 1.1rem;
+            font-size: 1rem;
             text-decoration: none;
             display: inline-block;
-            transition: all 0.3s ease;
+            transition: all 0.2s ease;
         }
 
         .btn-browse:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
+            background: #1e40af;
             color: white;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
         }
 
         .clear-all-btn {
             background: #fee2e2;
             color: #dc2626;
             border: none;
-            padding: 12px 30px;
-            border-radius: 10px;
+            padding: 10px 24px;
+            border-radius: 8px;
             font-weight: 600;
-            margin-bottom: 20px;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.2s ease;
         }
 
         .clear-all-btn:hover {
             background: #fecaca;
-            transform: translateY(-2px);
+            color: #b91c1c;
         }
 
         @media (max-width: 768px) {

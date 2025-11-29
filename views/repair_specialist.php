@@ -181,9 +181,16 @@ try {
 
         body {
             font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
-            background: linear-gradient(135deg, #f0fdf4 0%, #ecfdf5 50%, #d1fae5 100%);
-            color: #065f46;
+            background: #ffffff;
+            color: #1f2937;
             min-height: 100vh;
+        }
+
+        /* Hide decorative bubbles */
+        .bg-decoration,
+        .bg-decoration-1,
+        .bg-decoration-2 {
+            display: none !important;
         }
 
         /* Promo Banner */
@@ -274,24 +281,25 @@ try {
         }
 
         .step-number {
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
             background: #e5e7eb;
-            color: #6b7280;
+            color: #64748b;
             display: flex;
             align-items: center;
             justify-content: center;
             font-weight: 600;
+            font-size: 0.875rem;
         }
 
         .step.completed .step-number {
-            background: linear-gradient(135deg, #10b981, #34d399);
+            background: #10b981;
             color: white;
         }
 
         .step.active .step-number {
-            background: linear-gradient(135deg, #047857, #059669);
+            background: #2563EB;
             color: white;
         }
 
@@ -309,23 +317,22 @@ try {
         }
 
         .section-title {
-            font-size: 2.5rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: #047857;
+            color: #1e3a8a;
             margin-bottom: 1rem;
             text-align: center;
         }
 
         .issue-info {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 16px;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 1.5rem;
             margin: 0 auto 3rem;
             max-width: 600px;
             text-align: center;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
         }
 
         .specialists-grid {
@@ -337,57 +344,49 @@ try {
         }
 
         .specialist-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
+            background: #ffffff;
+            border-radius: 12px;
             padding: 2rem;
-            border: 1px solid rgba(16, 185, 129, 0.1);
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.05);
-            transition: all 0.3s ease;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.2s ease;
             cursor: pointer;
             position: relative;
-            overflow: hidden;
         }
 
         .specialist-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 4px;
-            background: linear-gradient(135deg, #10b981, #34d399);
-            transform: scaleX(0);
-            transition: transform 0.3s ease;
+            display: none;
         }
 
         .specialist-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 8px 30px rgba(16, 185, 129, 0.15);
+            border-color: #2563EB;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.1);
+            transform: translateY(-2px);
         }
 
-        .specialist-card:hover::before {
-            transform: scaleX(1);
+        .specialist-card.selected {
+            border-color: #2563EB;
+            background: #eff6ff;
         }
 
         .specialist-avatar {
-            width: 80px;
-            height: 80px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, #10b981, #34d399);
+            width: 72px;
+            height: 72px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #2563EB, #1e40af);
             display: flex;
             align-items: center;
             justify-content: center;
             margin: 0 auto 1.5rem;
-            font-size: 2rem;
+            font-size: 1.75rem;
             font-weight: 700;
             color: white;
         }
 
         .specialist-name {
-            font-size: 1.4rem;
-            font-weight: 700;
-            color: #047857;
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
             text-align: center;
             margin-bottom: 0.5rem;
         }
@@ -410,9 +409,9 @@ try {
         }
 
         .stat-value {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #047857;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #2563EB;
         }
 
         .stat-label {
@@ -439,26 +438,26 @@ try {
         }
 
         .continue-btn {
-            background: linear-gradient(135deg, #10b981, #34d399);
+            background: linear-gradient(135deg, #2563EB, #1e40af);
             color: white;
             border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.1rem;
+            padding: 14px 32px;
+            border-radius: 8px;
+            font-size: 1rem;
             font-weight: 600;
             position: fixed;
             bottom: 30px;
             right: 30px;
-            box-shadow: 0 4px 20px rgba(16, 185, 129, 0.3);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s ease;
             z-index: 1000;
             display: none;
         }
 
         .continue-btn:hover {
-            background: linear-gradient(135deg, #059669, #10b981);
+            background: linear-gradient(135deg, #1e40af, #2563EB);
             transform: translateY(-2px);
-            box-shadow: 0 6px 25px rgba(16, 185, 129, 0.4);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
 
         .continue-btn.show {
@@ -845,7 +844,7 @@ try {
             <!-- Issue Info -->
             <?php if ($issue): ?>
             <div class="issue-info">
-                <h2 style="color: #047857; margin-bottom: 0.5rem;">
+                <h2 style="color: #1e3a8a; margin-bottom: 0.5rem;">
                     <i class="<?php echo htmlspecialchars($issue['icon_class'] ?? 'fas fa-tools'); ?> me-2"></i>
                     <?php echo htmlspecialchars($issue['issue_name'] ?? $issue_name); ?>
                 </h2>
@@ -855,7 +854,7 @@ try {
             </div>
             <?php else: ?>
             <div class="issue-info">
-                <h2 style="color: #047857; margin-bottom: 0.5rem;">
+                <h2 style="color: #1e3a8a; margin-bottom: 0.5rem;">
                     <i class="fas fa-tools me-2"></i>
                     <?php echo htmlspecialchars($issue_name); ?>
                 </h2>
@@ -966,8 +965,8 @@ try {
             const card = element || event?.currentTarget;
             if (card) {
                 card.classList.add('selected');
-                card.style.background = 'linear-gradient(135deg, #ecfdf5, #d1fae5)';
-                card.style.border = '2px solid #10b981';
+                card.style.background = '#eff6ff';
+                card.style.border = '2px solid #2563EB';
             }
 
             selectedSpecialist = specialistId;
@@ -994,7 +993,7 @@ try {
         document.querySelectorAll('.specialist-card').forEach(card => {
             card.addEventListener('mouseenter', function() {
                 if (!this.classList.contains('selected')) {
-                    this.style.background = 'linear-gradient(135deg, #f8fafc, #f1f5f9)';
+                    this.style.background = '#f8fafc';
                 }
             });
 

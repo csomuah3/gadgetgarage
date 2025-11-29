@@ -151,21 +151,65 @@ function get_all_support_messages_ctr($status = null, $limit = null) {
         return false;
     }
 
-    // Check if customer_email column exists
-    $check_email_column = "SHOW COLUMNS FROM support_messages LIKE 'customer_email'";
-    $email_column_exists = $db->db_fetch_one($check_email_column);
+    // Build column selections with COALESCE/IFNULL to handle column name variations
+    // This will use the first available column name
+    $name_column = "COALESCE(NULLIF(customer_name, ''), NULLIF(full_name, ''), 'Unknown Customer') as customer_name";
+    $email_column = "COALESCE(NULLIF(customer_email, ''), NULLIF(email, ''), '') as customer_email";
+    $phone_column = "COALESCE(NULLIF(customer_phone, ''), NULLIF(phone, ''), '') as customer_phone";
     
-    if ($email_column_exists) {
-        $sql = "SELECT message_id, customer_id, customer_name, customer_email, customer_phone, subject,
-                       LEFT(message, 100) as message_preview, message, status, priority,
-                       assigned_to, admin_response, response_date, created_at, updated_at
-                FROM support_messages";
+    // Build the query - MySQL will handle missing columns gracefully in COALESCE
+    // But we need to check which columns actually exist first to avoid SQL errors
+    $columns_query = "SHOW COLUMNS FROM support_messages";
+    $all_columns = $db->db_fetch_all($columns_query);
+    $column_names = array_column($all_columns ?: [], 'Field');
+    
+    // Build column selections based on what exists
+    if (in_array('customer_name', $column_names) && in_array('full_name', $column_names)) {
+        $name_column = "COALESCE(customer_name, full_name, 'Unknown Customer') as customer_name";
+    } elseif (in_array('customer_name', $column_names)) {
+        $name_column = "COALESCE(customer_name, 'Unknown Customer') as customer_name";
+    } elseif (in_array('full_name', $column_names)) {
+        $name_column = "COALESCE(full_name, 'Unknown Customer') as customer_name";
     } else {
-        $sql = "SELECT message_id, customer_id, customer_name, customer_phone, subject,
-                       LEFT(message, 100) as message_preview, message, status, priority,
-                       assigned_to, admin_response, response_date, created_at, updated_at
-                FROM support_messages";
+        $name_column = "'Unknown Customer' as customer_name";
     }
+    
+    if (in_array('customer_email', $column_names) && in_array('email', $column_names)) {
+        $email_column = "COALESCE(customer_email, email, '') as customer_email";
+    } elseif (in_array('customer_email', $column_names)) {
+        $email_column = "customer_email";
+    } elseif (in_array('email', $column_names)) {
+        $email_column = "email as customer_email";
+    } else {
+        $email_column = "'' as customer_email";
+    }
+    
+    if (in_array('customer_phone', $column_names) && in_array('phone', $column_names)) {
+        $phone_column = "COALESCE(customer_phone, phone, '') as customer_phone";
+    } elseif (in_array('customer_phone', $column_names)) {
+        $phone_column = "customer_phone";
+    } elseif (in_array('phone', $column_names)) {
+        $phone_column = "phone as customer_phone";
+    } else {
+        $phone_column = "'' as customer_phone";
+    }
+    
+    $sql = "SELECT message_id, 
+                   customer_id, 
+                   $name_column, 
+                   $email_column, 
+                   $phone_column, 
+                   subject,
+                   LEFT(message, 100) as message_preview, 
+                   message, 
+                   status, 
+                   COALESCE(priority, 'normal') as priority,
+                   assigned_to, 
+                   admin_response, 
+                   response_date, 
+                   created_at, 
+                   updated_at
+            FROM support_messages";
 
     if ($status) {
         $sql .= " WHERE status = '" . mysqli_real_escape_string($db->db_conn(), $status) . "'";

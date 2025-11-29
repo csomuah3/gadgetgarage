@@ -471,4 +471,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Wishlist Badge Update Script -->
-<script src="../js/wishlist.js"></script>
+<script src="<?php echo $base_path; ?>js/wishlist.js"></script>
+
+<!-- Purchase Notifications -->
+<link href="<?php echo $base_path; ?>css/purchase_notifications.css" rel="stylesheet">
+<script src="<?php echo $base_path; ?>js/purchase_notifications.js" defer></script>

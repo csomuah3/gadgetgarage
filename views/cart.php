@@ -76,15 +76,56 @@ try {
         }
 
         /* Promotional Banner Styles */
-        
+        .promo-banner,
+        .promo-banner2 {
+            background: #001f3f !important;
+            color: white;
+            padding: 6px 15px;
+            text-align: center;
+            font-size: 1rem;
+            font-weight: 400;
+            position: sticky;
+            top: 0;
+            z-index: 1001;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            max-width: 100%;
+        }
 
-        
+        .promo-banner-left,
+        .promo-banner2 .promo-banner-left,
+        .promo-banner2 .promo-banner-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex: 0 0 auto;
+        }
 
-        
+        .promo-banner-center,
+        .promo-banner2 .promo-banner-center,
+        .promo-banner2 .promo-banner-center {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            flex: 1;
+        }
 
-        
+        .promo-banner i,
+        .promo-banner2 i {
+            font-size: 1rem;
+        }
 
-        
+        .promo-banner .promo-text,
+        .promo-banner2 .promo-text {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.5px;
+        }
 
         .promo-timer {
             background: transparent;
@@ -111,7 +152,15 @@ try {
         }
 
         /* Header Styles */
-        
+        .main-header {
+            background: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 38px;
+            z-index: 1000;
+            padding: 20px 0;
+            border-bottom: 1px solid #e5e7eb;
+        }
 
         .logo {
             font-size: 2.2rem;
@@ -453,9 +502,14 @@ try {
             color: #e2e8f0;
         }
 
-        body.dark-mode 
+        body.dark-mode .promo-banner {
+            background: #0f1419 !important;
+        }
 
-        body.dark-mode 
+        body.dark-mode .main-header {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-bottom-color: #4a5568;
+        }
 
         body.dark-mode .logo,
         body.dark-mode .tech-revival-text,
@@ -526,7 +580,10 @@ try {
             color: #60a5fa;
         }
 
-        body.dark-mode 
+        body.dark-mode .main-nav {
+            background: linear-gradient(135deg, #2d3748 0%, #1a202c 100%);
+            border-bottom-color: #4a5568;
+        }
 
         body.dark-mode .nav-item {
             color: #e2e8f0;
@@ -575,7 +632,15 @@ try {
         }
 
         /* Main Navigation */
-        
+        .main-nav {
+            background: #ffffff;
+            border-bottom: 1px solid #e5e7eb;
+            padding: 12px 0;
+            position: sticky;
+            top: 85px;
+            z-index: 999;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
 
         .nav-menu {
             display: flex;
@@ -1285,9 +1350,21 @@ try {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        
+        .promo-banner-card {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            border-radius: 8px;
+            padding: 12px 16px;
+            text-align: center;
+            margin-bottom: 12px;
+            border: 1px solid #dee2e6;
+        }
 
-        
+        .promo-banner-text {
+            font-size: 14px;
+            color: #495057;
+            font-weight: 500;
+            margin-right: 8px;
+        }
 
         .promo-code-pill {
             background: #dc3545;
@@ -1797,7 +1874,10 @@ try {
                     <!-- Discount Code Section -->
                     <div class="promo-section-redesign">
                         <!-- Promotional Banner -->
-                        
+                        <div class="promo-banner-card">
+                            <span class="promo-banner-text">Get GH₵ 1,200 Off On Orders Above GH₵ 2,000! Use Code:</span>
+                            <span class="promo-code-pill">BLACKFRIDAY20</span>
+                        </div>
 
                         <!-- Input Section -->
                         <div class="promo-input-container">

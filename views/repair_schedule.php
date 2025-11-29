@@ -1180,6 +1180,36 @@ try {
                                 urgencyBadge = '<span style="display:inline-flex;align-items:center;gap:6px;background:#ecfdf5;color:#047857;padding:4px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;"><i class="fas fa-info-circle"></i> Low urgency</span>';
                             }
 
+                            // **NEW: Show SweetAlert popup FIRST with AI analysis**
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    title: '<i class="fas fa-brain" style="color: #2563EB;"></i> AI Repair Analysis',
+                                    html: `
+                                        <div style="text-align: left; padding: 0.5rem;">
+                                            <div style="margin-bottom: 1rem;">
+                                                <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 0.25rem;">Likely Issue:</div>
+                                                <div style="font-weight: 600; color: #1f2937;">${a.likely_issue || 'AI could not determine the issue clearly.'}</div>
+                                            </div>
+                                            <div style="margin-bottom: 1rem;">
+                                                <div style="font-size: 0.9rem; color: #6b7280; margin-bottom: 0.25rem;">Recommended Repair:</div>
+                                                <div style="font-weight: 600; color: #1f2937;">${a.recommended_repair_type || 'Will be confirmed during diagnosis.'}</div>
+                                            </div>
+                                            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                                                ${a.estimated_cost_range ? `<span style="background:#dbeafe;color:#1e40af;padding:6px 12px;border-radius:999px;font-size:0.85rem;font-weight:600;"><i class="fas fa-money-bill-wave"></i> ${a.estimated_cost_range}</span>` : ''}
+                                                ${a.estimated_time ? `<span style="background:#e0e7ff;color:#4338ca;padding:6px 12px;border-radius:999px;font-size:0.85rem;font-weight:600;"><i class="fas fa-clock"></i> ${a.estimated_time}</span>` : ''}
+                                            </div>
+                                            ${urgencyBadge ? `<div style="margin-bottom: 1rem;">${urgencyBadge}</div>` : ''}
+                                            ${a.notes ? `<div style="padding: 0.75rem; background: #f9fafb; border-left: 3px solid #2563EB; border-radius: 4px; margin-top: 1rem;"><div style="font-size: 0.85rem; color: #4b5563;"><strong>Note:</strong> ${a.notes}</div></div>` : ''}
+                                        </div>
+                                    `,
+                                    icon: 'info',
+                                    confirmButtonColor: '#2563EB',
+                                    confirmButtonText: 'Got it!',
+                                    width: '600px'
+                                });
+                            }
+
+                            // **THEN: Display in the card below as before**
                             aiContent.innerHTML = `
                                 <div style="display:flex;flex-direction:column;gap:8px;">
                                     <div>

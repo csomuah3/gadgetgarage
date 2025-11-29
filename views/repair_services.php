@@ -553,7 +553,7 @@ try {
 
 			<div class="issues-grid">
 				<?php foreach ($issue_types as $issue): ?>
-					<div class="issue-card" onclick="goToSpecialist(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>')">
+					<div class="issue-card" onclick="selectIssue(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>')">
 						<div class="issue-icon">
 							<i class="<?php echo htmlspecialchars($issue['icon_class']); ?>"></i>
 						</div>
@@ -908,12 +908,15 @@ try {
 				card.style.border = '';
 			});
 
-			// Select current issue
-			if (event && event.currentTarget) {
-				event.currentTarget.classList.add('selected');
-				event.currentTarget.style.background = '#eff6ff';
-				event.currentTarget.style.border = '2px solid #2563EB';
-			}
+			// Select current issue - find the clicked card
+			const cards = document.querySelectorAll('.issue-card');
+			cards.forEach(card => {
+				if (card.onclick && card.onclick.toString().includes(`selectIssue(${issueId}`)) {
+					card.classList.add('selected');
+					card.style.background = '#eff6ff';
+					card.style.border = '2px solid #2563EB';
+				}
+			});
 
 			selectedIssue = issueId;
 			selectedIssueName = issueName;

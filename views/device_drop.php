@@ -189,20 +189,21 @@ try {
         }
 
         .form-container {
-            background: white;
+            background: linear-gradient(135deg, #dbeafe 0%, #eff6ff 100%);
             padding: 50px;
             border-radius: 20px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 10px 40px rgba(37, 99, 235, 0.15);
             max-width: 900px;
             margin: 0 auto;
+            border: 2px solid #bfdbfe;
         }
 
         .form-section {
             margin-bottom: 45px;
             padding: 35px;
-            background: #fafbfc;
+            background: rgba(255, 255, 255, 0.85);
             border-radius: 16px;
-            border: 1px solid #e5e7eb;
+            border: 2px solid #bfdbfe;
             transition: all 0.3s ease;
         }
 
@@ -234,9 +235,9 @@ try {
         }
 
         .section-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: #1f2937;
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: #1e3a8a;
             margin: 0;
             letter-spacing: -0.3px;
         }
@@ -247,10 +248,10 @@ try {
 
         .form-label {
             display: block;
-            font-weight: 600;
-            color: #374151;
+            font-weight: 700;
+            color: #1e3a8a;
             margin-bottom: 10px;
-            font-size: 0.95rem;
+            font-size: 1.1rem;
             letter-spacing: 0.2px;
         }
 
@@ -263,10 +264,11 @@ try {
         .form-select,
         .form-textarea {
             width: 100%;
-            padding: 14px 18px;
-            border: 2px solid #e5e7eb;
+            padding: 16px 20px;
+            border: 2px solid #93c5fd;
             border-radius: 10px;
-            font-size: 1rem;
+            font-size: 1.1rem;
+            font-weight: 500;
             transition: all 0.3s ease;
             background: white;
             color: #1f2937;
@@ -355,10 +357,10 @@ try {
         }
 
         .condition-title {
-            font-weight: 700;
-            color: #1f2937;
+            font-weight: 800;
+            color: #1e3a8a;
             margin-bottom: 8px;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             display: flex;
             align-items: center;
             gap: 8px;
@@ -384,8 +386,9 @@ try {
         }
 
         .condition-description {
-            font-size: 0.9rem;
-            color: #6b7280;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #374151;
             line-height: 1.6;
             margin-top: 8px;
         }
@@ -444,15 +447,16 @@ try {
         }
 
         .upload-text {
-            color: #374151;
+            color: #1e3a8a;
             margin-bottom: 10px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            font-weight: 700;
+            font-size: 1.25rem;
         }
 
         .upload-subtext {
-            font-size: 0.9rem;
-            color: #6b7280;
+            font-size: 1.05rem;
+            font-weight: 500;
+            color: #374151;
         }
 
         #imagePreview {
@@ -567,13 +571,16 @@ try {
         .checkbox-option {
             display: flex;
             align-items: center;
-            padding: 16px 18px;
-            border: 2px solid #e5e7eb;
+            padding: 18px 20px;
+            border: 2px solid #93c5fd;
             border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s ease;
             background: white;
             position: relative;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #1e3a8a;
         }
 
         .checkbox-option:hover {

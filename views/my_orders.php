@@ -130,21 +130,32 @@ function getOrderStatus($order_date) {
         .account-layout {
             display: flex;
             min-height: calc(100vh - 140px);
-            background: #f8fafc;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             position: relative;
             margin-top: 0;
         }
 
-        /* Account Sidebar Navigation */
+        /* Account Sidebar Navigation - Modern Minimalistic */
         .account-sidebar {
             width: 240px;
-            background: #f8fafc;
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
             border-right: 1px solid #e5e7eb;
             padding: 25px 0;
             position: sticky;
             top: 140px;
             height: fit-content;
-            box-shadow: none;
+            box-shadow: 2px 0 20px rgba(0, 0, 0, 0.04);
+            position: relative;
+        }
+
+        .account-sidebar::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
         }
 
         .sidebar-header {
@@ -161,16 +172,12 @@ function getOrderStatus($order_date) {
         }
 
         .sidebar-nav {
-            font-size: 20px;
-            font-weight: 600;
-            color: #1f2937;
-            margin: 0;
-            letter-spacing: -0.3px;
-        }
-
-        .sidebar-nav {
             padding: 0;
             list-style: none;
+            margin: 0;
+        }
+
+        .sidebar-nav li {
             margin: 0;
         }
 
@@ -178,27 +185,31 @@ function getOrderStatus($order_date) {
             display: flex;
             align-items: center;
             gap: 10px;
-            padding: 12px 20px;
+            padding: 16px 20px;
             margin: 2px 12px;
             color: #64748b;
             text-decoration: none;
-            border-radius: 8px;
+            border-radius: 12px;
             font-weight: 500;
-            font-size: 14px;
-            transition: all 0.2s ease;
+            font-size: 15px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             position: relative;
+            letter-spacing: -0.2px;
         }
 
         .nav-item:hover {
             background: #eff6ff;
             color: #2563EB;
             text-decoration: none;
+            transform: translateX(4px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
         }
 
         .nav-item.active {
-            background: #2563EB;
+            background: linear-gradient(135deg, #2563EB 0%, #1d4ed8 100%);
             color: #ffffff;
             font-weight: 600;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
         }
 
         .nav-item.active::before {
@@ -209,6 +220,13 @@ function getOrderStatus($order_date) {
             font-size: 15px;
             width: 18px;
             text-align: center;
+            background: rgba(37, 99, 235, 0.1);
+            padding: 8px;
+            border-radius: 8px;
+        }
+
+        .nav-item.active i {
+            background: rgba(255, 255, 255, 0.2);
         }
 
         .sign-out-item {
@@ -220,6 +238,15 @@ function getOrderStatus($order_date) {
         .sign-out-item:hover {
             background: #fee2e2;
             color: #dc2626;
+            transform: translateX(4px);
+        }
+
+        .sign-out-item i {
+            background: rgba(220, 38, 38, 0.1);
+        }
+
+        .sign-out-item:hover i {
+            background: rgba(220, 38, 38, 0.2);
         }
 
         /* Main Content */
@@ -289,16 +316,17 @@ function getOrderStatus($order_date) {
             margin: 0;
         }
 
-        /* Order Cards */
+        /* Order Cards - Modern Enhanced */
         .order-card {
             background: #ffffff;
-            border-radius: 12px;
+            border-radius: 16px;
             padding: 24px;
             border: 1px solid #e5e7eb;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             max-width: 100%;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
         }
 
         .order-card::before {
@@ -309,16 +337,17 @@ function getOrderStatus($order_date) {
             width: 4px;
             height: 100%;
             background: #e5e7eb;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .order-card:hover {
-            border-color: #2563EB;
-            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+            border-color: #4F46E5;
+            box-shadow: 0 8px 24px rgba(79, 70, 229, 0.12);
+            transform: translateY(-2px);
         }
 
         .order-card:hover::before {
-            background: #2563EB;
+            background: linear-gradient(180deg, #4F46E5 0%, #7C3AED 100%);
         }
 
         .order-status {
@@ -340,8 +369,8 @@ function getOrderStatus($order_date) {
         }
 
         .order-status.shipped {
-            color: #2563EB;
-            background: #dbeafe;
+            color: #4F46E5;
+            background: #E0E7FF;
         }
 
         .order-status.out-for-delivery {
@@ -360,24 +389,26 @@ function getOrderStatus($order_date) {
             margin-bottom: 18px;
             flex-wrap: wrap;
             padding: 12px;
-            background: #f8fafc;
-            border-radius: 8px;
+            background: #ffffff;
+            border-radius: 10px;
+            border: 1px solid #f1f5f9;
         }
 
         .order-image {
             width: 70px;
             height: 70px;
             background: #ffffff;
-            border-radius: 8px;
+            border-radius: 10px;
             overflow: hidden;
             border: 1px solid #e5e7eb;
             flex-shrink: 0;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .order-image:hover {
-            transform: scale(1.05);
-            border-color: #2563EB;
+            transform: scale(1.08);
+            border-color: #4F46E5;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
         }
 
         .order-image img {
@@ -429,10 +460,10 @@ function getOrderStatus($order_date) {
             min-width: 90px;
             padding: 10px 16px;
             border: none;
-            border-radius: 8px;
+            border-radius: 10px;
             font-weight: 600;
             font-size: 0.875rem;
-            transition: all 0.2s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -441,49 +472,57 @@ function getOrderStatus($order_date) {
         }
 
         .details-btn {
-            background: #f3f4f6;
-            color: #374151;
+            background: #E0E7FF;
+            color: #4F46E5;
         }
 
         .details-btn:hover {
-            background: #e5e7eb;
-            color: #1f2937;
+            background: #C7D2FE;
+            color: #4338CA;
         }
 
         .track-btn {
-            background: #2563EB;
+            background: #4F46E5;
             color: white;
         }
 
         .track-btn:hover {
-            background: #1d4ed8;
+            background: #4338CA;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
         }
 
         .refund-btn {
-            background: #f59e0b;
+            background: #8B5CF6;
             color: white;
         }
 
         .refund-btn:hover {
-            background: #d97706;
+            background: #7C3AED;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.3);
         }
 
         .rate-btn {
-            background: #000000;
+            background: #10B981;
             color: white;
         }
 
         .rate-btn:hover {
-            background: #333333;
+            background: #059669;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         .cancel-order-btn {
-            background: #ef4444;
+            background: #F43F5E;
             color: white;
         }
 
         .cancel-order-btn:hover {
-            background: #dc2626;
+            background: #E11D48;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244, 63, 94, 0.3);
         }
 
         .cancel-order-btn:disabled {

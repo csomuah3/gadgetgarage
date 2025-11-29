@@ -202,7 +202,7 @@ try {
         /* Header styles now imported from header-styles.css */
 
         .btn-back {
-            background: #64748b;
+            background: #001f3f;
             color: white;
             border: none;
             padding: 10px 20px;
@@ -212,10 +212,11 @@ try {
             display: inline-flex;
             align-items: center;
             gap: 8px;
+            margin-left: auto;
         }
 
         .btn-back:hover {
-            background: #475569;
+            background: #001a33;
             color: white;
             transform: translateY(-1px);
         }
@@ -751,12 +752,7 @@ try {
     <div class="bg-decoration bg-decoration-1"></div>
     <div class="bg-decoration bg-decoration-2"></div>
         <div class="container">
-            <div class="d-flex justify-content-between align-items-center">
-                <a href="../index.php" class="logo">
-                    <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                         alt="Gadget Garage"
-                         style="height: 40px; width: auto; object-fit: contain;">
-                </a>
+            <div class="d-flex justify-content-end align-items-center">
                 <a href="repair_specialist.php?issue_id=<?php echo $issue_id; ?>&issue_name=<?php echo urlencode($issue_name); ?>" class="btn-back">
                     <i class="fas fa-arrow-left"></i>
                     Back to Specialists

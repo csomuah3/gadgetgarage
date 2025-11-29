@@ -200,6 +200,92 @@ class AIHelper {
             throw new Exception("Failed to generate description: " . $e->getMessage());
         }
     }
+    
+    /**
+     * Get AI-powered product recommendations
+     * Analyzes user context and suggests relevant products
+     */
+    public function getProductRecommendations($all_products, $user_context = []) {
+        if (empty($all_products)) {
+            return [];
+        }
+        
+        // Build context information
+        $context_info = "Customer Context:\n";
+        
+        if (!empty($user_context['cart_items'])) {
+            $context_info .= "- Items in cart: " . implode(', ', array_column($user_context['cart_items'], 'product_title')) . "\n";
+        }
+        
+        if (!empty($user_context['wishlist_items'])) {
+            $context_info .= "- Wishlist items: " . implode(', ', array_column($user_context['wishlist_items'], 'product_title')) . "\n";
+        }
+        
+        if (!empty($user_context['viewed_products'])) {
+            $context_info .= "- Recently viewed: " . implode(', ', array_slice($user_context['viewed_products'], 0, 5)) . "\n";
+        }
+        
+        if (!empty($user_context['current_product'])) {
+            $context_info .= "- Currently viewing: {$user_context['current_product']['product_title']}\n";
+        }
+        
+        if (empty($context_info) || $context_info === "Customer Context:\n") {
+            $context_info = "New customer with no browsing history.\n";
+        }
+        
+        // Limit products for analysis (too many would be expensive)
+        $products_to_analyze = array_slice($all_products, 0, 50);
+        
+        $prompt = "You are a product recommendation engine for an e-commerce site called 'Gadget Garage' that sells tech products.\n\n";
+        $prompt .= $context_info . "\n";
+        $prompt .= "Available Products (showing sample):\n\n";
+        
+        foreach (array_slice($products_to_analyze, 0, 20) as $index => $product) {
+            $prompt .= ($index + 1) . ". {$product['product_title']} - GH₵" . number_format($product['product_price'], 2) . "\n";
+            $prompt .= "   Brand: {$product['brand_name']}, Category: {$product['cat_name']}\n";
+            $prompt .= "   " . substr($product['product_desc'], 0, 100) . "...\n\n";
+        }
+        
+        $prompt .= "Based on the customer's context, recommend 6 products that would be most relevant and appealing.\n";
+        $prompt .= "Return ONLY a comma-separated list of product titles (exactly as they appear above), nothing else.\n";
+        $prompt .= "Example format: iPhone 15 Pro, Samsung Galaxy S24, MacBook Pro 14\"\n";
+        $prompt .= "Focus on products that complement what they're interested in or similar quality/price range.";
+        
+        try {
+            $response = $this->callOpenAI($prompt, 200);
+            $recommended_titles = array_map('trim', explode(',', $response));
+            
+            // Find matching products
+            $recommended_products = [];
+            foreach ($recommended_titles as $title) {
+                foreach ($all_products as $product) {
+                    if (stripos($product['product_title'], $title) !== false || stripos($title, $product['product_title']) !== false) {
+                        if (!in_array($product['product_id'], array_column($recommended_products, 'product_id'))) {
+                            $recommended_products[] = $product;
+                            if (count($recommended_products) >= 6) break 2;
+                        }
+                    }
+                }
+            }
+            
+            // If AI didn't return enough, fill with random products
+            if (count($recommended_products) < 6) {
+                $remaining = 6 - count($recommended_products);
+                $available = array_filter($all_products, function($p) use ($recommended_products) {
+                    return !in_array($p['product_id'], array_column($recommended_products, 'product_id'));
+                });
+                shuffle($available);
+                $recommended_products = array_merge($recommended_products, array_slice($available, 0, $remaining));
+            }
+            
+            return array_slice($recommended_products, 0, 6);
+        } catch (Exception $e) {
+            error_log("AI Recommendation Error: " . $e->getMessage());
+            // Fallback: return random products
+            shuffle($all_products);
+            return array_slice($all_products, 0, 6);
+        }
+    }
 }
 ?>
 

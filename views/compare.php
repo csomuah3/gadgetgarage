@@ -1,4 +1,7 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
+
 require_once(__DIR__ . '/../settings/core.php');
 require_once(__DIR__ . '/../controllers/compare_controller.php');
 require_once(__DIR__ . '/../controllers/cart_controller.php');
@@ -57,6 +60,7 @@ $user_name = $_SESSION['name'] ?? 'User';
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -69,7 +73,7 @@ $user_name = $_SESSION['name'] ?? 'User';
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        
+
         * {
             margin: 0;
             padding: 0;
@@ -120,7 +124,7 @@ $user_name = $_SESSION['name'] ?? 'User';
             right: -10%;
             width: 300px;
             height: 300px;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, transparent 70%);
             border-radius: 50%;
         }
 
@@ -168,17 +172,28 @@ $user_name = $_SESSION['name'] ?? 'User';
             z-index: 1;
         }
 
-        .ai-content h1, .ai-content h2, .ai-content h3 {
+        .ai-content h1,
+        .ai-content h2,
+        .ai-content h3 {
             color: #1e3a8a;
             margin-top: 20px;
             margin-bottom: 10px;
         }
 
-        .ai-content h1 { font-size: 1.6rem; }
-        .ai-content h2 { font-size: 1.4rem; }
-        .ai-content h3 { font-size: 1.2rem; }
+        .ai-content h1 {
+            font-size: 1.6rem;
+        }
 
-        .ai-content ul, .ai-content ol {
+        .ai-content h2 {
+            font-size: 1.4rem;
+        }
+
+        .ai-content h3 {
+            font-size: 1.2rem;
+        }
+
+        .ai-content ul,
+        .ai-content ol {
             margin-left: 20px;
             margin-bottom: 15px;
         }
@@ -205,8 +220,13 @@ $user_name = $_SESSION['name'] ?? 'User';
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Comparison Table */
@@ -394,7 +414,7 @@ $user_name = $_SESSION['name'] ?? 'User';
                 border-right: none;
                 border-bottom: 1px solid #e5e7eb;
             }
-            
+
             .product-column:last-child {
                 border-bottom: none;
             }
@@ -422,7 +442,7 @@ $user_name = $_SESSION['name'] ?? 'User';
                             <p class="ai-subtitle">Intelligent insights powered by OpenAI</p>
                         </div>
                     </div>
-                    
+
                     <div class="ai-content" id="aiContent">
                         <?php if (!empty($ai_analysis)): ?>
                             <div id="analysisText"></div>
@@ -450,7 +470,7 @@ $user_name = $_SESSION['name'] ?? 'User';
                 <!-- Comparison Table -->
                 <div class="comparison-table">
                     <div class="row g-0">
-                        <?php foreach ($compare_products as $product): 
+                        <?php foreach ($compare_products as $product):
                             $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
                         ?>
                             <div class="col-lg-<?php echo $compare_count == 2 ? '6' : ($compare_count == 3 ? '4' : '3'); ?> col-md-6">
@@ -458,17 +478,17 @@ $user_name = $_SESSION['name'] ?? 'User';
                                     <div class="product-image-wrapper">
                                         <img src="<?= htmlspecialchars($product_image_url) ?>" alt="<?= htmlspecialchars($product['product_title']) ?>">
                                     </div>
-                                    
+
                                     <h3 class="product-name"><?= htmlspecialchars($product['product_title']) ?></h3>
                                     <div class="product-price">GH₵<?= number_format($product['product_price'], 2) ?></div>
-                                    
+
                                     <span class="product-brand"><?= htmlspecialchars($product['brand_name']) ?></span>
                                     <span class="product-category"><?= htmlspecialchars($product['cat_name']) ?></span>
-                                    
+
                                     <div class="product-description">
                                         <?= nl2br(htmlspecialchars(substr($product['product_desc'], 0, 200))) ?>...
                                     </div>
-                                    
+
                                     <div class="product-actions">
                                         <a href="single_product.php?pid=<?= $product['product_id'] ?>" class="btn-view">
                                             <i class="fas fa-eye"></i> View Details
@@ -511,32 +531,32 @@ $user_name = $_SESSION['name'] ?? 'User';
             }).then((result) => {
                 if (result.isConfirmed) {
                     fetch('../actions/remove_from_compare.php', {
-                        method: 'POST',
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded',
-                        },
-                        body: 'product_id=' + productId
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.status === 'success') {
-                            Swal.fire({
-                                icon: 'success',
-                                title: 'Removed!',
-                                text: data.message,
-                                timer: 1500,
-                                showConfirmButton: false
-                            }).then(() => {
-                                location.reload();
-                            });
-                        } else {
-                            Swal.fire('Error', data.message, 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error:', error);
-                        Swal.fire('Error', 'Failed to remove product', 'error');
-                    });
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded',
+                            },
+                            body: 'product_id=' + productId
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                Swal.fire({
+                                    icon: 'success',
+                                    title: 'Removed!',
+                                    text: data.message,
+                                    timer: 1500,
+                                    showConfirmButton: false
+                                }).then(() => {
+                                    location.reload();
+                                });
+                            } else {
+                                Swal.fire('Error', data.message, 'error');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error:', error);
+                            Swal.fire('Error', 'Failed to remove product', 'error');
+                        });
                 }
             });
         }
@@ -556,7 +576,7 @@ $user_name = $_SESSION['name'] ?? 'User';
                     <?php foreach ($compare_products as $product): ?>
                         removeFromCompareQuiet(<?= $product['product_id'] ?>);
                     <?php endforeach; ?>
-                    
+
                     setTimeout(() => {
                         location.reload();
                     }, 500);
@@ -575,5 +595,5 @@ $user_name = $_SESSION['name'] ?? 'User';
         }
     </script>
 </body>
-</html>
 
+</html>

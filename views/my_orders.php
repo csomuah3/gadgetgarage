@@ -929,72 +929,81 @@ function getOrderStatus($order_date) {
 
         /* Account Sidebar Navigation */
         .account-sidebar {
-            width: 280px;
-            background: #ffffff;
-            border-right: 1px solid #e2e8f0;
-            padding: 40px 0;
+            width: 240px;
+            background: #f8fafc;
+            border-right: 1px solid #e5e7eb;
+            padding: 25px 0;
             position: sticky;
             top: 140px;
             height: fit-content;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            box-shadow: none;
+        }
+
+        .sidebar-header {
+            padding: 0 20px 25px;
+            margin-bottom: 15px;
+        }
+
+        .sidebar-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+            letter-spacing: -0.3px;
         }
 
         .sidebar-nav {
-            padding: 0 20px;
+            padding: 0;
+            list-style: none;
+            margin: 0;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 16px;
-            padding: 16px 20px;
-            margin-bottom: 8px;
-            color: #4a5568;
+            gap: 10px;
+            padding: 12px 20px;
+            margin: 2px 12px;
+            color: #64748b;
             text-decoration: none;
-            border-radius: 12px;
+            border-radius: 8px;
             font-weight: 500;
-            font-size: 16px;
-            transition: all 0.3s ease;
+            font-size: 14px;
+            transition: all 0.2s ease;
             position: relative;
         }
 
         .nav-item:hover {
-            background: #f7fafc;
-            color: #2d3748;
+            background: #eff6ff;
+            color: #2563EB;
             text-decoration: none;
         }
 
         .nav-item.active {
-            background: #edf2f7;
-            color: #2d3748;
+            background: #2563EB;
+            color: #ffffff;
             font-weight: 600;
         }
 
         .nav-item.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 4px;
-            background: #3182ce;
-            border-radius: 0 2px 2px 0;
+            display: none;
         }
 
         .nav-item i {
-            font-size: 1.1rem;
-            width: 20px;
+            font-size: 15px;
+            width: 18px;
+            text-align: center;
         }
 
         .sign-out-item {
-            background: #fed7d7;
-            color: #c53030;
-            margin-top: 20px;
+            background: transparent;
+            color: #64748b;
+            margin-top: 8px;
         }
 
         .sign-out-item:hover {
-            background: #feb2b2;
-            color: #9b2c2c;
+            background: #fee2e2;
+            color: #dc2626;
         }
 
         /* Main Content */
@@ -1551,6 +1560,22 @@ function getOrderStatus($order_date) {
 
 <body>
     <?php include '../includes/header.php'; ?>
+    
+    <!-- Account Layout -->
+    <div class="account-layout">
+        <!-- Account Sidebar -->
+        <aside class="account-sidebar">
+            <div class="sidebar-header">
+                <h2 class="sidebar-title">My Account</h2>
+            </div>
+            <ul class="sidebar-nav">
+                <li><a href="account.php"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
+                <li><a href="my_orders.php" class="active"><i class="fas fa-box"></i>My Orders</a></li>
+                <li><a href="wishlist.php"><i class="fas fa-heart"></i>My Wishlist</a></li>
+                <li><a href="compare.php"><i class="fas fa-balance-scale"></i>Compare</a></li>
+                <li><a href="help_center.php"><i class="fas fa-question-circle"></i>Help Center</a></li>
+                <li><a href="../login/logout.php" class="sign-out-item"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
+            </ul>
         </aside>
 
         <!-- Main Content -->

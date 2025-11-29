@@ -82,8 +82,26 @@ try {
 
     // Check if a refund request already exists for this order
     $db = new db_connection();
-    $check_sql = "SELECT refund_id FROM refund_requests WHERE order_id = ? AND customer_id = ?";
-    $existing_refund = $db->db_fetch_one($check_sql, [$order_reference, $customer_id]);
+    if (!$db->db_connect()) {
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Database connection failed'
+        ]);
+        exit();
+    }
+
+    // Escape all inputs
+    $order_reference_escaped = mysqli_real_escape_string($db->db_conn(), $order_reference);
+    $customer_id_escaped = mysqli_real_escape_string($db->db_conn(), $customer_id);
+    $first_name_escaped = mysqli_real_escape_string($db->db_conn(), $first_name);
+    $last_name_escaped = mysqli_real_escape_string($db->db_conn(), $last_name);
+    $email_escaped = mysqli_real_escape_string($db->db_conn(), $email);
+    $phone_escaped = mysqli_real_escape_string($db->db_conn(), $phone);
+    $reason_escaped = mysqli_real_escape_string($db->db_conn(), $reason);
+    $refund_amount_escaped = $refund_amount !== null ? floatval($refund_amount) : 'NULL';
+
+    $check_sql = "SELECT refund_id FROM refund_requests WHERE order_id = '$order_reference_escaped' AND customer_id = '$customer_id_escaped'";
+    $existing_refund = $db->db_fetch_one($check_sql);
 
     if ($existing_refund) {
         echo json_encode([
@@ -94,6 +112,7 @@ try {
     }
 
     // Insert refund request
+    $refund_amount_value = $refund_amount_escaped !== 'NULL' ? "'$refund_amount_escaped'" : 'NULL';
     $insert_sql = "INSERT INTO refund_requests (
         order_id,
         customer_id,
@@ -104,24 +123,23 @@ try {
         refund_amount,
         reason_for_refund,
         request_date
-    ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, NOW())";
+    ) VALUES (
+        '$order_reference_escaped',
+        '$customer_id_escaped',
+        '$first_name_escaped',
+        '$last_name_escaped',
+        '$email_escaped',
+        '$phone_escaped',
+        $refund_amount_value,
+        '$reason_escaped',
+        NOW()
+    )";
 
-    $params = [
-        $order_reference,
-        $customer_id,
-        $first_name,
-        $last_name,
-        $email,
-        $phone,
-        $refund_amount,
-        $reason
-    ];
-
-    $result = $db->db_query($insert_sql, $params);
+    $result = $db->db_write_query($insert_sql);
 
     if ($result) {
         // Get the refund ID
-        $refund_id = $db->get_insert_id();
+        $refund_id = $db->last_insert_id();
 
         // Format refund ID with prefix
         $formatted_refund_id = "REF" . str_pad($refund_id, 6, '0', STR_PAD_LEFT);

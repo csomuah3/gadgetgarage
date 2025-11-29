@@ -61,6 +61,28 @@ $rating_filter = $filter_values['rating'];
 $all_products_for_recommendations = get_all_products_ctr();
 shuffle($all_products_for_recommendations);
 $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
+
+if (!function_exists('generate_product_highlights')) {
+    function generate_product_highlights($product)
+    {
+        $brand = isset($product['brand_name']) && $product['brand_name'] ? $product['brand_name'] : 'GadgetGarage';
+        $category = isset($product['cat_name']) && $product['cat_name'] ? strtolower($product['cat_name']) : 'tech';
+        $price = isset($product['product_price']) ? number_format($product['product_price'], 0) : null;
+        $title = isset($product['product_title']) ? $product['product_title'] : 'this device';
+
+        $highlight_pool = [
+            "$brand reliability engineered for everyday confidence",
+            "Optimized for $category power-users who need speed",
+            "Smart sensors inside $title keep performance seamless",
+            "Energy-efficient design helps $title stay cool and quiet",
+            "Premium materials built to handle busy workdays",
+            $price ? "Flexible plans make GH₵{$price} easier to own" : "Flexible installment options available"
+        ];
+
+        shuffle($highlight_pool);
+        return array_slice(array_unique($highlight_pool), 0, 2);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -1178,40 +1200,133 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 20px;
+            grid-template-columns: repeat(4, minmax(0, 1fr));
+            gap: 24px;
             margin-bottom: 50px;
             width: 100%;
             padding: 0;
         }
-        
+
         .modern-product-card {
             width: 100%;
             min-width: 0;
             max-width: 100%;
+            border-radius: 30px;
+            border: 1px solid #e5e7eb;
+            background: #ffffff;
+            box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+            transition: transform 0.35s ease, box-shadow 0.35s ease;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
         }
-        
+
+        .modern-product-card:hover {
+            transform: translateY(-12px) scale(1.01);
+            box-shadow: 0 24px 60px rgba(15, 23, 42, 0.15);
+        }
+
+        .modern-product-card .product-image-container {
+            padding: 28px;
+            text-align: center;
+            height: 260px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: #f5f7ff;
+            position: relative;
+        }
+
+        .product-card-body {
+            padding: 26px 30px 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            flex: 1;
+        }
+
+        .product-highlights {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .product-highlights li {
+            display: flex;
+            gap: 8px;
+            font-size: 0.92rem;
+            color: #4b5563;
+            line-height: 1.35;
+        }
+
+        .product-highlights li::before {
+            content: '•';
+            color: #22c55e;
+            font-weight: bold;
+        }
+
+        .customer-activity-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(99, 102, 241, 0.12);
+            color: #4338ca;
+            padding: 10px 16px;
+            border-radius: 999px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            animation: pillPulse 6s ease-in-out infinite;
+        }
+
+        @keyframes pillPulse {
+            0% {
+                transform: translateY(0);
+                opacity: 0.85;
+            }
+
+            50% {
+                transform: translateY(-4px);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(0);
+                opacity: 0.85;
+            }
+        }
+
         #productContent {
             padding-left: 15px;
             padding-right: 0;
         }
-        
+
         .container-fluid {
             max-width: 100%;
             padding-left: 20px;
             padding-right: 20px;
         }
-        
-        @media (max-width: 1400px) {
+
+        @media (max-width: 1600px) {
             .product-grid {
-                gap: 15px;
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 20px;
             }
         }
-        
+
         @media (max-width: 1200px) {
             .product-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 15px;
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 18px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .product-grid {
+                grid-template-columns: 1fr;
+                gap: 18px;
             }
         }
 
@@ -2104,22 +2219,24 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                     <?php else: ?>
                         <div class="product-grid" id="productGrid">
                             <?php foreach ($products_to_display as $product):
-                                // Calculate random discount percentage (13% shown in your example)
                                 $discount_percentage = rand(10, 25);
                                 $original_price = $product['product_price'] * (1 + $discount_percentage / 100);
-                                $rating = round(rand(40, 50) / 10, 1); // Random rating between 4.0-5.0
+                                $rating = round(rand(40, 50) / 10, 1);
+                                $highlights = generate_product_highlights($product);
+                                $show_customer_activity = rand(1, 3) === 1;
+                                $activity_message = '';
+                                if ($show_customer_activity) {
+                                    $activities = [
+                                        rand(2, 8) . ' people have this on their wishlist',
+                                        rand(1, 5) . ' shoppers added this today',
+                                        rand(3, 12) . ' customers watching this deal',
+                                        rand(2, 6) . ' people comparing this model',
+                                        rand(1, 4) . ' orders confirmed this hour'
+                                    ];
+                                    $activity_message = $activities[array_rand($activities)];
+                                }
                             ?>
-                                <div class="modern-product-card" style="
-                                    background: white;
-                                    border-radius: 16px;
-                                    border: 1px solid #e5e7eb;
-                                    overflow: visible;
-                                    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-                                    cursor: pointer;
-                                    position: relative;
-                                    transform-origin: center;
-                                " onmouseover="this.style.boxShadow='0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04)';"
-                                    onmouseout="this.style.boxShadow='0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)';">
+                                <div class="modern-product-card">
 
 
                                     <!-- Discount Badge -->
@@ -2160,7 +2277,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                                     </div>
 
                                     <!-- Product Image -->
-                                    <div class="product-image-container" style="padding: 20px; text-align: center; height: 200px; display: flex; align-items: center; justify-content: center; background: #f9fafb; overflow: hidden; position: relative;">
+                                    <div class="product-image-container">
                                         <?php
                                         $image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? 'Product');
                                         $fallback_url = generate_placeholder_url($product['product_title'] ?? 'Product', '400x300');
@@ -2171,44 +2288,10 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                                             style="max-width: 100%; max-height: 100%; object-fit: contain; transition: transform 0.3s ease;"
                                             onerror="this.onerror=null; this.src='<?php echo htmlspecialchars($fallback_url); ?>';">
 
-                                        <!-- Customer Activity Popup - Now inside image frame -->
-                                        <?php if (rand(1, 3) === 1): // Show on 33% of cards only 
-                                        ?>
-                                            <div class="customer-activity-popup" style="
-                                            position: absolute;
-                                            bottom: 12px;
-                                            left: 50%;
-                                            transform: translateX(-50%);
-                                            background: rgba(59, 130, 246, 0.9);
-                                            color: white;
-                                            padding: 8px 16px;
-                                            border-radius: 25px;
-                                            font-size: 0.7rem;
-                                            font-weight: 600;
-                                            z-index: 20;
-                                            opacity: 0;
-                                            animation: popupFade 6s ease-in-out infinite;
-                                            white-space: nowrap;
-                                            pointer-events: none;
-                                            animation-delay: <?php echo rand(1, 15); ?>s;
-                                        ">
-                                                <?php
-                                                $activities = [
-                                                    rand(2, 8) . ' customers viewing this',
-                                                    rand(1, 5) . ' customers added to cart',
-                                                    rand(3, 12) . ' customers wishlisted this',
-                                                    rand(1, 4) . ' customers bought recently',
-                                                    rand(5, 15) . ' customers interested',
-                                                    rand(2, 6) . ' customers comparing this'
-                                                ];
-                                                echo $activities[array_rand($activities)];
-                                                ?>
-                                            </div>
-                                        <?php endif; ?>
                                     </div>
 
                                     <!-- Product Content -->
-                                    <div style="padding: 28px 30px; min-height: 200px; overflow: visible;">
+                                    <div class="product-card-body">
                                         <!-- Product Title -->
                                         <h3 style="color: #1f2937; font-size: 1.3rem; font-weight: 700; margin-bottom: 8px; line-height: 1.4; cursor: pointer;" onclick="viewProductDetails(<?php echo $product['product_id']; ?>)">
                                             <?php echo htmlspecialchars($product['product_title']); ?>
@@ -2237,6 +2320,14 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                                             <span style="color: #6b7280; font-size: 0.9rem; font-weight: 600;">(<?php echo $rating; ?>)</span>
                                         </div>
 
+                                        <?php if (!empty($highlights)): ?>
+                                            <ul class="product-highlights">
+                                                <?php foreach ($highlights as $highlight): ?>
+                                                    <li><?php echo htmlspecialchars($highlight); ?></li>
+                                                <?php endforeach; ?>
+                                            </ul>
+                                        <?php endif; ?>
+
                                         <!-- Stock Status - Only show if out of stock -->
                                         <?php
                                         $stock_quantity = isset($product['stock_quantity']) ? intval($product['stock_quantity']) : 10;
@@ -2246,6 +2337,13 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                                                 <span style="background: #ef4444; color: white; padding: 6px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
                                                     <i class="fas fa-times-circle" style="margin-right: 4px;"></i>Out of Stock
                                                 </span>
+                                            </div>
+                                        <?php endif; ?>
+
+                                        <?php if ($show_customer_activity): ?>
+                                            <div class="customer-activity-pill">
+                                                <i class="fas fa-eye"></i>
+                                                <span><?php echo htmlspecialchars($activity_message); ?></span>
                                             </div>
                                         <?php endif; ?>
 

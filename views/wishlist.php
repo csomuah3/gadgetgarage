@@ -687,7 +687,8 @@ if ($is_logged_in) {
             }
         });
 
-        function removeFromWishlist(productId, button) {
+        // Remove from Wishlist Function (Make globally available)
+        window.removeFromWishlist = function(productId, button) {
             fetch('../actions/remove_from_wishlist.php', {
                     method: 'POST',
                     headers: {

@@ -119,6 +119,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
+    <link href="../css/product-card.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
 

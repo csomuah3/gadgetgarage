@@ -507,9 +507,6 @@ try {
 	<!-- Reusable Header Component -->
 	<?php include '../includes/header.php'; ?>
 
-	<!-- Page Title -->
-	<h1 class="page-title">Device Repair Services</h1>
-
 	<!-- Hero Section -->
 	<section class="hero-section">
 		<div class="container">

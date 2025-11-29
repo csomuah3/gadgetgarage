@@ -1424,19 +1424,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             gap: 32px;
         }
 
-        .nav-item {
-            color: #1f2937;
-            text-decoration: none;
-            font-weight: 500;
-            font-size: 1rem;
-            padding: 12px 0;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .nav-item:hover {
-            color: #008060;
-        }
+        /* Navigation items - let header.css handle styling */
 
         .shop-categories-btn {
             position: relative;
@@ -1461,14 +1449,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             background: #3d4fd1;
         }
 
-        .nav-item.flash-deal {
-            color: #ef4444;
-            font-weight: 600;
-        }
-
-        .nav-item.flash-deal:hover {
-            color: #dc2626;
-        }
+        /* Flash deal - let header.css handle styling */
 
         .hero-actions .btn {
             border-radius: 12px;

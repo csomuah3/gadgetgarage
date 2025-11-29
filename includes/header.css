@@ -648,7 +648,8 @@ body.dark-mode .simple-dropdown ul li a:hover {
 .nav-item {
     color: #1f2937;
     text-decoration: none;
-    font-weight: 600;
+    font-weight: 600 !important;
+    font-size: 1.3rem !important;
     padding: 16px 20px;
     display: flex;
     align-items: center;

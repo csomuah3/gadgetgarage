@@ -329,7 +329,7 @@ foreach ($refund_trend_rows as $row) {
                                     <th>Customer</th>
                                     <th>Amount (GH₵)</th>
                                     <th>Requested</th>
-                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -341,7 +341,17 @@ foreach ($refund_trend_rows as $row) {
                                         <td><?= number_format((float)$refund['refund_amount'], 2) ?></td>
                                         <td><?= htmlspecialchars($refund['request_date']) ?></td>
                                         <td>
-                                            <span class="status-badge status-pending">Pending</span>
+                                            <div class="d-flex gap-2">
+                                                <button class="btn btn-success btn-sm" onclick="updateRefundStatus(<?= (int)$refund['refund_id'] ?>, 'approved')" title="Approve Refund">
+                                                    <i class="fas fa-check"></i>
+                                                </button>
+                                                <button class="btn btn-danger btn-sm" onclick="updateRefundStatus(<?= (int)$refund['refund_id'] ?>, 'rejected')" title="Reject Refund">
+                                                    <i class="fas fa-times"></i>
+                                                </button>
+                                                <button class="btn btn-info btn-sm" onclick="viewRefundDetails(<?= (int)$refund['refund_id'] ?>)" title="View Details">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                            </div>
                                         </td>
                                     </tr>
                                 <?php endforeach; ?>
@@ -484,6 +494,131 @@ foreach ($refund_trend_rows as $row) {
             });
         }
     });
+
+    // Refund Status Update Functions
+    async function updateRefundStatus(refundId, status) {
+        const confirmMessage = status === 'approved'
+            ? 'Are you sure you want to APPROVE this refund?'
+            : 'Are you sure you want to REJECT this refund?';
+
+        if (!confirm(confirmMessage)) {
+            return;
+        }
+
+        // Get admin notes if rejecting
+        let adminNotes = '';
+        if (status === 'rejected') {
+            adminNotes = prompt('Please provide a reason for rejection (optional):');
+            if (adminNotes === null) return; // User cancelled
+        }
+
+        try {
+            const response = await fetch('actions/update_refund_status.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    refund_id: refundId,
+                    status: status,
+                    admin_notes: adminNotes
+                })
+            });
+
+            const result = await response.json();
+
+            if (result.status === 'success') {
+                alert('Refund status updated successfully!');
+                location.reload(); // Refresh the page to show updated data
+            } else {
+                alert('Error: ' + result.message);
+            }
+        } catch (error) {
+            alert('Error updating refund status: ' + error.message);
+        }
+    }
+
+    function viewRefundDetails(refundId) {
+        // Find the refund data
+        const refunds = <?= json_encode($pending_refunds_list) ?>;
+        const refund = refunds.find(r => parseInt(r.refund_id) === refundId);
+
+        if (!refund) {
+            alert('Refund not found');
+            return;
+        }
+
+        // Create modal content
+        const modalContent = `
+            <div class="modal fade" id="refundModal" tabindex="-1">
+                <div class="modal-dialog modal-lg">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title">Refund Request Details - #${refund.refund_id}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                        </div>
+                        <div class="modal-body">
+                            <div class="row g-3">
+                                <div class="col-md-6">
+                                    <strong>Order ID:</strong><br>
+                                    ${refund.order_id}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Customer:</strong><br>
+                                    ${refund.first_name} ${refund.last_name}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Email:</strong><br>
+                                    ${refund.email}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Phone:</strong><br>
+                                    ${refund.phone}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Refund Amount:</strong><br>
+                                    GH₵${parseFloat(refund.refund_amount).toFixed(2)}
+                                </div>
+                                <div class="col-md-6">
+                                    <strong>Request Date:</strong><br>
+                                    ${refund.request_date}
+                                </div>
+                                <div class="col-12">
+                                    <strong>Reason for Refund:</strong><br>
+                                    <div class="p-2 bg-light rounded">${refund.reason_for_refund}</div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" onclick="updateRefundStatus(${refund.refund_id}, 'approved')">
+                                <i class="fas fa-check me-2"></i>Approve Refund
+                            </button>
+                            <button type="button" class="btn btn-danger" onclick="updateRefundStatus(${refund.refund_id}, 'rejected')">
+                                <i class="fas fa-times me-2"></i>Reject Refund
+                            </button>
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Remove existing modal if any
+        const existingModal = document.getElementById('refundModal');
+        if (existingModal) {
+            existingModal.remove();
+        }
+
+        // Add modal to body and show
+        document.body.insertAdjacentHTML('beforeend', modalContent);
+        const modal = new bootstrap.Modal(document.getElementById('refundModal'));
+        modal.show();
+
+        // Clean up modal after it's hidden
+        document.getElementById('refundModal').addEventListener('hidden.bs.modal', function() {
+            this.remove();
+        });
+    }
 </script>
 
 

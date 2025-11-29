@@ -1229,7 +1229,7 @@ if (!function_exists('generate_product_highlights')) {
         .modern-product-card .product-image-container {
             padding: 28px;
             text-align: center;
-            height: 260px;
+            height: 320px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -2251,11 +2251,11 @@ if (!function_exists('generate_product_highlights')) {
                                         <!-- Compare Button -->
                                         <button onclick="event.stopPropagation(); addToCompare(<?php echo $product['product_id']; ?>, '<?php echo htmlspecialchars($product['product_title']); ?>')"
                                             class="compare-btn"
-                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
                                             onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
                                             onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';"
                                             title="Add to Compare">
-                                            <i class="fas fa-balance-scale" style="color: #2563eb; font-size: 14px;"></i>
+                                            <i class="fas fa-balance-scale" style="color: #2563eb; font-size: 18px;"></i>
                                         </button>
                                         
                                         <!-- Wishlist Heart -->
@@ -2269,10 +2269,10 @@ if (!function_exists('generate_product_highlights')) {
                                         ?>
                                         <button onclick="event.stopPropagation(); toggleWishlist(<?php echo $product['product_id']; ?>, this)"
                                             class="<?php echo $btn_class; ?>"
-                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
+                                            style="background: rgba(255,255,255,0.9); border: none; border-radius: 50%; width: 44px; height: 44px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.3s ease;"
                                             onmouseover="this.style.background='rgba(255,255,255,1)'; this.style.transform='scale(1.1)';"
                                             onmouseout="this.style.background='rgba(255,255,255,0.9)'; this.style.transform='scale(1)';">
-                                            <i class="<?php echo $heart_class; ?>" style="color: <?php echo $is_in_wishlist ? '#ef4444' : '#6b7280'; ?>; font-size: 16px;"></i>
+                                            <i class="<?php echo $heart_class; ?>" style="color: <?php echo $is_in_wishlist ? '#ef4444' : '#6b7280'; ?>; font-size: 20px;"></i>
                                         </button>
                                     </div>
 

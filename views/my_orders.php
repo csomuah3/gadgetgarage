@@ -1170,7 +1170,7 @@ function getOrderStatus($order_date) {
         }
 
         // Show Order Details Modal
-        function showOrderDetailsModal(order, orderReference) {
+        window.showOrderDetailsModal = function(order, orderReference) {
             const orderDate = new Date(order.order_date);
             const estimatedDelivery = new Date(orderDate);
             estimatedDelivery.setDate(estimatedDelivery.getDate() + 4);
@@ -1637,7 +1637,7 @@ function getOrderStatus($order_date) {
         }
 
         // Display Order Details in Modal
-        function displayOrderDetails(order) {
+        window.displayOrderDetails = function(order) {
             const content = `
                 <div class="order-info-section">
                     <h6><i class="fas fa-info-circle me-2"></i>Order Information</h6>

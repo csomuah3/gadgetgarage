@@ -1251,6 +1251,107 @@ try {
             100% { opacity: 1; }
         }
 
+        .payment-preference-options {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+        }
+
+        .payment-option {
+            flex: 1;
+            position: relative;
+        }
+
+        .payment-option input[type="radio"] {
+            display: none;
+        }
+
+        .payment-label {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+            gap: 1rem;
+        }
+
+        .payment-label:hover {
+            border-color: #3B82F6;
+            background: #f8faff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.1);
+        }
+
+        .payment-option input[type="radio"]:checked + .payment-label {
+            border-color: #3B82F6;
+            background: linear-gradient(135deg, #3B82F6, #1e40af);
+            color: white;
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .payment-option input[type="radio"]:checked + .payment-label .payment-desc {
+            color: #e0e9ff;
+        }
+
+        .payment-icon {
+            font-size: 2rem;
+            min-width: 3rem;
+            text-align: center;
+        }
+
+        .payment-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .payment-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .payment-desc {
+            font-size: 0.9rem;
+            color: #6b7280;
+            transition: color 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .payment-preference-options {
+                flex-direction: column;
+            }
+        }
+
+        .payment-method-indicator {
+            background: #e0f2fe;
+            color: #0369a1;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            display: inline-block;
+            margin-left: 1rem;
+        }
+
+        .valuation-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .valuation-header h3 {
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
         .submit-btn.valuation-accepted {
             background: linear-gradient(135deg, #10b981, #059669);
             animation: pulse 2s infinite;
@@ -1453,6 +1554,33 @@ try {
                             <label for="deviceDescription" class="form-label">Additional Details & Issues</label>
                             <textarea id="deviceDescription" name="description" class="form-textarea" rows="4"
                                 placeholder="Please provide details about: **Battery health, years of usage, if it has been repaired before**, and any issues, damage, or special features of your device..."></textarea>
+                        </div>
+
+                        <!-- Payment Preference Selection -->
+                        <div class="form-group">
+                            <label class="form-label">Preferred Payment Method</label>
+                            <div class="payment-preference-options">
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" value="cash" id="cash_option" checked>
+                                    <label for="cash_option" class="payment-label">
+                                        <div class="payment-icon">💰</div>
+                                        <div class="payment-details">
+                                            <span class="payment-title">Cash Payment</span>
+                                            <span class="payment-desc">Receive money directly</span>
+                                        </div>
+                                    </label>
+                                </div>
+                                <div class="payment-option">
+                                    <input type="radio" name="payment_method" value="store_credit" id="store_credit_option">
+                                    <label for="store_credit_option" class="payment-label">
+                                        <div class="payment-icon">🎁</div>
+                                        <div class="payment-details">
+                                            <span class="payment-title">Store Credit</span>
+                                            <span class="payment-desc">Get 10% bonus for future purchases</span>
+                                        </div>
+                                    </label>
+                                </div>
+                            </div>
                         </div>
 
                         <!-- AI Valuation Button -->
@@ -1851,6 +1979,18 @@ try {
         // AI Valuation functionality
         let currentValuation = null;
 
+        // Add event listeners to payment method radio buttons
+        document.querySelectorAll('input[name="payment_method"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                // If there's a current valuation, update the display
+                if (currentValuation) {
+                    const selectedPaymentMethod = this.value;
+                    currentValuation.selectedPaymentMethod = selectedPaymentMethod;
+                    displayValuationResult({ valuation: currentValuation }, selectedPaymentMethod);
+                }
+            });
+        });
+
         document.getElementById('getAIValuationBtn').addEventListener('click', async function() {
             // Get form data
             const deviceType = document.getElementById('deviceType').value;
@@ -1858,6 +1998,7 @@ try {
             const model = document.getElementById('deviceModel').value;
             const condition = document.querySelector('input[name="condition"]:checked')?.value;
             const description = document.getElementById('deviceDescription').value;
+            const selectedPaymentMethod = document.querySelector('input[name="payment_method"]:checked')?.value;
 
             // Validate required fields
             if (!deviceType || !brand || !condition) {
@@ -1865,6 +2006,17 @@ try {
                     icon: 'warning',
                     title: 'Missing Information',
                     text: 'Please fill in device type, brand, and condition before getting valuation.',
+                    confirmButtonColor: '#3B82F6'
+                });
+                return;
+            }
+
+            // Validate payment method selection
+            if (!selectedPaymentMethod) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Payment Method Required',
+                    text: 'Please select your preferred payment method.',
                     confirmButtonColor: '#3B82F6'
                 });
                 return;
@@ -1895,7 +2047,8 @@ try {
 
                 if (result.status === 'success') {
                     currentValuation = result.valuation;
-                    displayValuationResult(result);
+                    currentValuation.selectedPaymentMethod = selectedPaymentMethod;
+                    displayValuationResult(result, selectedPaymentMethod);
                 } else {
                     throw new Error(result.message || 'Failed to get valuation');
                 }
@@ -1915,34 +2068,52 @@ try {
             }
         });
 
-        function displayValuationResult(result) {
+        function displayValuationResult(result, selectedPaymentMethod) {
             const resultContainer = document.getElementById('aiValuationResult');
             const valuation = result.valuation;
+
+            // Generate content based on selected payment method
+            let paymentOptionHtml = '';
+            let selectedValue = '';
+            let selectedDescription = '';
+
+            if (selectedPaymentMethod === 'store_credit') {
+                selectedValue = valuation.credit_value.toFixed(2);
+                selectedDescription = `+GH₵ ${valuation.bonus_amount.toFixed(2)} bonus value (10% extra)`;
+                paymentOptionHtml = `
+                    <div class="value-option selected recommended" data-payment="store_credit">
+                        <div class="value-header">
+                            <h4><i class="fas fa-gift"></i> Store Credit</h4>
+                            <span class="bonus-badge">+10% BONUS</span>
+                        </div>
+                        <div class="value-amount">GH₵ ${selectedValue}</div>
+                        <div class="value-description">${selectedDescription}</div>
+                    </div>`;
+            } else {
+                selectedValue = valuation.cash_value.toFixed(2);
+                selectedDescription = 'Immediate cash payment';
+                paymentOptionHtml = `
+                    <div class="value-option selected" data-payment="cash">
+                        <div class="value-header">
+                            <h4><i class="fas fa-money-bill-wave"></i> Cash Payment</h4>
+                        </div>
+                        <div class="value-amount">GH₵ ${selectedValue}</div>
+                        <div class="value-description">${selectedDescription}</div>
+                    </div>`;
+            }
 
             const html = `
                 <div class="valuation-card">
                     <div class="valuation-header">
                         <h3><i class="fas fa-robot"></i> AI Device Valuation</h3>
                         <div class="condition-badge">${valuation.condition_grade}</div>
+                        <div class="payment-method-indicator">
+                            <span>Payment: ${selectedPaymentMethod === 'store_credit' ? 'Store Credit' : 'Cash'}</span>
+                        </div>
                     </div>
 
                     <div class="value-options">
-                        <div class="value-option" data-payment="cash">
-                            <div class="value-header">
-                                <h4><i class="fas fa-money-bill-wave"></i> Cash Payment</h4>
-                            </div>
-                            <div class="value-amount">GH₵ ${valuation.cash_value.toFixed(2)}</div>
-                            <div class="value-description">Immediate cash payment</div>
-                        </div>
-
-                        <div class="value-option recommended" data-payment="store_credit">
-                            <div class="value-header">
-                                <h4><i class="fas fa-gift"></i> Store Credit</h4>
-                                <span class="bonus-badge">+10% BONUS</span>
-                            </div>
-                            <div class="value-amount">GH₵ ${valuation.credit_value.toFixed(2)}</div>
-                            <div class="value-description">+GH₵ ${valuation.bonus_amount.toFixed(2)} bonus value</div>
-                        </div>
+                        ${paymentOptionHtml}
                     </div>
 
                     <div class="valuation-details">
@@ -1974,22 +2145,12 @@ try {
             resultContainer.innerHTML = html;
             resultContainer.style.display = 'block';
 
-            // Add click handlers for payment options
-            document.querySelectorAll('.value-option').forEach(option => {
-                option.addEventListener('click', function() {
-                    // Remove previous selection
-                    document.querySelectorAll('.value-option').forEach(opt => opt.classList.remove('selected'));
-                    // Add selection to clicked option
-                    this.classList.add('selected');
-                });
-            });
-
             // Scroll to result
             resultContainer.scrollIntoView({ behavior: 'smooth', block: 'center' });
         }
 
         function acceptValuation() {
-            const selectedPayment = document.querySelector('.value-option.selected')?.dataset.payment;
+            const selectedPayment = document.querySelector('input[name="payment_method"]:checked')?.value;
 
             if (!selectedPayment) {
                 Swal.fire({

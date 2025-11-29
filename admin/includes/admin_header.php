@@ -738,6 +738,10 @@ if (!check_login() || !check_admin()) {
                         <i class="fas fa-star-half-alt"></i>
                         <span>Refunds &amp; Ratings</span>
                     </a>
+                    <a href="device_drop.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'device_drop.php' ? 'active' : ''; ?>">
+                        <i class="fas fa-mobile-alt"></i>
+                        <span>Device Drop</span>
+                    </a>
                     <a href="support_messages.php" class="nav-link <?php echo basename($_SERVER['PHP_SELF']) == 'support_messages.php' ? 'active' : ''; ?>">
                         <i class="fas fa-headset"></i>
                         <span>Support</span>

@@ -1,5 +1,28 @@
 /* Account Sidebar Styles - Modern Minimalistic Design */
 
+/* Main Content Layout - Required for sidebar to work */
+.main-content {
+    display: flex;
+    min-height: calc(100vh - 114px);
+    background: transparent;
+    align-items: flex-start;
+    padding: 20px;
+    gap: 20px;
+    position: relative;
+    z-index: 1;
+}
+
+.content-area {
+    flex: 1;
+    padding: 25px 30px;
+    overflow-y: auto;
+    background: rgba(255, 255, 255, 0.85);
+    border-radius: 16px;
+    margin: 20px 20px 20px 0;
+    position: relative;
+    z-index: 1;
+}
+
 .account-sidebar {
     width: 240px;
     background: linear-gradient(180deg, #1e3a8a 0%, #1E3A5F 100%);

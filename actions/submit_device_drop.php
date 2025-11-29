@@ -42,12 +42,17 @@ try {
     $device_model = trim($_POST['device_model']);
     $condition = trim($_POST['condition']);
 
-    // Handle reasons checkbox array
+    // Handle reasons checkbox array or direct description
     $reasons = [];
     if (isset($_POST['reasons']) && is_array($_POST['reasons'])) {
         $reasons = $_POST['reasons'];
     }
-    $description = !empty($reasons) ? implode(', ', $reasons) : null;
+    $description = null;
+    if (!empty($reasons)) {
+        $description = implode(', ', $reasons);
+    } elseif (isset($_POST['description']) && !empty(trim($_POST['description']))) {
+        $description = trim($_POST['description']);
+    }
 
     $asking_price = isset($_POST['asking_price']) && !empty($_POST['asking_price']) ?
                    floatval($_POST['asking_price']) : null;

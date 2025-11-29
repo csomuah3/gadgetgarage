@@ -1196,6 +1196,61 @@ try {
             transform: translateY(-2px);
         }
 
+        .ai-valuation-btn {
+            background: linear-gradient(135deg, #7c3aed, #5b21b6);
+            color: white;
+            border: none;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.75rem;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .ai-valuation-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .ai-valuation-btn:hover::before {
+            left: 100%;
+        }
+
+        .ai-valuation-btn:hover {
+            background: linear-gradient(135deg, #6d28d9, #4c1d95);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 30px rgba(124, 58, 237, 0.4);
+        }
+
+        .ai-valuation-btn:active {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 15px rgba(124, 58, 237, 0.3);
+        }
+
+        .ai-valuation-btn .fas {
+            font-size: 1.2rem;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.7; }
+            100% { opacity: 1; }
+        }
+
         .submit-btn.valuation-accepted {
             background: linear-gradient(135deg, #10b981, #059669);
             animation: pulse 2s infinite;
@@ -1396,8 +1451,8 @@ try {
 
                         <div class="form-group">
                             <label for="deviceDescription" class="form-label">Additional Details & Issues</label>
-                            <textarea id="deviceDescription" name="description" class="form-textarea" rows="4" 
-                                placeholder="Describe any issues, damage, or special features of your device..."></textarea>
+                            <textarea id="deviceDescription" name="description" class="form-textarea" rows="4"
+                                placeholder="Please provide details about: **Battery health, years of usage, if it has been repaired before**, and any issues, damage, or special features of your device..."></textarea>
                         </div>
 
                         <!-- AI Valuation Button -->
@@ -1798,11 +1853,11 @@ try {
 
         document.getElementById('getAIValuationBtn').addEventListener('click', async function() {
             // Get form data
-            const deviceType = document.getElementById('device_type').value;
-            const brand = document.getElementById('brand').value;
-            const model = document.getElementById('model').value;
+            const deviceType = document.getElementById('deviceType').value;
+            const brand = document.getElementById('deviceBrand').value;
+            const model = document.getElementById('deviceModel').value;
             const condition = document.querySelector('input[name="condition"]:checked')?.value;
-            const description = document.getElementById('description').value;
+            const description = document.getElementById('deviceDescription').value;
 
             // Validate required fields
             if (!deviceType || !brand || !condition) {

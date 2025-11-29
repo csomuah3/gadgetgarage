@@ -106,14 +106,14 @@ try {
 		.checkout-header {
 			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
 			color: #1f2937;
-			padding: 0.5rem 0;
-			margin-bottom: 0.5rem;
+			padding: 0.3rem 0;
+			margin-bottom: 0.3rem;
 		}
 
 		.checkout-steps {
 			display: flex;
 			justify-content: center;
-			margin-bottom: 2rem;
+			margin-bottom: 0.5rem;
 		}
 
 		.step {
@@ -554,16 +554,13 @@ try {
 	<?php include '../includes/header.php'; ?>
 
 	<!-- Floating Bubbles Background -->
-	<div class="floating-bubbles" id="floatingBubbles"></div>
+	<div class="floating-bubbles" id="floatingBubbles" style="display: none;"></div>
 
-	<!-- Page Title -->
-	<h1 class="page-title">Checkout</h1>
-
-	<div class="checkout-header" style="margin-top: 10px;">
+	<div class="checkout-header" style="margin-top: 0; padding-top: 10px;">
 		<div class="container">
 			<div class="row align-items-center">
 				<div class="col-12">
-					<div class="checkout-steps">
+					<div class="checkout-steps" style="margin-bottom: 0.3rem;">
 						<div class="step">
 							<div class="step-number">1</div>
 							<span>Cart</span>
@@ -579,11 +576,11 @@ try {
 							<span>Confirmation</span>
 						</div>
 					</div>
-					<h1 class="text-center mb-2">
+					<h1 class="text-center" style="margin-bottom: 5px; font-size: 2rem; font-weight: 800;">
 						<i class="fas fa-credit-card me-3"></i>
 						Secure Checkout
 					</h1>
-					<p class="text-center mb-0 fs-5 opacity-90">
+					<p class="text-center mb-0 fs-5 opacity-90" style="margin-bottom: 5px;">
 						Review your order and complete your purchase
 					</p>
 				</div>
@@ -591,7 +588,7 @@ try {
 		</div>
 	</div>
 
-	<div class="container py-2">
+	<div class="container" style="padding-top: 10px; padding-bottom: 20px;">
 		<div class="row">
 			<div class="col-lg-8">
 				<div class="checkout-card">

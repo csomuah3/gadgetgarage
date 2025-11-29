@@ -1003,39 +1003,39 @@ try {
 
         .quantity-btn {
             background: #f3f4f6;
-            border: 1px solid #d1d5db;
-            color: #374151;
+            border: 2px solid #4285F4;
+            color: #4285F4;
             width: 32px;
             height: 32px;
             border-radius: 4px;
-            font-weight: 400;
+            font-weight: 500;
             font-size: 1rem;
             transition: all 0.3s ease;
             box-shadow: none;
         }
 
         .quantity-btn:hover {
-            background: #e5e7eb;
+            background: #4285F4;
             transform: none;
             box-shadow: none;
-            color: #374151;
+            color: #ffffff;
         }
 
         .quantity-input {
             width: 60px;
             text-align: center;
-            border: 1px solid #d1d5db;
+            border: 2px solid #4285F4;
             border-radius: 4px;
             padding: 8px 4px;
             font-size: 1rem;
-            font-weight: 400;
+            font-weight: 500;
             background: white;
             transition: all 0.3s ease;
         }
 
         .quantity-input:focus {
             border-color: #4285F4;
-            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3);
             outline: none;
         }
 
@@ -1046,34 +1046,37 @@ try {
             padding: 2rem 1rem;
         }
 
-        /* Clean cart layout */
+        /* Clean cart layout - Single unified container */
         .col-lg-8 {
             background: #ffffff;
             padding: 2rem;
-            border: 1px solid #e2e8f0;
+            border: 2px solid #4285F4;
+            border-radius: 8px;
         }
 
         .col-lg-4 .cart-summary {
             margin-top: 0;
+            border: 2px solid #4285F4;
+            border-radius: 8px;
         }
 
         /* Back button styling */
         .btn-outline-primary {
-            border: 1px solid #d1d5db;
-            color: #374151;
+            border: 2px solid #4285F4;
+            color: #4285F4;
             background: transparent;
             border-radius: 4px;
             padding: 12px 24px;
             font-size: 0.875rem;
-            font-weight: 400;
+            font-weight: 500;
             text-decoration: none;
             transition: all 0.3s ease;
         }
 
         .btn-outline-primary:hover {
-            background: #f3f4f6;
-            border-color: #9ca3af;
-            color: #374151;
+            background: #4285F4;
+            border-color: #4285F4;
+            color: #ffffff;
             transform: none;
         }
 
@@ -1101,6 +1104,45 @@ try {
             display: none !important;
         }
 
+        /* Restore and style discount section */
+        .promo-section-redesign,
+        .promo-input-container {
+            display: block !important;
+            visibility: visible !important;
+        }
+
+        .promo-input-redesign {
+            border: 2px solid #4285F4 !important;
+            border-radius: 4px !important;
+            padding: 12px 16px !important;
+            font-size: 1rem !important;
+            background: #ffffff !important;
+            color: #1a202c !important;
+            outline: none !important;
+            flex: 1 !important;
+        }
+
+        .promo-input-redesign:focus {
+            border-color: #4285F4 !important;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.3) !important;
+        }
+
+        .promo-apply-btn {
+            background: #10b981 !important;
+            color: white !important;
+            border: none !important;
+            padding: 12px 24px !important;
+            font-weight: 600 !important;
+            font-size: 1rem !important;
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            border-radius: 4px !important;
+        }
+
+        .promo-apply-btn:hover {
+            background: #059669 !important;
+        }
+
         /* Style radio buttons to match reference */
         .cart-item input[type="radio"] {
             width: 16px;
@@ -1113,11 +1155,31 @@ try {
         .cart-summary h3,
         .cart-summary h4 {
             color: #4285F4 !important;
+            font-weight: 600 !important;
         }
 
-        /* Add blue to total amount */
-        .cart-summary .fs-5.fw-bold.text-primary {
+        /* Add blue to total amount and all cart summary values */
+        .cart-summary .fs-5.fw-bold.text-primary,
+        .cart-summary .fw-bold,
+        .cart-summary .text-success {
             color: #4285F4 !important;
+            font-weight: 600 !important;
+        }
+
+        /* Cart Items header styling */
+        .col-lg-8 h4 {
+            color: #4285F4 !important;
+            font-weight: 600 !important;
+            font-size: 1.25rem !important;
+        }
+
+        /* Divider lines in blue */
+        .cart-item {
+            border-bottom: 1px solid rgba(66, 133, 244, 0.2) !important;
+        }
+
+        .cart-summary hr {
+            border-color: rgba(66, 133, 244, 0.3) !important;
         }
 
         .cart-summary {
@@ -1256,7 +1318,7 @@ try {
             font-size: 1.1rem !important;
             font-weight: 500 !important;
             font-family: "Times New Roman", Times, serif !important;
-            color: #1a202c !important;
+            color: #4285F4 !important;
             margin-bottom: 0.5rem !important;
             line-height: 1.4 !important;
             letter-spacing: 0 !important;

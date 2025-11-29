@@ -13,13 +13,6 @@ ob_start();
 try {
     // Log incoming request for debugging
     error_log('Device Drop Request received');
-    error_log('POST data: ' . print_r($_POST, true));
-    error_log('FILES data: ' . print_r(array_keys($_FILES), true));
-
-    // Debug field validation
-    foreach (['device_type', 'device_brand', 'device_model', 'condition', 'first_name', 'last_name', 'email', 'phone'] as $field) {
-        error_log("Field $field: " . (isset($_POST[$field]) ? $_POST[$field] : 'NOT SET'));
-    }
 
     // Include database connection
     require_once(__DIR__ . '/../settings/db_class.php');
@@ -114,24 +107,19 @@ try {
     $condition_grade_sql = $condition_grade ? "'" . mysqli_real_escape_string($db->db_conn(), $condition_grade) . "'" : 'NULL';
     $value_reasoning_sql = $value_reasoning ? "'" . mysqli_real_escape_string($db->db_conn(), $value_reasoning) . "'" : 'NULL';
 
-    // Insert device drop request using direct SQL
+    // Insert device drop request using direct SQL (excluding non-existent columns)
     $sql = "INSERT INTO device_drop_requests (
         device_type, device_brand, device_model, condition_status,
         description, asking_price, first_name, last_name, email, phone, pickup_address,
-        ai_valuation, payment_method, final_amount, condition_grade, value_reasoning
+        ai_valuation, payment_method, final_amount
     ) VALUES (
         '$device_type', '$device_brand', '$device_model', '$condition',
         $description, $asking_price, '$first_name', '$last_name', '$email', '$phone', $pickup_address,
-        $ai_valuation_sql, $payment_method_sql, $final_amount_sql, $condition_grade_sql, $value_reasoning_sql
+        $ai_valuation_sql, $payment_method_sql, $final_amount_sql
     )";
 
-    // Debug the SQL query
-    error_log("SQL Query: " . $sql);
-
     if (!$db->db_write_query($sql)) {
-        $error = mysqli_error($db->db_conn());
-        error_log("Database insert failed: " . $error);
-        throw new Exception('Database insert failed: ' . $error);
+        throw new Exception('Database insert failed: ' . mysqli_error($db->db_conn()));
     }
 
     $request_id = mysqli_insert_id($db->db_conn());

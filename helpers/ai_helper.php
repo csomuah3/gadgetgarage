@@ -97,12 +97,16 @@ class AIHelper {
             $prompt .= "- Description: " . substr($product['product_desc'], 0, 200) . "...\n\n";
         }
         
-        $prompt .= "Please provide a helpful comparison with these sections:\n\n";
-        $prompt .= "1. **Key Differences**: List the main differences between these products (3-5 bullet points)\n";
-        $prompt .= "2. **Best For**: Explain what type of user each product is best suited for\n";
-        $prompt .= "3. **Value Analysis**: Compare their prices and features to determine which offers better value\n";
-        $prompt .= "4. **Final Recommendation**: Give a clear, specific recommendation\n\n";
-        $prompt .= "Keep it concise, customer-friendly, and use markdown formatting. Focus on practical differences that matter to buyers.";
+        $prompt .= "Please provide a side-by-side comparison in an HTML table format.\n\n";
+        $prompt .= "Create an HTML table with these comparison categories as rows:\n";
+        $prompt .= "- Key Features\n";
+        $prompt .= "- Best For\n";
+        $prompt .= "- Pros\n";
+        $prompt .= "- Cons\n";
+        $prompt .= "- Value for Money\n";
+        $prompt .= "- Recommendation\n\n";
+        $prompt .= "Each product should have its own column. Use <table class='ai-comparison-table'> and make it customer-friendly.\n";
+        $prompt .= "Keep descriptions concise (2-3 sentences per cell). Focus on practical differences that matter to buyers.";
         
         try {
             $analysis = $this->callOpenAI($prompt, 700);

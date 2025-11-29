@@ -161,29 +161,30 @@ $user_name = $_SESSION['name'] ?? 'User';
             border-radius: 8px;
             padding: 1.5rem;
             color: #374151;
-            line-height: 1.7;
+            line-height: 1.8;
             border: 1px solid #e5e7eb;
+            font-size: 1.15rem;
         }
 
         .ai-content h1,
         .ai-content h2,
         .ai-content h3 {
             color: #1e3a8a;
-            margin-top: 1.25rem;
-            margin-bottom: 0.75rem;
-            font-weight: 600;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+            font-weight: 700;
         }
 
         .ai-content h1 {
-            font-size: 1.25rem;
+            font-size: 1.9rem;
         }
 
         .ai-content h2 {
-            font-size: 1.125rem;
+            font-size: 1.6rem;
         }
 
         .ai-content h3 {
-            font-size: 1rem;
+            font-size: 1.35rem;
         }
 
         .ai-content ul,
@@ -193,12 +194,81 @@ $user_name = $_SESSION['name'] ?? 'User';
         }
 
         .ai-content li {
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.75rem;
+            font-size: 1.15rem;
+        }
+
+        .ai-content p {
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+            line-height: 1.8;
         }
 
         .ai-content strong {
             color: #1e3a8a;
-            font-weight: 600;
+            font-weight: 700;
+        }
+
+        /* AI Comparison Table */
+        .ai-comparison-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: separate;
+            border-spacing: 0 12px;
+        }
+
+        .ai-comparison-table th {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            padding: 16px 20px;
+            text-align: left;
+            font-size: 1.3rem;
+            font-weight: 700;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .ai-comparison-table td {
+            background: white;
+            padding: 16px 20px;
+            border-left: 4px solid #2563eb;
+            font-size: 1.1rem;
+            line-height: 1.7;
+            vertical-align: top;
+        }
+
+        .ai-comparison-table tr:hover td {
+            background: #eff6ff;
+        }
+
+        .ai-comparison-table .category-label {
+            font-weight: 700;
+            color: #1e3a8a;
+            font-size: 1.2rem;
+            width: 200px;
+            background: #f1f5f9 !important;
+        }
+
+        .ai-content table {
+            font-size: 1.1rem;
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .ai-content td,
+        .ai-content th {
+            font-size: 1.1rem;
+            padding: 14px 18px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .ai-content th {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            color: white;
+            font-weight: 700;
+        }
+
+        .ai-content tr:nth-child(even) {
+            background: #f8fafc;
         }
 
         .ai-loading {
@@ -454,11 +524,7 @@ $user_name = $_SESSION['name'] ?? 'User';
 
                     <div class="ai-content" id="aiContent">
                         <?php if (!empty($ai_analysis)): ?>
-                            <div id="analysisText"></div>
-                            <script>
-                                // Convert markdown to HTML
-                                document.getElementById('analysisText').innerHTML = marked.parse(<?php echo json_encode($ai_analysis); ?>);
-                            </script>
+                            <div id="analysisText"><?php echo $ai_analysis; ?></div>
                         <?php else: ?>
                             <div class="ai-loading">
                                 <i class="fas fa-spinner"></i>

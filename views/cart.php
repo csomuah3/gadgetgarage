@@ -951,7 +951,7 @@ try {
         }
 
         .btn-primary {
-            background: #1a202c;
+            background: #4285F4;
             border: none;
             border-radius: 0;
             padding: 16px 32px;
@@ -966,7 +966,7 @@ try {
         }
 
         .btn-primary:hover {
-            background: #374151;
+            background: #3367d6;
             transform: none;
             box-shadow: none;
             color: #ffffff;
@@ -1092,6 +1092,32 @@ try {
             background: #f3f4f6;
             border-color: #9ca3af;
             color: #374151;
+        }
+
+        /* Hide radio button descriptions to match reference image */
+        .cart-item input[type="radio"] + label,
+        .cart-item .form-check-label,
+        .cart-item .condition-description {
+            display: none !important;
+        }
+
+        /* Style radio buttons to match reference */
+        .cart-item input[type="radio"] {
+            width: 16px;
+            height: 16px;
+            margin-right: 8px;
+            accent-color: #4285F4;
+        }
+
+        /* Add blue color to cart totals header */
+        .cart-summary h3,
+        .cart-summary h4 {
+            color: #4285F4 !important;
+        }
+
+        /* Add blue to total amount */
+        .cart-summary .fs-5.fw-bold.text-primary {
+            color: #4285F4 !important;
         }
 
         .cart-summary {
@@ -1241,8 +1267,12 @@ try {
             font-size: 1.1rem !important;
             font-weight: 600 !important;
             font-family: "Times New Roman", Times, serif !important;
-            color: #1a202c !important;
+            color: #4285F4 !important;
             margin-bottom: 0.5rem !important;
+        }
+
+        .cart-item .text-success {
+            color: #4285F4 !important;
         }
 
         .cart-item .text-muted {

@@ -89,595 +89,6 @@ try {
 			pointer-events: none;
 		}
 
-		/* Promotional Banner Styles - Same as index */
-		
-
-		
-
-		
-
-		
-
-		
-
-		.promo-timer {
-			background: transparent;
-			padding: 0;
-			border-radius: 0;
-			font-size: 1.3rem;
-			font-weight: 500;
-			margin: 0;
-			border: none;
-		}
-
-		.promo-shop-link {
-			color: white;
-			text-decoration: underline;
-			font-weight: 700;
-			cursor: pointer;
-			transition: opacity 0.3s ease;
-			font-size: 1.2rem;
-			flex: 0 0 auto;
-		}
-
-		.promo-shop-link:hover {
-			opacity: 0.8;
-		}
-
-		/* Header Styles - Same as index */
-		
-
-		.logo {
-			font-size: 2.2rem;
-			font-weight: 700;
-			color: #1f2937;
-			text-decoration: none;
-			display: flex;
-			align-items: center;
-			gap: 8px;
-		}
-
-		.logo img {
-			height: 60px !important;
-			width: auto !important;
-			object-fit: contain;
-			transition: transform 0.3s ease;
-		}
-
-		.logo:hover img {
-			transform: scale(1.05);
-		}
-
-		.logo .garage {
-			background: linear-gradient(135deg, #008060, #006b4e);
-			color: white;
-			padding: 4px 8px;
-			border-radius: 6px;
-			font-size: 1rem;
-			font-weight: 600;
-		}
-
-		.search-container {
-			position: relative;
-			max-width: 600px;
-			width: 100%;
-			margin: 0 auto;
-		}
-
-		.search-input {
-			width: 100%;
-			padding: 15px 50px 15px 50px;
-			border: 2px solid #e5e7eb;
-			border-radius: 50px;
-			background: #f8fafc;
-			font-size: 1rem;
-			transition: all 0.3s ease;
-			outline: none;
-		}
-
-		.search-input:focus {
-			border-color: #3b82f6;
-			background: white;
-			box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-		}
-
-		.search-icon {
-			position: absolute;
-			left: 18px;
-			top: 50%;
-			transform: translateY(-50%);
-			color: #6b7280;
-			font-size: 1.1rem;
-		}
-
-		.search-btn {
-			position: absolute;
-			right: 8px;
-			top: 50%;
-			transform: translateY(-50%);
-			background: linear-gradient(135deg, #3b82f6, #1e40af);
-			color: white;
-			border: none;
-			border-radius: 50%;
-			width: 40px;
-			height: 40px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			transition: all 0.3s ease;
-		}
-
-		.search-btn:hover {
-			transform: translateY(-50%) scale(1.05);
-			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
-		}
-
-		.header-actions {
-			display: flex;
-			align-items: center;
-			gap: 20px;
-		}
-
-		.vertical-separator {
-			width: 1px;
-			height: 40px;
-			background: #e5e7eb;
-			margin: 0 15px;
-		}
-
-		.tech-revival-section {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-			color: #1f2937;
-		}
-
-		.tech-revival-icon {
-			font-size: 2.5rem;
-			color: #10b981;
-		}
-
-		.tech-revival-text {
-			font-size: 1.1rem;
-			font-weight: 600;
-			margin: 0;
-			line-height: 1.2;
-		}
-
-		.contact-number {
-			font-size: 1rem;
-			font-weight: 500;
-			color: #6b7280;
-			margin: 0;
-			line-height: 1.2;
-		}
-
-		.user-actions {
-			display: flex;
-			align-items: center;
-			gap: 11px;
-		}
-
-		/* Navigation Separator Styles */
-		.nav-separator {
-			color: #e5e7eb;
-			font-weight: 300;
-			margin: 0 8px;
-			font-size: 1.2rem;
-		}
-
-		.nav-dropdown {
-			position: relative;
-			display: inline-block;
-		}
-
-		.simple-dropdown {
-			position: absolute;
-			top: 100%;
-			left: 0;
-			background: white;
-			border: 1px solid #e5e7eb;
-			border-radius: 8px;
-			min-width: 160px;
-			box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-			z-index: 1000;
-			opacity: 0;
-			visibility: hidden;
-			transform: translateY(-10px);
-			transition: all 0.3s ease;
-		}
-
-		.simple-dropdown.show {
-			opacity: 1;
-			visibility: visible;
-			transform: translateY(0);
-		}
-
-		.simple-dropdown ul {
-			list-style: none;
-			padding: 8px 0;
-			margin: 0;
-		}
-
-		.simple-dropdown li {
-			padding: 0;
-		}
-
-		.simple-dropdown a {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			padding: 12px 16px;
-			color: #4b5563;
-			text-decoration: none;
-			font-size: 0.9rem;
-			transition: all 0.3s ease;
-		}
-
-		.simple-dropdown a:hover {
-			background: #f3f4f6;
-			color: #008060;
-		}
-
-		.flash-deal-spacer {
-			flex: 1;
-			min-width: 100px;
-		}
-
-		/* Brands Dropdown Styles */
-		.brands-dropdown {
-			position: absolute;
-			top: 100%;
-			left: 0;
-			background: white;
-			border: 1px solid #e5e7eb;
-			border-radius: 8px;
-			padding: 12px;
-			width: 280px;
-			max-height: 350px;
-			overflow-y: auto;
-			box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-			z-index: 1000;
-			opacity: 0;
-			visibility: hidden;
-			transform: translateY(-10px);
-			transition: all 0.3s ease;
-		}
-
-		.brands-dropdown.show {
-			opacity: 1;
-			visibility: visible;
-			transform: translateY(0);
-		}
-
-		.brands-dropdown h4 {
-			font-size: 1rem;
-			font-weight: 600;
-			color: #1f2937;
-			margin-bottom: 12px;
-			padding-bottom: 8px;
-			border-bottom: 1px solid #e5e7eb;
-		}
-
-		.brands-dropdown ul {
-			list-style: none;
-			padding: 0;
-			margin: 0;
-		}
-
-		.brands-dropdown li {
-			padding: 0;
-		}
-
-		.brands-dropdown a {
-			display: flex;
-			align-items: center;
-			gap: 8px;
-			padding: 8px 12px;
-			color: #4b5563;
-			text-decoration: none;
-			font-size: 0.9rem;
-			border-radius: 6px;
-			transition: all 0.2s ease;
-		}
-
-		.brands-dropdown a:hover {
-			background: #f3f4f6;
-			color: #008060;
-		}
-
-		/* Scrollbar styling for brands dropdown */
-		.brands-dropdown::-webkit-scrollbar {
-			width: 6px;
-		}
-
-		.brands-dropdown::-webkit-scrollbar-track {
-			background: #f1f1f1;
-			border-radius: 3px;
-		}
-
-		.brands-dropdown::-webkit-scrollbar-thumb {
-			background: #c1c1c1;
-			border-radius: 3px;
-		}
-
-		.brands-dropdown::-webkit-scrollbar-thumb:hover {
-			background: #a8a8a8;
-		}
-
-		.header-icon {
-			position: relative;
-			width: 48px;
-			height: 48px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: #374151;
-			font-size: 1.3rem;
-			transition: all 0.3s ease;
-			border-radius: 50%;
-		}
-
-		.header-icon:hover {
-			background: rgba(139, 95, 191, 0.1);
-			transform: scale(1.1);
-		}
-
-		.wishlist-badge,
-		.cart-badge {
-			position: absolute;
-			top: -2px;
-			right: -2px;
-			background: #ef4444;
-			color: white;
-			border-radius: 50%;
-			width: 20px;
-			height: 20px;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			font-size: 0.7rem;
-			font-weight: 600;
-		}
-
-		.user-menu {
-			position: relative;
-		}
-
-		.login-btn {
-			background: linear-gradient(135deg, #008060, #006b4e);
-			color: white;
-			border: none;
-			padding: 10px 20px;
-			border-radius: 20px;
-			font-weight: 500;
-			text-decoration: none;
-			transition: all 0.3s ease;
-			display: inline-block;
-		}
-
-		.login-btn:hover {
-			background: linear-gradient(135deg, #006b4e, #008060);
-			transform: translateY(-1px);
-			color: white;
-		}
-
-		.logout-btn {
-			background: linear-gradient(135deg, #ef4444, #dc2626);
-			color: white;
-			border: none;
-			padding: 8px 16px;
-			border-radius: 16px;
-			font-weight: 500;
-			text-decoration: none;
-			transition: all 0.3s ease;
-			display: inline-block;
-			font-size: 0.875rem;
-		}
-
-		.logout-btn:hover {
-			background: linear-gradient(135deg, #dc2626, #b91c1c);
-			transform: translateY(-1px);
-			color: white;
-		}
-
-		.user-dropdown {
-			position: relative;
-		}
-
-		.user-avatar {
-			width: 48px;
-			height: 48px;
-			background: linear-gradient(135deg, #008060, #006b4e);
-			border-radius: 50%;
-			display: flex;
-			align-items: center;
-			justify-content: center;
-			color: white;
-			font-weight: 600;
-			font-size: 1.3rem;
-			cursor: pointer;
-			transition: all 0.3s ease;
-		}
-
-		.user-avatar:hover {
-			transform: scale(1.15);
-			box-shadow: 0 5px 15px rgba(0, 128, 96, 0.5);
-		}
-
-		.dropdown-menu-custom {
-			position: absolute;
-			top: 100%;
-			right: 0;
-			background: rgba(255, 255, 255, 0.95);
-			backdrop-filter: blur(20px);
-			border: 1px solid rgba(139, 95, 191, 0.2);
-			border-radius: 15px;
-			box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
-			padding: 15px 0;
-			min-width: 220px;
-			opacity: 0;
-			visibility: hidden;
-			transform: translateY(-10px);
-			transition: all 0.3s ease;
-			z-index: 1000;
-		}
-
-		.dropdown-menu-custom.show {
-			opacity: 1;
-			visibility: visible;
-			transform: translateY(0);
-		}
-
-		.dropdown-item-custom {
-			display: flex;
-			align-items: center;
-			gap: 12px;
-			padding: 12px 20px;
-			color: #4a5568;
-			text-decoration: none;
-			transition: all 0.3s ease;
-			border: none;
-			background: none;
-			width: 100%;
-			cursor: pointer;
-		}
-
-		.dropdown-item-custom:hover {
-			background: rgba(139, 95, 191, 0.1);
-			color: #008060;
-			transform: translateX(3px);
-		}
-
-		.dropdown-item-custom i {
-			font-size: 1rem;
-			width: 18px;
-			text-align: center;
-		}
-
-		.dropdown-divider-custom {
-			height: 1px;
-			background: linear-gradient(90deg, transparent, rgba(139, 95, 191, 0.2), transparent);
-			margin: 8px 0;
-		}
-
-		/* Language and Theme Toggle Styles */
-		.language-selector,
-		.theme-toggle {
-			display: flex;
-			align-items: center;
-			justify-content: space-between;
-			width: 100%;
-		}
-
-		.toggle-switch {
-			position: relative;
-			width: 40px;
-			height: 20px;
-			background: #cbd5e0;
-			border-radius: 10px;
-			cursor: pointer;
-			transition: all 0.3s ease;
-		}
-
-		.toggle-switch.active {
-			background: #008060;
-		}
-
-		.toggle-slider {
-			position: absolute;
-			top: 2px;
-			left: 2px;
-			width: 16px;
-			height: 16px;
-			background: white;
-			border-radius: 50%;
-			transition: all 0.3s ease;
-			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-		}
-
-		.toggle-switch.active .toggle-slider {
-			transform: translateX(20px);
-		}
-
-		/* Dark Mode Styles */
-		body.dark-mode {
-			background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
-			color: #e2e8f0;
-		}
-
-		body.dark-mode 
-
-		body.dark-mode 
-
-		body.dark-mode .logo,
-		body.dark-mode .tech-revival-text,
-		body.dark-mode .contact-number {
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .search-input {
-			background: #374151;
-			border-color: #4a5568;
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .search-input::placeholder {
-			color: #9ca3af;
-		}
-
-		body.dark-mode .search-input:focus {
-			background: #4a5568;
-			border-color: #60a5fa;
-		}
-
-		body.dark-mode .categories-button {
-			background: linear-gradient(135deg, #374151, #1f2937);
-		}
-
-		body.dark-mode .categories-button:hover {
-			background: linear-gradient(135deg, #4a5568, #374151);
-		}
-
-		body.dark-mode .brands-dropdown {
-			background: rgba(45, 55, 72, 0.95);
-			border-color: rgba(74, 85, 104, 0.5);
-		}
-
-		body.dark-mode .brands-dropdown h4 {
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .brands-dropdown a {
-			color: #cbd5e0;
-		}
-
-		body.dark-mode .brands-dropdown a:hover {
-			background: rgba(74, 85, 104, 0.3);
-			color: #60a5fa;
-		}
-
-		body.dark-mode .header-icon {
-			color: #e2e8f0;
-		}
-
-		body.dark-mode .header-icon:hover {
-			background: rgba(74, 85, 104, 0.3);
-		}
-
-		body.dark-mode .dropdown-menu-custom {
-			background: rgba(45, 55, 72, 0.95);
-			border-color: rgba(74, 85, 104, 0.5);
-		}
-
-		body.dark-mode .dropdown-item-custom {
-			color: #cbd5e0;
-		}
-
-		body.dark-mode .dropdown-item-custom:hover {
-			background: rgba(74, 85, 104, 0.3);
-			color: #60a5fa;
-		}
 
 
 		/* Page Title */
@@ -1142,3 +553,402 @@ try {
 
 	<!-- Floating Bubbles Background -->
 	<div class="floating-bubbles" id="floatingBubbles"></div>
+
+	<!-- Page Title -->
+	<h1 class="page-title">Checkout</h1>
+
+	<div class="checkout-header">
+		<div class="container">
+			<div class="row align-items-center">
+				<div class="col-12">
+					<div class="checkout-steps">
+						<div class="step">
+							<div class="step-number">1</div>
+							<span>Cart</span>
+						</div>
+						<div class="step-divider"></div>
+						<div class="step active">
+							<div class="step-number">2</div>
+							<span>Checkout</span>
+						</div>
+						<div class="step-divider"></div>
+						<div class="step">
+							<div class="step-number">3</div>
+							<span>Confirmation</span>
+						</div>
+					</div>
+					<h1 class="text-center mb-2">
+						<i class="fas fa-credit-card me-3"></i>
+						Secure Checkout
+					</h1>
+					<p class="text-center mb-0 fs-5 opacity-90">
+						Review your order and complete your purchase
+					</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="container py-2">
+		<div class="row">
+			<div class="col-lg-8">
+				<div class="checkout-card">
+					<h4 class="mb-4">
+						<i class="fas fa-list-check me-2"></i>
+						Order Review
+					</h4>
+
+					<div id="orderItems">
+						<?php foreach ($cart_items as $item): ?>
+							<div class="order-item">
+								<div class="row align-items-center">
+									<div class="col-auto">
+										<img src="<?php echo get_product_image_url($item['product_image']); ?>"
+											alt="<?php echo htmlspecialchars($item['product_title']); ?>"
+											class="product-image-small"
+											onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4='; this.onerror=null;">
+									</div>
+									<div class="col">
+										<h6 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h6>
+										<small class="text-muted">Quantity: <?php echo $item['qty']; ?></small>
+									</div>
+									<div class="col-auto">
+										<div class="fw-bold text-primary">
+											GHS <?php echo number_format($item['product_price'] * $item['qty'], 2); ?>
+										</div>
+									</div>
+								</div>
+							</div>
+						<?php endforeach; ?>
+					</div>
+				</div>
+
+				<!-- Login Status / Guest Checkout -->
+				<?php if (!$is_logged_in): ?>
+				<div class="checkout-card">
+					<div class="row">
+						<div class="col-md-8">
+							<div class="alert alert-info mb-0">
+								<i class="fas fa-info-circle me-2"></i>
+								<strong>Checkout Options:</strong> You can continue as a guest or
+								<a href="login/user_login.php" class="alert-link">login</a> to your account for a faster checkout experience.
+							</div>
+						</div>
+						<div class="col-md-4">
+							<div class="form-check">
+								<input class="form-check-input" type="checkbox" id="guestCheckout" checked>
+								<label class="form-check-label fw-bold" for="guestCheckout">
+									Continue as Guest
+								</label>
+							</div>
+						</div>
+					</div>
+				</div>
+				<?php endif; ?>
+
+				<!-- Contact Information -->
+				<div class="checkout-card">
+					<h4 class="mb-4">
+						<i class="fas fa-user me-2"></i>
+						Contact Information
+						<?php if ($is_logged_in): ?>
+							<small class="text-success ms-2">
+								<i class="fas fa-check-circle"></i> Logged in as <?php echo htmlspecialchars($_SESSION['user_email'] ?? 'User'); ?>
+							</small>
+						<?php endif; ?>
+					</h4>
+					<form id="contactForm">
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label">First Name <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" name="first_name"
+									value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_name'] ?? '') : ''; ?>" required>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label">Last Name <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" name="last_name" required>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label">Email Address <span class="text-danger">*</span></label>
+								<input type="email" class="form-control" name="email"
+									value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['user_email'] ?? '') : ''; ?>"
+									required>
+								<?php if ($is_logged_in): ?>
+									<small class="text-muted">You can update your email address if needed</small>
+								<?php endif; ?>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label">Phone Number <span class="text-danger">*</span></label>
+								<input type="tel" class="form-control" name="phone"
+									value="<?php echo $is_logged_in ? htmlspecialchars($_SESSION['customer_contact'] ?? '') : ''; ?>"
+									placeholder="+233 XX XXX XXXX" required>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<!-- Shipping Address -->
+				<div class="checkout-card">
+					<h4 class="mb-4">
+						<i class="fas fa-shipping-fast me-2"></i>
+						Shipping Address
+					</h4>
+					<form id="shippingForm">
+						<div class="mb-3">
+							<label class="form-label">Street Address <span class="text-danger">*</span></label>
+							<input type="text" class="form-control" name="street_address" placeholder="House number and street name" required>
+						</div>
+						<div class="mb-3">
+							<label class="form-label">Apartment, suite, etc. (optional)</label>
+							<input type="text" class="form-control" name="apartment" placeholder="Apartment, suite, unit, building, floor, etc.">
+						</div>
+						<div class="row">
+							<div class="col-md-6 mb-3">
+								<label class="form-label">City <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" name="city" required>
+							</div>
+							<div class="col-md-6 mb-3">
+								<label class="form-label">Region <span class="text-danger">*</span></label>
+								<select class="form-control" name="region" required>
+									<option value="">Select Region</option>
+									<option value="Greater Accra">Greater Accra</option>
+									<option value="Ashanti">Ashanti</option>
+									<option value="Western">Western</option>
+									<option value="Central">Central</option>
+									<option value="Eastern">Eastern</option>
+									<option value="Volta">Volta</option>
+									<option value="Northern">Northern</option>
+									<option value="Upper East">Upper East</option>
+									<option value="Upper West">Upper West</option>
+									<option value="Brong Ahafo">Brong Ahafo</option>
+								</select>
+							</div>
+						</div>
+					</form>
+				</div>
+
+				<!-- Billing Address -->
+				<div class="checkout-card">
+					<h4 class="mb-4">
+						<i class="fas fa-receipt me-2"></i>
+						Billing Address
+					</h4>
+					<div class="mb-3">
+						<div class="form-check">
+							<input class="form-check-input" type="checkbox" id="sameBillingAddress" checked>
+							<label class="form-check-label" for="sameBillingAddress">
+								Billing address is the same as shipping address
+							</label>
+						</div>
+					</div>
+					<div id="billingAddressForm" style="display: none;">
+						<form id="billingForm">
+							<div class="mb-3">
+								<label class="form-label">Street Address <span class="text-danger">*</span></label>
+								<input type="text" class="form-control" name="billing_street_address">
+							</div>
+							<div class="mb-3">
+								<label class="form-label">Apartment, suite, etc. (optional)</label>
+								<input type="text" class="form-control" name="billing_apartment">
+							</div>
+							<div class="row">
+								<div class="col-md-6 mb-3">
+									<label class="form-label">City <span class="text-danger">*</span></label>
+									<input type="text" class="form-control" name="billing_city">
+								</div>
+								<div class="col-md-6 mb-3">
+									<label class="form-label">Region <span class="text-danger">*</span></label>
+									<select class="form-control" name="billing_region">
+										<option value="">Select Region</option>
+										<option value="Greater Accra">Greater Accra</option>
+										<option value="Ashanti">Ashanti</option>
+										<option value="Western">Western</option>
+										<option value="Central">Central</option>
+										<option value="Eastern">Eastern</option>
+										<option value="Volta">Volta</option>
+										<option value="Northern">Northern</option>
+										<option value="Upper East">Upper East</option>
+										<option value="Upper West">Upper West</option>
+										<option value="Brong Ahafo">Brong Ahafo</option>
+									</select>
+								</div>
+							</div>
+						</form>
+					</div>
+				</div>
+
+				<div class="checkout-card">
+					<h4 class="mb-4">
+						<i class="fas fa-credit-card me-2"></i>
+						Payment Method
+					</h4>
+
+					<div class="payment-methods">
+						<div class="payment-option" data-method="paystack-mobile">
+							<i class="fas fa-mobile-alt"></i>
+							<div class="fw-bold">Mobile Money</div>
+							<small class="text-muted">MTN MoMo, Vodafone Cash, AirtelTigo Money via PayStack</small>
+						</div>
+
+						<div class="payment-option" data-method="paystack-card">
+							<i class="fas fa-credit-card"></i>
+							<div class="fw-bold">Credit/Debit Card</div>
+							<small class="text-muted">Visa, Mastercard via PayStack</small>
+						</div>
+
+						<div class="payment-option" data-method="paystack">
+							<i class="fas fa-wallet"></i>
+							<div class="fw-bold">PayStack</div>
+							<small class="text-muted">Secure online payment gateway</small>
+						</div>
+
+						<div class="payment-option" data-method="paystack-bank">
+							<i class="fas fa-university"></i>
+							<div class="fw-bold">Bank Transfer</div>
+							<small class="text-muted">Direct bank transfer via PayStack</small>
+						</div>
+					</div>
+
+					<div class="secure-badge">
+						<i class="fas fa-lock"></i>
+						<span>Your payment information is secure and encrypted</span>
+					</div>
+				</div>
+
+				<div class="d-flex gap-3">
+					<a href="cart.php" class="btn btn-outline-secondary">
+						<i class="fas fa-arrow-left me-2"></i>
+						Back to Cart
+					</a>
+					<button type="button" class="btn btn-primary flex-fill" id="simulatePaymentBtn">
+						<i class="fas fa-lock me-2"></i>
+						Complete Order - GH₵ <?php echo number_format($cart_total, 2); ?>
+					</button>
+				</div>
+			</div>
+
+			<div class="col-lg-4">
+				<div class="order-summary">
+					<h4 class="mb-4">Order Summary</h4>
+
+					<div class="summary-row">
+						<span>Subtotal (<?php echo $cart_count; ?> items):</span>
+						<span class="ms-auto" id="subtotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
+					</div>
+
+					<div class="summary-row">
+						<span>Shipping:</span>
+						<span class="ms-auto text-success">FREE</span>
+					</div>
+
+					<div class="summary-row">
+						<span>Tax:</span>
+						<span class="ms-auto">GH₵ 0.00</span>
+					</div>
+
+					<!-- Discount Row (hidden by default) -->
+					<div class="summary-row discount-row" id="discountRow" style="display: none;">
+						<span class="text-success" id="discountLabel">
+							<i class="fas fa-tag me-1"></i>
+							Discount (<span id="discountPercent">20</span>%):
+						</span>
+						<span class="ms-auto text-success" id="discountAmount">-GH₵ 0.00</span>
+					</div>
+
+					<div class="summary-row total">
+						<span>Total:</span>
+						<span class="ms-auto" id="finalTotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
+					</div>
+
+					<div class="mt-4">
+						<div class="d-flex align-items-center gap-2 text-muted small">
+							<i class="fas fa-shield-alt"></i>
+							<span>30-day money-back guarantee</span>
+						</div>
+						<div class="d-flex align-items-center gap-2 text-muted small mt-1">
+							<i class="fas fa-shipping-fast"></i>
+							<span>Free shipping on all orders</span>
+						</div>
+						<div class="d-flex align-items-center gap-2 text-muted small mt-1">
+							<i class="fas fa-headset"></i>
+							<span>24/7 customer support</span>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Payment Simulation Modal -->
+	<div class="modal fade payment-modal" id="paymentModal" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header text-center border-0">
+					<div class="w-100">
+						<i class="fas fa-credit-card payment-icon"></i>
+						<h4 class="mb-0">Secure Payment via PayStack</h4>
+						<p class="mb-0 opacity-90">🔒 Powered by PayStack - Ghana's trusted payment gateway</p>
+					</div>
+				</div>
+				<div class="modal-body text-center">
+					<div class="mb-4">
+						<div class="fs-2 fw-bold text-primary mb-2" id="checkoutTotalDisplay">
+							GH₵ <?php echo number_format($cart_total, 2); ?>
+						</div>
+						<p class="text-muted">
+							You'll be redirected to PayStack's secure payment page where you can choose from Mobile Money, Cards, or Bank Transfer options.
+						</p>
+						<div class="alert alert-info mb-3">
+							<i class="fas fa-info-circle me-2"></i>
+							<small><strong>All payment methods</strong> (Mobile Money, Cards, Bank Transfer) are processed securely through PayStack</small>
+						</div>
+					</div>
+
+					<div class="d-grid gap-3">
+						<button type="button" class="btn btn-primary btn-lg" id="confirmPaymentBtn">
+							<i class="fas fa-credit-card me-2"></i>
+							💳 Pay Now
+						</button>
+						<button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+							<i class="fas fa-times me-2"></i>
+							Cancel
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Success Modal -->
+	<div class="modal fade payment-modal" id="successModal" tabindex="-1">
+		<div class="modal-dialog modal-dialog-centered">
+			<div class="modal-content">
+				<div class="modal-header text-center border-0">
+					<div class="w-100">
+						<i class="fas fa-check-circle payment-icon text-success"></i>
+						<h4 class="mb-0 text-success">Payment Successful!</h4>
+						<p class="mb-0 text-muted">Your order has been processed</p>
+					</div>
+				</div>
+				<div class="modal-body text-center">
+					<div id="orderSuccessDetails">
+						<!-- Order details will be populated here -->
+					</div>
+
+					<div class="d-grid gap-3">
+						<button type="button" class="btn btn-primary btn-lg" onclick="window.location.href='index.php'">
+							<i class="fas fa-home me-2"></i>
+							Continue Shopping
+						</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<!-- Bootstrap JS -->
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+	<script src="js/dark-mode.js"></script>
+	<script src="js/checkout.js"></script>

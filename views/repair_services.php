@@ -40,6 +40,80 @@ try {
 	<!-- Reusable Header CSS -->
 	<link href="../includes/header.css" rel="stylesheet">
 
+	<!-- Define repair functions immediately in head to ensure availability -->
+	<script>
+		// IMMEDIATELY DEFINE GLOBAL FUNCTIONS - BEFORE ANY HTML LOADS
+		// Global variables for repair service selection
+		let selectedIssue = null;
+		let selectedIssueName = '';
+
+		// Make selectIssue function globally available IMMEDIATELY
+		window.selectIssue = function(issueId, issueName, element) {
+			console.log('selectIssue called with:', issueId, issueName, element);
+
+			// Remove previous selection
+			document.querySelectorAll('.issue-card').forEach(card => {
+				card.classList.remove('selected');
+				card.style.background = '';
+				card.style.border = '';
+			});
+
+			// Use the passed element or find it
+			let clickedCard = element;
+			if (!clickedCard) {
+				// Fallback: find card by data attribute or onclick content
+				const cards = document.querySelectorAll('.issue-card');
+				cards.forEach(card => {
+					if (card.getAttribute('data-issue-id') == issueId) {
+						clickedCard = card;
+					}
+				});
+			}
+
+			if (clickedCard) {
+				clickedCard.classList.add('selected');
+				clickedCard.style.background = '#eff6ff';
+				clickedCard.style.border = '2px solid #2563EB';
+			}
+
+			selectedIssue = issueId;
+			selectedIssueName = issueName;
+
+			console.log('Selected issue:', issueId, issueName);
+
+			// Show continue button
+			const continueBtn = document.getElementById('continueBtn');
+			if (continueBtn) {
+				continueBtn.classList.add('show');
+			}
+		};
+
+		// Make proceedToSpecialist function globally available IMMEDIATELY
+		window.proceedToSpecialist = function() {
+			console.log('proceedToSpecialist called with selectedIssue:', selectedIssue);
+			if (selectedIssue) {
+				// Both files are in views/ directory, so relative path works
+				const url = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
+				console.log('Navigating to:', url);
+				window.location.href = url;
+			} else {
+				alert('Please select an issue first');
+			}
+		};
+
+		// Direct navigation function - goes straight to specialist page
+		window.goToSpecialist = function(issueId, issueName) {
+			console.log('goToSpecialist called with:', issueId, issueName);
+			// Navigate directly to specialist selection page
+			// Both files are in the same directory (views/), so use relative path
+			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
+			console.log('Navigating to:', url);
+			window.location.href = url;
+		};
+
+		console.log('Global repair functions defined in head:', typeof window.selectIssue, typeof window.proceedToSpecialist);
+	</script>
+
 	<style>
 		/* Import Google Fonts */
 		@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -553,7 +627,9 @@ try {
 
 			<div class="issues-grid">
 				<?php foreach ($issue_types as $issue): ?>
-					<div class="issue-card" onclick="selectIssue(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>')">
+					<div class="issue-card" 
+						 data-issue-id="<?php echo $issue['issue_id']; ?>"
+						 onclick="selectIssue(<?php echo $issue['issue_id']; ?>, '<?php echo htmlspecialchars($issue['issue_name'], ENT_QUOTES); ?>', this)">
 						<div class="issue-icon">
 							<i class="<?php echo htmlspecialchars($issue['icon_class']); ?>"></i>
 						</div>
@@ -584,78 +660,8 @@ try {
 	<script src="../js/header.js"></script>
 	<script src="../js/dark-mode.js"></script>
 	<script>
-		// IMMEDIATELY DEFINE GLOBAL FUNCTIONS FIRST - BEFORE DOM READY
-		// Global variables for repair service selection
-		let selectedIssue = null;
-		let selectedIssueName = '';
-
-		// Make selectIssue function globally available IMMEDIATELY
-		window.selectIssue = function(issueId, issueName) {
-			console.log('selectIssue called with:', issueId, issueName);
-
-			// Remove previous selection
-			document.querySelectorAll('.issue-card').forEach(card => {
-				card.classList.remove('selected');
-				card.style.background = '';
-				card.style.border = '';
-			});
-
-			// Find and select the clicked card using event.target if available
-			let clickedCard = null;
-			if (typeof event !== 'undefined' && event.currentTarget) {
-				clickedCard = event.currentTarget;
-			} else {
-				// Fallback: find card by onclick content
-				const cards = document.querySelectorAll('.issue-card');
-				cards.forEach(card => {
-					if (card.onclick && card.onclick.toString().includes(`selectIssue(${issueId}`)) {
-						clickedCard = card;
-					}
-				});
-			}
-
-			if (clickedCard) {
-				clickedCard.classList.add('selected');
-				clickedCard.style.background = '#eff6ff';
-				clickedCard.style.border = '2px solid #2563EB';
-			}
-
-			selectedIssue = issueId;
-			selectedIssueName = issueName;
-
-			console.log('Selected issue:', issueId, issueName);
-
-			// Show continue button
-			const continueBtn = document.getElementById('continueBtn');
-			if (continueBtn) {
-				continueBtn.classList.add('show');
-			}
-		};
-
-		// Make proceedToSpecialist function globally available IMMEDIATELY
-		window.proceedToSpecialist = function() {
-			console.log('proceedToSpecialist called with selectedIssue:', selectedIssue);
-			if (selectedIssue) {
-				// Both files are in views/ directory, so relative path works
-				const url = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
-				console.log('Navigating to:', url);
-				window.location.href = url;
-			} else {
-				alert('Please select an issue first');
-			}
-		};
-
-		// Direct navigation function - goes straight to specialist page
-		window.goToSpecialist = function(issueId, issueName) {
-			console.log('goToSpecialist called with:', issueId, issueName);
-			// Navigate directly to specialist selection page
-			// Both files are in the same directory (views/), so use relative path
-			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
-			console.log('Navigating to:', url);
-			window.location.href = url;
-		};
-
-		console.log('Global repair functions defined:', typeof window.selectIssue, typeof window.proceedToSpecialist);
+		// Functions are already defined in head section above
+		// This script section is for other page-specific functionality
 
 		// Search functionality - after global functions
 		document.addEventListener('DOMContentLoaded', function() {

@@ -1871,7 +1871,7 @@ try {
                 <a href="all_product.php" class="btn btn-outline-primary me-3">
                     <i class="fas fa-grid-3x3"></i> View All Products
                 </a>
-                <a href="product_search_result.php?query=<?php echo urlencode($product['cat_name']); ?>" class="btn btn-outline-success">
+                <a href="product_search_result.php?query=<?php echo urlencode($product['cat_name'] ?? ''); ?>" class="btn btn-outline-success">
                     <i class="fas fa-search"></i> Similar Products
                 </a>
             </div>

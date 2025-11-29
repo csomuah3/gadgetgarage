@@ -71,10 +71,10 @@ try {
 
         body {
             font-family: "Times New Roman", Times, serif;
-            background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+            background: #f7fafc;
             color: #1a202c;
             overflow-x: hidden;
-            font-size: 18px;
+            font-size: 16px;
             line-height: 1.6;
         }
 
@@ -884,13 +884,11 @@ try {
         }
 
         .cart-header {
-            background: linear-gradient(135deg, #4285F4 0%, #3b82f6 100%);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 3rem;
-            position: relative;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(66, 133, 244, 0.2);
+            background: #ffffff;
+            color: #1a202c;
+            padding: 2rem 0 1rem 0;
+            margin-bottom: 0;
+            border-bottom: 1px solid #e2e8f0;
         }
 
         .cart-header::before {
@@ -906,163 +904,225 @@ try {
 
         .cart-header h1 {
             font-family: "Times New Roman", Times, serif !important;
-            font-size: 4rem !important;
-            font-weight: 800 !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 1rem !important;
-            letter-spacing: 1px;
+            font-size: 2.5rem !important;
+            font-weight: 400 !important;
+            color: #1a202c !important;
+            margin-bottom: 0.5rem !important;
+            letter-spacing: -0.5px;
         }
 
         .cart-header p {
             font-family: "Times New Roman", Times, serif !important;
-            font-size: 1.6rem !important;
-            opacity: 0.9;
-            font-weight: 500;
+            font-size: 1rem !important;
+            color: #6b7280 !important;
+            font-weight: 400;
         }
 
         .cart-item {
             background: #ffffff;
-            border-radius: 16px;
-            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.12);
-            margin-bottom: 2.5rem;
-            overflow: hidden;
-            transition: all 0.3s ease;
-            border: 2px solid rgba(66, 133, 244, 0.1);
-            padding: 2rem;
+            border-radius: 0;
+            box-shadow: none;
+            margin-bottom: 0;
+            overflow: visible;
+            transition: none;
+            border: none;
+            border-bottom: 1px solid #e2e8f0;
+            padding: 2rem 0;
             font-family: "Times New Roman", Times, serif;
         }
 
         .cart-item:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 15px 40px rgba(66, 133, 244, 0.2);
-            border-color: rgba(66, 133, 244, 0.3);
+            transform: none;
+            box-shadow: none;
+            border-color: #e2e8f0;
         }
 
         .product-image {
-            width: 150px;
-            height: 150px;
+            width: 100px;
+            height: 100px;
             object-fit: cover;
-            border-radius: 15px;
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            box-shadow: none;
+            transition: none;
         }
 
         .cart-item:hover .product-image {
-            transform: scale(1.05);
+            transform: none;
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #4285F4, #3b82f6);
+            background: #1a202c;
             border: none;
-            border-radius: 12px;
-            padding: 18px 45px;
-            font-weight: 700;
-            font-size: 1.3rem;
+            border-radius: 0;
+            padding: 16px 32px;
+            font-weight: 500;
+            font-size: 1rem;
             font-family: "Times New Roman", Times, serif;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
+            letter-spacing: 1px;
             transition: all 0.3s ease;
-            box-shadow: 0 8px 25px rgba(66, 133, 244, 0.3);
+            box-shadow: none;
+            color: #ffffff;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #3367d6, #2563eb);
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(66, 133, 244, 0.4);
+            background: #374151;
+            transform: none;
+            box-shadow: none;
+            color: #ffffff;
         }
 
         .btn-outline-danger {
-            border: 3px solid #ff6b6b;
-            color: #ff6b6b;
-            border-radius: 25px;
-            padding: 12px 25px;
-            font-weight: 600;
-            font-size: 1.1rem;
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-weight: 400;
+            font-size: 0.875rem;
             transition: all 0.3s ease;
             background: transparent;
         }
 
         .btn-outline-danger:hover {
-            background: #ff6b6b;
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+            background: #f3f4f6;
+            color: #374151;
+            transform: none;
+            box-shadow: none;
+            border-color: #9ca3af;
         }
 
         .quantity-control {
             display: flex;
             align-items: center;
-            gap: 15px;
-            background: linear-gradient(145deg, #f8fafc, #e2e8f0);
-            padding: 10px 20px;
-            border-radius: 50px;
-            box-shadow: inset 2px 2px 5px rgba(0, 0, 0, 0.1);
+            gap: 8px;
+            background: transparent;
+            padding: 0;
+            border-radius: 0;
+            box-shadow: none;
         }
 
         .quantity-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border: none;
-            color: white;
-            width: 45px;
-            height: 45px;
-            border-radius: 50%;
-            font-weight: 700;
-            font-size: 1.2rem;
+            background: #f3f4f6;
+            border: 1px solid #d1d5db;
+            color: #374151;
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            font-weight: 400;
+            font-size: 1rem;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+            box-shadow: none;
         }
 
         .quantity-btn:hover {
-            background: linear-gradient(135deg, #764ba2, #667eea);
-            transform: scale(1.15);
-            box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+            background: #e5e7eb;
+            transform: none;
+            box-shadow: none;
+            color: #374151;
         }
 
         .quantity-input {
-            width: 80px;
+            width: 60px;
             text-align: center;
-            border: 3px solid #e2e8f0;
-            border-radius: 15px;
-            padding: 12px 8px;
-            font-size: 1.3rem;
-            font-weight: 600;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 8px 4px;
+            font-size: 1rem;
+            font-weight: 400;
             background: white;
             transition: all 0.3s ease;
         }
 
         .quantity-input:focus {
-            border-color: #667eea;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            border-color: #4285F4;
+            box-shadow: 0 0 0 2px rgba(66, 133, 244, 0.2);
             outline: none;
+        }
+
+        /* Container styling for clean layout */
+        .container.py-4 {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Clean cart layout */
+        .col-lg-8 {
+            background: #ffffff;
+            padding: 2rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .col-lg-4 .cart-summary {
+            margin-top: 0;
+        }
+
+        /* Back button styling */
+        .btn-outline-primary {
+            border: 1px solid #d1d5db;
+            color: #374151;
+            background: transparent;
+            border-radius: 4px;
+            padding: 12px 24px;
+            font-size: 0.875rem;
+            font-weight: 400;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline-primary:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+            color: #374151;
+            transform: none;
+        }
+
+        /* Empty cart button */
+        button.btn.btn-outline-danger {
+            border: 1px solid #d1d5db;
+            color: #6b7280;
+            background: transparent;
+            border-radius: 4px;
+            padding: 8px 16px;
+            font-size: 0.875rem;
+            font-weight: 400;
+        }
+
+        button.btn.btn-outline-danger:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+            color: #374151;
         }
 
         .cart-summary {
             background: #ffffff;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(66, 133, 244, 0.15);
-            padding: 3.5rem;
+            border-radius: 0;
+            box-shadow: none;
+            padding: 2rem;
             position: sticky;
             top: 120px;
-            border: 3px solid rgba(66, 133, 244, 0.1);
-            transition: all 0.3s ease;
+            border: 1px solid #e2e8f0;
+            transition: none;
             font-family: "Times New Roman", Times, serif;
         }
 
         .cart-summary:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 50px rgba(66, 133, 244, 0.2);
-            border-color: rgba(66, 133, 244, 0.3);
+            transform: none;
+            box-shadow: none;
+            border-color: #e2e8f0;
         }
 
-        .cart-summary h3 {
-            font-size: 2.5rem !important;
-            font-weight: 800 !important;
+        .cart-summary h3,
+        .cart-summary h4 {
+            font-size: 1.25rem !important;
+            font-weight: 500 !important;
             font-family: "Times New Roman", Times, serif !important;
-            color: #1a202c !important;
-            margin-bottom: 2rem !important;
-            text-align: center;
+            color: #6b7280 !important;
+            margin-bottom: 1.5rem !important;
+            text-align: left;
             position: relative;
-            letter-spacing: 1px;
+            letter-spacing: 0;
+            text-transform: uppercase;
         }
 
         .cart-summary h3::after {
@@ -1167,59 +1227,73 @@ try {
 
         /* Enhanced Cart Item Content Styling */
         .cart-item h5 {
-            font-size: 1.8rem !important;
-            font-weight: 800 !important;
+            font-size: 1.1rem !important;
+            font-weight: 500 !important;
             font-family: "Times New Roman", Times, serif !important;
             color: #1a202c !important;
-            margin-bottom: 1rem !important;
+            margin-bottom: 0.5rem !important;
             line-height: 1.4 !important;
-            letter-spacing: 0.5px !important;
+            letter-spacing: 0 !important;
         }
 
-        .cart-item .product-price {
-            font-size: 1.7rem !important;
-            font-weight: 800 !important;
+        .cart-item .product-price,
+        .cart-item .fw-bold {
+            font-size: 1.1rem !important;
+            font-weight: 600 !important;
             font-family: "Times New Roman", Times, serif !important;
-            color: #4285F4 !important;
-            margin-bottom: 0.8rem !important;
+            color: #1a202c !important;
+            margin-bottom: 0.5rem !important;
         }
 
         .cart-item .text-muted {
-            font-size: 1.1rem !important;
-            color: #718096 !important;
-            font-weight: 500 !important;
+            font-size: 0.875rem !important;
+            color: #6b7280 !important;
+            font-weight: 400 !important;
         }
 
         .cart-item .badge {
-            font-size: 1rem !important;
-            padding: 0.6rem 1.2rem !important;
-            border-radius: 20px !important;
-            font-weight: 600 !important;
+            font-size: 0.75rem !important;
+            padding: 0.25rem 0.5rem !important;
+            border-radius: 4px !important;
+            font-weight: 500 !important;
+            background-color: #f3f4f6 !important;
+            color: #374151 !important;
+            border: none !important;
         }
 
         .cart-item .card-text {
-            font-size: 1.2rem !important;
-            line-height: 1.6 !important;
-            color: #4a5568 !important;
+            font-size: 0.875rem !important;
+            line-height: 1.4 !important;
+            color: #6b7280 !important;
         }
 
         /* Cart Summary Styling */
         .cart-summary .list-group-item {
-            font-size: 1.3rem !important;
-            padding: 1rem 1.5rem !important;
+            font-size: 1rem !important;
+            padding: 0.75rem 0 !important;
             border: none !important;
             background: transparent !important;
         }
 
         .cart-summary .fw-bold {
-            font-size: 1.6rem !important;
-            font-weight: 800 !important;
-            color: #2d3748 !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #1a202c !important;
         }
 
         .cart-summary .text-success {
-            font-size: 1.8rem !important;
-            font-weight: 800 !important;
+            font-size: 1rem !important;
+            font-weight: 600 !important;
+            color: #1a202c !important;
+        }
+
+        .cart-summary .d-flex {
+            margin-bottom: 0.75rem;
+        }
+
+        .cart-summary hr {
+            margin: 1.5rem 0;
+            border-color: #e2e8f0;
         }
 
         /* Page Title Styling */
@@ -1779,12 +1853,6 @@ try {
     <?php include '../includes/header.php'; ?>
     
     <!-- Cart Content -->
-    <!-- Page Title -->
-    <div class="container-fluid">
-        <div class="text-center py-3">
-            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Shopping Cart</h1>
-        </div>
-    </div>
 
     <div class="cart-header">
         <div class="container">

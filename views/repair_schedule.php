@@ -855,9 +855,37 @@ try {
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label" for="issue_description">Additional Details (optional)</label>
-                            <textarea class="form-control" id="issue_description" name="issue_description" rows="3"
-                                      placeholder="Please describe any additional details about the issue..."></textarea>
+                            <label class="form-label" for="issue_description">Describe the issue with your device</label>
+                            <textarea class="form-control" id="issue_description" name="issue_description" rows="4"
+                                      placeholder="e.g., My iPhone 12 battery drains very fast and sometimes the phone gets hot near the camera..."></textarea>
+                            <div style="margin-top: 0.75rem; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                                <button type="button" id="analyzeIssueBtn"
+                                        style="background: linear-gradient(135deg, #2563EB, #1e40af); color: white; border: none; padding: 10px 18px; border-radius: 999px; font-size: 0.95rem; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <i class="fas fa-brain"></i>
+                                    Analyze my Issue
+                                </button>
+                                <small class="text-muted" style="font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-info-circle"></i>
+                                    AI will suggest a likely issue and an estimated repair range. This is not a final quote.
+                                </small>
+                            </div>
+                        </div>
+
+                        <div id="aiDiagnosisCard" style="display: none; margin-bottom: 1.5rem;">
+                            <div style="border-radius: 12px; border: 1px solid #bfdbfe; background: linear-gradient(135deg, #eff6ff, #ffffff); padding: 1.25rem 1.5rem;">
+                                <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem;">
+                                    <div style="width: 34px; height: 34px; border-radius: 999px; background: #1d4ed8; display: flex; align-items: center; justify-content: center; color: white;">
+                                        <i class="fas fa-microchip"></i>
+                                    </div>
+                                    <div>
+                                        <div style="font-weight: 700; color: #1f2937; font-size: 0.98rem;">AI Repair Assistant (Estimate)</div>
+                                        <div style="font-size: 0.8rem; color: #6b7280;">This is an estimate only. Final diagnosis and pricing will be confirmed by a technician.</div>
+                                    </div>
+                                </div>
+                                <div id="aiDiagnosisContent" style="font-size: 0.9rem; color: #111827;">
+                                    <!-- Filled by JS -->
+                                </div>
+                            </div>
                         </div>
                     </div>
 
@@ -1071,6 +1099,142 @@ try {
             // Mark random time slots as unavailable when page loads
             markRandomSlotsUnavailable();
         });
+
+        // AI Repair Analysis
+        const analyzeBtn = document.getElementById('analyzeIssueBtn');
+        const issueTextarea = document.getElementById('issue_description');
+        const deviceInfoInput = document.getElementById('device_info');
+        const aiCard = document.getElementById('aiDiagnosisCard');
+        const aiContent = document.getElementById('aiDiagnosisContent');
+
+        if (analyzeBtn && issueTextarea) {
+            analyzeBtn.addEventListener('click', function () {
+                const issueText = issueTextarea.value.trim();
+
+                if (!issueText) {
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Describe Your Issue',
+                            text: 'Please describe the problem with your device before using AI analysis.',
+                            icon: 'info',
+                            confirmButtonColor: '#2563EB',
+                            confirmButtonText: 'OK'
+                        });
+                    } else {
+                        alert('Please describe the problem with your device before using AI analysis.');
+                    }
+                    issueTextarea.focus();
+                    return;
+                }
+
+                const originalText = analyzeBtn.innerHTML;
+                analyzeBtn.disabled = true;
+                analyzeBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Analyzing...';
+
+                const deviceInfo = deviceInfoInput ? deviceInfoInput.value.trim() : '';
+                let deviceType = '';
+                let brand = '';
+                let model = '';
+
+                if (deviceInfo) {
+                    deviceType = 'Device';
+                    const parts = deviceInfo.split(' ');
+                    if (parts.length >= 1) {
+                        brand = parts[0];
+                    }
+                    if (parts.length >= 2) {
+                        model = parts.slice(1).join(' ');
+                    }
+                }
+
+                let baseCost = null;
+                <?php if ($issue && isset($issue['base_cost'])): ?>
+                baseCost = <?php echo json_encode($issue['base_cost']); ?>;
+                <?php endif; ?>
+
+                const formData = new FormData();
+                formData.append('device_type', deviceType);
+                formData.append('brand', brand);
+                formData.append('model', model);
+                formData.append('issue_description', issueText);
+                if (baseCost !== null) {
+                    formData.append('base_cost', baseCost);
+                }
+
+                fetch('../actions/repair_ai_diagnosis.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success' && data.analysis) {
+                            const a = data.analysis;
+
+                            let urgencyBadge = '';
+                            const urgency = (a.urgency || '').toLowerCase();
+                            if (urgency === 'high') {
+                                urgencyBadge = '<span style="display:inline-flex;align-items:center;gap:6px;background:#fee2e2;color:#b91c1c;padding:4px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;"><i class="fas fa-exclamation-triangle"></i> High urgency</span>';
+                            } else if (urgency === 'medium') {
+                                urgencyBadge = '<span style="display:inline-flex;align-items:center;gap:6px;background:#fef3c7;color:#92400e;padding:4px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;"><i class="fas fa-exclamation-circle"></i> Medium urgency</span>';
+                            } else if (urgency === 'low') {
+                                urgencyBadge = '<span style="display:inline-flex;align-items:center;gap:6px;background:#ecfdf5;color:#047857;padding:4px 10px;border-radius:999px;font-size:0.75rem;font-weight:600;"><i class="fas fa-info-circle"></i> Low urgency</span>';
+                            }
+
+                            aiContent.innerHTML = `
+                                <div style="display:flex;flex-direction:column;gap:8px;">
+                                    <div>
+                                        <div style="font-size:0.8rem;color:#6b7280;margin-bottom:4px;">Likely issue</div>
+                                        <div style="font-weight:600;">${a.likely_issue || 'AI could not determine the issue clearly.'}</div>
+                                    </div>
+                                    <div>
+                                        <div style="font-size:0.8rem;color:#6b7280;margin-bottom:4px;">Recommended repair type</div>
+                                        <div style="font-weight:600;">${a.recommended_repair_type || 'Will be confirmed during diagnosis.'}</div>
+                                    </div>
+                                    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-top:4px;">
+                                        ${a.estimated_cost_range ? `<span style="background:#eff6ff;color:#1d4ed8;padding:6px 10px;border-radius:999px;font-size:0.8rem;font-weight:600;"><i class="fas fa-money-bill-wave"></i> ${a.estimated_cost_range}</span>` : ''}
+                                        ${a.estimated_time ? `<span style="background:#f3f4f6;color:#374151;padding:6px 10px;border-radius:999px;font-size:0.8rem;font-weight:600;"><i class="fas fa-clock"></i> ${a.estimated_time}</span>` : ''}
+                                        ${urgencyBadge}
+                                    </div>
+                                    ${a.notes ? `<div style="margin-top:6px;font-size:0.85rem;color:#374151;">${a.notes}</div>` : ''}
+                                </div>
+                            `;
+
+                            aiCard.style.display = 'block';
+                        } else {
+                            const msg = data.message || 'AI could not analyze your issue. Please try again or continue without it.';
+                            if (typeof Swal !== 'undefined') {
+                                Swal.fire({
+                                    title: 'AI Assistant Unavailable',
+                                    text: msg,
+                                    icon: 'error',
+                                    confirmButtonColor: '#2563EB',
+                                    confirmButtonText: 'OK'
+                                });
+                            } else {
+                                alert(msg);
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('AI diagnosis error:', error);
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                title: 'AI Error',
+                                text: 'Something went wrong while analyzing your issue. You can still schedule your appointment.',
+                                icon: 'error',
+                                confirmButtonColor: '#2563EB',
+                                confirmButtonText: 'OK'
+                            });
+                        } else {
+                            alert('Something went wrong while analyzing your issue. You can still schedule your appointment.');
+                        }
+                    })
+                    .finally(() => {
+                        analyzeBtn.disabled = false;
+                        analyzeBtn.innerHTML = originalText;
+                    });
+            });
+        }
 
         // Form validation
         document.getElementById('appointmentForm').addEventListener('submit', function(e) {

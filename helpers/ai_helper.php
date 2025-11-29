@@ -202,6 +202,66 @@ class AIHelper {
     }
     
     /**
+     * Analyze a device repair issue and suggest likely diagnosis
+     * Returns a JSON string with a fixed structure
+     */
+    public function analyzeRepairIssue($device_type, $brand, $model, $issue_description, $base_cost = null) {
+        $device_type = trim($device_type ?: 'Device');
+        $brand = trim($brand ?: 'Unknown brand');
+        $model = trim($model ?: '');
+        $issue_description = trim($issue_description ?: '');
+        
+        if (empty($issue_description)) {
+            throw new Exception("Issue description is required for analysis.");
+        }
+        
+        $prompt = "You are a senior repair technician at a repair shop called Gadget Garage in Accra, Ghana.\n";
+        $prompt .= "A customer has scheduled a remote repair consultation.\n\n";
+        $prompt .= "Device details:\n";
+        $prompt .= "- Type: {$device_type}\n";
+        $prompt .= "- Brand: {$brand}\n";
+        if (!empty($model)) {
+            $prompt .= "- Model: {$model}\n";
+        }
+        $prompt .= "\nCustomer issue description (in their own words):\n\"{$issue_description}\"\n\n";
+        
+        $prompt .= "The shop offers these main repair categories:\n";
+        $prompt .= "- Screen replacement (for cracked, unresponsive, or display issues)\n";
+        $prompt .= "- Battery replacement (for fast drain, random shutdowns, overheating, swollen battery)\n";
+        $prompt .= "- Charging port / power issues (for not charging, loose port, cable must be bent)\n";
+        $prompt .= "- Board-level / advanced diagnosis (for water damage, no power, boot loop, random behaviour)\n";
+        $prompt .= "- Software / OS issues (for slow phone, app crashes, virus, update problems)\n";
+        $prompt .= "- Camera or speaker/microphone issues\n\n";
+        
+        if (!empty($base_cost)) {
+            $prompt .= "The base consultation cost for this type of issue is about GH₵" . number_format($base_cost, 0) . ".\n";
+        }
+        
+        $prompt .= "\nIMPORTANT:\n";
+        $prompt .= "- You are only giving an ESTIMATE, not a final quote.\n";
+        $prompt .= "- Use realistic prices for Accra, Ghana in Ghana cedis (GH₵).\n";
+        $prompt .= "- Always assume the device still needs physical diagnosis before final pricing.\n\n";
+        
+        $prompt .= "Respond ONLY in valid JSON with this exact structure (no explanations, no extra text):\n";
+        $prompt .= "{\n";
+        $prompt .= "  \"likely_issue\": \"short text explaining what is probably wrong\",\n";
+        $prompt .= "  \"recommended_repair_type\": \"one of: screen replacement, battery replacement, charging port / power issues, board-level / advanced diagnosis, software / OS issues, camera issue, speaker / microphone issue\",\n";
+        $prompt .= "  \"estimated_cost_range\": \"a realistic price range in Ghana cedis, e.g. 'GH₵300 - GH₵600'\",\n";
+        $prompt .= "  \"estimated_time\": \"how long the repair usually takes, e.g. '1-2 hours', '1-2 days'\",\n";
+        $prompt .= "  \"urgency\": \"low, medium, or high based on the risk of further damage or data loss\",\n";
+        $prompt .= "  \"notes\": \"1-3 short sentences with friendly advice for the customer and what to expect during diagnosis\"\n";
+        $prompt .= "}\n";
+        
+        try {
+            $response = $this->callOpenAI($prompt, 400);
+            return trim($response);
+        } catch (Exception $e) {
+            error_log("AI Repair Analysis Error: " . $e->getMessage());
+            throw new Exception("Unable to analyze issue at this time. Please try again.");
+        }
+    }
+    
+    /**
      * Get AI-powered product recommendations
      * Analyzes user context and suggests relevant products
      */

@@ -2616,6 +2616,476 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <?php include '../includes/header.php'; ?>
-    
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>
+
+    <!-- Flash Deals Hero Section with Large Timer -->
+    <div class="container-fluid">
+        <div class="flash-deals-hero">
+            <div class="flash-hero-content">
+                <div class="flash-hero-text">
+                    <h1 class="flash-main-title">
+                        <i class="fas fa-bolt"></i>
+                        FLASH DEALS
+                        <i class="fas fa-bolt"></i>
+                    </h1>
+                    <p class="flash-subtitle">Unbeatable prices for a limited time only!</p>
+                </div>
+
+                <div class="flash-countdown-large">
+                    <div class="countdown-label-large">Deals End In</div>
+                    <div class="countdown-display-large">
+                        <div class="countdown-item-large">
+                            <div class="countdown-number-large" id="days">12</div>
+                            <div class="countdown-text-large">Days</div>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-item-large">
+                            <div class="countdown-number-large" id="hours">00</div>
+                            <div class="countdown-text-large">Hours</div>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-item-large">
+                            <div class="countdown-number-large" id="minutes">00</div>
+                            <div class="countdown-text-large">Minutes</div>
+                        </div>
+                        <div class="countdown-separator">:</div>
+                        <div class="countdown-item-large">
+                            <div class="countdown-number-large" id="seconds">00</div>
+                            <div class="countdown-text-large">Seconds</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content with Filters -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Filters Sidebar -->
+            <div class="col-lg-3 mb-4">
+                <div id="filterSidebar" class="filters-sidebar">
+                    <div class="filter-header">
+                        <h4 class="filter-title">
+                            <i class="fas fa-filter"></i>
+                            Filters
+                        </h4>
+                        <button class="filter-close" onclick="hideFilters()">
+                            <i class="fas fa-times"></i>
+                        </button>
+                    </div>
+
+                    <!-- Search Filter -->
+                    <div class="filter-group">
+                        <label class="filter-subtitle">Search Products</label>
+                        <div class="search-container">
+                            <input type="text" id="searchFilter" class="search-input"
+                                   placeholder="Search flash deals..."
+                                   value="<?php echo htmlspecialchars($search_query); ?>">
+                            <i class="fas fa-search search-icon"></i>
+                        </div>
+                    </div>
+
+                    <!-- Brand Filter -->
+                    <div class="filter-group">
+                        <label class="filter-subtitle">Brand</label>
+                        <div class="checkbox-dropdown">
+                            <div class="dropdown-toggle" onclick="toggleDropdown('brandDropdown')">
+                                <span>Select Brands</span>
+                                <i class="fas fa-chevron-down dropdown-arrow"></i>
+                            </div>
+                            <div class="dropdown-content" id="brandDropdown">
+                                <?php foreach ($brands as $brand): ?>
+                                <div class="checkbox-item">
+                                    <input type="checkbox" id="brand_<?php echo $brand['brand_id']; ?>"
+                                           name="brand" value="<?php echo htmlspecialchars($brand['brand_name']); ?>"
+                                           <?php echo ($brand_filter === $brand['brand_name']) ? 'checked' : ''; ?>>
+                                    <label for="brand_<?php echo $brand['brand_id']; ?>">
+                                        <?php echo htmlspecialchars($brand['brand_name']); ?>
+                                    </label>
+                                </div>
+                                <?php endforeach; ?>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Condition Filter -->
+                    <div class="filter-group">
+                        <label class="filter-subtitle">Condition</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item">
+                                <input type="radio" name="condition" value="all" id="condition_all"
+                                       <?php echo ($condition_filter === 'all') ? 'checked' : ''; ?>>
+                                <label for="condition_all">All Conditions</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" name="condition" value="excellent" id="condition_excellent"
+                                       <?php echo ($condition_filter === 'excellent') ? 'checked' : ''; ?>>
+                                <label for="condition_excellent">Excellent</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" name="condition" value="good" id="condition_good"
+                                       <?php echo ($condition_filter === 'good') ? 'checked' : ''; ?>>
+                                <label for="condition_good">Good</label>
+                            </div>
+                            <div class="checkbox-item">
+                                <input type="radio" name="condition" value="fair" id="condition_fair"
+                                       <?php echo ($condition_filter === 'fair') ? 'checked' : ''; ?>>
+                                <label for="condition_fair">Fair</label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Filter Actions -->
+                    <div class="filter-actions">
+                        <button class="apply-filters-btn" onclick="applyFilters()">
+                            <i class="fas fa-check"></i>
+                            Apply Filters
+                        </button>
+                        <div class="clear-filters-container">
+                            <button class="clear-filters-btn" onclick="clearFilters()">
+                                <i class="fas fa-times"></i>
+                                Clear All Filters
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Products Area -->
+            <div class="col-lg-9">
+                <!-- Stats Bar -->
+                <div class="stats-bar">
+                    <div class="product-count">
+                        <i class="fas fa-fire"></i>
+                        Showing <?php echo count($products_to_display); ?> of <?php echo $total_products; ?> flash deals
+                    </div>
+                    <div class="view-toggle">
+                        <button class="view-btn active" onclick="toggleView('grid')">
+                            <i class="fas fa-th"></i>
+                        </button>
+                        <button class="view-btn" onclick="toggleView('list')">
+                            <i class="fas fa-list"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Products Grid -->
+                <div class="product-grid" id="productGrid">
+                    <?php if (empty($products_to_display)): ?>
+                        <div class="no-products">
+                            <div class="no-products-icon">
+                                <i class="fas fa-search"></i>
+                            </div>
+                            <h3>No Flash Deals Found</h3>
+                            <p>Try adjusting your filters or check back later for new deals.</p>
+                            <a href="flash_deals.php" class="btn btn-primary">
+                                <i class="fas fa-refresh me-2"></i>
+                                View All Flash Deals
+                            </a>
+                        </div>
+                    <?php else: ?>
+                        <?php foreach ($products_to_display as $product): ?>
+                            <div class="product-card" onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'">
+                                <div class="product-image-container">
+                                    <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
+                                         alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                         class="product-image"
+                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PHJlY3Qgd2lkdGg9IjMwMCIgaGVpZ2h0PSIzMDAiIGZpbGw9IiNGM0Y0RjYiLz48cGF0aCBkPSJNOTAgMTIwTDIxMCAyMTBIOTBWMTIwWiIgZmlsbD0iI0QxRDVEQiIvPjxjaXJjbGUgY3g9IjEzMiIgY3k9IjEzMiIgcj0iMTgiIGZpbGw9IiNEMUQ1REIiLz48L3N2Zz4='; this.onerror=null;">
+
+                                    <!-- Flash Deal Badge -->
+                                    <div class="product-badge">
+                                        <i class="fas fa-bolt me-1"></i>
+                                        FLASH DEAL
+                                    </div>
+
+                                    <!-- Wishlist Button -->
+                                    <button class="wishlist-btn <?php echo $is_logged_in ? 'btn-wishlist' : 'btn-login-required'; ?>"
+                                            data-product-id="<?php echo $product['product_id']; ?>"
+                                            onclick="event.stopPropagation(); <?php echo $is_logged_in ? 'toggleWishlist(this)' : 'showLoginPrompt()'; ?>"
+                                            title="<?php echo $is_logged_in ? 'Add to Wishlist' : 'Login to add to wishlist'; ?>">
+                                        <i class="far fa-heart"></i>
+                                    </button>
+                                </div>
+
+                                <div class="product-content">
+                                    <h3 class="product-title"><?php echo htmlspecialchars($product['product_title']); ?></h3>
+
+                                    <div class="product-meta">
+                                        <div class="meta-tag">
+                                            <i class="fas fa-tag"></i>
+                                            <?php echo htmlspecialchars($product['brand_name'] ?? 'Unknown Brand'); ?>
+                                        </div>
+                                        <div class="meta-tag">
+                                            <i class="fas fa-layer-group"></i>
+                                            <?php echo htmlspecialchars($product['cat_name'] ?? 'Category'); ?>
+                                        </div>
+                                    </div>
+
+                                    <div class="product-price">
+                                        GH₵ <?php echo number_format($product['product_price'], 2); ?>
+                                    </div>
+
+                                    <button class="add-to-cart-btn"
+                                            onclick="event.stopPropagation(); addToCartWithCondition(<?php echo $product['product_id']; ?>)"
+                                            data-product-id="<?php echo $product['product_id']; ?>">
+                                        <i class="fas fa-fire"></i>
+                                        Grab Deal Now
+                                    </button>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    <?php endif; ?>
+                </div>
+
+                <!-- Pagination -->
+                <?php if ($total_pages > 1): ?>
+                    <div class="pagination">
+                        <?php if ($current_page > 1): ?>
+                            <a href="?page=<?php echo $current_page - 1; ?>&<?php echo http_build_query(array_filter(['brand' => $brand_filter !== 'all' ? $brand_filter : '', 'condition' => $condition_filter !== 'all' ? $condition_filter : '', 'search' => $search_query])); ?>"
+                               class="page-btn">
+                                <i class="fas fa-chevron-left me-2"></i>Previous
+                            </a>
+                        <?php endif; ?>
+
+                        <?php for ($i = max(1, $current_page - 2); $i <= min($total_pages, $current_page + 2); $i++): ?>
+                            <a href="?page=<?php echo $i; ?>&<?php echo http_build_query(array_filter(['brand' => $brand_filter !== 'all' ? $brand_filter : '', 'condition' => $condition_filter !== 'all' ? $condition_filter : '', 'search' => $search_query])); ?>"
+                               class="page-btn <?php echo $i === $current_page ? 'active' : ''; ?>">
+                                <?php echo $i; ?>
+                            </a>
+                        <?php endfor; ?>
+
+                        <?php if ($current_page < $total_pages): ?>
+                            <a href="?page=<?php echo $current_page + 1; ?>&<?php echo http_build_query(array_filter(['brand' => $brand_filter !== 'all' ? $brand_filter : '', 'condition' => $condition_filter !== 'all' ? $condition_filter : '', 'search' => $search_query])); ?>"
+                               class="page-btn">
+                                Next<i class="fas fa-chevron-right ms-2"></i>
+                            </a>
+                        <?php endif; ?>
+                    </div>
+                <?php endif; ?>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Central Filter Overlay (for mobile) -->
+    <div class="filter-overlay" id="filterOverlay"></div>
+
+    <!-- Footer -->
+    <?php include '../includes/footer.php'; ?>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/dark-mode.js"></script>
+    <script src="../js/product-card.js"></script>
+    <script src="../js/cart-functions.js"></script>
+    <script src="../js/wishlist.js"></script>
+
+    <script>
+        // Flash Deals 12-Day Countdown Timer
+        function startCountdown() {
+            const now = new Date().getTime();
+            const endDate = new Date(now + (12 * 24 * 60 * 60 * 1000)).getTime(); // 12 days from now
+
+            const timer = setInterval(function() {
+                const now = new Date().getTime();
+                const distance = endDate - now;
+
+                if (distance < 0) {
+                    clearInterval(timer);
+                    document.getElementById("days").innerHTML = "00";
+                    document.getElementById("hours").innerHTML = "00";
+                    document.getElementById("minutes").innerHTML = "00";
+                    document.getElementById("seconds").innerHTML = "00";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById("days").innerHTML = String(days).padStart(2, '0');
+                document.getElementById("hours").innerHTML = String(hours).padStart(2, '0');
+                document.getElementById("minutes").innerHTML = String(minutes).padStart(2, '0');
+                document.getElementById("seconds").innerHTML = String(seconds).padStart(2, '0');
+            }, 1000);
+        }
+
+        // Filter Functions
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const toggle = dropdown.previousElementSibling;
+
+            dropdown.classList.toggle('show');
+            toggle.classList.toggle('active');
+        }
+
+        function applyFilters() {
+            const searchQuery = document.getElementById('searchFilter').value;
+            const brandCheckboxes = document.querySelectorAll('input[name="brand"]:checked');
+            const conditionRadio = document.querySelector('input[name="condition"]:checked');
+
+            const brands = Array.from(brandCheckboxes).map(cb => cb.value);
+            const condition = conditionRadio ? conditionRadio.value : 'all';
+
+            const params = new URLSearchParams();
+            if (searchQuery) params.set('search', searchQuery);
+            if (brands.length > 0 && brands[0] !== 'all') params.set('brand', brands[0]);
+            if (condition !== 'all') params.set('condition', condition);
+
+            window.location.href = 'flash_deals.php?' + params.toString();
+        }
+
+        function clearFilters() {
+            window.location.href = 'flash_deals.php';
+        }
+
+        function toggleView(view) {
+            const productGrid = document.getElementById('productGrid');
+            const viewBtns = document.querySelectorAll('.view-btn');
+
+            viewBtns.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.view-btn').classList.add('active');
+
+            if (view === 'list') {
+                productGrid.classList.add('list-view');
+            } else {
+                productGrid.classList.remove('list-view');
+            }
+        }
+
+        function hideFilters() {
+            const sidebar = document.getElementById('filterSidebar');
+            const overlay = document.getElementById('filterOverlay');
+
+            sidebar.classList.remove('show');
+            overlay.classList.remove('show');
+        }
+
+        // Enhanced Add to Cart Function for Flash Deals
+        async function addToCartWithCondition(productId) {
+            if (!<?php echo $is_logged_in ? 'true' : 'false'; ?>) {
+                showLoginPrompt();
+                return;
+            }
+
+            // Show flash deal notification
+            const flashNotification = document.createElement('div');
+            flashNotification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #ff6b6b, #ee5a52);
+                color: white;
+                padding: 15px 25px;
+                border-radius: 10px;
+                z-index: 10000;
+                font-weight: 600;
+                box-shadow: 0 4px 20px rgba(255, 107, 107, 0.3);
+            `;
+            flashNotification.innerHTML = '<i class="fas fa-fire me-2"></i>Adding flash deal to cart...';
+            document.body.appendChild(flashNotification);
+
+            try {
+                const response = await fetch('../actions/add_to_cart_action.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `product_id=${productId}&quantity=1`
+                });
+
+                const result = await response.json();
+
+                setTimeout(() => {
+                    document.body.removeChild(flashNotification);
+
+                    if (result.success) {
+                        showFlashDealSuccess();
+                        updateCartBadge(result.cart_count);
+                    } else {
+                        alert(result.message || 'Failed to add item to cart');
+                    }
+                }, 800);
+
+            } catch (error) {
+                setTimeout(() => {
+                    document.body.removeChild(flashNotification);
+                    alert('Error adding item to cart: ' + error.message);
+                }, 800);
+            }
+        }
+
+        function showFlashDealSuccess() {
+            const successDiv = document.createElement('div');
+            successDiv.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: linear-gradient(135deg, #10b981, #059669);
+                color: white;
+                padding: 20px 30px;
+                border-radius: 12px;
+                z-index: 10000;
+                font-weight: 600;
+                box-shadow: 0 8px 30px rgba(16, 185, 129, 0.3);
+                animation: slideIn 0.3s ease-out;
+            `;
+            successDiv.innerHTML = '<i class="fas fa-bolt me-2"></i>Flash Deal Added to Cart! 🔥';
+            document.body.appendChild(successDiv);
+
+            setTimeout(() => {
+                if (document.body.contains(successDiv)) {
+                    document.body.removeChild(successDiv);
+                }
+            }, 3000);
+        }
+
+        function updateCartBadge(count) {
+            const badge = document.getElementById('cartBadge');
+            if (badge) {
+                badge.textContent = count;
+                badge.style.display = count > 0 ? 'flex' : 'none';
+            }
+        }
+
+        // Scroll to Top Functionality
+        window.addEventListener('scroll', function() {
+            const scrollBtn = document.getElementById('scrollToTopBtn');
+            if (window.pageYOffset > 300) {
+                scrollBtn.classList.add('show');
+            } else {
+                scrollBtn.classList.remove('show');
+            }
+        });
+
+        document.getElementById('scrollToTopBtn').addEventListener('click', function() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        });
+
+        // Initialize countdown on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            startCountdown();
+
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.checkbox-dropdown')) {
+                    document.querySelectorAll('.dropdown-content.show').forEach(dropdown => {
+                        dropdown.classList.remove('show');
+                        dropdown.previousElementSibling.classList.remove('active');
+                    });
+                }
+            });
+        });
+    </script>
+
+</body>
+</html>

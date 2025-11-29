@@ -729,9 +729,10 @@ body.dark-mode .simple-dropdown ul li a:hover {
 }
 
 .brands-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    display: block !important;
 }
 
 .brands-dropdown h4 {
@@ -793,9 +794,10 @@ body.dark-mode .simple-dropdown ul li a:hover {
 }
 
 .simple-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    display: block !important;
 }
 
 .simple-dropdown ul {
@@ -843,9 +845,10 @@ body.dark-mode .simple-dropdown ul li a:hover {
 }
 
 .mega-dropdown.show {
-    opacity: 1;
-    visibility: visible;
-    transform: translateY(0);
+    opacity: 1 !important;
+    visibility: visible !important;
+    transform: translateY(0) !important;
+    display: block !important;
 }
 
 .dropdown-content {

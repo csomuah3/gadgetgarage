@@ -361,10 +361,15 @@ window.toggleUserDropdown = function() {
 };
 
 window.showDropdown = function() {
+    console.log('showDropdown called');
     const dropdown = document.getElementById('shopDropdown');
+    console.log('shopDropdown element:', dropdown);
     if (dropdown) {
         clearTimeout(dropdownTimeout);
         dropdown.classList.add('show');
+        console.log('Added show class, classes:', dropdown.className);
+    } else {
+        console.error('shopDropdown element not found!');
     }
 };
 
@@ -379,10 +384,15 @@ window.hideDropdown = function() {
 };
 
 window.showShopDropdown = function() {
+    console.log('showShopDropdown called');
     const dropdown = document.getElementById('shopCategoryDropdown');
+    console.log('shopCategoryDropdown element:', dropdown);
     if (dropdown) {
         clearTimeout(shopDropdownTimeout);
         dropdown.classList.add('show');
+        console.log('Added show class, classes:', dropdown.className);
+    } else {
+        console.error('shopCategoryDropdown element not found!');
     }
 };
 
@@ -397,10 +407,15 @@ window.hideShopDropdown = function() {
 };
 
 window.showMoreDropdown = function() {
+    console.log('showMoreDropdown called');
     const dropdown = document.getElementById('moreDropdown');
+    console.log('moreDropdown element:', dropdown);
     if (dropdown) {
         clearTimeout(moreDropdownTimeout);
         dropdown.classList.add('show');
+        console.log('Added show class, classes:', dropdown.className);
+    } else {
+        console.error('moreDropdown element not found!');
     }
 };
 

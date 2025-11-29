@@ -1558,11 +1558,13 @@ function getOrderStatus($order_date) {
                 reverseButtons: true
             }).then((result) => {
                 if (result.isConfirmed) {
-                    // Show loading state
-                    const cancelBtn = event.target.closest('button');
-                    const originalText = cancelBtn.innerHTML;
-                    cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
-                    cancelBtn.disabled = true;
+                    // Show loading state - find button by order ID
+                    const cancelBtn = document.querySelector(`button[onclick*="cancelOrder(${orderId}"]`);
+                    if (cancelBtn) {
+                        const originalText = cancelBtn.innerHTML;
+                        cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+                        cancelBtn.disabled = true;
+                    }
 
                     // Send cancellation request
                     fetch('../actions/cancel_order_action.php', {
@@ -1600,8 +1602,11 @@ function getOrderStatus($order_date) {
                             });
 
                             // Reset button
-                            cancelBtn.innerHTML = originalText;
-                            cancelBtn.disabled = false;
+                            const cancelBtn = document.querySelector(`button[onclick*="cancelOrder(${orderId}"]`);
+                            if (cancelBtn) {
+                                cancelBtn.innerHTML = 'Cancel';
+                                cancelBtn.disabled = false;
+                            }
                         }
                     })
                     .catch(error => {
@@ -1615,6 +1620,13 @@ function getOrderStatus($order_date) {
                             confirmButtonColor: '#3085d6',
                             confirmButtonText: 'OK'
                         });
+                        
+                        // Reset button
+                        const cancelBtn = document.querySelector(`button[onclick*="cancelOrder(${orderId}"]`);
+                        if (cancelBtn) {
+                            cancelBtn.innerHTML = 'Cancel';
+                            cancelBtn.disabled = false;
+                        }
 
                         // Reset button
                         cancelBtn.innerHTML = originalText;

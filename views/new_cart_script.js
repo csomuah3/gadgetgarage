@@ -343,3 +343,113 @@ function removeItem(productId, cartItemId) {
 function emptyCart() {
     cartManager.emptyCart();
 }
+
+// NEW: Cart ID-based functions for multiple conditions support
+function incrementQuantityByCartId(cartItemId, productId) {
+    cartManager.incrementQuantity(productId, cartItemId.replace('qty-', ''));
+}
+
+function decrementQuantityByCartId(cartItemId, productId) {
+    cartManager.decrementQuantity(productId, cartItemId.replace('qty-', ''));
+}
+
+function updateQuantityByCartId(cartItemId, productId, quantity) {
+    cartManager.updateQuantity(productId, quantity, cartItemId.replace('qty-', ''));
+}
+
+function removeFromCartByCartId(cartItemId, productId) {
+    cartManager.removeItem(productId, cartItemId);
+}
+
+// NEW: Update product condition in cart with dynamic price
+function updateCondition(selectElement) {
+    const cartItemId = selectElement.getAttribute('data-cart-item-id');
+    const productId = selectElement.getAttribute('data-product-id');
+    const newCondition = selectElement.value;
+
+    console.log('Condition change:', { cartItemId, productId, newCondition });
+
+    // Get the unit price element
+    const unitPriceElement = document.getElementById('unit-price-' + cartItemId);
+    if (!unitPriceElement) {
+        console.error('Unit price element not found:', cartItemId);
+        return;
+    }
+
+    // Get current price
+    let currentPriceText = unitPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
+    let currentPrice = parseFloat(currentPriceText);
+    
+    // Calculate multiplier based on condition
+    let multiplier = 1.0;
+    switch (newCondition) {
+        case 'excellent':
+            multiplier = 1.0; // 100%
+            break;
+        case 'good':
+            multiplier = 0.9; // 90%
+            break;
+        case 'fair':
+            multiplier = 0.8; // 80%
+            break;
+    }
+
+    // Calculate new price
+    let newPrice = currentPrice * multiplier;
+
+    // Update the unit price display
+    unitPriceElement.textContent = `GH₵ ${newPrice.toFixed(2)}`;
+
+    // Update total price for this item
+    const quantityInput = document.getElementById(`qty-${cartItemId}`);
+    if (quantityInput) {
+        const quantity = parseInt(quantityInput.value) || 1;
+        const totalPriceElement = document.getElementById('total-price-' + cartItemId);
+        if (totalPriceElement) {
+            const newTotal = newPrice * quantity;
+            totalPriceElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
+        }
+    }
+
+    // Recalculate cart totals
+    updateCartTotals();
+
+    // Show notification
+    Swal.fire({
+        icon: 'success',
+        title: 'Condition Updated!',
+        text: `Changed to ${newCondition.charAt(0).toUpperCase() + newCondition.slice(1)}`,
+        timer: 2000,
+        showConfirmButton: false,
+        toast: true,
+        position: 'top-end'
+    });
+}
+
+// Calculate cart totals from all items
+function updateCartTotals() {
+    let total = 0;
+    const cartItems = document.querySelectorAll('.cart-item');
+
+    cartItems.forEach(item => {
+        const totalPriceElement = item.querySelector('[id^="total-price-"]');
+        if (totalPriceElement) {
+            let priceText = totalPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
+            const itemTotal = parseFloat(priceText);
+            if (!isNaN(itemTotal)) {
+                total += itemTotal;
+            }
+        }
+    });
+
+    // Update cart total displays
+    const cartTotal = document.getElementById('cartTotal');
+    const cartSubtotal = document.getElementById('cartSubtotal');
+
+    if (cartTotal) {
+        cartTotal.textContent = `GH₵ ${total.toFixed(2)}`;
+    }
+    if (cartSubtotal) {
+        cartSubtotal.textContent = `GH₵ ${total.toFixed(2)}`;
+    }
+}

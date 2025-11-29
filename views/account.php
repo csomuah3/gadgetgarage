@@ -101,7 +101,7 @@ try {
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: fixed;
-            opacity: 0.08;
+            opacity: 0.75;
             z-index: 0;
             pointer-events: none;
         }

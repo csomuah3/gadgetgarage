@@ -348,13 +348,91 @@ $is_logged_in = isset($_SESSION['user_id']);
 </nav>
 
 <script>
-// Header JavaScript functionality
+// Header JavaScript functionality - DROPDOWN FUNCTIONS MUST BE GLOBAL
+// Dropdown navigation functions with timeout delays
+let dropdownTimeout;
+let shopDropdownTimeout;
+let moreDropdownTimeout;
+let userDropdownTimeout;
+
+window.toggleUserDropdown = function() {
+    const dropdown = document.getElementById('userDropdownMenu');
+    if (dropdown) dropdown.classList.toggle('show');
+};
+
+window.showDropdown = function() {
+    const dropdown = document.getElementById('shopDropdown');
+    if (dropdown) {
+        clearTimeout(dropdownTimeout);
+        dropdown.classList.add('show');
+    }
+};
+
+window.hideDropdown = function() {
+    const dropdown = document.getElementById('shopDropdown');
+    if (dropdown) {
+        clearTimeout(dropdownTimeout);
+        dropdownTimeout = setTimeout(() => {
+            dropdown.classList.remove('show');
+        }, 300);
+    }
+};
+
+window.showShopDropdown = function() {
+    const dropdown = document.getElementById('shopCategoryDropdown');
+    if (dropdown) {
+        clearTimeout(shopDropdownTimeout);
+        dropdown.classList.add('show');
+    }
+};
+
+window.hideShopDropdown = function() {
+    const dropdown = document.getElementById('shopCategoryDropdown');
+    if (dropdown) {
+        clearTimeout(shopDropdownTimeout);
+        shopDropdownTimeout = setTimeout(() => {
+            dropdown.classList.remove('show');
+        }, 300);
+    }
+};
+
+window.showMoreDropdown = function() {
+    const dropdown = document.getElementById('moreDropdown');
+    if (dropdown) {
+        clearTimeout(moreDropdownTimeout);
+        dropdown.classList.add('show');
+    }
+};
+
+window.hideMoreDropdown = function() {
+    const dropdown = document.getElementById('moreDropdown');
+    if (dropdown) {
+        clearTimeout(moreDropdownTimeout);
+        moreDropdownTimeout = setTimeout(() => {
+            dropdown.classList.remove('show');
+        }, 300);
+    }
+};
+
+window.showUserDropdown = function() {
+    const dropdown = document.getElementById('userDropdownMenu');
+    if (dropdown) {
+        clearTimeout(userDropdownTimeout);
+        dropdown.classList.add('show');
+    }
+};
+
+window.hideUserDropdown = function() {
+    const dropdown = document.getElementById('userDropdownMenu');
+    if (dropdown) {
+        clearTimeout(userDropdownTimeout);
+        userDropdownTimeout = setTimeout(() => {
+            dropdown.classList.remove('show');
+        }, 300);
+    }
+};
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Global functions for dropdown functionality
-    window.toggleUserDropdown = function() {
-        const dropdown = document.getElementById('userDropdownMenu');
-        if (dropdown) dropdown.classList.toggle('show');
-    };
 
     // Close dropdown when clicking outside
     document.addEventListener('click', function(event) {
@@ -364,84 +442,6 @@ document.addEventListener('DOMContentLoaded', function() {
             dropdown.classList.remove('show');
         }
     });
-
-    // Dropdown navigation functions with timeout delays
-    let dropdownTimeout;
-    let shopDropdownTimeout;
-    let moreDropdownTimeout;
-    let userDropdownTimeout;
-
-    window.showDropdown = function() {
-        const dropdown = document.getElementById('shopDropdown');
-        if (dropdown) {
-            clearTimeout(dropdownTimeout);
-            dropdown.classList.add('show');
-        }
-    };
-
-    window.hideDropdown = function() {
-        const dropdown = document.getElementById('shopDropdown');
-        if (dropdown) {
-            clearTimeout(dropdownTimeout);
-            dropdownTimeout = setTimeout(() => {
-                dropdown.classList.remove('show');
-            }, 300);
-        }
-    };
-
-    window.showShopDropdown = function() {
-        const dropdown = document.getElementById('shopCategoryDropdown');
-        if (dropdown) {
-            clearTimeout(shopDropdownTimeout);
-            dropdown.classList.add('show');
-        }
-    };
-
-    window.hideShopDropdown = function() {
-        const dropdown = document.getElementById('shopCategoryDropdown');
-        if (dropdown) {
-            clearTimeout(shopDropdownTimeout);
-            shopDropdownTimeout = setTimeout(() => {
-                dropdown.classList.remove('show');
-            }, 300);
-        }
-    };
-
-    window.showMoreDropdown = function() {
-        const dropdown = document.getElementById('moreDropdown');
-        if (dropdown) {
-            clearTimeout(moreDropdownTimeout);
-            dropdown.classList.add('show');
-        }
-    };
-
-    window.hideMoreDropdown = function() {
-        const dropdown = document.getElementById('moreDropdown');
-        if (dropdown) {
-            clearTimeout(moreDropdownTimeout);
-            moreDropdownTimeout = setTimeout(() => {
-                dropdown.classList.remove('show');
-            }, 300);
-        }
-    };
-
-    window.showUserDropdown = function() {
-        const dropdown = document.getElementById('userDropdownMenu');
-        if (dropdown) {
-            clearTimeout(userDropdownTimeout);
-            dropdown.classList.add('show');
-        }
-    };
-
-    window.hideUserDropdown = function() {
-        const dropdown = document.getElementById('userDropdownMenu');
-        if (dropdown) {
-            clearTimeout(userDropdownTimeout);
-            userDropdownTimeout = setTimeout(() => {
-                dropdown.classList.remove('show');
-            }, 300);
-        }
-    };
 
     // Enhanced dropdown behavior
     const shopCategoriesBtn = document.querySelector('.shop-categories-btn');

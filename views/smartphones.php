@@ -96,10 +96,10 @@ $filter_config = [
     'allowed_categories' => []
 ];
 
-// Get recommended products (4 random products)
+// Get recommended products (3 random products)
 $all_products_for_recommendations = get_all_products_ctr();
 shuffle($all_products_for_recommendations);
-$recommended_products = array_slice($all_products_for_recommendations, 0, 4);
+$recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 ?>
 
 <!DOCTYPE html>
@@ -3554,7 +3554,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 4);
             <?php foreach ($recommended_products as $product): 
                 $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
             ?>
-                <div class="col-lg-3 col-md-6 mb-3">
+                <div class="col-lg-4 col-md-6 mb-3">
                     <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
                         <div class="product-image-container" style="position: relative; overflow: hidden; background: #f9fafb;">
                             <img src="<?php echo htmlspecialchars($product_image_url); ?>"

@@ -2259,6 +2259,166 @@ try {
                 window.location.href = 'checkout.php';
             };
 
+            // Cart quantity functions - defined globally for button onclick
+            window.incrementQuantityByCartId = function(cartItemId, productId) {
+                const input = document.getElementById(cartItemId);
+                if (input) {
+                    const currentValue = parseInt(input.value) || 1;
+                    const newValue = Math.min(currentValue + 1, 99);
+                    input.value = newValue;
+                    
+                    // Update display and server
+                    updateCartItemPrice(cartItemId, newValue);
+                }
+            };
+
+            window.decrementQuantityByCartId = function(cartItemId, productId) {
+                const input = document.getElementById(cartItemId);
+                if (input) {
+                    const currentValue = parseInt(input.value) || 1;
+                    const newValue = Math.max(currentValue - 1, 1);
+                    input.value = newValue;
+                    
+                    // Update display and server
+                    updateCartItemPrice(cartItemId, newValue);
+                }
+            };
+
+            window.updateQuantityByCartId = function(cartItemId, productId, quantity) {
+                quantity = parseInt(quantity);
+                if (quantity < 1) quantity = 1;
+                if (quantity > 99) quantity = 99;
+                
+                const input = document.getElementById(cartItemId);
+                if (input) input.value = quantity;
+                
+                // Update display
+                updateCartItemPrice(cartItemId, quantity);
+            };
+
+            window.removeFromCartByCartId = function(cartItemId, productId) {
+                Swal.fire({
+                    title: 'Remove Item?',
+                    text: 'Are you sure you want to remove this item from your cart?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    cancelButtonColor: '#6c757d',
+                    confirmButtonText: 'Yes, remove it!',
+                    cancelButtonText: 'Cancel'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        // Just reload for now - backend handles removal
+                        location.reload();
+                    }
+                });
+            };
+
+            window.updateCondition = function(selectElement) {
+                const cartItemId = selectElement.getAttribute('data-cart-item-id');
+                const newCondition = selectElement.value;
+                
+                // Get unit price element
+                const unitPriceElement = document.getElementById('unit-price-' + cartItemId);
+                if (!unitPriceElement) return;
+                
+                // Get current price
+                let currentPriceText = unitPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
+                let currentPrice = parseFloat(currentPriceText);
+                
+                // Calculate multiplier based on condition
+                let multiplier = 1.0;
+                switch (newCondition) {
+                    case 'excellent': multiplier = 1.0; break;
+                    case 'good': multiplier = 0.9; break;
+                    case 'fair': multiplier = 0.8; break;
+                }
+                
+                // Calculate new price
+                let newPrice = currentPrice * multiplier;
+                unitPriceElement.textContent = `GH₵ ${newPrice.toFixed(2)}`;
+                
+                // Update total for this item
+                const quantityInput = document.getElementById(`qty-${cartItemId}`);
+                if (quantityInput) {
+                    const quantity = parseInt(quantityInput.value) || 1;
+                    const totalPriceElement = document.getElementById('total-price-' + cartItemId);
+                    if (totalPriceElement) {
+                        totalPriceElement.textContent = `GH₵ ${(newPrice * quantity).toFixed(2)}`;
+                    }
+                }
+                
+                // Recalculate cart totals
+                updateAllCartTotals();
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Condition Updated!',
+                    text: `Changed to ${newCondition.charAt(0).toUpperCase() + newCondition.slice(1)}`,
+                    timer: 2000,
+                    showConfirmButton: false,
+                    toast: true,
+                    position: 'top-end'
+                });
+            };
+
+            window.emptyCart = function() {
+                Swal.fire({
+                    title: 'Empty Cart?',
+                    text: 'Are you sure you want to remove all items?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc3545',
+                    confirmButtonText: 'Yes, empty it!'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+            };
+
+            // Helper: Update item price display
+            function updateCartItemPrice(cartItemId, quantity) {
+                const unitPriceElement = document.getElementById('unit-price-' + cartItemId.replace('qty-', ''));
+                const totalPriceElement = document.getElementById('total-price-' + cartItemId.replace('qty-', ''));
+                
+                if (unitPriceElement && totalPriceElement) {
+                    let unitPriceText = unitPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
+                    const unitPrice = parseFloat(unitPriceText);
+                    
+                    if (!isNaN(unitPrice)) {
+                        const newTotal = unitPrice * quantity;
+                        totalPriceElement.textContent = `GH₵ ${newTotal.toFixed(2)}`;
+                        
+                        // Update cart totals
+                        updateAllCartTotals();
+                    }
+                }
+            }
+
+            // Helper: Update all cart totals
+            function updateAllCartTotals() {
+                let total = 0;
+                const cartItems = document.querySelectorAll('.cart-item');
+                
+                cartItems.forEach(item => {
+                    const totalPriceElement = item.querySelector('[id^="total-price-"]');
+                    if (totalPriceElement) {
+                        let priceText = totalPriceElement.textContent.replace('GH₵', '').replace(/,/g, '').trim();
+                        const itemTotal = parseFloat(priceText);
+                        if (!isNaN(itemTotal)) {
+                            total += itemTotal;
+                        }
+                    }
+                });
+                
+                const cartTotal = document.getElementById('cartTotal');
+                const cartSubtotal = document.getElementById('cartSubtotal');
+                
+                if (cartTotal) cartTotal.textContent = `GH₵ ${total.toFixed(2)}`;
+                if (cartSubtotal) cartSubtotal.textContent = `GH₵ ${total.toFixed(2)}`;
+            }
+
             window.addRecommendedToCart = function(productId) {
                 fetch('../actions/add_to_cart_action.php', {
                     method: 'POST',

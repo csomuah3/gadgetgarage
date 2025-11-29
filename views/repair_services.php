@@ -584,20 +584,105 @@ try {
 	<script src="../js/header.js"></script>
 	<script src="../js/dark-mode.js"></script>
 	<script>
-		// Search functionality
-		document.querySelector('.search-input').addEventListener('keypress', function(e) {
-			if (e.key === 'Enter') {
-				performSearch();
+		// IMMEDIATELY DEFINE GLOBAL FUNCTIONS FIRST - BEFORE DOM READY
+		// Global variables for repair service selection
+		let selectedIssue = null;
+		let selectedIssueName = '';
+
+		// Make selectIssue function globally available IMMEDIATELY
+		window.selectIssue = function(issueId, issueName) {
+			console.log('selectIssue called with:', issueId, issueName);
+
+			// Remove previous selection
+			document.querySelectorAll('.issue-card').forEach(card => {
+				card.classList.remove('selected');
+				card.style.background = '';
+				card.style.border = '';
+			});
+
+			// Find and select the clicked card using event.target if available
+			let clickedCard = null;
+			if (typeof event !== 'undefined' && event.currentTarget) {
+				clickedCard = event.currentTarget;
+			} else {
+				// Fallback: find card by onclick content
+				const cards = document.querySelectorAll('.issue-card');
+				cards.forEach(card => {
+					if (card.onclick && card.onclick.toString().includes(`selectIssue(${issueId}`)) {
+						clickedCard = card;
+					}
+				});
+			}
+
+			if (clickedCard) {
+				clickedCard.classList.add('selected');
+				clickedCard.style.background = '#eff6ff';
+				clickedCard.style.border = '2px solid #2563EB';
+			}
+
+			selectedIssue = issueId;
+			selectedIssueName = issueName;
+
+			console.log('Selected issue:', issueId, issueName);
+
+			// Show continue button
+			const continueBtn = document.getElementById('continueBtn');
+			if (continueBtn) {
+				continueBtn.classList.add('show');
+			}
+		};
+
+		// Make proceedToSpecialist function globally available IMMEDIATELY
+		window.proceedToSpecialist = function() {
+			console.log('proceedToSpecialist called with selectedIssue:', selectedIssue);
+			if (selectedIssue) {
+				// Both files are in views/ directory, so relative path works
+				const url = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
+				console.log('Navigating to:', url);
+				window.location.href = url;
+			} else {
+				alert('Please select an issue first');
+			}
+		};
+
+		// Direct navigation function - goes straight to specialist page
+		window.goToSpecialist = function(issueId, issueName) {
+			console.log('goToSpecialist called with:', issueId, issueName);
+			// Navigate directly to specialist selection page
+			// Both files are in the same directory (views/), so use relative path
+			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
+			console.log('Navigating to:', url);
+			window.location.href = url;
+		};
+
+		console.log('Global repair functions defined:', typeof window.selectIssue, typeof window.proceedToSpecialist);
+
+		// Search functionality - after global functions
+		document.addEventListener('DOMContentLoaded', function() {
+			const searchInput = document.querySelector('.search-input');
+			const searchBtn = document.querySelector('.search-btn');
+
+			if (searchInput) {
+				searchInput.addEventListener('keypress', function(e) {
+					if (e.key === 'Enter') {
+						performSearch();
+					}
+				});
+			}
+
+			if (searchBtn) {
+				searchBtn.addEventListener('click', performSearch);
 			}
 		});
 
-		document.querySelector('.search-btn').addEventListener('click', performSearch);
-
 		function performSearch() {
-			const query = document.querySelector('.search-input').value.trim();
-			if (query) {
-				// Redirect to search results page
-				window.location.href = 'product_search_result.php?query=' + encodeURIComponent(query);
+			const searchInput = document.querySelector('.search-input');
+			if (searchInput) {
+				const query = searchInput.value.trim();
+				if (query) {
+					// Redirect to search results page
+					window.location.href = 'product_search_result.php?query=' + encodeURIComponent(query);
+				}
 			}
 		}
 
@@ -886,57 +971,6 @@ try {
 			}
 		}
 
-		// Global variables for repair service selection
-		let selectedIssue = null;
-		let selectedIssueName = '';
-
-		// Make selectIssue function globally available
-		window.selectIssue = function(issueId, issueName) {
-			// Remove previous selection
-			document.querySelectorAll('.issue-card').forEach(card => {
-				card.classList.remove('selected');
-				card.style.background = '';
-				card.style.border = '';
-			});
-
-			// Find and select the clicked card
-			const clickedCard = event.currentTarget;
-			clickedCard.classList.add('selected');
-			clickedCard.style.background = '#eff6ff';
-			clickedCard.style.border = '2px solid #2563EB';
-
-			selectedIssue = issueId;
-			selectedIssueName = issueName;
-
-			console.log('Selected issue:', issueId, issueName);
-
-			// Show continue button
-			const continueBtn = document.getElementById('continueBtn');
-			if (continueBtn) {
-				continueBtn.classList.add('show');
-			}
-		};
-
-		// Direct navigation function - goes straight to specialist page
-		window.goToSpecialist = function(issueId, issueName) {
-			// Navigate directly to specialist selection page
-			// Both files are in the same directory (views/), so use relative path
-			const url = `repair_specialist.php?issue_id=${issueId}&issue_name=${encodeURIComponent(issueName)}`;
-			console.log('Navigating to:', url);
-			window.location.href = url;
-		};
-
-		// Make proceedToSpecialist function globally available
-		window.proceedToSpecialist = function() {
-			if (selectedIssue) {
-				// Both files are in views/ directory, so relative path works
-				const url = `repair_specialist.php?issue_id=${selectedIssue}&issue_name=${encodeURIComponent(selectedIssueName)}`;
-				console.log('Navigating to:', url);
-				window.location.href = url;
-			} else {
-				alert('Please select an issue first');
-			}
-		};
 
 		// Timer functionality for promo banner
 		function updateTimer() {

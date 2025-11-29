@@ -95,6 +95,11 @@ $total_pages = ceil($total_products / $products_per_page);
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
 $products_to_display = array_slice($filtered_products, $offset, $products_per_page);
+
+// Get recommended products (4 random products)
+$all_products_for_recommendations = get_all_products_ctr();
+shuffle($all_products_for_recommendations);
+$recommended_products = array_slice($all_products_for_recommendations, 0, 4);
 ?>
 
 <!DOCTYPE html>
@@ -897,10 +902,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 <body>
     <?php include '../includes/header.php'; ?>
 
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles" id="floatingBubbles"></div>
-
-    <!-- Page Title -->
     <div class="container-fluid mt-4">
         <div class="row">
             <!-- Left Sidebar - Filters -->

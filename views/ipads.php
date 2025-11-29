@@ -92,6 +92,11 @@ $filter_config = [
     'fixed_category_id' => 2,         // Fixed to tablets/iPads category
     'allowed_categories' => []
 ];
+
+// Get recommended products (4 random products)
+$all_products_for_recommendations = get_all_products_ctr();
+shuffle($all_products_for_recommendations);
+$recommended_products = array_slice($all_products_for_recommendations, 0, 4);
 ?>
 
 <!DOCTYPE html>
@@ -1834,27 +1839,7 @@ $filter_config = [
             window.location.href = 'single_product.php?pid=' + productId;
         }
 
-        // Floating bubbles animation
-        function createFloatingBubbles() {
-            const bubblesContainer = document.querySelector('.floating-bubbles');
-            if (!bubblesContainer) return;
-
-            const numberOfBubbles = 15;
-            for (let i = 0; i < numberOfBubbles; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                const size = Math.random() * 60 + 20;
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.left = Math.random() * 100 + '%';
-                bubble.style.animationDelay = Math.random() * 15 + 's';
-                bubble.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                bubblesContainer.appendChild(bubble);
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            createFloatingBubbles();
             
             // Scroll to top button functionality
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
@@ -1887,6 +1872,3 @@ $filter_config = [
 
 </body>
 </html>
-    
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>

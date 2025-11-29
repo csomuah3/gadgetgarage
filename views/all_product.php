@@ -56,6 +56,11 @@ $search_query = $filter_values['search'];
 $min_price = $filter_values['min_price'];
 $max_price = $filter_values['max_price'];
 $rating_filter = $filter_values['rating'];
+
+// Get recommended products (4 random products)
+$all_products_for_recommendations = get_all_products_ctr();
+shuffle($all_products_for_recommendations);
+$recommended_products = array_slice($all_products_for_recommendations, 0, 4);
 ?>
 
 <!DOCTYPE html>
@@ -1173,10 +1178,16 @@ $rating_filter = $filter_values['rating'];
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
             margin-bottom: 50px;
             width: 100%;
+        }
+        
+        @media (max-width: 1200px) {
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
 
         .product-grid.list-view {
@@ -1651,8 +1662,8 @@ $rating_filter = $filter_values['rating'];
 
         @media (max-width: 768px) {
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
-                gap: 10px;
+                grid-template-columns: 1fr;
+                gap: 15px;
             }
 
             .filters-section {
@@ -1878,10 +1889,6 @@ $rating_filter = $filter_values['rating'];
 
 <body>
     <?php include '../includes/header.php'; ?>
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>
-
-    <!-- Page Title -->
     <div class="container-fluid">
         <div class="text-center py-3">
             <h1 style="color: #1f2937; font-weight: 700; margin: 0;">All Products</h1>
@@ -3393,50 +3400,7 @@ $rating_filter = $filter_values['rating'];
         }
         }
 
-        // Floating Bubbles Animation
-        function createFloatingBubbles() {
-            const bubblesContainer = document.querySelector('.floating-bubbles');
-            const colors = [
-                'rgba(0, 128, 96, 0.1)',
-                'rgba(0, 107, 78, 0.1)',
-                'rgba(0, 150, 112, 0.1)'
-            ];
-
-            function createBubble() {
-                const bubble = document.createElement('div');
-                bubble.className = 'bubble';
-
-                const size = Math.random() * 60 + 20;
-                const color = colors[Math.floor(Math.random() * colors.length)];
-                const left = Math.random() * 100;
-                const animationDuration = Math.random() * 10 + 10;
-                const delay = Math.random() * 5;
-
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.background = color;
-                bubble.style.left = left + '%';
-                bubble.style.animationDuration = animationDuration + 's';
-                bubble.style.animationDelay = delay + 's';
-
-                bubblesContainer.appendChild(bubble);
-
-                setTimeout(() => {
-                    if (bubblesContainer.contains(bubble)) {
-                        bubblesContainer.removeChild(bubble);
-                    }
-                }, (animationDuration + delay) * 1000);
-            }
-
-            setInterval(createBubble, 300);
-            for (let i = 0; i < 5; i++) {
-                setTimeout(createBubble, i * 200);
-            }
-        }
-
-        // Initialize floating bubbles when page loads
         document.addEventListener('DOMContentLoaded', function() {
-            createFloatingBubbles();
         });
 
         // Dropdown functions are now in header.php - removed duplicate code

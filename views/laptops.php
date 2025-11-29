@@ -85,6 +85,11 @@ $total_pages = ceil($total_products / $products_per_page);
 $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
 $products_to_display = array_slice($filtered_products, $offset, $products_per_page);
+
+// Get recommended products (4 random products)
+$all_products_for_recommendations = get_all_products_ctr();
+shuffle($all_products_for_recommendations);
+$recommended_products = array_slice($all_products_for_recommendations, 0, 4);
 ?>
 
 <!DOCTYPE html>
@@ -163,46 +168,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         /* Header styles are now in header.css */
 
-        /* Floating Bubbles Animation */
-        .floating-bubbles {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-            overflow: hidden;
-        }
-
-        .bubble {
-            position: absolute;
-            bottom: -100px;
-            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(0, 107, 78, 0.1));
-            border-radius: 50%;
-            opacity: 0.6;
-            animation: float 15s infinite linear;
-        }
-
-        @keyframes float {
-            0% {
-                transform: translateY(100vh) rotate(0deg);
-                opacity: 0;
-            }
-
-            10% {
-                opacity: 0.6;
-            }
-
-            90% {
-                opacity: 0.6;
-            }
-
-            100% {
-                transform: translateY(-100px) rotate(360deg);
-                opacity: 0;
-            }
-        }
+        /* Page styles */
 
         .page-title {
             color: #1f2937;
@@ -1756,32 +1722,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 <body>
     <?php include '../includes/header.php'; ?>
-    
-    <!-- Floating Bubbles Background -->
-    <div class="floating-bubbles"></div>
 
     <script>
-        // Floating bubbles animation
-        function createFloatingBubbles() {
-            const bubblesContainer = document.querySelector('.floating-bubbles');
-            if (!bubblesContainer) return;
-
-            const numberOfBubbles = 15;
-            for (let i = 0; i < numberOfBubbles; i++) {
-                const bubble = document.createElement('div');
-                bubble.classList.add('bubble');
-                const size = Math.random() * 60 + 20;
-                bubble.style.width = size + 'px';
-                bubble.style.height = size + 'px';
-                bubble.style.left = Math.random() * 100 + '%';
-                bubble.style.animationDelay = Math.random() * 15 + 's';
-                bubble.style.animationDuration = (Math.random() * 10 + 15) + 's';
-                bubblesContainer.appendChild(bubble);
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            createFloatingBubbles();
             
             // Scroll to top button functionality
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
@@ -1806,6 +1749,34 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         });
     </script>
+
+    <!-- Recommended for You Section -->
+    <div class="container mt-5 mb-5">
+        <h2 style="text-align: center; margin-bottom: 30px; color: #1f2937; font-weight: 700;">RECOMMENDED FOR YOU</h2>
+        <div class="row">
+            <?php foreach ($recommended_products as $product): 
+                $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
+            ?>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="product-card" onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
+                        <div class="product-image-container" style="position: relative; overflow: hidden; background: #f9fafb;">
+                            <img src="<?php echo htmlspecialchars($product_image_url); ?>"
+                                 alt="<?php echo htmlspecialchars($product['product_title']); ?>"
+                                 style="width: 100%; height: 250px; object-fit: cover;">
+                        </div>
+                        <div class="product-content" style="padding: 15px;">
+                            <h5 style="font-size: 1rem; font-weight: 600; color: #1f2937; margin-bottom: 8px; min-height: 40px;">
+                                <?php echo htmlspecialchars($product['product_title']); ?>
+                            </h5>
+                            <div style="font-size: 1.2rem; font-weight: 700; color: #2563eb;">
+                                GH₵ <?php echo number_format($product['product_price'], 2); ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            <?php endforeach; ?>
+        </div>
+    </div>
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">

@@ -904,8 +904,19 @@ try {
             width: 240px;
             background: #f8fafc;
             padding: 25px 0;
-            border-right: 1px solid #e5e7eb;
+            border-right: 2px solid #e5e7eb;
             min-height: calc(100vh - 114px);
+            position: relative;
+        }
+
+        .account-sidebar::after {
+            content: '';
+            position: absolute;
+            right: -2px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #e5e7eb;
         }
 
         .sidebar-header {
@@ -977,8 +988,8 @@ try {
         }
 
         .page-title {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 28px;
+            font-weight: 700;
             color: #1f2937;
             margin: 0;
             letter-spacing: -0.3px;
@@ -987,7 +998,7 @@ try {
         .page-subtitle {
             color: #64748b;
             margin: 6px 0 0;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         /* Dashboard Content */
@@ -1001,8 +1012,8 @@ try {
         }
 
         .welcome-title {
-            font-size: 28px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
             color: #1f2937;
             margin-bottom: 20px;
             letter-spacing: -0.3px;
@@ -1010,7 +1021,7 @@ try {
 
         .welcome-subtitle {
             color: #64748b;
-            font-size: 14px;
+            font-size: 15px;
         }
 
         .stats-grid {
@@ -1098,7 +1109,7 @@ try {
         .dashboard-sections {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            gap: 0;
             margin-top: 20px;
         }
 
@@ -1108,6 +1119,15 @@ try {
             padding: 0;
             box-shadow: none;
             border: none;
+        }
+
+        .dashboard-section:first-child {
+            padding-right: 30px;
+            border-right: 2px solid #e5e7eb;
+        }
+
+        .dashboard-section:last-child {
+            padding-left: 30px;
         }
 
         .section-header {
@@ -1120,14 +1140,12 @@ try {
         }
 
         .section-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 14px;
+            font-weight: 700;
             color: #1f2937;
             margin: 0;
-            letter-spacing: -0.2px;
-            text-transform: uppercase;
-            font-size: 12px;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
         }
 
         .section-view-all {
@@ -1188,8 +1206,8 @@ try {
         }
 
         .product-title {
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 14px;
+            font-weight: 600;
             color: #374151;
             margin-bottom: 6px;
             line-height: 1.4;
@@ -1200,8 +1218,8 @@ try {
         }
 
         .product-price {
-            font-size: 14px;
-            font-weight: 600;
+            font-size: 15px;
+            font-weight: 700;
             color: #2563eb;
         }
 

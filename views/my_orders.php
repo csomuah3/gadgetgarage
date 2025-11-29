@@ -252,24 +252,27 @@ function getOrderStatus($order_date) {
         }
 
         .section-title {
-            color: #1a1a1a;
-            font-size: 1.8rem;
-            font-weight: 800;
-            margin-bottom: 30px;
+            color: #1f2937;
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 20px;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
         }
 
         .orders-grid {
             display: grid;
-            gap: 20px;
-            max-width: 1000px;
-            margin: 0 auto;
+            gap: 16px;
+            max-width: 100%;
+            margin: 0;
         }
 
         .empty-section {
             text-align: center;
-            padding: 60px 20px;
-            color: #64748b;
+            padding: 40px 20px;
+            color: #9ca3af;
             background: #f8fafc;
             border-radius: 12px;
             border: 2px dashed #cbd5e1;
@@ -289,61 +292,92 @@ function getOrderStatus($order_date) {
         /* Order Cards */
         .order-card {
             background: #ffffff;
-            border-radius: 15px;
-            padding: 25px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-            border: 1px solid #f1f5f9;
-            transition: all 0.3s ease;
+            border-radius: 12px;
+            padding: 24px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s ease;
             max-width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .order-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+            background: #e5e7eb;
+            transition: all 0.2s ease;
         }
 
         .order-card:hover {
-            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-            transform: translateY(-2px);
+            border-color: #2563EB;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.08);
+        }
+
+        .order-card:hover::before {
+            background: #2563EB;
         }
 
         .order-status {
-            font-size: 1.1rem;
-            font-weight: 900;
-            margin-bottom: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 18px;
             letter-spacing: 0.5px;
+            text-transform: uppercase;
+            padding: 6px 12px;
+            border-radius: 6px;
         }
 
         .order-status.processing {
             color: #f59e0b;
+            background: #fef3c7;
         }
 
         .order-status.shipped {
-            color: #3b82f6;
+            color: #2563EB;
+            background: #dbeafe;
         }
 
         .order-status.out-for-delivery {
             color: #10b981;
+            background: #d1fae5;
         }
 
         .order-status.delivered {
             color: #059669;
             background: #d1fae5;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 0.9rem;
         }
 
         .order-images {
             display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
+            gap: 10px;
+            margin-bottom: 18px;
             flex-wrap: wrap;
+            padding: 12px;
+            background: #f8fafc;
+            border-radius: 8px;
         }
 
         .order-image {
-            width: 80px;
-            height: 80px;
-            background: #f8fafc;
-            border-radius: 10px;
+            width: 70px;
+            height: 70px;
+            background: #ffffff;
+            border-radius: 8px;
             overflow: hidden;
-            border: 1px solid #e2e8f0;
+            border: 1px solid #e5e7eb;
             flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+
+        .order-image:hover {
+            transform: scale(1.05);
+            border-color: #2563EB;
         }
 
         .order-image img {
@@ -353,68 +387,76 @@ function getOrderStatus($order_date) {
         }
 
         .order-more {
-            width: 80px;
-            height: 80px;
-            background: #f1f5f9;
-            border-radius: 10px;
+            width: 70px;
+            height: 70px;
+            background: #ffffff;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #64748b;
             font-weight: 600;
-            font-size: 0.85rem;
+            font-size: 0.75rem;
+            text-align: center;
+            line-height: 1.2;
         }
 
         .order-details {
-            color: #64748b;
-            font-size: 1rem;
-            margin-bottom: 20px;
-            line-height: 1.5;
+            color: #374151;
+            font-size: 0.9rem;
+            margin-bottom: 18px;
+            line-height: 1.6;
+            padding: 12px;
+            background: #f9fafb;
+            border-radius: 8px;
         }
 
         .order-number {
-            color: #1e293b;
+            color: #1f2937;
             font-weight: 600;
-            text-decoration: underline;
         }
 
         .order-actions {
             display: flex;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
+            margin-top: 4px;
         }
 
         .action-btn {
             flex: 1;
-            min-width: 100px;
-            padding: 12px 20px;
+            min-width: 90px;
+            padding: 10px 16px;
             border: none;
             border-radius: 8px;
             font-weight: 600;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
+            font-size: 0.875rem;
+            transition: all 0.2s ease;
             cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
         }
 
         .details-btn {
-            background: #e2e8f0;
-            color: #475569;
+            background: #f3f4f6;
+            color: #374151;
         }
 
         .details-btn:hover {
-            background: #cbd5e1;
-            color: #334155;
-            transform: translateY(-2px);
+            background: #e5e7eb;
+            color: #1f2937;
         }
 
         .track-btn {
-            background: #3182ce;
+            background: #2563EB;
             color: white;
         }
 
         .track-btn:hover {
-            background: #2c5aa0;
-            transform: translateY(-2px);
+            background: #1d4ed8;
         }
 
         .refund-btn {
@@ -424,7 +466,6 @@ function getOrderStatus($order_date) {
 
         .refund-btn:hover {
             background: #d97706;
-            transform: translateY(-2px);
         }
 
         .cancel-order-btn {
@@ -434,7 +475,6 @@ function getOrderStatus($order_date) {
 
         .cancel-order-btn:hover {
             background: #dc2626;
-            transform: translateY(-2px);
         }
 
         .cancel-order-btn:disabled {

@@ -1918,6 +1918,9 @@ $products_to_display = array_slice($products, $offset, $products_per_page);
         });
     </script>
 
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
+
     <!-- Footer -->
     <footer class="main-footer">
         <div class="container">

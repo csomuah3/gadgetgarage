@@ -2806,8 +2806,12 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Alias function for applyFilters to call executeFilters
         function applyFilters() {
+            console.log('⚡ applyFilters() alias called, forwarding to executeFilters()');
             executeFilters();
         }
+        
+        // Test that JavaScript is loading
+        console.log('✅✅✅ ALL_PRODUCT.PHP JAVASCRIPT LOADED - VERSION 2.0 ✅✅✅');
 
         // Hide suggestions when clicking outside
         document.addEventListener('click', function(e) {
@@ -3051,9 +3055,11 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         // Updated Filter functionality for new design with multiple categories
         function executeFilters() {
+            console.log('🔥🔥🔥 EXECUTE FILTERS CALLED 🔥🔥🔥');
+            
             // Get search query
             const searchInput = document.getElementById('searchInput');
-            const searchQuery = searchInput.value;
+            const searchQuery = searchInput ? searchInput.value : '';
 
             // Get selected category (single selection like brand)
             const activeCategory = document.querySelector('#categoryTags .tag-btn.active');
@@ -3064,8 +3070,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             const brandId = activeBrand ? activeBrand.getAttribute('data-brand') : '';
 
             // Get price range from sliders
-            const minPrice = parseInt(document.getElementById('minPriceSlider').value);
-            const maxPrice = parseInt(document.getElementById('maxPriceSlider').value);
+            const minPriceEl = document.getElementById('minPriceSlider');
+            const maxPriceEl = document.getElementById('maxPriceSlider');
+            const minPrice = minPriceEl ? parseInt(minPriceEl.value) : 0;
+            const maxPrice = maxPriceEl ? parseInt(maxPriceEl.value) : 50000;
 
             // Get rating filter
             const selectedRating = document.querySelector('input[name="rating_filter"]:checked');
@@ -3096,71 +3104,79 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             params.append('action', 'combined_filter');
 
-            console.log('Sending filter params:', params.toString());
-            console.log('Filter values:', {
+            const fetchUrl = '../actions/product_actions.php?' + params.toString();
+            console.log('📡 FETCH URL:', fetchUrl);
+            console.log('📊 Sending filter params:', params.toString());
+            console.log('📋 Filter values:', {
                 searchQuery: searchQuery,
                 categoryId: categoryId,
                 brandId: brandId,
                 minPrice: minPrice,
                 maxPrice: maxPrice,
-                rating: rating
+                rating: rating,
+                size: size,
+                color: color
             });
 
             // Show loading state
             const applyBtn = document.getElementById('applyFilters');
+            if (!applyBtn) {
+                console.error('❌ Apply button not found in executeFilters!');
+                return;
+            }
+            
             const originalText = applyBtn.innerHTML;
             applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying Filters...';
             applyBtn.disabled = true;
             applyBtn.classList.remove('has-changes');
+            
+            console.log('🚀 Starting fetch request to:', fetchUrl);
 
-            fetch('../actions/product_actions.php?' + params.toString())
+            fetch(fetchUrl)
                 .then(response => {
+                    console.log('📥 Response received:', response);
+                    console.log('📊 Response status:', response.status);
+                    console.log('📊 Response OK:', response.ok);
+                    
                     if (!response.ok) {
                         throw new Error('Network response was not ok: ' + response.status);
                     }
                     return response.text();
                 })
                 .then(text => {
-                    console.log('Raw filter response:', text);
+                    console.log('📄 Raw filter response (first 500 chars):', text.substring(0, 500));
                     try {
                         const data = JSON.parse(text);
-                        console.log('Filter response:', data);
+                        console.log('✅ Parsed filter response:', data);
+                        console.log('📦 Number of products:', Array.isArray(data) ? data.length : 'Not an array');
+                        
                         if (data.error) {
                             throw new Error('Server error: ' + data.error);
                         }
+                        
+                        console.log('🔄 Updating product grid...');
                         updateProductGrid(data);
+                        console.log('✅ Product grid updated');
+                        
                         // Images already loaded via PHP helper function
                         // Hide apply button after successful application
                         hideApplyButton();
                         // Update initial state
                         updateInitialState();
                     } catch (jsonError) {
-                        console.error('JSON parse error:', jsonError);
-                        console.error('Response text:', text);
+                        console.error('❌ JSON parse error:', jsonError);
+                        console.error('❌ Response text:', text);
                         throw new Error('Invalid JSON response');
                     }
                 })
                 .catch(error => {
-                    console.error('Filter Error:', error);
-                    if (typeof Swal !== 'undefined') {
-                        Swal.fire({
-                            title: 'Error',
-                            text: 'Error applying filters. Please try again.',
-                            icon: 'error',
-                            confirmButtonColor: '#D19C97',
-                            confirmButtonText: 'OK'
-                        });
-                    } else {
-                        Swal.fire({
-                            title: 'Filter Error',
-                            text: 'Error applying filters. Please try again.',
-                            icon: 'error',
-                            confirmButtonColor: '#dc3545',
-                            confirmButtonText: 'OK'
-                        });
-                    }
+                    console.error('❌❌❌ Filter Error:', error);
+                    console.error('❌ Error stack:', error.stack);
+                    
+                    alert('Filter Error: ' + error.message + '\n\nCheck browser console for details.');
                 })
                 .finally(() => {
+                    console.log('🏁 Fetch complete, resetting button');
                     applyBtn.innerHTML = originalText;
                     applyBtn.disabled = false;
                 });
@@ -3241,6 +3257,8 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('🌟🌟🌟 FILTER SYSTEM LOADING - VERSION 2.0 🌟🌟🌟');
+            
             const searchInput = document.getElementById('searchInput');
             const clearFilters = document.getElementById('clearFilters');
             const applyFiltersBtn = document.getElementById('applyFilters');
@@ -3248,27 +3266,43 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             console.log('🚀 Filter System Init:', {
                 searchInput: !!searchInput,
                 clearFilters: !!clearFilters,
-                applyFiltersBtn: !!applyFiltersBtn
+                applyFiltersBtn: !!applyFiltersBtn,
+                applyFiltersBtn_element: applyFiltersBtn
             });
 
             if (!applyFiltersBtn) {
                 console.error('❌ Apply filters button not found!');
+                console.error('Available buttons:', document.querySelectorAll('button'));
                 return;
             }
+
+            // Add a visible indicator that the script loaded
+            applyFiltersBtn.style.border = '3px solid #10b981';
+            console.log('✅ Apply button found and marked with green border');
 
             // Initialize new filter system
             setTimeout(() => {
                 console.log('🔧 Initializing filters...');
-                initNewFilters();
+                try {
+                    initNewFilters();
+                    console.log('✅ Filters initialized successfully');
+                } catch (error) {
+                    console.error('❌ Filter initialization error:', error);
+                }
             }, 100);
 
             // Images loaded via PHP helper function
 
             // Apply Filters button click handler
-            applyFiltersBtn.addEventListener('click', function() {
-                console.log('🎯 Apply Filters clicked!');
+            console.log('📌 Adding click handler to Apply Filters button...');
+            applyFiltersBtn.addEventListener('click', function(e) {
+                console.log('🎯🎯🎯 APPLY FILTERS CLICKED! 🎯🎯🎯');
+                console.log('Event:', e);
+                e.preventDefault();
+                e.stopPropagation();
                 executeFilters();
             });
+            console.log('✅ Click handler added successfully');
 
             // Search input change detection
             searchInput.addEventListener('input', function() {
@@ -3932,6 +3966,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
             }
         });
     </script>
+
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
 
     <!-- Footer -->
     <footer class="main-footer">

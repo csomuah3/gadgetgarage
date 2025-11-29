@@ -2512,6 +2512,9 @@ try {
         });
     </script>
 
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
+
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
         <i class="fas fa-arrow-up"></i>

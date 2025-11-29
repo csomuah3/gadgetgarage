@@ -249,7 +249,7 @@ try {
     $message .= "Email: $email\n";
     $message .= "Phone: $phone\n";
     if ($asking_price) {
-        $message .= "Asking Price: GH₵ " . number_format($asking_price, 2) . "\n";
+        $message .= "Asking Price: GH₵ " . number_format(floatval($asking_price), 2) . "\n";
     }
     if ($description) {
         $message .= "Description: $description\n";

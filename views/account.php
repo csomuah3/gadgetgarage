@@ -86,6 +86,24 @@ try {
             background-color: #ffffff;
             color: #1a1a1a;
             overflow-x: hidden;
+            position: relative;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: fixed;
+            opacity: 0.08;
+            z-index: 0;
+            pointer-events: none;
         }
 
         /* Promotional Banner Styles */
@@ -901,6 +919,8 @@ try {
             align-items: flex-start;
             padding: 20px;
             gap: 20px;
+            position: relative;
+            z-index: 1;
         }
 
         .account-sidebar {
@@ -914,6 +934,7 @@ try {
             border-radius: 16px;
             margin: 20px;
             align-self: flex-start;
+            z-index: 1;
         }
 
         .account-sidebar::before {
@@ -1017,9 +1038,11 @@ try {
             flex: 1;
             padding: 25px 30px;
             overflow-y: auto;
-            background: #ffffff;
+            background: rgba(255, 255, 255, 0.95);
             border-radius: 16px;
             margin: 20px 20px 20px 0;
+            position: relative;
+            z-index: 1;
         }
 
         .page-header {

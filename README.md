@@ -1,2 +1,0 @@
-# Ecommerce_Final
-# gadgetgarage

@@ -6,6 +6,7 @@ require_once(__DIR__ . '/../controllers/category_controller.php');
 require_once(__DIR__ . '/../controllers/brand_controller.php');
 require_once(__DIR__ . '/../controllers/wishlist_controller.php');
 require_once(__DIR__ . '/../helpers/image_helper.php');
+require_once(__DIR__ . '/../includes/product_filter_helper.php'); // Centralized filter helper
 
 $is_logged_in = check_login();
 $is_admin = false;
@@ -37,71 +38,24 @@ try {
 
 // Products and categories fetched from database above
 
-// Filter products based on URL parameters
-$category_filter = $_GET['category'] ?? 'all';
-$brand_filter = $_GET['brand'] ?? 'all';
-$condition_filter = $_GET['condition'] ?? 'all';
-$search_query = $_GET['search'] ?? '';
+// ✅ CENTRALIZED FILTER SYSTEM - Just call the helper function!
+$filtered_products = apply_product_filters($all_products);
 
-$filtered_products = $all_products;
+// Get paginated products
+$pagination = get_paginated_products($filtered_products, 12);
+$products_to_display = $pagination['products'];
+$total_products = $pagination['total'];
+$total_pages = $pagination['pages'];
+$current_page = $pagination['current_page'];
 
-// Improved category filtering with case-insensitive matching
-if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
-        // Direct match (case-insensitive)
-        if (strcasecmp($product['cat_name'], $category_filter) === 0) {
-            return true;
-        }
-
-        // Check for partial matches for common category names
-        $cat_lower = strtolower($product['cat_name']);
-        $filter_lower = strtolower($category_filter);
-
-        // Handle plural/singular variations
-        if ($filter_lower === 'smartphone' || $filter_lower === 'smartphones') {
-            return strpos($cat_lower, 'smartphone') !== false || strpos($cat_lower, 'phone') !== false;
-        }
-        if ($filter_lower === 'laptop' || $filter_lower === 'laptops') {
-            return strpos($cat_lower, 'laptop') !== false;
-        }
-        if ($filter_lower === 'camera' || $filter_lower === 'cameras') {
-            return strpos($cat_lower, 'camera') !== false;
-        }
-        if ($filter_lower === 'ipad' || $filter_lower === 'ipads') {
-            return strpos($cat_lower, 'ipad') !== false;
-        }
-        if ($filter_lower === 'desktop' || $filter_lower === 'desktops') {
-            return strpos($cat_lower, 'desktop') !== false;
-        }
-        if ($filter_lower === 'video_equipment' || $filter_lower === 'video equipment') {
-            return strpos($cat_lower, 'video') !== false;
-        }
-
-        return false;
-    });
-}
-
-// Improved brand filtering with case-insensitive matching
-if ($brand_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
-        return strcasecmp($product['brand_name'], $brand_filter) === 0;
-    });
-}
-
-if (!empty($search_query)) {
-    $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
-        return stripos($product['product_title'], $search_query) !== false ||
-            stripos($product['product_desc'], $search_query) !== false;
-    });
-}
-
-// Pagination
-$products_per_page = 12;
-$total_products = count($filtered_products);
-$total_pages = ceil($total_products / $products_per_page);
-$current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
-$offset = ($current_page - 1) * $products_per_page;
-$products_to_display = array_slice($filtered_products, $offset, $products_per_page);
+// Get filter values for UI (to preserve state in form inputs)
+$filter_values = get_filter_values_from_url();
+$category_filter = $filter_values['category'];
+$brand_filter = $filter_values['brand'];
+$search_query = $filter_values['search'];
+$min_price = $filter_values['min_price'];
+$max_price = $filter_values['max_price'];
+$rating_filter = $filter_values['rating'];
 ?>
 
 <!DOCTYPE html>
@@ -1927,99 +1881,6 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <!-- Floating Bubbles Background -->
     <div class="floating-bubbles"></div>
 
-                <div class="d-flex align-items-center" style="flex: 1; justify-content: center; gap: 60px;">
-                    <!-- Search Bar -->
-                    <form class="search-container" method="GET" action="../product_search_result.php">
-                        <i class="fas fa-search search-icon"></i>
-                        <input type="text" name="query" class="search-input" placeholder="Search phones, laptops, cameras..." required>
-                        <button type="submit" class="search-btn">
-                            <i class="fas fa-search"></i>
-                        </button>
-                    </form>
-
-                    <!-- Tech Revival Section -->
-                    <div class="tech-revival-section">
-                        <i class="fas fa-recycle tech-revival-icon"></i>
-                        <div>
-                            <p class="tech-revival-text">Bring Retired Devices</p>
-                            <p class="contact-number">055-138-7578</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- User Actions - Far Right -->
-                <div class="user-actions" style="display: flex; align-items: center; gap: 18px;">
-                    <span style="color: #ddd; font-size: 1.5rem; margin: 0 5px;">|</span>
-                    <?php if ($is_logged_in): ?>
-                        <!-- Wishlist Icon -->
-                        <div class="header-icon">
-                            <a href="../views/wishlist.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-heart"></i>
-                                <span class="wishlist-badge" id="wishlistBadge" style="display: none;">0</span>
-                            </a>
-                        </div>
-
-                        <!-- Cart Icon -->
-                        <div class="header-icon">
-                            <a href="../views/cart.php" style="color: inherit; text-decoration: none; display: flex; align-items: center; justify-content: center;">
-                                <i class="fas fa-shopping-cart"></i>
-                                <?php if ($cart_count > 0): ?>
-                                    <span class="cart-badge" id="cartBadge"><?php echo $cart_count; ?></span>
-                                <?php else: ?>
-                                    <span class="cart-badge" id="cartBadge" style="display: none;">0</span>
-                                <?php endif; ?>
-                            </a>
-                        </div>
-
-                        <!-- User Avatar Dropdown -->
-                        <div class="user-dropdown">
-                            <div class="user-avatar" title="<?= htmlspecialchars($_SESSION['name'] ?? 'User') ?>" onclick="toggleUserDropdown()">
-                                <?= strtoupper(substr($_SESSION['name'] ?? 'U', 0, 1)) ?>
-                            </div>
-                            <div class="dropdown-menu-custom" id="userDropdownMenu">
-                                <button class="dropdown-item-custom" onclick="goToAccount()">
-                                    <i class="fas fa-user"></i>
-                                    <span>Account</span>
-                                </button>
-                                <div class="dropdown-divider-custom"></div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-globe"></i>
-                                    <div class="language-selector">
-                                        <span>Language</span>
-                                        <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                            <option value="en">🇬🇧 EN</option>
-                                            <option value="es">🇪🇸 ES</option>
-                                            <option value="fr">🇫🇷 FR</option>
-                                            <option value="de">🇩🇪 DE</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="dropdown-item-custom">
-                                    <i class="fas fa-moon"></i>
-                                    <div class="theme-toggle">
-                                        <span>Dark Mode</span>
-                                        <div class="toggle-switch" id="themeToggle" onclick="toggleTheme()">
-                                            <div class="toggle-slider"></div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="dropdown-divider-custom"></div>
-                                <a href="../login/logout.php" class="dropdown-item-custom">
-                                    <i class="fas fa-sign-out-alt"></i>
-                                    <span>Logout</span>
-                                </a>
-                            </div>
-                        </div>
-                    <?php else: ?>
-                        <!-- Login Button -->
-                        <a href="../login/login.php" class="login-btn">
-                            <i class="fas fa-user"></i>
-                            Login
-                        </a>
-                    <?php endif; ?>
-                </div>
-            </div>
-        </div>
     <!-- Page Title -->
     <div class="container-fluid">
         <div class="text-center py-3">
@@ -2046,7 +1907,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <!-- Search Bar -->
                     <div class="filter-group">
                         <div class="search-container">
-                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off">
+                            <input type="text" class="search-input" id="searchInput" placeholder="Search products..." autocomplete="off" value="<?php echo htmlspecialchars($search_query); ?>">
                             <i class="fas fa-search search-icon"></i>
                             <div id="searchSuggestions" class="search-suggestions" style="display: none;"></div>
                         </div>
@@ -2057,7 +1918,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <h6 class="filter-subtitle">Rating</h6>
                         <div class="rating-filter">
                             <div class="rating-option" data-rating="5">
-                                <input type="radio" id="rating_5" name="rating_filter" value="5">
+                                <input type="radio" id="rating_5" name="rating_filter" value="5" <?php echo ($rating_filter == 5) ? 'checked' : ''; ?>>
                                 <label for="rating_5">
                                     <div class="stars">
                                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
@@ -2066,7 +1927,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 </label>
                             </div>
                             <div class="rating-option" data-rating="4">
-                                <input type="radio" id="rating_4" name="rating_filter" value="4">
+                                <input type="radio" id="rating_4" name="rating_filter" value="4" <?php echo ($rating_filter == 4) ? 'checked' : ''; ?>>
                                 <label for="rating_4">
                                     <div class="stars">
                                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i>
@@ -2075,7 +1936,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 </label>
                             </div>
                             <div class="rating-option" data-rating="3">
-                                <input type="radio" id="rating_3" name="rating_filter" value="3">
+                                <input type="radio" id="rating_3" name="rating_filter" value="3" <?php echo ($rating_filter == 3) ? 'checked' : ''; ?>>
                                 <label for="rating_3">
                                     <div class="stars">
                                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
@@ -2084,7 +1945,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 </label>
                             </div>
                             <div class="rating-option" data-rating="2">
-                                <input type="radio" id="rating_2" name="rating_filter" value="2">
+                                <input type="radio" id="rating_2" name="rating_filter" value="2" <?php echo ($rating_filter == 2) ? 'checked' : ''; ?>>
                                 <label for="rating_2">
                                     <div class="stars">
                                         <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
@@ -2093,7 +1954,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                                 </label>
                             </div>
                             <div class="rating-option" data-rating="1">
-                                <input type="radio" id="rating_1" name="rating_filter" value="1">
+                                <input type="radio" id="rating_1" name="rating_filter" value="1" <?php echo ($rating_filter == 1) ? 'checked' : ''; ?>>
                                 <label for="rating_1">
                                     <div class="stars">
                                         <i class="fas fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i><i class="far fa-star"></i>
@@ -2110,13 +1971,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                         <div class="price-slider-container">
                             <div class="price-slider-track">
                                 <div class="price-slider-range" id="priceRange"></div>
-                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="0" step="100">
-                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="50000" step="100">
+                                <input type="range" class="price-slider" id="minPriceSlider" min="0" max="50000" value="<?php echo $min_price; ?>" step="100">
+                                <input type="range" class="price-slider" id="maxPriceSlider" min="0" max="50000" value="<?php echo $max_price; ?>" step="100">
                             </div>
                             <div class="price-display">
-                                <span class="price-min" id="priceMinDisplay">GH₵ 0</span>
+                                <span class="price-min" id="priceMinDisplay">GH₵ <?php echo number_format($min_price); ?></span>
                                 <span class="price-separator">-</span>
-                                <span class="price-max" id="priceMaxDisplay">GH₵ 50,000</span>
+                                <span class="price-max" id="priceMaxDisplay">GH₵ <?php echo number_format($max_price); ?></span>
                             </div>
                         </div>
                     </div>
@@ -2125,9 +1986,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Category</h6>
                         <div class="tag-filters" id="categoryTags">
-                            <button class="tag-btn active" data-category="" id="category_all_btn">All</button>
+                            <button class="tag-btn <?php echo ($category_filter === 'all' || $category_filter === '') ? 'active' : ''; ?>" data-category="" id="category_all_btn">All</button>
                             <?php foreach ($categories as $category): ?>
-                                <button class="tag-btn" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
+                                <button class="tag-btn <?php echo ($category_filter == $category['cat_id']) ? 'active' : ''; ?>" data-category="<?php echo $category['cat_id']; ?>" id="category_btn_<?php echo $category['cat_id']; ?>">
                                     <?php echo htmlspecialchars($category['cat_name']); ?>
                                 </button>
                             <?php endforeach; ?>
@@ -2138,9 +1999,9 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                     <div class="filter-group">
                         <h6 class="filter-subtitle">Filter By Brand</h6>
                         <div class="tag-filters" id="brandTags">
-                            <button class="tag-btn active" data-brand="" id="brand_all_btn">All</button>
+                            <button class="tag-btn <?php echo ($brand_filter === 'all' || $brand_filter === '') ? 'active' : ''; ?>" data-brand="" id="brand_all_btn">All</button>
                             <?php foreach ($brands as $brand): ?>
-                                <button class="tag-btn" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
+                                <button class="tag-btn <?php echo ($brand_filter == $brand['brand_id']) ? 'active' : ''; ?>" data-brand="<?php echo $brand['brand_id']; ?>" id="brand_btn_<?php echo $brand['brand_id']; ?>">
                                     <?php echo htmlspecialchars($brand['brand_name']); ?>
                                 </button>
                             <?php endforeach; ?>
@@ -3054,132 +2915,42 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
         }
 
         // Updated Filter functionality for new design with multiple categories
-        function executeFilters() {
-            console.log('🔥🔥🔥 EXECUTE FILTERS CALLED 🔥🔥🔥');
-            
-            // Get search query
+        // Apply all filters function (same logic as photography_video.php)
+        function applyAllFilters() {
+            const categoryBtn = document.querySelector('#categoryTags .tag-btn.active');
+            const brandBtn = document.querySelector('#brandTags .tag-btn.active');
             const searchInput = document.getElementById('searchInput');
-            const searchQuery = searchInput ? searchInput.value : '';
-
-            // Get selected category (single selection like brand)
-            const activeCategory = document.querySelector('#categoryTags .tag-btn.active');
-            const categoryId = activeCategory ? activeCategory.getAttribute('data-category') : '';
-
-            // Get selected brand
-            const activeBrand = document.querySelector('#brandTags .tag-btn.active');
-            const brandId = activeBrand ? activeBrand.getAttribute('data-brand') : '';
-
-            // Get price range from sliders
-            const minPriceEl = document.getElementById('minPriceSlider');
-            const maxPriceEl = document.getElementById('maxPriceSlider');
-            const minPrice = minPriceEl ? parseInt(minPriceEl.value) : 0;
-            const maxPrice = maxPriceEl ? parseInt(maxPriceEl.value) : 50000;
-
-            // Get rating filter
+            const minPrice = document.getElementById('minPriceSlider').value;
+            const maxPrice = document.getElementById('maxPriceSlider').value;
             const selectedRating = document.querySelector('input[name="rating_filter"]:checked');
-            const rating = selectedRating ? selectedRating.value : '';
-
-            // Get size filter
-            const activeSize = document.querySelector('.size-btn.active');
-            const size = activeSize ? activeSize.getAttribute('data-size') : '';
-
-            // Get color filter
-            const activeColor = document.querySelector('.color-btn.active');
-            const color = activeColor ? activeColor.getAttribute('data-color') : '';
 
             const params = new URLSearchParams();
 
-            // Add filters to params
-            if (searchQuery) params.append('query', searchQuery);
-
-            // Add single category
-            if (categoryId) params.append('cat_ids[]', categoryId);
-
-            if (brandId) params.append('brand_ids[]', brandId);
-            if (minPrice > 0) params.append('min_price', minPrice);
-            if (maxPrice < 50000) params.append('max_price', maxPrice);
-            if (rating) params.append('rating', rating);
-            if (size) params.append('size', size);
-            if (color) params.append('color', color);
-
-            params.append('action', 'combined_filter');
-
-            const fetchUrl = '../actions/product_actions.php?' + params.toString();
-            console.log('📡 FETCH URL:', fetchUrl);
-            console.log('📊 Sending filter params:', params.toString());
-            console.log('📋 Filter values:', {
-                searchQuery: searchQuery,
-                categoryId: categoryId,
-                brandId: brandId,
-                minPrice: minPrice,
-                maxPrice: maxPrice,
-                rating: rating,
-                size: size,
-                color: color
-            });
-
-            // Show loading state
-            const applyBtn = document.getElementById('applyFilters');
-            if (!applyBtn) {
-                console.error('❌ Apply button not found in executeFilters!');
-                return;
+            if (categoryBtn && categoryBtn.dataset.category) {
+                params.append('category', categoryBtn.dataset.category);
             }
-            
-            const originalText = applyBtn.innerHTML;
-            applyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Applying Filters...';
-            applyBtn.disabled = true;
-            applyBtn.classList.remove('has-changes');
-            
-            console.log('🚀 Starting fetch request to:', fetchUrl);
+            if (brandBtn && brandBtn.dataset.brand) {
+                params.append('brand', brandBtn.dataset.brand);
+            }
+            if (searchInput && searchInput.value) {
+                params.append('search', searchInput.value);
+            }
+            if (minPrice !== '0') {
+                params.append('min_price', minPrice);
+            }
+            if (maxPrice !== '50000') {
+                params.append('max_price', maxPrice);
+            }
+            if (selectedRating && selectedRating.value) {
+                params.append('rating', selectedRating.value);
+            }
 
-            fetch(fetchUrl)
-                .then(response => {
-                    console.log('📥 Response received:', response);
-                    console.log('📊 Response status:', response.status);
-                    console.log('📊 Response OK:', response.ok);
-                    
-                    if (!response.ok) {
-                        throw new Error('Network response was not ok: ' + response.status);
-                    }
-                    return response.text();
-                })
-                .then(text => {
-                    console.log('📄 Raw filter response (first 500 chars):', text.substring(0, 500));
-                    try {
-                        const data = JSON.parse(text);
-                        console.log('✅ Parsed filter response:', data);
-                        console.log('📦 Number of products:', Array.isArray(data) ? data.length : 'Not an array');
-                        
-                        if (data.error) {
-                            throw new Error('Server error: ' + data.error);
-                        }
-                        
-                        console.log('🔄 Updating product grid...');
-                        updateProductGrid(data);
-                        console.log('✅ Product grid updated');
-                        
-                        // Images already loaded via PHP helper function
-                        // Hide apply button after successful application
-                        hideApplyButton();
-                        // Update initial state
-                        updateInitialState();
-                    } catch (jsonError) {
-                        console.error('❌ JSON parse error:', jsonError);
-                        console.error('❌ Response text:', text);
-                        throw new Error('Invalid JSON response');
-                    }
-                })
-                .catch(error => {
-                    console.error('❌❌❌ Filter Error:', error);
-                    console.error('❌ Error stack:', error.stack);
-                    
-                    alert('Filter Error: ' + error.message + '\n\nCheck browser console for details.');
-                })
-                .finally(() => {
-                    console.log('🏁 Fetch complete, resetting button');
-                    applyBtn.innerHTML = originalText;
-                    applyBtn.disabled = false;
-                });
+            window.location.href = 'all_product.php?' + params.toString();
+        }
+
+        // Alias for backward compatibility
+        function executeFilters() {
+            applyAllFilters();
         }
 
         function updateInitialState() {
@@ -3293,16 +3064,10 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
             // Images loaded via PHP helper function
 
-            // Apply Filters button click handler
-            console.log('📌 Adding click handler to Apply Filters button...');
-            applyFiltersBtn.addEventListener('click', function(e) {
-                console.log('🎯🎯🎯 APPLY FILTERS CLICKED! 🎯🎯🎯');
-                console.log('Event:', e);
-                e.preventDefault();
-                e.stopPropagation();
-                executeFilters();
+            // Apply Filters button click handler (same as photography_video.php)
+            applyFiltersBtn.addEventListener('click', function() {
+                applyAllFilters();
             });
-            console.log('✅ Click handler added successfully');
 
             // Search input change detection
             searchInput.addEventListener('input', function() {
@@ -3311,77 +3076,25 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
                 }
             });
 
-            let searchTimeout;
+            // Search input - show suggestions but don't auto-apply (user clicks Apply button)
             searchInput.addEventListener('input', function() {
-                clearTimeout(searchTimeout);
-
                 const query = this.value.trim();
-
                 if (query.length >= 2) {
                     // Show autocomplete suggestions
                     showSearchSuggestions(query);
-                    searchTimeout = setTimeout(applyFilters, 500);
                 } else {
                     hideSearchSuggestions();
-                    if (query.length === 0) {
-                        searchTimeout = setTimeout(applyFilters, 500);
-                    }
+                }
+                // Show apply button when search changes
+                if (initialState && this.value !== initialState.search) {
+                    showApplyButton();
                 }
             });
 
 
             clearFilters.addEventListener('click', function() {
-                // Reset search input
-                searchInput.value = '';
-
-                // Reset rating filter
-                document.querySelectorAll('input[name="rating_filter"]').forEach(input => {
-                    input.checked = false;
-                });
-
-                // Reset price sliders
-                document.getElementById('minPriceSlider').value = 0;
-                document.getElementById('maxPriceSlider').value = 50000;
-                document.getElementById('priceMinDisplay').textContent = 'GH₵ 0';
-                document.getElementById('priceMaxDisplay').textContent = 'GH₵ 50,000';
-                document.getElementById('priceRange').style.left = '0%';
-                document.getElementById('priceRange').style.right = '0%';
-
-                // Reset category filter - activate "All" button
-                document.querySelectorAll('#categoryTags .tag-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.getElementById('category_all_btn').classList.add('active');
-
-                // Reset brand filter - activate "All" button
-                document.querySelectorAll('#brandTags .tag-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.getElementById('brand_all_btn').classList.add('active');
-
-                // Reset size filter - activate first "All" button
-                document.querySelectorAll('.size-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector('.size-btn[data-size=""]').classList.add('active');
-
-                // Reset color filter - activate first "All" button
-                document.querySelectorAll('.color-btn').forEach(btn => {
-                    btn.classList.remove('active');
-                });
-                document.querySelector('.color-btn[data-color=""]').classList.add('active');
-
-                // Hide search suggestions
-                hideSearchSuggestions();
-
-                // Reset initial state
-                captureInitialState();
-
-                // Hide apply button
-                hideApplyButton();
-
-                // Apply filters (which will show all products)
-                executeFilters();
+                // Simple redirect to clear all filters (same as photography_video.php)
+                window.location.href = 'all_product.php';
             });
         });
 
@@ -4105,6 +3818,13 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
         <i class="fas fa-arrow-up"></i>
     </button>
+
+    <!-- ✅ CENTRALIZED FILTER SYSTEM - Just include this! -->
+    <script src="../js/product-filters-redirect.js"></script>
+    <script>
+        // Initialize with page name
+        productFiltersRedirect.init('all_product.php');
+    </script>
 
 </body>
 

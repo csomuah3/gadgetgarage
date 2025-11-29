@@ -7220,47 +7220,79 @@ try {
 		};
 
 		function showSlideNumber(num) {
-			if (!carouselSlides || !carouselDots) return;
+			if (!carouselSlides || !carouselDots) {
+				console.error('Carousel not initialized');
+				return;
+			}
+
+			if (num < 0 || num >= carouselSlides.length) {
+				console.error('Invalid slide number:', num);
+				return;
+			}
 
 			console.log('🎯 SWITCHING TO SLIDE:', num);
 
 			// Re-query dots to get latest references
 			carouselDots = document.querySelectorAll('.carousel-dot');
 
-			// Hide ALL slides first
+			// Get current active slide
+			const currentActive = document.querySelector('.hero-slide.active');
+			
+			// Add exiting class to current slide if it exists
+			if (currentActive && currentActive !== carouselSlides[num]) {
+				currentActive.classList.add('exiting');
+				setTimeout(() => {
+					currentActive.classList.remove('active', 'exiting');
+					currentActive.style.display = 'none';
+				}, 400);
+			}
+
+			// Hide ALL slides first (except the one we're showing)
 			carouselSlides.forEach((slide, index) => {
-				slide.classList.remove('active', 'exiting');
-				slide.style.display = 'none';
+				if (index !== num) {
+					slide.classList.remove('active', 'exiting');
+					slide.style.display = 'none';
+					slide.style.opacity = '0';
+					slide.style.visibility = 'hidden';
+				}
 			});
 
 			// Remove active from all dots
 			carouselDots.forEach(dot => dot.classList.remove('active'));
 
 			// Show current slide with proper display and active class
-			carouselSlides[num].style.display = 'grid';
+			const targetSlide = carouselSlides[num];
+			targetSlide.style.display = 'grid';
+			targetSlide.style.opacity = '0';
+			targetSlide.style.visibility = 'visible';
+			
 			// Force reflow
-			carouselSlides[num].offsetHeight;
-			carouselSlides[num].classList.add('active');
+			targetSlide.offsetHeight;
+			
+			// Add active class and trigger transition
+			setTimeout(() => {
+				targetSlide.classList.add('active');
+				targetSlide.style.opacity = '1';
+			}, 10);
 
 			// Activate current dot
 			if (carouselDots[num]) {
 				carouselDots[num].classList.add('active');
 			}
 
-			console.log('✅ NOW SHOWING:', carouselSlides[num].dataset.product);
+			console.log('✅ NOW SHOWING:', targetSlide.dataset.product || 'slide ' + num);
 		}
 
 		function goToNextSlide() {
-			if (!carouselSlides) return;
+			if (!carouselSlides || carouselSlides.length === 0) {
+				console.error('No slides available');
+				return;
+			}
 
-			console.log('⏭️ Going to next slide from', currentSlide, 'to', (currentSlide + 1) % carouselSlides.length);
 			const previousSlide = currentSlide;
 			currentSlide = (currentSlide + 1) % carouselSlides.length;
 
-			// Add exiting class to previous slide
-			if (carouselSlides[previousSlide]) {
-				carouselSlides[previousSlide].classList.add('exiting');
-			}
+			console.log('⏭️ Going to next slide from', previousSlide, 'to', currentSlide);
 
 			showSlideNumber(currentSlide);
 		}
@@ -7275,29 +7307,53 @@ try {
 			console.log('Found dots:', carouselDots.length);
 
 			if (carouselSlides.length === 0) {
-				console.error('❌ No slides found!');
+				console.error('❌ No slides found! Retrying...');
 				setTimeout(initSimpleCarousel, 500);
 				return;
 			}
 
-			// Force reset all slides first
-			carouselSlides.forEach((slide, index) => {
-				slide.classList.remove('active');
-				slide.style.display = 'none';
-			});
-			carouselDots.forEach(dot => dot.classList.remove('active'));
-
-			// Show first slide immediately with force
-			console.log('Showing first slide...');
-			currentSlide = 0;
-			showSlideNumber(0);
-
-			// Clear any existing timer
+			// Clear any existing timer first
 			if (slideTimer) {
 				console.log('Clearing existing timer');
 				clearInterval(slideTimer);
 				slideTimer = null;
 			}
+
+			// Force reset all slides first
+			carouselSlides.forEach((slide, index) => {
+				slide.classList.remove('active', 'exiting');
+				slide.style.display = 'none';
+				slide.style.opacity = '0';
+				slide.style.visibility = 'hidden';
+			});
+			
+			carouselDots.forEach(dot => dot.classList.remove('active'));
+
+			// Show first slide immediately
+			console.log('Showing first slide...');
+			currentSlide = 0;
+			showSlideNumber(0);
+
+			// Add click handlers to dots if not already present
+			carouselDots.forEach((dot, index) => {
+				// Remove existing listeners by cloning
+				const newDot = dot.cloneNode(true);
+				dot.parentNode.replaceChild(newDot, dot);
+				
+				// Add click handler
+				newDot.addEventListener('click', function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					console.log('Dot clicked:', index);
+					window.goToSlide(index);
+				});
+				
+				// Also keep the onclick for compatibility
+				newDot.setAttribute('onclick', 'window.goToSlide(' + index + '); return false;');
+			});
+
+			// Re-query dots after cloning
+			carouselDots = document.querySelectorAll('.carousel-dot');
 
 			// Start timer - change every 5 seconds
 			console.log('Starting new timer...');
@@ -7309,7 +7365,7 @@ try {
 			console.log('🚀 TIMER STARTED - CHANGES EVERY 5 SECONDS');
 			console.log('Timer ID:', slideTimer);
 			console.log('✅ Carousel initialized successfully!');
-			console.log('Dots have inline onclick handlers - should work now!');
+			console.log('Dots are now clickable!');
 		}
 
 		// Featured on IG Carousel Function

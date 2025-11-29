@@ -1364,7 +1364,7 @@ try {
 			height: 100%;
 		}
 
-		/* ——— Hero Slide (Main Banner) ——— */
+		/* ——— Hero Slide (Main Banner) - SPLIT SCREEN REVEAL ——— */
 		.hero-slide {
 			display: none;
 			grid-template-columns: 1.5fr 1fr;
@@ -1379,8 +1379,6 @@ try {
 			height: 100%;
 			opacity: 0;
 			visibility: hidden;
-			transform: scale(0.98);
-			transition: opacity 0.8s ease-in-out, visibility 0.8s ease-in-out, transform 0.8s ease-in-out;
 			z-index: 1;
 		}
 
@@ -1388,27 +1386,132 @@ try {
 			display: grid !important;
 			opacity: 1 !important;
 			visibility: visible !important;
-			transform: scale(1) !important;
 			z-index: 2;
-			animation: slideIn 0.8s ease-out forwards;
 		}
 
-		@keyframes slideIn {
+		/* Split-screen reveal animations */
+		.hero-slide.active .banner-copy {
+			animation: slideInFromLeft 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+		}
+
+		.hero-slide.active .banner-media {
+			animation: slideInFromRight 1s cubic-bezier(0.22, 0.61, 0.36, 1) forwards;
+		}
+
+		/* Stagger text elements inside banner-copy */
+		.hero-slide.active .brand-logo-section {
+			animation: fadeInUp 0.8s ease-out 0.2s forwards;
+			opacity: 0;
+		}
+
+		.hero-slide.active .text-line {
+			animation: fadeInUp 0.6s ease-out forwards;
+			opacity: 0;
+		}
+
+		.hero-slide.active .text-line:nth-child(1) { animation-delay: 0.3s; }
+		.hero-slide.active .text-line:nth-child(2) { animation-delay: 0.4s; }
+		.hero-slide.active .text-line:nth-child(3) { animation-delay: 0.5s; }
+		.hero-slide.active .text-line:nth-child(4) { animation-delay: 0.6s; }
+		.hero-slide.active .text-line:nth-child(5) { animation-delay: 0.7s; }
+		.hero-slide.active .text-line:nth-child(6) { animation-delay: 0.8s; }
+		.hero-slide.active .text-line:nth-child(7) { animation-delay: 0.9s; }
+
+		.hero-slide.active .social-buttons {
+			animation: fadeInUp 0.6s ease-out 1s forwards;
+			opacity: 0;
+		}
+
+		.hero-slide.active .btn-primary {
+			animation: fadeInUp 0.6s ease-out 1.1s forwards;
+			opacity: 0;
+		}
+
+		/* Product image zoom in */
+		.hero-slide.active .product-image {
+			animation: zoomIn 1.2s cubic-bezier(0.22, 0.61, 0.36, 1) 0.3s forwards;
+			transform: scale(0.8);
+			opacity: 0;
+		}
+
+		@keyframes slideInFromLeft {
 			from {
+				transform: translateX(-100%);
 				opacity: 0;
-				transform: scale(0.95) translateX(30px);
 			}
 			to {
+				transform: translateX(0);
 				opacity: 1;
-				transform: scale(1) translateX(0);
+			}
+		}
+
+		@keyframes slideInFromRight {
+			from {
+				transform: translateX(100%);
+				opacity: 0;
+			}
+			to {
+				transform: translateX(0);
+				opacity: 1;
+			}
+		}
+
+		@keyframes fadeInUp {
+			from {
+				transform: translateY(30px);
+				opacity: 0;
+			}
+			to {
+				transform: translateY(0);
+				opacity: 1;
+			}
+		}
+
+		@keyframes zoomIn {
+			from {
+				transform: scale(0.8);
+				opacity: 0;
+			}
+			to {
+				transform: scale(1);
+				opacity: 1;
 			}
 		}
 
 		.hero-slide.exiting {
 			opacity: 0;
 			visibility: hidden;
-			transform: scale(0.98) translateX(-30px);
-			transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out, transform 0.6s ease-in-out;
+			transition: opacity 0.4s ease-out, visibility 0.4s ease-out;
+		}
+
+		.hero-slide.exiting .banner-copy {
+			animation: slideOutToLeft 0.6s ease-in forwards;
+		}
+
+		.hero-slide.exiting .banner-media {
+			animation: slideOutToRight 0.6s ease-in forwards;
+		}
+
+		@keyframes slideOutToLeft {
+			from {
+				transform: translateX(0);
+				opacity: 1;
+			}
+			to {
+				transform: translateX(-100%);
+				opacity: 0;
+			}
+		}
+
+		@keyframes slideOutToRight {
+			from {
+				transform: translateX(0);
+				opacity: 1;
+			}
+			to {
+				transform: translateX(100%);
+				opacity: 0;
+			}
 		}
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
@@ -7803,43 +7906,60 @@ try {
 			closeNewsletter();
 		}
 
-		// ==================== HERO CAROUSEL AUTO-SLIDE ====================
+		// ==================== HERO CAROUSEL AUTO-SLIDE - SPLIT SCREEN REVEAL ====================
 		let currentSlide = 0;
 		let heroSlideInterval = null;
 		const heroSlides = document.querySelectorAll('.hero-slide');
 		const heroDots = document.querySelectorAll('.carousel-dot');
 		const totalSlides = heroSlides.length;
 
-		// Function to show specific slide
+		// Function to show specific slide with split-screen reveal
 		function showHeroSlide(index) {
+			// Mark current active slide as exiting
+			const currentActiveSlide = document.querySelector('.hero-slide.active');
+			if (currentActiveSlide && currentActiveSlide !== heroSlides[index]) {
+				currentActiveSlide.classList.add('exiting');
+				
+				// Remove exiting class after animation completes
+				setTimeout(() => {
+					currentActiveSlide.classList.remove('active', 'exiting');
+				}, 600);
+			}
+
 			// Remove active class from all slides and dots
-			heroSlides.forEach(slide => slide.classList.remove('active'));
+			heroSlides.forEach(slide => {
+				if (slide !== heroSlides[index]) {
+					slide.classList.remove('active');
+				}
+			});
 			heroDots.forEach(dot => dot.classList.remove('active'));
 
-			// Add active class to current slide and dot
-			if (heroSlides[index]) {
-				heroSlides[index].classList.add('active');
-				heroDots[index].classList.add('active');
-			}
+			// Add active class to new slide and dot after a small delay
+			setTimeout(() => {
+				if (heroSlides[index]) {
+					heroSlides[index].classList.add('active');
+					heroDots[index].classList.add('active');
+				}
+			}, 100);
 
 			currentSlide = index;
 		}
 
 		// Function to go to next slide
 		function nextHeroSlide() {
-			currentSlide = (currentSlide + 1) % totalSlides;
-			showHeroSlide(currentSlide);
+			const nextIndex = (currentSlide + 1) % totalSlides;
+			showHeroSlide(nextIndex);
 		}
 
 		// Function to go to previous slide
 		function prevHeroSlide() {
-			currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
-			showHeroSlide(currentSlide);
+			const prevIndex = (currentSlide - 1 + totalSlides) % totalSlides;
+			showHeroSlide(prevIndex);
 		}
 
 		// Start auto-sliding
 		function startHeroAutoSlide() {
-			heroSlideInterval = setInterval(nextHeroSlide, 5000); // Change slide every 5 seconds
+			heroSlideInterval = setInterval(nextHeroSlide, 6000); // Change slide every 6 seconds (longer for split animation)
 		}
 
 		// Stop auto-sliding
@@ -7870,6 +7990,9 @@ try {
 		if (totalSlides > 1) {
 			startHeroAutoSlide();
 		}
+
+		// Log for debugging
+		console.log('🎬 Hero split-screen carousel initialized with', totalSlides, 'slides');
 
 		// Show newsletter popup after 5 seconds if not shown before
 		setTimeout(function() {

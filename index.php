@@ -5238,10 +5238,10 @@ try {
 					</div>
 					<!-- Navigation Dots -->
 					<div class="hero-dots">
-						<span class="carousel-dot active" data-slide="0" onclick="window.goToSlide(0); return false;"></span>
-						<span class="carousel-dot" data-slide="1" onclick="window.goToSlide(1); return false;"></span>
-						<span class="carousel-dot" data-slide="2" onclick="window.goToSlide(2); return false;"></span>
-						<span class="carousel-dot" data-slide="3" onclick="window.goToSlide(3); return false;"></span>
+						<span class="carousel-dot active" data-slide="0" role="button" tabindex="0" aria-label="Go to slide 1"></span>
+						<span class="carousel-dot" data-slide="1" role="button" tabindex="0" aria-label="Go to slide 2"></span>
+						<span class="carousel-dot" data-slide="2" role="button" tabindex="0" aria-label="Go to slide 3"></span>
+						<span class="carousel-dot" data-slide="3" role="button" tabindex="0" aria-label="Go to slide 4"></span>
 					</div>
 				</div>
 
@@ -7334,25 +7334,41 @@ try {
 			currentSlide = 0;
 			showSlideNumber(0);
 
-			// Add click handlers to dots if not already present
+			// Add click handlers to dots
 			carouselDots.forEach((dot, index) => {
-				// Remove existing listeners by cloning
+				// Remove any existing event listeners by cloning
 				const newDot = dot.cloneNode(true);
 				dot.parentNode.replaceChild(newDot, dot);
 				
-				// Add click handler
+				// Add multiple event handlers for maximum compatibility
 				newDot.addEventListener('click', function(e) {
 					e.preventDefault();
 					e.stopPropagation();
-					console.log('Dot clicked:', index);
+					console.log('Dot clicked (addEventListener):', index);
 					window.goToSlide(index);
+					return false;
 				});
 				
-				// Also keep the onclick for compatibility
-				newDot.setAttribute('onclick', 'window.goToSlide(' + index + '); return false;');
+				// Add keyboard support
+				newDot.addEventListener('keydown', function(e) {
+					if (e.key === 'Enter' || e.key === ' ') {
+						e.preventDefault();
+						console.log('Dot activated (keyboard):', index);
+						window.goToSlide(index);
+					}
+				});
+				
+				// Also set onclick for maximum compatibility
+				newDot.onclick = function(e) {
+					e.preventDefault();
+					e.stopPropagation();
+					console.log('Dot clicked (onclick):', index);
+					window.goToSlide(index);
+					return false;
+				};
 			});
 
-			// Re-query dots after cloning
+			// Re-query dots after cloning to get fresh references
 			carouselDots = document.querySelectorAll('.carousel-dot');
 
 			// Start timer - change every 5 seconds

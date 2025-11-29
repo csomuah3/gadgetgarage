@@ -1384,19 +1384,7 @@ try {
             position: relative;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-image:
-                radial-gradient(circle at 25% 25%, rgba(102, 126, 234, 0.02) 0%, transparent 50%),
-                radial-gradient(circle at 75% 75%, rgba(118, 75, 162, 0.02) 0%, transparent 50%);
-            pointer-events: none;
-            z-index: -1;
-        }
+        /* Removed body::before overlay - was blocking interactions */
 
         padding: 20px;
         margin-bottom: 20px;

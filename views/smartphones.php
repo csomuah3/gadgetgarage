@@ -1830,8 +1830,6 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             window.location.href = 'single_product.php?pid=' + productId;
         }
     </script>
-</body>
-</html>
 
 <!-- LEGACY CODE BELOW (HIDDEN/REPLACED BY NEW FILTER SYSTEM) -->
 <div style="display: none;">

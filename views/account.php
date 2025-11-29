@@ -898,6 +898,9 @@ try {
             display: flex;
             min-height: calc(100vh - 114px);
             background: #f8f9fa;
+            align-items: flex-start;
+            padding: 20px;
+            gap: 20px;
         }
 
         .account-sidebar {
@@ -905,9 +908,12 @@ try {
             background: linear-gradient(180deg, #1e3a8a 0%, #1E3A5F 100%);
             padding: 30px 0;
             border-right: none;
-            min-height: calc(100vh - 114px);
+            height: fit-content;
             position: relative;
             box-shadow: 4px 0 20px rgba(30, 58, 95, 0.3);
+            border-radius: 16px;
+            margin: 20px;
+            align-self: flex-start;
         }
 
         .account-sidebar::before {
@@ -1012,6 +1018,8 @@ try {
             padding: 25px 30px;
             overflow-y: auto;
             background: #ffffff;
+            border-radius: 16px;
+            margin: 20px 20px 20px 0;
         }
 
         .page-header {
@@ -1022,17 +1030,12 @@ try {
         }
 
         .page-title {
-            font-size: 28px;
-            font-weight: 700;
+            font-size: 32px;
+            font-weight: 600;
             color: #1f2937;
             margin: 0;
-            letter-spacing: -0.3px;
-        }
-
-        .page-subtitle {
-            color: #64748b;
-            margin: 6px 0 0;
-            font-size: 15px;
+            letter-spacing: -0.5px;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         /* Dashboard Content */
@@ -1041,22 +1044,6 @@ try {
             padding: 0;
         }
 
-        .welcome-section {
-            margin-bottom: 40px;
-        }
-
-        .welcome-title {
-            font-size: 32px;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 20px;
-            letter-spacing: -0.3px;
-        }
-
-        .welcome-subtitle {
-            color: #64748b;
-            font-size: 15px;
-        }
 
         .stats-grid {
             display: grid;
@@ -1463,6 +1450,18 @@ try {
                 border-right: none;
                 border-bottom: none;
                 padding: 20px 0;
+                border-radius: 16px;
+                margin: 20px 0;
+            }
+
+            .main-content {
+                padding: 0;
+                gap: 0;
+            }
+
+            .content-area {
+                margin: 20px;
+                border-radius: 16px;
             }
 
             .sidebar-header {
@@ -1572,15 +1571,10 @@ try {
         <!-- Content Area -->
         <main class="content-area">
             <div class="page-header">
-                <h1 class="page-title">Dashboard</h1>
-                <p class="page-subtitle">Welcome back to your account</p>
+                <h1 class="page-title">HI, <?= strtoupper(htmlspecialchars($first_name)) ?>!</h1>
             </div>
 
             <div class="dashboard-container">
-                <div class="welcome-section">
-                    <h2 class="welcome-title">HI, <?= strtoupper(htmlspecialchars($first_name)) ?>!</h2>
-                </div>
-
                 <div class="dashboard-sections">
                     <!-- Wishlist Section -->
                     <div class="dashboard-section">

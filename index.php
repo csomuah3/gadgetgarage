@@ -9735,7 +9735,18 @@ try {
 						confirmButtonText: 'Great!',
 						allowOutsideClick: false
 					}).then(() => {
-						// SMS functionality removed
+						// Send SMS notification
+						fetch('actions/send_order_sms_action.php', {
+							method: 'POST',
+							headers: {
+								'Content-Type': 'application/json',
+							},
+							body: JSON.stringify({
+								order_id: orderId
+							})
+						}).catch(err => {
+							console.log('SMS notification error (non-critical):', err);
+						});
 
 						// Show rating popup after confirmation
 						setTimeout(() => {
@@ -9810,8 +9821,27 @@ try {
 						console.log('SweetAlert confirmed, result:', result);
 						console.log('About to show rating popup for order:', orderParam);
 
-						// SMS functionality removed
-						if (false) {
+						// Send SMS notification (only if orderParam is valid)
+						if (orderParam && orderParam !== 'null' && orderParam !== null) {
+							fetch('actions/send_order_sms_action.php', {
+								method: 'POST',
+								headers: {
+									'Content-Type': 'application/json',
+								},
+								body: JSON.stringify({
+									order_id: orderParam
+								})
+							}).then(response => {
+								if (!response.ok) {
+									console.log('SMS response not OK:', response.status, response.statusText);
+								}
+								return response.json();
+							}).then(data => {
+								console.log('SMS notification result:', data);
+							}).catch(err => {
+								console.log('SMS notification error (non-critical):', err);
+							});
+						} else {
 							console.log('Skipping SMS notification - orderParam is null/invalid');
 						}
 

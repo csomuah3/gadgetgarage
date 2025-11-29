@@ -5,6 +5,7 @@ header('Content-Type: application/json');
 require_once __DIR__ . '/../settings/core.php';
 require_once __DIR__ . '/../controllers/cart_controller.php';
 require_once __DIR__ . '/../controllers/order_controller.php';
+require_once __DIR__ . '/../helpers/sms_helper.php';
 
 // Check if user is logged in
 if (!check_login()) {
@@ -106,7 +107,26 @@ try {
         // Empty cart
         empty_cart_ctr($customer_id, $ip_address);
 
-        // SMS functionality removed
+        // Send SMS confirmation if enabled
+        $sms_sent = false;
+        if (defined('SMS_ENABLED') && SMS_ENABLED) {
+            try {
+                $sms_sent = send_order_confirmation_sms($order_id);
+            } catch (Exception $sms_error) {
+                // SMS error is not critical, continue
+                error_log('SMS error: ' . $sms_error->getMessage());
+            }
+        }
+
+        // Send admin SMS notification for new order
+        if (defined('ADMIN_SMS_ENABLED') && ADMIN_SMS_ENABLED && defined('ADMIN_NEW_ORDER_SMS_ENABLED') && ADMIN_NEW_ORDER_SMS_ENABLED) {
+            try {
+                send_admin_new_order_sms($order_id);
+            } catch (Exception $admin_sms_error) {
+                // Log but don't fail the order
+                error_log('Admin SMS notification error: ' . $admin_sms_error->getMessage());
+            }
+        }
 
         // Clear session payment data
         unset($_SESSION['paystack_reference']);

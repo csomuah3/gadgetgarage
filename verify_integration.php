@@ -27,7 +27,17 @@ echo "<li><strong>Environment:</strong> <span class='info'>" . PAYSTACK_ENVIRONM
 echo "<li><strong>Callback URL:</strong> <span class='info'>" . PAYSTACK_CALLBACK_URL . "</span></li>";
 echo "</ul>";
 
-// SMS Configuration removed
+// SMS Configuration
+echo "<h3>📱 SMS Configuration (Arkesel)</h3>";
+require_once __DIR__ . '/settings/sms_config.php';
+
+echo "<ul>";
+echo "<li><strong>API Key:</strong> <span class='info'>" . substr(SMS_API_KEY, 0, 20) . "...(" . strlen(SMS_API_KEY) . " chars)</span></li>";
+echo "<li><strong>Sender ID:</strong> <span class='success'>" . SMS_SENDER_ID . "</span></li>";
+echo "<li><strong>API URL:</strong> <span class='info'>" . SMS_API_URL . "</span></li>";
+echo "<li><strong>SMS Enabled:</strong> <span class='" . (SMS_ENABLED ? 'success' : 'error') . "'>" . (SMS_ENABLED ? 'YES' : 'NO') . "</span></li>";
+echo "<li><strong>Cart Abandonment:</strong> <span class='" . (CART_ABANDONMENT_ENABLED ? 'success' : 'error') . "'>" . (CART_ABANDONMENT_ENABLED ? 'YES' : 'NO') . "</span></li>";
+echo "</ul>";
 
 // Database Configuration
 echo "<h3>🗄️ Database Configuration</h3>";
@@ -66,7 +76,17 @@ try {
         echo "<p class='error'>❌ Missing PayStack columns in payment table</p>";
     }
 
-    // SMS tables check removed
+    // Check SMS tables
+    $sms_tables = ['sms_logs', 'cart_abandonment'];
+    foreach ($sms_tables as $table) {
+        $query = "SHOW TABLES LIKE '$table'";
+        $result = $db->db_fetch_one($query);
+        if ($result) {
+            echo "<p class='success'>✅ Table '$table' exists</p>";
+        } else {
+            echo "<p class='error'>❌ Table '$table' missing</p>";
+        }
+    }
 
 } catch (Exception $e) {
     echo "<p class='error'>❌ Database connection failed: " . $e->getMessage() . "</p>";
@@ -85,6 +105,13 @@ $required_files = [
         'actions/paystack_verify_payment.php',
         'views/paystack_callback.php',
         'views/payment_success.php'
+    ],
+    'SMS Files' => [
+        'settings/sms_config.php',
+        'classes/sms_class.php',
+        'helpers/sms_helper.php',
+        'actions/send_sms_action.php',
+        'admin/sms_management.php'
     ],
     'Core Files' => [
         'js/checkout.js',
@@ -127,7 +154,13 @@ if (isset($_GET['test_apis']) && $_GET['test_apis'] === '1') {
         echo "<p class='error'>❌ PayStack API error: " . $e->getMessage() . "</p>";
     }
 
-    // SMS API Test removed
+    echo "<h3>SMS API Test</h3>";
+    // Note: We won't actually send SMS in test, just check if function exists
+    if (function_exists('send_order_confirmation_sms')) {
+        echo "<p class='success'>✅ SMS functions are available</p>";
+    } else {
+        echo "<p class='error'>❌ SMS functions not loaded</p>";
+    }
 
     echo "</div>";
 }

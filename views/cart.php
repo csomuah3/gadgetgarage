@@ -1407,6 +1407,16 @@ try {
             letter-spacing: 0.5px;
         }
 
+        .promo-section-redesign::before {
+            content: "Discount Code";
+            display: block;
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1a202c;
+            margin-bottom: 0.75rem;
+            font-family: "Times New Roman", Times, serif;
+        }
+
         .promo-input-container {
             display: flex;
             gap: 0;

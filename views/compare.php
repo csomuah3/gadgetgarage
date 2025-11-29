@@ -679,7 +679,8 @@ $user_name = $_SESSION['name'] ?? 'User';
     </script>
     <!-- AI Recommendations Section -->
     <?php include '../includes/ai_recommendations_section.php'; ?>
-
+        </main>
+    </div>
 </body>
 
 </html>

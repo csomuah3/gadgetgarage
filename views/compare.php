@@ -240,6 +240,9 @@ $user_name = $_SESSION['name'] ?? 'User';
         .product-column {
             padding: 30px;
             border-right: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
         }
 
         .product-column:last-child {
@@ -313,6 +316,8 @@ $user_name = $_SESSION['name'] ?? 'User';
             display: flex;
             gap: 10px;
             flex-wrap: wrap;
+            margin-top: auto;
+            padding-top: 20px;
         }
 
         .btn-view {

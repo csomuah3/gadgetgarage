@@ -53,10 +53,10 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
-    
+
     <!-- Reusable Header CSS -->
     <link href="../includes/header.css" rel="stylesheet">
-    
+
     <link href="css/dark-mode.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -1347,73 +1347,79 @@ try {
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
-        .promo-banner-card {
-            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            border-radius: 8px;
-            padding: 12px 16px;
-            text-align: center;
-            margin-bottom: 12px;
-            border: 1px solid #dee2e6;
+        .promo-code-display {
+            margin-bottom: 16px;
         }
 
-        .promo-banner-text {
-            font-size: 14px;
-            color: #495057;
-            font-weight: 500;
-            margin-right: 8px;
-        }
-
-        .promo-code-pill {
-            background: #dc3545;
-            color: white;
-            padding: 4px 12px;
-            border-radius: 16px;
-            font-size: 13px;
-            font-weight: 600;
+        .promo-code-display strong {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #1a1a1a;
             letter-spacing: 0.5px;
+        }
+
+        .discount-code-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
         }
 
         .promo-input-container {
             display: flex;
             gap: 0;
-            border-radius: 8px;
-            overflow: hidden;
-            border: 1px solid #dee2e6;
+            border-radius: 0;
+            overflow: visible;
+            border: none;
+            border-bottom: 1px solid #9ca3af;
+            align-items: center;
+            padding-bottom: 4px;
         }
 
         .promo-input-redesign {
             flex: 1;
             border: none;
-            padding: 12px 16px;
+            padding: 8px 0;
             font-size: 14px;
-            background: #ffffff;
-            color: #6c757d;
+            background: transparent;
+            color: #1a1a1a;
             outline: none;
+            border-bottom: none;
         }
 
         .promo-input-redesign::placeholder {
-            color: #adb5bd;
+            color: transparent;
         }
 
         .promo-input-redesign:focus {
             outline: none;
-            background: #ffffff;
+            background: transparent;
         }
 
         .promo-apply-btn {
-            background: #28a745;
+            background: #2563eb;
             color: white;
             border: none;
-            padding: 12px 24px;
-            font-weight: 600;
+            padding: 8px 12px;
+            font-weight: 500;
             font-size: 14px;
             cursor: pointer;
             transition: all 0.3s ease;
-            min-width: 80px;
+            min-width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
         }
 
         .promo-apply-btn:hover {
-            background: #218838;
+            background: #1d4ed8;
+        }
+
+        .promo-apply-btn i {
+            font-size: 12px;
         }
 
         .promo-apply-btn:disabled {
@@ -1725,7 +1731,7 @@ try {
 <body>
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
-    
+
     <!-- Cart Content -->
     <!-- Page Title -->
     <div class="container-fluid">
@@ -1822,7 +1828,7 @@ try {
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
-                                                        min="1" max="99" 
+                                                        min="1" max="99"
                                                         data-product-id="<?php echo $item['p_id']; ?>"
                                                         data-cart-item-id="<?php echo $cart_item_id; ?>"
                                                         id="qty-<?php echo $cart_item_id; ?>"
@@ -1870,16 +1876,20 @@ try {
                 <div class="col-lg-4">
                     <!-- Discount Code Section -->
                     <div class="promo-section-redesign">
-                        <!-- Promotional Banner -->
-                        <div class="promo-banner-card">
-                            <span class="promo-banner-text">Get GH₵ 1,200 Off On Orders Above GH₵ 2,000! Use Code:</span>
-                            <span class="promo-code-pill">BLACKFRIDAY20</span>
+                        <!-- Promo Code Display -->
+                        <div class="promo-code-display">
+                            <strong>BLACKFRIDAY20</strong>
                         </div>
+
+                        <!-- Discount Code Label -->
+                        <div class="discount-code-label">DISCOUNT CODE</div>
 
                         <!-- Input Section -->
                         <div class="promo-input-container">
-                            <input type="text" id="promoCode" class="promo-input-redesign" placeholder="Enter discount code" maxlength="50">
-                            <button type="button" id="applyPromoBtn" class="promo-apply-btn">Apply</button>
+                            <input type="text" id="promoCode" class="promo-input-redesign" placeholder="" maxlength="50">
+                            <button type="button" id="applyPromoBtn" class="promo-apply-btn">
+                                <i class="fas fa-arrow-right"></i>
+                            </button>
                         </div>
 
                         <div id="promoMessage" class="mt-2" style="display: none;"></div>

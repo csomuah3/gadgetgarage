@@ -941,7 +941,8 @@ try {
             width: 100px;
             height: 100px;
             object-fit: cover;
-            border-radius: 12px;
+            border-radius: 0;
+            border: none;
             box-shadow: none;
             transition: none;
         }
@@ -1941,8 +1942,18 @@ try {
                                                 <h5 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h5>
                                                 <p class="text-muted mb-2 small"><?php echo htmlspecialchars($item['product_desc'] ?? ''); ?></p>
                                                 <?php if (isset($item['condition_type'])): ?>
-                                                    <div class="condition-badge mb-2">
-                                                        <span class="badge bg-secondary">Condition: <?php echo ucfirst($item['condition_type']); ?></span>
+                                                    <div class="condition-selector-wrapper mb-2">
+                                                        <label for="condition-<?php echo $cart_item_id; ?>" style="font-size: 0.9rem; color: #6b7280; margin-bottom: 4px; display: block;">Condition:</label>
+                                                        <select id="condition-<?php echo $cart_item_id; ?>" 
+                                                                class="form-select form-select-sm condition-dropdown" 
+                                                                data-cart-item-id="<?php echo $cart_item_id; ?>"
+                                                                data-product-id="<?php echo $item['p_id']; ?>"
+                                                                onchange="updateCondition(this)"
+                                                                style="max-width: 200px; padding: 6px 12px; border: 1px solid #d1d5db; border-radius: 8px; font-size: 0.95rem;">
+                                                            <option value="excellent" <?php echo ($item['condition_type'] === 'excellent') ? 'selected' : ''; ?>>Excellent - 100%</option>
+                                                            <option value="good" <?php echo ($item['condition_type'] === 'good') ? 'selected' : ''; ?>>Good - 90%</option>
+                                                            <option value="fair" <?php echo ($item['condition_type'] === 'fair') ? 'selected' : ''; ?>>Fair - 80%</option>
+                                                        </select>
                                                     </div>
                                                 <?php endif; ?>
                                                 <div class="fw-bold text-primary fs-5" id="unit-price-<?php echo $cart_item_id; ?>">
@@ -1956,7 +1967,7 @@ try {
                                             </div>
                                             <div class="col-md-3 text-center">
                                                 <div class="quantity-control">
-                                                    <button type="button" class="quantity-btn" onclick="decrementQuantity(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
+                                                    <button type="button" class="quantity-btn" onclick="decrementQuantityByCartId('qty-<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-minus"></i>
                                                     </button>
                                                     <input type="number" class="quantity-input" value="<?php echo $item['qty']; ?>"
@@ -1964,8 +1975,8 @@ try {
                                                         data-product-id="<?php echo $item['p_id']; ?>"
                                                         data-cart-item-id="<?php echo $cart_item_id; ?>"
                                                         id="qty-<?php echo $cart_item_id; ?>"
-                                                        onchange="updateQuantity(<?php echo $item['p_id']; ?>, this.value, '<?php echo $cart_item_id; ?>')">
-                                                    <button type="button" class="quantity-btn" onclick="incrementQuantity(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
+                                                        onchange="updateQuantityByCartId('qty-<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>, this.value)">
+                                                    <button type="button" class="quantity-btn" onclick="incrementQuantityByCartId('qty-<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                         <i class="fas fa-plus"></i>
                                                     </button>
                                                 </div>
@@ -1986,7 +1997,7 @@ try {
                                                     ?>
                                                 </div>
                                                 <button type="button" class="btn btn-outline-danger btn-sm"
-                                                    onclick="removeItem(<?php echo $item['p_id']; ?>, '<?php echo $cart_item_id; ?>')">
+                                                    onclick="removeFromCartByCartId('<?php echo $cart_item_id; ?>', <?php echo $item['p_id']; ?>)">
                                                     <i class="fas fa-times"></i> Remove
                                                 </button>
                                             </div>

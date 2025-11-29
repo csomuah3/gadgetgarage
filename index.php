@@ -1377,10 +1377,23 @@ try {
 			left: 0;
 			width: 100%;
 			height: 100%;
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.6s ease-in-out, visibility 0.6s ease-in-out;
+			z-index: 1;
 		}
 
 		.hero-slide.active {
 			display: grid !important;
+			opacity: 1 !important;
+			visibility: visible !important;
+			z-index: 2;
+		}
+
+		.hero-slide.exiting {
+			opacity: 0;
+			visibility: hidden;
+			transition: opacity 0.4s ease-in-out, visibility 0.4s ease-in-out;
 		}
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
@@ -7175,6 +7188,16 @@ try {
 
 			if (!carouselSlides || carouselSlides.length === 0) {
 				console.error('Slides not initialized yet');
+				// Try to initialize if not done
+				initSimpleCarousel();
+				if (!carouselSlides || carouselSlides.length === 0) {
+					return;
+				}
+			}
+
+			// Ensure valid index
+			if (slideIndex < 0 || slideIndex >= carouselSlides.length) {
+				console.error('Invalid slide index:', slideIndex);
 				return;
 			}
 

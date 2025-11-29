@@ -257,20 +257,28 @@ function getOrderStatus($order_date) {
         }
 
         .orders-header {
-            margin-bottom: 40px;
+            margin-bottom: 45px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid #f1f5f9;
         }
 
         .orders-title {
-            font-size: 24px;
-            font-weight: 600;
+            font-size: 32px;
+            font-weight: 700;
             color: #1f2937;
-            margin-bottom: 8px;
-            letter-spacing: -0.3px;
+            margin-bottom: 10px;
+            letter-spacing: -0.5px;
+            background: linear-gradient(135deg, #1f2937 0%, #4F46E5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .orders-subtitle {
-            color: #718096;
-            font-size: 1.1rem;
+            color: #64748b;
+            font-size: 1.15rem;
+            font-weight: 400;
+            letter-spacing: -0.2px;
         }
 
         /* Orders Section Styles */
@@ -298,22 +306,38 @@ function getOrderStatus($order_date) {
 
         .empty-section {
             text-align: center;
-            padding: 40px 20px;
-            color: #9ca3af;
-            background: #f8fafc;
-            border-radius: 12px;
-            border: 2px dashed #cbd5e1;
+            padding: 60px 30px;
+            color: #64748b;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            border: 2px dashed #e2e8f0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .empty-section:hover {
+            border-color: #cbd5e1;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
         }
 
         .empty-section i {
-            font-size: 3rem;
+            font-size: 4rem;
             color: #cbd5e1;
-            margin-bottom: 15px;
+            margin-bottom: 20px;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .empty-section:hover i {
+            opacity: 1;
+            transform: scale(1.05);
         }
 
         .empty-section p {
-            font-size: 1.1rem;
+            font-size: 1.15rem;
             margin: 0;
+            font-weight: 500;
+            letter-spacing: -0.2px;
         }
 
         /* Order Cards - Modern Enhanced */
@@ -353,34 +377,40 @@ function getOrderStatus($order_date) {
         .order-status {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
-            font-size: 0.75rem;
+            gap: 10px;
+            font-size: 0.8rem;
             font-weight: 600;
-            margin-bottom: 18px;
-            letter-spacing: 0.5px;
+            margin-bottom: 20px;
+            letter-spacing: 0.8px;
             text-transform: uppercase;
-            padding: 6px 12px;
-            border-radius: 6px;
+            padding: 8px 16px;
+            border-radius: 10px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
         }
 
         .order-status.processing {
-            color: #f59e0b;
-            background: #fef3c7;
+            color: #F59E0B;
+            background: linear-gradient(135deg, #FEF3C7 0%, #FDE68A 100%);
+            border: 1px solid rgba(245, 158, 11, 0.2);
         }
 
         .order-status.shipped {
             color: #4F46E5;
-            background: #E0E7FF;
+            background: linear-gradient(135deg, #E0E7FF 0%, #C7D2FE 100%);
+            border: 1px solid rgba(79, 70, 229, 0.2);
         }
 
         .order-status.out-for-delivery {
-            color: #10b981;
-            background: #d1fae5;
+            color: #10B981;
+            background: linear-gradient(135deg, #D1FAE5 0%, #A7F3D0 100%);
+            border: 1px solid rgba(16, 185, 129, 0.2);
         }
 
         .order-status.delivered {
             color: #059669;
-            background: #d1fae5;
+            background: linear-gradient(135deg, #A7F3D0 0%, #6EE7B7 100%);
+            border: 1px solid rgba(5, 150, 105, 0.2);
         }
 
         .order-images {
@@ -840,6 +870,29 @@ function getOrderStatus($order_date) {
                 width: 100%;
                 position: relative;
                 top: 0;
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+                border-right: none;
+                border-bottom: 1px solid #e5e7eb;
+            }
+
+            .account-sidebar::after {
+                display: none;
+            }
+
+            .sidebar-nav {
+                display: flex;
+                overflow-x: auto;
+                padding: 0 15px;
+                gap: 8px;
+            }
+
+            .sidebar-nav li {
+                flex-shrink: 0;
+            }
+
+            .nav-item {
+                white-space: nowrap;
+                margin: 2px 4px;
             }
 
             .account-content {
@@ -848,15 +901,32 @@ function getOrderStatus($order_date) {
             }
 
             .orders-title {
-                font-size: 2rem;
+                font-size: 28px;
+            }
+
+            .orders-subtitle {
+                font-size: 1rem;
             }
 
             .order-card {
                 padding: 20px;
+                border-radius: 12px;
             }
 
             .order-actions {
                 flex-direction: column;
+            }
+
+            .action-btn {
+                width: 100%;
+            }
+
+            .empty-section {
+                padding: 40px 20px;
+            }
+
+            .empty-section i {
+                font-size: 3rem;
             }
         }
     </style>

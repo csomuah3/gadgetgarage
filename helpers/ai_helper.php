@@ -164,6 +164,42 @@ class AIHelper {
             return "A quality product from {$product['brand_name']}.";
         }
     }
+    
+    /**
+     * Generate product description using AI
+     */
+    public function generateProductDescription($product_title, $brand_name, $category_name, $price, $existing_description = '') {
+        $prompt = "Generate a compelling, SEO-friendly product description for an e-commerce website.\n\n";
+        $prompt .= "Product Details:\n";
+        $prompt .= "- Name: {$product_title}\n";
+        $prompt .= "- Brand: {$brand_name}\n";
+        $prompt .= "- Category: {$category_name}\n";
+        $prompt .= "- Price: GH₵" . number_format($price, 2) . "\n";
+        
+        if (!empty($existing_description)) {
+            $prompt .= "- Current Description: {$existing_description}\n\n";
+            $prompt .= "Enhance and expand this description. Make it more engaging, detailed, and SEO-optimized while keeping the original information.\n\n";
+        } else {
+            $prompt .= "\n";
+            $prompt .= "Create a professional product description that:\n";
+            $prompt .= "1. Highlights key features and benefits\n";
+            $prompt .= "2. Appeals to potential customers\n";
+            $prompt .= "3. Is SEO-friendly with relevant keywords\n";
+            $prompt .= "4. Is 150-250 words long\n";
+            $prompt .= "5. Uses persuasive but honest language\n";
+            $prompt .= "6. Mentions who the product is best for\n\n";
+        }
+        
+        $prompt .= "Write in a professional, customer-friendly tone. Focus on value and benefits. Do not include HTML tags or markdown formatting - just plain text.";
+        
+        try {
+            $description = $this->callOpenAI($prompt, 400);
+            return trim($description);
+        } catch (Exception $e) {
+            error_log("AI Description Generation Error: " . $e->getMessage());
+            throw new Exception("Failed to generate description: " . $e->getMessage());
+        }
+    }
 }
 ?>
 

@@ -461,8 +461,14 @@ if (isset($_SESSION['error_message'])) {
                     </div>
 
                     <div class="form-group">
-                        <label for="product_desc" class="form-label-modern">Description</label>
-                        <textarea class="form-control-modern" id="product_desc" name="product_desc" rows="3"></textarea>
+                        <label for="product_desc" class="form-label-modern">
+                            Description
+                            <button type="button" class="btn btn-sm btn-primary ms-2" id="generateDescBtn" onclick="generateProductDescription()" style="padding: 4px 12px; font-size: 12px;">
+                                <i class="fas fa-magic"></i> Generate with AI
+                            </button>
+                        </label>
+                        <textarea class="form-control-modern" id="product_desc" name="product_desc" rows="5"></textarea>
+                        <small class="text-muted">Leave blank or enter basic info, then click "Generate with AI" for a professional description</small>
                     </div>
 
                     <div class="form-group">
@@ -1451,9 +1457,15 @@ function editProduct(productId) {
 
                     <div class="form-row-full">
                         <div class="form-group-custom">
-                            <label for="edit-description">Description *</label>
+                            <label for="edit-description">
+                                Description *
+                                <button type="button" class="btn btn-sm btn-primary ms-2" onclick="generateEditDescription()" style="padding: 4px 12px; font-size: 12px;">
+                                    <i class="fas fa-magic"></i> Generate with AI
+                                </button>
+                            </label>
                             <textarea id="edit-description" class="form-control-custom textarea-custom"
                                       placeholder="Enter detailed product description">${product.product_desc || ''}</textarea>
+                            <small class="text-muted">Click "Generate with AI" to create or enhance the description</small>
                         </div>
                     </div>
                 </div>
@@ -1789,6 +1801,176 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 });
+
+// AI Product Description Generation Functions
+function generateProductDescription() {
+    const productTitle = document.getElementById('product_title').value.trim();
+    const productPrice = document.getElementById('product_price').value.trim();
+    const existingDesc = document.getElementById('product_desc').value.trim();
+    
+    // Get category and brand names from custom dropdowns
+    const categorySelected = document.getElementById('category-selected');
+    const brandSelected = document.getElementById('brand-selected');
+    const categoryName = categorySelected ? categorySelected.querySelector('.dropdown-text').textContent.trim() : 'General';
+    const brandName = brandSelected ? brandSelected.querySelector('.dropdown-text').textContent.trim() : 'Unknown';
+    
+    // Validation
+    if (!productTitle) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Information',
+            text: 'Please enter a product title first'
+        });
+        return;
+    }
+    
+    if (!productPrice || parseFloat(productPrice) <= 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Information',
+            text: 'Please enter a valid price first'
+        });
+        return;
+    }
+    
+    // Show loading
+    const btn = document.getElementById('generateDescBtn');
+    const originalText = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Generating...';
+    
+    // Make AJAX request
+    fetch('../actions/generate_product_description.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            product_title: productTitle,
+            brand_name: brandName,
+            category_name: categoryName,
+            price: productPrice,
+            existing_description: existingDesc
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        
+        if (data.status === 'success') {
+            // Fill the textarea with generated description
+            document.getElementById('product_desc').value = data.description;
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Description Generated!',
+                text: 'AI has generated a professional description. You can edit it if needed.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Generation Failed',
+                text: data.message || 'Failed to generate description. Please try again.'
+            });
+        }
+    })
+    .catch(error => {
+        btn.disabled = false;
+        btn.innerHTML = originalText;
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while generating the description. Please try again.'
+        });
+    });
+}
+
+function generateEditDescription() {
+    const productTitle = document.getElementById('edit-title').value.trim();
+    const productPrice = document.getElementById('edit-price').value.trim();
+    const existingDesc = document.getElementById('edit-description').value.trim();
+    
+    // Get category and brand names from select elements
+    const categorySelect = document.getElementById('edit-category');
+    const brandSelect = document.getElementById('edit-brand');
+    const categoryName = categorySelect && categorySelect.options[categorySelect.selectedIndex] ? categorySelect.options[categorySelect.selectedIndex].text.trim() : 'General';
+    const brandName = brandSelect && brandSelect.options[brandSelect.selectedIndex] ? brandSelect.options[brandSelect.selectedIndex].text.trim() : 'Unknown';
+    
+    // Validation
+    if (!productTitle) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Information',
+            text: 'Product title is required'
+        });
+        return;
+    }
+    
+    if (!productPrice || parseFloat(productPrice) <= 0) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Missing Information',
+            text: 'Valid price is required'
+        });
+        return;
+    }
+    
+    // Show loading
+    Swal.fire({
+        title: 'Generating Description...',
+        html: '<i class="fas fa-spinner fa-spin fa-3x text-primary"></i><br><br>AI is creating a professional description',
+        allowOutsideClick: false,
+        showConfirmButton: false
+    });
+    
+    // Make AJAX request
+    fetch('../actions/generate_product_description.php', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: new URLSearchParams({
+            product_title: productTitle,
+            brand_name: brandName,
+            category_name: categoryName,
+            price: productPrice,
+            existing_description: existingDesc
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Fill the textarea with generated description
+            document.getElementById('edit-description').value = data.description;
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'Description Generated!',
+                text: 'AI has generated/enhanced the description. Review and edit if needed.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+        } else {
+            Swal.fire({
+                icon: 'error',
+                title: 'Generation Failed',
+                text: data.message || 'Failed to generate description. Please try again.'
+            });
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'An error occurred while generating the description. Please try again.'
+        });
+    });
+}
 </script>
 
 <?php include 'includes/admin_footer.php'; ?>

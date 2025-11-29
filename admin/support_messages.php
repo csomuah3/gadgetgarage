@@ -825,6 +825,46 @@ setInterval(function() {
         location.reload();
     }
 }, 60000);
+
+// Remove purchase notifications on admin pages
+(function() {
+    // Remove any existing purchase notifications immediately
+    function removePurchaseNotifications() {
+        const notifications = document.querySelectorAll('.purchase-notification');
+        notifications.forEach(notification => {
+            notification.style.display = 'none';
+            notification.remove();
+        });
+        
+        // Stop purchase notification intervals if they exist
+        if (window.purchaseNotifications) {
+            window.purchaseNotifications.pause();
+            window.purchaseNotifications.removeAll();
+        }
+    }
+    
+    // Remove on page load
+    removePurchaseNotifications();
+    
+    // Remove when modals are shown
+    document.addEventListener('show.bs.modal', function() {
+        removePurchaseNotifications();
+    });
+    
+    // Remove periodically to catch any that might appear
+    setInterval(removePurchaseNotifications, 1000);
+    
+    // Override the purchase notification function if it exists
+    if (window.purchaseNotifications) {
+        const originalShow = window.purchaseNotifications.showNextNotification;
+        if (originalShow) {
+            window.purchaseNotifications.showNextNotification = function() {
+                // Do nothing on admin pages
+                return;
+            };
+        }
+    }
+})();
 </script>
 
 <?php include 'includes/admin_footer.php'; ?>

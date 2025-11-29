@@ -192,18 +192,22 @@
     // Check if we should show notifications on this page
     function shouldShowNotifications() {
         const currentPage = window.location.pathname.toLowerCase();
+        const currentUrl = window.location.href.toLowerCase();
         const excludedPages = [
             'admin',
             'checkout',
             'cart',
             'login',
             'register',
-            'payment'
+            'payment',
+            'support'
         ];
         
-        // Don't show on excluded pages
+        // Don't show on excluded pages - check both pathname and full URL
         for (let page of excludedPages) {
-            if (currentPage.includes(page)) {
+            if (currentPage.includes(page) || currentUrl.includes(page)) {
+                // Remove any existing notifications immediately
+                removeAllNotifications();
                 return false;
             }
         }
@@ -211,11 +215,43 @@
         return true;
     }
 
+    /**
+     * Remove all purchase notifications from the page
+     */
+    function removeAllNotifications() {
+        const notifications = document.querySelectorAll('.purchase-notification');
+        notifications.forEach(notification => {
+            notification.classList.remove('show');
+            setTimeout(() => {
+                if (notification.parentElement) {
+                    notification.remove();
+                }
+            }, 300);
+        });
+        
+        // Clear any intervals
+        if (notificationInterval) {
+            clearInterval(notificationInterval);
+            notificationInterval = null;
+        }
+        
+        // Clear the queue
+        purchaseQueue = [];
+        isPaused = true;
+    }
+
     // Initialize when DOM is ready - wrap in try-catch to prevent breaking other scripts
     try {
+        // First, check if we're on an excluded page and remove any existing notifications
+        if (!shouldShowNotifications()) {
+            // Already removed in shouldShowNotifications, just return
+            return;
+        }
+
         if (document.readyState === 'loading') {
             document.addEventListener('DOMContentLoaded', () => {
                 try {
+                    // Double-check before starting (in case page changed)
                     if (shouldShowNotifications()) {
                         startPurchaseNotifications();
                     }
@@ -225,6 +261,7 @@
             });
         } else {
             try {
+                // Double-check before starting (in case page changed)
                 if (shouldShowNotifications()) {
                     startPurchaseNotifications();
                 }
@@ -236,11 +273,19 @@
         console.warn('Error setting up purchase notifications:', error);
     }
 
+    // Also check on page navigation (for SPA-like behavior)
+    window.addEventListener('popstate', () => {
+        if (!shouldShowNotifications()) {
+            removeAllNotifications();
+        }
+    });
+
     // Export functions for external use
     window.purchaseNotifications = {
         pause: pauseNotifications,
         resume: resumeNotifications,
-        refresh: fetchRecentPurchases
+        refresh: fetchRecentPurchases,
+        removeAll: removeAllNotifications
     };
 
 })();

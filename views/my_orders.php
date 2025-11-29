@@ -468,6 +468,15 @@ function getOrderStatus($order_date) {
             background: #d97706;
         }
 
+        .rate-btn {
+            background: #000000;
+            color: white;
+        }
+
+        .rate-btn:hover {
+            background: #333333;
+        }
+
         .cancel-order-btn {
             background: #ef4444;
             color: white;
@@ -1010,11 +1019,8 @@ function getOrderStatus($order_date) {
                                         <button class="action-btn details-btn" onclick="viewOrderDetails(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
                                             Details
                                         </button>
-                                        <button class="action-btn track-btn" onclick="trackOrder('<?= htmlspecialchars($order['invoice_no']) ?>', '<?= htmlspecialchars($order['order_date']) ?>')">
-                                            Track
-                                        </button>
-                                        <button class="action-btn refund-btn" onclick="requestRefund(<?= $order['order_id'] ?>, '<?= htmlspecialchars($order['invoice_no']) ?>')">
-                                            Refund
+                                        <button class="action-btn rate-btn" onclick="openRatingModal(<?= $order['order_id'] ?>)">
+                                            Rate this product
                                         </button>
                                     </div>
                                 </div>
@@ -1925,6 +1931,249 @@ function getOrderStatus($order_date) {
         }
 
         // Load dark mode preference
+        // Open Rating Modal Function
+        async function openRatingModal(orderId) {
+            try {
+                // Fetch order details
+                const response = await fetch(`../actions/get_order_details.php?order_id=${orderId}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to load order details'
+                    });
+                    return;
+                }
+
+                const orderItems = data.order.items || [];
+                
+                if (orderItems.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Products',
+                        text: 'No products found in this order.'
+                    });
+                    return;
+                }
+
+                // Fetch existing ratings for this order
+                const ratingsResponse = await fetch(`../actions/get_product_ratings.php?order_id=${orderId}`);
+                const ratingsData = await ratingsResponse.json();
+                const existingRatings = ratingsData.success ? ratingsData.ratings : {};
+
+                // Build rating modal for each product
+                let currentProductIndex = 0;
+                let productRatings = {};
+
+                function showRatingModalForProduct(index) {
+                    if (index >= orderItems.length) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thank you!',
+                            text: 'All ratings have been submitted successfully.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+
+                    const item = orderItems[index];
+                    const productId = item.product_id;
+                    const existingRating = existingRatings[productId] || null;
+                    
+                    // Product image is already a full URL from the API
+                    const imageUrl = item.product_image || '';
+
+                    // Get product condition (default to 'excellent' if not set)
+                    const productCondition = item.product_condition || item.condition || 'excellent';
+                    
+                    const ratingHTML = `
+                        <div style="max-width: 700px; margin: 0 auto; text-align: left;">
+                            <h3 style="text-align: center; margin-bottom: 10px; font-weight: 700; color: #212529;">WE'D LOVE YOUR FEEDBACK</h3>
+                            <p style="text-align: center; margin-bottom: 30px; color: #6c757d; font-size: 14px;">Click on the stars to review your purchase and share your thoughts!</p>
+                            
+                            <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: center;">
+                                <div style="flex-shrink: 0;">
+                                    <img src="${imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNkI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K'}" 
+                                         alt="${item.product_title}" 
+                                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #dee2e6;"
+                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNkI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+                                </div>
+                                
+                                <div style="flex: 1;">
+                                    <h4 style="margin: 0 0 10px 0; font-size: 18px; font-weight: 600; color: #212529;">${item.product_title}</h4>
+                                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #6c757d;">Size: ${item.size || 'OS'}</p>
+                                    
+                                    <!-- Star Rating -->
+                                    <div style="margin-bottom: 15px;">
+                                        <div id="starRating${index}" style="display: flex; gap: 5px; font-size: 28px; cursor: pointer;">
+                                            ${[1, 2, 3, 4, 5].map(star => `
+                                                <span class="star" data-rating="${star}" 
+                                                      style="color: ${existingRating && star <= existingRating.rating ? '#FFD700' : '#ddd'}; 
+                                                             transition: color 0.2s;">
+                                                    ★
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                        <input type="hidden" id="selectedRating${index}" value="${existingRating ? existingRating.rating : 0}">
+                                    </div>
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                                        <span style="font-size: 18px; font-weight: 700; color: #212529;">GH₵${parseFloat(item.product_price || 0).toFixed(2)}</span>
+                                        <span style="font-size: 14px; color: #6c757d;">Qty: ${item.qty || 1}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Review Text Area -->
+                            <div style="margin-bottom: 20px;">
+                                <textarea id="reviewText${index}" 
+                                          placeholder="Write a short review" 
+                                          rows="4"
+                                          style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical; font-family: inherit;">${existingRating ? (existingRating.comment || '') : ''}</textarea>
+                            </div>
+                            
+                            ${index < orderItems.length - 1 ? 
+                                `<p style="text-align: center; color: #6c757d; font-size: 13px; margin-bottom: 0;">Product ${index + 1} of ${orderItems.length}</p>` 
+                                : ''}
+                        </div>
+                    `;
+
+                    Swal.fire({
+                        title: '',
+                        html: ratingHTML,
+                        width: '800px',
+                        showCancelButton: true,
+                        confirmButtonText: index < orderItems.length - 1 ? 'Next Product' : 'Submit Review',
+                        cancelButtonText: 'Skip',
+                        confirmButtonColor: '#000000',
+                        cancelButtonColor: '#6c757d',
+                        showCloseButton: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            // Star rating functionality
+                            const starContainer = document.getElementById(`starRating${index}`);
+                            const ratingInput = document.getElementById(`selectedRating${index}`);
+                            
+                            if (starContainer) {
+                                starContainer.addEventListener('click', (e) => {
+                                    if (e.target.classList.contains('star')) {
+                                        const rating = parseInt(e.target.dataset.rating);
+                                        ratingInput.value = rating;
+                                        
+                                        // Update star display
+                                        const stars = starContainer.querySelectorAll('.star');
+                                        stars.forEach((star, idx) => {
+                                            star.style.color = idx < rating ? '#FFD700' : '#ddd';
+                                        });
+                                    }
+                                });
+
+                                // Hover effect
+                                starContainer.addEventListener('mouseover', (e) => {
+                                    if (e.target.classList.contains('star')) {
+                                        const hoverRating = parseInt(e.target.dataset.rating);
+                                        const stars = starContainer.querySelectorAll('.star');
+                                        stars.forEach((star, idx) => {
+                                            if (idx < hoverRating) {
+                                                star.style.color = '#FFD700';
+                                                star.style.opacity = '0.7';
+                                            }
+                                        });
+                                    }
+                                });
+
+                                starContainer.addEventListener('mouseleave', () => {
+                                    const currentRating = parseInt(ratingInput.value) || 0;
+                                    const stars = starContainer.querySelectorAll('.star');
+                                    stars.forEach((star, idx) => {
+                                        star.style.opacity = '1';
+                                        star.style.color = idx < currentRating ? '#FFD700' : '#ddd';
+                                    });
+                                });
+                            }
+                        },
+                        preConfirm: () => {
+                            const rating = parseInt(document.getElementById(`selectedRating${index}`).value) || 0;
+                            const comment = document.getElementById(`reviewText${index}`).value.trim();
+
+                            if (rating === 0) {
+                                Swal.showValidationMessage('Please select a rating');
+                                return false;
+                            }
+
+                            return {
+                                product_id: productId,
+                                rating: rating,
+                                comment: comment,
+                                product_condition: productCondition,
+                                product_price: parseFloat(item.product_price || 0)
+                            };
+                        }
+                    }).then(async (result) => {
+                        if (result.isConfirmed && result.value) {
+                            const ratingData = result.value;
+                            
+                            // Save rating
+                            try {
+                                const submitResponse = await fetch('../actions/submit_product_rating_action.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        order_id: orderId,
+                                        product_id: ratingData.product_id,
+                                        rating: ratingData.rating,
+                                        comment: ratingData.comment,
+                                        product_condition: ratingData.product_condition,
+                                        product_price: ratingData.product_price
+                                    })
+                                });
+
+                                const submitData = await submitResponse.json();
+
+                                if (submitData.success) {
+                                    productRatings[ratingData.product_id] = ratingData;
+                                    
+                                    // Show next product or finish
+                                    showRatingModalForProduct(index + 1);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: submitData.message || 'Failed to save rating'
+                                    });
+                                }
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Failed to submit rating: ' + error.message
+                                });
+                            }
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            // User skipped - show next product
+                            showRatingModalForProduct(index + 1);
+                        }
+                    });
+                }
+
+                // Start with first product
+                showRatingModalForProduct(0);
+
+            } catch (error) {
+                console.error('Error opening rating modal:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load order details: ' + error.message
+                });
+            }
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
             const darkMode = localStorage.getItem('darkMode') === 'true';
             const toggle = document.getElementById('themeToggle');

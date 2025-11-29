@@ -1200,11 +1200,11 @@ if (!function_exists('generate_product_highlights')) {
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(0, 1fr));
-            gap: 24px;
+            grid-template-columns: repeat(4, minmax(280px, 1fr));
+            gap: 20px;
             margin-bottom: 50px;
             width: 100%;
-            padding: 0;
+            padding: 0 10px;
         }
 
         .modern-product-card {
@@ -1299,14 +1299,14 @@ if (!function_exists('generate_product_highlights')) {
         }
 
         #productContent {
-            padding-left: 15px;
-            padding-right: 0;
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
         .container-fluid {
             max-width: 100%;
-            padding-left: 20px;
-            padding-right: 20px;
+            padding-left: 10px;
+            padding-right: 10px;
         }
 
         @media (max-width: 1600px) {

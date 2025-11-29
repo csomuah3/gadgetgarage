@@ -71,6 +71,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="css/dark-mode.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/account_sidebar.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
@@ -923,116 +924,6 @@ try {
             z-index: 1;
         }
 
-        .account-sidebar {
-            width: 240px;
-            background: linear-gradient(180deg, #1e3a8a 0%, #1E3A5F 100%);
-            padding: 30px 0;
-            border-right: none;
-            height: fit-content;
-            position: relative;
-            box-shadow: 4px 0 20px rgba(30, 58, 95, 0.3);
-            border-radius: 16px;
-            margin: 20px;
-            align-self: flex-start;
-            z-index: 1;
-        }
-
-        .account-sidebar::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.1);
-            pointer-events: none;
-        }
-
-        .sidebar-header {
-            padding: 0 24px 30px;
-            margin-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 1;
-        }
-
-        .sidebar-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.9);
-            margin: 0;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-        }
-
-        .sidebar-nav {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-            position: relative;
-            z-index: 1;
-        }
-
-        .sidebar-nav li {
-            margin: 0;
-            position: relative;
-        }
-
-        .sidebar-nav li::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 24px;
-            right: 24px;
-            height: 1px;
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        .sidebar-nav li:last-child::after {
-            display: none;
-        }
-
-        .sidebar-nav a {
-            display: block;
-            padding: 16px 24px;
-            color: rgba(255, 255, 255, 0.7);
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-weight: 500;
-            font-size: 13px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            position: relative;
-            background: transparent;
-        }
-
-        .sidebar-nav a i {
-            display: none;
-        }
-
-        .sidebar-nav a:hover {
-            background: rgba(255, 255, 255, 0.05);
-            color: rgba(255, 255, 255, 0.9);
-            padding-left: 28px;
-        }
-
-        .sidebar-nav a.active {
-            background: rgba(37, 99, 235, 0.2);
-            color: #ffffff;
-            font-weight: 600;
-            border-left: 3px solid #2563EB;
-            padding-left: 21px;
-        }
-
-        .sidebar-nav a.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            width: 3px;
-            background: #2563EB;
-        }
 
         .content-area {
             flex: 1;
@@ -1577,19 +1468,7 @@ try {
     <!-- Main Content -->
     <div class="main-content">
         <!-- Account Sidebar -->
-        <aside class="account-sidebar">
-            <div class="sidebar-header">
-                <h2 class="sidebar-title">My Account</h2>
-            </div>
-            <ul class="sidebar-nav">
-                <li><a href="account.php" class="active"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
-                <li><a href="my_orders.php"><i class="fas fa-box"></i>My Orders</a></li>
-                <li><a href="wishlist.php"><i class="fas fa-heart"></i>My Wishlist</a></li>
-                <li><a href="compare.php"><i class="fas fa-balance-scale"></i>Compare</a></li>
-                <li><a href="help_center.php"><i class="fas fa-question-circle"></i>Help Center</a></li>
-                <li><a href="../login/logout.php"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
-            </ul>
-        </aside>
+        <?php include '../includes/account_sidebar.php'; ?>
 
         <!-- Content Area -->
         <main class="content-area">

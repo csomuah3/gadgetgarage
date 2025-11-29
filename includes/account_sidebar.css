@@ -1,0 +1,162 @@
+/* Account Sidebar Styles - Modern Minimalistic Design */
+
+.account-sidebar {
+    width: 240px;
+    background: linear-gradient(180deg, #1e3a8a 0%, #1E3A5F 100%);
+    padding: 30px 0;
+    border-right: none;
+    height: fit-content;
+    position: relative;
+    box-shadow: 4px 0 20px rgba(30, 58, 95, 0.3);
+    border-radius: 16px;
+    margin: 20px;
+    align-self: flex-start;
+    z-index: 1;
+}
+
+.account-sidebar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.1);
+    pointer-events: none;
+}
+
+.sidebar-header {
+    padding: 0 24px 30px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.9);
+    margin: 0;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+}
+
+.sidebar-nav {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    position: relative;
+    z-index: 1;
+}
+
+.sidebar-nav li {
+    margin: 0;
+    position: relative;
+}
+
+.sidebar-nav li::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 24px;
+    right: 24px;
+    height: 1px;
+    background: rgba(255, 255, 255, 0.1);
+}
+
+.sidebar-nav li:last-child::after {
+    display: none;
+}
+
+.sidebar-nav a {
+    display: block;
+    padding: 16px 24px;
+    color: rgba(255, 255, 255, 0.7);
+    text-decoration: none;
+    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    position: relative;
+    background: transparent;
+}
+
+.sidebar-nav a i {
+    display: none;
+}
+
+.sidebar-nav a:hover {
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.9);
+    padding-left: 28px;
+}
+
+.sidebar-nav a.active {
+    background: rgba(37, 99, 235, 0.2);
+    color: #ffffff;
+    font-weight: 600;
+    border-left: 3px solid #2563EB;
+    padding-left: 21px;
+}
+
+.sidebar-nav a.active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: #2563EB;
+}
+
+/* Responsive Styles */
+@media (max-width: 768px) {
+    .account-sidebar {
+        width: 100%;
+        box-shadow: 0 4px 20px rgba(30, 58, 95, 0.3);
+        border-right: none;
+        border-bottom: none;
+        padding: 20px 0;
+        border-radius: 16px;
+        margin: 20px 0;
+    }
+
+    .sidebar-header {
+        padding: 0 20px 20px;
+        margin-bottom: 15px;
+    }
+
+    .sidebar-nav {
+        display: flex;
+        overflow-x: auto;
+        padding: 0;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .sidebar-nav li {
+        flex-shrink: 0;
+    }
+
+    .sidebar-nav li::after {
+        display: none;
+    }
+
+    .sidebar-nav a {
+        padding: 15px 20px;
+        white-space: nowrap;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .sidebar-nav a.active {
+        border-left: none;
+        border-bottom: 2px solid #2563EB;
+        padding-left: 20px;
+    }
+
+    .sidebar-nav a.active::before {
+        display: none;
+    }
+}
+

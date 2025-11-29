@@ -1,6 +1,6 @@
 <!-- AI-Powered Recommendations Section -->
 <section class="ai-recommendations-section" style="background: linear-gradient(135deg, #f8f9ff 0%, #f0f2ff 100%); padding: 80px 0; margin: 100px 0 150px 0;">
-	<div class="container">
+	<div class="container" style="max-width: 1600px; padding-left: 60px; padding-right: 60px;">
 		<div class="section-header text-center mb-5">
 			<div style="display: flex; align-items: center; justify-content: center; gap: 15px; margin-bottom: 15px;">
 				<i class="fas fa-brain" style="font-size: 2.5rem; color: #2563eb;"></i>
@@ -13,7 +13,7 @@
 			</p>
 		</div>
 
-		<div id="aiRecommendationsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 30px; margin-top: 40px; max-width: 1200px; margin-left: auto; margin-right: auto;">
+		<div id="aiRecommendationsContainer" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; margin-top: 40px; max-width: 100%; margin-left: 0; margin-right: 0;">
 			<!-- Loading state -->
 			<div id="aiRecommendationsLoading" style="grid-column: 1 / -1; text-align: center; padding: 60px 20px;">
 				<i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: #2563eb; margin-bottom: 20px;"></i>
@@ -136,4 +136,40 @@
 	}
 })();
 </script>
+
+<style>
+	/* Responsive styles for recommendations grid */
+	@media (max-width: 1400px) {
+		.ai-recommendations-section .container {
+			max-width: 1400px !important;
+			padding-left: 40px !important;
+			padding-right: 40px !important;
+		}
+		#aiRecommendationsContainer {
+			gap: 30px !important;
+		}
+	}
+	
+	@media (max-width: 1200px) {
+		.ai-recommendations-section .container {
+			padding-left: 30px !important;
+			padding-right: 30px !important;
+		}
+		#aiRecommendationsContainer {
+			grid-template-columns: repeat(2, 1fr) !important;
+			gap: 25px !important;
+		}
+	}
+	
+	@media (max-width: 768px) {
+		.ai-recommendations-section .container {
+			padding-left: 20px !important;
+			padding-right: 20px !important;
+		}
+		#aiRecommendationsContainer {
+			grid-template-columns: 1fr !important;
+			gap: 20px !important;
+		}
+	}
+</style>
 

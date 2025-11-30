@@ -3,6 +3,8 @@ require_once __DIR__ . '/../settings/db_class.php';
 
 class Product extends db_connection
 {
+    private $last_error = '';
+    
     public function __construct()
     {
         if ($this->db === null) {
@@ -46,7 +48,10 @@ class Product extends db_connection
 
             $stmt = mysqli_prepare($this->db, $sql);
             if (!$stmt) {
-                error_log("ERROR: Failed to prepare statement: " . mysqli_error($this->db));
+                $prepare_error = mysqli_error($this->db);
+                $prepare_errno = mysqli_errno($this->db);
+                error_log("ERROR: Failed to prepare statement: " . $prepare_error);
+                $this->last_error = "Error $prepare_errno: $prepare_error";
                 return false;
             }
 
@@ -74,12 +79,22 @@ class Product extends db_connection
                 error_log("========== ADD PRODUCT END ==========");
                 return true;
             } else {
+                // Get error before closing statement
                 $mysql_error = mysqli_error($this->db);
                 $mysql_errno = mysqli_errno($this->db);
+                $stmt_error = mysqli_stmt_error($stmt);
+                $stmt_errno = mysqli_stmt_errno($stmt);
+                
                 error_log("========== DATABASE ERROR ==========");
                 error_log("MySQL Error Number: " . $mysql_errno);
                 error_log("MySQL Error Message: " . $mysql_error);
+                error_log("Statement Error Number: " . $stmt_errno);
+                error_log("Statement Error Message: " . $stmt_error);
                 error_log("=====================================");
+                
+                // Store error in class property for get_last_error() to retrieve
+                $this->last_error = !empty($stmt_error) ? "Error $stmt_errno: $stmt_error" : (!empty($mysql_error) ? "Error $mysql_errno: $mysql_error" : "Unknown database error");
+                
                 mysqli_stmt_close($stmt);
                 return false;
             }
@@ -89,6 +104,7 @@ class Product extends db_connection
             error_log("Exception Code: " . $e->getCode());
             error_log("Stack Trace: " . $e->getTraceAsString());
             error_log("==============================================");
+            $this->last_error = "Exception: " . $e->getMessage();
             return false;
         }
     }
@@ -136,11 +152,22 @@ class Product extends db_connection
     public function get_last_error()
     {
         try {
+            // Return stored error if available (from prepared statement)
+            if (!empty($this->last_error)) {
+                return $this->last_error;
+            }
+            
             if (!isset($this->db) || !$this->db) {
                 return 'No database connection';
             }
             $errno = mysqli_errno($this->db);
             $error = mysqli_error($this->db);
+            
+            // If no error, return a more helpful message
+            if ($errno == 0 && empty($error)) {
+                return 'Unknown database error occurred';
+            }
+            
             return "Error $errno: $error";
         } catch (Exception $e) {
             return 'Unable to get error: ' . $e->getMessage();

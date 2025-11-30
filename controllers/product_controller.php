@@ -31,7 +31,7 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
             
             // Extract the actual error message for user display
             $error_message = 'Database error: Could not add product to database';
-            if (!empty($mysql_error) && $mysql_error !== 'No database connection') {
+            if (!empty($mysql_error) && $mysql_error !== 'No database connection' && $mysql_error !== 'Unknown database error occurred') {
                 // Show user-friendly error based on MySQL error code
                 if (strpos($mysql_error, '1062') !== false || strpos($mysql_error, 'Duplicate entry') !== false) {
                     $error_message = 'Product with this title already exists. Please use a different title.';
@@ -41,9 +41,15 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
                     $error_message = 'Database connection lost. Please try again in a moment.';
                 } elseif (strpos($mysql_error, '1040') !== false || strpos($mysql_error, 'Too many connections') !== false) {
                     $error_message = 'Too many database connections. Please wait a moment and try again, or add products one at a time.';
+                } elseif (strpos($mysql_error, '1366') !== false || strpos($mysql_error, 'Incorrect string value') !== false) {
+                    $error_message = 'Invalid characters in product description. Please check for special characters and try again.';
+                } elseif (strpos($mysql_error, 'Error 0:') !== false || strpos($mysql_error, 'Unknown database error') !== false) {
+                    $error_message = 'An unexpected database error occurred. Please check the product data and try again.';
                 } else {
                     $error_message = 'Database error: ' . $mysql_error;
                 }
+            } elseif (empty($mysql_error) || $mysql_error === 'Unknown database error occurred') {
+                $error_message = 'An unexpected database error occurred. Please check your product data and try again.';
             }
             
             return [

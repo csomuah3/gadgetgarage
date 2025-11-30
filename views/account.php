@@ -71,6 +71,7 @@ try {
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="css/dark-mode.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../includes/account_sidebar.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
@@ -90,22 +91,7 @@ try {
             position: relative;
         }
 
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png');
-            background-size: contain;
-            background-position: center;
-            background-repeat: no-repeat;
-            background-attachment: fixed;
-            opacity: 0.75;
-            z-index: 0;
-            pointer-events: none;
-        }
+        /* Background moved to page-background.css - using class instead */
 
         /* Promotional Banner Styles */
         
@@ -1439,7 +1425,7 @@ try {
     </style>
 </head>
 
-<body>
+<body class="page-background">
     <?php include '../includes/header.php'; ?>
 
     <!-- Main Content -->

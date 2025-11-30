@@ -46,9 +46,20 @@ try {
             $storeCreditHelper = new StoreCreditHelper();
             $store_credit_balance = $storeCreditHelper->getTotalAvailableCredit($customer_id);
             $available_store_credits = $storeCreditHelper->getAvailableCredits($customer_id);
+            
+            // Debug logging
+            error_log("Store Credits Debug - Customer ID: $customer_id");
+            error_log("Store Credits Debug - Balance: " . $store_credit_balance);
+            error_log("Store Credits Debug - Available Credits Count: " . count($available_store_credits));
+            if (!empty($available_store_credits)) {
+                error_log("Store Credits Debug - Credits Data: " . print_r($available_store_credits, true));
+            }
         } catch (Exception $e) {
             error_log("Failed to load store credits: " . $e->getMessage());
+            error_log("Store Credits Error Trace: " . $e->getTraceAsString());
         }
+    } else {
+        error_log("Store Credits Debug - Not logged in or no customer ID. Logged in: " . ($is_logged_in ? 'yes' : 'no') . ", Customer ID: " . ($customer_id ?? 'null'));
     }
 } catch (Exception $e) {
     die("Critical error: " . $e->getMessage());
@@ -70,6 +81,7 @@ try {
 
     <!-- Reusable Header CSS -->
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/page-background.css" rel="stylesheet">
 
     <link href="css/dark-mode.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
@@ -1742,7 +1754,7 @@ try {
     </style>
 </head>
 
-<body>
+<body class="page-background">
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
 

@@ -52,6 +52,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
+    <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
 
     <style>
@@ -1418,7 +1419,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
     </style>
 </head>
 
-<body>
+<body class="page-background">
     <?php include '../includes/header.php'; ?>
     
     <!-- Contact Hero Section -->

@@ -44,6 +44,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 
     <!-- Custom CSS -->
     <link rel="stylesheet" href="../includes/header.css">
+    <link rel="stylesheet" href="../includes/page-background.css">
 
     <style>
         /* Header Styles */
@@ -591,7 +592,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
         }
     </style>
 </head>
-<body>
+<body class="page-background">
     <?php include '../includes/header.php'; ?>
 
     <!-- Terms Hero Section -->

@@ -15,29 +15,48 @@ class StoreCreditHelper {
      */
     public function getAvailableCredits($customer_id) {
         if (!$customer_id) {
+            error_log("StoreCreditHelper: No customer_id provided");
             return [];
         }
 
         $customer_id = intval($customer_id);
+        error_log("StoreCreditHelper: Fetching credits for customer_id: $customer_id");
+
+        // First, let's check all credits for this customer (for debugging)
+        $all_sql = "SELECT * FROM store_credits WHERE customer_id = $customer_id";
+        $all_credits = $this->db->db_fetch_all($all_sql) ?: [];
+        error_log("StoreCreditHelper: Total credits found (all statuses): " . count($all_credits));
+        if (!empty($all_credits)) {
+            error_log("StoreCreditHelper: All credits data: " . print_r($all_credits, true));
+        }
 
         $sql = "SELECT
                     credit_id,
-                    amount,
-                    used_amount,
-                    (amount - IFNULL(used_amount, 0)) as available_amount,
-                    source_type,
-                    source_reference,
-                    description,
+                    credit_amount as amount,
+                    (credit_amount - IFNULL(remaining_amount, credit_amount)) as used_amount,
+                    remaining_amount as available_amount,
+                    source as source_type,
+                    device_drop_id as source_reference,
+                    admin_notes as description,
                     created_at,
-                    expires_at
+                    expires_at,
+                    status
                 FROM store_credits
                 WHERE customer_id = $customer_id
                 AND status = 'active'
                 AND (expires_at IS NULL OR expires_at > NOW())
-                AND (amount - IFNULL(used_amount, 0)) > 0
+                AND remaining_amount > 0
                 ORDER BY expires_at ASC, created_at ASC";
 
-        return $this->db->db_fetch_all($sql) ?: [];
+        $result = $this->db->db_fetch_all($sql) ?: [];
+        error_log("StoreCreditHelper: Available credits found: " . count($result));
+        if (!empty($result)) {
+            error_log("StoreCreditHelper: Available credits data: " . print_r($result, true));
+        } else {
+            error_log("StoreCreditHelper: No available credits found. Query: $sql");
+        }
+
+        return $result;
     }
 
     /**
@@ -73,13 +92,14 @@ class StoreCreditHelper {
             $to_use = min($available, $remaining_total);
 
             if ($to_use > 0) {
-                // Update used amount
-                $new_used_amount = floatval($credit['used_amount']) + $to_use;
+                // Update remaining amount (decrease it by the amount used)
+                $current_remaining = floatval($credit['available_amount']);
+                $new_remaining = max(0, $current_remaining - $to_use);
                 $credit_id = intval($credit['credit_id']);
 
                 $update_sql = "UPDATE store_credits
-                              SET used_amount = $new_used_amount,
-                                  updated_at = NOW()
+                              SET remaining_amount = $new_remaining,
+                                  created_at = created_at
                               WHERE credit_id = $credit_id";
 
                 if ($this->db->db_write_query($update_sql)) {

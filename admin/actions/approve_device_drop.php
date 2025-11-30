@@ -85,22 +85,24 @@ try {
             // Generate credit reference ID
             $credit_reference = 'DDC' . str_pad($request_id, 6, '0', STR_PAD_LEFT);
 
-            // Insert store credit
+            // Insert store credit using correct database schema
             $credit_sql = "INSERT INTO store_credits (
-                customer_id, amount, source_type, source_reference,
-                description, expires_at, created_at
+                customer_id, credit_amount, remaining_amount, source, device_drop_id,
+                admin_notes, status, expires_at, created_at, admin_verified, verified_at
             ) VALUES (
-                ?, ?, 'device_drop', ?,
-                ?, DATE_ADD(NOW(), INTERVAL 1 YEAR), NOW()
+                ?, ?, ?, 'device_drop', ?,
+                ?, 'active', DATE_ADD(NOW(), INTERVAL 1 YEAR), NOW(), 1, NOW()
             )";
 
             $credit_description = "Store credit from device drop request #$request_id";
 
-            if ($db->db_prepare_execute($credit_sql, 'idss', [
+            if ($db->db_prepare_execute($credit_sql, 'iddiss', [
                 $user_id,
-                $request['final_amount'],
-                $credit_reference,
-                $credit_description
+                $request['final_amount'],  // credit_amount
+                $request['final_amount'],  // remaining_amount (starts equal to credit_amount)
+                $credit_reference,          // source
+                $request_id,               // device_drop_id
+                $credit_description        // admin_notes
             ])) {
                 $message = "Request approved! Store credit of GH₵" . number_format($request['final_amount'], 2) . " has been added to the customer's account.";
                 error_log("Store credit created for user $user_id: GH₵{$request['final_amount']} (Request #$request_id)");

@@ -171,6 +171,137 @@ function getOrderStatus($order_date)
                 });
         };
 
+        // Show Order Details Modal Function - Must be defined in head for immediate availability
+        window.showOrderDetailsModal = function(order, orderReference) {
+            const orderDate = new Date(order.order_date);
+            const estimatedDelivery = new Date(orderDate);
+            estimatedDelivery.setDate(estimatedDelivery.getDate() + 4);
+            
+            const formatDate = (date) => {
+                const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                return `${days[date.getDay()]}, ${date.getDate()}. ${months[date.getMonth()].toUpperCase()}`;
+            };
+
+            // Calculate delivery status
+            const daysSinceOrder = Math.floor((new Date() - orderDate) / (1000 * 60 * 60 * 24));
+            let currentStep = 0;
+            if (daysSinceOrder >= 4) currentStep = 4;
+            else if (daysSinceOrder >= 2) currentStep = 3;
+            else if (daysSinceOrder >= 1) currentStep = 2;
+            else currentStep = 1;
+
+            const progressPercentage = (currentStep / 4) * 100;
+
+            const modalHTML = `
+                <div style="text-align: left; max-width: 900px; margin: 0 auto;">
+                    <!-- Delivery Progress -->
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 12px; margin-bottom: 25px;">
+                        <h6 style="margin: 0 0 10px 0; font-size: 12px; font-weight: 600; color: #6c757d; text-transform: uppercase;">Estimated Delivery:</h6>
+                        <h3 style="margin: 0 0 20px 0; font-size: 24px; font-weight: bold; color: #212529;">${formatDate(estimatedDelivery)}</h3>
+                        
+                        <div style="background: #e9ecef; height: 8px; border-radius: 20px; margin-bottom: 15px; overflow: hidden;">
+                            <div style="background: linear-gradient(90deg, #28a745, #20c997); height: 100%; width: ${progressPercentage}%; transition: width 0.3s ease;"></div>
+                        </div>
+                        
+                        <div style="display: flex; justify-content: space-between; gap: 10px;">
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 1 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">✓</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 1 ? '#212529' : '#6c757d'}; font-weight: 600;">Ordered</div>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 2 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">✓</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 2 ? '#212529' : '#6c757d'}; font-weight: 600;">Shipped</div>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 3 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">${currentStep >= 3 ? '✓' : '○'}</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 3 ? '#212529' : '#6c757d'}; font-weight: 600;">Arriving Soon</div>
+                            </div>
+                            <div style="flex: 1; text-align: center;">
+                                <div style="font-size: 20px; color: ${currentStep >= 4 ? '#28a745' : '#dee2e6'}; margin-bottom: 5px;">${currentStep >= 4 ? '✓' : '○'}</div>
+                                <div style="font-size: 11px; color: ${currentStep >= 4 ? '#212529' : '#6c757d'}; font-weight: 600;">Delivered</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Order Info -->
+                    <div style="background: white; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 15px;">
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Order #</div>
+                                <div style="font-weight: 600;">${orderReference}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Date Placed</div>
+                                <div style="font-weight: 600;">${new Date(order.order_date).toLocaleString()}</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 12px; color: #6c757d; margin-bottom: 5px;">Total</div>
+                                <div style="font-weight: 600; color: #28a745;">GH₵${parseFloat(order.total_amount || order.payment_amount || 0).toFixed(2)}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Three Columns -->
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; margin-bottom: 20px;">
+                        <!-- Delivery Address -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h6 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; color: #495057;">Delivery Address</h6>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.6;">${order.customer_name || 'N/A'}<br>${order.customer_city || ''}<br>${order.customer_country || 'Ghana'}</p>
+                        </div>
+
+                        <!-- Shipping Methods -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h6 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; color: #495057;">Shipping Methods</h6>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.6;">In Transit<br>Standard Delivery</p>
+                        </div>
+
+                        <!-- Billing Address -->
+                        <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                            <h6 style="font-size: 13px; font-weight: 600; margin-bottom: 10px; text-transform: uppercase; color: #495057;">Billing Address</h6>
+                            <p style="margin: 0; font-size: 14px; line-height: 1.6;">${order.customer_name || 'N/A'}<br>${order.customer_city || ''}<br>${order.customer_country || 'Ghana'}</p>
+                        </div>
+                    </div>
+
+                    <!-- Product List -->
+                    <div style="background: white; padding: 20px; border: 1px solid #dee2e6; border-radius: 8px;">
+                        <h6 style="font-size: 15px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase;">Product in Order</h6>
+                        <p style="font-size: 13px; color: #6c757d; margin-bottom: 15px;">Once your package is delivered, drop us a review!</p>
+                        
+                        ${order.items && order.items.length > 0 ? order.items.map(item => `
+                            <div style="display: flex; align-items: center; gap: 15px; padding: 15px; background: #f8f9fa; border-radius: 8px; margin-bottom: 10px;">
+                                <img src="${item.product_image || '../images/placeholder.jpg'}" style="width: 80px; height: 80px; object-fit: cover; border-radius: 8px;" alt="${item.product_title || 'Product'}">
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">${item.product_title || 'Product'}</div>
+                                    <div style="font-size: 13px; color: #6c757d;">Size: ${item.size || 'N/A'}</div>
+                                </div>
+                                <div style="text-align: right;">
+                                    <div style="font-weight: 700; font-size: 16px; color: #212529;">GH₵${parseFloat(item.product_price || 0).toFixed(2)}</div>
+                                    <div style="font-size: 13px; color: #6c757d;">Qty: ${item.qty || 0}</div>
+                                </div>
+                            </div>
+                        `).join('') : '<p>No items found</p>'}
+                    </div>
+                </div>
+            `;
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: `Order #${orderReference}`,
+                    html: modalHTML,
+                    width: '1000px',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Close',
+                    confirmButtonColor: '#3b82f6',
+                    customClass: {
+                        popup: 'order-details-modal',
+                        confirmButton: 'btn btn-primary'
+                    }
+                });
+            }
+        };
+
         // Track Order Function
         window.trackOrder = function(orderReference, orderDate) {
             const orderDateTime = new Date(orderDate);

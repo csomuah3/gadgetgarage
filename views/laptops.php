@@ -26,10 +26,12 @@ $laptop_category_id = null;
 // Find laptop category by name (case-insensitive)
 foreach ($categories as $cat) {
     $cat_name_lower = strtolower(trim($cat['cat_name']));
-    if (strpos($cat_name_lower, 'laptop') !== false || 
+    if (
+        strpos($cat_name_lower, 'laptop') !== false ||
         strpos($cat_name_lower, 'notebook') !== false ||
         $cat_name_lower === 'laptops' ||
-        $cat_name_lower === 'laptop') {
+        $cat_name_lower === 'laptop'
+    ) {
         $laptop_category_id = $cat['cat_id'];
         break;
     }
@@ -52,17 +54,17 @@ if (empty($laptop_products)) {
     $laptop_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
         $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
-        
+
         // Include laptop/notebook products
-        $is_laptop = (strpos($cat_name, 'laptop') !== false || 
-                     strpos($cat_name, 'notebook') !== false ||
-                     strpos($product_title, 'laptop') !== false ||
-                     strpos($product_title, 'notebook') !== false);
-        
+        $is_laptop = (strpos($cat_name, 'laptop') !== false ||
+            strpos($cat_name, 'notebook') !== false ||
+            strpos($product_title, 'laptop') !== false ||
+            strpos($product_title, 'notebook') !== false);
+
         // Exclude phone and iPad products
         $is_phone = (strpos($cat_name, 'phone') !== false || strpos($cat_name, 'smartphone') !== false);
         $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
-        
+
         return $is_laptop && !$is_phone && !$is_ipad;
     });
 }
@@ -123,6 +125,7 @@ $joint_category_ids = [];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -138,6 +141,7 @@ $joint_category_ids = [];
     <link href="../css/dark-mode.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body class="page-background">
     <?php include '../includes/header.php'; ?>
 
@@ -262,64 +266,68 @@ $joint_category_ids = [];
                 icon.style.color = '#6b7280';
 
                 fetch('../actions/remove_from_wishlist.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count = Math.max(0, count - 1);
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count = Math.max(0, count - 1);
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                            }
+                        } else {
+                            button.classList.add('active');
+                            icon.className = 'fas fa-heart';
+                            icon.style.color = '#ef4444';
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         button.classList.add('active');
                         icon.className = 'fas fa-heart';
                         icon.style.color = '#ef4444';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    button.classList.add('active');
-                    icon.className = 'fas fa-heart';
-                    icon.style.color = '#ef4444';
-                });
+                    });
             } else {
                 button.classList.add('active');
                 icon.className = 'fas fa-heart';
                 icon.style.color = '#ef4444';
 
                 fetch('../actions/add_to_wishlist.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count++;
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = 'flex';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count++;
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = 'flex';
+                            }
+                        } else {
+                            button.classList.remove('active');
+                            icon.className = 'far fa-heart';
+                            icon.style.color = '#6b7280';
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         button.classList.remove('active');
                         icon.className = 'far fa-heart';
                         icon.style.color = '#6b7280';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    button.classList.remove('active');
-                    icon.className = 'far fa-heart';
-                    icon.style.color = '#6b7280';
-                });
+                    });
             }
         };
 
@@ -345,4 +353,5 @@ $joint_category_ids = [];
         });
     </script>
 </body>
+
 </html>

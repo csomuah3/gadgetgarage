@@ -26,10 +26,12 @@ $ipad_category_id = null;
 // Find iPad/tablet category by name (case-insensitive)
 foreach ($categories as $cat) {
     $cat_name_lower = strtolower(trim($cat['cat_name']));
-    if (strpos($cat_name_lower, 'ipad') !== false || 
+    if (
+        strpos($cat_name_lower, 'ipad') !== false ||
         strpos($cat_name_lower, 'tablet') !== false ||
         $cat_name_lower === 'ipads' ||
-        $cat_name_lower === 'ipad') {
+        $cat_name_lower === 'ipad'
+    ) {
         $ipad_category_id = $cat['cat_id'];
         break;
     }
@@ -52,19 +54,19 @@ if (empty($ipad_products)) {
     $ipad_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
         $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
-        
+
         // Include iPad/tablet products
-        $is_ipad = (strpos($cat_name, 'ipad') !== false || 
-                   strpos($cat_name, 'tablet') !== false ||
-                   strpos($product_title, 'ipad') !== false ||
-                   strpos($product_title, 'tablet') !== false);
-        
+        $is_ipad = (strpos($cat_name, 'ipad') !== false ||
+            strpos($cat_name, 'tablet') !== false ||
+            strpos($product_title, 'ipad') !== false ||
+            strpos($product_title, 'tablet') !== false);
+
         // Exclude phone products
-        $is_phone = (strpos($cat_name, 'phone') !== false || 
-                    strpos($cat_name, 'smartphone') !== false ||
-                    strpos($product_title, 'iphone') !== false ||
-                    strpos($product_title, 'samsung galaxy') !== false);
-        
+        $is_phone = (strpos($cat_name, 'phone') !== false ||
+            strpos($cat_name, 'smartphone') !== false ||
+            strpos($product_title, 'iphone') !== false ||
+            strpos($product_title, 'samsung galaxy') !== false);
+
         return $is_ipad && !$is_phone;
     });
 }
@@ -125,6 +127,7 @@ $joint_category_ids = [];
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -140,6 +143,7 @@ $joint_category_ids = [];
     <link href="../css/dark-mode.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
+
 <body class="page-background">
     <?php include '../includes/header.php'; ?>
 
@@ -148,7 +152,7 @@ $joint_category_ids = [];
         <div class="text-center py-3">
             <h1 style="color: #1f2937; font-weight: 700; margin: 0;">iPads</h1>
         </div>
-            </div>
+    </div>
 
     <!-- Category Product Layout Template -->
     <?php include '../includes/category_product_layout.php'; ?>
@@ -162,7 +166,7 @@ $joint_category_ids = [];
                         <div class="footer-brand">
                             <div class="footer-logo" style="margin-bottom: 20px;">
                                 <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
-                </div>
+                            </div>
                             <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
                             <div class="social-links">
                                 <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
@@ -170,8 +174,8 @@ $joint_category_ids = [];
                                 <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
                                 <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
                             </div>
-                                </div>
-                                </div>
+                        </div>
+                    </div>
                     <div class="col-lg-5 col-md-12">
                         <div class="row">
                             <div class="col-lg-4 col-md-6 mb-4">
@@ -192,7 +196,7 @@ $joint_category_ids = [];
                                     <li><a href="contact.php">Stores</a></li>
                                     <li><a href="contact.php">Want to Collab?</a></li>
                                 </ul>
-                        </div>
+                            </div>
                             <div class="col-lg-4 col-md-6 mb-4">
                                 <h5 class="footer-title">Quick Links</h5>
                                 <ul class="footer-links">
@@ -201,9 +205,9 @@ $joint_category_ids = [];
                                     <li><a href="contact.php">Gift Cards</a></li>
                                     <li><a href="contact.php">Check Gift Card Balance</a></li>
                                 </ul>
-                </div>
-                </div>
-            </div>
+                            </div>
+                        </div>
+                    </div>
                     <div class="col-lg-4 col-md-12 mb-4">
                         <div class="newsletter-signup-section">
                             <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
@@ -219,8 +223,8 @@ $joint_category_ids = [];
                             <p class="newsletter-disclaimer">
                                 By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
                             </p>
-        </div>
-    </div>
+                        </div>
+                    </div>
                 </div>
                 <hr class="footer-divider">
                 <div class="footer-bottom">
@@ -264,64 +268,68 @@ $joint_category_ids = [];
                 icon.style.color = '#6b7280';
 
                 fetch('../actions/remove_from_wishlist.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count = Math.max(0, count - 1);
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count = Math.max(0, count - 1);
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                            }
+                        } else {
+                            button.classList.add('active');
+                            icon.className = 'fas fa-heart';
+                            icon.style.color = '#ef4444';
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         button.classList.add('active');
                         icon.className = 'fas fa-heart';
                         icon.style.color = '#ef4444';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    button.classList.add('active');
-                    icon.className = 'fas fa-heart';
-                    icon.style.color = '#ef4444';
-                });
+                    });
             } else {
                 button.classList.add('active');
                 icon.className = 'fas fa-heart';
                 icon.style.color = '#ef4444';
 
                 fetch('../actions/add_to_wishlist.php', {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        const wishlistBadge = document.getElementById('wishlistBadge');
-                        if (wishlistBadge) {
-                            let count = parseInt(wishlistBadge.textContent) || 0;
-                            count++;
-                            wishlistBadge.textContent = count;
-                            wishlistBadge.style.display = 'flex';
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        },
+                        body: 'product_id=' + productId
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            const wishlistBadge = document.getElementById('wishlistBadge');
+                            if (wishlistBadge) {
+                                let count = parseInt(wishlistBadge.textContent) || 0;
+                                count++;
+                                wishlistBadge.textContent = count;
+                                wishlistBadge.style.display = 'flex';
+                            }
+                        } else {
+                            button.classList.remove('active');
+                            icon.className = 'far fa-heart';
+                            icon.style.color = '#6b7280';
                         }
-                    } else {
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
                         button.classList.remove('active');
                         icon.className = 'far fa-heart';
                         icon.style.color = '#6b7280';
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    button.classList.remove('active');
-                    icon.className = 'far fa-heart';
-                    icon.style.color = '#6b7280';
-                });
+                    });
             }
         };
 
@@ -347,4 +355,5 @@ $joint_category_ids = [];
         });
     </script>
 </body>
+
 </html>

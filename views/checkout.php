@@ -91,7 +91,7 @@ try {
 		}
 
 		.checkout-header {
-			background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+			background: transparent;
 			color: #1f2937;
 			padding: 0.3rem 0;
 			margin-bottom: 0.3rem;
@@ -234,8 +234,15 @@ try {
 
 		.summary-row {
 			display: flex;
-			justify-content: between;
+			justify-content: space-between;
+			align-items: center;
 			margin-bottom: 0.5rem;
+		}
+		
+		.summary-row span:first-child {
+			display: flex;
+			align-items: center;
+			flex-wrap: nowrap;
 		}
 
 		.summary-row.total {
@@ -836,10 +843,10 @@ try {
 
 					<!-- Discount Row (hidden by default) -->
 					<div class="summary-row discount-row" id="discountRow" style="display: none;">
-						<span class="text-success" id="discountLabel">
+						<span class="text-success" id="discountLabel" style="display: inline-flex; align-items: center; flex-wrap: nowrap;">
 							<i class="fas fa-tag me-1"></i>
-							Discount (<span id="discountPercent">20</span>%):
-							<span class="badge bg-success ms-2" id="discountBadge" style="font-size: 0.7rem; padding: 2px 6px;">
+							<span>Discount (<span id="discountPercent">20</span>%):</span>
+							<span class="badge bg-success ms-2" id="discountBadge" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap;">
 								<i class="fas fa-check-circle me-1"></i>Applied from Cart
 							</span>
 						</span>
@@ -1344,14 +1351,18 @@ try {
 						
 						const discountLabel = document.getElementById('discountLabel');
 						if (discountLabel) {
+							// Ensure the label maintains inline-flex display
+							discountLabel.style.display = 'inline-flex';
+							discountLabel.style.alignItems = 'center';
+							discountLabel.style.flexWrap = 'nowrap';
+							
 							let discountText = '';
 							if (promoData.discount_type === 'fixed') {
 								discountText = 'Discount (' + (promoData.promo_code || 'Discount') + '):';
 							} else {
 								discountText = 'Discount (' + promoData.discount_value + '%):';
 							}
-							discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>' + discountText + 
-								'<span class="badge bg-success ms-2" style="font-size: 0.7rem; padding: 2px 6px;"><i class="fas fa-check-circle me-1"></i>Applied from Cart</span>';
+							discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i><span>' + discountText + '</span><span class="badge bg-success ms-2" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap;"><i class="fas fa-check-circle me-1"></i>Applied from Cart</span>';
 						}
 						
 						const discountAmountElement = document.getElementById('discountAmount');

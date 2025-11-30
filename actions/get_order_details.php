@@ -19,8 +19,21 @@ if ($order_id <= 0) {
 }
 
 try {
-    // Get order information
-    $order = get_order_by_id_ctr($order_id);
+    // Get order information with customer details
+    require_once __DIR__ . '/../settings/db_class.php';
+    $db = new db_connection();
+    $db->db_connect();
+    
+    $order_id_escaped = intval($order_id);
+    $order_query = "SELECT o.*, c.customer_name, c.customer_email, c.customer_contact, 
+                           c.customer_city, c.customer_country,
+                           p.amt as payment_amount, p.currency, p.payment_date
+                    FROM orders o
+                    JOIN customer c ON o.customer_id = c.customer_id
+                    LEFT JOIN payment p ON o.order_id = p.order_id
+                    WHERE o.order_id = $order_id_escaped";
+    
+    $order = $db->db_fetch_one($order_query);
 
     if (!$order) {
         echo json_encode(['success' => false, 'message' => 'Order not found.']);
@@ -68,6 +81,9 @@ try {
         'total_amount' => $final_amount, // Add total_amount as well
         'currency' => $order['currency'] ?: 'GHS',
         'payment_date' => $order['payment_date'],
+        'customer_name' => $order['customer_name'] ?? '',
+        'customer_city' => $order['customer_city'] ?? '',
+        'customer_country' => $order['customer_country'] ?? 'Ghana',
         'items' => $items
     ];
 

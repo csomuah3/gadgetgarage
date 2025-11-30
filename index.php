@@ -3224,8 +3224,8 @@ try {
 		}
 
 		.side-card.purple {
-			background: #6f45d8;
-			/* vibrant purple */
+			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			/* blue gradient */
 			color: #fff;
 		}
 
@@ -5622,15 +5622,8 @@ try {
 
 					<!-- Bottom -->
 					<article class="side-card purple">
-						<div class="side-copy">
-							<h3 class="side-title">Kids Wireless<br>Headphones</h3>
-							<p class="side-price">Starting <span class="price">GH₵ 36.00</span></p>
-							<a href="views/all_product.php" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
-						</div>
-						<div class="side-media">
-							<img
-								src="https://images.unsplash.com/photo-1546435770-a3e426bf472b?q=80&w=1200&auto=format&fit=crop"
-								alt="Headphones" />
+						<div class="side-copy" style="text-align: center; width: 100%;">
+							<h3 class="side-title" style="margin-bottom: 15px; font-size: clamp(24px, 2.6vw, 36px);">Use Code 'BLACKFRIDAY20' FOR ₵₵₵ OFF !!!</h3>
 						</div>
 					</article>
 				</div>

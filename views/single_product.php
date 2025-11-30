@@ -2447,7 +2447,7 @@ try {
         }
 
         // New add to cart function for condition-based pricing
-        function addToCartWithCondition(productId) {
+        window.addToCartWithCondition = function(productId) {
             console.log('Add to cart called with:', {
                 productId: productId,
                 selectedCondition: selectedCondition,
@@ -4235,9 +4235,9 @@ function continueShopping() {
     window.location.href = '../index.php';
 }
 
-// Make functions globally available
-window.selectCondition = selectCondition;
-window.addToCartWithCondition = addToCartWithCondition;
+// Make functions globally available (COMMENTED OUT - already defined in main script above)
+// window.selectCondition = selectCondition;
+// window.addToCartWithCondition = addToCartWithCondition;
 window.showAddedToCartPopup = showAddedToCartPopup;
 window.closeAddedToCartPopup = closeAddedToCartPopup;
 window.viewCart = viewCart;

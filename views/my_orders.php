@@ -1120,26 +1120,52 @@ function getOrderStatus($order_date) {
     <script src="../js/header.js"></script>
 
     <script>
-        // View Order Details Function
-        function viewOrderDetails(orderId) {
-            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
-            modal.show();
+        // View Order Details Function (Make globally available)
+        window.viewOrderDetails = function(orderId, orderReference) {
+            console.log('Loading order details for order ID:', orderId);
 
             // Fetch order details
-            fetch('../actions/get_order_details_action.php?id=' + orderId)
-                .then(response => response.json())
-                .then(data => {
-                    if (data.status === 'success') {
-                        displayOrderDetails(data.order);
-                    } else {
-                        document.getElementById('orderDetailsContent').innerHTML =
-                            '<div class="alert alert-danger">Failed to load order details: ' + data.message + '</div>';
+            fetch(`../actions/get_order_details.php?order_id=${orderId}`)
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    console.log('Raw response:', text);
+                    try {
+                        const data = JSON.parse(text);
+                        console.log('Parsed JSON:', data);
+
+                        if (data.success) {
+                            showOrderDetailsModal(data.order, orderReference);
+                        } else {
+                            console.error('API returned error:', data.message);
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Failed to load order details'
+                            });
+                        }
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                        console.error('Response text:', text);
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Invalid response from server'
+                        });
                     }
                 })
                 .catch(error => {
-                    console.error('Error:', error);
-                    document.getElementById('orderDetailsContent').innerHTML =
-                        '<div class="alert alert-danger">Failed to load order details. Please try again.</div>';
+                    console.error('Fetch error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to load order details: ' + error.message
+                    });
                 });
         }
 
@@ -1271,15 +1297,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Track Order Function - Horizontal Timeline
         // Track Order Function (Make globally available)
-        function trackOrder(orderReference) {
-            // Redirect to tracking page with order reference
-            window.location.href = 'track_order.php?ref=' + encodeURIComponent(orderReference);
-        }
-
-        // Fix the old function implementation
-        function trackOrder_old(orderReference) {
+        window.trackOrder = function(orderReference, orderDate) {
             const orderDateTime = new Date(orderDate);
             const now = new Date();
             const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
@@ -1372,9 +1391,9 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Request Refund Function
+
         // Request Refund Function (Make globally available)
-        function requestRefund(orderId, orderReference) {
+        window.requestRefund = function(orderId, orderReference) {
             const refundFormHTML = `
                 <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -1527,7 +1546,8 @@ function getOrderStatus($order_date) {
 
         // Cancel Order Function
         // Cancel Order Function (Make globally available)
-        function cancelOrder(orderId, orderReference) {
+        // Cancel Order Function (Make globally available)
+        window.cancelOrder = function(orderId, orderReference) {
             // Confirm cancellation with SweetAlert
             Swal.fire({
                 title: 'Cancel Order?',

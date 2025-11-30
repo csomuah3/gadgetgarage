@@ -1,12 +1,18 @@
 <?php
+// Start output buffering to catch any errors/warnings
+ob_start();
+
+// Suppress error display (we'll catch them in logs)
 ini_set('display_errors', 0);
 ini_set('display_startup_errors', 0);
+ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../settings/core.php';
 
 // Check admin access for proper error handling
 if (!check_admin()) {
+    ob_clean();
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         // If it's an AJAX/form request, return JSON error
         header('Content-Type: application/json');
@@ -14,9 +20,11 @@ if (!check_admin()) {
             'status' => 'error',
             'message' => 'Access denied. Admin privileges required.'
         ]);
+        ob_end_flush();
         exit();
     } else {
         // If it's a page request, redirect to login
+        ob_clean();
         redirect('/login/login.php');
     }
 }
@@ -40,24 +48,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($new_status === 'customer_needs_to_come_in' && empty($response)) {
             $error_message = "Response is required when customer needs to come in.";
         } else {
-            // Update status
-            if (update_support_message_status_ctr($message_id, $new_status, null)) {
-                // If response is provided, save it as admin response
-                if (!empty($response)) {
-                    $admin_id = $_SESSION['user_id'] ?? null;
-                    add_admin_response_ctr($message_id, $response, $admin_id);
-                }
+        // Update status
+        if (update_support_message_status_ctr($message_id, $new_status, null)) {
+            // If response is provided, save it as admin response
+            if (!empty($response)) {
+                $admin_id = $_SESSION['user_id'] ?? null;
+                add_admin_response_ctr($message_id, $response, $admin_id);
+            }
                 // If status is "spoke_to_ai", auto-add a default response
                 if ($new_status === 'spoke_to_ai' && empty($response)) {
                     $admin_id = $_SESSION['user_id'] ?? null;
                     add_admin_response_ctr($message_id, 'Spoke to AI - Issue handled automatically.', $admin_id);
                 }
-                $success_message = "Status updated successfully.";
-                // Redirect to prevent form resubmission and clear modal state
-                header("Location: " . $_SERVER['REQUEST_URI'] . "?success=1");
+            $success_message = "Status updated successfully.";
+                // Clean output and redirect to prevent form resubmission
+                ob_clean();
+                $redirect_url = strtok($_SERVER['REQUEST_URI'], '?') . '?success=1';
+                header("Location: " . $redirect_url);
+                ob_end_flush();
                 exit();
-            } else {
-                $error_message = "Failed to update status.";
+        } else {
+            $error_message = "Failed to update status.";
             }
         }
     }
@@ -69,8 +80,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (add_admin_response_ctr($message_id, $response, $admin_id)) {
             $success_message = "Response added successfully.";
-            // Redirect to prevent form resubmission and clear modal state
-            header("Location: " . $_SERVER['REQUEST_URI'] . "?success=2");
+            // Clean output and redirect to prevent form resubmission
+            ob_clean();
+            $redirect_url = strtok($_SERVER['REQUEST_URI'], '?') . '?success=2';
+            header("Location: " . $redirect_url);
+            ob_end_flush();
             exit();
         } else {
             $error_message = "Failed to add response.";
@@ -147,6 +161,15 @@ try {
     $today_count = 0;
     $error_message = "Unable to load support messages: " . $e->getMessage();
 }
+
+// Check for success messages from URL
+if (isset($_GET['success'])) {
+    if ($_GET['success'] == '1') {
+        $success_message = "Status updated successfully.";
+    } elseif ($_GET['success'] == '2') {
+        $success_message = "Response added successfully.";
+    }
+}
 ?>
 
 <?php include 'includes/admin_header.php'; ?>
@@ -159,16 +182,16 @@ try {
     </nav>
 </div>
 
-<?php if ($success_message): ?>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
+<?php if (!empty($success_message)): ?>
+    <div class="alert alert-success alert-dismissible fade show" role="alert" style="background: rgba(209, 250, 229, 0.9); border: 1px solid rgba(16, 185, 129, 0.3); color: #065f46; backdrop-filter: blur(10px);">
         <i class="fas fa-check-circle me-2"></i>
         <?= htmlspecialchars($success_message) ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
     </div>
 <?php endif; ?>
 
-<?php if ($error_message): ?>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+<?php if (!empty($error_message)): ?>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert" style="background: rgba(254, 226, 226, 0.9); border: 1px solid rgba(239, 68, 68, 0.3); color: #991b1b; backdrop-filter: blur(10px);">
         <i class="fas fa-exclamation-circle me-2"></i>
         <?= htmlspecialchars($error_message) ?>
         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
@@ -287,9 +310,9 @@ try {
             <div class="card-header-custom d-flex justify-content-between align-items-center">
                 <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Support Tickets</h5>
                 <button class="btn btn-light btn-sm" onclick="refreshMessages()" id="refreshBtn" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white;">
-                    <i class="fas fa-sync-alt me-1"></i> Refresh
-                </button>
-            </div>
+                        <i class="fas fa-sync-alt me-1"></i> Refresh
+                    </button>
+                </div>
             <div class="card-body-custom">
                 <?php if (empty($messages)): ?>
                     <div class="text-center py-5">
@@ -297,32 +320,32 @@ try {
                             <i class="fas fa-inbox fa-4x mb-3" style="color: rgba(100, 116, 139, 0.5);"></i>
                             <h3 style="color: var(--primary-navy);">No Support Tickets Found</h3>
                             <p style="color: #64748b;">There are no support messages matching your criteria.</p>
-                        </div>
                     </div>
+                                            </div>
                 <?php else: ?>
                     <div class="support-messages-grid">
-                        <?php 
-                        $subject_labels = [
-                            'order' => 'Order',
-                            'device_quality' => 'Device Issue',
-                            'repair' => 'Repair',
-                            'device_drop' => 'Device Drop',
-                            'tech_revival' => 'Tech Revival',
-                            'billing' => 'Billing',
-                            'account' => 'Account',
-                            'general' => 'General'
-                        ];
-                        $status_labels = [
+                                                        <?php
+                                                        $subject_labels = [
+                                                            'order' => 'Order',
+                                                            'device_quality' => 'Device Issue',
+                                                            'repair' => 'Repair',
+                                                            'device_drop' => 'Device Drop',
+                                                            'tech_revival' => 'Tech Revival',
+                                                            'billing' => 'Billing',
+                                                            'account' => 'Account',
+                                                            'general' => 'General'
+                                                        ];
+                                                $status_labels = [
                             'spoke_to_ai' => 'Spoke to AI',
-                            'reached_out_via_mail' => 'Reached Out via Mail',
-                            'reached_out_via_call' => 'Reached Out via Call',
-                            'reached_out_via_text' => 'Reached Out via Text',
+                                                    'reached_out_via_mail' => 'Reached Out via Mail',
+                                                    'reached_out_via_call' => 'Reached Out via Call',
+                                                    'reached_out_via_text' => 'Reached Out via Text',
                             'customer_needs_to_come_in' => 'Customer Needs to Come In',
-                            'new' => 'New',
-                            'in_progress' => 'In Progress',
-                            'resolved' => 'Resolved',
-                            'closed' => 'Closed'
-                        ];
+                                                    'new' => 'New',
+                                                    'in_progress' => 'In Progress',
+                                                    'resolved' => 'Resolved',
+                                                    'closed' => 'Closed'
+                                                ];
                         foreach ($messages as $index => $message): 
                             $status = $message['status'] ?? 'new';
                             $current_status = ($status === 'new' || empty($status)) ? 'spoke_to_ai' : $status;
@@ -337,9 +360,9 @@ try {
                                             <div class="d-flex align-items-center gap-2 mb-1">
                                                 <span class="subject-badge subject-<?= $message['subject'] ?? 'general' ?>">
                                                     <?= $subject_labels[$message['subject'] ?? 'general'] ?? 'General' ?>
-                                                </span>
+                                            </span>
                                                 <strong class="customer-name"><?= htmlspecialchars($message['customer_name'] ?? $message['full_name'] ?? 'Unknown Customer') ?></strong>
-                                            </div>
+                                        </div>
                                             <?php if (!empty($message['customer_email'] ?? $message['email'] ?? '')): ?>
                                                 <small class="customer-email">
                                                     <i class="fas fa-envelope me-1"></i>
@@ -378,10 +401,10 @@ try {
 
                                     <div class="message-actions-glass">
                                         <button class="btn-update-glass" 
-                                                data-bs-toggle="modal"
+                                                    data-bs-toggle="modal"
                                                 data-bs-target="#updateModal<?= $message['message_id'] ?>">
                                             <i class="fas fa-edit me-2"></i>Update
-                                        </button>
+                                            </button>
                                     </div>
                                 </div>
                             </div>
@@ -954,45 +977,13 @@ function handleStatusChange(messageId) {
     }
 }
 
-// Check for success messages from URL parameters
+// Clean URL parameters after page load (success messages are handled server-side)
 document.addEventListener('DOMContentLoaded', function() {
+    // Clean success parameter from URL if present
     const urlParams = new URLSearchParams(window.location.search);
-    const success = urlParams.get('success');
-
-    if (success === '1') {
-        // Show success message for status update
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert alert-success alert-dismissible fade show';
-        alertDiv.innerHTML = `
-            <i class="fas fa-check-circle me-2"></i>
-            Status updated successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        const container = document.querySelector('.container-fluid');
-        if (container) {
-            container.insertBefore(alertDiv, container.firstChild);
-        }
-
-        // Clean the URL
-        const newUrl = window.location.pathname + window.location.search.replace(/[?&]success=\d+/, '').replace(/^&/, '?');
-        window.history.replaceState({}, '', newUrl === window.location.pathname + '?' ? window.location.pathname : newUrl);
-    } else if (success === '2') {
-        // Show success message for response added
-        const alertDiv = document.createElement('div');
-        alertDiv.className = 'alert alert-success alert-dismissible fade show';
-        alertDiv.innerHTML = `
-            <i class="fas fa-check-circle me-2"></i>
-            Response added successfully!
-            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-        `;
-        const container = document.querySelector('.container-fluid');
-        if (container) {
-            container.insertBefore(alertDiv, container.firstChild);
-        }
-
-        // Clean the URL
-        const newUrl = window.location.pathname + window.location.search.replace(/[?&]success=\d+/, '').replace(/^&/, '?');
-        window.history.replaceState({}, '', newUrl === window.location.pathname + '?' ? window.location.pathname : newUrl);
+    if (urlParams.has('success')) {
+        const newUrl = window.location.pathname + (urlParams.toString().replace(/success=\d+&?/, '').replace(/&$/, '') ? '?' + urlParams.toString().replace(/success=\d+&?/, '').replace(/&$/, '') : '');
+        window.history.replaceState({}, '', newUrl);
     }
 
     // Initialize modals when they open
@@ -1030,7 +1021,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-// Handle form submission to prevent blue page issue
+// Handle form submission to prevent blur/page issues
 function handleFormSubmit(form) {
     // Disable the submit button to prevent double submission
     const submitBtn = form.querySelector('button[type="submit"]');
@@ -1038,22 +1029,13 @@ function handleFormSubmit(form) {
         const originalText = submitBtn.innerHTML;
         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Updating...';
         submitBtn.disabled = true;
-
-        // Re-enable after a delay if the form submission fails
-        setTimeout(() => {
-            if (submitBtn.disabled) {
-                submitBtn.innerHTML = originalText;
-                submitBtn.disabled = false;
-            }
-        }, 5000);
     }
 
     // Validate required fields
-    const status = form.querySelector('select[name="status"]').value;
-    const response = form.querySelector('textarea[name="response"]');
-
-    if (status === 'customer_needs_to_come_in' && response && !response.value.trim()) {
-        alert('Response is required when customer needs to come in.');
+    const statusSelect = form.querySelector('select[name="status"]');
+    const responseTextarea = form.querySelector('textarea[name="response"]');
+    
+    if (!statusSelect) {
         if (submitBtn) {
             submitBtn.innerHTML = originalText;
             submitBtn.disabled = false;
@@ -1061,16 +1043,25 @@ function handleFormSubmit(form) {
         return false;
     }
 
-    // Close the modal before submission to prevent blue page
-    const modal = form.closest('.modal');
-    if (modal) {
-        const bsModal = bootstrap.Modal.getInstance(modal);
-        if (bsModal) {
-            bsModal.hide();
+    const status = statusSelect.value;
+
+    if (status === 'customer_needs_to_come_in' && responseTextarea && !responseTextarea.value.trim()) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Response Required',
+            text: 'Response is required when customer needs to come in.',
+            confirmButtonColor: '#3b82f6'
+        });
+        if (submitBtn) {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
         }
+        return false;
     }
 
-    return true; // Allow form submission
+    // Allow form submission - the redirect will happen server-side
+    // Don't close modal here as it causes blur issues
+    return true;
 }
 
 // Manual refresh function

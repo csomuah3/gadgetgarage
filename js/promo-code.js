@@ -126,6 +126,38 @@ async function applyPromoCode() {
         console.log('PROMO-CODE.JS DEBUG: result.discount_amount:', result.discount_amount);
 
         if (result.success) {
+            // Check if store credits are applied - if yes, remove them
+            const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
+            if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
+                // Uncheck store credits and remove deduction
+                applyStoreCreditsCheckbox.checked = false;
+                if (typeof handleStoreCreditsToggle === 'function') {
+                    handleStoreCreditsToggle(false);
+                }
+                // Show message
+                if (promoMessage) {
+                    promoMessage.innerHTML = `<div class="text-warning">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        Store credits removed. Discount code applied instead.
+                    </div>`;
+                    promoMessage.style.display = 'block';
+                }
+            }
+
+            // Disable store credits checkbox
+            if (applyStoreCreditsCheckbox) {
+                applyStoreCreditsCheckbox.disabled = true;
+            }
+            const storeCreditsLabel = document.querySelector('label[for="applyStoreCredits"]');
+            if (storeCreditsLabel) {
+                storeCreditsLabel.style.cursor = 'not-allowed';
+                storeCreditsLabel.style.opacity = '0.6';
+            }
+            const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
+            if (storeCreditsExclusiveMessage) {
+                storeCreditsExclusiveMessage.style.display = 'block';
+            }
+
             appliedPromo = result;
 
             // Store original total for removal
@@ -145,11 +177,13 @@ async function applyPromoCode() {
             }));
 
             // Update UI with success message
-            promoMessage.innerHTML = `<div class="text-success">
-                <i class="fas fa-check-circle"></i>
-                Promo code "${promoCode}" applied! You saved GH₵${result.discount_amount.toFixed(2)}
-            </div>`;
-            promoMessage.style.display = 'block';
+            if (promoMessage) {
+                promoMessage.innerHTML = `<div class="text-success">
+                    <i class="fas fa-check-circle"></i>
+                    Promo code "${promoCode}" applied! You saved GH₵${result.discount_amount.toFixed(2)}
+                </div>`;
+                promoMessage.style.display = 'block';
+            }
 
             // Show applied promo section
             const appliedPromoDiv = document.getElementById('appliedPromo');
@@ -206,6 +240,21 @@ function removePromoCode() {
 
     // Remove promo code from localStorage
     localStorage.removeItem('appliedPromo');
+
+    // Re-enable store credits checkbox
+    const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
+    if (applyStoreCreditsCheckbox) {
+        applyStoreCreditsCheckbox.disabled = false;
+    }
+    const storeCreditsLabel = document.querySelector('label[for="applyStoreCredits"]');
+    if (storeCreditsLabel) {
+        storeCreditsLabel.style.cursor = 'pointer';
+        storeCreditsLabel.style.opacity = '1';
+    }
+    const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
+    if (storeCreditsExclusiveMessage) {
+        storeCreditsExclusiveMessage.style.display = 'none';
+    }
 
     // Hide applied promo section
     const appliedPromoDiv = document.getElementById('appliedPromo');

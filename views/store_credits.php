@@ -325,7 +325,18 @@ try {
                                 </div>
                             </div>
                             <div class="credit-description">
-                                <?php echo htmlspecialchars($credit['description'] ?? 'Store Credit'); ?>
+                                <?php 
+                                $description = $credit['description'] ?? 'Store Credit';
+                                // Remove "Auto-generated from device drop request #0" text
+                                $description = preg_replace('/Auto-generated from device drop request #0/i', '', $description);
+                                $description = preg_replace('/Auto-generated from device drop request #\d+/i', '', $description);
+                                $description = trim($description);
+                                // If description is empty after removal, use a default
+                                if (empty($description)) {
+                                    $description = 'Store Credit';
+                                }
+                                echo htmlspecialchars($description); 
+                                ?>
                             </div>
                             <div class="credit-details">
                                 <div>

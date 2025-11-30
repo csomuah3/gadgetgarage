@@ -1539,7 +1539,7 @@ try {
 
 		@keyframes kenBurnsZoomPan {
 			0% {
-				transform: translateY(-120px) scale(1.1) translateX(-3%);
+				transform: translateY(-120px) scale(1.3) translateX(-3%);
 				opacity: 0;
 			}
 
@@ -1548,7 +1548,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.3) translateX(0);
+				transform: translateY(-120px) scale(1.6) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1560,7 +1560,7 @@ try {
 
 		@keyframes kenBurnsZoomPanIpad {
 			0% {
-				transform: translateY(-120px) scale(1.7) translateX(-3%);
+				transform: translateY(-120px) scale(1.3) translateX(-3%);
 				opacity: 0;
 			}
 
@@ -1569,7 +1569,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.97) translateX(0);
+				transform: translateY(-120px) scale(1.6) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1585,7 +1585,7 @@ try {
 
 		@keyframes kenBurnsZoomPanAlt {
 			0% {
-				transform: translateY(-120px) scale(1.6) translateX(3%);
+				transform: translateY(-120px) scale(1.3) translateX(3%);
 				opacity: 0;
 			}
 
@@ -1594,7 +1594,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.9) translateX(0);
+				transform: translateY(-120px) scale(1.6) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -2068,7 +2068,7 @@ try {
 			min-height: 550px;
 			max-width: 90%;
 			object-fit: contain;
-			transform: translateY(-120px) translateX(0) scale(1.3);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -2079,37 +2079,37 @@ try {
 			max-height: 1075px;
 			min-height: 850px;
 			max-width: 100%;
-			transform: translateY(-120px) translateX(0) scale(1.97);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.97);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-			transform: translateY(-120px) translateX(-30px) scale(1.1);
+			transform: translateY(-120px) translateX(-30px) scale(1.3);
 			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - initial state (hidden, off to the right) */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(-120px) translateX(60px) scale(1.1);
+			transform: translateY(-120px) translateX(60px) scale(1.3);
 		}
 
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(-120px) translateX(0) scale(1.3);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
 
 		/* iPad specific - scaled for active state */
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.97);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		/* Navigation Dots */

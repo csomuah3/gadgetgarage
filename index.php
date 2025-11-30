@@ -1462,7 +1462,7 @@ try {
 		width: 100%;
 		max-width: 100%;
 		margin: 0 auto;
-		padding: 8px 15px;
+		padding: 3px 15px;
 		background: #ffffff;
 	}
 
@@ -1470,11 +1470,11 @@ try {
 		display: grid;
 		grid-template-columns: 4fr 1.5fr;
 		/* hero carousel | right side banners */
-		gap: 15px;
+		gap: 8px;
 		/* spacing between cards */
 		align-items: start;
-		min-height: 20px;
-		/* hero height */
+		min-height: 28px;
+		/* hero height - MUCH SHORTER */
 	}
 
 
@@ -1483,8 +1483,8 @@ try {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		min-height: 20px;
-		border-radius: 10px;
+		min-height: 28px;
+		border-radius: 8px;
 		overflow: visible;
 		background: #f0f4f8;
 		/* Fallback background */
@@ -1500,23 +1500,23 @@ try {
 		}
 
 		/* ——— Hero Slide (Main Banner) - KEN BURNS EFFECT ——— */
-		.hero-slide {
-			display: none;
-			grid-template-columns: 1.5fr 1fr;
-			gap: 40px;
-			padding: 60px 60px;
-			border-radius: 14px;
-			overflow: hidden;
-			align-items: center;
-			position: absolute;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			opacity: 0;
-			visibility: hidden;
-			z-index: 1;
-		}
+	.hero-slide {
+		display: none;
+		grid-template-columns: 1.5fr 1fr;
+		gap: 10px;
+		padding: 8px 12px;
+		border-radius: 8px;
+		overflow: hidden;
+		align-items: center;
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		opacity: 0;
+		visibility: hidden;
+		z-index: 1;
+	}
 
 		.hero-slide.active {
 			display: grid !important;

@@ -1473,7 +1473,7 @@ try {
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 375px;
+			min-height: 275px;
 			/* hero height */
 		}
 
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 375px;
+			min-height: 275px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -2060,7 +2060,7 @@ try {
 			justify-content: center;
 			position: relative;
 			height: 100%;
-			min-height: 200px;
+			min-height: 180px;
 			padding-top: 0px;
 			overflow: visible;
 		}
@@ -2068,8 +2068,8 @@ try {
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 240px;
-			min-height: 200px;
+			max-height: 220px;
+			min-height: 180px;
 			max-width: 95%;
 			object-fit: contain;
 			transform: translateY(-120px) translateX(0) scale(1.67);

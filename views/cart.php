@@ -2022,25 +2022,29 @@ try {
                         </div>
 
                         <!-- Store Credits Section -->
-                        <?php if ($is_logged_in && $store_credit_balance > 0): ?>
+                        <?php if ($is_logged_in): ?>
                         <div class="store-credits-section mb-3" style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <div>
                                     <strong><i class="fas fa-credit-card me-2"></i>Available Store Credits</strong>
-                                    <div class="text-success fw-bold" style="font-size: 1.1rem;" id="storeCreditBalanceDisplay">
+                                    <div class="text-success fw-bold" style="font-size: 1.1rem;" id="storeCreditBalance">
                                         GH₵ <?php echo number_format($store_credit_balance, 2); ?>
                                     </div>
                                 </div>
                             </div>
                             <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
-                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
+                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;" <?php echo ($store_credit_balance <= 0) ? 'disabled' : ''; ?>>
+                                <label class="form-check-label" for="applyStoreCredits" style="cursor: <?php echo ($store_credit_balance <= 0) ? 'not-allowed; opacity: 0.6;' : 'pointer;'; ?>">
                                     <strong>Apply Store Credits to this order</strong>
                                 </label>
                             </div>
                             <small class="text-muted d-block mt-1">
                                 <i class="fas fa-info-circle me-1"></i>
-                                You can use up to GH₵ <?php echo number_format(min($store_credit_balance, $cart_total), 2); ?> from your store credits
+                                <?php if ($store_credit_balance > 0): ?>
+                                    You can use up to GH₵ <?php echo number_format(min($store_credit_balance, $cart_total), 2); ?> from your store credits
+                                <?php else: ?>
+                                    You don't have any store credits available
+                                <?php endif; ?>
                             </small>
                             <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
                                 <i class="fas fa-exclamation-triangle me-1"></i>
@@ -2185,7 +2189,7 @@ try {
             const storeCreditsAmount = document.getElementById('storeCreditsAmount');
             const cartTotal = document.getElementById('cartTotal');
             const cartSubtotal = document.getElementById('cartSubtotal');
-            const storeCreditBalanceDisplay = document.getElementById('storeCreditBalanceDisplay');
+            const storeCreditBalanceDisplay = document.getElementById('storeCreditBalance') || document.getElementById('storeCreditBalanceDisplay');
             const discountRow = document.getElementById('discountRow');
             const promoCodeInput = document.getElementById('promoCode');
             const applyPromoBtn = document.getElementById('applyPromoBtn');

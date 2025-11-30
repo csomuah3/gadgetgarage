@@ -2214,30 +2214,24 @@ try {
             const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
 
             if (isChecked) {
-                // If discount is active, clear it first (mutually exclusive)
+                // If discount is active, prevent applying store credits
                 if (isDiscountActive) {
-                    // Clear discount code
-                    if (promoCodeInput) {
-                        promoCodeInput.value = '';
+                    const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
+                    if (applyStoreCreditsCheckbox) {
+                        applyStoreCreditsCheckbox.checked = false;
                     }
-                    // Hide discount row
-                    if (discountRow) {
-                        discountRow.style.display = 'none';
+                    if (storeCreditsExclusiveMessage) {
+                        storeCreditsExclusiveMessage.style.display = 'block';
                     }
-                    // Clear discount from session/localStorage if exists
-                    sessionStorage.removeItem('appliedPromo');
-                    // Trigger recalculation without discount
-                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
-                    const subtotal = parseFloat(subtotalText) || 0;
-                    cartTotal.textContent = 'GH₵ ' + subtotal.toFixed(2);
+                    return;
                 }
 
-                // Hide exclusive message
+                // Hide exclusive message if shown
                 if (storeCreditsExclusiveMessage) {
                     storeCreditsExclusiveMessage.style.display = 'none';
                 }
 
-                // Disable discount code input when store credits are applied
+                // Disable discount code input
                 if (promoCodeInput) {
                     promoCodeInput.disabled = true;
                     promoCodeInput.placeholder = 'Store credits applied';
@@ -2261,8 +2255,12 @@ try {
                     storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
                     storeCreditsRow.style.display = 'flex';
                     
-                    // Update total (subtract store credits only - discount is cleared)
-                    const newTotal = Math.max(0, subtotal - creditsToApply);
+                    // Update total (subtract store credits only, discount should not be active)
+                    const discountAmountText = discountRow && discountRow.style.display !== 'none' 
+                        ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
+                        : '0';
+                    const discountAmount = parseFloat(discountAmountText) || 0;
+                    const newTotal = Math.max(0, subtotal - discountAmount - creditsToApply);
                     cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
                     
                     // Update session storage

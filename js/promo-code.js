@@ -133,7 +133,7 @@ async function applyPromoCode() {
         console.log('PROMO-CODE.JS DEBUG: result.discount_amount:', result.discount_amount);
 
         if (result.success) {
-            // Check if store credits are applied - if yes, remove them (mutual exclusivity)
+            // Check if store credits are applied - if yes, remove them (MUTUAL EXCLUSIVITY)
             const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
             if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
                 // Uncheck store credits and remove deduction
@@ -143,22 +143,27 @@ async function applyPromoCode() {
                 }
                 // Clear store credits from sessionStorage
                 sessionStorage.removeItem('appliedStoreCredits');
-                // Hide store credit row on checkout page if exists
+                sessionStorage.removeItem('subtotalAfterCredits');
+                sessionStorage.removeItem('vatAmount');
+                sessionStorage.removeItem('finalTotal');
+                
+                // Hide store credit row
                 const storeCreditsRow = document.getElementById('storeCreditsRow');
                 if (storeCreditsRow) {
                     storeCreditsRow.style.display = 'none';
                 }
-                // Show message
-                if (promoMessage) {
-                    promoMessage.innerHTML = `<div class="text-warning">
-                        <i class="fas fa-exclamation-triangle"></i>
-                        Store credits removed. Discount code applied instead.
-                    </div>`;
-                    promoMessage.style.display = 'block';
-                }
+                
+                // Show warning message
+                Swal.fire({
+                    icon: 'info',
+                    title: 'Store Credits Removed',
+                    text: 'Store credits have been removed. Discount code applied instead.',
+                    timer: 3000,
+                    showConfirmButton: false
+                });
             }
 
-            // Disable store credits checkbox
+            // Disable and dim store credits section (MUTUAL EXCLUSIVITY)
             if (applyStoreCreditsCheckbox) {
                 applyStoreCreditsCheckbox.disabled = true;
             }
@@ -170,6 +175,11 @@ async function applyPromoCode() {
             const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
             if (storeCreditsExclusiveMessage) {
                 storeCreditsExclusiveMessage.style.display = 'block';
+            }
+            const storeCreditsBox = document.getElementById('storeCreditsBox');
+            if (storeCreditsBox) {
+                storeCreditsBox.style.opacity = '0.5';
+                storeCreditsBox.style.pointerEvents = 'none';
             }
             
             // Update checkout page if we're on checkout
@@ -263,7 +273,7 @@ function removePromoCode() {
     // Remove promo code from localStorage
     localStorage.removeItem('appliedPromo');
 
-    // Re-enable store credits checkbox
+    // Re-enable and restore store credits section
     const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
     if (applyStoreCreditsCheckbox) {
         applyStoreCreditsCheckbox.disabled = false;
@@ -276,6 +286,11 @@ function removePromoCode() {
     const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
     if (storeCreditsExclusiveMessage) {
         storeCreditsExclusiveMessage.style.display = 'none';
+    }
+    const storeCreditsBox = document.getElementById('storeCreditsBox');
+    if (storeCreditsBox) {
+        storeCreditsBox.style.opacity = '1';
+        storeCreditsBox.style.pointerEvents = 'auto';
     }
     
     // Update checkout page if we're on checkout
@@ -320,6 +335,8 @@ function removePromoCode() {
 function updateCartTotals(originalTotal, newTotal, discountAmount) {
     console.log('PROMO-CODE.JS DEBUG: updateCartTotals called with originalTotal:', originalTotal, 'newTotal:', newTotal, 'discountAmount:', discountAmount);
 
+    const VAT_RATE = 0.125; // 12.5% VAT
+
     // Update subtotal to show original cart total (unchanged)
     const cartSubtotalElement = document.getElementById('cartSubtotal');
     if (cartSubtotalElement) {
@@ -327,21 +344,55 @@ function updateCartTotals(originalTotal, newTotal, discountAmount) {
         console.log('PROMO-CODE.JS DEBUG: Updated cartSubtotal element to:', cartSubtotalElement.textContent);
     }
 
-    // Update cart total display (final total after discount)
-    const cartTotalElement = document.getElementById('cartTotal');
-    if (cartTotalElement) {
-        cartTotalElement.textContent = `GH₵ ${newTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
-        console.log('PROMO-CODE.JS DEBUG: Updated cartTotal element to:', cartTotalElement.textContent);
-    }
-
     // Show/hide discount row based on discount amount
     const discountRow = document.getElementById('discountRow');
+    const subtotalAfterRow = document.getElementById('subtotalAfterRow');
+    const subtotalAfterElement = document.getElementById('subtotalAfter');
+    const vatAmountElement = document.getElementById('vatAmount');
+    const cartTotalElement = document.getElementById('cartTotal');
+    
     if (discountRow) {
         if (discountAmount > 0) {
-        discountRow.style.display = 'flex';
-        console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+            discountRow.style.display = 'flex';
+            console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+            
+            // Show subtotal after discount
+            if (subtotalAfterRow && subtotalAfterElement) {
+                subtotalAfterElement.textContent = `GH₵ ${newTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                subtotalAfterRow.style.display = 'flex';
+            }
+            
+            // Calculate VAT on subtotal after discount
+            const vat = newTotal * VAT_RATE;
+            if (vatAmountElement) {
+                vatAmountElement.textContent = `GH₵ ${vat.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+            
+            // Calculate final total (subtotal after discount + VAT)
+            const finalTotal = newTotal + vat;
+            if (cartTotalElement) {
+                cartTotalElement.textContent = `GH₵ ${finalTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+                console.log('PROMO-CODE.JS DEBUG: Updated cartTotal with VAT to:', cartTotalElement.textContent);
+            }
+            
         } else {
             discountRow.style.display = 'none';
+            if (subtotalAfterRow) {
+                subtotalAfterRow.style.display = 'none';
+            }
+            
+            // No discount - calculate VAT on original total
+            const vat = originalTotal * VAT_RATE;
+            if (vatAmountElement) {
+                vatAmountElement.textContent = `GH₵ ${vat.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+            
+            // Final total = original total + VAT
+            const finalTotal = originalTotal + vat;
+            if (cartTotalElement) {
+                cartTotalElement.textContent = `GH₵ ${finalTotal.toLocaleString('en-US', {minimumFractionDigits: 2, maximumFractionDigits: 2})}`;
+            }
+            
             console.log('PROMO-CODE.JS DEBUG: Hid discount row');
         }
     }

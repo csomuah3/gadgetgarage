@@ -2028,7 +2028,7 @@ try {
                                     $max_usable = max(0, $store_credit_balance - 500);
                                     $display_max = min($max_usable, $cart_total);
                                     echo number_format($display_max, 2); 
-                                    ?> from your store credits (GH₵500 minimum reserve)
+                                    ?> from your store credits. You must keep at least GH₵ 500.00 in your balance.
                                 </span>
                             </small>
                             <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
@@ -2052,7 +2052,7 @@ try {
                             <span class="text-success fw-bold">FREE</span>
                         </div>
 
-                        <!-- Discount Row (hidden by default) -->
+                        <!-- Discount Row (hidden by default, mutually exclusive with store credits) -->
                         <div class="d-flex justify-content-between mb-3 discount-row" id="discountRow" style="display: none;">
                             <span class="text-success">
                                 <i class="fas fa-tag me-1"></i>
@@ -2061,7 +2061,7 @@ try {
                             <span class="text-success fw-bold" id="discountAmount">-GH₵ 0.00</span>
                         </div>
 
-                        <!-- Store Credits Applied Row (hidden by default) -->
+                        <!-- Store Credits Applied Row (hidden by default, mutually exclusive with discount) -->
                         <?php if ($is_logged_in && $store_credit_balance > 0): ?>
                         <div class="d-flex justify-content-between mb-3 store-credits-row" id="storeCreditsRow" style="display: none;">
                             <span class="text-success">
@@ -2072,11 +2072,23 @@ try {
                         </div>
                         <?php endif; ?>
 
+                        <!-- Subtotal After Discount/Credits (hidden initially) -->
+                        <div class="d-flex justify-content-between mb-3" id="subtotalAfterRow" style="display: none;">
+                            <span>Subtotal After:</span>
+                            <span class="fw-bold" id="subtotalAfter">GH₵ <?php echo number_format($cart_total, 2); ?></span>
+                        </div>
+
+                        <!-- VAT Row (12.5% calculated on subtotal after discount/credits) -->
+                        <div class="d-flex justify-content-between mb-3" id="vatRow">
+                            <span>VAT (12.5%):</span>
+                            <span class="fw-bold" id="vatAmount">GH₵ <?php echo number_format($cart_total * 0.125, 2); ?></span>
+                        </div>
+
                         <hr>
 
                         <div class="d-flex justify-content-between mb-4">
                             <span class="fs-5 fw-bold">Total:</span>
-                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GH₵ <?php echo number_format($cart_total, 2); ?></span>
+                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GH₵ <?php echo number_format($cart_total * 1.125, 2); ?></span>
                         </div>
 
                         <?php if ($is_logged_in): ?>
@@ -2194,6 +2206,8 @@ try {
 
     <script>
         // Store Credits Functions - Define before DOMContentLoaded
+        const VAT_RATE = 0.125; // 12.5% VAT
+        
         function handleStoreCreditsToggle(isChecked) {
             console.log('handleStoreCreditsToggle called with:', isChecked);
             const storeCreditsRow = document.getElementById('storeCreditsRow');
@@ -2206,6 +2220,12 @@ try {
             const applyPromoBtn = document.getElementById('applyPromoBtn');
             const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
             const storeCreditsInfoText = document.getElementById('storeCreditsInfoText');
+            const subtotalAfterRow = document.getElementById('subtotalAfterRow');
+            const subtotalAfter = document.getElementById('subtotalAfter');
+            const vatRow = document.getElementById('vatRow');
+            const vatAmount = document.getElementById('vatAmount');
+            const storeCreditsBox = document.getElementById('storeCreditsBox');
+            const promoSection = document.querySelector('.promo-section-redesign');
 
             console.log('Elements found:', {
                 storeCreditsRow: !!storeCreditsRow,
@@ -2224,7 +2244,7 @@ try {
             const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
 
             if (isChecked) {
-                // If discount is active, prevent applying store credits
+                // If discount is active, prevent applying store credits (MUTUAL EXCLUSIVITY)
                 if (isDiscountActive) {
                     const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
                     if (applyStoreCreditsCheckbox) {
@@ -2233,6 +2253,12 @@ try {
                     if (storeCreditsExclusiveMessage) {
                         storeCreditsExclusiveMessage.style.display = 'block';
                     }
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Cannot Apply Both',
+                        text: 'You cannot use store credits and discount codes at the same time. Please remove the discount code first.',
+                        confirmButtonColor: '#3b82f6'
+                    });
                     return;
                 }
 
@@ -2241,13 +2267,17 @@ try {
                     storeCreditsExclusiveMessage.style.display = 'none';
                 }
 
-                // Disable discount code input
+                // Disable and dim promo section
                 if (promoCodeInput) {
                     promoCodeInput.disabled = true;
-                    promoCodeInput.placeholder = 'Store credits applied';
+                    promoCodeInput.placeholder = 'Disabled (Store credits active)';
                 }
                 if (applyPromoBtn) {
                     applyPromoBtn.disabled = true;
+                }
+                if (promoSection) {
+                    promoSection.style.opacity = '0.5';
+                    promoSection.style.pointerEvents = 'none';
                 }
 
                 // Get values
@@ -2263,8 +2293,24 @@ try {
                     storeCreditBalanceDisplayText: storeCreditBalanceDisplay?.textContent
                 });
 
-                // Apply 500 minimum reserve rule: max usable = balance - 500
+                // Apply GH₵ 500 minimum reserve rule: max usable = balance - 500
                 const maxUsableCredits = Math.max(0, creditBalance - 500);
+                
+                // Check if user has enough credits (after keeping 500 minimum)
+                if (maxUsableCredits <= 0) {
+                    const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
+                    if (applyStoreCreditsCheckbox) {
+                        applyStoreCreditsCheckbox.checked = false;
+                    }
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Insufficient Credits',
+                        text: 'You must maintain a minimum balance of GH₵ 500 in store credits. You currently have GH₵ ' + creditBalance.toFixed(2) + '.',
+                        confirmButtonColor: '#3b82f6'
+                    });
+                    return;
+                }
+                
                 // Credits to apply = minimum of (max usable, cart subtotal)
                 const creditsToApply = Math.min(maxUsableCredits, subtotal);
                 
@@ -2273,35 +2319,46 @@ try {
                     creditsToApply
                 });
 
-                if (creditsToApply > 0) {
-                    storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
-                    storeCreditsRow.style.display = 'flex';
-                    
-                    // Update total (subtract store credits only, discount should not be active)
-                    const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                        ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                        : '0';
-                    const discountAmount = parseFloat(discountAmountText) || 0;
-                    const newTotal = Math.max(0, subtotal - discountAmount - creditsToApply);
-                    cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
-                    
-                    // Update session storage
-                    sessionStorage.setItem('appliedStoreCredits', creditsToApply.toFixed(2));
-                } else {
-                    // Not enough credits (would leave less than 500)
-                    const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                    if (applyStoreCreditsCheckbox) {
-                        applyStoreCreditsCheckbox.checked = false;
-                    }
-                    alert('You cannot use store credits that would leave less than GH₵500 in your balance.');
-                    return;
+                // Apply store credits
+                storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
+                storeCreditsRow.style.display = 'flex';
+                
+                // Calculate subtotal after credits
+                const subtotalAfterCredits = Math.max(0, subtotal - creditsToApply);
+                
+                // Show subtotal after row
+                if (subtotalAfterRow && subtotalAfter) {
+                    subtotalAfter.textContent = 'GH₵ ' + subtotalAfterCredits.toFixed(2);
+                    subtotalAfterRow.style.display = 'flex';
                 }
+                
+                // Calculate VAT on subtotal after credits
+                const vat = subtotalAfterCredits * VAT_RATE;
+                if (vatAmount) {
+                    vatAmount.textContent = 'GH₵ ' + vat.toFixed(2);
+                }
+                
+                // Calculate final total (subtotal after credits + VAT)
+                const finalTotal = subtotalAfterCredits + vat;
+                cartTotal.textContent = 'GH₵ ' + finalTotal.toFixed(2);
+                
+                // Update session storage
+                sessionStorage.setItem('appliedStoreCredits', creditsToApply.toFixed(2));
+                sessionStorage.setItem('subtotalAfterCredits', subtotalAfterCredits.toFixed(2));
+                sessionStorage.setItem('vatAmount', vat.toFixed(2));
+                sessionStorage.setItem('finalTotal', finalTotal.toFixed(2));
+                
             } else {
                 // Remove store credits
                 storeCreditsRow.style.display = 'none';
                 storeCreditsAmount.textContent = '-GH₵ 0.00';
                 
-                // Re-enable discount code input
+                // Hide subtotal after row
+                if (subtotalAfterRow) {
+                    subtotalAfterRow.style.display = 'none';
+                }
+                
+                // Re-enable and restore promo section
                 if (promoCodeInput) {
                     promoCodeInput.disabled = false;
                     promoCodeInput.placeholder = '';
@@ -2309,19 +2366,45 @@ try {
                 if (applyPromoBtn) {
                     applyPromoBtn.disabled = false;
                 }
+                if (promoSection) {
+                    promoSection.style.opacity = '1';
+                    promoSection.style.pointerEvents = 'auto';
+                }
 
-                // Recalculate total (subtract discount if any)
+                // Recalculate totals without store credits
                 const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
                 const subtotal = parseFloat(subtotalText) || 0;
                 const discountAmountText = discountRow && discountRow.style.display !== 'none' 
                     ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
                     : '0';
                 const discountAmount = parseFloat(discountAmountText) || 0;
-                const newTotal = Math.max(0, subtotal - discountAmount);
-                cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
+                
+                // Recalculate based on whether discount is active
+                const subtotalAfterDiscount = Math.max(0, subtotal - discountAmount);
+                
+                // Update subtotal after if discount is active
+                if (discountAmount > 0 && subtotalAfterRow && subtotalAfter) {
+                    subtotalAfter.textContent = 'GH₵ ' + subtotalAfterDiscount.toFixed(2);
+                    subtotalAfterRow.style.display = 'flex';
+                } else if (subtotalAfterRow) {
+                    subtotalAfterRow.style.display = 'none';
+                }
+                
+                // Calculate VAT on subtotal (after discount if any)
+                const vat = subtotalAfterDiscount * VAT_RATE;
+                if (vatAmount) {
+                    vatAmount.textContent = 'GH₵ ' + vat.toFixed(2);
+                }
+                
+                // Calculate final total
+                const finalTotal = subtotalAfterDiscount + vat;
+                cartTotal.textContent = 'GH₵ ' + finalTotal.toFixed(2);
                 
                 // Remove from session storage
                 sessionStorage.removeItem('appliedStoreCredits');
+                sessionStorage.removeItem('subtotalAfterCredits');
+                sessionStorage.removeItem('vatAmount');
+                sessionStorage.removeItem('finalTotal');
             }
         }
 
@@ -2331,6 +2414,27 @@ try {
         // Simple cart functionality - all complex code moved to new_cart_script.js
         document.addEventListener('DOMContentLoaded', function() {
             console.log('Cart page loaded successfully');
+            
+            // Initialize VAT calculation on page load
+            const cartSubtotal = document.getElementById('cartSubtotal');
+            const vatAmount = document.getElementById('vatAmount');
+            const cartTotal = document.getElementById('cartTotal');
+            
+            if (cartSubtotal && vatAmount && cartTotal) {
+                const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
+                const subtotal = parseFloat(subtotalText) || 0;
+                const vat = subtotal * VAT_RATE;
+                const total = subtotal + vat;
+                
+                vatAmount.textContent = 'GH₵ ' + vat.toFixed(2);
+                cartTotal.textContent = 'GH₵ ' + total.toFixed(2);
+                
+                console.log('Initial VAT calculation:', {
+                    subtotal: subtotal,
+                    vat: vat,
+                    total: total
+                });
+            }
 
             // Global functions for dropdown functionality
             window.toggleUserDropdown = function() {
@@ -2349,16 +2453,56 @@ try {
 
             // Checkout function
             window.proceedToCheckout = function() {
-                // Store applied credits in sessionStorage to pass to checkout
+                // Get all relevant values
+                const cartSubtotal = document.getElementById('cartSubtotal');
+                const cartTotal = document.getElementById('cartTotal');
+                const vatAmount = document.getElementById('vatAmount');
+                const discountRow = document.getElementById('discountRow');
+                const discountAmount = document.getElementById('discountAmount');
+                const storeCreditsRow = document.getElementById('storeCreditsRow');
+                const storeCreditsAmount = document.getElementById('storeCreditsAmount');
                 const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
-                    const storeCreditsAmount = parseFloat(document.getElementById('storeCreditsAmount')?.textContent.replace(/[^0-9.]/g, '') || 0);
-                    if (storeCreditsAmount > 0) {
-                        sessionStorage.setItem('appliedStoreCredits', storeCreditsAmount.toFixed(2));
+                
+                // Extract numerical values
+                const subtotal = parseFloat(cartSubtotal?.textContent.replace(/[^0-9.]/g, '') || 0);
+                const finalTotal = parseFloat(cartTotal?.textContent.replace(/[^0-9.]/g, '') || 0);
+                const vat = parseFloat(vatAmount?.textContent.replace(/[^0-9.]/g, '') || 0);
+                
+                // Store basic totals
+                sessionStorage.setItem('cartSubtotal', subtotal.toFixed(2));
+                sessionStorage.setItem('vatAmount', vat.toFixed(2));
+                sessionStorage.setItem('finalTotal', finalTotal.toFixed(2));
+                
+                // Check if discount is applied
+                const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
+                if (isDiscountActive) {
+                    const discount = parseFloat(discountAmount?.textContent.replace(/[^0-9.]/g, '') || 0);
+                    sessionStorage.setItem('discountAmount', discount.toFixed(2));
+                    sessionStorage.removeItem('appliedStoreCredits');
+                } else {
+                    sessionStorage.removeItem('discountAmount');
+                }
+                
+                // Check if store credits are applied
+                const isStoreCreditsActive = applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked;
+                if (isStoreCreditsActive) {
+                    const credits = parseFloat(storeCreditsAmount?.textContent.replace(/[^0-9.]/g, '') || 0);
+                    if (credits > 0) {
+                        sessionStorage.setItem('appliedStoreCredits', credits.toFixed(2));
                     }
+                    sessionStorage.removeItem('discountAmount');
                 } else {
                     sessionStorage.removeItem('appliedStoreCredits');
                 }
+                
+                console.log('Proceeding to checkout with:', {
+                    subtotal: subtotal,
+                    vat: vat,
+                    finalTotal: finalTotal,
+                    discount: sessionStorage.getItem('discountAmount'),
+                    storeCredits: sessionStorage.getItem('appliedStoreCredits')
+                });
+                
                 window.location.href = 'checkout.php';
             };
 

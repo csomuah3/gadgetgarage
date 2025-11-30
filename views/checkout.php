@@ -1337,29 +1337,54 @@ try {
 
 		// Make function globally accessible for promo-code.js - MUST BE DEFINED BEFORE USE
 		window.checkAndApplyPromoFromCart = function() {
+			const VAT_RATE = 0.125; // 12.5% VAT
+			
 			// Read discount data from localStorage
 			const appliedPromo = localStorage.getItem('appliedPromo');
 			// Read store credit data from sessionStorage
 			const appliedStoreCredits = sessionStorage.getItem('appliedStoreCredits');
-			// Get original cart total from PHP
-			const originalCartTotal = <?php echo $cart_total; ?>;
-			const taxAmount = 150.00; // Standard tax
 			
-			// Initialize variables
-			let finalTotal = originalCartTotal + taxAmount;
-			let discountAmount = 0;
+			// Try to get values from sessionStorage (set from cart page)
+			const storedSubtotal = sessionStorage.getItem('cartSubtotal');
+			const storedVAT = sessionStorage.getItem('vatAmount');
+			const storedFinalTotal = sessionStorage.getItem('finalTotal');
+			const storedDiscount = sessionStorage.getItem('discountAmount');
+			
+			// Get original cart total from PHP (fallback)
+			const originalCartTotal = <?php echo $cart_total; ?>;
+			
+			// Use stored values if available, otherwise calculate
+			let subtotal = storedSubtotal ? parseFloat(storedSubtotal) : originalCartTotal;
+			let vatAmount = storedVAT ? parseFloat(storedVAT) : (subtotal * VAT_RATE);
+			let finalTotal = storedFinalTotal ? parseFloat(storedFinalTotal) : (subtotal + vatAmount);
+			let discountAmount = storedDiscount ? parseFloat(storedDiscount) : 0;
 			let storeCreditsAmount = 0;
 			let activeMethod = null; // 'discount' or 'store_credit'
 			
+			console.log('Checkout initialization:', {
+				subtotal: subtotal,
+				vatAmount: vatAmount,
+				finalTotal: finalTotal,
+				storedValues: {
+					subtotal: storedSubtotal,
+					vat: storedVAT,
+					finalTotal: storedFinalTotal,
+					discount: storedDiscount
+				}
+			});
+			
 			// Process discount if exists
-			if (appliedPromo) {
+			if (appliedPromo && !storedFinalTotal) {
+				// Only recalculate if we don't have stored final total from cart
 				try {
 					const promoData = JSON.parse(appliedPromo);
 					console.log('Promo data parsed successfully:', promoData);
 					
 					discountAmount = promoData.discount_amount || 0;
-					// Apply discount to subtotal, then add tax
-					finalTotal = (promoData.new_total || originalCartTotal) + taxAmount;
+					// Recalculate: subtotal - discount, then add VAT
+					const subtotalAfterDiscount = Math.max(0, originalCartTotal - discountAmount);
+					vatAmount = subtotalAfterDiscount * VAT_RATE;
+					finalTotal = subtotalAfterDiscount + vatAmount;
 					activeMethod = 'discount';
 					
 					// Show discount row
@@ -1406,12 +1431,15 @@ try {
 			}
 			
 			// Process store credits if exists (only if discount is not active)
-			if (appliedStoreCredits && !activeMethod) {
+			if (appliedStoreCredits && !activeMethod && !storedFinalTotal) {
+				// Only recalculate if we don't have stored final total from cart
 				try {
 					storeCreditsAmount = parseFloat(appliedStoreCredits) || 0;
 					if (storeCreditsAmount > 0) {
-						// Apply store credits to subtotal, then add tax
-						finalTotal = Math.max(0, originalCartTotal - storeCreditsAmount) + taxAmount;
+						// Recalculate: subtotal - credits, then add VAT
+						const subtotalAfterCredits = Math.max(0, originalCartTotal - storeCreditsAmount);
+						vatAmount = subtotalAfterCredits * VAT_RATE;
+						finalTotal = subtotalAfterCredits + vatAmount;
 						activeMethod = 'store_credit';
 						
 						// Show store credit row
@@ -1450,33 +1478,45 @@ try {
 				}
 			}
 			
-			// Update subtotal display (show original total)
+			// Update subtotal display (show original cart subtotal)
 			const subtotalElement = document.getElementById('subtotal');
 			if (subtotalElement) {
-				if (activeMethod === 'discount' && window.originalTotal) {
-					subtotalElement.textContent = 'GH₵ ' + window.originalTotal.toFixed(2);
-				} else {
-					subtotalElement.textContent = 'GH₵ ' + originalCartTotal.toFixed(2);
-				}
+				subtotalElement.textContent = 'GH₵ ' + subtotal.toFixed(2);
 			}
 			
-			// Ensure tax is always displayed
+			// Update VAT display (12.5% of subtotal after discount/credits)
 			const taxAmountElement = document.getElementById('taxAmount');
 			if (taxAmountElement) {
-				taxAmountElement.textContent = 'GH₵ ' + taxAmount.toFixed(2);
+				taxAmountElement.textContent = 'GH₵ ' + vatAmount.toFixed(2);
 			}
 			
-			// Update final total display
+			// Update final total display (subtotal - discount/credits + VAT)
 			const finalTotalElement = document.getElementById('finalTotal');
 			if (finalTotalElement) {
 				finalTotalElement.textContent = 'GH₵ ' + finalTotal.toFixed(2);
 			}
 			
-			// Update payment button
+			// Update payment button with final total
 			const completeOrderBtn = document.getElementById('simulatePaymentBtn');
 			if (completeOrderBtn) {
 				completeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Complete Order - GH₵ ' + finalTotal.toFixed(2);
 			}
+			
+			// Store final total in window for payment processing
+			if (typeof window !== 'undefined') {
+				window.checkoutFinalTotal = finalTotal;
+				window.checkoutVAT = vatAmount;
+				window.checkoutSubtotal = subtotal;
+			}
+			
+			console.log('Checkout totals updated:', {
+				subtotal: subtotal,
+				vatAmount: vatAmount,
+				finalTotal: finalTotal,
+				discountAmount: discountAmount,
+				storeCreditsAmount: storeCreditsAmount,
+				activeMethod: activeMethod
+			});
 			
 			// Update large total display at top
 			const checkoutTotalDisplay = document.getElementById('checkoutTotalDisplay');

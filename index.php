@@ -1457,37 +1457,37 @@ try {
 		/* Hero Section */
 		/* Hero Banner Styles */
 		/* ——— Layout shell ——— */
-		.hero-banner-section {
-			/* taller section like your screenshot */
-			width: 100%;
-			max-width: 100%;
-			margin: 0 auto;
-			padding: 24px 15px;
-			background: #ffffff;
-		}
+	.hero-banner-section {
+		/* taller section like your screenshot */
+		width: 100%;
+		max-width: 100%;
+		margin: 0 auto;
+		padding: 15px;
+		background: #ffffff;
+	}
 
-		.hero-grid {
-			display: grid;
-			grid-template-columns: 4fr 1.5fr;
-			/* hero carousel | right side banners */
-			gap: 28px;
-			/* spacing between cards */
-			align-items: start;
-			min-height: 125px;
-			/* hero height */
-		}
+	.hero-grid {
+		display: grid;
+		grid-template-columns: 4fr 1.5fr;
+		/* hero carousel | right side banners */
+		gap: 28px;
+		/* spacing between cards */
+		align-items: start;
+		min-height: 80px;
+		/* hero height */
+	}
 
-		/* ——— Hero Carousel Wrapper ——— */
-		.hero-carousel-wrapper {
-			position: relative;
-			width: 100%;
-			height: 100%;
-			min-height: 125px;
-			border-radius: 14px;
-			overflow: visible;
-			background: #f0f4f8;
-			/* Fallback background */
-		}
+	/* ——— Hero Carousel Wrapper ——— */
+	.hero-carousel-wrapper {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		min-height: 80px;
+		border-radius: 14px;
+		overflow: visible;
+		background: #f0f4f8;
+		/* Fallback background */
+	}
 
 
 

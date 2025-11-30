@@ -21,16 +21,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $new_status = $_POST['status'];
         $response = trim($_POST['response'] ?? '');
 
-        // Update status
-        if (update_support_message_status_ctr($message_id, $new_status, null)) {
-            // If response is provided, save it as admin response
-            if (!empty($response)) {
-                $admin_id = $_SESSION['user_id'] ?? null;
-                add_admin_response_ctr($message_id, $response, $admin_id);
-            }
-            $success_message = "Status updated successfully.";
+        // Validate response requirement for "customer_needs_to_come_in" status
+        if ($new_status === 'customer_needs_to_come_in' && empty($response)) {
+            $error_message = "Response is required when customer needs to come in.";
         } else {
-            $error_message = "Failed to update status.";
+            // Update status
+            if (update_support_message_status_ctr($message_id, $new_status, null)) {
+                // If response is provided, save it as admin response
+                if (!empty($response)) {
+                    $admin_id = $_SESSION['user_id'] ?? null;
+                    add_admin_response_ctr($message_id, $response, $admin_id);
+                }
+                // If status is "spoke_to_ai", auto-add a default response
+                if ($new_status === 'spoke_to_ai' && empty($response)) {
+                    $admin_id = $_SESSION['user_id'] ?? null;
+                    add_admin_response_ctr($message_id, 'Spoke to AI - Issue handled automatically.', $admin_id);
+                }
+                $success_message = "Status updated successfully.";
+            } else {
+                $error_message = "Failed to update status.";
+            }
         }
     }
 
@@ -307,9 +317,11 @@ try {
                                                 <?php
                                                 $status = $message['status'] ?? 'new';
                                                 $status_labels = [
+                                                    'spoke_to_ai' => 'Spoke to AI',
                                                     'reached_out_via_mail' => 'Reached Out via Mail',
                                                     'reached_out_via_call' => 'Reached Out via Call',
                                                     'reached_out_via_text' => 'Reached Out via Text',
+                                                    'customer_needs_to_come_in' => 'Customer Needs to Come In',
                                                     'new' => 'New',
                                                     'in_progress' => 'In Progress',
                                                     'resolved' => 'Resolved',
@@ -394,21 +406,34 @@ try {
                                             <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Update Status</h5>
                                             <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
                                         </div>
-                                        <form method="POST">
+                                        <form method="POST" id="statusForm<?= $message['message_id'] ?>">
                                             <div class="modal-body">
                                                 <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
                                                 <div class="form-group mb-3">
-                                                    <label for="status" class="form-label-modern">Status</label>
-                                                    <select class="form-control-modern" name="status" required>
-                                                        <option value="reached_out_via_mail" <?= ($message['status'] ?? '') === 'reached_out_via_mail' ? 'selected' : '' ?>>Reached Out via Mail</option>
-                                                        <option value="reached_out_via_call" <?= ($message['status'] ?? '') === 'reached_out_via_call' ? 'selected' : '' ?>>Reached Out via Call</option>
-                                                        <option value="reached_out_via_text" <?= ($message['status'] ?? '') === 'reached_out_via_text' ? 'selected' : '' ?>>Reached Out via Text</option>
+                                                    <label for="status<?= $message['message_id'] ?>" class="form-label-modern">Update</label>
+                                                    <?php 
+                                                    $current_status = $message['status'] ?? 'new';
+                                                    // Set default to "spoke_to_ai" for new messages
+                                                    if ($current_status === 'new' || empty($current_status)) {
+                                                        $current_status = 'spoke_to_ai';
+                                                    }
+                                                    $needs_response = $current_status === 'customer_needs_to_come_in';
+                                                    ?>
+                                                    <select class="form-control-modern" name="status" id="status<?= $message['message_id'] ?>" required onchange="toggleResponseField(<?= $message['message_id'] ?>)">
+                                                        <option value="spoke_to_ai" <?= $current_status === 'spoke_to_ai' ? 'selected' : '' ?>>Spoke to AI</option>
+                                                        <option value="reached_out_via_mail" <?= $current_status === 'reached_out_via_mail' ? 'selected' : '' ?>>Reached Out via Mail</option>
+                                                        <option value="reached_out_via_call" <?= $current_status === 'reached_out_via_call' ? 'selected' : '' ?>>Reached Out via Call</option>
+                                                        <option value="reached_out_via_text" <?= $current_status === 'reached_out_via_text' ? 'selected' : '' ?>>Reached Out via Text</option>
+                                                        <option value="customer_needs_to_come_in" <?= $current_status === 'customer_needs_to_come_in' ? 'selected' : '' ?>>Customer Needs to Come In</option>
+                                                        <option value="resolved" <?= $current_status === 'resolved' ? 'selected' : '' ?>>Resolved</option>
+                                                        <option value="closed" <?= $current_status === 'closed' ? 'selected' : '' ?>>Closed</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group">
-                                                    <label for="response" class="form-label-modern">Response</label>
-                                                    <textarea class="form-control-modern" name="response" rows="4"
-                                                              placeholder="Summary of what you told the customer..." required></textarea>
+                                                <div class="form-group" id="responseGroup<?= $message['message_id'] ?>" style="display: <?= $needs_response ? 'block' : 'none'; ?>;">
+                                                    <label for="response<?= $message['message_id'] ?>" class="form-label-modern">Response <span class="text-danger">*</span></label>
+                                                    <textarea class="form-control-modern" name="response" id="response<?= $message['message_id'] ?>" rows="4"
+                                                              placeholder="Enter details about what the customer needs to know if they have to come in..." <?= $needs_response ? 'required' : '' ?>></textarea>
+                                                    <small class="text-muted">This will be sent to the customer.</small>
                                                 </div>
                                             </div>
                                             <div class="modal-footer">
@@ -598,6 +623,16 @@ try {
     color: #92400e;
 }
 
+.status-spoke_to_ai {
+    background: #e0e7ff;
+    color: #3730a3;
+}
+
+.status-customer_needs_to_come_in {
+    background: #fef3c7;
+    color: #92400e;
+}
+
 .message-text {
     color: #374151;
     line-height: 1.6;
@@ -775,6 +810,48 @@ function filterByStatus(status) {
     }
     window.location.href = url.toString();
 }
+
+// Toggle response field based on status selection
+function toggleResponseField(messageId) {
+    const statusSelect = document.getElementById('status' + messageId);
+    const responseGroup = document.getElementById('responseGroup' + messageId);
+    const responseTextarea = document.getElementById('response' + messageId);
+    const form = document.getElementById('statusForm' + messageId);
+    
+    if (!statusSelect || !responseGroup || !responseTextarea) return;
+    
+    const selectedStatus = statusSelect.value;
+    
+    // Show response field only if customer needs to come in
+    if (selectedStatus === 'customer_needs_to_come_in') {
+        responseGroup.style.display = 'block';
+        responseTextarea.setAttribute('required', 'required');
+    } else {
+        responseGroup.style.display = 'none';
+        responseTextarea.removeAttribute('required');
+        responseTextarea.value = ''; // Clear the field when hidden
+    }
+    
+    // Initialize on modal show - check current status
+    const modal = document.getElementById('statusModal' + messageId);
+    if (modal) {
+        modal.addEventListener('show.bs.modal', function() {
+            setTimeout(() => toggleResponseField(messageId), 100);
+        });
+    }
+}
+
+// Initialize all status modals when they open
+document.addEventListener('DOMContentLoaded', function() {
+    // Find all status modals and initialize their response fields
+    const statusModals = document.querySelectorAll('[id^="statusModal"]');
+    statusModals.forEach(function(modal) {
+        modal.addEventListener('show.bs.modal', function() {
+            const messageId = modal.id.replace('statusModal', '');
+            setTimeout(() => toggleResponseField(messageId), 100);
+        });
+    });
+});
 
 // Initialize animations and charts when page loads
 document.addEventListener('DOMContentLoaded', function() {

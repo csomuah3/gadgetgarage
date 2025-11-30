@@ -10,29 +10,30 @@ error_reporting(E_ALL);
 session_start();
 header('Content-Type: application/json');
 
-// Clear any output that might have been generated
-ob_clean();
-
 require_once __DIR__ . '/../../settings/core.php';
 require_admin(); // Only admins can access this
 
 require_once __DIR__ . '/../../settings/db_class.php';
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+    ob_clean();
     echo json_encode([
         'status' => 'error',
         'message' => 'Invalid request method'
     ]);
+    ob_end_flush();
     exit();
 }
 
 // Get POST data
 $input = json_decode(file_get_contents('php://input'), true);
 if (!$input || !is_array($input)) {
+    ob_clean();
     echo json_encode([
         'status' => 'error',
         'message' => 'Invalid request data'
     ]);
+    ob_end_flush();
     exit();
 }
 
@@ -40,20 +41,24 @@ $request_id = isset($input['request_id']) ? intval($input['request_id']) : 0;
 $admin_notes = isset($input['admin_notes']) ? trim($input['admin_notes']) : '';
 
 if (!$request_id) {
+    ob_clean();
     echo json_encode([
         'status' => 'error',
         'message' => 'Request ID is required'
     ]);
+    ob_end_flush();
     exit();
 }
 
 try {
     $db = new db_connection();
     if (!$db->db_connect()) {
+        ob_clean();
         echo json_encode([
             'status' => 'error',
             'message' => 'Database connection failed'
         ]);
+        ob_end_flush();
         exit();
     }
 
@@ -62,10 +67,12 @@ try {
     $request = $db->db_prepare_fetch_one($request_sql, 'i', [$request_id]);
 
     if (!$request) {
+        ob_clean();
         echo json_encode([
             'status' => 'error',
             'message' => 'Request not found or already processed'
         ]);
+        ob_end_flush();
         exit();
     }
 

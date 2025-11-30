@@ -1473,9 +1473,9 @@ try {
 		gap: 28px;
 		/* spacing between cards */
 		align-items: start;
-		min-height: 625px !important;
-		max-height: 625px !important;
-		height: 625px !important;
+		min-height: 655px !important;
+		max-height: 655px !important;
+		height: 655px !important;
 		/* hero height */
 	}
 
@@ -1484,9 +1484,9 @@ try {
 	.hero-carousel-wrapper {
 		position: relative;
 		width: 100%;
-		height: 625px !important;
-		min-height: 625px !important;
-		max-height: 625px !important;
+		height: 655px !important;
+		min-height: 655px !important;
+		max-height: 655px !important;
 		border-radius: 20px;
 		overflow: visible;
 		background: #f0f4f8;
@@ -1515,9 +1515,9 @@ try {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 625px !important;
-		min-height: 625px !important;
-		max-height: 625px !important;
+		height: 655px !important;
+		min-height: 655px !important;
+		max-height: 655px !important;
 		opacity: 0;
 		visibility: hidden;
 		z-index: 1;
@@ -2074,22 +2074,22 @@ try {
 	.banner-media .product-image {
 		width: auto;
 		height: auto;
-		max-height: 550px;
-		min-height: 450px;
+		max-height: 580px;
+		min-height: 480px;
 		max-width: 95%;
 		object-fit: contain;
-		transform: translateY(-80px) translateX(0) scale(1.8);
+		transform: translateY(-80px) translateX(0) scale(1.9);
 		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 			transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 		filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 	}
 
-	/* iPad specific - scaled appropriately for 625px */
+	/* iPad specific - MUCH LARGER for 655px */
 	.hero-slide[data-product="ipad"] .banner-media .product-image {
-		max-height: 680px;
-		min-height: 580px;
+		max-height: 750px;
+		min-height: 650px;
 		max-width: 100%;
-		transform: translateY(-80px) translateX(0) scale(1.8);
+		transform: translateY(-80px) translateX(0) scale(2.1);
 	}
 
 		/* Image animations - fade out for exiting */
@@ -2164,8 +2164,8 @@ try {
 		display: grid;
 		grid-template-rows: 1fr 1fr;
 		gap: 28px;
-		height: 625px !important;
-		max-height: 625px !important;
+		height: 655px !important;
+		max-height: 655px !important;
 		overflow: hidden;
 	}
 
@@ -3316,15 +3316,15 @@ try {
 			animation-delay: 0.2s;
 		}
 
-		.trade-in-incentive {
-			font-size: clamp(14px, 1.5vw, 18px);
-			font-weight: 700;
-			color: #d97706;
-			margin: 4px 0;
-			line-height: 1.3;
-			animation: bounceGentle 2.5s ease-in-out infinite;
-			animation-delay: 0.5s;
-		}
+	.trade-in-incentive {
+		font-size: clamp(16px, 1.8vw, 22px);
+		font-weight: 700;
+		color: #d97706;
+		margin: 8px 0;
+		line-height: 1.4;
+		animation: bounceGentle 2.5s ease-in-out infinite;
+		animation-delay: 0.5s;
+	}
 
 		.trade-in-subtext {
 			font-size: clamp(12px, 1.2vw, 14px);
@@ -3441,31 +3441,31 @@ try {
 			min-width: 60px;
 		}
 
-		.countdown-number {
-			font-size: clamp(24px, 3vw, 32px);
-			font-weight: 800;
-			line-height: 1;
-			margin-bottom: 4px;
-			color: #ffffff;
-			/* white numbers on transparent card */
-		}
+	.countdown-number {
+		font-size: clamp(32px, 4vw, 42px);
+		font-weight: 800;
+		line-height: 1;
+		margin-bottom: 6px;
+		color: #ffffff;
+		/* white numbers on transparent card */
+	}
 
-		.countdown-label {
-			font-size: clamp(10px, 1vw, 12px);
-			font-weight: 600;
-			text-transform: uppercase;
-			letter-spacing: 0.5px;
-			color: #ffffff;
-			/* white text on transparent card */
-		}
+	.countdown-label {
+		font-size: clamp(12px, 1.2vw, 15px);
+		font-weight: 600;
+		text-transform: uppercase;
+		letter-spacing: 0.8px;
+		color: #ffffff;
+		/* white text on transparent card */
+	}
 
-		/* texts on side cards */
-		.side-title {
-			font-size: clamp(22px, 2.4vw, 34px);
-			font-weight: 800;
-			line-height: 1.15;
-			margin: 0 0 10px;
-		}
+	/* texts on side cards */
+	.side-title {
+		font-size: clamp(26px, 2.8vw, 38px);
+		font-weight: 800;
+		line-height: 1.2;
+		margin: 0 0 12px;
+	}
 
 		.side-price {
 			margin: 0 0 14px;

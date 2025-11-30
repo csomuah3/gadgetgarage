@@ -19,46 +19,32 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get categories to find smartphone category ID
+// Get categories to find video equipment category ID
 $categories = get_all_categories_ctr();
-$smartphone_category_id = null;
+$video_category_id = null;
 
-// Find smartphone category by name (case-insensitive)
+// Find video equipment category by name (case-insensitive)
 foreach ($categories as $cat) {
     $cat_name_lower = strtolower(trim($cat['cat_name']));
-    if (strpos($cat_name_lower, 'smartphone') !== false || 
-        (strpos($cat_name_lower, 'phone') !== false && strpos($cat_name_lower, 'ipad') === false && strpos($cat_name_lower, 'tablet') === false) ||
-        $cat_name_lower === 'smartphones' ||
-        $cat_name_lower === 'smartphone') {
-        $smartphone_category_id = $cat['cat_id'];
+    if (strpos($cat_name_lower, 'video') !== false || 
+        strpos($cat_name_lower, 'video equipment') !== false ||
+        $cat_name_lower === 'video') {
+        $video_category_id = $cat['cat_id'];
         break;
     }
 }
 
 // Get products by category ID if found, otherwise fallback to all products
-if ($smartphone_category_id) {
-    $smartphone_products = get_products_by_category_ctr($smartphone_category_id);
+if ($video_category_id) {
+    $video_products = get_products_by_category_ctr($video_category_id);
 } else {
     // Fallback: get all products and filter by category name
     $all_products = get_all_products_ctr();
-    $smartphone_products = array_filter($all_products, function ($product) {
+    $video_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        $is_phone = (strpos($cat_name, 'smartphone') !== false || strpos($cat_name, 'phone') !== false);
-        $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
-        return $is_phone && !$is_ipad;
+        return strpos($cat_name, 'video') !== false;
     });
 }
-
-// Additional filter to ensure NO iPads/tablets appear on phones page
-$smartphone_products = array_filter($smartphone_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
-    $has_ipad_keywords = (strpos($cat_name, 'ipad') !== false || 
-                         strpos($cat_name, 'tablet') !== false ||
-                         strpos($product_title, 'ipad') !== false ||
-                         strpos($product_title, 'tablet') !== false);
-    return !$has_ipad_keywords;
-});
 
 // Get brands
 try {
@@ -75,7 +61,7 @@ $min_price = isset($_GET['min_price']) ? intval($_GET['min_price']) : 0;
 $max_price = isset($_GET['max_price']) ? intval($_GET['max_price']) : 50000;
 $rating_filter = isset($_GET['rating']) ? intval($_GET['rating']) : '';
 
-$filtered_products = $smartphone_products;
+$filtered_products = $video_products;
 
 // Apply filters
 if (!empty($brand_filter) && $brand_filter !== 'all') {
@@ -107,7 +93,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
 // Template parameters
 $is_joint_category = false; // Single category page
-$category_id = $smartphone_category_id;
+$category_id = $video_category_id;
 $joint_category_ids = [];
 ?>
 
@@ -116,7 +102,7 @@ $joint_category_ids = [];
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Smartphones - Gadget Garage</title>
+    <title>Video Equipment - Gadget Garage</title>
     <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -134,7 +120,7 @@ $joint_category_ids = [];
     <!-- Page Title -->
     <div class="container-fluid">
         <div class="text-center py-3">
-            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Smartphones</h1>
+            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Video Equipment</h1>
         </div>
     </div>
 
@@ -146,7 +132,6 @@ $joint_category_ids = [];
         <div class="container">
             <div class="footer-content">
                 <div class="row align-items-start">
-                    <!-- First Column: Logo and Social -->
                     <div class="col-lg-3 col-md-6 mb-4">
                         <div class="footer-brand">
                             <div class="footer-logo" style="margin-bottom: 20px;">
@@ -161,7 +146,6 @@ $joint_category_ids = [];
                             </div>
                         </div>
                     </div>
-                    <!-- Navigation Links -->
                     <div class="col-lg-5 col-md-12">
                         <div class="row">
                             <div class="col-lg-4 col-md-6 mb-4">
@@ -194,7 +178,6 @@ $joint_category_ids = [];
                             </div>
                         </div>
                     </div>
-                    <!-- Right Side: Email Signup Form -->
                     <div class="col-lg-4 col-md-12 mb-4">
                         <div class="newsletter-signup-section">
                             <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
@@ -339,3 +322,4 @@ $joint_category_ids = [];
     </script>
 </body>
 </html>
+

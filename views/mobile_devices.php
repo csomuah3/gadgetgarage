@@ -4,6 +4,7 @@ require_once(__DIR__ . '/../controllers/cart_controller.php');
 require_once(__DIR__ . '/../controllers/product_controller.php');
 require_once(__DIR__ . '/../controllers/category_controller.php');
 require_once(__DIR__ . '/../controllers/brand_controller.php');
+require_once(__DIR__ . '/../controllers/wishlist_controller.php');
 require_once(__DIR__ . '/../helpers/image_helper.php');
 
 $is_logged_in = check_login();
@@ -27,7 +28,7 @@ $ipad_category_id = null;
 foreach ($categories as $cat) {
     $cat_name_lower = strtolower(trim($cat['cat_name']));
     if (strpos($cat_name_lower, 'smartphone') !== false || 
-        (strpos($cat_name_lower, 'phone') !== false && strpos($cat_name_lower, 'smart') !== false)) {
+        (strpos($cat_name_lower, 'phone') !== false && strpos($cat_name_lower, 'ipad') === false && strpos($cat_name_lower, 'tablet') === false)) {
         $smartphone_category_id = $cat['cat_id'];
     }
     if (strpos($cat_name_lower, 'ipad') !== false || strpos($cat_name_lower, 'tablet') !== false) {
@@ -51,22 +52,11 @@ if (empty($mobile_products)) {
     $all_products = get_all_products_ctr();
     $mobile_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        return (strpos($cat_name, 'smartphone') !== false || 
-                strpos($cat_name, 'phone') !== false ||
-                strpos($cat_name, 'ipad') !== false ||
-                strpos($cat_name, 'tablet') !== false);
+        return (strpos($cat_name, 'smartphone') !== false || strpos($cat_name, 'phone') !== false || strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
     });
 }
 
-// Get categories and brands from database (if not already loaded)
-if (empty($categories)) {
-    try {
-        $categories = get_all_categories_ctr();
-    } catch (Exception $e) {
-        $categories = [];
-    }
-}
-
+// Get brands
 try {
     $brands = get_all_brands_ctr();
 } catch (Exception $e) {
@@ -74,31 +64,40 @@ try {
 }
 
 // Filter products based on URL parameters
-$category_filter = $_GET['category'] ?? 'all';
-$brand_filter = $_GET['brand'] ?? 'all';
-$condition_filter = $_GET['condition'] ?? 'all';
+$category_filter = $_GET['category'] ?? '';
+$brand_filter = $_GET['brand'] ?? '';
 $search_query = $_GET['search'] ?? '';
+$min_price = isset($_GET['min_price']) ? intval($_GET['min_price']) : 0;
+$max_price = isset($_GET['max_price']) ? intval($_GET['max_price']) : 50000;
+$rating_filter = isset($_GET['rating']) ? intval($_GET['rating']) : '';
 
 $filtered_products = $mobile_products;
 
-if ($category_filter !== 'all') {
+// Apply filters
+if (!empty($category_filter) && $category_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
-        return $product['cat_name'] === $category_filter;
+        return isset($product['cat_id']) && $product['cat_id'] == $category_filter;
     });
 }
 
-if ($brand_filter !== 'all') {
+if (!empty($brand_filter) && $brand_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
-        return $product['brand_name'] === $brand_filter;
+        return isset($product['brand_id']) && $product['brand_id'] == $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
     $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
         return stripos($product['product_title'], $search_query) !== false ||
-            stripos($product['product_desc'], $search_query) !== false;
+            (isset($product['product_desc']) && stripos($product['product_desc'], $search_query) !== false);
     });
 }
+
+// Price filter
+$filtered_products = array_filter($filtered_products, function ($product) use ($min_price, $max_price) {
+    $price = isset($product['product_price']) ? floatval($product['product_price']) : 0;
+    return $price >= $min_price && $price <= $max_price;
+});
 
 // Pagination
 $products_per_page = 12;
@@ -108,25 +107,16 @@ $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
 $products_to_display = array_slice($filtered_products, $offset, $products_per_page);
 
-// Configure filters for mobile devices (joint category page)
-$filter_config = [
-    'show_category_filter' => true,   // Show category filter (smartphones, tablets, etc.)
-    'show_brand_filter' => true,      // Show brand filter
-    'show_price_filter' => true,      // Show price slider
-    'show_rating_filter' => true,     // Show ratings
-    'fixed_category_id' => null,      // No fixed category (joint page)
-    'allowed_categories' => []        // Allow all mobile-related categories
-];
-
-// Get recommended products (3 random products)
-$all_products_for_recommendations = get_all_products_ctr();
-shuffle($all_products_for_recommendations);
-$recommended_products = array_slice($all_products_for_recommendations, 0, 3);
+// Template parameters - JOINT CATEGORY PAGE
+$is_joint_category = true; // Joint category page
+$category_id = null;
+$joint_category_ids = [];
+if ($smartphone_category_id) $joint_category_ids[] = $smartphone_category_id;
+if ($ipad_category_id) $joint_category_ids[] = $ipad_category_id;
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -137,921 +127,200 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../includes/page-background.css" rel="stylesheet">
-    <link href="../css/product-card.css" rel="stylesheet">
-    
-    <!-- NEW: Product Filters CSS -->
-    <link href="../css/product-filters.css" rel="stylesheet">
-    
-    <style>
-        /* Import Google Fonts */
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
-
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* Transparent Logo Background */
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.15;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #ffffff;
-            color: #1a1a1a;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        
-        
-
-        
-
-        
-
-        
-
-        
-
-        /* Header styles are now in header.css */
-
-        /* Sidebar Layout Styles */
-        .filters-sidebar {
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-        }
-
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .filter-title {
-            color: #1f2937;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-close {
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .filter-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: #000000;
-        }
-
-        .filter-subtitle {
-            color: #333;
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .filter-group {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .filter-group:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        .search-container {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 40px 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: rgba(248, 250, 252, 0.8);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #000000;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #000000;
-        }
-
-        .tag-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag-btn {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tag-btn:hover {
-            background: rgba(0, 128, 96, 0.1);
-            border-color: #008060;
-            color: #008060;
-        }
-
-        .tag-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
-        }
-
-        /* Rating Filter Styles */
-        .rating-filter {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .rating-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            padding: 6px 0;
-        }
-
-        .rating-option input[type="radio"] {
-            margin: 0;
-        }
-
-        .rating-option label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            margin: 0;
-        }
-
-        .stars {
-            display: flex;
-            gap: 2px;
-            color: #fbbf24;
-        }
-
-        .stars i {
-            font-size: 14px;
-        }
-
-        .rating-text {
-            color: #6b7280;
-        }
-
-        /* Price Range Slider Styles */
-        .price-slider-container {
-            padding: 10px 0;
-        }
-
-        .price-slider-track {
-            position: relative;
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            margin: 10px 0 20px 0;
-        }
-
-        .price-slider-range {
-            position: absolute;
-            height: 6px;
-            background: #000000;
-            border-radius: 3px;
-            left: 0%;
-            right: 0%;
-        }
-
-        .price-slider {
-            position: absolute;
-            top: -2px;
-            width: 100%;
-            height: 10px;
-            background: transparent;
-            outline: none;
-            pointer-events: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .price-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--royal-blue);
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-        }
-
-        .price-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            background: var(--royal-blue);
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-        }
-
-        .price-display {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .price-separator {
-            color: #666;
-        }
-
-        /* Size Filter Styles */
-        .size-filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .size-btn {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .size-btn:hover {
-            background: rgba(0, 128, 96, 0.1);
-            border-color: #008060;
-            color: #008060;
-        }
-
-        .size-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
-        }
-
-        /* Color Filter Styles */
-        .color-filters {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .color-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            border: 2px solid #e2e8f0;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            position: relative;
-        }
-
-        .color-btn:hover {
-            border-color: #008060;
-            transform: scale(1.1);
-        }
-
-        .color-btn.active {
-            border-color: #008060;
-            transform: scale(1.1);
-        }
-
-        .color-btn.active::after {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .color-multicolor {
-            background: conic-gradient(red, yellow, lime, cyan, blue, magenta, red);
-        }
-
-        .color-blue {
-            background: #3b82f6;
-        }
-
-        .color-gray {
-            background: #6b7280;
-        }
-
-        .color-green {
-            background: #10b981;
-        }
-
-        .color-red {
-            background: #ef4444;
-        }
-
-        .color-orange {
-            background: #f97316;
-        }
-
-        /* Filter Action Buttons */
-        .filter-actions {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 20px;
-        }
-
-        .apply-filters-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .apply-filters-btn:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
-            transform: translateY(-1px);
-        }
-
-        .clear-filters-btn {
-            width: 100%;
-            background: #dc2626;
-            color: white;
-            border: none;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .clear-filters-btn:hover {
-            background: #b91c1c;
-            transform: translateY(-1px);
-        }
-
-        /* Products Grid */
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-            gap: 30px;
-            padding: 20px 0;
-        }
-
-        .modern-product-card {
-            background: white;
-            border-radius: 16px;
-            border: 1px solid #e5e7eb;
-            overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            cursor: pointer;
-            position: relative;
-            transform-origin: center;
-        }
-
-        .modern-product-card:hover {
-            transform: rotate(-2deg) scale(1.02);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-        }
-
-        .product-image {
-            max-width: 100%;
-            max-height: 100%;
-            object-fit: contain;
-        }
-
-        .product-info {
-            padding: 20px;
-        }
-
-        .product-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 8px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-price {
-            font-size: 1.3rem;
-            font-weight: 700;
-            color: #008060;
-            margin-bottom: 15px;
-        }
-
-        .add-to-cart-btn {
-            width: 100%;
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .add-to-cart-btn:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
-            transform: translateY(-1px);
-        }
-
-        .add-to-cart-btn:active {
-            transform: translateY(0);
-        }
-
-        /* Pagination */
-        .pagination-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            margin-top: 40px;
-            gap: 10px;
-        }
-
-        .pagination-btn {
-            padding: 10px 15px;
-            border: 2px solid #e5e7eb;
-            background: white;
-            color: #374151;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: 500;
-            transition: all 0.3s ease;
-        }
-
-        .pagination-btn:hover {
-            border-color: #008060;
-            background: #008060;
-            color: white;
-        }
-
-        .pagination-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
-        }
-
-        .pagination-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .pagination-btn:disabled:hover {
-            border-color: #e5e7eb;
-            background: white;
-            color: #374151;
-        }
-
-        /* Responsive */
-        @media (max-width: 768px) {
-            .nav-menu {
-                padding: 0 20px;
-                gap: 15px;
-                flex-wrap: wrap;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-
-            .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 20px;
-            }
-
-            .filters-container {
-                padding: 15px;
-            }
-
-            .filter-group {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 5px;
-            }
-
-            .filter-label {
-                min-width: auto;
-            }
-        }
-
-        /* Footer Styles */
-        .main-footer {
-            background: #ffffff;
-            border-top: 1px solid #e5e7eb;
-            padding: 60px 0 20px;
-            margin-top: 0;
-        }
-
-        .footer-brand {
-            margin-bottom: 30px;
-        }
-
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 16px;
-        }
-
-        .footer-logo img {
-            height: 50px !important;
-            width: auto !important;
-            object-fit: contain !important;
-        }
-
-        .footer-logo .garage {
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .footer-description {
-            color: #6b7280;
-            font-size: 1.1rem;
-            margin-bottom: 24px;
-            line-height: 1.7;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-        }
-
-        .social-link {
-            width: 48px;
-            height: 48px;
-            background: #f3f4f6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .social-link:hover {
-            background: #2563EB;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .footer-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 24px;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 14px;
-        }
-
-        .footer-links li a {
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links li a:hover {
-            color: #2563EB;
-            transform: translateX(4px);
-        }
-
-        .footer-divider {
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-            margin: 40px 0 20px;
-        }
-
-        .footer-bottom {
-            padding-top: 20px;
-        }
-
-        .copyright {
-            color: #6b7280;
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        /* Newsletter Signup Section */
-        .newsletter-signup-section {
-            background: transparent;
-            padding: 0;
-            text-align: left;
-            max-width: 100%;
-            height: fit-content;
-        }
-
-        .newsletter-title {
-            color: #1f2937;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .newsletter-form {
-            display: flex;
-            width: 100%;
-            margin: 0 0 15px 0;
-            gap: 0;
-            border-radius: 50px;
-            overflow: hidden;
-            background: #e5e7eb;
-        }
-
-        .newsletter-input {
-            flex: 1;
-            padding: 14px 20px;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-            color: #1a1a1a;
-            background: #e5e7eb;
-        }
-
-        .newsletter-input::placeholder {
-            color: #6b7280;
-        }
-
-        .newsletter-submit-btn {
-            width: 45px;
-            height: 45px;
-            min-width: 45px;
-            border: none;
-            background: #9ca3af;
-            color: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-            padding: 0;
-        }
-
-        .newsletter-submit-btn:hover {
-            background: #6b7280;
-            transform: scale(1.05);
-        }
-
-        .newsletter-disclaimer {
-            color: #6b7280;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin: 8px 0 0 0;
-            text-align: left;
-        }
-
-        .newsletter-disclaimer a {
-            color: #2563EB;
-            text-decoration: underline;
-            transition: color 0.3s ease;
-        }
-
-        .newsletter-disclaimer a:hover {
-            color: #1d4ed8;
-        }
-
-        @media (max-width: 991px) {
-            .newsletter-signup-section {
-                margin-top: 20px;
-            }
-        }
-
-        /* Scroll to Top Button */
-        .scroll-to-top {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .scroll-to-top.show {
-            display: flex;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-to-top:hover {
-            background: linear-gradient(135deg, #2563EB, #1E3A5F);
-            transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
-        }
-
-        .scroll-to-top:active {
-            transform: translateX(-50%) translateY(-1px);
-        }
-
-        @media (max-width: 768px) {
-            .scroll-to-top {
-                bottom: 20px;
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-        }
-    </style>
+    <link href="../css/dark-mode.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
 <body class="page-background">
     <?php include '../includes/header.php'; ?>
 
-    <!-- Main Content Container -->
-    <div class="container mt-4">
-        <div class="row">
-            <!-- Left: Filters Sidebar (3 columns) -->
-            <div class="col-lg-3">
-                <?php include '../includes/product-filters.php'; ?>
-            </div>
-
-            <!-- Right: Products Grid (9 columns) -->
-            <div class="col-lg-9 product-grid-container">
-                <!-- Product Count -->
-                <div class="product-count" style="padding: 15px 20px; background: white; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e5e7eb;">
-                    <i class="fas fa-box" style="margin-right: 8px; color: #2563eb;"></i>
-                    Showing <strong><?php echo count($products_to_display); ?></strong> of <strong><?php echo $total_products; ?></strong> products
-                </div>
-
-                <!-- Products Grid -->
-                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
-                    <?php foreach ($products_to_display as $product): ?>
-                        <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)" style="cursor: pointer;">
-                            <div class="product-image-container" style="position: relative; overflow: hidden; border-radius: 12px; background: #f9fafb;">
-                                <img src="<?php echo get_product_image_url($product['product_image'], $product['product_title']); ?>"
-                                     alt="<?php echo htmlspecialchars($product['product_title']); ?>"
-                                     class="product-image"
-                                     style="width: 100%; height: 280px; object-fit: cover;"
-                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSIjRjNGNEY2Ii8+CjxwYXRoIGQ9Ik0xNSAyMEwzNSAzNUgxNVYyMFoiIGZpbGw9IiNEMUQ1REIiLz4KPGNpcmNsZSBjeD0iMjIiIGN5PSIyMiIgcj0iMyIgZmlsbD0iI0QxRDVEQiIvPgo8L3N2Zz4=';">
-                            </div>
-                            <div class="product-content" style="padding: 15px;">
-                                <h5 class="product-title" style="font-size: 1.1rem; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
-                                    <?php echo htmlspecialchars($product['product_title']); ?>
-                                </h5>
-                                <div class="product-price" style="font-size: 1.3rem; font-weight: 700; color: #2563eb; margin-bottom: 10px;">
-                                    GH₵ <?php echo number_format($product['product_price'], 2); ?>
-                                </div>
-                                <div class="product-meta" style="display: flex; gap: 10px; font-size: 0.85rem; color: #6b7280;">
-                                    <span><i class="fas fa-tag"></i> <?php echo htmlspecialchars($product['cat_name'] ?? 'N/A'); ?></span>
-                                    <span><i class="fas fa-store"></i> <?php echo htmlspecialchars($product['brand_name'] ?? 'N/A'); ?></span>
-                                </div>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-
-                <!-- Pagination (if needed) -->
-                <?php if ($total_pages > 1): ?>
-                <div class="pagination" style="display: flex; justify-content: center; gap: 10px; margin-top: 30px;">
-                    <?php for ($i = 1; $i <= $total_pages; $i++): ?>
-                        <a href="?page=<?php echo $i; ?>"
-                           class="<?php echo $i == $current_page ? 'active' : ''; ?>"
-                           style="padding: 10px 15px; border: 1px solid #e5e7eb; border-radius: 6px; text-decoration: none; color: <?php echo $i == $current_page ? 'white' : '#1f2937'; ?>; background: <?php echo $i == $current_page ? '#2563eb' : 'white'; ?>;">
-                            <?php echo $i; ?>
-                        </a>
-                    <?php endfor; ?>
-                </div>
-                <?php endif; ?>
-            </div>
+    <!-- Page Title -->
+    <div class="container-fluid">
+        <div class="text-center py-3">
+            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Mobile Devices</h1>
         </div>
     </div>
 
-    <!-- Product Filters JavaScript -->
-    <script src="../js/product-filters.js"></script>
-    
-    <script>
-        function viewProduct(productId) {
-            window.location.href = 'single_product.php?pid=' + productId;
-        }
+    <!-- Category Product Layout Template -->
+    <?php include '../includes/category_product_layout.php'; ?>
 
+    <!-- Footer -->
+    <footer class="main-footer" style="background: #ffffff; border-top: 1px solid #e5e7eb; padding: 60px 0 20px; margin-top: 150px;">
+        <div class="container">
+            <div class="footer-content">
+                <div class="row align-items-start">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <div class="footer-logo" style="margin-bottom: 20px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
+                            </div>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Get Help</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Help Center</a></li>
+                                    <li><a href="contact.php">Track Order</a></li>
+                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
+                                    <li><a href="terms_conditions.php">Returns</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Company</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Careers</a></li>
+                                    <li><a href="contact.php">About</a></li>
+                                    <li><a href="contact.php">Stores</a></li>
+                                    <li><a href="contact.php">Want to Collab?</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Quick Links</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Size Guide</a></li>
+                                    <li><a href="contact.php">Sitemap</a></li>
+                                    <li><a href="contact.php">Gift Cards</a></li>
+                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="newsletter-signup-section">
+                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+                                <button type="submit" class="newsletter-submit-btn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </form>
+                            <p class="newsletter-disclaimer">
+                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+                            </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 text-center">
+                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <?php include '../includes/cart_sidebar.php'; ?>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/chatbot.js"></script>
+    <script src="../js/compare.js"></script>
+
+    <script>
+        // Global toggleWishlist function
+        window.toggleWishlist = function(productId, button) {
+            <?php if (!$is_logged_in): ?>
+                window.location.href = '../login/login.php';
+                return;
+            <?php endif; ?>
+
+            const icon = button.querySelector('i');
+            const isActive = button.classList.contains('active');
+
+            if (isActive) {
+                button.classList.remove('active');
+                icon.className = 'far fa-heart';
+                icon.style.color = '#6b7280';
+
+                fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count = Math.max(0, count - 1);
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    } else {
+                        button.classList.add('active');
+                        icon.className = 'fas fa-heart';
+                        icon.style.color = '#ef4444';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    button.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                    icon.style.color = '#ef4444';
+                });
+            } else {
+                button.classList.add('active');
+                icon.className = 'fas fa-heart';
+                icon.style.color = '#ef4444';
+
+                fetch('../actions/add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count++;
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = 'flex';
+                        }
+                    } else {
+                        button.classList.remove('active');
+                        icon.className = 'far fa-heart';
+                        icon.style.color = '#6b7280';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    button.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                    icon.style.color = '#6b7280';
+                });
+            }
+        };
+
+        // Scroll to Top Button
         document.addEventListener('DOMContentLoaded', function() {
-            
-            // Scroll to top button functionality
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            
             if (scrollToTopBtn) {
-                // Show/hide button based on scroll position
                 window.addEventListener('scroll', function() {
                     if (window.pageYOffset > 300) {
                         scrollToTopBtn.classList.add('show');
@@ -1060,7 +329,6 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                     }
                 });
 
-                // Scroll to top when button is clicked
                 scrollToTopBtn.addEventListener('click', function() {
                     window.scrollTo({
                         top: 0,
@@ -1070,14 +338,5 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             }
         });
     </script>
-
-    <!-- AI Recommendations Section -->
-    <?php include '../includes/ai_recommendations_section.php'; ?>
-
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
 </body>
 </html>

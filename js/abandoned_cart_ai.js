@@ -6,7 +6,7 @@
 // Configuration
 const ABANDONED_CART_CONFIG = {
     // Timing delays (in milliseconds)
-    FIRST_REMINDER_DELAY: 30 * 60 * 1000,      // 30 minutes
+    FIRST_REMINDER_DELAY: 2 * 60 * 1000,       // 2 minutes (for testing - change to 30 * 60 * 1000 for production)
     SECOND_REMINDER_DELAY: 24 * 60 * 60 * 1000, // 24 hours
     THIRD_REMINDER_DELAY: 48 * 60 * 60 * 1000,  // 48 hours
     
@@ -23,6 +23,8 @@ const ABANDONED_CART_CONFIG = {
  * Initialize abandoned cart tracking
  */
 function initAbandonedCartTracking() {
+    console.log('Initializing abandoned cart tracking...');
+    
     // Track cart state when items are added
     trackCartState();
     
@@ -31,6 +33,8 @@ function initAbandonedCartTracking() {
     
     // Check for abandoned cart on page load
     checkAbandonedCart();
+    
+    console.log('Abandoned cart tracking initialized');
 }
 
 /**
@@ -39,7 +43,12 @@ function initAbandonedCartTracking() {
 function trackCartState() {
     // Fetch current cart data
     fetch('actions/get_cart_data.php')
-        .then(response => response.json())
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            return response.json();
+        })
         .then(data => {
             if (data.success && data.items && data.items.length > 0) {
                 const cartSnapshot = {
@@ -59,10 +68,13 @@ function trackCartState() {
                 // Clear abandonment flag if cart is active
                 localStorage.removeItem(ABANDONED_CART_CONFIG.ABANDONMENT_KEY);
                 localStorage.removeItem(ABANDONED_CART_CONFIG.NOTIFICATION_SHOWN_KEY);
+                
+                console.log('Cart tracked:', cartSnapshot);
             } else {
                 // Cart is empty, clear tracking
                 localStorage.removeItem(ABANDONED_CART_CONFIG.CART_STORAGE_KEY);
                 localStorage.removeItem(ABANDONED_CART_CONFIG.ABANDONMENT_KEY);
+                console.log('Cart is empty, cleared tracking');
             }
         })
         .catch(error => {
@@ -114,26 +126,43 @@ function checkAbandonedCart() {
     const abandonmentData = localStorage.getItem(ABANDONED_CART_CONFIG.ABANDONMENT_KEY);
     const notificationShown = localStorage.getItem(ABANDONED_CART_CONFIG.NOTIFICATION_SHOWN_KEY);
     
-    if (!abandonmentData) return;
+    if (!abandonmentData) {
+        console.log('No abandoned cart data found');
+        return;
+    }
     
-    const abandonment = JSON.parse(abandonmentData);
-    const timeSinceAbandonment = Date.now() - abandonment.timestamp;
-    
-    // Check if enough time has passed for first reminder
-    if (timeSinceAbandonment >= ABANDONED_CART_CONFIG.FIRST_REMINDER_DELAY) {
-        // Check if we've already shown notification for this abandonment
-        const lastShown = notificationShown ? JSON.parse(notificationShown) : null;
+    try {
+        const abandonment = JSON.parse(abandonmentData);
+        const timeSinceAbandonment = Date.now() - abandonment.timestamp;
+        const minutesSinceAbandonment = Math.floor(timeSinceAbandonment / (60 * 1000));
         
-        if (!lastShown || lastShown.timestamp !== abandonment.timestamp) {
-            // Show notification with AI-generated message
-            showAbandonedCartNotification(abandonment.cart);
+        console.log(`Abandoned cart found. Time since abandonment: ${minutesSinceAbandonment} minutes`);
+        console.log(`Required delay: ${ABANDONED_CART_CONFIG.FIRST_REMINDER_DELAY / (60 * 1000)} minutes`);
+        
+        // Check if enough time has passed for first reminder
+        if (timeSinceAbandonment >= ABANDONED_CART_CONFIG.FIRST_REMINDER_DELAY) {
+            // Check if we've already shown notification for this abandonment
+            const lastShown = notificationShown ? JSON.parse(notificationShown) : null;
             
-            // Mark as shown
-            localStorage.setItem(ABANDONED_CART_CONFIG.NOTIFICATION_SHOWN_KEY, JSON.stringify({
-                timestamp: abandonment.timestamp,
-                shownAt: Date.now()
-            }));
+            if (!lastShown || lastShown.timestamp !== abandonment.timestamp) {
+                console.log('Showing abandoned cart notification');
+                // Show notification with AI-generated message
+                showAbandonedCartNotification(abandonment.cart);
+                
+                // Mark as shown
+                localStorage.setItem(ABANDONED_CART_CONFIG.NOTIFICATION_SHOWN_KEY, JSON.stringify({
+                    timestamp: abandonment.timestamp,
+                    shownAt: Date.now()
+                }));
+            } else {
+                console.log('Notification already shown for this abandonment');
+            }
+        } else {
+            const remainingMinutes = Math.ceil((ABANDONED_CART_CONFIG.FIRST_REMINDER_DELAY - timeSinceAbandonment) / (60 * 1000));
+            console.log(`Notification will show in ${remainingMinutes} minutes`);
         }
+    } catch (error) {
+        console.error('Error checking abandoned cart:', error);
     }
 }
 

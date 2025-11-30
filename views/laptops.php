@@ -39,11 +39,10 @@ foreach ($categories as $cat) {
 if ($laptop_category_id) {
     $laptop_products = get_products_by_category_ctr($laptop_category_id);
 } else {
-    // Fallback: get all products and filter by category name - STRICT: ONLY laptops/notebooks
+    // Fallback: get all products and filter by category name
     $all_products = get_all_products_ctr();
     $laptop_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        // Include only laptop/notebook products, exclude phones, iPads, tablets
         $is_laptop = (strpos($cat_name, 'laptop') !== false || strpos($cat_name, 'notebook') !== false);
         $is_phone = (strpos($cat_name, 'phone') !== false || strpos($cat_name, 'smartphone') !== false);
         $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
@@ -51,29 +50,7 @@ if ($laptop_category_id) {
     });
 }
 
-// Additional filter to ensure ONLY laptops appear on laptops page
-$laptop_products = array_filter($laptop_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
-    // Exclude any products with phone/iPad/tablet keywords
-    $has_other_keywords = (strpos($cat_name, 'phone') !== false || 
-                          strpos($cat_name, 'smartphone') !== false ||
-                          strpos($cat_name, 'ipad') !== false ||
-                          strpos($cat_name, 'tablet') !== false ||
-                          (strpos($product_title, 'iphone') !== false && strpos($product_title, 'laptop') === false) ||
-                          (strpos($product_title, 'ipad') !== false && strpos($product_title, 'laptop') === false));
-    return !$has_other_keywords;
-});
-
-// Get categories and brands from database (if not already loaded)
-if (empty($categories)) {
-    try {
-        $categories = get_all_categories_ctr();
-    } catch (Exception $e) {
-        $categories = [];
-    }
-}
-
+// Get brands
 try {
     $brands = get_all_brands_ctr();
 } catch (Exception $e) {
@@ -81,31 +58,34 @@ try {
 }
 
 // Filter products based on URL parameters
-$category_filter = $_GET['category'] ?? 'all';
-$brand_filter = $_GET['brand'] ?? 'all';
-$condition_filter = $_GET['condition'] ?? 'all';
+$category_filter = $_GET['category'] ?? '';
+$brand_filter = $_GET['brand'] ?? '';
 $search_query = $_GET['search'] ?? '';
+$min_price = isset($_GET['min_price']) ? intval($_GET['min_price']) : 0;
+$max_price = isset($_GET['max_price']) ? intval($_GET['max_price']) : 50000;
+$rating_filter = isset($_GET['rating']) ? intval($_GET['rating']) : '';
 
 $filtered_products = $laptop_products;
 
-if ($category_filter !== 'all') {
-    $filtered_products = array_filter($filtered_products, function ($product) use ($category_filter) {
-        return $product['cat_name'] === $category_filter;
-    });
-}
-
-if ($brand_filter !== 'all') {
+// Apply filters
+if (!empty($brand_filter) && $brand_filter !== 'all') {
     $filtered_products = array_filter($filtered_products, function ($product) use ($brand_filter) {
-        return $product['brand_name'] === $brand_filter;
+        return isset($product['brand_id']) && $product['brand_id'] == $brand_filter;
     });
 }
 
 if (!empty($search_query)) {
     $filtered_products = array_filter($filtered_products, function ($product) use ($search_query) {
         return stripos($product['product_title'], $search_query) !== false ||
-            stripos($product['product_desc'], $search_query) !== false;
+            (isset($product['product_desc']) && stripos($product['product_desc'], $search_query) !== false);
     });
 }
+
+// Price filter
+$filtered_products = array_filter($filtered_products, function ($product) use ($min_price, $max_price) {
+    $price = isset($product['product_price']) ? floatval($product['product_price']) : 0;
+    return $price >= $min_price && $price <= $max_price;
+});
 
 // Pagination
 $products_per_page = 12;
@@ -115,19 +95,18 @@ $current_page = isset($_GET['page']) ? max(1, intval($_GET['page'])) : 1;
 $offset = ($current_page - 1) * $products_per_page;
 $products_to_display = array_slice($filtered_products, $offset, $products_per_page);
 
-// Get recommended products (3 random products)
-$all_products_for_recommendations = get_all_products_ctr();
-shuffle($all_products_for_recommendations);
-$recommended_products = array_slice($all_products_for_recommendations, 0, 3);
+// Template parameters
+$is_joint_category = false; // Single category page
+$category_id = $laptop_category_id;
+$joint_category_ids = [];
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>All Products - Gadget Garage</title>
+    <title>Laptops - Gadget Garage</title>
     <link rel="icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -137,1609 +116,197 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
-    <link href="../css/product-card.css" rel="stylesheet">
-    <style>
-        /* Color Scheme Variables */
-        :root {
-            --light-blue: #E8F0FE;
-            --medium-blue: #4285F4;
-            --dark-blue: #1A73E8;
-            --navy-blue: #0D47A1;
-            --off-white: #FAFAFA;
-            --text-dark: #1F2937;
-            --text-light: #6B7280;
-            --shadow: rgba(26, 115, 232, 0.1);
-            --gradient-primary: linear-gradient(135deg, var(--navy-blue) 0%, var(--dark-blue) 50%, var(--medium-blue) 100%);
-            --gradient-light: linear-gradient(135deg, var(--light-blue) 0%, var(--off-white) 100%);
-        }
-
-        /* Reset and Base Styles */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: "Times New Roman", Times, serif;
-            background-color: #ffffff;
-            color: #1a1a1a;
-            overflow-x: hidden;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.45;
-            z-index: -1;
-            pointer-events: none;
-        }
-
-        
-        
-
-        
-
-        
-
-        
-
-        
-
-        /* Header styles are now in header.css */
-
-        /* Page styles */
-
-        .page-title {
-            color: #1f2937;
-            background-clip: text;
-            font-size: 2.5rem;
-            font-weight: 800;
-            text-align: center;
-            margin: 30px 0;
-            position: relative;
-        }
-
-        .page-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: #000000;
-            border-radius: 2px;
-        }
-
-        /* Sidebar Layout Styles */
-        .filters-sidebar {
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            border: 1px solid #e5e7eb;
-            position: sticky;
-            top: 20px;
-            max-height: calc(100vh - 40px);
-            overflow-y: auto;
-        }
-
-        .filter-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 15px;
-            border-bottom: 2px solid #e5e7eb;
-        }
-
-        .filter-title {
-            color: #1f2937;
-            font-weight: 700;
-            font-size: 1.2rem;
-            margin: 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .filter-close {
-            background: none;
-            border: none;
-            color: #666;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
-            transition: all 0.3s ease;
-        }
-
-        .filter-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: #000000;
-        }
-
-        .filter-subtitle {
-            color: #333;
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
-            display: block;
-        }
-
-        .filter-group {
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e5e7eb;
-        }
-
-        .filter-group:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-        }
-
-        /* Search Input Styles */
-        .search-container {
-            position: relative;
-        }
-
-        .search-input {
-            width: 100%;
-            padding: 12px 40px 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            background: rgba(248, 250, 252, 0.8);
-        }
-
-        .search-input:focus {
-            outline: none;
-            border-color: #000000;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-icon {
-            position: absolute;
-            right: 12px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: #000000;
-            font-size: 0.9rem;
-        }
-
-        /* Checkbox Styles */
-        .checkbox-group {
-            max-height: 200px;
-            overflow-y: auto;
-            padding-right: 5px;
-        }
-
-        .checkbox-group::-webkit-scrollbar {
-            width: 4px;
-        }
-
-        .checkbox-group::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 2px;
-        }
-
-        .checkbox-group::-webkit-scrollbar-thumb {
-            background: #008060;
-            border-radius: 2px;
-        }
-
-        .checkbox-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            cursor: pointer;
-            font-size: 0.9rem;
-            color: #555;
-            transition: all 0.3s ease;
-            margin: 0;
-        }
-
-        .checkbox-item:hover {
-            color: #000000;
-            background: rgba(0, 0, 0, 0.05);
-            border-radius: 5px;
-            padding-left: 5px;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            display: none;
-        }
-
-        .checkbox-custom {
-            width: 16px;
-            height: 16px;
-            border: 2px solid #ddd;
-            border-radius: 3px;
-            margin-right: 10px;
-            position: relative;
-            transition: all 0.3s ease;
-        }
-
-        .checkbox-item input[type="checkbox"]:checked+.checkbox-custom {
-            background: #000000;
-            border-color: #000000;
-        }
-
-        .checkbox-item input[type="checkbox"]:checked+.checkbox-custom::after {
-            content: '✓';
-            position: absolute;
-            top: -2px;
-            left: 2px;
-            color: white;
-            font-size: 12px;
-            font-weight: bold;
-        }
-
-        /* Filter Actions */
-        .filter-actions {
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 2px solid rgba(0, 128, 96, 0.1);
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .apply-filters-btn {
-            background: #000000;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-size: 0.9rem;
-        }
-
-        .apply-filters-btn:hover {
-            background: #374151;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        /* Mobile Styles */
-        @media (max-width: 991px) {
-            #filterSidebar {
-                position: fixed;
-                left: -100%;
-                top: 0;
-                width: 320px;
-                height: 100vh;
-                z-index: 9999;
-                transition: all 0.3s ease;
-                background: white;
-            }
-
-            #filterSidebar.show {
-                left: 0;
-            }
-
-            .filters-sidebar {
-                height: 100vh;
-                max-height: none;
-                border-radius: 0;
-                position: static;
-                top: auto;
-            }
-
-            .filter-overlay {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100vw;
-                height: 100vh;
-                background: rgba(0, 0, 0, 0.5);
-                z-index: 9998;
-                display: none;
-            }
-
-            .filter-overlay.show {
-                display: block;
-            }
-        }
-
-        /* Rating Filter Styles */
-        .rating-filter {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-        }
-
-        .rating-option {
-            display: flex;
-            align-items: center;
-        }
-
-        .rating-option input[type="radio"] {
-            display: none;
-        }
-
-        .rating-option label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            padding: 5px;
-            border-radius: 5px;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .rating-option label:hover {
-            background: rgba(0, 0, 0, 0.1);
-        }
-
-        .rating-option input[type="radio"]:checked+label {
-            background: rgba(0, 0, 0, 0.2);
-            color: #000000;
-        }
-
-        .stars {
-            display: flex;
-            gap: 2px;
-        }
-
-        .stars i {
-            color: #ffd700;
-            font-size: 14px;
-        }
-
-        .rating-text {
-            font-size: 14px;
-            color: #666;
-        }
-
-        /* Price Range Slider Styles */
-        .price-slider-container {
-            padding: 10px 0;
-        }
-
-        .price-slider-track {
-            position: relative;
-            height: 6px;
-            background: #e2e8f0;
-            border-radius: 3px;
-            margin: 10px 0 20px 0;
-        }
-
-        .price-slider-range {
-            position: absolute;
-            height: 6px;
-            background: #000000;
-            border-radius: 3px;
-            left: 0%;
-            right: 0%;
-        }
-
-        .price-slider {
-            position: absolute;
-            top: -2px;
-            width: 100%;
-            height: 10px;
-            background: transparent;
-            outline: none;
-            pointer-events: none;
-            -webkit-appearance: none;
-            appearance: none;
-        }
-
-        .price-slider::-webkit-slider-thumb {
-            -webkit-appearance: none;
-            appearance: none;
-            width: 18px;
-            height: 18px;
-            background: var(--royal-blue);
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-        }
-
-        .price-slider::-moz-range-thumb {
-            width: 18px;
-            height: 18px;
-            background: var(--royal-blue);
-            border-radius: 50%;
-            cursor: pointer;
-            pointer-events: auto;
-            border: 2px solid white;
-            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.3);
-        }
-
-        .price-display {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            color: var(--text-dark);
-        }
-
-        .price-separator {
-            color: #666;
-        }
-
-        /* Footer Styles */
-        .main-footer {
-            background: #ffffff;
-            border-top: 1px solid #e5e7eb;
-            padding: 60px 0 20px;
-            margin-top: 0;
-        }
-
-        .footer-brand {
-            margin-bottom: 30px;
-        }
-
-        .footer-logo {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #1f2937;
-            margin-bottom: 16px;
-        }
-
-        .footer-logo img {
-            height: 50px !important;
-            width: auto !important;
-            object-fit: contain !important;
-        }
-
-        .footer-logo .garage {
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
-            color: white;
-            padding: 4px 8px;
-            border-radius: 6px;
-            font-size: 1rem;
-            font-weight: 600;
-        }
-
-        .footer-description {
-            color: #6b7280;
-            font-size: 1.1rem;
-            margin-bottom: 24px;
-            line-height: 1.7;
-        }
-
-        .social-links {
-            display: flex;
-            gap: 12px;
-        }
-
-        .social-link {
-            width: 48px;
-            height: 48px;
-            background: #f3f4f6;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #6b7280;
-            text-decoration: none;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-        }
-
-        .social-link:hover {
-            background: #2563EB;
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .footer-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            color: #1f2937;
-            margin-bottom: 24px;
-        }
-
-        .footer-links {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .footer-links li {
-            margin-bottom: 14px;
-        }
-
-        .footer-links li a {
-            color: #6b7280;
-            text-decoration: none;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-        }
-
-        .footer-links li a:hover {
-            color: #2563EB;
-            transform: translateX(4px);
-        }
-
-        .footer-divider {
-            border: none;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, #e5e7eb, transparent);
-            margin: 40px 0 20px;
-        }
-
-        .footer-bottom {
-            padding-top: 20px;
-        }
-
-        .copyright {
-            color: #6b7280;
-            font-size: 1rem;
-            margin: 0;
-        }
-
-        /* Newsletter Signup Section */
-        .newsletter-signup-section {
-            background: transparent;
-            padding: 0;
-            text-align: left;
-            max-width: 100%;
-            height: fit-content;
-        }
-
-        .newsletter-title {
-            color: #1f2937;
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin-bottom: 24px;
-        }
-
-        .newsletter-form {
-            display: flex;
-            width: 100%;
-            margin: 0 0 15px 0;
-            gap: 0;
-            border-radius: 50px;
-            overflow: hidden;
-            background: #e5e7eb;
-        }
-
-        .newsletter-input {
-            flex: 1;
-            padding: 14px 20px;
-            border: none;
-            outline: none;
-            font-size: 1rem;
-            color: #1a1a1a;
-            background: #e5e7eb;
-        }
-
-        .newsletter-input::placeholder {
-            color: #6b7280;
-        }
-
-        .newsletter-submit-btn {
-            width: 45px;
-            height: 45px;
-            min-width: 45px;
-            border: none;
-            background: #9ca3af;
-            color: #ffffff;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.3s ease;
-            font-size: 1.2rem;
-            padding: 0;
-        }
-
-        .newsletter-submit-btn:hover {
-            background: #6b7280;
-            transform: scale(1.05);
-        }
-
-        .newsletter-disclaimer {
-            color: #6b7280;
-            font-size: 0.85rem;
-            line-height: 1.6;
-            margin: 8px 0 0 0;
-            text-align: left;
-        }
-
-        .newsletter-disclaimer a {
-            color: #2563EB;
-            text-decoration: underline;
-            transition: color 0.3s ease;
-        }
-
-        .newsletter-disclaimer a:hover {
-            color: #1d4ed8;
-        }
-
-        @media (max-width: 991px) {
-            .newsletter-signup-section {
-                margin-top: 20px;
-            }
-        }
-
-        .payment-methods {
-            display: flex;
-            gap: 8px;
-            justify-content: end;
-            align-items: center;
-        }
-
-        .payment-methods img {
-            height: 25px;
-            border-radius: 4px;
-            opacity: 0.8;
-            transition: opacity 0.3s ease;
-        }
-
-        .payment-methods img:hover {
-            opacity: 1;
-        }
-
-        /* Live Chat Widget */
-        .live-chat-widget {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            z-index: 1000;
-        }
-
-        .chat-trigger {
-            width: 60px;
-            height: 60px;
-            background: #000000;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            transition: all 0.3s ease;
-        }
-
-        .chat-trigger:hover {
-            background: #374151;
-            transform: scale(1.1);
-        }
-
-        .chat-panel {
-            position: absolute;
-            bottom: 80px;
-            left: 0;
-            width: 350px;
-            height: 450px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.15);
-            border: 1px solid #e5e7eb;
-            display: none;
-            flex-direction: column;
-        }
-
-        .chat-panel.active {
-            display: flex;
-        }
-
-        .chat-header {
-            padding: 16px 20px;
-            background: #000000;
-            color: white;
-            border-radius: 12px 12px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chat-header h4 {
-            margin: 0;
-            font-size: 1.1rem;
-            font-weight: 600;
-        }
-
-        .chat-close {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.2rem;
-            cursor: pointer;
-            padding: 0;
-        }
-
-        .chat-body {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .chat-message {
-            margin-bottom: 16px;
-        }
-
-        .chat-message.bot p {
-            background: #f3f4f6;
-            padding: 12px 16px;
-            border-radius: 18px;
-            margin: 0;
-            color: #374151;
-            font-size: 0.9rem;
-        }
-
-        .chat-footer {
-            padding: 16px 20px;
-            border-top: 1px solid #e5e7eb;
-            display: flex;
-            gap: 12px;
-        }
-
-        .chat-input {
-            flex: 1;
-            padding: 12px 16px;
-            border: 1px solid #e5e7eb;
-            border-radius: 25px;
-            outline: none;
-            font-size: 0.9rem;
-        }
-
-        .chat-input:focus {
-            border-color: #000000;
-        }
-
-        .chat-send {
-            width: 40px;
-            height: 40px;
-            background: #000000;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: background 0.3s ease;
-        }
-
-        .chat-send:hover {
-            background: #374151;
-        }
-
-        /* Tag Filter Styles */
-        .tag-filters {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .tag-btn {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .tag-btn:hover {
-            background: rgba(0, 128, 96, 0.1);
-            border-color: #008060;
-            color: #008060;
-        }
-
-        .tag-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
-        }
-
-        /* Size Filter Styles */
-        .size-filters {
-            display: flex;
-            gap: 8px;
-        }
-
-        .size-btn {
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 500;
-            color: #64748b;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            min-width: 70px;
-            text-align: center;
-        }
-
-        .size-btn:hover {
-            background: rgba(0, 128, 96, 0.1);
-            border-color: #008060;
-            color: #008060;
-        }
-
-        .size-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            border-color: #008060;
-            color: white;
-        }
-
-        /* Color Filter Styles */
-        .color-filters {
-            display: flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .color-btn {
-            background: none;
-            border: 2px solid transparent;
-            padding: 4px;
-            border-radius: 50%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 32px;
-            height: 32px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .color-btn:hover {
-            border-color: #008060;
-            transform: scale(1.1);
-        }
-
-        .color-btn.active {
-            border-color: #008060;
-            background: rgba(0, 128, 96, 0.1);
-        }
-
-        .color-circle {
-            width: 20px;
-            height: 20px;
-            border-radius: 50%;
-            border: 1px solid rgba(0, 0, 0, 0.1);
-        }
-
-        .color-circle.all-colors {
-            background: conic-gradient(from 0deg,
-                    #ff0000 0deg 60deg,
-                    #ffff00 60deg 120deg,
-                    #00ff00 120deg 180deg,
-                    #00ffff 180deg 240deg,
-                    #0000ff 240deg 300deg,
-                    #ff00ff 300deg 360deg);
-        }
-
-        /* Clear Filters Button */
-        .clear-filters-container {
-            margin-top: 20px;
-            padding-top: 15px;
-            border-top: 1px solid rgba(0, 128, 96, 0.1);
-        }
-
-        .filter-select,
-        .filter-input {
-            width: 100%;
-            padding: 15px 20px;
-            border: 2px solid #e2e8f0;
-            border-radius: 15px;
-            font-size: 1rem;
-            transition: all 0.3s ease;
-            background: rgba(248, 250, 252, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .filter-select:focus,
-        .filter-input:focus {
-            outline: none;
-            border-color: #008060;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 4px rgba(0, 128, 96, 0.1);
-            transform: translateY(-2px);
-        }
-
-        .price-input {
-            padding: 12px 15px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            font-size: 0.95rem;
-            transition: all 0.3s ease;
-            background: rgba(248, 250, 252, 0.8);
-            backdrop-filter: blur(10px);
-        }
-
-        .price-input:focus {
-            outline: none;
-            border-color: #008060;
-            background: rgba(255, 255, 255, 0.95);
-            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
-        }
-
-        .preset-btn {
-            border-radius: 8px;
-            margin-right: 5px;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-            padding: 6px 12px;
-            transition: all 0.3s ease;
-        }
-
-        .preset-btn:hover,
-        .preset-btn.active {
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
-            border-color: #008060;
-        }
-
-        .clear-filters-btn {
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 12px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            width: 100%;
-            justify-content: center;
-        }
-
-        .clear-filters-btn:hover {
-            background: linear-gradient(135deg, #dc2626, #b91c1c);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
-        }
-
-        .stats-bar {
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            padding: 20px 30px;
-            border-radius: 20px;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 20px rgba(0, 128, 96, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .product-count {
-            font-weight: 600;
-            color: #008060;
-            font-size: 1.1rem;
-        }
-
-        .view-toggle {
-            display: flex;
-            gap: 8px;
-        }
-
-        .view-btn {
-            padding: 8px 12px;
-            border: 2px solid #e2e8f0;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .view-btn.active,
-        .view-btn:hover {
-            background: #008060;
-            color: white;
-            border-color: #008060;
-        }
-
-        .product-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
-            gap: 35px;
-            margin-bottom: 50px;
-            width: 100%;
-        }
-
-        .product-grid.list-view {
-            grid-template-columns: 1fr;
-        }
-
-        .product-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            position: relative;
-            width: 100%;
-            max-width: none;
-            min-height: 450px;
-        }
-
-        .product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 15px 40px rgba(139, 95, 191, 0.25);
-            border-color: rgba(139, 95, 191, 0.4);
-        }
-
-        .product-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, rgba(139, 95, 191, 0.05), rgba(240, 147, 251, 0.05));
-            opacity: 0;
-            transition: all 0.3s ease;
-        }
-
-        .product-card:hover {
-            transform: translateY(-8px) scale(1.02);
-            box-shadow: 0 16px 48px rgba(139, 95, 191, 0.25);
-        }
-
-        .product-card:hover::before {
-            opacity: 1;
-        }
-
-        .product-image-container {
-            position: relative;
-            width: 100%;
-            height: 240px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        }
-
-        .product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: all 0.4s ease;
-        }
-
-        .product-card:hover .product-image {
-            transform: scale(1.1);
-        }
-
-        .product-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .product-content {
-            padding: 25px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .product-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 12px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .product-price {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #000000;
-            margin-bottom: 15px;
-        }
-
-        .product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-
-        .meta-tag {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #000000;
-            font-weight: 500;
-        }
-
-        .add-to-cart-btn {
-            width: 100%;
-            padding: 15px;
-            background: #000000;
-            color: white;
-            border: none;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .add-to-cart-btn:hover {
-            background: #374151;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 15px;
-            margin: 50px 0;
-        }
-
-        .page-btn {
-            padding: 12px 18px;
-            border: 2px solid rgba(0, 0, 0, 0.2);
-            background: rgba(255, 255, 255, 0.9);
-            color: #000000;
-            text-decoration: none;
-            border-radius: 12px;
-            transition: all 0.3s ease;
-            font-weight: 600;
-        }
-
-        .page-btn:hover,
-        .page-btn.active {
-            background: #000000;
-            color: white;
-            border-color: transparent;
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-        }
-
-        .no-products {
-            text-align: center;
-            padding: 80px 20px;
-            color: #64748b;
-            background: rgba(255, 255, 255, 0.9);
-            backdrop-filter: blur(20px);
-            border-radius: 25px;
-            box-shadow: 0 8px 32px rgba(0, 128, 96, 0.1);
-        }
-
-        .no-products-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
-        }
-
-        .back-btn {
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
-            padding: 15px 25px;
-            background: linear-gradient(135deg, #008060, #006b4e);
-            color: white;
-            text-decoration: none;
-            border-radius: 15px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            margin-bottom: 30px;
-            box-shadow: 0 4px 15px rgba(139, 95, 191, 0.3);
-        }
-
-        .back-btn:hover {
-            background: linear-gradient(135deg, #006b4e, #008060);
-            color: white;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.4);
-        }
-
-        /* Main Navigation */
-        
-
-        .nav-menu {
-            display: flex;
-            align-items: center;
-            gap: 32px;
-        }
-
-        /* Navigation items - let header.css handle styling */
-
-        .shop-categories-btn {
-            position: relative;
-        }
-
-        .categories-button {
-            background: #4f63d2;
-            color: white;
-            border: none;
-            padding: 12px 20px;
-            border-radius: 6px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .categories-button:hover {
-            background: #3d4fd1;
-        }
-
-        /* Flash deal - let header.css handle styling */
-
-        .hero-actions .btn {
-            border-radius: 12px;
-            padding: 10px 20px;
-            font-weight: 600;
-            border-width: 2px;
-        }
-
-        .search-suggestions {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.15);
-            z-index: 1000;
-            max-height: 300px;
-            overflow-y: auto;
-            margin-top: 5px;
-        }
-
-        .suggestion-item {
-            padding: 12px 15px;
-            border-bottom: 1px solid #f1f5f9;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .suggestion-item:hover {
-            background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
-            color: #008060;
-        }
-
-        .suggestion-item:last-child {
-            border-bottom: none;
-        }
-
-        .suggestion-icon {
-            color: #008060;
-            font-size: 0.9rem;
-        }
-
-        .checkbox-dropdown {
-            position: relative;
-            width: 100%;
-        }
-
-        .dropdown-toggle {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #e2e8f0;
-            border-radius: 12px;
-            background: white;
-            cursor: pointer;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 1rem;
-            color: #4a5568;
-            transition: all 0.3s ease;
-        }
-
-        .dropdown-toggle:hover {
-            border-color: #008060;
-            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
-        }
-
-        .dropdown-toggle.active {
-            border-color: #008060;
-            box-shadow: 0 0 0 3px rgba(0, 128, 96, 0.1);
-        }
-
-        .dropdown-arrow {
-            transition: transform 0.3s ease;
-            color: #008060;
-        }
-
-        .dropdown-toggle.active .dropdown-arrow {
-            transform: rotate(180deg);
-        }
-
-        .dropdown-content {
-            position: absolute;
-            top: 100%;
-            left: 0;
-            right: 0;
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 12px;
-            box-shadow: 0 8px 25px rgba(139, 95, 191, 0.15);
-            z-index: 1000;
-            max-height: 250px;
-            overflow-y: auto;
-            margin-top: 5px;
-            display: none;
-        }
-
-        .dropdown-content.show {
-            display: block;
-        }
-
-        .checkbox-item {
-            padding: 10px 15px;
-            border-bottom: 1px solid #f1f5f9;
-            transition: all 0.2s ease;
-        }
-
-        .checkbox-item:hover {
-            background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
-        }
-
-        .checkbox-item:last-child {
-            border-bottom: none;
-        }
-
-        .checkbox-item input[type="checkbox"] {
-            margin-right: 10px;
-            width: 16px;
-            height: 16px;
-            accent-color: #008060;
-            cursor: pointer;
-        }
-
-        .checkbox-item label {
-            cursor: pointer;
-            color: #4a5568;
-            font-weight: 500;
-            margin: 0;
-        }
-
-        .checkbox-item:hover label {
-            color: #008060;
-        }
-
-        .floating-elements {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            pointer-events: none;
-            z-index: -1;
-        }
-
-        .bubble {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(135deg, rgba(0, 128, 96, 0.1), rgba(240, 147, 251, 0.1));
-            animation: float 6s ease-in-out infinite;
-        }
-
-        .bubble:nth-child(1) {
-            width: 100px;
-            height: 100px;
-            top: 10%;
-            left: 10%;
-            animation-delay: 0s;
-        }
-
-        .bubble:nth-child(2) {
-            width: 150px;
-            height: 150px;
-            top: 20%;
-            right: 15%;
-            animation-delay: 2s;
-        }
-
-        .bubble:nth-child(3) {
-            width: 80px;
-            height: 80px;
-            bottom: 30%;
-            left: 20%;
-            animation-delay: 4s;
-        }
-
-        .bubble:nth-child(4) {
-            width: 120px;
-            height: 120px;
-            bottom: 20%;
-            right: 10%;
-            animation-delay: 1s;
-        }
-
-        @keyframes float {
-
-            0%,
-            100% {
-                transform: translateY(0px) rotate(0deg);
-            }
-
-            50% {
-                transform: translateY(-20px) rotate(180deg);
-            }
-        }
-
-        @media (max-width: 768px) {
-            .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
-                gap: 25px;
-            }
-
-            .filters-section {
-                padding: 20px;
-            }
-
-            .page-title {
-                font-size: 2rem;
-            }
-
-            .stats-bar {
-                flex-direction: column;
-                align-items: stretch;
-                gap: 15px;
-            }
-        }
-
-        /* Product Card Enhancements */
-        @keyframes popupFade {
-            0% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-
-            15% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            85% {
-                opacity: 1;
-                transform: translate(-50%, -50%) scale(1);
-            }
-
-            100% {
-                opacity: 0;
-                transform: translate(-50%, -50%) scale(0.8);
-            }
-        }
-
-        .product-image-container:hover .product-image {
-            transform: rotate(-3deg) scale(1.05);
-        }
-
-        .customer-activity-popup {
-            animation-delay: var(--delay, 0s);
-        }
-
-        .wishlist-btn.active i {
-            color: #ef4444 !important;
-        }
-
-        .wishlist-btn.active {
-            background: rgba(239, 68, 68, 0.1) !important;
-        }
-
-        /* Scroll to Top Button */
-        .scroll-to-top {
-            position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 50px;
-            height: 50px;
-            background: linear-gradient(135deg, #1E3A5F, #2563EB);
-            color: white;
-            border: none;
-            border-radius: 50%;
-            cursor: pointer;
-            display: none;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
-            z-index: 1000;
-            transition: all 0.3s ease;
-            opacity: 0;
-            visibility: hidden;
-        }
-
-        .scroll-to-top.show {
-            display: flex;
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .scroll-to-top:hover {
-            background: linear-gradient(135deg, #2563EB, #1E3A5F);
-            transform: translateX(-50%) translateY(-3px);
-            box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
-        }
-
-        .scroll-to-top:active {
-            transform: translateX(-50%) translateY(-1px);
-        }
-
-        @media (max-width: 768px) {
-            .scroll-to-top {
-                bottom: 20px;
-                width: 45px;
-                height: 45px;
-                font-size: 18px;
-            }
-        }
-    </style>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
-
 <body class="page-background">
     <?php include '../includes/header.php'; ?>
 
+    <!-- Page Title -->
+    <div class="container-fluid">
+        <div class="text-center py-3">
+            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Laptops</h1>
+        </div>
+    </div>
+
+    <!-- Category Product Layout Template -->
+    <?php include '../includes/category_product_layout.php'; ?>
+
+    <!-- Footer -->
+    <footer class="main-footer" style="background: #ffffff; border-top: 1px solid #e5e7eb; padding: 60px 0 20px; margin-top: 150px;">
+        <div class="container">
+            <div class="footer-content">
+                <div class="row align-items-start">
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <div class="footer-logo" style="margin-bottom: 20px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
+                            </div>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-5 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Get Help</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Help Center</a></li>
+                                    <li><a href="contact.php">Track Order</a></li>
+                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
+                                    <li><a href="terms_conditions.php">Returns</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Company</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Careers</a></li>
+                                    <li><a href="contact.php">About</a></li>
+                                    <li><a href="contact.php">Stores</a></li>
+                                    <li><a href="contact.php">Want to Collab?</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Quick Links</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Size Guide</a></li>
+                                    <li><a href="contact.php">Sitemap</a></li>
+                                    <li><a href="contact.php">Gift Cards</a></li>
+                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="newsletter-signup-section">
+                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+                                <button type="submit" class="newsletter-submit-btn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </form>
+                            <p class="newsletter-disclaimer">
+                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+                            </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 text-center">
+                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <?php include '../includes/cart_sidebar.php'; ?>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/cart.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/chatbot.js"></script>
+    <script src="../js/compare.js"></script>
+
     <script>
+        // Global toggleWishlist function
+        window.toggleWishlist = function(productId, button) {
+            <?php if (!$is_logged_in): ?>
+                window.location.href = '../login/login.php';
+                return;
+            <?php endif; ?>
+
+            const icon = button.querySelector('i');
+            const isActive = button.classList.contains('active');
+
+            if (isActive) {
+                button.classList.remove('active');
+                icon.className = 'far fa-heart';
+                icon.style.color = '#6b7280';
+
+                fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count = Math.max(0, count - 1);
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = count > 0 ? 'flex' : 'none';
+                        }
+                    } else {
+                        button.classList.add('active');
+                        icon.className = 'fas fa-heart';
+                        icon.style.color = '#ef4444';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    button.classList.add('active');
+                    icon.className = 'fas fa-heart';
+                    icon.style.color = '#ef4444';
+                });
+            } else {
+                button.classList.add('active');
+                icon.className = 'fas fa-heart';
+                icon.style.color = '#ef4444';
+
+                fetch('../actions/add_to_wishlist.php', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                    body: 'product_id=' + productId
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        const wishlistBadge = document.getElementById('wishlistBadge');
+                        if (wishlistBadge) {
+                            let count = parseInt(wishlistBadge.textContent) || 0;
+                            count++;
+                            wishlistBadge.textContent = count;
+                            wishlistBadge.style.display = 'flex';
+                        }
+                    } else {
+                        button.classList.remove('active');
+                        icon.className = 'far fa-heart';
+                        icon.style.color = '#6b7280';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    button.classList.remove('active');
+                    icon.className = 'far fa-heart';
+                    icon.style.color = '#6b7280';
+                });
+            }
+        };
+
+        // Scroll to Top Button
         document.addEventListener('DOMContentLoaded', function() {
-            
-            // Scroll to top button functionality
             const scrollToTopBtn = document.getElementById('scrollToTopBtn');
-            
             if (scrollToTopBtn) {
-                // Show/hide button based on scroll position
                 window.addEventListener('scroll', function() {
                     if (window.pageYOffset > 300) {
                         scrollToTopBtn.classList.add('show');
@@ -1748,7 +315,6 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                     }
                 });
 
-                // Scroll to top when button is clicked
                 scrollToTopBtn.addEventListener('click', function() {
                     window.scrollTo({
                         top: 0,
@@ -1758,15 +324,5 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             }
         });
     </script>
-
-    <!-- AI Recommendations Section -->
-    <?php include '../includes/ai_recommendations_section.php'; ?>
-
-    <!-- Scroll to Top Button -->
-    <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
-        <i class="fas fa-arrow-up"></i>
-    </button>
-
 </body>
-
 </html>

@@ -18,19 +18,30 @@ try {
 
     if ($cart_items && is_array($cart_items)) {
         foreach ($cart_items as $item) {
+            // Handle different possible field names from cart
+            $product_id = $item['p_id'] ?? $item['product_id'] ?? null;
+            $quantity = $item['qty'] ?? $item['quantity'] ?? 1;
+            
+            if (!$product_id) continue;
+            
             // Get product details
-            $product = view_single_product_ctr($item['product_id']);
+            $product = view_single_product_ctr($product_id);
 
             if ($product) {
+                // Use final_price if available, otherwise use product_price
+                $price = isset($item['final_price']) && $item['final_price'] > 0 
+                    ? floatval($item['final_price']) 
+                    : floatval($product['product_price']);
+                
                 $formatted_items[] = [
-                    'id' => $item['cart_id'],
-                    'product_id' => $item['product_id'],
-                    'name' => $product['product_title'],
-                    'price' => number_format($product['product_price'], 2),
+                    'id' => $item['cart_id'] ?? null,
+                    'product_id' => $product_id,
+                    'name' => $product['product_title'] ?? 'Unknown Product',
+                    'price' => number_format($price, 2),
                     'original_price' => isset($product['original_price']) ? number_format($product['original_price'], 2) : null,
-                    'image' => $product['product_image'] ?: '../uploads/default-product.png',
-                    'condition' => $product['product_condition'] ?: 'New',
-                    'quantity' => $item['qty']
+                    'image' => $product['product_image'] ?? '../uploads/default-product.png',
+                    'condition' => $item['condition_type'] ?? $product['product_condition'] ?? 'New',
+                    'quantity' => intval($quantity)
                 ];
             }
         }

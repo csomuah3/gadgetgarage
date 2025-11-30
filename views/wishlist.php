@@ -588,6 +588,123 @@ $first_name = explode(' ', $user_name)[0];
     <script src="../js/dark-mode.js"></script>
 
     <script>
+        // Define functions immediately at global scope to avoid reference errors
+        // Remove from Wishlist Function (Make globally available)
+        window.removeFromWishlist = function(productId, button) {
+            console.log('removeFromWishlist called with productId:', productId);
+            
+            if (!productId || !button) {
+                console.error('Invalid parameters for removeFromWishlist');
+                alert('Invalid parameters');
+                return;
+            }
+
+            fetch('../actions/remove_from_wishlist.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: 'product_id=' + encodeURIComponent(productId)
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Remove the wishlist item from the page
+                        const wishlistItem = button.closest('.wishlist-item');
+                        if (wishlistItem) {
+                            wishlistItem.style.transition = 'all 0.3s ease';
+                            wishlistItem.style.opacity = '0';
+                            wishlistItem.style.transform = 'scale(0.8)';
+
+                            setTimeout(() => {
+                                wishlistItem.remove();
+
+                                // Check if there are no more items
+                                const remainingItems = document.querySelectorAll('.wishlist-item');
+                                if (remainingItems.length === 0) {
+                                    location.reload(); // Reload to show empty state
+                                }
+                            }, 300);
+                        }
+                    } else {
+                        alert(data.message || 'Failed to remove item from wishlist');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error removing from wishlist:', error);
+                    alert('Failed to remove item from wishlist. Please try again.');
+                });
+        };
+
+        // Add to Cart from Wishlist Function (Make globally available)
+        window.addToCartFromWishlist = function(productId) {
+            console.log('addToCartFromWishlist called with productId:', productId);
+            
+            if (!productId) {
+                console.error('Invalid productId for addToCartFromWishlist');
+                alert('Invalid product ID');
+                return;
+            }
+
+            // Use FormData for proper encoding
+            const formData = new FormData();
+            formData.append('product_id', productId);
+            formData.append('quantity', 1);
+
+            fetch('../actions/add_to_cart_action.php', {
+                    method: 'POST',
+                    body: formData
+                })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Network response was not ok');
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        // Show success message
+                        alert('Item added to cart successfully!');
+
+                        // Update cart count if available
+                        if (data.cart_count !== undefined) {
+                            const cartBadge = document.querySelector('.cart-count, .cart-badge');
+                            if (cartBadge) {
+                                cartBadge.textContent = data.cart_count;
+                            }
+                        }
+
+                        // Optional: Show cart sidebar if available
+                        if (typeof window.showCartSidebar === 'function') {
+                            window.showCartSidebar();
+                        }
+                    } else {
+                        alert(data.message || 'Failed to add item to cart');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error adding to cart:', error);
+                    alert('Failed to add item to cart. Please try again.');
+                });
+        };
+
+        // View Product Function (Make globally available)
+        window.viewProduct = function(productId) {
+            console.log('viewProduct called with productId:', productId);
+            
+            if (!productId) {
+                console.error('Invalid productId for viewProduct');
+                return;
+            }
+            
+            window.location.href = `single_product.php?pid=${encodeURIComponent(productId)}`;
+        };
+
         // Promo Banner Countdown Timer
         function updateCountdown() {
             const now = new Date().getTime();
@@ -633,84 +750,18 @@ $first_name = explode(' ', $user_name)[0];
         });
 
         // Search functionality
-        document.querySelector('.search-form').addEventListener('submit', function(e) {
-            const searchInput = document.querySelector('.search-input');
-            if (!searchInput.value.trim()) {
-                e.preventDefault();
-                searchInput.focus();
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchForm = document.querySelector('.search-form');
+            if (searchForm) {
+                searchForm.addEventListener('submit', function(e) {
+                    const searchInput = document.querySelector('.search-input');
+                    if (searchInput && !searchInput.value.trim()) {
+                        e.preventDefault();
+                        searchInput.focus();
+                    }
+                });
             }
         });
-
-        // Remove from Wishlist Function (Make globally available)
-        window.removeFromWishlist = function(productId, button) {
-            fetch('../actions/remove_from_wishlist.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Remove the wishlist item from the page
-                        const wishlistItem = button.closest('.wishlist-item');
-                        wishlistItem.style.transition = 'all 0.3s ease';
-                        wishlistItem.style.opacity = '0';
-                        wishlistItem.style.transform = 'scale(0.8)';
-
-                        setTimeout(() => {
-                            wishlistItem.remove();
-
-                            // Check if there are no more items
-                            const remainingItems = document.querySelectorAll('.wishlist-item');
-                            if (remainingItems.length === 0) {
-                                location.reload(); // Reload to show empty state
-                            }
-                        }, 300);
-                    } else {
-                        alert(data.message || 'Failed to remove item from wishlist');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to remove item from wishlist');
-                });
-        }
-
-        // Add to Cart from Wishlist Function (Make globally available)
-        window.addToCartFromWishlist = function(productId) {
-            fetch('../actions/add_to_cart.php', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                    body: 'product_id=' + productId + '&qty=1'
-                })
-                .then(response => response.json())
-                .then(data => {
-                    if (data.success) {
-                        // Show success message
-                        alert('Item added to cart successfully!');
-
-                        // Optional: Show cart sidebar if available
-                        if (window.showCartSidebar) {
-                            window.showCartSidebar();
-                        }
-                    } else {
-                        alert(data.message || 'Failed to add item to cart');
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    alert('Failed to add item to cart');
-                });
-        }
-
-        // View Product Function (Make globally available)
-        window.viewProduct = function(productId) {
-            window.location.href = `single_product.php?pid=${productId}`;
-        }
 
         // Dropdown navigation functions with timeout delays
         let dropdownTimeout;

@@ -2262,11 +2262,11 @@ try {
                         </div>
                         <?php endif; ?>
 
-                        <!-- Subtotal After Discount/Credits (hidden initially) -->
-                        <div class="d-flex justify-content-between mb-3" id="subtotalAfterRow" style="display: none;">
-                            <span>Subtotal After:</span>
-                            <span class="fw-bold" id="subtotalAfter">GH₵ <?php echo number_format($cart_total, 2); ?></span>
-                        </div>
+                    <!-- Subtotal After Discount/Credits (ONLY shows when discount/credits applied) -->
+                    <div class="d-flex justify-content-between mb-3" id="subtotalAfterRow" style="display: none !important;">
+                        <span>Subtotal After:</span>
+                        <span class="fw-bold" id="subtotalAfter">GH₵ 0.00</span>
+                    </div>
 
                         <!-- VAT Row (5% calculated on subtotal after discount/credits) -->
                         <div class="d-flex justify-content-between mb-3" id="vatRow">
@@ -2516,10 +2516,14 @@ try {
                 // Calculate subtotal after credits
                 const subtotalAfterCredits = Math.max(0, subtotal - creditsToApply);
                 
-                // Show subtotal after row
-                if (subtotalAfterRow && subtotalAfter) {
+                // ONLY show subtotal after row if credits > 0
+                if (creditsToApply > 0 && subtotalAfterRow && subtotalAfter) {
                     subtotalAfter.textContent = 'GH₵ ' + subtotalAfterCredits.toFixed(2);
                     subtotalAfterRow.style.display = 'flex';
+                    subtotalAfterRow.classList.add('d-flex');
+                } else if (subtotalAfterRow) {
+                    subtotalAfterRow.style.display = 'none';
+                    subtotalAfterRow.classList.remove('d-flex');
                 }
                 
                 // Calculate VAT on subtotal after credits
@@ -2572,12 +2576,15 @@ try {
                 // Recalculate based on whether discount is active
                 const subtotalAfterDiscount = Math.max(0, subtotal - discountAmount);
                 
-                // Update subtotal after if discount is active
+                // ONLY show subtotal after if there's an actual discount
                 if (discountAmount > 0 && subtotalAfterRow && subtotalAfter) {
                     subtotalAfter.textContent = 'GH₵ ' + subtotalAfterDiscount.toFixed(2);
                     subtotalAfterRow.style.display = 'flex';
+                    subtotalAfterRow.style.removeProperty('display'); // Remove inline style
+                    subtotalAfterRow.classList.add('d-flex');
                 } else if (subtotalAfterRow) {
                     subtotalAfterRow.style.display = 'none';
+                    subtotalAfterRow.classList.remove('d-flex');
                 }
                 
                 // Calculate VAT on subtotal (after discount if any)

@@ -1468,12 +1468,12 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 2.5fr 4fr 1.5fr;
-			/* left banner | hero carousel | right side banners */
+			grid-template-columns: 4fr 1.5fr;
+			/* hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: start;
-			min-height: 620px;
+			min-height: 245px;
 			/* hero height */
 		}
 
@@ -1482,12 +1482,43 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 620px;
+			min-height: 245px;
 			border-radius: 14px;
-			overflow: hidden;
+			overflow: visible;
 			background: #f0f4f8;
 			/* Fallback background */
 		}
+
+		/* Positioned Flash Deals Banner Image */
+		.hero-carousel-wrapper::before {
+			content: '';
+			position: absolute;
+			left: 0;
+			top: 0;
+			width: 31.25%;
+			/* 2.5fr out of 8fr total = 31.25% */
+			height: 100%;
+			min-height: 245px;
+			background-image: url('http://169.239.251.102:442/~chelsea.somuah/uploads/newsf.png');
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+			border-radius: 14px 0 0 14px;
+			z-index: 1;
+			pointer-events: none;
+		}
+
+		/* Flash Deals Button positioned on the image */
+		.hero-carousel-wrapper .flash-deals-btn {
+			position: absolute;
+			left: 15.625%;
+			/* Center of the 31.25% width image area */
+			top: 50%;
+			transform: translate(-50%, -50%);
+			z-index: 3;
+			pointer-events: auto;
+		}
+
 
 		.hero-carousel {
 			position: relative;
@@ -1506,8 +1537,9 @@ try {
 			align-items: center;
 			position: absolute;
 			top: 0;
-			left: 0;
-			width: 100%;
+			left: 31.25%;
+			/* Start after the positioned image */
+			width: calc(100% - 31.25%);
 			height: 100%;
 			opacity: 0;
 			visibility: hidden;
@@ -5738,17 +5770,12 @@ try {
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
-				<!-- LEFT: FLASH DEALS BANNER -->
-				<article class="left-banner-card">
-					<div class="left-banner-content">
-						<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
-							FLASH DEALS
-						</a>
-					</div>
-				</article>
-
-				<!-- MIDDLE: MAIN BANNER CAROUSEL -->
+				<!-- MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
+					<!-- Flash Deals Button -->
+					<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
+						FLASH DEALS
+					</a>
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">

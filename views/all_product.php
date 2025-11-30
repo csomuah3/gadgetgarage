@@ -229,14 +229,15 @@ if (!function_exists('generate_product_highlights')) {
         /* Sidebar Layout Styles */
         .filters-sidebar {
             background: var(--pure-white);
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px var(--shadow);
+            padding: 35px;
+            border-radius: 16px;
+            box-shadow: 0 4px 12px var(--shadow);
             border: 1px solid var(--border-light);
             position: sticky;
             top: 20px;
             max-height: calc(100vh - 40px);
             overflow-y: auto;
+            margin-right: 30px;
         }
 
         .filter-header {
@@ -250,35 +251,42 @@ if (!function_exists('generate_product_highlights')) {
 
         .filter-title {
             color: var(--text-dark);
-            font-weight: 700;
-            font-size: 1.2rem;
+            font-weight: 800;
+            font-size: 1.6rem;
             margin: 0;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .filter-close {
-            background: none;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             border: none;
-            color: #666;
-            font-size: 1.2rem;
+            color: white;
+            font-size: 1.1rem;
             cursor: pointer;
-            padding: 5px;
-            border-radius: 50%;
+            padding: 10px 16px;
+            border-radius: 10px;
             transition: all 0.3s ease;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.3);
         }
 
         .filter-close:hover {
-            background: rgba(0, 0, 0, 0.1);
-            color: #000000;
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+            color: white;
         }
 
         .filter-subtitle {
             color: var(--text-dark);
-            font-weight: 600;
-            font-size: 0.95rem;
-            margin-bottom: 12px;
+            font-weight: 700;
+            font-size: 1.25rem;
+            margin-bottom: 18px;
             display: block;
         }
 
@@ -300,10 +308,11 @@ if (!function_exists('generate_product_highlights')) {
 
         .search-input {
             width: 100%;
-            padding: 12px 40px 12px 15px;
+            padding: 14px 45px 14px 18px;
             border: 2px solid #e2e8f0;
             border-radius: 12px;
-            font-size: 0.9rem;
+            font-size: 1.05rem;
+            font-weight: 500;
             transition: all 0.3s ease;
             background: rgba(248, 250, 252, 0.8);
         }
@@ -348,10 +357,11 @@ if (!function_exists('generate_product_highlights')) {
         .checkbox-item {
             display: flex;
             align-items: center;
-            padding: 8px 0;
+            padding: 10px 0;
             cursor: pointer;
-            font-size: 0.9rem;
-            color: #555;
+            font-size: 1.05rem;
+            font-weight: 600;
+            color: #374151;
             transition: all 0.3s ease;
             margin: 0;
         }
@@ -406,18 +416,18 @@ if (!function_exists('generate_product_highlights')) {
             background: var(--gradient-primary);
             color: var(--pure-white);
             border: none;
-            padding: 12px 20px;
+            padding: 16px 24px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
+            gap: 10px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
-            font-size: 0.9rem;
+            font-size: 1.05rem;
             box-shadow: 0 4px 12px var(--shadow);
             position: relative;
             width: 100%;
@@ -559,11 +569,12 @@ if (!function_exists('generate_product_highlights')) {
 
         .stars i {
             color: #ffd700;
-            font-size: 14px;
+            font-size: 16px;
         }
 
         .rating-text {
-            font-size: 14px;
+            font-size: 1.05rem;
+            font-weight: 600;
             color: #666;
         }
 
@@ -629,8 +640,14 @@ if (!function_exists('generate_product_highlights')) {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            font-weight: 600;
+            font-weight: 700;
+            font-size: 1.1rem;
             color: var(--text-dark);
+        }
+
+        .price-min, .price-max {
+            font-weight: 700;
+            font-size: 1.1rem;
         }
 
         .price-separator {
@@ -973,10 +990,10 @@ if (!function_exists('generate_product_highlights')) {
         .tag-btn {
             background: #f8fafc;
             border: 1px solid #e2e8f0;
-            padding: 6px 12px;
+            padding: 10px 16px;
             border-radius: 20px;
-            font-size: 13px;
-            font-weight: 500;
+            font-size: 1rem;
+            font-weight: 600;
             color: #64748b;
             cursor: pointer;
             transition: all 0.3s ease;
@@ -1036,12 +1053,12 @@ if (!function_exists('generate_product_highlights')) {
         .color-btn {
             background: none;
             border: 2px solid transparent;
-            padding: 4px;
+            padding: 5px;
             border-radius: 50%;
             cursor: pointer;
             transition: all 0.3s ease;
-            width: 32px;
-            height: 32px;
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -1058,10 +1075,10 @@ if (!function_exists('generate_product_highlights')) {
         }
 
         .color-circle {
-            width: 20px;
-            height: 20px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            border: 1px solid rgba(0, 0, 0, 0.1);
+            border: 2px solid rgba(0, 0, 0, 0.1);
         }
 
         .color-circle.all-colors {
@@ -1139,22 +1156,51 @@ if (!function_exists('generate_product_highlights')) {
             background: linear-gradient(135deg, #ef4444, #dc2626);
             color: white;
             border: none;
-            padding: 12px 25px;
+            padding: 14px 24px;
             border-radius: 12px;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             width: 100%;
             justify-content: center;
+            font-size: 1.05rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .clear-filters-btn:hover {
             background: linear-gradient(135deg, #dc2626, #b91c1c);
             transform: translateY(-2px);
             box-shadow: 0 8px 20px rgba(239, 68, 68, 0.3);
+        }
+
+        /* Show Filters Button */
+        .show-filters-btn {
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 1.1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .show-filters-btn:hover {
+            background: linear-gradient(135deg, #1d4ed8, #1e40af);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
         }
 
         .stats-bar {
@@ -2042,15 +2088,16 @@ if (!function_exists('generate_product_highlights')) {
 
         <div class="row product-layout-row">
             <!-- Left Sidebar - Filters -->
-            <div class="col-lg-2 col-md-4" id="filterSidebar">
+            <div class="col-lg-3 col-md-4" id="filterSidebar">
                 <div class="filters-sidebar">
                     <div class="filter-header">
                         <h3 class="filter-title">
                             <i class="fas fa-sliders-h"></i>
                             Filter Products
                         </h3>
-                        <button class="filter-close d-lg-none" id="closeFilters">
-                            <i class="fas fa-times"></i>
+                        <button class="filter-close" id="hideFiltersBtn" onclick="hideFilters()">
+                            <i class="fas fa-eye-slash"></i>
+                            <span>Hide</span>
                         </button>
                     </div>
 
@@ -2198,7 +2245,12 @@ if (!function_exists('generate_product_highlights')) {
             </div>
 
             <!-- Right Content - Products -->
-            <div class="col-lg-10 col-md-8" id="productContent">
+            <div class="col-lg-9 col-md-8" id="productContent">
+                <!-- Show Filters Button (shown when filters are hidden) -->
+                <button class="show-filters-btn" id="showFiltersBtn" onclick="showFilters()" style="display: none;">
+                    <i class="fas fa-filter"></i>
+                    <span>Show Filters</span>
+                </button>
                 <div class="stats-bar" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding: 20px; background: white; border-radius: 8px; border: 1px solid #e5e7eb;">
                     <div style="display: flex; align-items: center; gap: 20px;">
                         <div class="product-count" style="color: #6b7280; font-size: 0.9rem;">
@@ -3792,6 +3844,47 @@ if (!function_exists('generate_product_highlights')) {
     <script>
         // Initialize with page name
         productFiltersRedirect.init('all_product.php');
+
+        // Hide/Show Filters Functionality
+        function hideFilters() {
+            const filterSidebar = document.getElementById('filterSidebar');
+            const showFiltersBtn = document.getElementById('showFiltersBtn');
+            const productContent = document.getElementById('productContent');
+            
+            if (filterSidebar) {
+                filterSidebar.style.display = 'none';
+                if (showFiltersBtn) {
+                    showFiltersBtn.style.display = 'flex';
+                }
+                // Adjust product content to full width when filters hidden
+                if (productContent) {
+                    productContent.classList.remove('col-lg-9');
+                    productContent.classList.add('col-lg-12');
+                }
+            }
+        }
+
+        function showFilters() {
+            const filterSidebar = document.getElementById('filterSidebar');
+            const showFiltersBtn = document.getElementById('showFiltersBtn');
+            const productContent = document.getElementById('productContent');
+            
+            if (filterSidebar) {
+                filterSidebar.style.display = 'block';
+                if (showFiltersBtn) {
+                    showFiltersBtn.style.display = 'none';
+                }
+                // Restore product content width when filters shown
+                if (productContent) {
+                    productContent.classList.remove('col-lg-12');
+                    productContent.classList.add('col-lg-9');
+                }
+            }
+        }
+
+        // Make functions globally available
+        window.hideFilters = hideFilters;
+        window.showFilters = showFilters;
     </script>
 
 </body>

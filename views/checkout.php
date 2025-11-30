@@ -106,35 +106,38 @@ try {
 		.step {
 			display: flex;
 			align-items: center;
-			color: rgba(255, 255, 255, 0.6);
+			color: #000000;
 			font-weight: 500;
 		}
 
 		.step.active {
-			color: white;
+			color: #000000;
 		}
 
 		.step-number {
 			width: 40px;
 			height: 40px;
 			border-radius: 50%;
-			background: rgba(255, 255, 255, 0.2);
+			background: #e5e7eb;
+			border: 2px solid #9ca3af;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			margin-right: 10px;
 			font-weight: 600;
+			color: #000000;
 		}
 
 		.step.active .step-number {
-			background: white;
-			color: #000000;
+			background: #000000;
+			border-color: #000000;
+			color: #ffffff;
 		}
 
 		.step-divider {
 			width: 60px;
 			height: 2px;
-			background: rgba(255, 255, 255, 0.3);
+			background: #9ca3af;
 			margin: 0 20px;
 		}
 
@@ -576,11 +579,11 @@ try {
 							<span>Confirmation</span>
 						</div>
 					</div>
-					<h1 class="text-center" style="margin-bottom: 5px; font-size: 2rem; font-weight: 800;">
-						<i class="fas fa-credit-card me-3"></i>
+					<h1 class="text-center" style="margin-bottom: 5px; font-size: 2rem; font-weight: 800; color: #000000;">
+						<i class="fas fa-credit-card me-3" style="color: #000000;"></i>
 						Secure Checkout
 					</h1>
-					<p class="text-center mb-0 fs-5 opacity-90" style="margin-bottom: 5px;">
+					<p class="text-center mb-0 fs-5" style="margin-bottom: 5px; color: #000000;">
 						Review your order and complete your purchase
 					</p>
 				</div>
@@ -1416,6 +1419,11 @@ try {
 						if (storeCreditsRow) {
 							storeCreditsRow.style.display = 'flex';
 							
+							const storeCreditsLabel = document.getElementById('storeCreditsLabel');
+							if (storeCreditsLabel) {
+								storeCreditsLabel.innerHTML = '<i class="fas fa-credit-card me-1"></i><span>Store Credits Applied:</span><span class="badge bg-primary ms-2" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap; display: inline-block;"><i class="fas fa-check-circle me-1"></i>Applied from Cart</span>';
+							}
+							
 							const storeCreditsAmountElement = document.getElementById('storeCreditsAmount');
 							if (storeCreditsAmountElement) {
 								storeCreditsAmountElement.textContent = '-GH₵ ' + storeCreditsAmount.toFixed(2);
@@ -1658,7 +1666,9 @@ try {
 					}
 				} else if (appliedStoreCredits) {
 					const creditsAmount = parseFloat(appliedStoreCredits) || 0;
-					totalAmount = Math.max(0, totalAmount - creditsAmount - taxAmount) + taxAmount;
+					// Calculate: (original subtotal - credits) + tax
+					const originalSubtotal = <?php echo $cart_total; ?>;
+					totalAmount = Math.max(0, originalSubtotal - creditsAmount) + taxAmount;
 				}
 			}
 

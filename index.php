@@ -1473,8 +1473,8 @@ try {
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 480px;
-			/* shorter height */
+			min-height: 375px;
+			/* hero height */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 480px;
+			min-height: 375px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -3367,7 +3367,10 @@ try {
 			margin-bottom: 20px;
 			width: 100%;
 			max-width: 200px;
-			/* no background - directly on card */
+			background: transparent;
+			/* transparent card */
+			padding: 20px;
+			border-radius: 16px;
 		}
 
 		.countdown-item {
@@ -3387,7 +3390,7 @@ try {
 			line-height: 1;
 			margin-bottom: 4px;
 			color: #ffffff;
-			/* white numbers */
+			/* white numbers on transparent card */
 		}
 
 		.countdown-label {
@@ -3396,7 +3399,7 @@ try {
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
 			color: #ffffff;
-			/* white text */
+			/* white text on transparent card */
 		}
 
 		/* texts on side cards */
@@ -3443,7 +3446,7 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 480px;
+			min-height: 375px;
 			display: flex;
 			align-items: center;
 			justify-content: center;

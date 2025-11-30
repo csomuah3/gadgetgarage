@@ -561,12 +561,24 @@ class ChatBot {
                 const successDiv = document.getElementById('messageSuccess');
                 if (successDiv) {
                     successDiv.style.display = 'block';
+                    
+                    // If AI responded, show the response
+                    if (result.auto_responded && result.ai_response) {
+                        const successContent = successDiv.querySelector('p');
+                        if (successContent) {
+                            successContent.innerHTML = `
+                                <strong>Instant AI Response:</strong><br>
+                                ${result.ai_response}<br><br>
+                                <small style="color: #6b7280;">If you need further assistance, our team will review your message and respond.</small>
+                            `;
+                        }
+                    }
                 }
 
-                // Hide success message and return to menu after 3 seconds
+                // Hide success message and return to menu after 5 seconds (longer if AI responded)
                 setTimeout(() => {
                     this.hideMessageForm();
-                }, 3000);
+                }, result.auto_responded ? 8000 : 3000);
             } else {
                 throw new Error(result.message || 'Failed to send message');
             }

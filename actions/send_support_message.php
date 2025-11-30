@@ -204,11 +204,50 @@ try {
     }
 
     if ($message_id) {
+        // Try to generate AI response automatically
+        $aiResponse = null;
+        $autoResponded = false;
+        
+        try {
+            if (file_exists(__DIR__ . '/../helpers/ai_support_helper.php')) {
+                require_once(__DIR__ . '/../helpers/ai_support_helper.php');
+                
+                $aiSupportHelper = new AISupportHelper();
+                
+                // Check if we should auto-respond
+                $messageData = [
+                    'subject' => $subject,
+                    'message' => $message,
+                    'customer_name' => $customer_name
+                ];
+                
+                if ($aiSupportHelper->shouldAutoRespond($messageData)) {
+                    // Process with AI
+                    $result = $aiSupportHelper->processSupportMessage($message_id);
+                    
+                    if ($result['success'] && $result['auto_responded']) {
+                        $aiResponse = $result['response_text'];
+                        $autoResponded = true;
+                        
+                        // Log AI response
+                        error_log("AI Auto-Response sent for message #$message_id: " . substr($aiResponse, 0, 100));
+                    }
+                }
+            }
+        } catch (Exception $aiError) {
+            // Don't fail the whole request if AI fails
+            error_log("AI Support Helper Error: " . $aiError->getMessage());
+        }
+        
         ob_end_clean();
         echo json_encode([
             'success' => true,
-            'message' => 'Message sent successfully! Our support team will respond shortly.',
-            'message_id' => $message_id
+            'message' => $autoResponded 
+                ? 'Message received! You have received an instant AI response below.' 
+                : 'Message sent successfully! Our support team will respond shortly.',
+            'message_id' => $message_id,
+            'ai_response' => $aiResponse,
+            'auto_responded' => $autoResponded
         ]);
     } else {
         throw new Exception('Failed to save message to database');

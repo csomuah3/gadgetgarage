@@ -64,9 +64,20 @@ try {
     $credit_value = floatval($valuation_data['credit_value']);
     $original_retail = floatval($valuation_data['original_retail_estimate']);
 
+    // Enforce minimum quote of 3000 GH₵
+    $MINIMUM_QUOTE = 3000;
+    if ($cash_value < $MINIMUM_QUOTE) {
+        $cash_value = $MINIMUM_QUOTE;
+    }
+
     // Calculate 10% bonus for store credit if not already calculated
     if ($credit_value <= $cash_value) {
         $credit_value = $cash_value * 1.10; // Add 10% bonus
+    }
+    
+    // Ensure credit value also meets minimum
+    if ($credit_value < $MINIMUM_QUOTE) {
+        $credit_value = $cash_value * 1.10; // Recalculate based on adjusted cash value
     }
 
     // Format response

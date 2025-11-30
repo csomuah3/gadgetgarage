@@ -375,9 +375,10 @@ class AIHelper {
 
         $prompt .= "Valuation Guidelines:\n";
         $prompt .= "- Use realistic market prices for Ghana in Ghana cedis (GH₵)\n";
+        $prompt .= "- MINIMUM QUOTE: Never quote less than GH₵3000 for any device. All valuations must be at least GH₵3000.\n";
         $prompt .= "- Consider device age, condition, market demand, and local resale value\n";
         $prompt .= "- Store credit offers 10% bonus over cash value\n";
-        $prompt .= "- Be conservative but fair in valuation\n";
+        $prompt .= "- Be conservative but fair in valuation, ensuring minimum is met\n";
         $prompt .= "- Consider depreciation, wear and tear, and local market conditions\n\n";
 
         $prompt .= "Condition Multipliers:\n";

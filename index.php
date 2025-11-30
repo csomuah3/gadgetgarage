@@ -1039,6 +1039,138 @@ try {
 			border: 1px solid rgba(37, 99, 235, 0.3);
 		}
 
+		/* Abandoned Cart Notification Styles */
+		.abandoned-cart-notification {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+			color: white;
+			border-radius: 16px;
+			padding: 20px 24px;
+			box-shadow: 0 10px 40px rgba(59, 130, 246, 0.4);
+			z-index: 10000;
+			max-width: 400px;
+			transform: translateX(450px);
+			opacity: 0;
+			transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+			border: 2px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.abandoned-cart-notification.show {
+			transform: translateX(0);
+			opacity: 1;
+		}
+
+		.abandoned-cart-content {
+			display: flex;
+			align-items: center;
+			gap: 16px;
+		}
+
+		.abandoned-cart-icon {
+			font-size: 2rem;
+			color: white;
+			flex-shrink: 0;
+			animation: cartPulse 2s ease-in-out infinite;
+		}
+
+		@keyframes cartPulse {
+			0%, 100% {
+				transform: scale(1);
+			}
+			50% {
+				transform: scale(1.1);
+			}
+		}
+
+		.abandoned-cart-text {
+			flex: 1;
+		}
+
+		.abandoned-cart-text h4 {
+			font-size: 1.1rem;
+			font-weight: 700;
+			margin-bottom: 6px;
+			color: white;
+		}
+
+		.abandoned-cart-text p {
+			font-size: 0.9rem;
+			line-height: 1.4;
+			color: rgba(255, 255, 255, 0.95);
+			margin: 0;
+		}
+
+		.abandoned-cart-actions {
+			display: flex;
+			gap: 8px;
+			align-items: center;
+		}
+
+		.abandoned-cart-btn {
+			padding: 10px 16px;
+			border-radius: 8px;
+			font-weight: 600;
+			font-size: 0.9rem;
+			transition: all 0.3s ease;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 6px;
+			border: none;
+			cursor: pointer;
+		}
+
+		.view-cart-btn {
+			background: white;
+			color: #3b82f6;
+		}
+
+		.view-cart-btn:hover {
+			background: rgba(255, 255, 255, 0.9);
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+			color: #3b82f6;
+		}
+
+		.dismiss-btn {
+			background: rgba(255, 255, 255, 0.2);
+			color: white;
+			padding: 10px;
+			min-width: auto;
+		}
+
+		.dismiss-btn:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: scale(1.1);
+		}
+
+		/* Mobile Responsive */
+		@media (max-width: 768px) {
+			.abandoned-cart-notification {
+				bottom: 10px;
+				right: 10px;
+				left: 10px;
+				max-width: none;
+				transform: translateY(150px);
+			}
+
+			.abandoned-cart-notification.show {
+				transform: translateY(0);
+			}
+
+			.abandoned-cart-content {
+				flex-direction: column;
+				text-align: center;
+			}
+
+			.abandoned-cart-actions {
+				width: 100%;
+				justify-content: center;
+			}
+		}
+
 		/* View All Products Button */
 		.view-all-products-btn {
 			display: inline-flex;
@@ -1407,7 +1539,7 @@ try {
 
 		@keyframes kenBurnsZoomPan {
 			0% {
-				transform: translateY(-120px) scale(1.5) translateX(-3%);
+				transform: translateY(-120px) scale(0.9) translateX(-3%);
 				opacity: 0;
 			}
 
@@ -1416,7 +1548,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.9) translateX(0);
+				transform: translateY(-120px) scale(1.0) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1911,11 +2043,11 @@ try {
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 900px;
-			min-height: 800px;
-			max-width: 140%;
+			max-height: 500px;
+			min-height: 400px;
+			max-width: 80%;
 			object-fit: contain;
-			transform: translateY(-120px) translateX(0) scale(1.9);
+			transform: translateY(-120px) translateX(0) scale(1.0);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -1924,20 +2056,20 @@ try {
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-			transform: translateY(-120px) translateX(-30px) scale(1.8);
+			transform: translateY(-120px) translateX(-30px) scale(0.9);
 			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - initial state (hidden, off to the right) */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(-120px) translateX(60px) scale(1.7);
+			transform: translateY(-120px) translateX(60px) scale(0.9);
 		}
 
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(-120px) translateX(0) scale(1.9);
+			transform: translateY(-120px) translateX(0) scale(1.0);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
@@ -6282,6 +6414,7 @@ try {
 	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 	<script src="js/dark-mode.js"></script>
 	<script src="js/cart.js"></script>
+	<script src="js/abandoned_cart_ai.js"></script>
 	<script src="js/header.js"></script>
 	<script src="js/chatbot.js"></script>
 	<script src="js/newsletter-popup.js"></script>

@@ -1563,7 +1563,7 @@ try {
                                 <div class="payment-option">
                                     <input type="radio" name="payment_method" value="cash" id="cash_option" checked>
                                     <label for="cash_option" class="payment-label">
-                                        <div class="payment-icon">💰</div>
+                                        <div class="payment-icon"><i class="fas fa-money-bill-wave"></i></div>
                                         <div class="payment-details">
                                             <span class="payment-title">Cash Payment</span>
                                             <span class="payment-desc">Receive money directly</span>
@@ -1573,7 +1573,7 @@ try {
                                 <div class="payment-option">
                                     <input type="radio" name="payment_method" value="store_credit" id="store_credit_option">
                                     <label for="store_credit_option" class="payment-label">
-                                        <div class="payment-icon">🎁</div>
+                                        <div class="payment-icon"><i class="fas fa-credit-card"></i></div>
                                         <div class="payment-details">
                                             <span class="payment-title">Store Credit</span>
                                             <span class="payment-desc">Get 10% bonus for future purchases</span>

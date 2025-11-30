@@ -43,6 +43,11 @@ function addToCart(productId, quantity = 1) {
             // Show enhanced cart popup instead of notification
             showAddedToCartPopup(data);
             updateCartBadge(data.cart_count);
+            
+            // Update abandoned cart tracking
+            if (typeof updateCartTracking === 'function') {
+                updateCartTracking();
+            }
 
             // Update button text temporarily
             if (addBtn) {
@@ -123,6 +128,11 @@ function performRemoveFromCart(productId) {
 
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
+            
+            // Update abandoned cart tracking
+            if (typeof updateCartTracking === 'function') {
+                updateCartTracking();
+            }
         } else {
             showNotification(data.message || 'Failed to remove item from cart', 'error');
         }
@@ -375,6 +385,11 @@ function updateQuantityOnServer(productId, quantity) {
             updateCartBadge(data.cart_count);
             updateCartTotals(data.cart_total);
             console.log('Server update successful');
+            
+            // Update abandoned cart tracking
+            if (typeof updateCartTracking === 'function') {
+                updateCartTracking();
+            }
         } else {
             console.error('Server update failed:', data.message);
             showNotification(data.message || 'Failed to update cart', 'error');

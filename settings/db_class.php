@@ -25,6 +25,8 @@ if (!class_exists('db_connection')) {
             if (mysqli_connect_errno()) {
                 return false;
             } else {
+                // Set charset to UTF-8 to support special characters
+                mysqli_set_charset($this->db, "utf8mb4");
                 return true;
             }
         }
@@ -38,6 +40,8 @@ if (!class_exists('db_connection')) {
             if (mysqli_connect_errno()) {
                 return false;
             } else {
+                // Set charset to UTF-8 to support special characters
+                mysqli_set_charset($this->db, "utf8mb4");
                 return $this->db;
             }
         }
@@ -55,6 +59,9 @@ if (!class_exists('db_connection')) {
             } elseif ($this->db == null) {
                 return false;
             }
+
+            // Ensure UTF-8 charset is set
+            mysqli_set_charset($this->db, "utf8mb4");
 
             //run query 
             $this->results = mysqli_query($this->db, $sqlQuery);
@@ -80,6 +87,9 @@ if (!class_exists('db_connection')) {
                     return false;
                 }
             }
+
+            // Ensure UTF-8 charset is set
+            mysqli_set_charset($this->db, "utf8mb4");
 
             //run query 
             $result = mysqli_query($this->db, $sqlQuery);
@@ -166,6 +176,9 @@ if (!class_exists('db_connection')) {
             } elseif ($this->db == null) {
                 return false;
             }
+
+            // Ensure UTF-8 charset is set
+            mysqli_set_charset($this->db, "utf8mb4");
 
             $stmt = mysqli_prepare($this->db, $sql);
             if (!$stmt) {

@@ -30,43 +30,59 @@ class Product extends db_connection
                     return false;
                 }
             }
+            
+            // Ensure UTF-8 charset is set
+            if (!mysqli_set_charset($this->db, "utf8mb4")) {
+                error_log("ERROR: Failed to set UTF-8 charset: " . mysqli_error($this->db));
+            }
+            
             error_log("Database connection: OK");
 
-            // Escape all string inputs
-            $product_title = mysqli_real_escape_string($this->db, $product_title);
-            $product_desc = mysqli_real_escape_string($this->db, $product_desc);
-            $product_image = mysqli_real_escape_string($this->db, $product_image);
-            $product_keywords = mysqli_real_escape_string($this->db, $product_keywords);
-            $product_color = mysqli_real_escape_string($this->db, $product_color);
-
+            // Use prepared statement to handle UTF-8 characters properly
             $sql = "INSERT INTO products (product_title, product_price, product_desc, product_image, product_keywords, product_color, product_cat, product_brand, stock_quantity)
-                    VALUES ('$product_title', '$product_price', '$product_desc', '$product_image', '$product_keywords', '$product_color', '$category_id', '$brand_id', '$stock_quantity')";
+                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-            error_log("SQL Query: " . $sql);
+            error_log("Prepared SQL Query: " . $sql);
 
-            // Use db_write_query for INSERT operations
-            $result = $this->db_write_query($sql);
+            $stmt = mysqli_prepare($this->db, $sql);
+            if (!$stmt) {
+                error_log("ERROR: Failed to prepare statement: " . mysqli_error($this->db));
+                return false;
+            }
 
-            error_log("db_write_query result type: " . gettype($result));
-            error_log("db_write_query result value: " . var_export($result, true));
+            // Bind parameters
+            mysqli_stmt_bind_param($stmt, "sdssssiii", 
+                $product_title, 
+                $product_price, 
+                $product_desc, 
+                $product_image, 
+                $product_keywords, 
+                $product_color, 
+                $category_id, 
+                $brand_id, 
+                $stock_quantity
+            );
 
-            if ($result === false) {
+            // Execute the statement
+            $result = mysqli_stmt_execute($stmt);
+            
+            if ($result) {
+                $inserted_id = mysqli_insert_id($this->db);
+                mysqli_stmt_close($stmt);
+                error_log("✅ Product inserted successfully!");
+                error_log("Inserted Product ID: " . $inserted_id);
+                error_log("========== ADD PRODUCT END ==========");
+                return true;
+            } else {
                 $mysql_error = mysqli_error($this->db);
                 $mysql_errno = mysqli_errno($this->db);
                 error_log("========== DATABASE ERROR ==========");
                 error_log("MySQL Error Number: " . $mysql_errno);
                 error_log("MySQL Error Message: " . $mysql_error);
-                error_log("Failed SQL: " . $sql);
                 error_log("=====================================");
+                mysqli_stmt_close($stmt);
                 return false;
-            } else {
-                $inserted_id = mysqli_insert_id($this->db);
-                error_log("✅ Product inserted successfully!");
-                error_log("Inserted Product ID: " . $inserted_id);
-                error_log("========== ADD PRODUCT END ==========");
             }
-
-            return $result;
         } catch (Exception $e) {
             error_log("========== EXCEPTION IN ADD_PRODUCT ==========");
             error_log("Exception Message: " . $e->getMessage());

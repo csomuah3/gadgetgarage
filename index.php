@@ -2411,39 +2411,95 @@ try {
 		}
 
 		.countdown-timer {
-			background: #f3f4f6;
-			border-radius: 12px;
-			padding: 15px;
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			border-radius: 16px;
+			padding: 20px 15px;
 			margin-bottom: 20px;
 			text-align: center;
+			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.countdown-timer::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: linear-gradient(45deg, 
+				rgba(255, 255, 255, 0.1) 0%, 
+				rgba(255, 255, 255, 0) 50%,
+				rgba(255, 255, 255, 0.1) 100%
+			);
+			animation: shimmer 3s infinite;
+			pointer-events: none;
+		}
+
+		@keyframes shimmer {
+			0% { transform: translateX(-100%); }
+			100% { transform: translateX(100%); }
 		}
 
 		.countdown-grid {
 			display: grid;
 			grid-template-columns: repeat(4, 1fr);
-			gap: 10px;
+			gap: 12px;
 			margin-bottom: 5px;
+			position: relative;
+			z-index: 1;
 		}
 
 		.countdown-item {
 			text-align: center;
+			background: rgba(255, 255, 255, 0.15);
+			border-radius: 12px;
+			padding: 10px 5px;
+			backdrop-filter: blur(10px);
+			border: 1px solid rgba(255, 255, 255, 0.2);
+			transition: all 0.3s ease;
+		}
+
+		.countdown-item:hover {
+			background: rgba(255, 255, 255, 0.25);
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 		}
 
 		.countdown-number {
 			display: block;
-			font-size: 1.5rem;
-			font-weight: 800;
-			color: #1f2937;
+			font-size: 1.8rem;
+			font-weight: 900;
+			color: #ffffff;
 			line-height: 1;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+			font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
 		}
 
 		.countdown-label {
 			display: block;
-			font-size: 0.75rem;
-			color: #6b7280;
+			font-size: 0.7rem;
+			color: rgba(255, 255, 255, 0.9);
 			text-transform: uppercase;
-			letter-spacing: 0.5px;
-			margin-top: 2px;
+			letter-spacing: 1px;
+			margin-top: 4px;
+			font-weight: 600;
+		}
+
+		/* Responsive countdown */
+		@media (max-width: 768px) {
+			.countdown-number {
+				font-size: 1.4rem;
+			}
+			
+			.countdown-label {
+				font-size: 0.65rem;
+			}
+			
+			.countdown-item {
+				padding: 8px 4px;
+			}
 		}
 
 		.deal-options-btn {
@@ -6652,7 +6708,72 @@ try {
 		// Initialize countdown when DOM is ready
 		document.addEventListener('DOMContentLoaded', function() {
 			initBlackFridayCountdown();
+			initDealsCountdowns();
 		});
+
+		// Deals Countdown Timers - Initialize all 3 deal timers
+		function initDealsCountdowns() {
+			// Set countdown to 12 days, 15 hours, 35 minutes from now
+			const now = new Date().getTime();
+			const daysToAdd = 12;
+			const hoursToAdd = 15;
+			const minutesToAdd = 35;
+			const millisecondsToAdd = (daysToAdd * 24 * 60 * 60 * 1000) + 
+									  (hoursToAdd * 60 * 60 * 1000) + 
+									  (minutesToAdd * 60 * 1000);
+			const countdownDate = now + millisecondsToAdd;
+
+			// Update all 3 deal timers
+			function updateDealsCountdown() {
+				const now = new Date().getTime();
+				const distance = countdownDate - now;
+
+				if (distance < 0) {
+					// Countdown finished, reset
+					const newDistance = millisecondsToAdd;
+					const days = Math.floor(newDistance / (1000 * 60 * 60 * 24));
+					const hours = Math.floor((newDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					const minutes = Math.floor((newDistance % (1000 * 60 * 60)) / (1000 * 60));
+					const seconds = Math.floor((newDistance % (1000 * 60)) / 1000);
+
+					// Update all 3 deals
+					updateDealTimer(1, days, hours, minutes, seconds);
+					updateDealTimer(2, days, hours, minutes, seconds);
+					updateDealTimer(3, days, hours, minutes, seconds);
+				} else {
+					const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+					const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+					const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+					// Update all 3 deals
+					updateDealTimer(1, days, hours, minutes, seconds);
+					updateDealTimer(2, days, hours, minutes, seconds);
+					updateDealTimer(3, days, hours, minutes, seconds);
+				}
+			}
+
+			// Helper function to update individual deal timer
+			function updateDealTimer(dealNumber, days, hours, minutes, seconds) {
+				const daysEl = document.getElementById('days' + dealNumber);
+				const hoursEl = document.getElementById('hours' + dealNumber);
+				const minutesEl = document.getElementById('minutes' + dealNumber);
+				const secondsEl = document.getElementById('seconds' + dealNumber);
+
+				if (daysEl) daysEl.textContent = String(days).padStart(2, '0');
+				if (hoursEl) hoursEl.textContent = String(hours).padStart(2, '0');
+				if (minutesEl) minutesEl.textContent = String(minutes).padStart(2, '0');
+				if (secondsEl) secondsEl.textContent = String(seconds).padStart(2, '0');
+			}
+
+			// Update immediately
+			updateDealsCountdown();
+
+			// Update every second
+			setInterval(updateDealsCountdown, 1000);
+
+			console.log('✨ Deals countdown timers initialized!');
+		}
 	</script>
 
 	<!-- Footer -->

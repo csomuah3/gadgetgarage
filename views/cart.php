@@ -2000,8 +2000,8 @@ try {
                     </div>
 
                     <!-- Store Credits Section (Separate Box) -->
-                    <?php if ($is_logged_in && $store_credit_balance > 0): ?>
-                    <div class="store-credits-box" id="storeCreditsBox">
+                    <?php if ($is_logged_in): ?>
+                    <div class="store-credits-box <?php echo ($store_credit_balance <= 500) ? 'disabled' : ''; ?>" id="storeCreditsBox">
                         <div class="store-credits-header">
                             <i class="fas fa-credit-card me-2"></i>
                             <strong>STORE CREDITS</strong>
@@ -2015,26 +2015,39 @@ try {
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-check store-credits-checkbox-container">
-                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
-                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
-                                    <strong>Apply Store Credits to this order</strong>
-                                </label>
-                            </div>
-                            <small class="text-muted d-block mt-2" id="storeCreditsInfo">
-                                <i class="fas fa-info-circle me-1"></i>
-                                <span id="storeCreditsInfoText">
-                                    You can use up to GH₵ <?php 
-                                    $max_usable = max(0, $store_credit_balance - 500);
-                                    $display_max = min($max_usable, $cart_total);
-                                    echo number_format($display_max, 2); 
-                                    ?> from your store credits. You must keep at least GH₵ 500.00 in your balance.
-                                </span>
-                            </small>
-                            <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                <small>Discount code is active. Store credits cannot be used.</small>
-                            </div>
+                            
+                            <?php if ($store_credit_balance > 500): ?>
+                                <div class="form-check store-credits-checkbox-container">
+                                    <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
+                                    <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
+                                        <strong>Apply Store Credits to this order</strong>
+                                    </label>
+                                </div>
+                                <small class="text-muted d-block mt-2" id="storeCreditsInfo">
+                                    <i class="fas fa-info-circle me-1"></i>
+                                    <span id="storeCreditsInfoText">
+                                        You can use up to GH₵ <?php 
+                                        $max_usable = max(0, $store_credit_balance - 500);
+                                        $display_max = min($max_usable, $cart_total);
+                                        echo number_format($display_max, 2); 
+                                        ?> from your store credits. You must keep at least GH₵ 500.00 in your balance.
+                                    </span>
+                                </small>
+                                <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
+                                    <i class="fas fa-exclamation-triangle me-1"></i>
+                                    <small>Discount code is active. Store credits cannot be used.</small>
+                                </div>
+                            <?php else: ?>
+                                <div class="alert alert-info mb-0" style="font-size: 0.9rem; padding: 12px;">
+                                    <i class="fas fa-info-circle me-2"></i>
+                                    <?php if ($store_credit_balance == 0): ?>
+                                        You don't have any store credits yet. <a href="device_drop.php" class="alert-link">Trade in a device</a> to earn credits!
+                                    <?php else: ?>
+                                        You need at least GH₵ 500.01 in store credits to use them (you must keep GH₵ 500 minimum). 
+                                        Current balance: GH₵ <?php echo number_format($store_credit_balance, 2); ?>
+                                    <?php endif; ?>
+                                </div>
+                            <?php endif; ?>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -2062,7 +2075,7 @@ try {
                         </div>
 
                         <!-- Store Credits Applied Row (hidden by default, mutually exclusive with discount) -->
-                        <?php if ($is_logged_in && $store_credit_balance > 0): ?>
+                        <?php if ($is_logged_in): ?>
                         <div class="d-flex justify-content-between mb-3 store-credits-row" id="storeCreditsRow" style="display: none;">
                             <span class="text-success">
                                 <i class="fas fa-credit-card me-1"></i>

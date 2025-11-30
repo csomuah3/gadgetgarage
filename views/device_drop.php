@@ -68,6 +68,7 @@ try {
             background-color: #ffffff;
             color: #1a1a1a;
             overflow-x: hidden;
+            font-size: 1.05rem; /* Increased base font size for whole page */
         }
 
         body::after {
@@ -117,8 +118,9 @@ try {
         }
 
         .page-subtitle {
-            color: #6b7280;
-            font-size: 1.15rem;
+            color: #000000;
+            font-size: 1.4rem;
+            font-weight: 700;
             text-align: center;
             margin-bottom: 50px;
             max-width: 700px;

@@ -36,6 +36,20 @@ try {
     } catch (Exception $e) {
         error_log("Failed to load brands: " . $e->getMessage());
     }
+
+    // Get store credits for logged-in users
+    $store_credit_balance = 0;
+    $available_store_credits = [];
+    if ($is_logged_in && $customer_id) {
+        try {
+            require_once(__DIR__ . '/../helpers/store_credit_helper.php');
+            $storeCreditHelper = new StoreCreditHelper();
+            $store_credit_balance = $storeCreditHelper->getTotalAvailableCredit($customer_id);
+            $available_store_credits = $storeCreditHelper->getAvailableCredits($customer_id);
+        } catch (Exception $e) {
+            error_log("Failed to load store credits: " . $e->getMessage());
+        }
+    }
 } catch (Exception $e) {
     die("Critical error: " . $e->getMessage());
 }
@@ -1917,6 +1931,39 @@ try {
                             <span class="text-success fw-bold" id="discountAmount">-GH₵ 0.00</span>
                         </div>
 
+                        <!-- Store Credits Section -->
+                        <?php if ($is_logged_in && $store_credit_balance > 0): ?>
+                        <div class="store-credits-section mb-3" style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div class="d-flex align-items-center justify-content-between mb-2">
+                                <div>
+                                    <strong><i class="fas fa-credit-card me-2"></i>Available Store Credits</strong>
+                                    <div class="text-success fw-bold" style="font-size: 1.1rem;" id="storeCreditBalance">
+                                        GH₵ <?php echo number_format($store_credit_balance, 2); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check mt-2">
+                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
+                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
+                                    <strong>Apply Store Credits to this order</strong>
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-1">
+                                <i class="fas fa-info-circle me-1"></i>
+                                You can use up to GH₵ <?php echo number_format(min($store_credit_balance, $cart_total), 2); ?> from your store credits
+                            </small>
+                        </div>
+
+                        <!-- Store Credits Applied Row (hidden by default) -->
+                        <div class="d-flex justify-content-between mb-3 store-credits-row" id="storeCreditsRow" style="display: none;">
+                            <span class="text-success">
+                                <i class="fas fa-credit-card me-1"></i>
+                                Store Credits Applied:
+                            </span>
+                            <span class="text-success fw-bold" id="storeCreditsAmount">-GH₵ 0.00</span>
+                        </div>
+                        <?php endif; ?>
+
                         <hr>
 
                         <div class="d-flex justify-content-between mb-4">
@@ -1940,6 +1987,9 @@ try {
             </div>
         <?php endif; ?>
     </div>
+
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
 
     <!-- Footer -->
     <footer class="main-footer">
@@ -2056,8 +2106,62 @@ try {
 
             // Checkout function
             window.proceedToCheckout = function() {
+                // Store applied credits in sessionStorage to pass to checkout
+                const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
+                if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
+                    const storeCreditsAmount = parseFloat(document.getElementById('storeCreditsAmount')?.textContent.replace(/[^0-9.]/g, '') || 0);
+                    sessionStorage.setItem('appliedStoreCredits', storeCreditsAmount);
+                } else {
+                    sessionStorage.removeItem('appliedStoreCredits');
+                }
                 window.location.href = 'checkout.php';
             };
+
+            // Store Credits functionality
+            document.addEventListener('DOMContentLoaded', function() {
+                const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
+                if (applyStoreCreditsCheckbox) {
+                    applyStoreCreditsCheckbox.addEventListener('change', function() {
+                        handleStoreCreditsToggle(this.checked);
+                    });
+                }
+            });
+
+            // Store Credits Functions
+            function handleStoreCreditsToggle(isChecked) {
+                const storeCreditsRow = document.getElementById('storeCreditsRow');
+                const storeCreditsAmount = document.getElementById('storeCreditsAmount');
+                const cartTotal = document.getElementById('cartTotal');
+                const cartSubtotal = document.getElementById('cartSubtotal');
+                const storeCreditBalance = document.getElementById('storeCreditBalance');
+
+                if (!storeCreditsRow || !storeCreditsAmount || !cartTotal || !cartSubtotal) {
+                    return;
+                }
+
+                const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
+                const subtotal = parseFloat(subtotalText) || 0;
+                const creditBalanceText = storeCreditBalance?.textContent.replace(/[^0-9.]/g, '') || '0';
+                const creditBalance = parseFloat(creditBalanceText) || 0;
+
+                if (isChecked) {
+                    // Apply store credits (use minimum of balance and subtotal)
+                    const creditsToApply = Math.min(creditBalance, subtotal);
+                    storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
+                    storeCreditsRow.style.display = 'flex';
+                    
+                    // Update total
+                    const newTotal = Math.max(0, subtotal - creditsToApply);
+                    cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
+                } else {
+                    // Remove store credits
+                    storeCreditsRow.style.display = 'none';
+                    storeCreditsAmount.textContent = '-GH₵ 0.00';
+                    
+                    // Restore original total
+                    cartTotal.textContent = 'GH₵ ' + subtotal.toFixed(2);
+                }
+            }
 
             // Dropdown navigation functions with timeout delays
             let dropdownTimeout;

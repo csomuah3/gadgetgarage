@@ -34,20 +34,6 @@ try {
 	} catch (Exception $e) {
 		error_log("Failed to load brands: " . $e->getMessage());
 	}
-
-	// Get store credits for logged-in users
-	$store_credit_balance = 0;
-	$available_store_credits = [];
-	if ($is_logged_in && $customer_id) {
-		try {
-			require_once(__DIR__ . '/../helpers/store_credit_helper.php');
-			$storeCreditHelper = new StoreCreditHelper();
-			$store_credit_balance = $storeCreditHelper->getTotalAvailableCredit($customer_id);
-			$available_store_credits = $storeCreditHelper->getAvailableCredits($customer_id);
-		} catch (Exception $e) {
-			error_log("Failed to load store credits: " . $e->getMessage());
-		}
-	}
 } catch (Exception $e) {
 	die("Critical error: " . $e->getMessage());
 }
@@ -861,39 +847,6 @@ try {
 						<span class="ms-auto">GH₵ 0.00</span>
 					</div>
 
-					<!-- Store Credits Section -->
-					<?php if ($is_logged_in && $store_credit_balance > 0): ?>
-					<div class="store-credits-section" style="padding: 15px; background: #f8f9fa; border-radius: 8px; margin: 15px 0;">
-						<div class="d-flex align-items-center justify-content-between mb-2">
-							<div>
-								<strong><i class="fas fa-credit-card me-2"></i>Available Store Credits</strong>
-								<div class="text-success fw-bold" style="font-size: 1.1rem;" id="storeCreditBalance">
-									GH₵ <?php echo number_format($store_credit_balance, 2); ?>
-								</div>
-							</div>
-						</div>
-						<div class="form-check mt-2">
-							<input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
-							<label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
-								<strong>Apply Store Credits to this order</strong>
-							</label>
-						</div>
-						<small class="text-muted d-block mt-1">
-							<i class="fas fa-info-circle me-1"></i>
-							You can use up to GH₵ <?php echo number_format(min($store_credit_balance, $cart_total), 2); ?> from your store credits
-						</small>
-					</div>
-
-					<!-- Store Credits Applied Row (hidden by default) -->
-					<div class="summary-row store-credits-row" id="storeCreditsRow" style="display: none;">
-						<span class="text-success">
-							<i class="fas fa-credit-card me-1"></i>
-							Store Credits Applied:
-						</span>
-						<span class="ms-auto text-success" id="storeCreditsAmount">-GH₵ 0.00</span>
-					</div>
-					<?php endif; ?>
-
 					<!-- Discount Row (hidden by default) -->
 					<div class="summary-row discount-row" id="discountRow" style="display: none;">
 						<span class="text-success" id="discountLabel">
@@ -1504,18 +1457,9 @@ try {
 		}
 
 		let selectedPaymentMethod = 'paystack-mobile';
-		let storeCreditsApplied = 0;
-		let originalCartTotal = <?php echo $cart_total; ?>;
-		let storeCreditBalance = <?php echo $store_credit_balance ?? 0; ?>;
 
 		document.addEventListener('DOMContentLoaded', function() {
-			// Store Credits functionality
-			const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-			if (applyStoreCreditsCheckbox) {
-				applyStoreCreditsCheckbox.addEventListener('change', function() {
-					handleStoreCreditsToggle(this.checked);
-				});
-			}
+			console.log('Checkout page loaded, setting up payment options...');
 
 			const paymentOptions = document.querySelectorAll('.payment-option');
 			console.log('Found payment options:', paymentOptions.length);
@@ -1548,96 +1492,7 @@ try {
 					processCheckout();
 				});
 			}
-
-			// Store Credits functionality
-			const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-			if (applyStoreCreditsCheckbox) {
-				applyStoreCreditsCheckbox.addEventListener('change', function() {
-					handleStoreCreditsToggle(this.checked);
-				});
-			}
 		});
-
-		// Store Credits Functions
-		async function handleStoreCreditsToggle(isChecked) {
-			if (!isChecked) {
-				// Remove store credits
-				storeCreditsApplied = 0;
-				updateOrderTotal();
-				return;
-			}
-
-			// Apply store credits - get preview from server
-			try {
-				const response = await fetch('../actions/get_store_credits.php', {
-					method: 'POST',
-					headers: {
-						'Content-Type': 'application/json',
-					},
-					body: JSON.stringify({
-						action: 'preview_application',
-						order_total: originalCartTotal
-					})
-				});
-
-				const data = await response.json();
-				
-				if (data.status === 'success' && data.preview) {
-					storeCreditsApplied = data.preview.total_applicable;
-					updateOrderTotal();
-				} else {
-					document.getElementById('applyStoreCredits').checked = false;
-					Swal.fire({
-						icon: 'error',
-						title: 'Error',
-						text: data.message || 'Unable to apply store credits. Please try again.'
-					});
-				}
-			} catch (error) {
-				console.error('Error applying store credits:', error);
-				document.getElementById('applyStoreCredits').checked = false;
-				Swal.fire({
-					icon: 'error',
-					title: 'Error',
-					text: 'Failed to apply store credits. Please try again.'
-				});
-			}
-		}
-
-		function updateOrderTotal() {
-			const subtotal = originalCartTotal;
-			const creditsAmount = storeCreditsApplied || 0;
-			const finalTotal = Math.max(0, subtotal - creditsAmount);
-
-			// Update store credits row
-			const storeCreditsRow = document.getElementById('storeCreditsRow');
-			if (storeCreditsRow) {
-				if (creditsAmount > 0) {
-					storeCreditsRow.style.display = 'flex';
-					document.getElementById('storeCreditsAmount').textContent = `-GH₵ ${creditsAmount.toFixed(2)}`;
-				} else {
-					storeCreditsRow.style.display = 'none';
-				}
-			}
-
-			// Update final total
-			const finalTotalElement = document.getElementById('finalTotal');
-			if (finalTotalElement) {
-				finalTotalElement.textContent = `GH₵ ${finalTotal.toFixed(2)}`;
-			}
-
-			// Update checkout button
-			const checkoutButton = document.getElementById('simulatePaymentBtn');
-			if (checkoutButton) {
-				checkoutButton.innerHTML = `<i class="fas fa-lock me-2"></i>Complete Order - GH₵ ${finalTotal.toFixed(2)}`;
-			}
-
-			// Update payment modal display
-			const checkoutTotalDisplay = document.getElementById('checkoutTotalDisplay');
-			if (checkoutTotalDisplay) {
-				checkoutTotalDisplay.textContent = `GH₵ ${finalTotal.toFixed(2)}`;
-			}
-		}
 
 		function processCheckout() {
 			console.log('Session data check:');
@@ -1665,21 +1520,12 @@ try {
 			}
 
 			const appliedPromo = localStorage.getItem('appliedPromo');
-			let totalAmount = originalCartTotal;
-
-			// Apply store credits if checked
-			if (storeCreditsApplied > 0) {
-				totalAmount = Math.max(0, totalAmount - storeCreditsApplied);
-			}
+			let totalAmount = <?php echo $cart_total; ?>;
 
 			if (appliedPromo) {
 				try {
 					const promoData = JSON.parse(appliedPromo);
 					totalAmount = promoData.new_total;
-					// Re-apply store credits after promo
-					if (storeCreditsApplied > 0) {
-						totalAmount = Math.max(0, totalAmount - storeCreditsApplied);
-					}
 				} catch (error) {
 					console.error('Error parsing promo data:', error);
 				}
@@ -1708,8 +1554,7 @@ try {
 				body: JSON.stringify({
 					email: customerEmail,
 					total_amount: totalAmount,
-					payment_method: selectedPaymentMethod,
-					store_credits_applied: storeCreditsApplied || 0
+					payment_method: selectedPaymentMethod
 				})
 			})
 			.then(response => response.json())

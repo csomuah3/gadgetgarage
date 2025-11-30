@@ -1894,6 +1894,9 @@ try {
         </div>
     </div>
 
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script src="js/dark-mode.js"></script>
@@ -3980,9 +3983,6 @@ try {
                 left: 15px;
             }
         }
-
-    <!-- AI Recommendations Section -->
-    <?php include '../includes/ai_recommendations_section.php'; ?>
 
     <!-- Live Chat Widget -->
     <div class="live-chat-widget" id="liveChatWidget">

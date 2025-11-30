@@ -99,6 +99,670 @@ function getOrderStatus($order_date)
     <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../includes/account_sidebar.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        // ============================================
+        // ORDER MANAGEMENT FUNCTIONS - DEFINED IN HEAD FOR IMMEDIATE AVAILABILITY
+        // ============================================
+
+        // View Order Details Function
+        window.viewOrderDetails = function(orderId, orderReference) {
+            console.log('Loading order details for order ID:', orderId);
+
+            // Show loading state
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: 'Loading...',
+                    html: 'Please wait while we fetch your order details.',
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    showConfirmButton: false,
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+            }
+
+            // Fetch order details
+            fetch(`../actions/get_order_details.php?order_id=${orderId}`)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.close();
+                        }
+                        if (typeof showOrderDetailsModal === 'function') {
+                            showOrderDetailsModal(data.order, orderReference);
+                        }
+                    } else {
+                        if (typeof Swal !== 'undefined') {
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: data.message || 'Failed to load order details',
+                                confirmButtonColor: '#3b82f6'
+                            });
+                        }
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Failed to load order details: ' + error.message,
+                            confirmButtonColor: '#3b82f6'
+                        });
+                    }
+                });
+        };
+
+        // Track Order Function
+        window.trackOrder = function(orderReference, orderDate) {
+            const orderDateTime = new Date(orderDate);
+            const now = new Date();
+            const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
+
+            // Calculate status times
+            const orderConfirmedTime = new Date(orderDateTime);
+            const packagePreparedTime = new Date(orderDateTime);
+            packagePreparedTime.setDate(packagePreparedTime.getDate() + 1);
+            const inTransitTime = new Date(orderDateTime);
+            inTransitTime.setDate(inTransitTime.getDate() + 2);
+            const outForDeliveryTime = new Date(orderDateTime);
+            outForDeliveryTime.setDate(outForDeliveryTime.getDate() + 4);
+
+            const formatDateTime = (date) => {
+                const day = date.getDate();
+                const month = date.toLocaleString('default', { month: 'short' }).toUpperCase();
+                const time = date.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+                return `${day} ${month}<br>${time}`;
+            };
+
+            let currentStep = 0;
+            if (daysSinceOrder >= 4) currentStep = 4;
+            else if (daysSinceOrder >= 2) currentStep = 3;
+            else if (daysSinceOrder >= 1) currentStep = 2;
+            else currentStep = 1;
+
+            const trackingHTML = `
+                <div style="padding: 30px; max-width: 900px; margin: 0 auto;">
+                    <div style="position: relative; padding: 40px 0;">
+                        <!-- Timeline Line -->
+                        <div style="position: absolute; top: 70px; left: 50px; right: 50px; height: 4px; background: #e9ecef;"></div>
+                        <div style="position: absolute; top: 70px; left: 50px; width: ${((currentStep - 1) / 3) * 100}%; height: 4px; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.5s ease;"></div>
+
+                        <!-- Timeline Steps -->
+                        <div style="display: flex; justify-content: space-between; position: relative; z-index: 1;">
+                            <!-- Order Confirmed -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 1 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 1 ? '✓' : '1'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 1 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Order confirmed</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(orderConfirmedTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Order placed and confirmed</div>
+                            </div>
+
+                            <!-- Package Prepared -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 2 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 2 ? '✓' : '2'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 2 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Package prepared</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(packagePreparedTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Packed and handed to carrier</div>
+                            </div>
+
+                            <!-- In Transit -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 3 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 3 ? '✓' : '3'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 3 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">In transit</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(inTransitTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Package in transit</div>
+                            </div>
+
+                            <!-- Out for Delivery -->
+                            <div style="flex: 1; text-align: center;">
+                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 4 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
+                                    ${currentStep >= 4 ? '✓' : '4'}
+                                </div>
+                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 4 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Out for delivery</div>
+                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(outForDeliveryTime)}</div>
+                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Will be delivered today</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            if (typeof Swal !== 'undefined') {
+                Swal.fire({
+                    title: `Track Order #${orderReference}`,
+                    html: trackingHTML,
+                    width: '1000px',
+                    showCloseButton: true,
+                    showConfirmButton: true,
+                    confirmButtonText: 'Close',
+                    customClass: {
+                        popup: 'tracking-modal'
+                    }
+                });
+            }
+        };
+
+        // Request Refund Function
+        window.requestRefund = function(orderId, orderReference) {
+            if (typeof Swal === 'undefined') {
+                alert('Please wait for the page to fully load.');
+                return;
+            }
+
+            const refundFormHTML = `
+                <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+                        <h6 style="margin: 0 0 5px 0; color: #6c757d; font-size: 12px; text-transform: uppercase;">Order Reference</h6>
+                        <strong style="font-size: 16px; color: #212529;">#${orderReference}</strong>
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">First Name *</label>
+                        <input type="text" id="firstName" name="firstName" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Last Name *</label>
+                        <input type="text" id="lastName" name="lastName" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Email *</label>
+                        <input type="email" id="email" name="email" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Phone *</label>
+                        <input type="tel" id="phone" name="phone" required
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Refund Amount (Optional)</label>
+                        <input type="number" id="refundAmount" name="refundAmount" step="0.01" min="0"
+                               style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;"
+                               placeholder="Leave blank for full refund">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; font-weight: 500; color: #212529;">Reason for Refund *</label>
+                        <textarea id="reasonForRefund" name="reasonForRefund" required rows="4"
+                                  style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px; resize: vertical;"
+                                  placeholder="Please provide details about why you are requesting a refund..."></textarea>
+                    </div>
+                </form>
+            `;
+
+            Swal.fire({
+                title: 'Request Refund',
+                html: refundFormHTML,
+                width: '700px',
+                showCancelButton: true,
+                confirmButtonText: 'Submit Request',
+                cancelButtonText: 'Cancel',
+                confirmButtonColor: '#f59e0b',
+                cancelButtonColor: '#6c757d',
+                showCloseButton: true,
+                allowOutsideClick: false,
+                preConfirm: () => {
+                    const form = document.getElementById('refundForm');
+                    const formData = new FormData(form);
+
+                    // Validate required fields
+                    const firstName = formData.get('firstName').trim();
+                    const lastName = formData.get('lastName').trim();
+                    const email = formData.get('email').trim();
+                    const phone = formData.get('phone').trim();
+                    const reason = formData.get('reasonForRefund').trim();
+
+                    if (!firstName || !lastName || !email || !phone || !reason) {
+                        Swal.showValidationMessage('Please fill in all required fields');
+                        return false;
+                    }
+
+                    // Validate email format
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        Swal.showValidationMessage('Please enter a valid email address');
+                        return false;
+                    }
+
+                    return {
+                        orderId: orderId,
+                        orderReference: orderReference,
+                        firstName: firstName,
+                        lastName: lastName,
+                        email: email,
+                        phone: phone,
+                        refundAmount: formData.get('refundAmount') || null,
+                        reason: reason
+                    };
+                }
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state
+                    Swal.fire({
+                        title: 'Submitting Request...',
+                        html: 'Please wait while we process your refund request.',
+                        allowOutsideClick: false,
+                        allowEscapeKey: false,
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading();
+                        }
+                    });
+
+                    // Submit refund request
+                    fetch('../actions/submit_refund_action.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.value)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: 'Request Submitted!',
+                                html: `Your refund request for order <strong>#${orderReference}</strong> has been submitted successfully.<br><br>
+                                       <strong>Reference ID:</strong> ${data.refund_id}<br><br>
+                                       You will receive an email confirmation shortly. Our team will review your request within 2-3 business days.`,
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#10b981'
+                            });
+                        } else {
+                            Swal.fire({
+                                title: 'Request Failed',
+                                text: data.message || 'There was an error submitting your refund request. Please try again.',
+                                icon: 'error',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#ef4444'
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Network Error',
+                            text: 'Unable to submit your request. Please check your internet connection and try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#ef4444'
+                        });
+                    });
+                }
+            });
+        };
+
+        // Cancel Order Function
+        window.cancelOrder = function(orderId, orderReference) {
+            if (typeof Swal === 'undefined') {
+                alert('Please wait for the page to fully load.');
+                return;
+            }
+
+            // Confirm cancellation with SweetAlert
+            Swal.fire({
+                title: 'Cancel Order?',
+                html: `Are you sure you want to cancel order <strong>#${orderReference}</strong>?<br><br>This action cannot be undone.`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#d33',
+                cancelButtonColor: '#3085d6',
+                confirmButtonText: 'Yes, cancel it!',
+                cancelButtonText: 'No, keep it',
+                reverseButtons: true
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Show loading state - find button by order ID
+                    const cancelBtn = document.querySelector(`button[onclick*="cancelOrder(${orderId}"]`);
+                    let originalText = 'Cancel';
+                    if (cancelBtn) {
+                        originalText = cancelBtn.innerHTML;
+                        cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
+                        cancelBtn.disabled = true;
+                    }
+
+                    // Send cancellation request
+                    fetch('../actions/cancel_order_action.php', {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            order_id: orderId,
+                            order_reference: orderReference
+                        })
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Show success message
+                            Swal.fire({
+                                title: 'Cancelled!',
+                                html: `Order <strong>#${orderReference}</strong> has been cancelled successfully.`,
+                                icon: 'success',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            }).then(() => {
+                                // Reload the page to update order display
+                                window.location.reload();
+                            });
+                        } else {
+                            // Show error message
+                            Swal.fire({
+                                title: 'Error!',
+                                text: `Failed to cancel order: ${data.message || 'Unknown error'}`,
+                                icon: 'error',
+                                confirmButtonColor: '#3085d6',
+                                confirmButtonText: 'OK'
+                            });
+
+                            // Reset button
+                            if (cancelBtn) {
+                                cancelBtn.innerHTML = originalText;
+                                cancelBtn.disabled = false;
+                            }
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        
+                        // Show error message
+                        Swal.fire({
+                            title: 'Error!',
+                            text: 'Failed to cancel order. Please try again.',
+                            icon: 'error',
+                            confirmButtonColor: '#3085d6',
+                            confirmButtonText: 'OK'
+                        });
+                        
+                        // Reset button
+                        if (cancelBtn) {
+                            cancelBtn.innerHTML = originalText;
+                            cancelBtn.disabled = false;
+                        }
+                    });
+                }
+            });
+        };
+
+        // Open Rating Modal Function
+        window.openRatingModal = async function(orderId) {
+            if (typeof Swal === 'undefined') {
+                alert('Please wait for the page to fully load.');
+                return;
+            }
+
+            try {
+                // Fetch order details
+                const response = await fetch(`../actions/get_order_details.php?order_id=${orderId}`);
+                const data = await response.json();
+
+                if (!data.success) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to load order details'
+                    });
+                    return;
+                }
+
+                const orderItems = data.order.items || [];
+                
+                if (orderItems.length === 0) {
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'No Products',
+                        text: 'No products found in this order.'
+                    });
+                    return;
+                }
+
+                // Fetch existing ratings for this order
+                const ratingsResponse = await fetch(`../actions/get_product_ratings.php?order_id=${orderId}`);
+                const ratingsData = await ratingsResponse.json();
+                const existingRatings = ratingsData.success ? ratingsData.ratings : {};
+
+                // Build rating modal for each product
+                let currentProductIndex = 0;
+                let productRatings = {};
+
+                function showRatingModalForProduct(index) {
+                    if (index >= orderItems.length) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Thank you!',
+                            text: 'All ratings have been submitted successfully.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        });
+                        return;
+                    }
+
+                    const item = orderItems[index];
+                    const productId = item.product_id;
+                    const existingRating = existingRatings[productId] || null;
+                    
+                    // Product image is already a full URL from the API
+                    const imageUrl = item.product_image || '';
+
+                    // Get product condition (default to 'excellent' if not set)
+                    const productCondition = item.product_condition || item.condition || 'excellent';
+                    
+                    const ratingHTML = `
+                        <div style="max-width: 700px; margin: 0 auto; text-align: left;">
+                            <h3 style="text-align: center; margin-bottom: 10px; font-weight: 700; color: #212529;">WE'D LOVE YOUR FEEDBACK</h3>
+                            <p style="text-align: center; margin-bottom: 30px; color: #6c757d; font-size: 14px;">Click on the stars to review your purchase and share your thoughts!</p>
+                            
+                            <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: center;">
+                                <div style="flex-shrink: 0;">
+                                    <img src="${imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNkI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K'}" 
+                                         alt="${item.product_title}" 
+                                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #dee2e6;"
+                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNkI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+                                </div>
+                                
+                                <div style="flex: 1;">
+                                    <h4 style="margin: 0 0 10px 0; font-size: 18px; font-weight: 600; color: #212529;">${item.product_title}</h4>
+                                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #6c757d;">Size: ${item.size || 'OS'}</p>
+                                    
+                                    <!-- Star Rating -->
+                                    <div style="margin-bottom: 15px;">
+                                        <div id="starRating${index}" style="display: flex; gap: 5px; font-size: 28px; cursor: pointer;">
+                                            ${[1, 2, 3, 4, 5].map(star => `
+                                                <span class="star" data-rating="${star}" 
+                                                      style="color: ${existingRating && star <= existingRating.rating ? '#FFD700' : '#ddd'}; 
+                                                             transition: color 0.2s;">
+                                                    ★
+                                                </span>
+                                            `).join('')}
+                                        </div>
+                                        <input type="hidden" id="selectedRating${index}" value="${existingRating ? existingRating.rating : 0}">
+                                    </div>
+                                    
+                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
+                                        <span style="font-size: 18px; font-weight: 700; color: #212529;">GH₵${parseFloat(item.product_price || 0).toFixed(2)}</span>
+                                        <span style="font-size: 14px; color: #6c757d;">Qty: ${item.qty || 1}</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Review Text Area -->
+                            <div style="margin-bottom: 20px;">
+                                <textarea id="reviewText${index}" 
+                                          placeholder="Write a short review" 
+                                          rows="4"
+                                          style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical; font-family: inherit;">${existingRating ? (existingRating.comment || '') : ''}</textarea>
+                            </div>
+                            
+                            ${index < orderItems.length - 1 ? 
+                                `<p style="text-align: center; color: #6c757d; font-size: 13px; margin-bottom: 0;">Product ${index + 1} of ${orderItems.length}</p>` 
+                                : ''}
+                        </div>
+                    `;
+
+                    Swal.fire({
+                        title: '',
+                        html: ratingHTML,
+                        width: '800px',
+                        showCancelButton: true,
+                        confirmButtonText: index < orderItems.length - 1 ? 'Next Product' : 'Submit Review',
+                        cancelButtonText: 'Skip',
+                        confirmButtonColor: '#000000',
+                        cancelButtonColor: '#6c757d',
+                        showCloseButton: true,
+                        allowOutsideClick: false,
+                        didOpen: () => {
+                            // Star rating functionality
+                            const starContainer = document.getElementById(`starRating${index}`);
+                            const ratingInput = document.getElementById(`selectedRating${index}`);
+                            
+                            if (starContainer) {
+                                starContainer.addEventListener('click', (e) => {
+                                    if (e.target.classList.contains('star')) {
+                                        const rating = parseInt(e.target.dataset.rating);
+                                        ratingInput.value = rating;
+                                        
+                                        // Update star display
+                                        const stars = starContainer.querySelectorAll('.star');
+                                        stars.forEach((star, idx) => {
+                                            star.style.color = idx < rating ? '#FFD700' : '#ddd';
+                                        });
+                                    }
+                                });
+
+                                // Hover effect
+                                starContainer.addEventListener('mouseover', (e) => {
+                                    if (e.target.classList.contains('star')) {
+                                        const hoverRating = parseInt(e.target.dataset.rating);
+                                        const stars = starContainer.querySelectorAll('.star');
+                                        stars.forEach((star, idx) => {
+                                            if (idx < hoverRating) {
+                                                star.style.color = '#FFD700';
+                                                star.style.opacity = '0.7';
+                                            }
+                                        });
+                                    }
+                                });
+
+                                starContainer.addEventListener('mouseleave', () => {
+                                    const currentRating = parseInt(ratingInput.value) || 0;
+                                    const stars = starContainer.querySelectorAll('.star');
+                                    stars.forEach((star, idx) => {
+                                        star.style.opacity = '1';
+                                        star.style.color = idx < currentRating ? '#FFD700' : '#ddd';
+                                    });
+                                });
+                            }
+                        },
+                        preConfirm: () => {
+                            const rating = parseInt(document.getElementById(`selectedRating${index}`).value) || 0;
+                            const comment = document.getElementById(`reviewText${index}`).value.trim();
+
+                            if (rating === 0) {
+                                Swal.showValidationMessage('Please select a rating');
+                                return false;
+                            }
+
+                            return {
+                                product_id: productId,
+                                rating: rating,
+                                comment: comment,
+                                product_condition: productCondition,
+                                product_price: parseFloat(item.product_price || 0)
+                            };
+                        }
+                    }).then(async (result) => {
+                        if (result.isConfirmed && result.value) {
+                            const ratingData = result.value;
+                            
+                            // Save rating
+                            try {
+                                const submitResponse = await fetch('../actions/submit_product_rating_action.php', {
+                                    method: 'POST',
+                                    headers: {
+                                        'Content-Type': 'application/json',
+                                    },
+                                    body: JSON.stringify({
+                                        order_id: orderId,
+                                        product_id: ratingData.product_id,
+                                        rating: ratingData.rating,
+                                        comment: ratingData.comment,
+                                        product_condition: ratingData.product_condition,
+                                        product_price: ratingData.product_price
+                                    })
+                                });
+
+                                const submitData = await submitResponse.json();
+
+                                if (submitData.success) {
+                                    productRatings[ratingData.product_id] = ratingData;
+                                    
+                                    // Show next product or finish
+                                    showRatingModalForProduct(index + 1);
+                                } else {
+                                    Swal.fire({
+                                        icon: 'error',
+                                        title: 'Error',
+                                        text: submitData.message || 'Failed to save rating'
+                                    });
+                                }
+                            } catch (error) {
+                                Swal.fire({
+                                    icon: 'error',
+                                    title: 'Error',
+                                    text: 'Failed to submit rating: ' + error.message
+                                });
+                            }
+                        } else if (result.dismiss === Swal.DismissReason.cancel) {
+                            // User skipped - show next product
+                            showRatingModalForProduct(index + 1);
+                        }
+                    });
+                }
+
+                // Start with first product
+                showRatingModalForProduct(0);
+
+            } catch (error) {
+                console.error('Error opening rating modal:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Failed to load order details: ' + error.message
+                });
+            }
+        };
+
+        // Also define them without window prefix for onclick handlers (like wishlist does)
+        var viewOrderDetails = window.viewOrderDetails;
+        var trackOrder = window.trackOrder;
+        var requestRefund = window.requestRefund;
+        var cancelOrder = window.cancelOrder;
+        var openRatingModal = window.openRatingModal;
+    </script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Dancing+Script:wght@400;500;600;700&display=swap');
 
@@ -1117,59 +1781,7 @@ function getOrderStatus($order_date)
     <script src="../js/header.js"></script>
 
     <script>
-        // ============================================
-        // ORDER MANAGEMENT FUNCTIONS - ALL GLOBALLY AVAILABLE
-        // ============================================
-
-        // View Order Details Function
-        window.viewOrderDetails = function(orderId, orderReference) {
-            console.log('Loading order details for order ID:', orderId);
-
-            // Show loading state
-            Swal.fire({
-                title: 'Loading...',
-                html: 'Please wait while we fetch your order details.',
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                showConfirmButton: false,
-                didOpen: () => {
-                    Swal.showLoading();
-                }
-            });
-
-            // Fetch order details
-            fetch(`../actions/get_order_details.php?order_id=${orderId}`)
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.success) {
-                        Swal.close();
-                        showOrderDetailsModal(data.order, orderReference);
-                    } else {
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: data.message || 'Failed to load order details',
-                            confirmButtonColor: '#3b82f6'
-                        });
-                    }
-                })
-                .catch(error => {
-                    console.error('Error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to load order details: ' + error.message,
-                        confirmButtonColor: '#3b82f6'
-                    });
-                });
-        }
-
-        // Show Order Details Modal (Helper function)
+        // Helper function for showing order details modal (used by viewOrderDetails from head)
         function showOrderDetailsModal(order, orderReference) {
             const orderDate = new Date(order.order_date);
             const estimatedDelivery = new Date(orderDate);
@@ -1297,109 +1909,7 @@ function getOrderStatus($order_date)
             });
         }
 
-        // Track Order Function
-        window.trackOrder = function(orderReference, orderDate) {
-            const orderDateTime = new Date(orderDate);
-            const now = new Date();
-            const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
-
-            // Calculate status times
-            const orderConfirmedTime = new Date(orderDateTime);
-            const packagePreparedTime = new Date(orderDateTime);
-            packagePreparedTime.setDate(packagePreparedTime.getDate() + 1);
-            const inTransitTime = new Date(orderDateTime);
-            inTransitTime.setDate(inTransitTime.getDate() + 2);
-            const outForDeliveryTime = new Date(orderDateTime);
-            outForDeliveryTime.setDate(outForDeliveryTime.getDate() + 4);
-
-            const formatDateTime = (date) => {
-                const day = date.getDate();
-                const month = date.toLocaleString('default', {
-                    month: 'short'
-                }).toUpperCase();
-                const time = date.toLocaleTimeString('en-US', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
-                return `${day} ${month}<br>${time}`;
-            };
-
-            let currentStep = 0;
-            if (daysSinceOrder >= 4) currentStep = 4;
-            else if (daysSinceOrder >= 2) currentStep = 3;
-            else if (daysSinceOrder >= 1) currentStep = 2;
-            else currentStep = 1;
-
-            const trackingHTML = `
-                <div style="padding: 30px; max-width: 900px; margin: 0 auto;">
-                    <div style="position: relative; padding: 40px 0;">
-                        <!-- Timeline Line -->
-                        <div style="position: absolute; top: 70px; left: 50px; right: 50px; height: 4px; background: #e9ecef;"></div>
-                        <div style="position: absolute; top: 70px; left: 50px; width: ${((currentStep - 1) / 3) * 100}%; height: 4px; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.5s ease;"></div>
-
-                        <!-- Timeline Steps -->
-                        <div style="display: flex; justify-content: space-between; position: relative; z-index: 1;">
-                            <!-- Order Confirmed -->
-                            <div style="flex: 1; text-align: center;">
-                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 1 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                    ${currentStep >= 1 ? '✓' : '1'}
-                                </div>
-                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 1 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Order confirmed</div>
-                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(orderConfirmedTime)}</div>
-                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Order placed and confirmed</div>
-                            </div>
-
-                            <!-- Package Prepared -->
-                            <div style="flex: 1; text-align: center;">
-                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 2 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                    ${currentStep >= 2 ? '✓' : '2'}
-                                </div>
-                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 2 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Package prepared</div>
-                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(packagePreparedTime)}</div>
-                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Packed and handed to carrier</div>
-                            </div>
-
-                            <!-- In Transit -->
-                            <div style="flex: 1; text-align: center;">
-                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 3 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                    ${currentStep >= 3 ? '✓' : '3'}
-                                </div>
-                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 3 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">In transit</div>
-                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(inTransitTime)}</div>
-                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Package in transit</div>
-                            </div>
-
-                            <!-- Out for Delivery -->
-                            <div style="flex: 1; text-align: center;">
-                                <div style="width: 50px; height: 50px; margin: 0 auto 15px; border-radius: 50%; background: ${currentStep >= 4 ? '#28a745' : '#e9ecef'}; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; font-weight: bold; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                                    ${currentStep >= 4 ? '✓' : '4'}
-                                </div>
-                                <div style="font-weight: 700; font-size: 14px; color: ${currentStep >= 4 ? '#212529' : '#6c757d'}; margin-bottom: 8px;">Out for delivery</div>
-                                <div style="font-size: 12px; color: #6c757d; line-height: 1.4;">${formatDateTime(outForDeliveryTime)}</div>
-                                <div style="font-size: 11px; color: #adb5bd; margin-top: 5px;">Will be delivered today</div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            Swal.fire({
-                title: `Track Order #${orderReference}`,
-                html: trackingHTML,
-                width: '1000px',
-                showCloseButton: true,
-                showConfirmButton: true,
-                confirmButtonText: 'Close',
-                customClass: {
-                    popup: 'tracking-modal'
-                }
-            });
-        }
-
-
-        // Request Refund Function
-        window.requestRefund = function(orderId, orderReference) {
+        // Request Refund Function (duplicate removed - already in head)
             const refundFormHTML = `
                 <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -1550,93 +2060,7 @@ function getOrderStatus($order_date)
             });
         }
 
-        // Cancel Order Function
-        window.cancelOrder = function(orderId, orderReference) {
-            // Confirm cancellation with SweetAlert
-            Swal.fire({
-                title: 'Cancel Order?',
-                html: `Are you sure you want to cancel order <strong>#${orderReference}</strong>?<br><br>This action cannot be undone.`,
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#d33',
-                cancelButtonColor: '#3085d6',
-                confirmButtonText: 'Yes, cancel it!',
-                cancelButtonText: 'No, keep it',
-                reverseButtons: true
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Show loading state - find button by order ID
-                    const cancelBtn = document.querySelector(`button[onclick*="cancelOrder(${orderId}"]`);
-                    let originalText = 'Cancel';
-                    if (cancelBtn) {
-                        originalText = cancelBtn.innerHTML;
-                        cancelBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Cancelling...';
-                        cancelBtn.disabled = true;
-                    }
-
-                    // Send cancellation request
-                    fetch('../actions/cancel_order_action.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify({
-                                order_id: orderId,
-                                order_reference: orderReference
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                // Show success message
-                                Swal.fire({
-                                    title: 'Cancelled!',
-                                    html: `Order <strong>#${orderReference}</strong> has been cancelled successfully.`,
-                                    icon: 'success',
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK'
-                                }).then(() => {
-                                    // Reload the page to update order display
-                                    window.location.reload();
-                                });
-                            } else {
-                                // Show error message
-                                Swal.fire({
-                                    title: 'Error!',
-                                    text: `Failed to cancel order: ${data.message || 'Unknown error'}`,
-                                    icon: 'error',
-                                    confirmButtonColor: '#3085d6',
-                                    confirmButtonText: 'OK'
-                                });
-
-                                // Reset button
-                                if (cancelBtn) {
-                                    cancelBtn.innerHTML = originalText;
-                                    cancelBtn.disabled = false;
-                                }
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-
-                            // Show error message
-                            Swal.fire({
-                                title: 'Error!',
-                                text: 'Failed to cancel order. Please try again.',
-                                icon: 'error',
-                                confirmButtonColor: '#3085d6',
-                                confirmButtonText: 'OK'
-                            });
-
-                            // Reset button
-                            if (cancelBtn) {
-                                cancelBtn.innerHTML = originalText;
-                                cancelBtn.disabled = false;
-                            }
-                        });
-                }
-            });
-        }
+        // Cancel Order Function (duplicate removed - already in head)
 
         // Display Order Details in Modal (Helper function - not used currently)
         function displayOrderDetails(order) {
@@ -1905,249 +2329,7 @@ function getOrderStatus($order_date)
             console.log('Open profile picture modal');
         }
 
-        // Load dark mode preference
-        // Open Rating Modal Function
-        window.openRatingModal = async function(orderId) {
-            try {
-                // Fetch order details
-                const response = await fetch(`../actions/get_order_details.php?order_id=${orderId}`);
-                const data = await response.json();
-
-                if (!data.success) {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: data.message || 'Failed to load order details'
-                    });
-                    return;
-                }
-
-                const orderItems = data.order.items || [];
-
-                if (orderItems.length === 0) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'No Products',
-                        text: 'No products found in this order.'
-                    });
-                    return;
-                }
-
-                // Fetch existing ratings for this order
-                const ratingsResponse = await fetch(`../actions/get_product_ratings.php?order_id=${orderId}`);
-                const ratingsData = await ratingsResponse.json();
-                const existingRatings = ratingsData.success ? ratingsData.ratings : {};
-
-                // Build rating modal for each product
-                let currentProductIndex = 0;
-                let productRatings = {};
-
-                function showRatingModalForProduct(index) {
-                    if (index >= orderItems.length) {
-                        Swal.fire({
-                            icon: 'success',
-                            title: 'Thank you!',
-                            text: 'All ratings have been submitted successfully.',
-                            timer: 2000,
-                            showConfirmButton: false
-                        });
-                        return;
-                    }
-
-                    const item = orderItems[index];
-                    const productId = item.product_id;
-                    const existingRating = existingRatings[productId] || null;
-
-                    // Product image is already a full URL from the API
-                    const imageUrl = item.product_image || '';
-
-                    // Get product condition (default to 'excellent' if not set)
-                    const productCondition = item.product_condition || item.condition || 'excellent';
-
-                    const ratingHTML = `
-                        <div style="max-width: 700px; margin: 0 auto; text-align: left;">
-                            <h3 style="text-align: center; margin-bottom: 10px; font-weight: 700; color: #212529;">WE'D LOVE YOUR FEEDBACK</h3>
-                            <p style="text-align: center; margin-bottom: 30px; color: #6c757d; font-size: 14px;">Click on the stars to review your purchase and share your thoughts!</p>
-                            
-                            <div style="display: flex; gap: 30px; margin-bottom: 30px; align-items: center;">
-                                <div style="flex-shrink: 0;">
-                                    <img src="${imageUrl || 'data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNkI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K'}" 
-                                         alt="${item.product_title}" 
-                                         style="width: 150px; height: 150px; object-fit: cover; border-radius: 8px; border: 1px solid #dee2e6;"
-                                         onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTUwIiBoZWlnaHQ9IjE1MCIgdmlld0JveD0iMCAwIDE1MCAxNTAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxNTAiIGhlaWdodD0iMTUwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9Ijc1IiB5PSI3NSIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjE0IiBmaWxsPSIjNkI3MjgwIiB0ZXh0LWFuY2hvcj0ibWlkZGxlIiBkb21pbmFudC1iYXNlbGluZT0ibWlkZGxlIj5Qcm9kdWN0IEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
-                                </div>
-                                
-                                <div style="flex: 1;">
-                                    <h4 style="margin: 0 0 10px 0; font-size: 18px; font-weight: 600; color: #212529;">${item.product_title}</h4>
-                                    <p style="margin: 0 0 10px 0; font-size: 14px; color: #6c757d;">Size: ${item.size || 'OS'}</p>
-                                    
-                                    <!-- Star Rating -->
-                                    <div style="margin-bottom: 15px;">
-                                        <div id="starRating${index}" style="display: flex; gap: 5px; font-size: 28px; cursor: pointer;">
-                                            ${[1, 2, 3, 4, 5].map(star => `
-                                                <span class="star" data-rating="${star}" 
-                                                      style="color: ${existingRating && star <= existingRating.rating ? '#FFD700' : '#ddd'}; 
-                                                             transition: color 0.2s;">
-                                                    ★
-                                                </span>
-                                            `).join('')}
-                                        </div>
-                                        <input type="hidden" id="selectedRating${index}" value="${existingRating ? existingRating.rating : 0}">
-                                    </div>
-                                    
-                                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 20px;">
-                                        <span style="font-size: 18px; font-weight: 700; color: #212529;">GH₵${parseFloat(item.product_price || 0).toFixed(2)}</span>
-                                        <span style="font-size: 14px; color: #6c757d;">Qty: ${item.qty || 1}</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Review Text Area -->
-                            <div style="margin-bottom: 20px;">
-                                <textarea id="reviewText${index}" 
-                                          placeholder="Write a short review" 
-                                          rows="4"
-                                          style="width: 100%; padding: 15px; border: 1px solid #ddd; border-radius: 8px; font-size: 14px; resize: vertical; font-family: inherit;">${existingRating ? (existingRating.comment || '') : ''}</textarea>
-                            </div>
-                            
-                            ${index < orderItems.length - 1 ? 
-                                `<p style="text-align: center; color: #6c757d; font-size: 13px; margin-bottom: 0;">Product ${index + 1} of ${orderItems.length}</p>` 
-                                : ''}
-                        </div>
-                    `;
-
-                    Swal.fire({
-                        title: '',
-                        html: ratingHTML,
-                        width: '800px',
-                        showCancelButton: true,
-                        confirmButtonText: index < orderItems.length - 1 ? 'Next Product' : 'Submit Review',
-                        cancelButtonText: 'Skip',
-                        confirmButtonColor: '#000000',
-                        cancelButtonColor: '#6c757d',
-                        showCloseButton: true,
-                        allowOutsideClick: false,
-                        didOpen: () => {
-                            // Star rating functionality
-                            const starContainer = document.getElementById(`starRating${index}`);
-                            const ratingInput = document.getElementById(`selectedRating${index}`);
-
-                            if (starContainer) {
-                                starContainer.addEventListener('click', (e) => {
-                                    if (e.target.classList.contains('star')) {
-                                        const rating = parseInt(e.target.dataset.rating);
-                                        ratingInput.value = rating;
-
-                                        // Update star display
-                                        const stars = starContainer.querySelectorAll('.star');
-                                        stars.forEach((star, idx) => {
-                                            star.style.color = idx < rating ? '#FFD700' : '#ddd';
-                                        });
-                                    }
-                                });
-
-                                // Hover effect
-                                starContainer.addEventListener('mouseover', (e) => {
-                                    if (e.target.classList.contains('star')) {
-                                        const hoverRating = parseInt(e.target.dataset.rating);
-                                        const stars = starContainer.querySelectorAll('.star');
-                                        stars.forEach((star, idx) => {
-                                            if (idx < hoverRating) {
-                                                star.style.color = '#FFD700';
-                                                star.style.opacity = '0.7';
-                                            }
-                                        });
-                                    }
-                                });
-
-                                starContainer.addEventListener('mouseleave', () => {
-                                    const currentRating = parseInt(ratingInput.value) || 0;
-                                    const stars = starContainer.querySelectorAll('.star');
-                                    stars.forEach((star, idx) => {
-                                        star.style.opacity = '1';
-                                        star.style.color = idx < currentRating ? '#FFD700' : '#ddd';
-                                    });
-                                });
-                            }
-                        },
-                        preConfirm: () => {
-                            const rating = parseInt(document.getElementById(`selectedRating${index}`).value) || 0;
-                            const comment = document.getElementById(`reviewText${index}`).value.trim();
-
-                            if (rating === 0) {
-                                Swal.showValidationMessage('Please select a rating');
-                                return false;
-                            }
-
-                            return {
-                                product_id: productId,
-                                rating: rating,
-                                comment: comment,
-                                product_condition: productCondition,
-                                product_price: parseFloat(item.product_price || 0)
-                            };
-                        }
-                    }).then(async (result) => {
-                        if (result.isConfirmed && result.value) {
-                            const ratingData = result.value;
-
-                            // Save rating
-                            try {
-                                const submitResponse = await fetch('../actions/submit_product_rating_action.php', {
-                                    method: 'POST',
-                                    headers: {
-                                        'Content-Type': 'application/json',
-                                    },
-                                    body: JSON.stringify({
-                                        order_id: orderId,
-                                        product_id: ratingData.product_id,
-                                        rating: ratingData.rating,
-                                        comment: ratingData.comment,
-                                        product_condition: ratingData.product_condition,
-                                        product_price: ratingData.product_price
-                                    })
-                                });
-
-                                const submitData = await submitResponse.json();
-
-                                if (submitData.success) {
-                                    productRatings[ratingData.product_id] = ratingData;
-
-                                    // Show next product or finish
-                                    showRatingModalForProduct(index + 1);
-                                } else {
-                                    Swal.fire({
-                                        icon: 'error',
-                                        title: 'Error',
-                                        text: submitData.message || 'Failed to save rating'
-                                    });
-                                }
-                            } catch (error) {
-                                Swal.fire({
-                                    icon: 'error',
-                                    title: 'Error',
-                                    text: 'Failed to submit rating: ' + error.message
-                                });
-                            }
-                        } else if (result.dismiss === Swal.DismissReason.cancel) {
-                            // User skipped - show next product
-                            showRatingModalForProduct(index + 1);
-                        }
-                    });
-                }
-
-                // Start with first product
-                showRatingModalForProduct(0);
-
-            } catch (error) {
-                console.error('Error opening rating modal:', error);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Error',
-                    text: 'Failed to load order details: ' + error.message
-                });
-            }
-        }
+        // Load dark mode preference on page load (openRatingModal is already defined in head)
 
         // Also define them without window prefix for onclick handlers (like wishlist does)
         var viewOrderDetails = window.viewOrderDetails;

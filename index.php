@@ -1481,8 +1481,8 @@ try {
 	.ai-slideshow-wrapper {
 		position: relative;
 		width: 100%;
-		height: 100%;
-		min-height: 45px;
+		height: auto;
+		min-height: 60px;
 		border-radius: 10px;
 		overflow: hidden;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -1492,8 +1492,8 @@ try {
 	.ai-slideshow-container {
 		position: relative;
 		width: 100%;
-		height: 100%;
-		min-height: 45px;
+		height: auto;
+		min-height: 60px;
 	}
 
 	.ai-slide {
@@ -1501,8 +1501,8 @@ try {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 100%;
-		min-height: 45px;
+		height: auto;
+		min-height: 60px;
 		opacity: 0;
 		visibility: hidden;
 		transform: translateX(-20px);
@@ -1510,21 +1510,26 @@ try {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 8px;
+		padding: 10px 8px;
 		box-sizing: border-box;
 	}
 
 	.ai-slide.active {
-		opacity: 1;
-		visibility: visible;
-		transform: translateX(0);
-		z-index: 2;
+		opacity: 1 !important;
+		visibility: visible !important;
+		transform: translateX(0) !important;
+		z-index: 2 !important;
+		display: flex !important;
 	}
 
 	.ai-slide-content {
 		text-align: center;
 		color: white;
 		width: 100%;
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		justify-content: center;
 	}
 
 	.ai-slide-badge {

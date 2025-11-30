@@ -74,16 +74,22 @@ if (!class_exists('db_connection')) {
          **/
         function db_write_query($sqlQuery)
         {
-            if (!$this->db_connect()) {
-                return false;
-            } elseif ($this->db == null) {
-                return false;
+            // Reuse existing connection if available, otherwise create new one
+            if (!isset($this->db) || !$this->db) {
+                if (!$this->db_connect()) {
+                    return false;
+                }
             }
 
             //run query 
             $result = mysqli_query($this->db, $sqlQuery);
 
             if ($result == false) {
+                // Log the actual MySQL error for debugging
+                $error = mysqli_error($this->db);
+                $errno = mysqli_errno($this->db);
+                error_log("MySQL Error ($errno): $error");
+                error_log("Failed Query: " . substr($sqlQuery, 0, 200));
                 return false;
             } else {
                 return true;

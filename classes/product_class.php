@@ -23,10 +23,12 @@ class Product extends db_connection
             error_log("Brand ID: " . $brand_id);
             error_log("Stock Quantity: " . $stock_quantity);
 
-            // Check database connection
+            // Check database connection - reuse existing connection if available
             if (!isset($this->db) || !$this->db) {
-                error_log("ERROR: Database connection not available");
-                return false;
+                if (!$this->db_connect()) {
+                    error_log("ERROR: Failed to establish database connection");
+                    return false;
+                }
             }
             error_log("Database connection: OK");
 

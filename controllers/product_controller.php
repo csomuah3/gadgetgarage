@@ -28,9 +28,27 @@ function add_product_ctr($product_title, $product_price, $product_desc, $product
             // Get actual MySQL error
             $mysql_error = $product->get_last_error();
             error_log("Add product failed: add_product returned false or null. MySQL Error: " . $mysql_error);
+            
+            // Extract the actual error message for user display
+            $error_message = 'Database error: Could not add product to database';
+            if (!empty($mysql_error) && $mysql_error !== 'No database connection') {
+                // Show user-friendly error based on MySQL error code
+                if (strpos($mysql_error, '1062') !== false || strpos($mysql_error, 'Duplicate entry') !== false) {
+                    $error_message = 'Product with this title already exists. Please use a different title.';
+                } elseif (strpos($mysql_error, '1452') !== false || strpos($mysql_error, 'Cannot add or update') !== false) {
+                    $error_message = 'Invalid category or brand selected. Please check your selections.';
+                } elseif (strpos($mysql_error, '2006') !== false || strpos($mysql_error, 'MySQL server has gone away') !== false) {
+                    $error_message = 'Database connection lost. Please try again in a moment.';
+                } elseif (strpos($mysql_error, '1040') !== false || strpos($mysql_error, 'Too many connections') !== false) {
+                    $error_message = 'Too many database connections. Please wait a moment and try again, or add products one at a time.';
+                } else {
+                    $error_message = 'Database error: ' . $mysql_error;
+                }
+            }
+            
             return [
                 'status' => 'error', 
-                'message' => 'Database error: Could not add product to database',
+                'message' => $error_message,
                 'debug' => [
                     'mysql_error' => $mysql_error,
                     'title' => $product_title,

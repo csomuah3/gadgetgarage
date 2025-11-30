@@ -1473,7 +1473,7 @@ try {
 			gap: 28px;
 			/* spacing between cards */
 			align-items: start;
-			min-height: 245px;
+			min-height: 150px;
 			/* hero height */
 		}
 
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 245px;
+			min-height: 150px;
 			border-radius: 14px;
 			overflow: visible;
 			background: #f0f4f8;
@@ -1498,7 +1498,7 @@ try {
 			width: 31.25%;
 			/* 2.5fr out of 8fr total = 31.25% */
 			height: 100%;
-			min-height: 245px;
+			min-height: 150px;
 			background-image: url('http://169.239.251.102:442/~chelsea.somuah/uploads/newsf.png');
 			background-size: cover;
 			background-position: center;
@@ -1508,16 +1508,6 @@ try {
 			pointer-events: none;
 		}
 
-		/* Flash Deals Button positioned on the image */
-		.hero-carousel-wrapper .flash-deals-btn {
-			position: absolute;
-			left: 15.625%;
-			/* Center of the 31.25% width image area */
-			top: 50%;
-			transform: translate(-50%, -50%);
-			z-index: 3;
-			pointer-events: auto;
-		}
 
 
 		.hero-carousel {
@@ -5772,10 +5762,6 @@ try {
 			<div class="hero-grid">
 				<!-- MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
-					<!-- Flash Deals Button -->
-					<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
-						FLASH DEALS
-					</a>
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->
 						<article class="hero-slide active" data-product="ipad" data-gradient="ipad-gradient">

@@ -1499,8 +1499,8 @@ try {
 		.hero-slide {
 			display: none;
 			grid-template-columns: 1.5fr 1fr;
-			gap: 40px;
-			padding: 60px 60px;
+			gap: 20px;
+			padding: 20px 30px;
 			border-radius: 14px;
 			overflow: hidden;
 			align-items: center;
@@ -1769,13 +1769,13 @@ try {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			gap: 24px;
-			padding: 20px 0;
+			gap: 8px;
+			padding: 10px 0;
 		}
 
 		/* Brand Logo Section */
 		.brand-logo-section {
-			margin-bottom: 16px;
+			margin-bottom: 8px;
 			opacity: 0;
 			transform: translateY(15px);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s,
@@ -1830,7 +1830,7 @@ try {
 		}
 
 		.text-line {
-			font-size: clamp(42px, 6vw, 64px);
+			font-size: clamp(20px, 3vw, 32px);
 			font-weight: 400;
 			line-height: 1.2;
 			color: inherit;
@@ -1894,27 +1894,27 @@ try {
 
 		/* Typography Hierarchy - Reduced Sizes */
 		.brand-name {
-			font-size: clamp(18px, 2.5vw, 26px);
+			font-size: clamp(12px, 1.5vw, 16px);
 			font-weight: 300;
-			letter-spacing: 2px;
+			letter-spacing: 1px;
 			text-transform: uppercase;
 			opacity: 0.9;
 		}
 
 		.product-name {
-			font-size: clamp(32px, 4.5vw, 48px);
+			font-size: clamp(20px, 2.5vw, 28px);
 			font-weight: 700;
 			letter-spacing: -1px;
-			margin-bottom: 4px;
+			margin-bottom: 2px;
 		}
 
 		.product-desc {
-			font-size: clamp(14px, 1.5vw, 18px);
+			font-size: clamp(11px, 1.2vw, 14px);
 			font-weight: 400;
-			line-height: 1.4;
+			line-height: 1.3;
 			opacity: 0.9;
 			font-style: italic;
-			margin-bottom: 16px;
+			margin-bottom: 4px;
 			max-width: 80%;
 		}
 
@@ -1922,22 +1922,22 @@ try {
 		.tagline-2,
 		.tagline-3,
 		.tagline-4 {
-			font-size: clamp(24px, 3.5vw, 36px);
+			font-size: clamp(14px, 2vw, 20px);
 			font-weight: 500;
 			letter-spacing: 0px;
 		}
 
 		.price-line {
-			font-size: clamp(16px, 2vw, 24px);
+			font-size: clamp(12px, 1.5vw, 16px);
 			font-weight: 600;
-			margin-top: 8px;
+			margin-top: 4px;
 			opacity: 0.8;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 		}
 
 		.price-amount {
-			font-size: clamp(22px, 3vw, 34px);
+			font-size: clamp(16px, 2vw, 22px);
 			font-weight: 800;
 			color: #FFD700;
 			text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
@@ -1946,8 +1946,8 @@ try {
 		/* Social Media Buttons */
 		.social-buttons {
 			display: flex;
-			gap: 12px;
-			margin: 16px 0;
+			gap: 8px;
+			margin: 8px 0;
 			opacity: 0;
 			transform: translateY(15px);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s,
@@ -2007,12 +2007,13 @@ try {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			height: 56px;
-			padding: 0 28px;
+			height: 36px;
+			padding: 0 20px;
 			background: linear-gradient(135deg, #1E3A5F, #2563EB);
 			color: #fff;
-			border-radius: 10px;
+			border-radius: 8px;
 			font-weight: 700;
+			font-size: clamp(12px, 1.2vw, 14px);
 			letter-spacing: .2px;
 			text-decoration: none;
 			transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -2059,7 +2060,7 @@ try {
 			justify-content: center;
 			position: relative;
 			height: 100%;
-			min-height: 350px;
+			min-height: 200px;
 			padding-top: 0px;
 			overflow: visible;
 		}
@@ -2067,8 +2068,8 @@ try {
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 700px;
-			min-height: 550px;
+			max-height: 240px;
+			min-height: 200px;
 			max-width: 95%;
 			object-fit: contain;
 			transform: translateY(-120px) translateX(0) scale(1.67);

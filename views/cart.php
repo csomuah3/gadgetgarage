@@ -972,14 +972,12 @@ try {
         }
 
         .cart-header {
-            background: linear-gradient(135deg, #2563EB 0%, #1E3A5F 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             color: white;
-            padding: 60px 0 50px;
-            margin-top: 0;
-            margin-bottom: 40px;
+            padding: 4rem 0;
+            margin-bottom: 2rem;
             position: relative;
             overflow: hidden;
-            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
         }
 
         .cart-header::before {
@@ -989,33 +987,21 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
-            opacity: 0.4;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,70"/></svg>') no-repeat bottom;
+            background-size: cover;
         }
 
         .cart-header h1 {
-            font-size: 2.8rem;
-            font-weight: 800;
-            margin: 0 0 12px 0;
-            position: relative;
-            z-index: 1;
-            letter-spacing: -0.5px;
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .cart-header h1 i {
-            font-size: 2.5rem;
-            margin-right: 15px;
-            opacity: 0.95;
+            font-size: 3.5rem !important;
+            font-weight: 800 !important;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            margin-bottom: 1rem !important;
         }
 
         .cart-header p {
-            font-size: 1.25rem;
-            opacity: 0.92;
-            position: relative;
-            z-index: 1;
-            font-weight: 400;
-            letter-spacing: 0.3px;
+            font-size: 1.4rem !important;
+            opacity: 0.9;
+            font-weight: 500;
         }
 
         .cart-item {
@@ -1851,6 +1837,13 @@ try {
     <?php include '../includes/header.php'; ?>
 
     <!-- Cart Content -->
+    <!-- Page Title -->
+    <div class="container-fluid">
+        <div class="text-center py-3">
+            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Shopping Cart</h1>
+        </div>
+    </div>
+
     <div class="cart-header">
         <div class="container">
             <div class="row align-items-center">
@@ -2221,24 +2214,30 @@ try {
             const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
 
             if (isChecked) {
-                // If discount is active, prevent applying store credits
+                // If discount is active, clear it first (mutually exclusive)
                 if (isDiscountActive) {
-                    const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                    if (applyStoreCreditsCheckbox) {
-                        applyStoreCreditsCheckbox.checked = false;
+                    // Clear discount code
+                    if (promoCodeInput) {
+                        promoCodeInput.value = '';
                     }
-                    if (storeCreditsExclusiveMessage) {
-                        storeCreditsExclusiveMessage.style.display = 'block';
+                    // Hide discount row
+                    if (discountRow) {
+                        discountRow.style.display = 'none';
                     }
-                    return;
+                    // Clear discount from session/localStorage if exists
+                    sessionStorage.removeItem('appliedPromo');
+                    // Trigger recalculation without discount
+                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
+                    const subtotal = parseFloat(subtotalText) || 0;
+                    cartTotal.textContent = 'GH₵ ' + subtotal.toFixed(2);
                 }
 
-                // Hide exclusive message if shown
+                // Hide exclusive message
                 if (storeCreditsExclusiveMessage) {
                     storeCreditsExclusiveMessage.style.display = 'none';
                 }
 
-                // Disable discount code input
+                // Disable discount code input when store credits are applied
                 if (promoCodeInput) {
                     promoCodeInput.disabled = true;
                     promoCodeInput.placeholder = 'Store credits applied';
@@ -2262,12 +2261,8 @@ try {
                     storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
                     storeCreditsRow.style.display = 'flex';
                     
-                    // Update total (subtract store credits only, discount should not be active)
-                    const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                        ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                        : '0';
-                    const discountAmount = parseFloat(discountAmountText) || 0;
-                    const newTotal = Math.max(0, subtotal - discountAmount - creditsToApply);
+                    // Update total (subtract store credits only - discount is cleared)
+                    const newTotal = Math.max(0, subtotal - creditsToApply);
                     cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
                     
                     // Update session storage
@@ -2338,7 +2333,9 @@ try {
                 const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
                 if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
                     const storeCreditsAmount = parseFloat(document.getElementById('storeCreditsAmount')?.textContent.replace(/[^0-9.]/g, '') || 0);
-                    sessionStorage.setItem('appliedStoreCredits', storeCreditsAmount);
+                    if (storeCreditsAmount > 0) {
+                        sessionStorage.setItem('appliedStoreCredits', storeCreditsAmount.toFixed(2));
+                    }
                 } else {
                     sessionStorage.removeItem('appliedStoreCredits');
                 }
@@ -2368,114 +2365,6 @@ try {
                 }
             }
 
-            // Store Credits Functions (already defined above)
-                const storeCreditsRow = document.getElementById('storeCreditsRow');
-                const storeCreditsAmount = document.getElementById('storeCreditsAmount');
-                const cartTotal = document.getElementById('cartTotal');
-                const cartSubtotal = document.getElementById('cartSubtotal');
-                const storeCreditBalanceDisplay = document.getElementById('storeCreditBalanceDisplay');
-                const discountRow = document.getElementById('discountRow');
-                const promoCodeInput = document.getElementById('promoCode');
-                const applyPromoBtn = document.getElementById('applyPromoBtn');
-                const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
-                const storeCreditsInfoText = document.getElementById('storeCreditsInfoText');
-
-                if (!storeCreditsRow || !storeCreditsAmount || !cartTotal || !cartSubtotal) {
-                    return;
-                }
-
-                // Check if discount is active
-                const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
-
-                if (isChecked) {
-                    // If discount is active, prevent applying store credits
-                    if (isDiscountActive) {
-                        const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                        if (applyStoreCreditsCheckbox) {
-                            applyStoreCreditsCheckbox.checked = false;
-                        }
-                        if (storeCreditsExclusiveMessage) {
-                            storeCreditsExclusiveMessage.style.display = 'block';
-                        }
-                        return;
-                    }
-
-                    // Hide exclusive message if shown
-                    if (storeCreditsExclusiveMessage) {
-                        storeCreditsExclusiveMessage.style.display = 'none';
-                    }
-
-                    // Disable discount code input
-                    if (promoCodeInput) {
-                        promoCodeInput.disabled = true;
-                        promoCodeInput.placeholder = 'Store credits applied';
-                    }
-                    if (applyPromoBtn) {
-                        applyPromoBtn.disabled = true;
-                    }
-
-                    // Get values
-                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
-                    const subtotal = parseFloat(subtotalText) || 0;
-                    const creditBalanceText = storeCreditBalanceDisplay?.textContent.replace(/[^0-9.]/g, '') || '0';
-                    const creditBalance = parseFloat(creditBalanceText) || 0;
-
-                    // Apply 500 minimum reserve rule: max usable = balance - 500
-                    const maxUsableCredits = Math.max(0, creditBalance - 500);
-                    // Credits to apply = minimum of (max usable, cart subtotal)
-                    const creditsToApply = Math.min(maxUsableCredits, subtotal);
-
-                    if (creditsToApply > 0) {
-                        storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
-                        storeCreditsRow.style.display = 'flex';
-                        
-                        // Update total (subtract store credits)
-                        const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                            ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                            : '0';
-                        const discountAmount = parseFloat(discountAmountText) || 0;
-                        const newTotal = Math.max(0, subtotal - discountAmount - creditsToApply);
-                        cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
-                        
-                        // Update session storage
-                        sessionStorage.setItem('appliedStoreCredits', creditsToApply.toFixed(2));
-                    } else {
-                        // Not enough credits (would leave less than 500)
-                        const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                        if (applyStoreCreditsCheckbox) {
-                            applyStoreCreditsCheckbox.checked = false;
-                        }
-                        alert('You cannot use store credits that would leave less than GH₵500 in your balance.');
-                        return;
-                    }
-                } else {
-                    // Remove store credits
-                    storeCreditsRow.style.display = 'none';
-                    storeCreditsAmount.textContent = '-GH₵ 0.00';
-                    
-                    // Re-enable discount code input
-                    if (promoCodeInput) {
-                        promoCodeInput.disabled = false;
-                        promoCodeInput.placeholder = '';
-                    }
-                    if (applyPromoBtn) {
-                        applyPromoBtn.disabled = false;
-                    }
-
-                    // Recalculate total (subtract discount if any)
-                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
-                    const subtotal = parseFloat(subtotalText) || 0;
-                    const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                        ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                        : '0';
-                    const discountAmount = parseFloat(discountAmountText) || 0;
-                    const newTotal = Math.max(0, subtotal - discountAmount);
-                    cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
-                    
-                    // Remove from session storage
-                    sessionStorage.removeItem('appliedStoreCredits');
-                }
-            }
 
             // Dropdown navigation functions with timeout delays
             let dropdownTimeout;

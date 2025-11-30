@@ -2000,7 +2000,7 @@ try {
                     </div>
 
                     <!-- Store Credits Section (Separate Box) -->
-                    <?php if ($is_logged_in): ?>
+                    <?php if ($is_logged_in && $store_credit_balance > 0): ?>
                     <div class="store-credits-box" id="storeCreditsBox">
                         <div class="store-credits-header">
                             <i class="fas fa-credit-card me-2"></i>
@@ -2016,23 +2016,19 @@ try {
                                 </div>
                             </div>
                             <div class="form-check store-credits-checkbox-container">
-                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;" <?php echo ($store_credit_balance <= 0) ? 'disabled' : ''; ?>>
-                                <label class="form-check-label" for="applyStoreCredits" style="cursor: <?php echo ($store_credit_balance <= 0) ? 'not-allowed; opacity: 0.6;' : 'pointer;'; ?>">
+                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
+                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
                                     <strong>Apply Store Credits to this order</strong>
                                 </label>
                             </div>
                             <small class="text-muted d-block mt-2" id="storeCreditsInfo">
                                 <i class="fas fa-info-circle me-1"></i>
                                 <span id="storeCreditsInfoText">
-                                    <?php if ($store_credit_balance > 0): ?>
-                                        You can use up to GH₵ <?php 
-                                        $max_usable = max(0, $store_credit_balance - 500);
-                                        $display_max = min($max_usable, $cart_total);
-                                        echo number_format($display_max, 2); 
-                                        ?> from your store credits (GH₵500 minimum reserve)
-                                    <?php else: ?>
-                                        You don't have any store credits available. Current balance: GH₵ <?php echo number_format($store_credit_balance, 2); ?>
-                                    <?php endif; ?>
+                                    You can use up to GH₵ <?php 
+                                    $max_usable = max(0, $store_credit_balance - 500);
+                                    $display_max = min($max_usable, $cart_total);
+                                    echo number_format($display_max, 2); 
+                                    ?> from your store credits (GH₵500 minimum reserve)
                                 </span>
                             </small>
                             <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
@@ -2199,6 +2195,7 @@ try {
     <script>
         // Store Credits Functions - Define before DOMContentLoaded
         function handleStoreCreditsToggle(isChecked) {
+            console.log('handleStoreCreditsToggle called with:', isChecked);
             const storeCreditsRow = document.getElementById('storeCreditsRow');
             const storeCreditsAmount = document.getElementById('storeCreditsAmount');
             const cartTotal = document.getElementById('cartTotal');
@@ -2210,7 +2207,16 @@ try {
             const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
             const storeCreditsInfoText = document.getElementById('storeCreditsInfoText');
 
+            console.log('Elements found:', {
+                storeCreditsRow: !!storeCreditsRow,
+                storeCreditsAmount: !!storeCreditsAmount,
+                cartTotal: !!cartTotal,
+                cartSubtotal: !!cartSubtotal,
+                storeCreditBalanceDisplay: !!storeCreditBalanceDisplay
+            });
+
             if (!storeCreditsRow || !storeCreditsAmount || !cartTotal || !cartSubtotal) {
+                console.error('Missing required elements for store credits toggle');
                 return;
             }
 
@@ -2249,11 +2255,23 @@ try {
                 const subtotal = parseFloat(subtotalText) || 0;
                 const creditBalanceText = storeCreditBalanceDisplay?.textContent.replace(/[^0-9.]/g, '') || '0';
                 const creditBalance = parseFloat(creditBalanceText) || 0;
+                
+                console.log('Store credits calculation:', {
+                    subtotal,
+                    creditBalanceText,
+                    creditBalance,
+                    storeCreditBalanceDisplayText: storeCreditBalanceDisplay?.textContent
+                });
 
                 // Apply 500 minimum reserve rule: max usable = balance - 500
                 const maxUsableCredits = Math.max(0, creditBalance - 500);
                 // Credits to apply = minimum of (max usable, cart subtotal)
                 const creditsToApply = Math.min(maxUsableCredits, subtotal);
+                
+                console.log('Credits calculation result:', {
+                    maxUsableCredits,
+                    creditsToApply
+                });
 
                 if (creditsToApply > 0) {
                     storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
@@ -2347,8 +2365,14 @@ try {
             // Store Credits functionality - attach to existing DOMContentLoaded
             const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
             if (applyStoreCreditsCheckbox) {
+                console.log('Store credits checkbox found, attaching event listener');
                 applyStoreCreditsCheckbox.addEventListener('change', function() {
-                    handleStoreCreditsToggle(this.checked);
+                    console.log('Store credits checkbox changed:', this.checked);
+                    if (typeof handleStoreCreditsToggle === 'function') {
+                        handleStoreCreditsToggle(this.checked);
+                    } else {
+                        console.error('handleStoreCreditsToggle function not found!');
+                    }
                 });
 
                 // Check on page load if discount is active, disable store credits if so

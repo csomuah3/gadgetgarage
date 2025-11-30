@@ -1468,8 +1468,8 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 4.5fr 1fr;
-			/* much wider left + narrow right */
+			grid-template-columns: 4.5fr 1.2fr;
+			/* much wider left + slightly wider right for promo box */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
@@ -3227,6 +3227,10 @@ try {
 			background: linear-gradient(135deg, #1E3A5F, #2563EB);
 			/* blue gradient */
 			color: #fff;
+			padding: 36px 16px 36px 28px;
+			/* reduced right padding from 28px to 16px */
+			grid-template-columns: 1fr;
+			/* single column since no image */
 		}
 
 		/* texts on side cards */
@@ -5622,8 +5626,8 @@ try {
 
 					<!-- Bottom -->
 					<article class="side-card purple">
-						<div class="side-copy" style="text-align: center; width: 100%;">
-							<h3 class="side-title" style="margin-bottom: 15px; font-size: clamp(24px, 2.6vw, 36px);">Use Code 'BLACKFRIDAY20' FOR ₵₵₵ OFF !!!</h3>
+						<div class="side-copy" style="text-align: center; width: 100%; padding-right: 0; margin-right: 0;">
+							<h3 class="side-title" style="margin-bottom: 0; font-size: clamp(20px, 2.2vw, 32px); line-height: 1.2;">Use Code 'BLACKFRIDAY20' FOR ₵₵₵ OFF !!!</h3>
 						</div>
 					</article>
 				</div>

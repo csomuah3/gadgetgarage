@@ -1468,13 +1468,13 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 2.5fr 4fr 1.5fr;
-			/* left banner | hero carousel | right side banners */
+			grid-template-columns: 4fr 1.5fr;
+			/* hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 280px;
-			/* very short hero height */
+			min-height: 375px;
+			/* hero height */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 280px;
+			min-height: 375px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -5750,16 +5750,7 @@ try {
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
-				<!-- LEFT: FLASH DEALS BANNER -->
-				<article class="left-banner-card">
-					<div class="left-banner-content">
-						<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
-							FLASH DEALS
-						</a>
-					</div>
-				</article>
-
-				<!-- MIDDLE: MAIN BANNER CAROUSEL -->
+				<!-- MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->

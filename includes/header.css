@@ -841,7 +841,9 @@ body.dark-mode .simple-dropdown ul li a:hover {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 10000;
+    z-index: 10000 !important;
+    display: block;
+    pointer-events: none;
 }
 
 .mega-dropdown.show {
@@ -849,6 +851,7 @@ body.dark-mode .simple-dropdown ul li a:hover {
     visibility: visible !important;
     transform: translateY(0) !important;
     display: block !important;
+    pointer-events: auto !important;
 }
 
 .dropdown-content {

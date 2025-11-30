@@ -355,6 +355,20 @@ let shopDropdownTimeout;
 let moreDropdownTimeout;
 let userDropdownTimeout;
 
+// Initialize dropdown immediately if DOM is already loaded
+(function() {
+    if (document.readyState === 'loading') {
+        // DOM is still loading, will initialize in DOMContentLoaded
+        return;
+    }
+    // DOM is already loaded, initialize now
+    const shopCategoryDropdown = document.getElementById('shopCategoryDropdown');
+    if (shopCategoryDropdown) {
+        // Ensure dropdown is properly styled
+        shopCategoryDropdown.style.display = 'block';
+    }
+})();
+
 window.toggleUserDropdown = function() {
     const dropdown = document.getElementById('userDropdownMenu');
     if (dropdown) dropdown.classList.toggle('show');
@@ -384,15 +398,13 @@ window.hideDropdown = function() {
 };
 
 window.showShopDropdown = function() {
-    console.log('showShopDropdown called');
     const dropdown = document.getElementById('shopCategoryDropdown');
-    console.log('shopCategoryDropdown element:', dropdown);
     if (dropdown) {
         clearTimeout(shopDropdownTimeout);
         dropdown.classList.add('show');
-        console.log('Added show class, classes:', dropdown.className);
-    } else {
-        console.error('shopCategoryDropdown element not found!');
+        dropdown.style.display = 'block';
+        dropdown.style.opacity = '1';
+        dropdown.style.visibility = 'visible';
     }
 };
 
@@ -402,6 +414,8 @@ window.hideShopDropdown = function() {
         clearTimeout(shopDropdownTimeout);
         shopDropdownTimeout = setTimeout(() => {
             dropdown.classList.remove('show');
+            dropdown.style.opacity = '0';
+            dropdown.style.visibility = 'hidden';
         }, 300);
     }
 };
@@ -474,11 +488,24 @@ document.addEventListener('DOMContentLoaded', function() {
         console.error('Brands dropdown elements not found:', {shopCategoriesBtn, brandsDropdown});
     }
 
-    // Shop Category Dropdown
-    const shopNavDropdown = document.querySelector('.nav-dropdown:has(#shopCategoryDropdown)');
+    // Shop Category Dropdown - Fixed selector to work on all browsers
     const shopCategoryDropdown = document.getElementById('shopCategoryDropdown');
+    // Find the parent nav-dropdown that contains the shop dropdown
+    let shopNavDropdown = null;
+    if (shopCategoryDropdown) {
+        shopNavDropdown = shopCategoryDropdown.closest('.nav-dropdown');
+        // If closest doesn't work, try finding by parent
+        if (!shopNavDropdown) {
+            let parent = shopCategoryDropdown.parentElement;
+            while (parent && !parent.classList.contains('nav-dropdown')) {
+                parent = parent.parentElement;
+            }
+            shopNavDropdown = parent;
+        }
+    }
 
     if (shopNavDropdown && shopCategoryDropdown) {
+        // Add event listeners (inline handlers will also work as fallback)
         shopNavDropdown.addEventListener('mouseenter', showShopDropdown);
         shopNavDropdown.addEventListener('mouseleave', hideShopDropdown);
         shopCategoryDropdown.addEventListener('mouseenter', function() {
@@ -488,6 +515,14 @@ document.addEventListener('DOMContentLoaded', function() {
         console.log('Shop category dropdown listeners attached');
     } else {
         console.error('Shop category dropdown elements not found:', {shopNavDropdown, shopCategoryDropdown});
+        // Fallback: try to find by querySelector
+        const fallbackNav = document.querySelector('.nav-dropdown');
+        const fallbackDropdown = document.getElementById('shopCategoryDropdown');
+        if (fallbackNav && fallbackDropdown && fallbackNav.contains(fallbackDropdown)) {
+            fallbackNav.addEventListener('mouseenter', showShopDropdown);
+            fallbackNav.addEventListener('mouseleave', hideShopDropdown);
+            console.log('Shop category dropdown fallback listeners attached');
+        }
     }
 
     // More Dropdown

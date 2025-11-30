@@ -1462,17 +1462,14 @@ try {
 			width: 100%;
 			max-width: 100%;
 			margin: 0 auto;
-			display: flex;
-			justify-content: space-between;
-			gap: 20px;
 			padding: 24px 15px;
 			background: #ffffff;
 		}
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 4fr 1.5fr;
-			/* wider right column for promo box */
+			grid-template-columns: 1.2fr 4fr 1.5fr;
+			/* left banner | hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
@@ -6583,7 +6580,7 @@ try {
 			}
 		}
 
-		// Black Friday Countdown Timer (5 days)
+		// Black Friday Countdown Timer (10 days)
 		function initBlackFridayCountdown() {
 			const daysEl = document.getElementById('days');
 			const hoursEl = document.getElementById('hours');
@@ -6594,18 +6591,18 @@ try {
 				return; // Elements not found, exit
 			}
 
-			// Set countdown to 5 days from now
+			// Set countdown to 10 days from now
 			const now = new Date().getTime();
-			const fiveDaysInMs = 5 * 24 * 60 * 60 * 1000; // 5 days in milliseconds
-			const countdownDate = now + fiveDaysInMs;
+			const tenDaysInMs = 10 * 24 * 60 * 60 * 1000; // 10 days in milliseconds
+			const countdownDate = now + tenDaysInMs;
 
 			function updateCountdown() {
 				const now = new Date().getTime();
 				const distance = countdownDate - now;
 
 				if (distance < 0) {
-					// Countdown finished, reset to 5 days
-					const newCountdownDate = new Date().getTime() + fiveDaysInMs;
+					// Countdown finished, reset to 10 days
+					const newCountdownDate = new Date().getTime() + tenDaysInMs;
 					const newDistance = newCountdownDate - now;
 
 					const days = Math.floor(newDistance / (1000 * 60 * 60 * 24));

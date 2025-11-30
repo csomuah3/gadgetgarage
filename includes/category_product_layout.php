@@ -1362,7 +1362,7 @@ if ($is_joint_category && !empty($joint_category_ids)) {
                     params.append('max_price', maxPrice);
                 }
 
-                window.location.href = currentPage + '?' + params.toString();
+no                window.location.href = currentPage + '?' + params.toString();
             });
         }
 

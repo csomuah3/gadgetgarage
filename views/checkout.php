@@ -1312,43 +1312,12 @@ try {
 		const BASE_PATH = '<?php echo dirname($_SERVER['PHP_SELF']); ?>';
 		const ACTIONS_PATH = BASE_PATH.replace('/views', '') + '/actions/';
 
-		document.addEventListener('DOMContentLoaded', function() {
-			checkForPaymentStatus();
-
-			const savedLanguage = localStorage.getItem('selectedLanguage');
-			if (savedLanguage) {
-				const languageSelect = document.querySelector('.language-selector select');
-				if (languageSelect) {
-					languageSelect.value = savedLanguage;
-				}
-			}
-
-			const isDarkMode = localStorage.getItem('darkMode') === 'true';
-			if (isDarkMode) {
-				document.body.classList.add('dark-mode');
-				const toggleSwitch = document.getElementById('themeToggle');
-				if (toggleSwitch) {
-					toggleSwitch.classList.add('active');
-				}
-			}
-
-			createFloatingBubbles();
-			checkAndApplyPromoFromCart();
-		});
-
-		if (document.readyState !== 'loading') {
-			checkAndApplyPromoFromCart();
-		}
-
-		// Make function globally accessible for promo-code.js
+		// Make function globally accessible for promo-code.js - MUST BE DEFINED BEFORE USE
 		window.checkAndApplyPromoFromCart = function() {
-			console.log('Checking for cart data from localStorage/sessionStorage...');
-			
 			// Read discount data from localStorage
 			const appliedPromo = localStorage.getItem('appliedPromo');
 			// Read store credit data from sessionStorage
 			const appliedStoreCredits = sessionStorage.getItem('appliedStoreCredits');
-			
 			// Get original cart total from PHP
 			const originalCartTotal = <?php echo $cart_total; ?>;
 			
@@ -1486,8 +1455,43 @@ try {
 				window.activeMethod = activeMethod;
 			}
 			
-			console.log('Cart data loaded. Active method:', activeMethod, 'Final total:', finalTotal);
 		};
+
+		// Wait for DOM to be fully loaded before calling
+		function initCheckoutPage() {
+			checkForPaymentStatus();
+
+			const savedLanguage = localStorage.getItem('selectedLanguage');
+			if (savedLanguage) {
+				const languageSelect = document.querySelector('.language-selector select');
+				if (languageSelect) {
+					languageSelect.value = savedLanguage;
+				}
+			}
+
+			const isDarkMode = localStorage.getItem('darkMode') === 'true';
+			if (isDarkMode) {
+				document.body.classList.add('dark-mode');
+				const toggleSwitch = document.getElementById('themeToggle');
+				if (toggleSwitch) {
+					toggleSwitch.classList.add('active');
+				}
+			}
+
+			createFloatingBubbles();
+			// Call after a small delay to ensure all elements are rendered
+			setTimeout(function() {
+				window.checkAndApplyPromoFromCart();
+			}, 100);
+		}
+
+		// Call function when DOM is ready
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', initCheckoutPage);
+		} else {
+			// DOM is already ready
+			initCheckoutPage();
+		}
 
 		function createFloatingBubbles() {
 			const bubblesContainer = document.getElementById('floatingBubbles');

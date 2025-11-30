@@ -24,12 +24,15 @@ $categories = get_all_categories_ctr();
 $video_category_id = null;
 
 // Find video equipment category by name (case-insensitive)
+// Exclude camera categories - only get pure video equipment categories
 foreach ($categories as $cat) {
     $cat_name_lower = strtolower(trim($cat['cat_name']));
+    // Must contain 'video' but NOT 'camera' (unless it's 'video equipment' which is fine)
     if (
-        strpos($cat_name_lower, 'video') !== false ||
-        strpos($cat_name_lower, 'video equipment') !== false ||
-        $cat_name_lower === 'video'
+        (strpos($cat_name_lower, 'video') !== false && strpos($cat_name_lower, 'camera') === false) ||
+        $cat_name_lower === 'video equipment' ||
+        $cat_name_lower === 'videography' ||
+        ($cat_name_lower === 'video' && strpos($cat_name_lower, 'camera') === false)
     ) {
         $video_category_id = $cat['cat_id'];
         break;
@@ -54,11 +57,24 @@ if (empty($video_products)) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
         $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
 
-        // Include video equipment products
-        return (strpos($cat_name, 'video') !== false ||
-            strpos($product_title, 'video') !== false ||
+        // Exclude camera products explicitly
+        $is_camera = (strpos($cat_name, 'camera') !== false && strpos($cat_name, 'video') === false) ||
+            (strpos($product_title, 'camera') !== false && strpos($product_title, 'video') === false && strpos($product_title, 'camcorder') === false) ||
+            strpos($product_title, 'dslr') !== false ||
+            strpos($product_title, 'mirrorless') !== false ||
+            strpos($product_title, 'digital camera') !== false;
+
+        if ($is_camera) {
+            return false; // Exclude camera products
+        }
+
+        // Include video equipment products only
+        return (strpos($cat_name, 'video') !== false && strpos($cat_name, 'camera') === false) ||
+            (strpos($product_title, 'video') !== false && strpos($product_title, 'camera') === false) ||
             strpos($product_title, 'camcorder') !== false ||
-            strpos($product_title, 'recorder') !== false);
+            strpos($product_title, 'video recorder') !== false ||
+            strpos($product_title, 'action camera') !== false ||
+            (strpos($product_title, 'recorder') !== false && strpos($product_title, 'camera') === false);
     });
 }
 
@@ -149,7 +165,7 @@ $joint_category_ids = [];
     <!-- Category Product Layout Template -->
     <?php include '../includes/category_product_layout.php'; ?>
 
-        <!-- Footer -->
+    <!-- Footer -->
     <?php include '../includes/footer.php'; ?>
 
     <?php include '../includes/cart_sidebar.php'; ?>

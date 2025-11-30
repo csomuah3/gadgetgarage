@@ -48,14 +48,17 @@ try {
         exit;
     }
 
-    // Insert new subscription
-    $insert_stmt = $conn->prepare("INSERT INTO newsletter_subscribers (email) VALUES (?)");
+    // Insert new subscription with is_active set to 1
+    $insert_stmt = $conn->prepare("INSERT INTO newsletter_subscribers (email, is_active) VALUES (?, 1)");
     $insert_stmt->bind_param('s', $email);
 
     if ($insert_stmt->execute()) {
+        // Log successful subscription
+        error_log("Newsletter subscription successful: " . $email);
+        
         echo json_encode([
             'success' => true,
-            'message' => 'Successfully subscribed! You\'ll receive exclusive Black Friday deals.',
+            'message' => 'Thank you! Your email has been successfully added to our newsletter. We\'ll send you exclusive deals and updates!',
             'already_subscribed' => false
         ]);
     } else {

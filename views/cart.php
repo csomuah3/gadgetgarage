@@ -972,12 +972,14 @@ try {
         }
 
         .cart-header {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
+            background: linear-gradient(135deg, #2563EB 0%, #1E3A5F 100%);
             color: white;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
+            padding: 60px 0 50px;
+            margin-top: 0;
+            margin-bottom: 40px;
             position: relative;
             overflow: hidden;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
         }
 
         .cart-header::before {
@@ -987,21 +989,33 @@ try {
             left: 0;
             right: 0;
             bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,70"/></svg>') no-repeat bottom;
-            background-size: cover;
+            background: url('data:image/svg+xml,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><defs><pattern id="grid" width="40" height="40" patternUnits="userSpaceOnUse"><path d="M 40 0 L 0 0 0 40" fill="none" stroke="rgba(255,255,255,0.08)" stroke-width="1"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.4;
         }
 
         .cart-header h1 {
-            font-size: 3.5rem !important;
-            font-weight: 800 !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 1rem !important;
+            font-size: 2.8rem;
+            font-weight: 800;
+            margin: 0 0 12px 0;
+            position: relative;
+            z-index: 1;
+            letter-spacing: -0.5px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .cart-header h1 i {
+            font-size: 2.5rem;
+            margin-right: 15px;
+            opacity: 0.95;
         }
 
         .cart-header p {
-            font-size: 1.4rem !important;
-            opacity: 0.9;
-            font-weight: 500;
+            font-size: 1.25rem;
+            opacity: 0.92;
+            position: relative;
+            z-index: 1;
+            font-weight: 400;
+            letter-spacing: 0.3px;
         }
 
         .cart-item {
@@ -1837,13 +1851,6 @@ try {
     <?php include '../includes/header.php'; ?>
 
     <!-- Cart Content -->
-    <!-- Page Title -->
-    <div class="container-fluid">
-        <div class="text-center py-3">
-            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Shopping Cart</h1>
-        </div>
-    </div>
-
     <div class="cart-header">
         <div class="container">
             <div class="row align-items-center">

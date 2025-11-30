@@ -1468,13 +1468,13 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 2.2fr 4fr 1.5fr;
+			grid-template-columns: 2.5fr 4fr 1.5fr;
 			/* left banner | hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 620px;
-			/* original height */
+			min-height: 480px;
+			/* shorter height */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 620px;
+			min-height: 480px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -1735,8 +1735,8 @@ try {
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: radial-gradient(circle at 0% 0%, #efe0a5 0%, #ff4444 100%) !important;
-			/* circular gradient from yellow/beige to red */
+			background: linear-gradient(135deg, #3bdcff 0%, #ffa7a7 50%, #a2d2f4 100%) !important;
+			/* new gradient: cyan to pink to light blue */
 			color: #ffffff !important;
 			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
@@ -3367,6 +3367,7 @@ try {
 			margin-bottom: 20px;
 			width: 100%;
 			max-width: 200px;
+			/* no background - directly on card */
 		}
 
 		.countdown-item {
@@ -3374,10 +3375,9 @@ try {
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			background: #808080;
-			/* grey background */
+			background: transparent;
+			/* no box background - directly on card */
 			padding: 12px 16px;
-			border-radius: 10px;
 			min-width: 60px;
 		}
 
@@ -3386,8 +3386,8 @@ try {
 			font-weight: 800;
 			line-height: 1;
 			margin-bottom: 4px;
-			color: #001f3f;
-			/* navy blue numbers */
+			color: #ffffff;
+			/* white numbers */
 		}
 
 		.countdown-label {
@@ -3395,8 +3395,8 @@ try {
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: #001f3f;
-			/* navy blue text */
+			color: #ffffff;
+			/* white text */
 		}
 
 		/* texts on side cards */
@@ -3443,15 +3443,13 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 620px;
+			min-height: 480px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
 			border: 2px solid #e5e7eb;
-			/* frame border to envision the poster */
+			/* frame border only - no background image */
+			background: transparent;
 		}
 
 		.left-banner-card::before {
@@ -5185,24 +5183,41 @@ try {
 
 		.newsletter-message {
 			margin-top: 20px;
-			padding: 12px 20px;
-			border-radius: 8px;
-			font-size: 0.95rem;
+			padding: 16px 24px;
+			border-radius: 10px;
+			font-size: 1rem;
+			font-weight: 600;
 			display: none;
+			text-align: center;
+			animation: slideDown 0.3s ease-out;
+		}
+
+		@keyframes slideDown {
+			from {
+				opacity: 0;
+				transform: translateY(-10px);
+			}
+
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
 		}
 
 		.newsletter-message.success {
-			background: rgba(16, 185, 129, 0.2);
+			background: rgba(16, 185, 129, 0.95);
 			color: white;
-			border: 1px solid rgba(16, 185, 129, 0.4);
-			display: block;
+			border: 2px solid rgba(16, 185, 129, 1);
+			display: block !important;
+			box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
 		}
 
 		.newsletter-message.error {
-			background: rgba(239, 68, 68, 0.2);
+			background: rgba(239, 68, 68, 0.95);
 			color: white;
-			border: 1px solid rgba(239, 68, 68, 0.4);
-			display: block;
+			border: 2px solid rgba(239, 68, 68, 1);
+			display: block !important;
+			box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
 		}
 
 		.newsletter-privacy {
@@ -5732,7 +5747,7 @@ try {
 		<div class="container">
 			<div class="hero-grid">
 				<!-- LEFT: FLASH DEALS BANNER -->
-				<article class="left-banner-card" style="background-image: url('http://169.239.251.102:442/~chelsea.somuah/uploads/newsf.png');">
+				<article class="left-banner-card">
 					<div class="left-banner-content">
 						<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
 							FLASH DEALS
@@ -6556,7 +6571,9 @@ try {
 				const data = await response.json();
 
 				if (data.success) {
-					showNewsletterMessage('Thank you for joining Gadget Garage Premium list!', 'success');
+					// Show success message from server or default
+					const successMsg = data.message || 'Thank you! Your email has been successfully added to our newsletter.';
+					showNewsletterMessage(successMsg, 'success');
 					emailInput.value = '';
 
 					// Reset button after 2 seconds
@@ -6581,12 +6598,14 @@ try {
 			const messageDiv = document.getElementById('newsletterMessage');
 			messageDiv.textContent = message;
 			messageDiv.className = `newsletter-message ${type}`;
+			messageDiv.style.display = 'block'; // Ensure it's visible
 
-			// Auto-hide success messages after 5 seconds
+			// Auto-hide success messages after 8 seconds (longer to read)
 			if (type === 'success') {
 				setTimeout(() => {
 					messageDiv.className = 'newsletter-message';
-				}, 5000);
+					messageDiv.style.display = 'none';
+				}, 8000);
 			}
 		}
 

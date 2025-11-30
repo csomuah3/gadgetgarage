@@ -54,6 +54,7 @@ try {
 	<link href="../includes/chatbot-styles.css" rel="stylesheet">
 	<link href="../css/dark-mode.css" rel="stylesheet">
 	<link href="../includes/header.css" rel="stylesheet">
+	<link href="../includes/page-background.css" rel="stylesheet">
 	<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 	<style>
 		/* Import Google Fonts */
@@ -75,21 +76,7 @@ try {
 			overflow-x: hidden;
 		}
 
-		body::after {
-			content: '';
-			position: fixed;
-			top: 0;
-			left: 0;
-			width: 100%;
-			height: 100%;
-			background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
-			background-size: cover;
-			background-position: center;
-			background-attachment: fixed;
-			opacity: 0.45;
-			z-index: -1;
-			pointer-events: none;
-		}
+		/* Background moved to page-background.css - using class instead */
 
 
 
@@ -550,7 +537,7 @@ try {
 	</style>
 </head>
 
-<body>
+<body class="page-background">
 	<?php include '../includes/header.php'; ?>
 
 	<!-- Floating Bubbles Background -->

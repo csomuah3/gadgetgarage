@@ -135,6 +135,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
     <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
+    <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
     <link href="../css/product-card.css" rel="stylesheet">
     <style>
@@ -1728,7 +1729,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
     </style>
 </head>
 
-<body>
+<body class="page-background">
     <?php include '../includes/header.php'; ?>
 
     <script>

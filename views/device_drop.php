@@ -53,6 +53,7 @@ try {
     <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
     <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
+    <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -71,37 +72,7 @@ try {
             font-size: 1.05rem; /* Increased base font size for whole page */
         }
 
-        body::after {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.7;
-            z-index: -2;
-            pointer-events: none;
-        }
-
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%);
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            opacity: 0.85;
-            z-index: -1;
-            pointer-events: none;
-        }
+        /* Background moved to page-background.css - using class instead */
 
         .device-drop-container {
             padding: 60px 0;
@@ -1485,7 +1456,7 @@ try {
     </style>
 </head>
 
-<body>
+<body class="page-background">
     <?php include '../includes/header.php'; ?>
 
     <!-- Device Drop Content -->

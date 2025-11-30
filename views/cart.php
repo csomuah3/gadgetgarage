@@ -1932,8 +1932,8 @@ try {
                         </div>
 
                         <!-- Store Credits Section -->
-                        <?php if ($is_logged_in && $store_credit_balance > 0): ?>
-                        <div class="store-credits-section mb-3" style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <?php if ($is_logged_in): ?>
+                        <div class="store-credits-section mb-3" style="padding: 15px; background: #f8f9fa; border-radius: 8px; <?php echo $store_credit_balance <= 0 ? 'opacity: 0.6;' : ''; ?>">
                             <div class="d-flex align-items-center justify-content-between mb-2">
                                 <div>
                                     <strong><i class="fas fa-credit-card me-2"></i>Available Store Credits</strong>
@@ -1942,6 +1942,7 @@ try {
                                     </div>
                                 </div>
                             </div>
+                            <?php if ($store_credit_balance > 0): ?>
                             <div class="form-check mt-2">
                                 <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
                                 <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
@@ -1952,9 +1953,16 @@ try {
                                 <i class="fas fa-info-circle me-1"></i>
                                 You can use up to GH₵ <?php echo number_format(min($store_credit_balance, $cart_total), 2); ?> from your store credits
                             </small>
+                            <?php else: ?>
+                            <small class="text-muted d-block mt-2">
+                                <i class="fas fa-info-circle me-1"></i>
+                                You don't have any available store credits at this time.
+                            </small>
+                            <?php endif; ?>
                         </div>
 
                         <!-- Store Credits Applied Row (hidden by default) -->
+                        <?php if ($store_credit_balance > 0): ?>
                         <div class="d-flex justify-content-between mb-3 store-credits-row" id="storeCreditsRow" style="display: none;">
                             <span class="text-success">
                                 <i class="fas fa-credit-card me-1"></i>
@@ -1962,6 +1970,7 @@ try {
                             </span>
                             <span class="text-success fw-bold" id="storeCreditsAmount">-GH₵ 0.00</span>
                         </div>
+                        <?php endif; ?>
                         <?php endif; ?>
 
                         <hr>

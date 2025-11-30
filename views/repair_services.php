@@ -39,6 +39,7 @@ try {
 
 	<!-- Reusable Header CSS -->
 	<link href="../includes/header.css" rel="stylesheet">
+	<link href="../includes/page-background.css" rel="stylesheet">
 
 	<!-- Define repair functions immediately in head to ensure availability -->
 	<script>
@@ -594,7 +595,7 @@ try {
 	</style>
 </head>
 
-<body>
+<body class="page-background">
 	<!-- Reusable Header Component -->
 	<?php include '../includes/header.php'; ?>
 

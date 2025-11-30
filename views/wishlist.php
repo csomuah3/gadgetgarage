@@ -48,6 +48,7 @@ $first_name = explode(' ', $user_name)[0];
     
     <!-- Reusable Header CSS -->
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/page-background.css" rel="stylesheet">
     <link href="../includes/account_sidebar.css" rel="stylesheet">
     
     <style>
@@ -512,7 +513,7 @@ $first_name = explode(' ', $user_name)[0];
     </style>
 </head>
 
-<body>
+<body class="page-background">
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
     

@@ -707,7 +707,8 @@ $first_name = explode(' ', $user_name)[0];
                 });
         }
 
-        function viewProduct(productId) {
+        // View Product Function (Make globally available)
+        window.viewProduct = function(productId) {
             window.location.href = `single_product.php?pid=${productId}`;
         }
 

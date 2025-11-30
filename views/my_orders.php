@@ -2149,6 +2149,13 @@ function getOrderStatus($order_date)
             }
         }
 
+        // Also define them without window prefix for onclick handlers (like wishlist does)
+        var viewOrderDetails = window.viewOrderDetails;
+        var trackOrder = window.trackOrder;
+        var requestRefund = window.requestRefund;
+        var cancelOrder = window.cancelOrder;
+        var openRatingModal = window.openRatingModal;
+
         // Initialize page on load
         document.addEventListener('DOMContentLoaded', function() {
             // Load dark mode preference

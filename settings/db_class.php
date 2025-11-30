@@ -25,8 +25,13 @@ if (!class_exists('db_connection')) {
             if (mysqli_connect_errno()) {
                 return false;
             } else {
-                // Set charset to UTF-8 to support special characters
+                // Set charset to UTF-8 with compatible collation
+                // Use utf8mb4_general_ci and allow conversion to latin1 tables
                 mysqli_set_charset($this->db, "utf8mb4");
+                mysqli_query($this->db, "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+                // Allow conversion between collations for compatibility with latin1 tables
+                mysqli_query($this->db, "SET character_set_connection = utf8mb4");
+                mysqli_query($this->db, "SET collation_connection = utf8mb4_general_ci");
                 return true;
             }
         }
@@ -40,8 +45,12 @@ if (!class_exists('db_connection')) {
             if (mysqli_connect_errno()) {
                 return false;
             } else {
-                // Set charset to UTF-8 to support special characters
+                // Set charset to UTF-8 with compatible collation
+                // Use utf8mb4_general_ci and set character_set_connection to handle latin1 tables
                 mysqli_set_charset($this->db, "utf8mb4");
+                mysqli_query($this->db, "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+                mysqli_query($this->db, "SET character_set_connection = utf8mb4");
+                mysqli_query($this->db, "SET collation_connection = utf8mb4_general_ci");
                 return $this->db;
             }
         }
@@ -60,8 +69,11 @@ if (!class_exists('db_connection')) {
                 return false;
             }
 
-            // Ensure UTF-8 charset is set
+            // Ensure UTF-8 charset is set with compatible collation
             mysqli_set_charset($this->db, "utf8mb4");
+            mysqli_query($this->db, "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+            mysqli_query($this->db, "SET character_set_connection = utf8mb4");
+            mysqli_query($this->db, "SET collation_connection = utf8mb4_general_ci");
 
             //run query 
             $this->results = mysqli_query($this->db, $sqlQuery);
@@ -88,8 +100,11 @@ if (!class_exists('db_connection')) {
                 }
             }
 
-            // Ensure UTF-8 charset is set
+            // Ensure UTF-8 charset is set with compatible collation
             mysqli_set_charset($this->db, "utf8mb4");
+            mysqli_query($this->db, "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+            mysqli_query($this->db, "SET character_set_connection = utf8mb4");
+            mysqli_query($this->db, "SET collation_connection = utf8mb4_general_ci");
 
             //run query 
             $result = mysqli_query($this->db, $sqlQuery);
@@ -177,8 +192,11 @@ if (!class_exists('db_connection')) {
                 return false;
             }
 
-            // Ensure UTF-8 charset is set
+            // Ensure UTF-8 charset is set with compatible collation
             mysqli_set_charset($this->db, "utf8mb4");
+            mysqli_query($this->db, "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
+            mysqli_query($this->db, "SET character_set_connection = utf8mb4");
+            mysqli_query($this->db, "SET collation_connection = utf8mb4_general_ci");
 
             $stmt = mysqli_prepare($this->db, $sql);
             if (!$stmt) {

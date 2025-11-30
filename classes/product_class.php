@@ -33,10 +33,11 @@ class Product extends db_connection
                 }
             }
             
-            // Ensure UTF-8 charset is set
+            // Ensure UTF-8 charset is set with compatible collation
             if (!mysqli_set_charset($this->db, "utf8mb4")) {
                 error_log("ERROR: Failed to set UTF-8 charset: " . mysqli_error($this->db));
             }
+            mysqli_query($this->db, "SET NAMES utf8mb4 COLLATE utf8mb4_general_ci");
             
             error_log("Database connection: OK");
 
@@ -55,7 +56,7 @@ class Product extends db_connection
                 return false;
             }
 
-            // Bind parameters
+            // Bind parameters - MySQL will handle encoding conversion
             mysqli_stmt_bind_param($stmt, "sdssssiii", 
                 $product_title, 
                 $product_price, 

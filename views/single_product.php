@@ -1493,6 +1493,10 @@ try {
             width: auto;
             height: auto;
             position: absolute;
+            top: 0;
+            left: 0;
+            max-width: none;
+            max-height: none;
         }
 
         /* Thumbnail Gallery Styles */
@@ -1940,44 +1944,124 @@ try {
 
             // Magnifying glass functionality
             function magnify() {
-                let cx, cy;
+                let cx = 0, cy = 0;
+                let zoomInitialized = false;
 
                 // Ensure magnifyResultImage has the same source as main image
                 if (magnifyResultImage.src !== mainImage.src) {
                     magnifyResultImage.src = mainImage.src;
                 }
 
-                // Calculate the ratio between result DIV and lens
-                cx = magnifyResult.offsetWidth / magnifyLens.offsetWidth;
-                cy = magnifyResult.offsetHeight / magnifyLens.offsetHeight;
+                // Initialize zoom ratios
+                function initializeZoom() {
+                    // Get displayed image dimensions
+                    const imgDisplayWidth = mainImage.offsetWidth || mainImage.width;
+                    const imgDisplayHeight = mainImage.offsetHeight || mainImage.height;
+                    
+                    // Get natural image dimensions for accurate zoom
+                    const imgNaturalWidth = mainImage.naturalWidth || mainImage.width;
+                    const imgNaturalHeight = mainImage.naturalHeight || mainImage.height;
+                    
+                    // Calculate zoom factor (how much to magnify)
+                    const zoomFactor = 2.5;
+                    
+                    // Calculate ratios: how much the zoomed image moves relative to cursor
+                    // This maps the cursor position on the displayed image to the zoomed image
+                    cx = (imgNaturalWidth * zoomFactor) / imgDisplayWidth;
+                    cy = (imgNaturalHeight * zoomFactor) / imgDisplayHeight;
+                    
+                    // Set zoomed image size
+                    magnifyResultImage.style.width = (imgNaturalWidth * zoomFactor) + "px";
+                    magnifyResultImage.style.height = (imgNaturalHeight * zoomFactor) + "px";
+                    
+                    zoomInitialized = true;
+                    
+                    console.log('🔍 Zoom initialized:', { 
+                        cx, cy, 
+                        zoomFactor, 
+                        imgNaturalWidth, 
+                        imgNaturalHeight,
+                        imgDisplayWidth,
+                        imgDisplayHeight
+                    });
+                }
 
-                // Set background properties for the result DIV
-                magnifyResultImage.style.width = (mainImage.width * cx) + "px";
-                magnifyResultImage.style.height = (mainImage.height * cx) + "px";
+                // Wait for the result image to load before calculating zoom
+                magnifyResultImage.onload = function() {
+                    initializeZoom();
+                };
+
+                // If image is already loaded, initialize immediately
+                if (magnifyResultImage.complete && magnifyResultImage.naturalWidth > 0) {
+                    initializeZoom();
+                } else {
+                    // Fallback: initialize after a short delay
+                    setTimeout(initializeZoom, 100);
+                }
 
                 // Mouse move function
                 function moveMagnifier(e) {
                     e.preventDefault();
 
-                    // Get the cursor's x and y positions
+                    // Get the cursor's x and y positions relative to the image
                     const pos = getCursorPos(e);
                     let x = pos.x;
                     let y = pos.y;
                     
+                    // Get actual displayed image dimensions
+                    const imgRect = mainImage.getBoundingClientRect();
+                    const imgDisplayWidth = imgRect.width;
+                    const imgDisplayHeight = imgRect.height;
 
                     // Prevent the magnifying glass from being positioned outside the image
-                    if (x > mainImage.width - (magnifyLens.offsetWidth / 2)) { x = mainImage.width - (magnifyLens.offsetWidth / 2); }
-                    if (x < magnifyLens.offsetWidth / 2) { x = magnifyLens.offsetWidth / 2; }
-                    if (y > mainImage.height - (magnifyLens.offsetHeight / 2)) { y = mainImage.height - (magnifyLens.offsetHeight / 2); }
-                    if (y < magnifyLens.offsetHeight / 2) { y = magnifyLens.offsetHeight / 2; }
+                    if (x > imgDisplayWidth - (magnifyLens.offsetWidth / 2)) { 
+                        x = imgDisplayWidth - (magnifyLens.offsetWidth / 2); 
+                    }
+                    if (x < magnifyLens.offsetWidth / 2) { 
+                        x = magnifyLens.offsetWidth / 2; 
+                    }
+                    if (y > imgDisplayHeight - (magnifyLens.offsetHeight / 2)) { 
+                        y = imgDisplayHeight - (magnifyLens.offsetHeight / 2); 
+                    }
+                    if (y < magnifyLens.offsetHeight / 2) { 
+                        y = magnifyLens.offsetHeight / 2; 
+                    }
 
-                    // Set the position of the magnifying glass
+                    // Set the position of the magnifying glass lens
                     magnifyLens.style.left = (x - magnifyLens.offsetWidth / 2) + "px";
                     magnifyLens.style.top = (y - magnifyLens.offsetHeight / 2) + "px";
 
-                    // Display what the magnifying glass "sees"
-                    magnifyResultImage.style.left = ((x * cx) - magnifyResult.offsetWidth / 2) * -1 + "px";
-                    magnifyResultImage.style.top = ((y * cy) - magnifyResult.offsetHeight / 2) * -1 + "px";
+                    // Calculate the position of the zoomed image
+                    // The image should move in the opposite direction to show the correct zoomed area
+                    if (zoomInitialized && cx > 0 && cy > 0 && !isNaN(cx) && !isNaN(cy)) {
+                        // Calculate the position in the zoomed image that corresponds to cursor position
+                        const zoomedX = x * cx;
+                        const zoomedY = y * cy;
+                        
+                        // Center the zoomed area in the result window
+                        const resultCenterX = magnifyResult.offsetWidth / 2;
+                        const resultCenterY = magnifyResult.offsetHeight / 2;
+                        
+                        // Position the image so the zoomed area is centered
+                        magnifyResultImage.style.left = (resultCenterX - zoomedX) + "px";
+                        magnifyResultImage.style.top = (resultCenterY - zoomedY) + "px";
+                    } else if (!zoomInitialized) {
+                        // If zoom not initialized yet, try to initialize it
+                        setTimeout(() => {
+                            const imgDisplayWidth = mainImage.offsetWidth || mainImage.width;
+                            const imgDisplayHeight = mainImage.offsetHeight || mainImage.height;
+                            const imgNaturalWidth = mainImage.naturalWidth || mainImage.width;
+                            const imgNaturalHeight = mainImage.naturalHeight || mainImage.height;
+                            const zoomFactor = 2.5;
+                            
+                            cx = (imgNaturalWidth * zoomFactor) / imgDisplayWidth;
+                            cy = (imgNaturalHeight * zoomFactor) / imgDisplayHeight;
+                            
+                            magnifyResultImage.style.width = (imgNaturalWidth * zoomFactor) + "px";
+                            magnifyResultImage.style.height = (imgNaturalHeight * zoomFactor) + "px";
+                            zoomInitialized = true;
+                        }, 50);
+                    }
                 }
 
                 function getCursorPos(e) {

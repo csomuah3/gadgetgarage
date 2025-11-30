@@ -1452,11 +1452,177 @@ try {
 		.simple-dropdown ul li a:hover {
 			background: #f9fafb;
 			color: #008060;
-		}
+	}
 
-		/* Hero Section */
-		/* Hero Banner Styles */
-		/* ——— Layout shell ——— */
+	/* Live Deal Ticker - Left Edge */
+	.live-deal-ticker {
+		position: fixed;
+		left: 20px;
+		top: 120px; /* Below header */
+		width: 280px;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		border-radius: 16px;
+		padding: 20px;
+		box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+		z-index: 900;
+		display: none; /* Hidden by default, show on large screens */
+		animation: slideInLeft 0.6s ease-out;
+	}
+
+	@keyframes slideInLeft {
+		from {
+			opacity: 0;
+			transform: translateX(-100px);
+		}
+		to {
+			opacity: 1;
+			transform: translateX(0);
+		}
+	}
+
+	/* Show only on large screens */
+	@media (min-width: 1400px) {
+		.live-deal-ticker {
+			display: block;
+		}
+	}
+
+	.deal-ticker-header {
+		display: flex;
+		align-items: center;
+		gap: 10px;
+		margin-bottom: 20px;
+		padding-bottom: 15px;
+		border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+	}
+
+	.ticker-icon {
+		font-size: 1.8rem;
+		animation: pulse 2s ease-in-out infinite;
+	}
+
+	@keyframes pulse {
+		0%, 100% {
+			transform: scale(1);
+		}
+		50% {
+			transform: scale(1.2);
+		}
+	}
+
+	.deal-ticker-header h3 {
+		color: white;
+		font-size: 1.3rem;
+		font-weight: 700;
+		margin: 0;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.deal-ticker-content {
+		position: relative;
+		min-height: 400px;
+		overflow: hidden;
+	}
+
+	.deal-item {
+		background: white;
+		border-radius: 12px;
+		padding: 16px;
+		margin-bottom: 12px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+		cursor: pointer;
+		transition: all 0.3s ease;
+		opacity: 0;
+		animation: fadeInUp 0.5s ease forwards;
+		position: relative;
+		overflow: hidden;
+	}
+
+	.deal-item::before {
+		content: '';
+		position: absolute;
+		top: 0;
+		left: -100%;
+		width: 100%;
+		height: 100%;
+		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+		transition: left 0.5s;
+	}
+
+	.deal-item:hover::before {
+		left: 100%;
+	}
+
+	.deal-item:hover {
+		transform: translateY(-4px);
+		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+	}
+
+	@keyframes fadeInUp {
+		from {
+			opacity: 0;
+			transform: translateY(20px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	.deal-item.fade-out {
+		animation: fadeOutDown 0.5s ease forwards;
+	}
+
+	@keyframes fadeOutDown {
+		from {
+			opacity: 1;
+			transform: translateY(0);
+		}
+		to {
+			opacity: 0;
+			transform: translateY(-20px);
+		}
+	}
+
+	.deal-emoji {
+		font-size: 1.5rem;
+		margin-right: 8px;
+	}
+
+	.deal-text {
+		color: #1f2937;
+		font-size: 0.95rem;
+		font-weight: 600;
+		line-height: 1.4;
+		margin: 0;
+	}
+
+	.deal-badge {
+		display: inline-block;
+		background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+		color: white;
+		padding: 4px 10px;
+		border-radius: 6px;
+		font-size: 0.75rem;
+		font-weight: 700;
+		margin-top: 8px;
+		text-transform: uppercase;
+		letter-spacing: 0.5px;
+		animation: glow 2s ease-in-out infinite;
+	}
+
+	@keyframes glow {
+		0%, 100% {
+			box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
+		}
+		50% {
+			box-shadow: 0 0 20px rgba(239, 68, 68, 0.8), 0 0 30px rgba(239, 68, 68, 0.4);
+		}
+	}
+
+	/* Hero Section */
+	/* Hero Banner Styles */
+	/* ——— Layout shell ——— */
 	.hero-banner-section {
 		/* taller section like your screenshot */
 		width: 100%;
@@ -1468,13 +1634,137 @@ try {
 
 	.hero-grid {
 		display: grid;
-		grid-template-columns: 4fr 1.5fr;
-		/* hero carousel | right side banners */
+		grid-template-columns: 1.5fr 4fr 1.5fr;
+		/* left slideshow | hero carousel | right side banners */
 		gap: 28px;
 		/* spacing between cards */
 		align-items: start;
 		min-height: 80px;
 		/* hero height */
+	}
+
+	/* ——— AI-Powered Slideshow (Left Side) ——— */
+	.ai-slideshow-wrapper {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		min-height: 80px;
+		border-radius: 14px;
+		overflow: hidden;
+		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+		box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+	}
+
+	.ai-slideshow-container {
+		position: relative;
+		width: 100%;
+		height: 100%;
+		min-height: 80px;
+	}
+
+	.ai-slide {
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		min-height: 80px;
+		opacity: 0;
+		visibility: hidden;
+		transform: translateX(-20px);
+		transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		padding: 15px;
+		box-sizing: border-box;
+	}
+
+	.ai-slide.active {
+		opacity: 1;
+		visibility: visible;
+		transform: translateX(0);
+		z-index: 2;
+	}
+
+	.ai-slide-content {
+		text-align: center;
+		color: white;
+		width: 100%;
+	}
+
+	.ai-slide-badge {
+		display: inline-block;
+		background: rgba(255, 255, 255, 0.25);
+		padding: 4px 10px;
+		border-radius: 12px;
+		font-size: 0.7rem;
+		font-weight: 700;
+		letter-spacing: 0.5px;
+		margin-bottom: 8px;
+		backdrop-filter: blur(10px);
+	}
+
+	.ai-slide-title {
+		font-size: 1.1rem;
+		font-weight: 700;
+		margin: 0 0 4px 0;
+		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+	}
+
+	.ai-slide-text {
+		font-size: 0.8rem;
+		margin: 0 0 10px 0;
+		opacity: 0.95;
+		line-height: 1.3;
+	}
+
+	.ai-slide-btn {
+		display: inline-block;
+		background: white;
+		color: #667eea;
+		padding: 6px 16px;
+		border-radius: 20px;
+		text-decoration: none;
+		font-weight: 700;
+		font-size: 0.75rem;
+		transition: all 0.3s ease;
+		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+	}
+
+	.ai-slide-btn:hover {
+		transform: translateY(-2px);
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
+		background: #f8f9fa;
+	}
+
+	.ai-slideshow-indicators {
+		position: absolute;
+		bottom: 8px;
+		left: 50%;
+		transform: translateX(-50%);
+		display: flex;
+		gap: 6px;
+		z-index: 3;
+	}
+
+	.ai-indicator {
+		width: 6px;
+		height: 6px;
+		border-radius: 50%;
+		background: rgba(255, 255, 255, 0.4);
+		cursor: pointer;
+		transition: all 0.3s ease;
+	}
+
+	.ai-indicator.active {
+		background: white;
+		width: 20px;
+		border-radius: 3px;
+	}
+
+	.ai-indicator:hover {
+		background: rgba(255, 255, 255, 0.7);
 	}
 
 	/* ——— Hero Carousel Wrapper ——— */
@@ -3565,6 +3855,14 @@ try {
 			.hero-grid {
 				grid-template-columns: 1fr;
 				min-height: auto;
+			}
+
+			.ai-slideshow-wrapper {
+				min-height: 120px;
+			}
+
+			.ai-slide {
+				min-height: 120px;
 			}
 
 			.left-banner-card {
@@ -5793,10 +6091,68 @@ try {
 <body>
 	<?php include 'includes/header.php'; ?>
 
+	<!-- Left Edge Live Deal Ticker -->
+	<div class="live-deal-ticker">
+		<div class="deal-ticker-header">
+			<span class="ticker-icon">🔥</span>
+			<h3>Hot Deals</h3>
+		</div>
+		<div class="deal-ticker-content" id="dealTickerContent">
+			<!-- Deals will be populated by JavaScript -->
+		</div>
+	</div>
+
 	<!-- Hero Banner Section (matching demo) -->
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
+				<!-- LEFT: AI-POWERED SLIDESHOW -->
+				<div class="ai-slideshow-wrapper">
+					<div class="ai-slideshow-container" id="aiSlideshow">
+						<!-- Slide 1: Flash Deals -->
+						<div class="ai-slide active" data-slide-id="1" data-priority="high">
+							<div class="ai-slide-content">
+								<div class="ai-slide-badge">⚡ Flash Sale</div>
+								<h3 class="ai-slide-title">Limited Time</h3>
+								<p class="ai-slide-text">Up to 30% Off</p>
+								<a href="views/flash_deals.php" class="ai-slide-btn">Shop Now</a>
+							</div>
+						</div>
+
+						<!-- Slide 2: Trade In -->
+						<div class="ai-slide" data-slide-id="2" data-priority="medium">
+							<div class="ai-slide-content">
+								<div class="ai-slide-badge">🔄 Trade Up</div>
+								<h3 class="ai-slide-title">Trade In</h3>
+								<p class="ai-slide-text">Get Extra Credit</p>
+								<a href="views/device_drop.php" class="ai-slide-btn">Learn More</a>
+							</div>
+						</div>
+
+						<!-- Slide 3: New Arrivals -->
+						<div class="ai-slide" data-slide-id="3" data-priority="medium">
+							<div class="ai-slide-content">
+								<div class="ai-slide-badge">✨ New</div>
+								<h3 class="ai-slide-title">New Arrivals</h3>
+								<p class="ai-slide-text">Latest Devices</p>
+								<a href="views/category_product_layout.php?category=all" class="ai-slide-btn">Explore</a>
+							</div>
+						</div>
+
+						<!-- Slide 4: Free Shipping -->
+						<div class="ai-slide" data-slide-id="4" data-priority="low">
+							<div class="ai-slide-content">
+								<div class="ai-slide-badge">🚚 Free</div>
+								<h3 class="ai-slide-title">Free Shipping</h3>
+								<p class="ai-slide-text">On Orders Over GH₵500</p>
+								<a href="views/category_product_layout.php?category=all" class="ai-slide-btn">Shop Now</a>
+							</div>
+						</div>
+					</div>
+					<!-- Slide Indicators -->
+					<div class="ai-slideshow-indicators" id="aiSlideshowIndicators"></div>
+				</div>
+
 				<!-- MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
 					<div class="hero-carousel" id="heroCarousel">
@@ -10536,8 +10892,561 @@ try {
 		</div>
 	</div>
 
-</body>
+	<!-- Smart Non-Intrusive Ad Popup -->
+	<div id="smartAdPopup" class="smart-ad-popup">
+		<div class="smart-ad-content">
+			<button class="smart-ad-close" onclick="closeSmartAd()" aria-label="Close">
+				<i class="fas fa-times"></i>
+			</button>
+			<div class="smart-ad-body">
+				<div class="smart-ad-badge">🔥 Flash Sale</div>
+				<h3 class="smart-ad-title">Limited Time Offer!</h3>
+				<p class="smart-ad-text">Get up to 30% off on selected refurbished devices</p>
+				<a href="views/flash_deals.php" class="smart-ad-btn">Shop Now</a>
+			</div>
+		</div>
+	</div>
 
-</html>
+	<style>
+		/* Smart Non-Intrusive Ad Popup Styles */
+		.smart-ad-popup {
+			position: fixed;
+			bottom: 20px;
+			right: 20px;
+			width: 320px;
+			max-width: calc(100vw - 40px);
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			border-radius: 16px;
+			box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+			z-index: 9998;
+			opacity: 0;
+			transform: translateY(20px) scale(0.9);
+			transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+			pointer-events: none;
+			border: 2px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.smart-ad-popup.show {
+			opacity: 1;
+			transform: translateY(0) scale(1);
+			pointer-events: auto;
+		}
+
+		.smart-ad-popup.hiding {
+			opacity: 0;
+			transform: translateY(20px) scale(0.9);
+		}
+
+		.smart-ad-content {
+			position: relative;
+			padding: 20px;
+			color: white;
+		}
+
+		.smart-ad-close {
+			position: absolute;
+			top: 12px;
+			right: 12px;
+			background: rgba(255, 255, 255, 0.2);
+			border: none;
+			color: white;
+			width: 28px;
+			height: 28px;
+			border-radius: 50%;
+			cursor: pointer;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.2s ease;
+			font-size: 14px;
+		}
+
+		.smart-ad-close:hover {
+			background: rgba(255, 255, 255, 0.3);
+			transform: rotate(90deg);
+		}
+
+		.smart-ad-body {
+			text-align: center;
+		}
+
+		.smart-ad-badge {
+			display: inline-block;
+			background: rgba(255, 255, 255, 0.25);
+			padding: 4px 12px;
+			border-radius: 20px;
+			font-size: 0.75rem;
+			font-weight: 700;
+			letter-spacing: 0.5px;
+			margin-bottom: 12px;
+			backdrop-filter: blur(10px);
+		}
+
+		.smart-ad-title {
+			font-size: 1.4rem;
+			font-weight: 700;
+			margin: 0 0 8px 0;
+			text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+		}
+
+		.smart-ad-text {
+			font-size: 0.9rem;
+			margin: 0 0 16px 0;
+			opacity: 0.95;
+			line-height: 1.4;
+		}
+
+		.smart-ad-btn {
+			display: inline-block;
+			background: white;
+			color: #667eea;
+			padding: 10px 24px;
+			border-radius: 25px;
+			text-decoration: none;
+			font-weight: 700;
+			font-size: 0.9rem;
+			transition: all 0.3s ease;
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+		}
+
+		.smart-ad-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
+			background: #f8f9fa;
+		}
+
+		/* Mobile Responsive */
+		@media (max-width: 768px) {
+			.smart-ad-popup {
+				width: calc(100vw - 40px);
+				max-width: 320px;
+				bottom: 15px;
+				right: 15px;
+			}
+
+			.smart-ad-content {
+				padding: 16px;
+			}
+
+			.smart-ad-title {
+				font-size: 1.2rem;
+			}
+		}
+
+		/* Hide on very small screens */
+		@media (max-width: 480px) {
+			.smart-ad-popup {
+				width: calc(100vw - 30px);
+				bottom: 10px;
+				right: 15px;
+			}
+		}
+	</style>
+
+	<script>
+		// Smart Ad Popup System with AI-like Intelligence
+		(function() {
+			const adPopup = document.getElementById('smartAdPopup');
+			let adShown = false;
+			let adDismissed = false;
+			let userEngagementScore = 0;
+			let scrollDepth = 0;
+			let timeOnPage = 0;
+			let interactionCount = 0;
+
+			// Check if user previously dismissed ad
+			function checkDismissedStatus() {
+				const dismissed = localStorage.getItem('smartAdDismissed');
+				if (dismissed) {
+					const dismissTime = parseInt(dismissed);
+					const hoursSinceDismiss = (Date.now() - dismissTime) / (1000 * 60 * 60);
+					// Show again after 24 hours
+					return hoursSinceDismiss < 24;
+				}
+				return false;
+			}
+
+			// Calculate user engagement score
+			function calculateEngagementScore() {
+				// Time on page (max 60 points)
+				const timeScore = Math.min(timeOnPage / 10, 60);
+				
+				// Scroll depth (max 20 points)
+				const scrollScore = Math.min(scrollDepth / 5, 20);
+				
+				// Interactions (max 20 points)
+				const interactionScore = Math.min(interactionCount * 2, 20);
+				
+				return timeScore + scrollScore + interactionScore;
+			}
+
+			// Track user behavior
+			function trackUserBehavior() {
+				// Track time on page
+				setInterval(() => {
+					timeOnPage++;
+				}, 1000);
+
+				// Track scroll depth
+				let maxScroll = 0;
+				window.addEventListener('scroll', () => {
+					const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+					if (scrollPercent > maxScroll) {
+						maxScroll = scrollPercent;
+						scrollDepth = maxScroll;
+					}
+				}, { passive: true });
+
+				// Track interactions (clicks, hovers)
+				document.addEventListener('click', () => {
+					interactionCount++;
+				}, { passive: true });
+
+				// Track mouse movement (engagement indicator)
+				let mouseMoveCount = 0;
+				document.addEventListener('mousemove', () => {
+					mouseMoveCount++;
+					if (mouseMoveCount % 50 === 0) {
+						userEngagementScore += 5;
+					}
+				}, { passive: true });
+			}
+
+			// Show ad with intelligent timing
+			function showSmartAd() {
+				if (adShown || adDismissed || checkDismissedStatus()) {
+					return;
+				}
+
+				const engagementScore = calculateEngagementScore();
+				
+				// Intelligent triggers:
+				// 1. Show after 15 seconds if user is engaged (scrolled or interacted)
+				// 2. Show after 30 seconds regardless
+				// 3. Show when user reaches 50% scroll depth
+				// 4. Show when engagement score reaches 40
+
+				const shouldShow = 
+					(timeOnPage >= 15 && (scrollDepth > 10 || interactionCount > 0)) ||
+					timeOnPage >= 30 ||
+					scrollDepth >= 50 ||
+					engagementScore >= 40;
+
+				if (shouldShow) {
+					adPopup.classList.add('show');
+					adShown = true;
+					
+					// Auto-hide after 10 seconds if not interacted with
+					setTimeout(() => {
+						if (adPopup.classList.contains('show')) {
+							closeSmartAd(true); // auto-close
+						}
+					}, 10000);
+				}
+			}
+
+			// Close ad function
+			window.closeSmartAd = function(autoClose = false) {
+				adPopup.classList.remove('show');
+				adPopup.classList.add('hiding');
+				adDismissed = true;
+				
+				// Remember dismissal for 24 hours
+				if (!autoClose) {
+					localStorage.setItem('smartAdDismissed', Date.now().toString());
+				}
+
+				setTimeout(() => {
+					adPopup.style.display = 'none';
+				}, 400);
+			};
+
+			// Initialize
+			function initSmartAd() {
+				if (checkDismissedStatus()) {
+					return; // Don't show if dismissed recently
+				}
+
+				trackUserBehavior();
+
+				// Check every 2 seconds if we should show the ad
+				const checkInterval = setInterval(() => {
+					if (!adShown && !adDismissed) {
+						showSmartAd();
+					} else {
+						clearInterval(checkInterval);
+					}
+				}, 2000);
+
+				// Also check on scroll events
+				window.addEventListener('scroll', () => {
+					if (!adShown && !adDismissed) {
+						showSmartAd();
+					}
+				}, { passive: true });
+			}
+
+			// Start when DOM is ready
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initSmartAd);
+			} else {
+				initSmartAd();
+			}
+		})();
+
+		// AI-Powered Slideshow System
+		(function() {
+			const slideshow = document.getElementById('aiSlideshow');
+			const indicators = document.getElementById('aiSlideshowIndicators');
+			if (!slideshow) return;
+
+			const slides = slideshow.querySelectorAll('.ai-slide');
+			let currentSlide = 0;
+			let slideInterval = null;
+			let userEngagement = {
+				scrollDepth: 0,
+				timeOnPage: 0,
+				interactions: 0,
+				isActive: true,
+				lastInteraction: Date.now()
+			};
+
+			// Initialize indicators
+			slides.forEach((slide, index) => {
+				const indicator = document.createElement('div');
+				indicator.className = 'ai-indicator' + (index === 0 ? ' active' : '');
+				indicator.addEventListener('click', () => goToSlide(index));
+				indicators.appendChild(indicator);
+			});
+
+			// Track user engagement
+			function trackEngagement() {
+				// Track scroll depth
+				let maxScroll = 0;
+				window.addEventListener('scroll', () => {
+					const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
+					if (scrollPercent > maxScroll) {
+						maxScroll = scrollPercent;
+						userEngagement.scrollDepth = maxScroll;
+					}
+					userEngagement.lastInteraction = Date.now();
+					userEngagement.isActive = true;
+				}, { passive: true });
+
+				// Track time on page
+				setInterval(() => {
+					userEngagement.timeOnPage++;
+					// Check if user is inactive (no interaction for 10 seconds)
+					if (Date.now() - userEngagement.lastInteraction > 10000) {
+						userEngagement.isActive = false;
+					}
+				}, 1000);
+
+				// Track clicks/interactions
+				document.addEventListener('click', () => {
+					userEngagement.interactions++;
+					userEngagement.lastInteraction = Date.now();
+					userEngagement.isActive = true;
+				}, { passive: true });
+			}
+
+			// AI: Calculate optimal slide duration based on engagement
+			function calculateSlideDuration() {
+				let baseDuration = 4000; // 4 seconds base
+
+				// If user is highly engaged, slow down
+				if (userEngagement.scrollDepth > 50 || userEngagement.interactions > 3) {
+					baseDuration = 6000; // 6 seconds
+				}
+
+				// If user is inactive, speed up
+				if (!userEngagement.isActive) {
+					baseDuration = 3000; // 3 seconds
+				}
+
+				// Adjust based on time on page (longer = slower)
+				if (userEngagement.timeOnPage > 30) {
+					baseDuration += 2000;
+				}
+
+				return baseDuration;
+			}
+
+			// AI: Select next slide based on priority and engagement
+			function selectNextSlide() {
+				const priorities = {
+					high: 3,
+					medium: 2,
+					low: 1
+				};
+
+				// If user is highly engaged, show high-priority slides
+				if (userEngagement.scrollDepth > 30 || userEngagement.interactions > 2) {
+					const highPrioritySlides = Array.from(slides).filter(s => 
+						s.dataset.priority === 'high'
+					);
+					if (highPrioritySlides.length > 0) {
+						const randomHigh = highPrioritySlides[Math.floor(Math.random() * highPrioritySlides.length)];
+						return Array.from(slides).indexOf(randomHigh);
+					}
+				}
+
+				// Otherwise, cycle through all slides
+				return (currentSlide + 1) % slides.length;
+			}
+
+			// Go to specific slide
+			function goToSlide(index) {
+				if (index < 0 || index >= slides.length) return;
+
+				slides[currentSlide].classList.remove('active');
+				indicators.children[currentSlide].classList.remove('active');
+
+				currentSlide = index;
+
+				slides[currentSlide].classList.add('active');
+				indicators.children[currentSlide].classList.add('active');
+
+				// Reset timer with AI-calculated duration
+				clearInterval(slideInterval);
+				startSlideshow();
+			}
+
+			// Start slideshow with AI timing
+			function startSlideshow() {
+				const duration = calculateSlideDuration();
+				
+				slideInterval = setTimeout(() => {
+					const nextSlide = selectNextSlide();
+					goToSlide(nextSlide);
+				}, duration);
+			}
+
+			// Pause when user hovers
+			slideshow.addEventListener('mouseenter', () => {
+				clearInterval(slideInterval);
+			});
+
+			// Resume when user leaves
+			slideshow.addEventListener('mouseleave', () => {
+				startSlideshow();
+			});
+
+			// Initialize
+			function initAISlideshow() {
+				trackEngagement();
+				startSlideshow();
+			}
+
+			// Start when DOM is ready
+			if (document.readyState === 'loading') {
+				document.addEventListener('DOMContentLoaded', initAISlideshow);
+			} else {
+				initAISlideshow();
+			}
+	})();
+</script>
+
+<!-- Live Deal Ticker Script -->
+<script>
+	// Deal ticker data and animation
+	const dealTickerDeals = [
+		{ emoji: '⚡', text: 'iPhone 13 Pro Max', badge: 'Only 2 Left!' },
+		{ emoji: '🔥', text: 'Save GH₵2000 on MacBooks', badge: 'Hot Deal' },
+		{ emoji: '💎', text: 'Samsung Galaxy S23 Ultra', badge: '3 Left' },
+		{ emoji: '⚡', text: 'iPad Pro - Excellent Condition', badge: 'Limited Stock' },
+		{ emoji: '🎯', text: 'AirPods Pro 2nd Gen', badge: 'Save GH₵500' },
+		{ emoji: '🔥', text: 'Dell XPS 15 - Like New', badge: 'Only 1 Left!' },
+		{ emoji: '💥', text: 'PlayStation 5', badge: 'Back in Stock' },
+		{ emoji: '⚡', text: 'Apple Watch Series 8', badge: 'Save GH₵800' },
+		{ emoji: '🌟', text: 'Nintendo Switch OLED', badge: '5 Left' },
+		{ emoji: '🔥', text: 'MacBook Air M2', badge: 'Hot Deal' }
+	];
+
+	let currentDealIndex = 0;
+	const maxVisibleDeals = 5;
+	let dealTickerInterval;
+
+	function createDealElement(deal) {
+		const dealItem = document.createElement('div');
+		dealItem.className = 'deal-item';
+		dealItem.innerHTML = `
+			<span class="deal-emoji">${deal.emoji}</span>
+			<p class="deal-text">${deal.text}</p>
+			<span class="deal-badge">${deal.badge}</span>
+		`;
+		return dealItem;
+	}
+
+	function initializeDealTicker() {
+		const container = document.getElementById('dealTickerContent');
+		if (!container) return;
+
+		// Add initial deals
+		for (let i = 0; i < maxVisibleDeals; i++) {
+			const deal = dealTickerDeals[i % dealTickerDeals.length];
+			const dealElement = createDealElement(deal);
+			dealElement.style.animationDelay = `${i * 0.1}s`;
+			container.appendChild(dealElement);
+		}
+
+		currentDealIndex = maxVisibleDeals;
+
+		// Start rotating deals
+		startDealRotation();
+	}
+
+	function startDealRotation() {
+		dealTickerInterval = setInterval(() => {
+			rotateDeal();
+		}, 4000); // Change deal every 4 seconds
+	}
+
+	function rotateDeal() {
+		const container = document.getElementById('dealTickerContent');
+		if (!container) return;
+
+		const deals = container.querySelectorAll('.deal-item');
+		if (deals.length === 0) return;
+
+		// Fade out the first deal
+		const firstDeal = deals[0];
+		firstDeal.classList.add('fade-out');
+
+		// After fade out, remove it and add new deal
+		setTimeout(() => {
+			firstDeal.remove();
+
+			// Add new deal at the end
+			const newDeal = dealTickerDeals[currentDealIndex % dealTickerDeals.length];
+			const newDealElement = createDealElement(newDeal);
+			container.appendChild(newDealElement);
+
+			currentDealIndex++;
+		}, 500);
+	}
+
+	// Initialize on page load
+	document.addEventListener('DOMContentLoaded', () => {
+		// Wait a bit before showing ticker
+		setTimeout(() => {
+			initializeDealTicker();
+		}, 1000);
+	});
+
+	// Pause rotation on hover
+	const ticker = document.querySelector('.live-deal-ticker');
+	if (ticker) {
+		ticker.addEventListener('mouseenter', () => {
+			clearInterval(dealTickerInterval);
+		});
+
+		ticker.addEventListener('mouseleave', () => {
+			startDealRotation();
+		});
+	}
+</script>
+
+</body>
 
 </html>

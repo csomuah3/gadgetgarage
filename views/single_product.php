@@ -1677,6 +1677,87 @@ try {
             }
         }
     </style>
+    
+    <!-- Define condition selection functions BEFORE HTML uses them -->
+    <script type="text/javascript">
+    // Define functions immediately so onclick handlers can use them
+    window.selectCondition = function(condition) {
+        console.log('selectCondition called:', condition);
+        
+        // Update visual selection
+        var allOptions = document.querySelectorAll('[data-condition]');
+        for (var i = 0; i < allOptions.length; i++) {
+            allOptions[i].style.background = 'rgba(255,255,255,0.1)';
+            allOptions[i].style.border = 'none';
+        }
+        
+        var selectedOption = document.querySelector('[data-condition="' + condition + '"]');
+        if (selectedOption) {
+            selectedOption.style.background = 'rgba(255,255,255,0.3)';
+            selectedOption.style.border = '2px solid #10b981';
+        }
+        
+        // Store selected condition for later use
+        window._selectedCondition = condition;
+        
+        console.log('Condition selected:', condition);
+    };
+
+    window.addToCartWithCondition = function(productId) {
+        console.log('Add to cart called:', productId);
+        
+        var condition = window._selectedCondition || 'excellent';
+        
+        // Create form data
+        var formData = new FormData();
+        formData.append('product_id', productId);
+        formData.append('quantity', 1);
+        formData.append('condition', condition);
+        
+        // Send to cart action
+        fetch('../actions/add_to_cart_action.php', {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success' || data.success) {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Added to Cart!',
+                        text: 'Product has been added to your cart.',
+                        icon: 'success',
+                        timer: 2000
+                    });
+                } else {
+                    alert('Product added to cart successfully!');
+                }
+                
+                // Update cart count
+                var cartBadge = document.getElementById('cartBadge');
+                if (cartBadge && data.cart_count) {
+                    cartBadge.textContent = data.cart_count;
+                }
+            } else {
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Error',
+                        text: data.message || 'Failed to add product to cart',
+                        icon: 'error'
+                    });
+                } else {
+                    alert(data.message || 'Failed to add product to cart');
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            alert('An error occurred. Please try again.');
+        });
+    };
+    
+    console.log('Functions defined in head - selectCondition:', typeof window.selectCondition);
+    </script>
 </head>
 
 <body>

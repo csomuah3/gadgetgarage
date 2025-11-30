@@ -3909,7 +3909,7 @@ try {
 
         .related-products-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 30px;
             max-width: 1400px;
             margin: 0 auto;
@@ -4042,7 +4042,7 @@ try {
 
         @media (max-width: 768px) {
             .related-products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
                 gap: 20px;
             }
 

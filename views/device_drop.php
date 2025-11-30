@@ -305,7 +305,7 @@ try {
 
         .condition-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 20px;
             margin-top: 15px;
         }
@@ -564,7 +564,7 @@ try {
         /* Checkbox Styles */
         .checkbox-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 14px;
             margin-top: 10px;
         }
@@ -1046,7 +1046,7 @@ try {
 
         .value-options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 1.5rem;
             margin-bottom: 2rem;
         }

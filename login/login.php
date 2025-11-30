@@ -998,10 +998,10 @@ try {
 			position: relative;
 		}
 
-		/* Welcome Panel - GadgetGarage Teal/Green Gradient - LEFT SIDE */
+		/* Welcome Panel - Vibrant Blue Gradient - LEFT SIDE */
 		.welcome-panel {
 			flex: 0 0 50%;
-			background: var(--gradient-primary);
+			background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
 			display: flex;
 			flex-direction: column;
 			align-items: center;
@@ -1089,7 +1089,7 @@ try {
 		.welcome-signup-btn:hover,
 		.welcome-signin-btn:hover {
 			background: white;
-			color: var(--gg-teal);
+			color: #3b82f6;
 			transform: translateY(-2px);
 			box-shadow: 0 8px 20px rgba(255, 255, 255, 0.3);
 			text-decoration: none;

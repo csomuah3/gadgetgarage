@@ -1330,14 +1330,13 @@ try {
 			display: flex;
 			justify-content: space-between;
 			gap: 20px;
-			padding: 0 30px;
-			padding: 24px 0;
+			padding: 24px 15px;
 			background: #ffffff;
 		}
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 3.5fr 1fr;
+			grid-template-columns: 4.5fr 1fr;
 			/* much wider left + narrow right */
 			gap: 28px;
 			/* spacing between cards */
@@ -1408,7 +1407,7 @@ try {
 
 		@keyframes kenBurnsZoomPan {
 			0% {
-				transform: scale(1.2) translateX(-3%);
+				transform: translateY(-120px) scale(1.5) translateX(-3%);
 				opacity: 0;
 			}
 
@@ -1417,7 +1416,7 @@ try {
 			}
 
 			100% {
-				transform: scale(1) translateX(0);
+				transform: translateY(-120px) scale(1.9) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1433,7 +1432,7 @@ try {
 
 		@keyframes kenBurnsZoomPanAlt {
 			0% {
-				transform: scale(1.25) translateX(3%) translateY(-2%);
+				transform: translateY(-120px) scale(1.6) translateX(3%);
 				opacity: 0;
 			}
 
@@ -1442,7 +1441,7 @@ try {
 			}
 
 			100% {
-				transform: scale(1) translateX(0) translateY(0);
+				transform: translateY(-120px) scale(1.9) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1912,11 +1911,11 @@ try {
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 800px;
-			min-height: 700px;
-			max-width: 130%;
+			max-height: 900px;
+			min-height: 800px;
+			max-width: 140%;
 			object-fit: contain;
-			transform: translateY(-80px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.9);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -1925,20 +1924,20 @@ try {
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-			transform: translateY(-80px) translateX(-30px) scale(1.5);
+			transform: translateY(-120px) translateX(-30px) scale(1.8);
 			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - initial state (hidden, off to the right) */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(-80px) translateX(60px) scale(1.4);
+			transform: translateY(-120px) translateX(60px) scale(1.7);
 		}
 
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(-80px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.9);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
@@ -2284,8 +2283,8 @@ try {
 
 		.deal-options-btn {
 			width: 100%;
-			background: #e5e7eb;
-			color: #4b5563;
+			background: linear-gradient(135deg, #1E3A5F, #2563EB);
+			color: #ffffff;
 			border: none;
 			padding: 15px;
 			border-radius: 12px;
@@ -2295,11 +2294,17 @@ try {
 			transition: all 0.3s ease;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
+			box-shadow: 0 2px 8px rgba(37, 99, 235, 0.2);
 		}
 
 		.deal-options-btn:hover {
-			background: #d1d5db;
+			background: linear-gradient(135deg, #2563EB, #1E3A5F);
 			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+		}
+
+		.deal-options-btn:active {
+			transform: translateY(0);
 		}
 
 		@media (max-width: 1200px) {
@@ -5765,7 +5770,7 @@ try {
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='views/all_product.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'">OPTIONS</button>
 				</div>
 
 				<!-- Deal 2: Apple iPad -->
@@ -5831,7 +5836,7 @@ try {
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='views/all_product.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'">OPTIONS</button>
 				</div>
 
 				<!-- Deal 3: LG Apple iPad Mini -->
@@ -5897,7 +5902,7 @@ try {
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='views/all_product.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'">OPTIONS</button>
 				</div>
 			</div>
 		</div>

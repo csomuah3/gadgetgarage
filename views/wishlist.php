@@ -28,6 +28,10 @@ if ($is_logged_in) {
     $wishlist_items = get_wishlist_items_ctr($customer_id);
     $wishlist_count = get_wishlist_count_ctr($customer_id);
 }
+
+// Get user's name for sidebar
+$user_name = $_SESSION['name'] ?? 'User';
+$first_name = explode(' ', $user_name)[0];
 ?>
 
 <!DOCTYPE html>
@@ -44,6 +48,7 @@ if ($is_logged_in) {
     
     <!-- Reusable Header CSS -->
     <link href="../includes/header.css" rel="stylesheet">
+    <link href="../includes/account_sidebar.css" rel="stylesheet">
     
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
@@ -60,7 +65,21 @@ if ($is_logged_in) {
             color: #1a1a1a;
         }
 
-        
+        /* Account Layout */
+        .account-layout {
+            display: flex;
+            min-height: calc(100vh - 140px);
+            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
+            position: relative;
+            margin-top: 0;
+        }
+
+        /* Main Content */
+        .account-content {
+            flex: 1;
+            padding: 25px 30px;
+            max-width: calc(100% - 240px);
+        }
 
         .logo {
             font-size: 2.2rem;
@@ -137,7 +156,7 @@ if ($is_logged_in) {
 
         .wishlist-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 30px;
             margin-top: 30px;
         }
@@ -256,7 +275,7 @@ if ($is_logged_in) {
 
         @media (max-width: 768px) {
             .wishlist-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
                 gap: 20px;
             }
         }
@@ -513,7 +532,13 @@ if ($is_logged_in) {
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
     
-    
+    <!-- Account Layout -->
+    <div class="account-layout">
+        <!-- Account Sidebar -->
+        <?php include '../includes/account_sidebar.php'; ?>
+
+        <!-- Main Content -->
+        <main class="account-content">
     <!-- Wishlist Content -->
     <div class="wishlist-container">
         <div class="container">
@@ -621,6 +646,9 @@ if ($is_logged_in) {
             <?php endif; ?>
         </div>
     </div>
+        </main>
+    </div>
+    <!-- End Account Layout -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/header.js"></script>

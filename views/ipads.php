@@ -19,27 +19,41 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products and filter for IPADS ONLY
-$all_products = get_all_products_ctr();
+// Get categories to find iPad/tablet category ID
+$categories = get_all_categories_ctr();
+$ipad_category_id = null;
 
-// Filter for iPads specifically
-$ipad_products = array_filter($all_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+// Find iPad/tablet category by name (case-insensitive)
+foreach ($categories as $cat) {
+    $cat_name_lower = strtolower(trim($cat['cat_name']));
+    if (strpos($cat_name_lower, 'ipad') !== false || 
+        strpos($cat_name_lower, 'tablet') !== false ||
+        $cat_name_lower === 'ipads' ||
+        $cat_name_lower === 'ipad') {
+        $ipad_category_id = $cat['cat_id'];
+        break;
+    }
+}
 
-    // iPad-specific filtering
-    return (strpos($cat_name, 'ipad') !== false ||
-            strpos($cat_name, 'tablet') !== false ||
-            strpos($title, 'ipad') !== false ||
-            strpos($title, 'tablet') !== false ||
-            (strpos($title, 'apple') !== false && strpos($title, 'tab') !== false));
-});
+// Get products by category ID if found, otherwise fallback to all products
+if ($ipad_category_id) {
+    $ipad_products = get_products_by_category_ctr($ipad_category_id);
+} else {
+    // Fallback: get all products and filter by category name
+    $all_products = get_all_products_ctr();
+    $ipad_products = array_filter($all_products, function ($product) {
+        $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+        return (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
+    });
+}
 
-// Get real categories and brands from database
-try {
-    $categories = get_all_categories_ctr();
-} catch (Exception $e) {
-    $categories = [];
+// Get categories and brands from database (if not already loaded)
+if (empty($categories)) {
+    try {
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        $categories = [];
+    }
 }
 
 try {
@@ -1771,7 +1785,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                 </div>
 
                 <!-- Products Grid -->
-                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
                     <?php foreach ($products_to_display as $product): ?>
                         <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
                             <div class="product-image-container" style="position: relative; overflow: hidden; background: #f9fafb;">

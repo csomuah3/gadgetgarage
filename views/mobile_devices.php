@@ -18,33 +18,53 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products and filter for mobile devices ONLY
-$all_products = get_all_products_ctr();
+// Get categories to find smartphone and iPad/tablet category IDs
+$categories = get_all_categories_ctr();
+$smartphone_category_id = null;
+$ipad_category_id = null;
 
-// Simple mobile filtering - ONLY show mobile-related products
-$mobile_products = array_filter($all_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+// Find smartphone and iPad categories by name (case-insensitive)
+foreach ($categories as $cat) {
+    $cat_name_lower = strtolower(trim($cat['cat_name']));
+    if (strpos($cat_name_lower, 'smartphone') !== false || 
+        (strpos($cat_name_lower, 'phone') !== false && strpos($cat_name_lower, 'smart') !== false)) {
+        $smartphone_category_id = $cat['cat_id'];
+    }
+    if (strpos($cat_name_lower, 'ipad') !== false || strpos($cat_name_lower, 'tablet') !== false) {
+        $ipad_category_id = $cat['cat_id'];
+    }
+}
 
-    // Mobile categories and keywords
-    return (strpos($cat_name, 'smartphone') !== false ||
-            strpos($cat_name, 'mobile') !== false ||
-            strpos($cat_name, 'tablet') !== false ||
-            strpos($cat_name, 'ipad') !== false ||
-            strpos($cat_name, 'phone') !== false ||
-            strpos($title, 'iphone') !== false ||
-            strpos($title, 'samsung') !== false ||
-            strpos($title, 'smartphone') !== false ||
-            strpos($title, 'tablet') !== false ||
-            strpos($title, 'ipad') !== false ||
-            strpos($title, 'phone') !== false);
-});
+// Get products by category IDs
+$mobile_products = [];
+if ($smartphone_category_id) {
+    $smartphone_products = get_products_by_category_ctr($smartphone_category_id);
+    $mobile_products = array_merge($mobile_products, $smartphone_products);
+}
+if ($ipad_category_id) {
+    $ipad_products = get_products_by_category_ctr($ipad_category_id);
+    $mobile_products = array_merge($mobile_products, $ipad_products);
+}
 
-// Get real categories and brands from database
-try {
-    $categories = get_all_categories_ctr();
-} catch (Exception $e) {
-    $categories = [];
+// If no categories found, fallback to string matching
+if (empty($mobile_products)) {
+    $all_products = get_all_products_ctr();
+    $mobile_products = array_filter($all_products, function ($product) {
+        $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+        return (strpos($cat_name, 'smartphone') !== false || 
+                strpos($cat_name, 'phone') !== false ||
+                strpos($cat_name, 'ipad') !== false ||
+                strpos($cat_name, 'tablet') !== false);
+    });
+}
+
+// Get categories and brands from database (if not already loaded)
+if (empty($categories)) {
+    try {
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        $categories = [];
+    }
 }
 
 try {
@@ -555,7 +575,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
         /* Products Grid */
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 30px;
             padding: 20px 0;
         }
@@ -686,7 +706,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
             }
 
             .products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
                 gap: 20px;
             }
 
@@ -974,7 +994,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                 </div>
 
                 <!-- Products Grid -->
-                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px;">
+                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
                     <?php foreach ($products_to_display as $product): ?>
                         <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)" style="cursor: pointer;">
                             <div class="product-image-container" style="position: relative; overflow: hidden; border-radius: 12px; background: #f9fafb;">

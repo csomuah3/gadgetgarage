@@ -829,7 +829,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
         /* Contact Hero Section */
         .contact-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #2563EB 0%, #1E3A5F 100%);
             color: white;
             padding: 80px 0;
             text-align: center;
@@ -910,7 +910,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             left: 0;
             right: 0;
             height: 4px;
-            background: linear-gradient(90deg, #667eea, #764ba2);
+            background: linear-gradient(90deg, #2563EB, #1E3A5F);
         }
 
         .contact-card:hover {
@@ -922,14 +922,14 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
             width: 80px;
             height: 80px;
             border-radius: 50%;
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #2563EB, #1E3A5F);
             color: white;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 2rem;
             margin-bottom: 30px;
-            box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.3);
         }
 
         .contact-card h3 {
@@ -953,13 +953,13 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         }
 
         .contact-detail a {
-            color: #667eea;
+            color: #2563EB;
             text-decoration: none;
             transition: color 0.3s ease;
         }
 
         .contact-detail a:hover {
-            color: #764ba2;
+            color: #1E3A5F;
         }
 
         /* Contact Form */
@@ -1010,9 +1010,9 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
         .form-control:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #2563EB;
             background: white;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
             transform: translateY(-1px);
         }
 
@@ -1023,7 +1023,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
         }
 
         .submit-btn {
-            background: linear-gradient(135deg, #667eea, #764ba2);
+            background: linear-gradient(135deg, #2563EB, #1E3A5F);
             color: white;
             border: none;
             padding: 16px 40px;
@@ -1041,7 +1041,7 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
         .submit-btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+            box-shadow: 0 10px 20px rgba(37, 99, 235, 0.3);
         }
 
         .submit-btn:active {
@@ -1421,4 +1421,231 @@ $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 <body>
     <?php include '../includes/header.php'; ?>
     
+    <!-- Contact Hero Section -->
+    <section class="contact-hero">
+        <div class="container">
+            <h1 class="hero-title">Get in Touch</h1>
+            <p class="hero-subtitle">We're here to help! Reach out to us for any questions, support, or inquiries.</p>
+        </div>
+    </section>
+
+    <!-- Contact Content Section -->
+    <section class="contact-content">
+        <div class="container">
+            <h2 class="section-title">Contact Information</h2>
+            <p class="section-subtitle">Choose the best way to reach us or visit our location</p>
+            
+            <div class="row">
+                <div class="col-lg-4 col-md-6 mb-4 fade-in-up">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-phone"></i>
+                        </div>
+                        <h3>Phone</h3>
+                        <p>Call us for immediate assistance</p>
+                        <div class="contact-detail">
+                            <a href="tel:+233551387578">+233 055-138-7578</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4 fade-in-up delay-1">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-envelope"></i>
+                        </div>
+                        <h3>Email</h3>
+                        <p>Send us an email anytime</p>
+                        <div class="contact-detail">
+                            <a href="mailto:info@gadgetgarage.gh">info@gadgetgarage.gh</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-4 col-md-6 mb-4 fade-in-up delay-2">
+                    <div class="contact-card">
+                        <div class="contact-icon">
+                            <i class="fas fa-map-marker-alt"></i>
+                        </div>
+                        <h3>Address</h3>
+                        <p>Visit our physical location</p>
+                        <div class="contact-detail">
+                            Accra, Ghana
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Contact Form -->
+            <div class="row">
+                <div class="col-lg-8 mx-auto">
+                    <div class="contact-form fade-in-up delay-3">
+                        <h2 class="form-title">Send us a Message</h2>
+                        <p class="form-subtitle">Fill out the form below and we'll get back to you as soon as possible</p>
+                        
+                        <div id="alertContainer"></div>
+                        
+                        <form id="contactForm" method="POST">
+                            <div class="form-group">
+                                <label class="form-label" for="full_name">Full Name *</label>
+                                <input type="text" class="form-control" id="full_name" name="full_name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="email">Email Address *</label>
+                                <input type="email" class="form-control" id="email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="phone">Phone Number</label>
+                                <input type="tel" class="form-control" id="phone" name="phone">
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="subject">Subject *</label>
+                                <input type="text" class="form-control" id="subject" name="subject" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label class="form-label" for="message">Message *</label>
+                                <textarea class="form-control textarea" id="message" name="message" rows="5" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="submit-btn">
+                                <i class="fas fa-paper-plane"></i>
+                                Send Message
+                            </button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Map Section -->
+    <section class="map-section">
+        <div class="container">
+            <div class="map-container">
+                <div class="map-placeholder">
+                    <i class="fas fa-map-marked-alt"></i>
+                    <h3>Visit Our Location</h3>
+                    <p>Accra, Ghana</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Business Hours -->
+    <section class="contact-content">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-6 mx-auto">
+                    <div class="business-hours">
+                        <h3 style="font-size: 1.8rem; font-weight: 700; margin-bottom: 30px; color: #1a202c;">Business Hours</h3>
+                        <div class="hours-item today">
+                            <span class="hours-day">Monday - Friday</span>
+                            <span class="hours-time">9:00 AM - 6:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span class="hours-day">Saturday</span>
+                            <span class="hours-time">10:00 AM - 4:00 PM</span>
+                        </div>
+                        <div class="hours-item">
+                            <span class="hours-day">Sunday</span>
+                            <span class="hours-time">Closed</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <?php include '../includes/footer.php'; ?>
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+        // Handle contact form submission
+        document.getElementById('contactForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const submitBtn = form.querySelector('.submit-btn');
+            const originalBtnText = submitBtn.innerHTML;
+            const formData = new FormData(form);
+            
+            // Disable submit button
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
+
+            fetch('../actions/contact_action.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Message Sent!',
+                        text: data.message || 'Thank you for your message! We will get back to you within 24 hours.',
+                        confirmButtonColor: '#2563EB',
+                        confirmButtonText: 'OK'
+                    }).then(() => {
+                        form.reset();
+                    });
+                } else {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: data.message || 'Failed to send message. Please try again.',
+                        confirmButtonColor: '#2563EB',
+                        confirmButtonText: 'OK'
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred. Please try again later.',
+                    confirmButtonColor: '#2563EB',
+                    confirmButtonText: 'OK'
+                });
+            })
+            .finally(() => {
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = originalBtnText;
+            });
+        });
+
+        // Animate elements on scroll
+        function animateOnScroll() {
+            const elements = document.querySelectorAll('.fade-in-up');
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, {
+                threshold: 0.1
+            });
+
+            elements.forEach(element => {
+                observer.observe(element);
+            });
+        }
+
+        // Initialize animations on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            animateOnScroll();
+        });
+    </script>
+</body>
+</html>
 

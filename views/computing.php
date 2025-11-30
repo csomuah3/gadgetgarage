@@ -18,34 +18,49 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products and filter for computing devices ONLY
-$all_products = get_all_products_ctr();
+// Get categories to find laptop and desktop category IDs
+$categories = get_all_categories_ctr();
+$laptop_category_id = null;
+$desktop_category_id = null;
 
-// Simple computing filtering - ONLY show computing-related products
-$computing_products = array_filter($all_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+// Find laptop and desktop categories by name (case-insensitive)
+foreach ($categories as $cat) {
+    $cat_name_lower = strtolower(trim($cat['cat_name']));
+    if (strpos($cat_name_lower, 'laptop') !== false || strpos($cat_name_lower, 'notebook') !== false) {
+        $laptop_category_id = $cat['cat_id'];
+    }
+    if (strpos($cat_name_lower, 'desktop') !== false || strpos($cat_name_lower, 'computer') !== false) {
+        $desktop_category_id = $cat['cat_id'];
+    }
+}
 
-    // Computing categories and keywords
-    return (strpos($cat_name, 'laptop') !== false ||
-            strpos($cat_name, 'desktop') !== false ||
-            strpos($cat_name, 'computing') !== false ||
-            strpos($cat_name, 'computer') !== false ||
-            strpos($title, 'laptop') !== false ||
-            strpos($title, 'desktop') !== false ||
-            strpos($title, 'computer') !== false ||
-            strpos($title, 'macbook') !== false ||
-            strpos($title, 'imac') !== false ||
-            strpos($title, 'pc ') !== false ||
-            strpos($title, 'hp ') !== false ||
-            strpos($title, 'dell') !== false);
-});
+// Get products by category IDs
+$computing_products = [];
+if ($laptop_category_id) {
+    $laptop_products = get_products_by_category_ctr($laptop_category_id);
+    $computing_products = array_merge($computing_products, $laptop_products);
+}
+if ($desktop_category_id) {
+    $desktop_products = get_products_by_category_ctr($desktop_category_id);
+    $computing_products = array_merge($computing_products, $desktop_products);
+}
 
-// Get all categories and brands from database
-try {
-    $categories = get_all_categories_ctr();
-} catch (Exception $e) {
-    $categories = [];
+// If no categories found, fallback to string matching
+if (empty($computing_products)) {
+    $all_products = get_all_products_ctr();
+    $computing_products = array_filter($all_products, function ($product) {
+        $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+        return (strpos($cat_name, 'laptop') !== false || strpos($cat_name, 'desktop') !== false);
+    });
+}
+
+// Get categories and brands from database (if not already loaded)
+if (empty($categories)) {
+    try {
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        $categories = [];
+    }
 }
 
 try {
@@ -451,7 +466,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }

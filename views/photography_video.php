@@ -18,34 +18,49 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products and filter for photography & video devices ONLY
-$all_products = get_all_products_ctr();
+// Get categories to find camera and video equipment category IDs
+$categories = get_all_categories_ctr();
+$camera_category_id = null;
+$video_category_id = null;
 
-// Simple photo/video filtering - ONLY show photography/video-related products
-$photo_video_products = array_filter($all_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+// Find camera and video categories by name (case-insensitive)
+foreach ($categories as $cat) {
+    $cat_name_lower = strtolower(trim($cat['cat_name']));
+    if (strpos($cat_name_lower, 'camera') !== false || strpos($cat_name_lower, 'photo') !== false) {
+        $camera_category_id = $cat['cat_id'];
+    }
+    if (strpos($cat_name_lower, 'video') !== false || strpos($cat_name_lower, 'video equipment') !== false) {
+        $video_category_id = $cat['cat_id'];
+    }
+}
 
-    // Photo/Video categories and keywords
-    return (strpos($cat_name, 'camera') !== false ||
-            strpos($cat_name, 'video') !== false ||
-            strpos($cat_name, 'photo') !== false ||
-            strpos($cat_name, 'lens') !== false ||
-            strpos($title, 'camera') !== false ||
-            strpos($title, 'video') !== false ||
-            strpos($title, 'photo') !== false ||
-            strpos($title, 'lens') !== false ||
-            strpos($title, 'canon') !== false ||
-            strpos($title, 'nikon') !== false ||
-            strpos($title, 'sony') !== false ||
-            strpos($title, 'camcorder') !== false);
-});
+// Get products by category IDs
+$photo_video_products = [];
+if ($camera_category_id) {
+    $camera_products = get_products_by_category_ctr($camera_category_id);
+    $photo_video_products = array_merge($photo_video_products, $camera_products);
+}
+if ($video_category_id) {
+    $video_products = get_products_by_category_ctr($video_category_id);
+    $photo_video_products = array_merge($photo_video_products, $video_products);
+}
 
-// Get all categories and brands from database
-try {
-    $categories = get_all_categories_ctr();
-} catch (Exception $e) {
-    $categories = [];
+// If no categories found, fallback to string matching
+if (empty($photo_video_products)) {
+    $all_products = get_all_products_ctr();
+    $photo_video_products = array_filter($all_products, function ($product) {
+        $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+        return (strpos($cat_name, 'camera') !== false || strpos($cat_name, 'video') !== false);
+    });
+}
+
+// Get categories and brands from database (if not already loaded)
+if (empty($categories)) {
+    try {
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        $categories = [];
+    }
 }
 
 try {
@@ -512,7 +527,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }

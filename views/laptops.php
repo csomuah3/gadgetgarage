@@ -19,30 +19,41 @@ $customer_id = $is_logged_in ? $_SESSION['user_id'] : null;
 $ip_address = $_SERVER['REMOTE_ADDR'];
 $cart_count = get_cart_count_ctr($customer_id, $ip_address);
 
-// Get all products and filter for LAPTOPS ONLY
-$all_products = get_all_products_ctr();
+// Get categories to find laptop category ID
+$categories = get_all_categories_ctr();
+$laptop_category_id = null;
 
-// Filter for laptops specifically
-$laptop_products = array_filter($all_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+// Find laptop category by name (case-insensitive)
+foreach ($categories as $cat) {
+    $cat_name_lower = strtolower(trim($cat['cat_name']));
+    if (strpos($cat_name_lower, 'laptop') !== false || 
+        strpos($cat_name_lower, 'notebook') !== false ||
+        $cat_name_lower === 'laptops' ||
+        $cat_name_lower === 'laptop') {
+        $laptop_category_id = $cat['cat_id'];
+        break;
+    }
+}
 
-    // Laptop-specific filtering
-    return (strpos($cat_name, 'laptop') !== false ||
-            strpos($cat_name, 'notebook') !== false ||
-            strpos($title, 'laptop') !== false ||
-            strpos($title, 'macbook') !== false ||
-            strpos($title, 'notebook') !== false ||
-            strpos($title, 'thinkpad') !== false ||
-            strpos($title, 'inspiron') !== false ||
-            strpos($title, 'pavilion') !== false);
-});
+// Get products by category ID if found, otherwise fallback to all products
+if ($laptop_category_id) {
+    $laptop_products = get_products_by_category_ctr($laptop_category_id);
+} else {
+    // Fallback: get all products and filter by category name
+    $all_products = get_all_products_ctr();
+    $laptop_products = array_filter($all_products, function ($product) {
+        $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+        return (strpos($cat_name, 'laptop') !== false || strpos($cat_name, 'notebook') !== false);
+    });
+}
 
-// Get real categories and brands from database
-try {
-    $categories = get_all_categories_ctr();
-} catch (Exception $e) {
-    $categories = [];
+// Get categories and brands from database (if not already loaded)
+if (empty($categories)) {
+    try {
+        $categories = get_all_categories_ctr();
+    } catch (Exception $e) {
+        $categories = [];
+    }
 }
 
 try {

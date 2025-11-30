@@ -239,10 +239,16 @@ try {
 			margin-bottom: 0.5rem;
 		}
 		
-		.summary-row span:first-child {
-			display: flex;
+		.summary-row > span:first-child {
+			display: inline-flex;
 			align-items: center;
 			flex-wrap: nowrap;
+			flex: 1;
+		}
+		
+		.summary-row .ms-auto {
+			margin-left: auto;
+			flex-shrink: 0;
 		}
 
 		.summary-row.total {
@@ -603,7 +609,14 @@ try {
 									</div>
 									<div class="col">
 										<h6 class="mb-1"><?php echo htmlspecialchars($item['product_title']); ?></h6>
-										<small class="text-muted">Quantity: <?php echo $item['qty']; ?></small>
+										<small class="text-muted">
+											Quantity: <?php echo $item['qty']; ?>
+											<?php if (isset($item['condition_type']) && !empty($item['condition_type'])): ?>
+												<span class="ms-2">| Condition: <strong><?php echo htmlspecialchars(ucfirst($item['condition_type'])); ?></strong></span>
+											<?php elseif (isset($item['product_condition']) && !empty($item['product_condition'])): ?>
+												<span class="ms-2">| Condition: <strong><?php echo htmlspecialchars(ucfirst($item['product_condition'])); ?></strong></span>
+											<?php endif; ?>
+										</small>
 									</div>
 									<div class="col-auto">
 										<div class="fw-bold text-primary">
@@ -838,15 +851,15 @@ try {
 
 					<div class="summary-row">
 						<span>Tax:</span>
-						<span class="ms-auto">GH₵ 0.00</span>
+						<span class="ms-auto" id="taxAmount">GH₵ 150.00</span>
 					</div>
 
 					<!-- Discount Row (hidden by default) -->
 					<div class="summary-row discount-row" id="discountRow" style="display: none;">
-						<span class="text-success" id="discountLabel" style="display: inline-flex; align-items: center; flex-wrap: nowrap;">
+						<span class="text-success" id="discountLabel">
 							<i class="fas fa-tag me-1"></i>
 							<span>Discount (<span id="discountPercent">20</span>%):</span>
-							<span class="badge bg-success ms-2" id="discountBadge" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap;">
+							<span class="badge bg-success ms-2" id="discountBadge" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap; display: inline-block;">
 								<i class="fas fa-check-circle me-1"></i>Applied from Cart
 							</span>
 						</span>
@@ -1327,9 +1340,10 @@ try {
 			const appliedStoreCredits = sessionStorage.getItem('appliedStoreCredits');
 			// Get original cart total from PHP
 			const originalCartTotal = <?php echo $cart_total; ?>;
+			const taxAmount = 150.00; // Standard tax
 			
 			// Initialize variables
-			let finalTotal = originalCartTotal;
+			let finalTotal = originalCartTotal + taxAmount;
 			let discountAmount = 0;
 			let storeCreditsAmount = 0;
 			let activeMethod = null; // 'discount' or 'store_credit'
@@ -1341,7 +1355,8 @@ try {
 					console.log('Promo data parsed successfully:', promoData);
 					
 					discountAmount = promoData.discount_amount || 0;
-					finalTotal = promoData.new_total || originalCartTotal;
+					// Apply discount to subtotal, then add tax
+					finalTotal = (promoData.new_total || originalCartTotal) + taxAmount;
 					activeMethod = 'discount';
 					
 					// Show discount row
@@ -1351,18 +1366,13 @@ try {
 						
 						const discountLabel = document.getElementById('discountLabel');
 						if (discountLabel) {
-							// Ensure the label maintains inline-flex display
-							discountLabel.style.display = 'inline-flex';
-							discountLabel.style.alignItems = 'center';
-							discountLabel.style.flexWrap = 'nowrap';
-							
 							let discountText = '';
 							if (promoData.discount_type === 'fixed') {
 								discountText = 'Discount (' + (promoData.promo_code || 'Discount') + '):';
 							} else {
 								discountText = 'Discount (' + promoData.discount_value + '%):';
 							}
-							discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i><span>' + discountText + '</span><span class="badge bg-success ms-2" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap;"><i class="fas fa-check-circle me-1"></i>Applied from Cart</span>';
+							discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i><span>' + discountText + '</span><span class="badge bg-success ms-2" style="font-size: 0.7rem; padding: 2px 6px; white-space: nowrap; display: inline-block;"><i class="fas fa-check-circle me-1"></i>Applied from Cart</span>';
 						}
 						
 						const discountAmountElement = document.getElementById('discountAmount');
@@ -1397,7 +1407,8 @@ try {
 				try {
 					storeCreditsAmount = parseFloat(appliedStoreCredits) || 0;
 					if (storeCreditsAmount > 0) {
-						finalTotal = Math.max(0, originalCartTotal - storeCreditsAmount);
+						// Apply store credits to subtotal, then add tax
+						finalTotal = Math.max(0, originalCartTotal - storeCreditsAmount) + taxAmount;
 						activeMethod = 'store_credit';
 						
 						// Show store credit row
@@ -1439,6 +1450,12 @@ try {
 				} else {
 					subtotalElement.textContent = 'GH₵ ' + originalCartTotal.toFixed(2);
 				}
+			}
+			
+			// Ensure tax is always displayed
+			const taxAmountElement = document.getElementById('taxAmount');
+			if (taxAmountElement) {
+				taxAmountElement.textContent = 'GH₵ ' + taxAmount.toFixed(2);
 			}
 			
 			// Update final total display
@@ -1620,7 +1637,8 @@ try {
 			}
 
 			// Use the total from cart page (already calculated and stored)
-			let totalAmount = <?php echo $cart_total; ?>;
+			const taxAmount = 150.00; // Standard tax
+			let totalAmount = <?php echo $cart_total; ?> + taxAmount;
 			
 			// Check if we have a final total from cart page
 			if (typeof window.cartPageFinalTotal !== 'undefined' && window.cartPageFinalTotal !== null) {
@@ -1634,13 +1652,13 @@ try {
 				if (appliedPromo) {
 					try {
 						const promoData = JSON.parse(appliedPromo);
-						totalAmount = promoData.new_total;
+						totalAmount = promoData.new_total + taxAmount;
 					} catch (error) {
 						console.error('Error parsing promo data:', error);
 					}
 				} else if (appliedStoreCredits) {
 					const creditsAmount = parseFloat(appliedStoreCredits) || 0;
-					totalAmount = Math.max(0, totalAmount - creditsAmount);
+					totalAmount = Math.max(0, totalAmount - creditsAmount - taxAmount) + taxAmount;
 				}
 			}
 

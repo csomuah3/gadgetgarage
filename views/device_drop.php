@@ -67,9 +67,34 @@ try {
         body {
             font-family: "Times New Roman", Times, serif;
             background-color: #ffffff;
-            color: #1a1a1a;
+            color: #000000;
             overflow-x: hidden;
-            font-size: 1.05rem; /* Increased base font size for whole page */
+            font-size: 13px;
+            font-weight: 500;
+        }
+        
+        /* All text content should be black and normal weight like Word document */
+        p, .text, .content, .description, .info-text, 
+        .form-container p, .form-section p, 
+        .success-message, .detail-item p, 
+        .process-info p, .valuation-details p,
+        .value-description, .valuation-details .detail-item p {
+            color: #000000 !important;
+            font-size: 13px !important;
+            font-weight: 500 !important;
+        }
+        
+        /* Ensure all body text is readable like Word document */
+        body, .device-drop-container {
+            font-size: 13px;
+            font-weight: 500;
+            color: #000000;
+        }
+        
+        /* Override any gray text colors to black */
+        .detail-item p, .process-info p, 
+        .valuation-details p, .value-description {
+            color: #000000 !important;
         }
 
         /* Background moved to page-background.css - using class instead */
@@ -629,10 +654,11 @@ try {
         }
 
         .process-info p {
-            color: #1e3a8a;
+            color: #000000 !important;
             margin: 0;
             line-height: 1.8;
-            font-size: 1rem;
+            font-size: 13px;
+            font-weight: 500;
         }
 
         /* Checkbox Styles */
@@ -1220,8 +1246,10 @@ try {
 
         .detail-item p {
             margin: 0.5rem 0 0 0;
-            color: #4b5563;
+            color: #000000 !important;
             line-height: 1.5;
+            font-size: 13px;
+            font-weight: 500;
         }
 
         .valuation-actions {

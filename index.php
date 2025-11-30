@@ -1468,13 +1468,13 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 1.5fr 4fr 1.5fr;
+			grid-template-columns: 2.2fr 4fr 1.5fr;
 			/* left banner | hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 480px;
-			/* shorter height for better proportions */
+			min-height: 620px;
+			/* original height */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 480px;
+			min-height: 620px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -1735,7 +1735,8 @@ try {
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e9aaf 100%) !important;
+			background: radial-gradient(circle at 0% 0%, #efe0a5 0%, #ff4444 100%) !important;
+			/* circular gradient from yellow/beige to red */
 			color: #ffffff !important;
 			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
@@ -3329,8 +3330,8 @@ try {
 
 
 		.side-card.purple {
-			background: linear-gradient(135deg, #2563EB, #1e40af);
-			/* vibrant blue gradient */
+			background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%) !important;
+			/* new gradient: dark blue to light blue */
 			color: #111;
 			/* black text for better contrast */
 			padding: 36px 16px 36px 28px;
@@ -3359,23 +3360,25 @@ try {
 
 		/* Countdown Timer Styles */
 		.countdown-timer {
-			display: flex;
-			justify-content: center;
+			display: grid;
+			grid-template-columns: 1fr 1fr;
+			grid-template-rows: 1fr 1fr;
 			gap: 12px;
 			margin-bottom: 20px;
-			flex-wrap: wrap;
+			width: 100%;
+			max-width: 200px;
 		}
 
 		.countdown-item {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			background: linear-gradient(135deg, #ffb3ba 0%, #ffcccb 30%, #b3d9ff 70%, #87ceeb 100%);
-			/* light blue gradient matching iPad gradient */
+			justify-content: center;
+			background: #808080;
+			/* grey background */
 			padding: 12px 16px;
 			border-radius: 10px;
 			min-width: 60px;
-			border: 1px solid rgba(179, 217, 255, 0.3);
 		}
 
 		.countdown-number {
@@ -3383,8 +3386,8 @@ try {
 			font-weight: 800;
 			line-height: 1;
 			margin-bottom: 4px;
-			color: #111;
-			/* black text */
+			color: #001f3f;
+			/* navy blue numbers */
 		}
 
 		.countdown-label {
@@ -3392,8 +3395,8 @@ try {
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: #333;
-			/* dark gray/black text */
+			color: #001f3f;
+			/* navy blue text */
 		}
 
 		/* texts on side cards */
@@ -3440,13 +3443,15 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 480px;
+			min-height: 620px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
 			background-size: cover;
 			background-position: center;
 			background-repeat: no-repeat;
+			border: 2px solid #e5e7eb;
+			/* frame border to envision the poster */
 		}
 
 		.left-banner-card::before {

@@ -140,6 +140,7 @@ $joint_category_ids = [];
     <link href="../includes/header.css" rel="stylesheet">
     <link href="../includes/chatbot-styles.css" rel="stylesheet">
     <link href="../includes/page-background.css" rel="stylesheet">
+    <link href="../includes/footer.css" rel="stylesheet">
     <link href="../css/dark-mode.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
@@ -158,85 +159,7 @@ $joint_category_ids = [];
     <?php include '../includes/category_product_layout.php'; ?>
 
     <!-- Footer -->
-    <footer class="main-footer" style="background: #ffffff; border-top: 1px solid #e5e7eb; padding: 60px 0 20px; margin-top: 150px;">
-        <div class="container">
-            <div class="footer-content">
-                <div class="row align-items-start">
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="footer-brand">
-                            <div class="footer-logo" style="margin-bottom: 20px;">
-                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png" alt="Gadget Garage">
-                            </div>
-                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
-                            <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-5 col-md-12">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Get Help</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Help Center</a></li>
-                                    <li><a href="contact.php">Track Order</a></li>
-                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
-                                    <li><a href="terms_conditions.php">Returns</a></li>
-                                    <li><a href="contact.php">Contact Us</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Company</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Careers</a></li>
-                                    <li><a href="contact.php">About</a></li>
-                                    <li><a href="contact.php">Stores</a></li>
-                                    <li><a href="contact.php">Want to Collab?</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Quick Links</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Size Guide</a></li>
-                                    <li><a href="contact.php">Sitemap</a></li>
-                                    <li><a href="contact.php">Gift Cards</a></li>
-                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-lg-4 col-md-12 mb-4">
-                        <div class="newsletter-signup-section">
-                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
-                            <form class="newsletter-form" id="newsletterForm">
-                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
-                                <button type="submit" class="newsletter-submit-btn">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </form>
-                            <p class="newsletter-disclaimer">
-                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
-                            </p>
-                            <p class="newsletter-disclaimer">
-                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <hr class="footer-divider">
-                <div class="footer-bottom">
-                    <div class="row align-items-center">
-                        <div class="col-md-12 text-center">
-                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <?php include '../includes/footer.php'; ?>
 
     <?php include '../includes/cart_sidebar.php'; ?>
 

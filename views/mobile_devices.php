@@ -36,25 +36,43 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category IDs
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category IDs
 $mobile_products = [];
 if ($smartphone_category_id) {
     $smartphone_products = get_products_by_category_ctr($smartphone_category_id);
-    $mobile_products = array_merge($mobile_products, $smartphone_products);
+    if (!empty($smartphone_products)) {
+        $mobile_products = array_merge($mobile_products, $smartphone_products);
+    }
 }
 if ($ipad_category_id) {
     $ipad_products = get_products_by_category_ctr($ipad_category_id);
-    $mobile_products = array_merge($mobile_products, $ipad_products);
+    if (!empty($ipad_products)) {
+        $mobile_products = array_merge($mobile_products, $ipad_products);
+    }
 }
 
-// If no categories found, fallback to string matching
+// If no products found by ID, or IDs not found, filter by category name
 if (empty($mobile_products)) {
-    $all_products = get_all_products_ctr();
     $mobile_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        return (strpos($cat_name, 'smartphone') !== false || strpos($cat_name, 'phone') !== false || strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        return (strpos($cat_name, 'smartphone') !== false || 
+                strpos($cat_name, 'phone') !== false || 
+                strpos($cat_name, 'ipad') !== false || 
+                strpos($cat_name, 'tablet') !== false ||
+                strpos($product_title, 'iphone') !== false ||
+                strpos($product_title, 'samsung galaxy') !== false ||
+                strpos($product_title, 'ipad') !== false ||
+                strpos($product_title, 'tablet') !== false);
     });
 }
+
+// Remove duplicates and re-index
+$mobile_products = array_values(array_unique($mobile_products, SORT_REGULAR));
 
 // Get brands
 try {

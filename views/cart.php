@@ -2214,24 +2214,30 @@ try {
             const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
 
             if (isChecked) {
-                // If discount is active, prevent applying store credits
+                // If discount is active, clear it first (mutually exclusive)
                 if (isDiscountActive) {
-                    const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                    if (applyStoreCreditsCheckbox) {
-                        applyStoreCreditsCheckbox.checked = false;
+                    // Clear discount code
+                    if (promoCodeInput) {
+                        promoCodeInput.value = '';
                     }
-                    if (storeCreditsExclusiveMessage) {
-                        storeCreditsExclusiveMessage.style.display = 'block';
+                    // Hide discount row
+                    if (discountRow) {
+                        discountRow.style.display = 'none';
                     }
-                    return;
+                    // Clear discount from session/localStorage if exists
+                    sessionStorage.removeItem('appliedPromo');
+                    // Trigger recalculation without discount
+                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
+                    const subtotal = parseFloat(subtotalText) || 0;
+                    cartTotal.textContent = 'GH₵ ' + subtotal.toFixed(2);
                 }
 
-                // Hide exclusive message if shown
+                // Hide exclusive message
                 if (storeCreditsExclusiveMessage) {
                     storeCreditsExclusiveMessage.style.display = 'none';
                 }
 
-                // Disable discount code input
+                // Disable discount code input when store credits are applied
                 if (promoCodeInput) {
                     promoCodeInput.disabled = true;
                     promoCodeInput.placeholder = 'Store credits applied';
@@ -2255,12 +2261,8 @@ try {
                     storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
                     storeCreditsRow.style.display = 'flex';
                     
-                    // Update total (subtract store credits only, discount should not be active)
-                    const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                        ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                        : '0';
-                    const discountAmount = parseFloat(discountAmountText) || 0;
-                    const newTotal = Math.max(0, subtotal - discountAmount - creditsToApply);
+                    // Update total (subtract store credits only - discount is cleared)
+                    const newTotal = Math.max(0, subtotal - creditsToApply);
                     cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
                     
                     // Update session storage
@@ -2331,7 +2333,9 @@ try {
                 const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
                 if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
                     const storeCreditsAmount = parseFloat(document.getElementById('storeCreditsAmount')?.textContent.replace(/[^0-9.]/g, '') || 0);
-                    sessionStorage.setItem('appliedStoreCredits', storeCreditsAmount);
+                    if (storeCreditsAmount > 0) {
+                        sessionStorage.setItem('appliedStoreCredits', storeCreditsAmount.toFixed(2));
+                    }
                 } else {
                     sessionStorage.removeItem('appliedStoreCredits');
                 }
@@ -2361,114 +2365,6 @@ try {
                 }
             }
 
-            // Store Credits Functions (already defined above)
-                const storeCreditsRow = document.getElementById('storeCreditsRow');
-                const storeCreditsAmount = document.getElementById('storeCreditsAmount');
-                const cartTotal = document.getElementById('cartTotal');
-                const cartSubtotal = document.getElementById('cartSubtotal');
-                const storeCreditBalanceDisplay = document.getElementById('storeCreditBalanceDisplay');
-                const discountRow = document.getElementById('discountRow');
-                const promoCodeInput = document.getElementById('promoCode');
-                const applyPromoBtn = document.getElementById('applyPromoBtn');
-                const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
-                const storeCreditsInfoText = document.getElementById('storeCreditsInfoText');
-
-                if (!storeCreditsRow || !storeCreditsAmount || !cartTotal || !cartSubtotal) {
-                    return;
-                }
-
-                // Check if discount is active
-                const isDiscountActive = discountRow && discountRow.style.display !== 'none' && discountRow.style.display !== '';
-
-                if (isChecked) {
-                    // If discount is active, prevent applying store credits
-                    if (isDiscountActive) {
-                        const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                        if (applyStoreCreditsCheckbox) {
-                            applyStoreCreditsCheckbox.checked = false;
-                        }
-                        if (storeCreditsExclusiveMessage) {
-                            storeCreditsExclusiveMessage.style.display = 'block';
-                        }
-                        return;
-                    }
-
-                    // Hide exclusive message if shown
-                    if (storeCreditsExclusiveMessage) {
-                        storeCreditsExclusiveMessage.style.display = 'none';
-                    }
-
-                    // Disable discount code input
-                    if (promoCodeInput) {
-                        promoCodeInput.disabled = true;
-                        promoCodeInput.placeholder = 'Store credits applied';
-                    }
-                    if (applyPromoBtn) {
-                        applyPromoBtn.disabled = true;
-                    }
-
-                    // Get values
-                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
-                    const subtotal = parseFloat(subtotalText) || 0;
-                    const creditBalanceText = storeCreditBalanceDisplay?.textContent.replace(/[^0-9.]/g, '') || '0';
-                    const creditBalance = parseFloat(creditBalanceText) || 0;
-
-                    // Apply 500 minimum reserve rule: max usable = balance - 500
-                    const maxUsableCredits = Math.max(0, creditBalance - 500);
-                    // Credits to apply = minimum of (max usable, cart subtotal)
-                    const creditsToApply = Math.min(maxUsableCredits, subtotal);
-
-                    if (creditsToApply > 0) {
-                        storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
-                        storeCreditsRow.style.display = 'flex';
-                        
-                        // Update total (subtract store credits)
-                        const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                            ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                            : '0';
-                        const discountAmount = parseFloat(discountAmountText) || 0;
-                        const newTotal = Math.max(0, subtotal - discountAmount - creditsToApply);
-                        cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
-                        
-                        // Update session storage
-                        sessionStorage.setItem('appliedStoreCredits', creditsToApply.toFixed(2));
-                    } else {
-                        // Not enough credits (would leave less than 500)
-                        const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
-                        if (applyStoreCreditsCheckbox) {
-                            applyStoreCreditsCheckbox.checked = false;
-                        }
-                        alert('You cannot use store credits that would leave less than GH₵500 in your balance.');
-                        return;
-                    }
-                } else {
-                    // Remove store credits
-                    storeCreditsRow.style.display = 'none';
-                    storeCreditsAmount.textContent = '-GH₵ 0.00';
-                    
-                    // Re-enable discount code input
-                    if (promoCodeInput) {
-                        promoCodeInput.disabled = false;
-                        promoCodeInput.placeholder = '';
-                    }
-                    if (applyPromoBtn) {
-                        applyPromoBtn.disabled = false;
-                    }
-
-                    // Recalculate total (subtract discount if any)
-                    const subtotalText = cartSubtotal.textContent.replace(/[^0-9.]/g, '');
-                    const subtotal = parseFloat(subtotalText) || 0;
-                    const discountAmountText = discountRow && discountRow.style.display !== 'none' 
-                        ? document.getElementById('discountAmount')?.textContent.replace(/[^0-9.]/g, '') || '0'
-                        : '0';
-                    const discountAmount = parseFloat(discountAmountText) || 0;
-                    const newTotal = Math.max(0, subtotal - discountAmount);
-                    cartTotal.textContent = 'GH₵ ' + newTotal.toFixed(2);
-                    
-                    // Remove from session storage
-                    sessionStorage.removeItem('appliedStoreCredits');
-                }
-            }
 
             // Dropdown navigation functions with timeout delays
             let dropdownTimeout;

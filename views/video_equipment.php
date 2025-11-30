@@ -34,17 +34,34 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category ID if found, otherwise fallback to all products
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category ID if found
+$video_products = [];
 if ($video_category_id) {
-    $video_products = get_products_by_category_ctr($video_category_id);
-} else {
-    // Fallback: get all products and filter by category name
-    $all_products = get_all_products_ctr();
+    $products_by_id = get_products_by_category_ctr($video_category_id);
+    if (!empty($products_by_id)) {
+        $video_products = $products_by_id;
+    }
+}
+
+// If no products found by ID, or ID not found, filter by category name
+if (empty($video_products)) {
     $video_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        return strpos($cat_name, 'video') !== false;
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        // Include video equipment products
+        return (strpos($cat_name, 'video') !== false || 
+                strpos($product_title, 'video') !== false ||
+                strpos($product_title, 'camcorder') !== false ||
+                strpos($product_title, 'recorder') !== false);
     });
 }
+
+// Ensure array is re-indexed
+$video_products = array_values($video_products);
 
 // Get brands
 try {

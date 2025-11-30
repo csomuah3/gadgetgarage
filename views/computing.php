@@ -35,25 +35,43 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category IDs
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category IDs
 $computing_products = [];
 if ($laptop_category_id) {
     $laptop_products = get_products_by_category_ctr($laptop_category_id);
-    $computing_products = array_merge($computing_products, $laptop_products);
+    if (!empty($laptop_products)) {
+        $computing_products = array_merge($computing_products, $laptop_products);
+    }
 }
 if ($desktop_category_id) {
     $desktop_products = get_products_by_category_ctr($desktop_category_id);
-    $computing_products = array_merge($computing_products, $desktop_products);
+    if (!empty($desktop_products)) {
+        $computing_products = array_merge($computing_products, $desktop_products);
+    }
 }
 
-// If no categories found, fallback to string matching
+// If no products found by ID, or IDs not found, filter by category name
 if (empty($computing_products)) {
-    $all_products = get_all_products_ctr();
     $computing_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        return (strpos($cat_name, 'laptop') !== false || strpos($cat_name, 'desktop') !== false || strpos($cat_name, 'notebook') !== false || strpos($cat_name, 'computer') !== false);
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        return (strpos($cat_name, 'laptop') !== false || 
+                strpos($cat_name, 'desktop') !== false || 
+                strpos($cat_name, 'notebook') !== false || 
+                strpos($cat_name, 'computer') !== false ||
+                strpos($product_title, 'laptop') !== false ||
+                strpos($product_title, 'desktop') !== false ||
+                strpos($product_title, 'notebook') !== false ||
+                strpos($product_title, 'pc') !== false);
     });
 }
+
+// Remove duplicates and re-index
+$computing_products = array_values(array_unique($computing_products, SORT_REGULAR));
 
 // Get brands
 try {

@@ -35,20 +35,40 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category ID if found, otherwise fallback to all products
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category ID if found
+$laptop_products = [];
 if ($laptop_category_id) {
-    $laptop_products = get_products_by_category_ctr($laptop_category_id);
-} else {
-    // Fallback: get all products and filter by category name
-    $all_products = get_all_products_ctr();
+    $products_by_id = get_products_by_category_ctr($laptop_category_id);
+    if (!empty($products_by_id)) {
+        $laptop_products = $products_by_id;
+    }
+}
+
+// If no products found by ID, or ID not found, filter by category name
+if (empty($laptop_products)) {
     $laptop_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        $is_laptop = (strpos($cat_name, 'laptop') !== false || strpos($cat_name, 'notebook') !== false);
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        // Include laptop/notebook products
+        $is_laptop = (strpos($cat_name, 'laptop') !== false || 
+                     strpos($cat_name, 'notebook') !== false ||
+                     strpos($product_title, 'laptop') !== false ||
+                     strpos($product_title, 'notebook') !== false);
+        
+        // Exclude phone and iPad products
         $is_phone = (strpos($cat_name, 'phone') !== false || strpos($cat_name, 'smartphone') !== false);
         $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
+        
         return $is_laptop && !$is_phone && !$is_ipad;
     });
 }
+
+// Ensure array is re-indexed
+$laptop_products = array_values($laptop_products);
 
 // Get brands
 try {

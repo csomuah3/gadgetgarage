@@ -583,10 +583,7 @@ $first_name = explode(' ', $user_name)[0];
     </div>
     <!-- End Main Content -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script src="../js/header.js"></script>
-    <script src="../js/dark-mode.js"></script>
-
+    <!-- Define wishlist functions BEFORE other scripts to ensure they're available -->
     <script>
         // Define functions immediately at global scope to avoid reference errors
         // Remove from Wishlist Function (Make globally available)
@@ -704,7 +701,25 @@ $first_name = explode(' ', $user_name)[0];
             
             window.location.href = `single_product.php?pid=${encodeURIComponent(productId)}`;
         };
+        
+        // Verify functions are defined immediately
+        console.log('Wishlist functions defined:', {
+            removeFromWishlist: typeof window.removeFromWishlist,
+            addToCartFromWishlist: typeof window.addToCartFromWishlist,
+            viewProduct: typeof window.viewProduct
+        });
+        
+        // Also define them without window prefix for onclick handlers
+        var removeFromWishlist = window.removeFromWishlist;
+        var addToCartFromWishlist = window.addToCartFromWishlist;
+        var viewProduct = window.viewProduct;
+    </script>
 
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="../js/header.js"></script>
+    <script src="../js/dark-mode.js"></script>
+
+    <script>
         // Promo Banner Countdown Timer
         function updateCountdown() {
             const now = new Date().getTime();

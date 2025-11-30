@@ -35,30 +35,42 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category ID if found, otherwise fallback to all products
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category ID if found
+$ipad_products = [];
 if ($ipad_category_id) {
-    $ipad_products = get_products_by_category_ctr($ipad_category_id);
-} else {
-    // Fallback: get all products and filter by category name
-    $all_products = get_all_products_ctr();
+    $products_by_id = get_products_by_category_ctr($ipad_category_id);
+    if (!empty($products_by_id)) {
+        $ipad_products = $products_by_id;
+    }
+}
+
+// If no products found by ID, or ID not found, filter by category name
+if (empty($ipad_products)) {
     $ipad_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
-        $is_phone = (strpos($cat_name, 'phone') !== false || strpos($cat_name, 'smartphone') !== false);
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        // Include iPad/tablet products
+        $is_ipad = (strpos($cat_name, 'ipad') !== false || 
+                   strpos($cat_name, 'tablet') !== false ||
+                   strpos($product_title, 'ipad') !== false ||
+                   strpos($product_title, 'tablet') !== false);
+        
+        // Exclude phone products
+        $is_phone = (strpos($cat_name, 'phone') !== false || 
+                    strpos($cat_name, 'smartphone') !== false ||
+                    strpos($product_title, 'iphone') !== false ||
+                    strpos($product_title, 'samsung galaxy') !== false);
+        
         return $is_ipad && !$is_phone;
     });
 }
 
-// Additional filter to ensure NO phones appear on iPads page
-$ipad_products = array_filter($ipad_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
-    $has_phone_keywords = (strpos($cat_name, 'phone') !== false || 
-                          strpos($cat_name, 'smartphone') !== false ||
-                          strpos($product_title, 'iphone') !== false ||
-                          strpos($product_title, 'samsung galaxy') !== false);
-    return !$has_phone_keywords;
-});
+// Ensure array is re-indexed
+$ipad_products = array_values($ipad_products);
 
 // Get brands
 try {

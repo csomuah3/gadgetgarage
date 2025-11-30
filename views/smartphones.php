@@ -35,30 +35,43 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category ID if found, otherwise fallback to all products
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category ID if found
+$smartphone_products = [];
 if ($smartphone_category_id) {
-    $smartphone_products = get_products_by_category_ctr($smartphone_category_id);
-} else {
-    // Fallback: get all products and filter by category name
-    $all_products = get_all_products_ctr();
+    $products_by_id = get_products_by_category_ctr($smartphone_category_id);
+    if (!empty($products_by_id)) {
+        $smartphone_products = $products_by_id;
+    }
+}
+
+// If no products found by ID, or ID not found, filter by category name
+if (empty($smartphone_products)) {
     $smartphone_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        $is_phone = (strpos($cat_name, 'smartphone') !== false || strpos($cat_name, 'phone') !== false);
-        $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        // Include smartphone/phone products
+        $is_phone = (strpos($cat_name, 'smartphone') !== false || 
+                    strpos($cat_name, 'phone') !== false ||
+                    strpos($product_title, 'iphone') !== false ||
+                    strpos($product_title, 'samsung galaxy') !== false ||
+                    strpos($product_title, 'smartphone') !== false);
+        
+        // Exclude iPad/tablet products
+        $is_ipad = (strpos($cat_name, 'ipad') !== false || 
+                   strpos($cat_name, 'tablet') !== false ||
+                   strpos($product_title, 'ipad') !== false ||
+                   strpos($product_title, 'tablet') !== false);
+        
         return $is_phone && !$is_ipad;
     });
 }
 
-// Additional filter to ensure NO iPads/tablets appear on phones page
-$smartphone_products = array_filter($smartphone_products, function ($product) {
-    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-    $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
-    $has_ipad_keywords = (strpos($cat_name, 'ipad') !== false || 
-                         strpos($cat_name, 'tablet') !== false ||
-                         strpos($product_title, 'ipad') !== false ||
-                         strpos($product_title, 'tablet') !== false);
-    return !$has_ipad_keywords;
-});
+// Ensure array is re-indexed
+$smartphone_products = array_values($smartphone_products);
 
 // Get brands
 try {

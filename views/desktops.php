@@ -35,19 +35,39 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category ID if found, otherwise fallback to all products
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category ID if found
+$desktop_products = [];
 if ($desktop_category_id) {
-    $desktop_products = get_products_by_category_ctr($desktop_category_id);
-} else {
-    // Fallback: get all products and filter by category name
-    $all_products = get_all_products_ctr();
+    $products_by_id = get_products_by_category_ctr($desktop_category_id);
+    if (!empty($products_by_id)) {
+        $desktop_products = $products_by_id;
+    }
+}
+
+// If no products found by ID, or ID not found, filter by category name
+if (empty($desktop_products)) {
     $desktop_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        $is_desktop = (strpos($cat_name, 'desktop') !== false || strpos($cat_name, 'computer') !== false);
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        // Include desktop/computer products
+        $is_desktop = (strpos($cat_name, 'desktop') !== false || 
+                      strpos($cat_name, 'computer') !== false ||
+                      strpos($product_title, 'desktop') !== false ||
+                      strpos($product_title, 'pc') !== false);
+        
+        // Exclude laptop products
         $is_laptop = (strpos($cat_name, 'laptop') !== false || strpos($cat_name, 'notebook') !== false);
+        
         return $is_desktop && !$is_laptop;
     });
 }
+
+// Ensure array is re-indexed
+$desktop_products = array_values($desktop_products);
 
 // Get brands
 try {

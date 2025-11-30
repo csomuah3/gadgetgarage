@@ -35,17 +35,35 @@ foreach ($categories as $cat) {
     }
 }
 
-// Get products by category ID if found, otherwise fallback to all products
+// Get all products first
+$all_products = get_all_products_ctr();
+
+// Try to get products by category ID if found
+$camera_products = [];
 if ($camera_category_id) {
-    $camera_products = get_products_by_category_ctr($camera_category_id);
-} else {
-    // Fallback: get all products and filter by category name
-    $all_products = get_all_products_ctr();
+    $products_by_id = get_products_by_category_ctr($camera_category_id);
+    if (!empty($products_by_id)) {
+        $camera_products = $products_by_id;
+    }
+}
+
+// If no products found by ID, or ID not found, filter by category name
+if (empty($camera_products)) {
     $camera_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        return strpos($cat_name, 'camera') !== false || strpos($cat_name, 'photo') !== false;
+        $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+        
+        // Include camera/photo products
+        return (strpos($cat_name, 'camera') !== false || 
+                strpos($cat_name, 'photo') !== false ||
+                strpos($product_title, 'camera') !== false ||
+                strpos($product_title, 'dslr') !== false ||
+                strpos($product_title, 'mirrorless') !== false);
     });
 }
+
+// Ensure array is re-indexed
+$camera_products = array_values($camera_products);
 
 // Get brands
 try {

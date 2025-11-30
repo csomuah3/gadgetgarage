@@ -1473,7 +1473,7 @@ try {
 			gap: 28px;
 			/* spacing between cards */
 			align-items: start;
-			min-height: 150px;
+			min-height: 125px;
 			/* hero height */
 		}
 
@@ -1482,31 +1482,13 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 150px;
+			min-height: 125px;
 			border-radius: 14px;
 			overflow: visible;
 			background: #f0f4f8;
 			/* Fallback background */
 		}
 
-		/* Positioned Flash Deals Banner Image */
-		.hero-carousel-wrapper::before {
-			content: '';
-			position: absolute;
-			left: 0;
-			top: 0;
-			width: 31.25%;
-			/* 2.5fr out of 8fr total = 31.25% */
-			height: 100%;
-			min-height: 150px;
-			background-image: url('http://169.239.251.102:442/~chelsea.somuah/uploads/newsf.png');
-			background-size: cover;
-			background-position: center;
-			background-repeat: no-repeat;
-			border-radius: 14px 0 0 14px;
-			z-index: 1;
-			pointer-events: none;
-		}
 
 
 
@@ -1527,9 +1509,8 @@ try {
 			align-items: center;
 			position: absolute;
 			top: 0;
-			left: 31.25%;
-			/* Start after the positioned image */
-			width: calc(100% - 31.25%);
+			left: 0;
+			width: 100%;
 			height: 100%;
 			opacity: 0;
 			visibility: hidden;

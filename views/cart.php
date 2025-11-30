@@ -1999,6 +1999,46 @@ try {
                         <div id="promoMessage" class="mt-2" style="display: none;"></div>
                     </div>
 
+                    <!-- Store Credits Section (Separate Box) -->
+                    <?php if ($is_logged_in && $store_credit_balance > 0): ?>
+                    <div class="store-credits-box" id="storeCreditsBox">
+                        <div class="store-credits-header">
+                            <i class="fas fa-credit-card me-2"></i>
+                            <strong>STORE CREDITS</strong>
+                        </div>
+                        <div class="store-credits-content">
+                            <div class="d-flex align-items-center justify-content-between mb-3">
+                                <div>
+                                    <div class="store-credits-label">Available Balance</div>
+                                    <div class="store-credits-amount" id="storeCreditBalanceDisplay">
+                                        GH₵ <?php echo number_format($store_credit_balance, 2); ?>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-check store-credits-checkbox-container">
+                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
+                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
+                                    <strong>Apply Store Credits to this order</strong>
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-2" id="storeCreditsInfo">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <span id="storeCreditsInfoText">
+                                    You can use up to GH₵ <?php 
+                                    $max_usable = max(0, $store_credit_balance - 500);
+                                    $display_max = min($max_usable, $cart_total);
+                                    echo number_format($display_max, 2); 
+                                    ?> from your store credits (GH₵500 minimum reserve)
+                                </span>
+                            </small>
+                            <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                <small>Discount code is active. Store credits cannot be used.</small>
+                            </div>
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
                     <div class="cart-summary">
                         <h4 class="mb-4">Order Summary</h4>
 
@@ -2021,38 +2061,8 @@ try {
                             <span class="text-success fw-bold" id="discountAmount">-GH₵ 0.00</span>
                         </div>
 
-                        <!-- Store Credits Section -->
-                        <?php if ($is_logged_in): ?>
-                        <div class="store-credits-section mb-3" style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                            <div class="d-flex align-items-center justify-content-between mb-2">
-                                <div>
-                                    <strong><i class="fas fa-credit-card me-2"></i>Available Store Credits</strong>
-                                    <div class="text-success fw-bold" style="font-size: 1.1rem;" id="storeCreditBalance">
-                                        GH₵ <?php echo number_format($store_credit_balance, 2); ?>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-check mt-2">
-                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;" <?php echo ($store_credit_balance <= 0) ? 'disabled' : ''; ?>>
-                                <label class="form-check-label" for="applyStoreCredits" style="cursor: <?php echo ($store_credit_balance <= 0) ? 'not-allowed; opacity: 0.6;' : 'pointer;'; ?>">
-                                    <strong>Apply Store Credits to this order</strong>
-                                </label>
-                            </div>
-                            <small class="text-muted d-block mt-1">
-                                <i class="fas fa-info-circle me-1"></i>
-                                <?php if ($store_credit_balance > 0): ?>
-                                    You can use up to GH₵ <?php echo number_format(min($store_credit_balance, $cart_total), 2); ?> from your store credits
-                                <?php else: ?>
-                                    You don't have any store credits available
-                                <?php endif; ?>
-                            </small>
-                            <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
-                                <i class="fas fa-exclamation-triangle me-1"></i>
-                                <small>Discount code is active. Store credits cannot be used.</small>
-                            </div>
-                        </div>
-
                         <!-- Store Credits Applied Row (hidden by default) -->
+                        <?php if ($is_logged_in && $store_credit_balance > 0): ?>
                         <div class="d-flex justify-content-between mb-3 store-credits-row" id="storeCreditsRow" style="display: none;">
                             <span class="text-success">
                                 <i class="fas fa-credit-card me-1"></i>
@@ -2189,7 +2199,7 @@ try {
             const storeCreditsAmount = document.getElementById('storeCreditsAmount');
             const cartTotal = document.getElementById('cartTotal');
             const cartSubtotal = document.getElementById('cartSubtotal');
-            const storeCreditBalanceDisplay = document.getElementById('storeCreditBalance') || document.getElementById('storeCreditBalanceDisplay');
+            const storeCreditBalanceDisplay = document.getElementById('storeCreditBalanceDisplay');
             const discountRow = document.getElementById('discountRow');
             const promoCodeInput = document.getElementById('promoCode');
             const applyPromoBtn = document.getElementById('applyPromoBtn');

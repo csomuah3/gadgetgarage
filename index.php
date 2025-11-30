@@ -1468,12 +1468,12 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 4fr 1.5fr;
-			/* hero carousel | right side banners */
+			grid-template-columns: 2.5fr 4fr 1.5fr;
+			/* left banner | hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 275px;
+			min-height: 245px;
 			/* hero height */
 		}
 
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 275px;
+			min-height: 245px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -1499,8 +1499,8 @@ try {
 		.hero-slide {
 			display: none;
 			grid-template-columns: 1.5fr 1fr;
-			gap: 20px;
-			padding: 20px 30px;
+			gap: 40px;
+			padding: 60px 60px;
 			border-radius: 14px;
 			overflow: hidden;
 			align-items: center;
@@ -1769,13 +1769,13 @@ try {
 			display: flex;
 			flex-direction: column;
 			justify-content: center;
-			gap: 8px;
-			padding: 10px 0;
+			gap: 24px;
+			padding: 20px 0;
 		}
 
 		/* Brand Logo Section */
 		.brand-logo-section {
-			margin-bottom: 8px;
+			margin-bottom: 16px;
 			opacity: 0;
 			transform: translateY(15px);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.05s,
@@ -1830,7 +1830,7 @@ try {
 		}
 
 		.text-line {
-			font-size: clamp(20px, 3vw, 32px);
+			font-size: clamp(42px, 6vw, 64px);
 			font-weight: 400;
 			line-height: 1.2;
 			color: inherit;
@@ -1894,27 +1894,27 @@ try {
 
 		/* Typography Hierarchy - Reduced Sizes */
 		.brand-name {
-			font-size: clamp(12px, 1.5vw, 16px);
+			font-size: clamp(18px, 2.5vw, 26px);
 			font-weight: 300;
-			letter-spacing: 1px;
+			letter-spacing: 2px;
 			text-transform: uppercase;
 			opacity: 0.9;
 		}
 
 		.product-name {
-			font-size: clamp(20px, 2.5vw, 28px);
+			font-size: clamp(32px, 4.5vw, 48px);
 			font-weight: 700;
 			letter-spacing: -1px;
-			margin-bottom: 2px;
+			margin-bottom: 4px;
 		}
 
 		.product-desc {
-			font-size: clamp(11px, 1.2vw, 14px);
+			font-size: clamp(14px, 1.5vw, 18px);
 			font-weight: 400;
-			line-height: 1.3;
+			line-height: 1.4;
 			opacity: 0.9;
 			font-style: italic;
-			margin-bottom: 4px;
+			margin-bottom: 16px;
 			max-width: 80%;
 		}
 
@@ -1922,22 +1922,22 @@ try {
 		.tagline-2,
 		.tagline-3,
 		.tagline-4 {
-			font-size: clamp(14px, 2vw, 20px);
+			font-size: clamp(24px, 3.5vw, 36px);
 			font-weight: 500;
 			letter-spacing: 0px;
 		}
 
 		.price-line {
-			font-size: clamp(12px, 1.5vw, 16px);
+			font-size: clamp(16px, 2vw, 24px);
 			font-weight: 600;
-			margin-top: 4px;
+			margin-top: 8px;
 			opacity: 0.8;
 			text-transform: uppercase;
 			letter-spacing: 1px;
 		}
 
 		.price-amount {
-			font-size: clamp(16px, 2vw, 22px);
+			font-size: clamp(22px, 3vw, 34px);
 			font-weight: 800;
 			color: #FFD700;
 			text-shadow: 0 2px 8px rgba(255, 215, 0, 0.4);
@@ -1946,8 +1946,8 @@ try {
 		/* Social Media Buttons */
 		.social-buttons {
 			display: flex;
-			gap: 8px;
-			margin: 8px 0;
+			gap: 12px;
+			margin: 16px 0;
 			opacity: 0;
 			transform: translateY(15px);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.7s,
@@ -2007,13 +2007,12 @@ try {
 			display: inline-flex;
 			align-items: center;
 			justify-content: center;
-			height: 36px;
-			padding: 0 20px;
+			height: 56px;
+			padding: 0 28px;
 			background: linear-gradient(135deg, #1E3A5F, #2563EB);
 			color: #fff;
-			border-radius: 8px;
+			border-radius: 10px;
 			font-weight: 700;
-			font-size: clamp(12px, 1.2vw, 14px);
 			letter-spacing: .2px;
 			text-decoration: none;
 			transition: all 0.3s cubic-bezier(0.23, 1, 0.32, 1);
@@ -2056,23 +2055,22 @@ try {
 
 		.banner-media {
 			display: flex;
-			align-items: center;
+			align-items: flex-start;
 			justify-content: center;
 			position: relative;
 			height: 100%;
-			min-height: 180px;
+			min-height: 350px;
 			padding-top: 0px;
-			overflow: visible;
 		}
 
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 220px;
-			min-height: 180px;
-			max-width: 95%;
+			max-height: 700px;
+			min-height: 550px;
+			max-width: 90%;
 			object-fit: contain;
-			transform: translateY(-120px) translateX(0) scale(1.67);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -2083,11 +2081,11 @@ try {
 			max-height: 1075px;
 			min-height: 850px;
 			max-width: 100%;
-			transform: translateY(-120px) translateX(0) scale(1.67);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.67);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		/* Image animations - fade out for exiting */
@@ -2106,14 +2104,14 @@ try {
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(-120px) translateX(0) scale(1.67);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
 
 		/* iPad specific - scaled for active state */
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.67);
+			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		/* Navigation Dots */
@@ -3447,7 +3445,7 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 280px;
+			min-height: 245px;
 			display: flex;
 			align-items: center;
 			justify-content: center;
@@ -5750,7 +5748,16 @@ try {
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
-				<!-- MAIN BANNER CAROUSEL -->
+				<!-- LEFT: FLASH DEALS BANNER -->
+				<article class="left-banner-card">
+					<div class="left-banner-content">
+						<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
+							FLASH DEALS
+						</a>
+					</div>
+				</article>
+
+				<!-- MIDDLE: MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->

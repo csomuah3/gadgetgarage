@@ -1468,150 +1468,22 @@ try {
 
 	.hero-grid {
 		display: grid;
-		grid-template-columns: 1.5fr 4fr 1.5fr;
-		/* left slideshow | hero carousel | right side banners */
+		grid-template-columns: 4fr 1.5fr;
+		/* hero carousel | right side banners */
 		gap: 15px;
 		/* spacing between cards */
 		align-items: start;
-		min-height: 45px;
+		min-height: 20px;
 		/* hero height */
 	}
 
-	/* ——— AI-Powered Slideshow (Left Side) ——— */
-	.ai-slideshow-wrapper {
-		position: relative;
-		width: 100%;
-		height: auto;
-		min-height: 60px;
-		border-radius: 10px;
-		overflow: hidden;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-		box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
-	}
-
-	.ai-slideshow-container {
-		position: relative;
-		width: 100%;
-		height: auto;
-		min-height: 60px;
-	}
-
-	.ai-slide {
-		position: absolute;
-		top: 0;
-		left: 0;
-		width: 100%;
-		height: auto;
-		min-height: 60px;
-		opacity: 0;
-		visibility: hidden;
-		transform: translateX(-20px);
-		transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-		display: flex;
-		align-items: center;
-		justify-content: center;
-		padding: 10px 8px;
-		box-sizing: border-box;
-	}
-
-	.ai-slide.active {
-		opacity: 1 !important;
-		visibility: visible !important;
-		transform: translateX(0) !important;
-		z-index: 2 !important;
-		display: flex !important;
-	}
-
-	.ai-slide-content {
-		text-align: center;
-		color: white;
-		width: 100%;
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-		justify-content: center;
-	}
-
-	.ai-slide-badge {
-		display: inline-block;
-		background: rgba(255, 255, 255, 0.25);
-		padding: 2px 6px;
-		border-radius: 8px;
-		font-size: 0.55rem;
-		font-weight: 700;
-		letter-spacing: 0.3px;
-		margin-bottom: 3px;
-		backdrop-filter: blur(10px);
-	}
-
-	.ai-slide-title {
-		font-size: 0.8rem;
-		font-weight: 700;
-		margin: 0 0 2px 0;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-	}
-
-	.ai-slide-text {
-		font-size: 0.65rem;
-		margin: 0 0 5px 0;
-		opacity: 0.95;
-		line-height: 1.2;
-	}
-
-	.ai-slide-btn {
-		display: inline-block;
-		background: white;
-		color: #667eea;
-		padding: 3px 10px;
-		border-radius: 12px;
-		text-decoration: none;
-		font-weight: 700;
-		font-size: 0.6rem;
-		transition: all 0.3s ease;
-		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-	}
-
-	.ai-slide-btn:hover {
-		transform: translateY(-2px);
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.25);
-		background: #f8f9fa;
-	}
-
-	.ai-slideshow-indicators {
-		position: absolute;
-		bottom: 8px;
-		left: 50%;
-		transform: translateX(-50%);
-		display: flex;
-		gap: 6px;
-		z-index: 3;
-	}
-
-	.ai-indicator {
-		width: 6px;
-		height: 6px;
-		border-radius: 50%;
-		background: rgba(255, 255, 255, 0.4);
-		cursor: pointer;
-		transition: all 0.3s ease;
-	}
-
-	.ai-indicator.active {
-		background: white;
-		width: 20px;
-		border-radius: 3px;
-	}
-
-	.ai-indicator:hover {
-		background: rgba(255, 255, 255, 0.7);
-	}
 
 	/* ——— Hero Carousel Wrapper ——— */
 	.hero-carousel-wrapper {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		min-height: 45px;
+		min-height: 20px;
 		border-radius: 10px;
 		overflow: visible;
 		background: #f0f4f8;
@@ -1867,8 +1739,8 @@ try {
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e9aaf 100%) !important;
-			color: #ffffff !important;
+			background: linear-gradient(135deg, #87CEEB 0%, #ADD8E6 50%, #B0E0E6 100%) !important;
+			color: #1f2937 !important;
 			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
 
@@ -2540,12 +2412,12 @@ try {
 		}
 
 		.countdown-timer {
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background: linear-gradient(135deg, #87CEEB 0%, #ADD8E6 100%);
 			border-radius: 16px;
 			padding: 20px 15px;
 			margin-bottom: 20px;
 			text-align: center;
-			box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
+			box-shadow: 0 4px 15px rgba(135, 206, 235, 0.2);
 			position: relative;
 			overflow: hidden;
 		}
@@ -3507,8 +3379,8 @@ try {
 
 
 		.side-card.purple {
-			background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%) !important;
-			/* new gradient: dark blue to light blue */
+			background: linear-gradient(135deg, #87CEEB 0%, #ADD8E6 33%, #B0E0E6 66%, #E0F6FF 100%) !important;
+			/* light blue gradient */
 			color: #111;
 			/* black text for better contrast */
 			padding: 36px 16px 36px 28px;
@@ -3696,13 +3568,6 @@ try {
 				min-height: auto;
 			}
 
-			.ai-slideshow-wrapper {
-				min-height: 120px;
-			}
-
-			.ai-slide {
-				min-height: 120px;
-			}
 
 			.left-banner-card {
 				min-height: 300px;
@@ -4110,7 +3975,7 @@ try {
 			flex-direction: column;
 			align-items: center;
 			justify-content: center;
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background: linear-gradient(135deg, #87CEEB 0%, #ADD8E6 100%);
 			color: white;
 		}
 
@@ -5934,53 +5799,6 @@ try {
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
-				<!-- LEFT: AI-POWERED SLIDESHOW -->
-				<div class="ai-slideshow-wrapper">
-					<div class="ai-slideshow-container" id="aiSlideshow">
-						<!-- Slide 1: Flash Deals -->
-						<div class="ai-slide active" data-slide-id="1" data-priority="high">
-							<div class="ai-slide-content">
-								<div class="ai-slide-badge">⚡ Flash Sale</div>
-								<h3 class="ai-slide-title">Limited Time</h3>
-								<p class="ai-slide-text">Up to 30% Off</p>
-								<a href="views/flash_deals.php" class="ai-slide-btn">Shop Now</a>
-							</div>
-						</div>
-
-						<!-- Slide 2: Trade In -->
-						<div class="ai-slide" data-slide-id="2" data-priority="medium">
-							<div class="ai-slide-content">
-								<div class="ai-slide-badge">🔄 Trade Up</div>
-								<h3 class="ai-slide-title">Trade In</h3>
-								<p class="ai-slide-text">Get Extra Credit</p>
-								<a href="views/device_drop.php" class="ai-slide-btn">Learn More</a>
-							</div>
-						</div>
-
-						<!-- Slide 3: New Arrivals -->
-						<div class="ai-slide" data-slide-id="3" data-priority="medium">
-							<div class="ai-slide-content">
-								<div class="ai-slide-badge">✨ New</div>
-								<h3 class="ai-slide-title">New Arrivals</h3>
-								<p class="ai-slide-text">Latest Devices</p>
-								<a href="views/category_product_layout.php?category=all" class="ai-slide-btn">Explore</a>
-							</div>
-						</div>
-
-						<!-- Slide 4: Free Shipping -->
-						<div class="ai-slide" data-slide-id="4" data-priority="low">
-							<div class="ai-slide-content">
-								<div class="ai-slide-badge">🚚 Free</div>
-								<h3 class="ai-slide-title">Free Shipping</h3>
-								<p class="ai-slide-text">On Orders Over GH₵500</p>
-								<a href="views/category_product_layout.php?category=all" class="ai-slide-btn">Shop Now</a>
-							</div>
-						</div>
-					</div>
-					<!-- Slide Indicators -->
-					<div class="ai-slideshow-indicators" id="aiSlideshowIndicators"></div>
-				</div>
-
 				<!-- MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
 					<div class="hero-carousel" id="heroCarousel">
@@ -10743,9 +10561,9 @@ try {
 			right: 20px;
 			width: 320px;
 			max-width: calc(100vw - 40px);
-			background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+			background: linear-gradient(135deg, #87CEEB 0%, #ADD8E6 100%);
 			border-radius: 16px;
-			box-shadow: 0 10px 40px rgba(102, 126, 234, 0.4);
+			box-shadow: 0 10px 40px rgba(135, 206, 235, 0.4);
 			z-index: 9998;
 			opacity: 0;
 			transform: translateY(20px) scale(0.9);
@@ -10827,7 +10645,7 @@ try {
 		.smart-ad-btn {
 			display: inline-block;
 			background: white;
-			color: #667eea;
+			color: #5DADE2;
 			padding: 10px 24px;
 			border-radius: 25px;
 			text-decoration: none;
@@ -11022,157 +10840,6 @@ try {
 			}
 		})();
 
-		// AI-Powered Slideshow System
-		(function() {
-			const slideshow = document.getElementById('aiSlideshow');
-			const indicators = document.getElementById('aiSlideshowIndicators');
-			if (!slideshow) return;
-
-			const slides = slideshow.querySelectorAll('.ai-slide');
-			let currentSlide = 0;
-			let slideInterval = null;
-			let userEngagement = {
-				scrollDepth: 0,
-				timeOnPage: 0,
-				interactions: 0,
-				isActive: true,
-				lastInteraction: Date.now()
-			};
-
-			// Initialize indicators
-			slides.forEach((slide, index) => {
-				const indicator = document.createElement('div');
-				indicator.className = 'ai-indicator' + (index === 0 ? ' active' : '');
-				indicator.addEventListener('click', () => goToSlide(index));
-				indicators.appendChild(indicator);
-			});
-
-			// Track user engagement
-			function trackEngagement() {
-				// Track scroll depth
-				let maxScroll = 0;
-				window.addEventListener('scroll', () => {
-					const scrollPercent = (window.scrollY / (document.documentElement.scrollHeight - window.innerHeight)) * 100;
-					if (scrollPercent > maxScroll) {
-						maxScroll = scrollPercent;
-						userEngagement.scrollDepth = maxScroll;
-					}
-					userEngagement.lastInteraction = Date.now();
-					userEngagement.isActive = true;
-				}, { passive: true });
-
-				// Track time on page
-				setInterval(() => {
-					userEngagement.timeOnPage++;
-					// Check if user is inactive (no interaction for 10 seconds)
-					if (Date.now() - userEngagement.lastInteraction > 10000) {
-						userEngagement.isActive = false;
-					}
-				}, 1000);
-
-				// Track clicks/interactions
-				document.addEventListener('click', () => {
-					userEngagement.interactions++;
-					userEngagement.lastInteraction = Date.now();
-					userEngagement.isActive = true;
-				}, { passive: true });
-			}
-
-			// AI: Calculate optimal slide duration based on engagement
-			function calculateSlideDuration() {
-				let baseDuration = 4000; // 4 seconds base
-
-				// If user is highly engaged, slow down
-				if (userEngagement.scrollDepth > 50 || userEngagement.interactions > 3) {
-					baseDuration = 6000; // 6 seconds
-				}
-
-				// If user is inactive, speed up
-				if (!userEngagement.isActive) {
-					baseDuration = 3000; // 3 seconds
-				}
-
-				// Adjust based on time on page (longer = slower)
-				if (userEngagement.timeOnPage > 30) {
-					baseDuration += 2000;
-				}
-
-				return baseDuration;
-			}
-
-			// AI: Select next slide based on priority and engagement
-			function selectNextSlide() {
-				const priorities = {
-					high: 3,
-					medium: 2,
-					low: 1
-				};
-
-				// If user is highly engaged, show high-priority slides
-				if (userEngagement.scrollDepth > 30 || userEngagement.interactions > 2) {
-					const highPrioritySlides = Array.from(slides).filter(s => 
-						s.dataset.priority === 'high'
-					);
-					if (highPrioritySlides.length > 0) {
-						const randomHigh = highPrioritySlides[Math.floor(Math.random() * highPrioritySlides.length)];
-						return Array.from(slides).indexOf(randomHigh);
-					}
-				}
-
-				// Otherwise, cycle through all slides
-				return (currentSlide + 1) % slides.length;
-			}
-
-			// Go to specific slide
-			function goToSlide(index) {
-				if (index < 0 || index >= slides.length) return;
-
-				slides[currentSlide].classList.remove('active');
-				indicators.children[currentSlide].classList.remove('active');
-
-				currentSlide = index;
-
-				slides[currentSlide].classList.add('active');
-				indicators.children[currentSlide].classList.add('active');
-
-				// Reset timer with AI-calculated duration
-				clearInterval(slideInterval);
-				startSlideshow();
-			}
-
-			// Start slideshow with AI timing
-			function startSlideshow() {
-				const duration = calculateSlideDuration();
-				
-				slideInterval = setTimeout(() => {
-					const nextSlide = selectNextSlide();
-					goToSlide(nextSlide);
-				}, duration);
-			}
-
-			// Pause when user hovers
-			slideshow.addEventListener('mouseenter', () => {
-				clearInterval(slideInterval);
-			});
-
-			// Resume when user leaves
-			slideshow.addEventListener('mouseleave', () => {
-				startSlideshow();
-			});
-
-			// Initialize
-			function initAISlideshow() {
-				trackEngagement();
-				startSlideshow();
-			}
-
-			// Start when DOM is ready
-			if (document.readyState === 'loading') {
-				document.addEventListener('DOMContentLoaded', initAISlideshow);
-			} else {
-				initAISlideshow();
-			}
-	})();
 </script>
 
 

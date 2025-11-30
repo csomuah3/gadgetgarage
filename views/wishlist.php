@@ -65,22 +65,6 @@ $first_name = explode(' ', $user_name)[0];
             color: #1a1a1a;
         }
 
-        /* Account Layout */
-        .account-layout {
-            display: flex;
-            min-height: calc(100vh - 140px);
-            background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%);
-            position: relative;
-            margin-top: 0;
-        }
-
-        /* Main Content */
-        .account-content {
-            flex: 1;
-            padding: 25px 30px;
-            max-width: calc(100% - 240px);
-        }
-
         .logo {
             font-size: 2.2rem;
             font-weight: 700;
@@ -532,66 +516,14 @@ $first_name = explode(' ', $user_name)[0];
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
     
-    <!-- Account Layout -->
-    <div class="account-layout">
+    <!-- Main Content -->
+    <div class="main-content">
         <!-- Account Sidebar -->
         <?php include '../includes/account_sidebar.php'; ?>
 
-        <!-- Main Content -->
-        <main class="account-content">
+        <!-- Content Area -->
+        <main class="content-area">
     <!-- Wishlist Content -->
-    <div class="wishlist-container">
-        <div class="container">
-            <h1 class="wishlist-title">My Wishlist</h1>
-
-            <?php if (!$is_logged_in): ?>
-                <div class="empty-wishlist">
-                    <i class="fas fa-user-lock" style="font-size: 4rem; color: #e5e7eb; margin-bottom: 20px;"></i>
-                    <h3>Please log in to view your wishlist</h3>
-                    <p>You need to be logged in to access your saved items.</p>
-                    <a href="login.php" class="shop-btn">Log In</a>
-                </div>
-            <?php elseif (empty($wishlist_items)): ?>
-                <div class="empty-wishlist">
-                    <i class="fas fa-heart"></i>
-                    <h3>Your wishlist is empty</h3>
-                    <p>Start adding products to your wishlist to save them for later!</p>
-                    <a href="all_product.php" class="shop-btn">Start Shopping</a>
-                </div>
-            <?php else: ?>
-                <div class="wishlist-grid">
-                    <?php foreach ($wishlist_items as $item): ?>
-                        <div class="wishlist-item">
-                            <div class="product-image-container">
-                                <img src="<?php echo get_product_image_url($item['product_image'] ?? '', $item['product_title'] ?? 'Product'); ?>"
-                                    alt="<?php echo htmlspecialchars($item['product_title']); ?>"
-                                    class="product-image">
-                                <button class="remove-wishlist-btn"
-                                    onclick="removeFromWishlist(<?php echo $item['product_id']; ?>, this)"
-                                    title="Remove from wishlist">
-                                    <i class="fas fa-times"></i>
-                                </button>
-                            </div>
-
-                            <h3 class="product-title"><?php echo htmlspecialchars($item['product_title']); ?></h3>
-                            <div class="product-price">GH₵<?php echo number_format($item['product_price'], 2); ?></div>
-
-                            <div class="product-actions">
-                                <button class="add-to-cart-btn"
-                                    onclick="addToCart(<?php echo $item['product_id']; ?>)">
-                                    <i class="fas fa-shopping-cart"></i> Add to Cart
-                                </button>
-                                <button class="view-details-btn"
-                                    onclick="window.location.href='product_detail.php?id=<?php echo $item['product_id']; ?>'">
-                                    <i class="fas fa-eye"></i> View Details
-                                </button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            <?php endif; ?>
-        </div>
-    </div>
     <div class="wishlist-container">
         <div class="container">
             <h1 class="wishlist-title">My Wishlist</h1>
@@ -648,7 +580,7 @@ $first_name = explode(' ', $user_name)[0];
     </div>
         </main>
     </div>
-    <!-- End Account Layout -->
+    <!-- End Main Content -->
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="../js/header.js"></script>
@@ -773,7 +705,7 @@ $first_name = explode(' ', $user_name)[0];
         }
 
         function viewProduct(productId) {
-            window.location.href = `single_product.php?product_id=${productId}`;
+            window.location.href = `single_product.php?pid=${productId}`;
         }
 
         // Dropdown navigation functions with timeout delays

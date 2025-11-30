@@ -1539,7 +1539,7 @@ try {
 
 		@keyframes kenBurnsZoomPan {
 			0% {
-				transform: translateY(-120px) scale(0.9) translateX(-3%);
+				transform: translateY(-120px) scale(1.1) translateX(-3%);
 				opacity: 0;
 			}
 
@@ -1548,7 +1548,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.0) translateX(0);
+				transform: translateY(-120px) scale(1.3) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -2043,11 +2043,11 @@ try {
 		.banner-media .product-image {
 			width: auto;
 			height: auto;
-			max-height: 500px;
-			min-height: 400px;
-			max-width: 80%;
+			max-height: 700px;
+			min-height: 550px;
+			max-width: 90%;
 			object-fit: contain;
-			transform: translateY(-120px) translateX(0) scale(1.0);
+			transform: translateY(-120px) translateX(0) scale(1.3);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -2056,20 +2056,20 @@ try {
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
-			transform: translateY(-120px) translateX(-30px) scale(0.9);
+			transform: translateY(-120px) translateX(-30px) scale(1.1);
 			transition: opacity 0.5s ease, transform 0.5s cubic-bezier(0.23, 1, 0.32, 1);
 		}
 
 		/* Image animations - initial state (hidden, off to the right) */
 		.hero-slide:not(.active):not(.exiting) .product-image {
 			opacity: 0;
-			transform: translateY(-120px) translateX(60px) scale(0.9);
+			transform: translateY(-120px) translateX(60px) scale(1.1);
 		}
 
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(-120px) translateX(0) scale(1.0);
+			transform: translateY(-120px) translateX(0) scale(1.3);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}

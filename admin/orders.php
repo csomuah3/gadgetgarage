@@ -727,16 +727,29 @@ function viewOrderDetails(orderId) {
                                 font-weight: 700;
                                 margin: 10px 0;
                             }
-                            .swal-close-button {
+                            .swal-close-button,
+                            .swal2-close {
                                 font-size: 32px !important;
                                 color: #999 !important;
                                 font-weight: 300 !important;
                                 opacity: 1 !important;
                                 transition: all 0.3s ease !important;
+                                pointer-events: auto !important;
+                                cursor: pointer !important;
+                                z-index: 9999 !important;
+                                position: relative !important;
                             }
-                            .swal-close-button:hover {
+                            .swal-close-button:hover,
+                            .swal2-close:hover {
                                 color: #333 !important;
                                 transform: scale(1.1) !important;
+                            }
+                            .swal2-backdrop-show {
+                                pointer-events: auto !important;
+                                cursor: pointer !important;
+                            }
+                            .order-details-popup {
+                                pointer-events: auto !important;
                             }
                             @media (max-width: 768px) {
                                 .order-info-row { grid-template-columns: 1fr; }
@@ -847,6 +860,9 @@ function viewOrderDetails(orderId) {
                     width: '950px',
                     allowOutsideClick: true,
                     allowEscapeKey: true,
+                    backdrop: true,
+                    allowEnterKey: false,
+                    focusConfirm: false,
                     customClass: {
                         popup: 'order-details-popup',
                         confirmButton: 'btn btn-secondary btn-lg',
@@ -857,6 +873,36 @@ function viewOrderDetails(orderId) {
                     },
                     hideClass: {
                         popup: 'animate__animated animate__fadeOutUp'
+                    },
+                    didOpen: () => {
+                        // Ensure close button is clickable
+                        const closeButton = document.querySelector('.swal2-close');
+                        if (closeButton) {
+                            closeButton.style.pointerEvents = 'auto';
+                            closeButton.style.cursor = 'pointer';
+                            closeButton.style.zIndex = '9999';
+                            closeButton.setAttribute('aria-label', 'Close this dialog');
+                            // Add click event listener as backup
+                            closeButton.addEventListener('click', function(e) {
+                                e.stopPropagation();
+                                Swal.close();
+                            });
+                        }
+                        // Ensure backdrop is clickable - try multiple selectors
+                        const backdrop = document.querySelector('.swal2-backdrop-show') || 
+                                        document.querySelector('.swal2-backdrop') ||
+                                        document.querySelector('.swal2-container');
+                        if (backdrop) {
+                            backdrop.style.pointerEvents = 'auto';
+                            backdrop.style.cursor = 'pointer';
+                            // Add click event listener to backdrop
+                            backdrop.addEventListener('click', function(e) {
+                                // Only close if clicking directly on backdrop, not on modal content
+                                if (e.target === backdrop || e.target.classList.contains('swal2-backdrop')) {
+                                    Swal.close();
+                                }
+                            });
+                        }
                     }
                 });
 

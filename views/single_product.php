@@ -1448,8 +1448,9 @@ try {
             cursor: zoom-in;
             width: 150px;
             height: 150px;
-            opacity: 0 !important;
-            transition: opacity 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             pointer-events: none;
             background: rgba(66, 133, 244, 0.3);
             box-shadow: 0 0 0 4px rgba(66, 133, 244, 0.5), 0 6px 20px rgba(0, 0, 0, 0.4);
@@ -1460,6 +1461,7 @@ try {
 
         .magnify-lens.active {
             opacity: 1 !important;
+            visibility: visible !important;
             display: block !important;
         }
 
@@ -1474,9 +1476,9 @@ try {
             background: white !important;
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4) !important;
             overflow: hidden;
-            opacity: 0 !important;
-            visibility: hidden !important;
-            transition: all 0.3s ease;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
             z-index: 999999 !important;
             display: block;
         }
@@ -1850,6 +1852,16 @@ try {
                             <div style="color: rgba(255,255,255,0.8); font-size: 0.9rem;">Limited time offer - While supplies last</div>
                         </div>
 
+                        <!-- Installment Payment Info -->
+                        <div style="margin-bottom: 15px; padding: 12px; background: rgba(255, 255, 255, 0.1); border-radius: 8px; text-align: center;">
+                            <p style="color: rgba(255,255,255,0.9); font-size: 0.9rem; font-weight: 500; margin: 0 0 5px 0;">
+                                Pay in installment, with only your Ghana Card
+                            </p>
+                            <p style="color: rgba(255,255,255,0.7); font-size: 0.75rem; margin: 0;">
+                                Contact us to Enroll in GadgetGarage's installment Plans
+                            </p>
+                        </div>
+
                         <!-- Add to Cart Button -->
                         <button onclick="addToCartWithCondition(<?php echo $product['product_id']; ?>)" id="addToCartBtn"
                             style="width: 100%; background: white; color: #4f46e5; border: none; padding: 18px; border-radius: 12px; font-size: 1.2rem; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px;">
@@ -1970,8 +1982,9 @@ try {
 
                 function getCursorPos(e) {
                     const a = mainImage.getBoundingClientRect();
-                    let x = e.pageX - a.left - window.pageXOffset;
-                    let y = e.pageY - a.top - window.pageYOffset;
+                    // Use clientX/clientY for better compatibility
+                    let x = (e.clientX || e.pageX || 0) - a.left;
+                    let y = (e.clientY || e.pageY || 0) - a.top;
                     return {x: x, y: y};
                 }
 
@@ -1980,6 +1993,11 @@ try {
                     console.log('🔍 SHOW magnifier triggered');
                     magnifyLens.classList.add('active');
                     magnifyResult.classList.add('active');
+                    // Force visibility with inline styles as backup
+                    magnifyLens.style.opacity = '1';
+                    magnifyLens.style.visibility = 'visible';
+                    magnifyResult.style.opacity = '1';
+                    magnifyResult.style.visibility = 'visible';
                 }
 
                 // Hide magnifying glass on mouse leave
@@ -1987,6 +2005,11 @@ try {
                     console.log('🔍 HIDE magnifier triggered');
                     magnifyLens.classList.remove('active');
                     magnifyResult.classList.remove('active');
+                    // Force hide with inline styles as backup
+                    magnifyLens.style.opacity = '0';
+                    magnifyLens.style.visibility = 'hidden';
+                    magnifyResult.style.opacity = '0';
+                    magnifyResult.style.visibility = 'hidden';
                 }
 
                 // Add event listeners
@@ -3874,316 +3897,8 @@ try {
             }
         }
 
-        /* Related Products Section */
-        .related-products-section {
-            padding: 80px 0;
-            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
-            margin-top: 60px;
-        }
-
-        .related-products-header {
-            text-align: center;
-            margin-bottom: 50px;
-        }
-
-        .related-products-title {
-            font-size: 2.5rem;
-            font-weight: 800;
-            color: #1a202c;
-            margin-bottom: 15px;
-            position: relative;
-            display: inline-block;
-        }
-
-        .related-products-title::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80px;
-            height: 4px;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            border-radius: 2px;
-        }
-
-        .related-products-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 30px;
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        .related-product-card {
-            background: var(--pure-white);
-            backdrop-filter: blur(20px);
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 4px 16px var(--shadow);
-            transition: all 0.4s ease;
-            cursor: pointer;
-            border: 1px solid var(--border-light);
-            position: relative;
-            width: 100%;
-            min-height: 450px;
-        }
-
-        .related-product-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 12px 32px var(--shadow-hover);
-            border-color: var(--royal-blue);
-        }
-
-        .related-product-image-container {
-            position: relative;
-            width: 100%;
-            height: 240px;
-            overflow: hidden;
-            background: linear-gradient(135deg, #f8fafc, #e2e8f0);
-        }
-
-        .related-product-image {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            transition: all 0.4s ease;
-        }
-
-        .related-product-card:hover .related-product-image {
-            transform: scale(1.1);
-        }
-
-        .related-product-badge {
-            position: absolute;
-            top: 15px;
-            right: 15px;
-            background: var(--gradient-primary);
-            color: var(--pure-white);
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            box-shadow: 0 2px 8px var(--shadow);
-        }
-
-        .related-product-content {
-            padding: 25px;
-            position: relative;
-            z-index: 2;
-        }
-
-        .related-product-title {
-            font-size: 1.2rem;
-            font-weight: 700;
-            color: #1a202c;
-            margin-bottom: 12px;
-            line-height: 1.4;
-            display: -webkit-box;
-            -webkit-line-clamp: 2;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-
-        .related-product-price {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: #000000;
-            margin-bottom: 15px;
-        }
-
-        .related-product-meta {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            gap: 15px;
-        }
-
-        .related-meta-tag {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            padding: 6px 12px;
-            background: rgba(0, 0, 0, 0.1);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            color: #000000;
-            font-weight: 500;
-        }
-
-        .related-add-to-cart-btn {
-            width: 100%;
-            padding: 15px;
-            background: var(--gradient-primary);
-            color: var(--pure-white);
-            border: none;
-            border-radius: 15px;
-            font-weight: 700;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            box-shadow: 0 4px 12px var(--shadow);
-        }
-
-        .related-add-to-cart-btn:hover {
-            background: linear-gradient(135deg, var(--royal-blue) 0%, var(--navy-blue) 100%);
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px var(--shadow-hover);
-        }
-
-        @media (max-width: 768px) {
-            .related-products-grid {
-                grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-                gap: 20px;
-            }
-
-            .related-products-title {
-                font-size: 2rem;
-            }
-        }
-    </style>
-
-    <!-- Related Products Section -->
-    <?php if (!empty($related_products)): ?>
-        <section class="related-products-section">
-            <div class="container-fluid">
-                <div class="related-products-header">
-                    <h2 class="related-products-title">Top Picks for You</h2>
-                </div>
-                <div class="related-products-grid">
-                    <?php foreach ($related_products as $related_product):
-                        $related_image_url = get_product_image_url($related_product['product_image'] ?? '', $related_product['product_title'] ?? 'Product', '400x300');
-                        $related_fallback_url = generate_placeholder_url($related_product['product_title'] ?? 'Product', '400x300');
-                    ?>
-                        <div class="related-product-card" onclick="window.location.href='single_product.php?id=<?php echo $related_product['product_id']; ?>'">
-                            <div class="related-product-image-container">
-                                <img src="<?php echo htmlspecialchars($related_image_url); ?>"
-                                    alt="<?php echo htmlspecialchars($related_product['product_title']); ?>"
-                                    class="related-product-image"
-                                    data-product-id="<?php echo $related_product['product_id']; ?>"
-                                    data-product-image="<?php echo htmlspecialchars($related_product['product_image'] ?? ''); ?>"
-                                    data-product-title="<?php echo htmlspecialchars($related_product['product_title']); ?>"
-                                    onerror="this.src='<?php echo htmlspecialchars($related_fallback_url); ?>'; this.onerror=null;">
-                                <div class="related-product-badge">New</div>
-                            </div>
-                            <div class="related-product-content">
-                                <h5 class="related-product-title"><?php echo htmlspecialchars($related_product['product_title']); ?></h5>
-                                <div class="related-product-price">GH₵ <?php echo number_format((float)($related_product['product_price'] ?? 0), 2); ?></div>
-                                <div class="related-product-meta">
-                                    <span class="related-meta-tag">
-                                        <i class="fas fa-tag"></i>
-                                        <?php echo htmlspecialchars($related_product['cat_name'] ?? 'N/A'); ?>
-                                    </span>
-                                    <span class="related-meta-tag">
-                                        <i class="fas fa-store"></i>
-                                        <?php echo htmlspecialchars($related_product['brand_name'] ?? 'N/A'); ?>
-                                    </span>
-                                </div>
-                                <button class="related-add-to-cart-btn" onclick="event.stopPropagation(); showAddToCartModal(<?php echo $related_product['product_id']; ?>, '<?php echo addslashes($related_product['product_title']); ?>', <?php echo $related_product['product_price']; ?>, '<?php echo htmlspecialchars($related_image_url); ?>')">
-                                    <i class="fas fa-shopping-cart"></i>
-                                    Add to Cart
-                                </button>
-                            </div>
-                        </div>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-        </section>
-    <?php endif; ?>
-
-    <!-- Footer -->
-    <footer class="main-footer">
-        <div class="container">
-            <div class="footer-content">
-                <div class="row align-items-start">
-                    <!-- First Column: Logo and Social -->
-                    <div class="col-lg-3 col-md-6 mb-4">
-                        <div class="footer-brand">
-                            <div class="footer-logo" style="margin-bottom: 20px;">
-                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
-                                    alt="Gadget Garage">
-                            </div>
-                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
-                            <div class="social-links">
-                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Navigation Links -->
-                    <div class="col-lg-5 col-md-12">
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Get Help</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Help Center</a></li>
-                                    <li><a href="contact.php">Track Order</a></li>
-                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
-                                    <li><a href="terms_conditions.php">Returns</a></li>
-                                    <li><a href="contact.php">Contact Us</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Company</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Careers</a></li>
-                                    <li><a href="contact.php">About</a></li>
-                                    <li><a href="contact.php">Stores</a></li>
-                                    <li><a href="contact.php">Want to Collab?</a></li>
-                                </ul>
-                            </div>
-                            <div class="col-lg-4 col-md-6 mb-4">
-                                <h5 class="footer-title">Quick Links</h5>
-                                <ul class="footer-links">
-                                    <li><a href="contact.php">Size Guide</a></li>
-                                    <li><a href="contact.php">Sitemap</a></li>
-                                    <li><a href="contact.php">Gift Cards</a></li>
-                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- Right Side: Email Signup Form -->
-                    <div class="col-lg-4 col-md-12 mb-4">
-                        <div class="newsletter-signup-section">
-                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
-                            <form class="newsletter-form" id="newsletterForm">
-                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
-                                <button type="submit" class="newsletter-submit-btn">
-                                    <i class="fas fa-arrow-right"></i>
-                                </button>
-                            </form>
-                            <p class="newsletter-disclaimer">
-                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
-                            </p>
-                            <p class="newsletter-disclaimer">
-                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <hr class="footer-divider">
-                <div class="footer-bottom">
-                    <div class="row align-items-center">
-                        <div class="col-md-12 text-center">
-                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </footer>
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
 
     <!-- Live Chat Widget -->
     <div class="live-chat-widget" id="liveChatWidget">
@@ -4473,13 +4188,95 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 </script>
 
-    <!-- AI Recommendations Section -->
-    <?php include '../includes/ai_recommendations_section.php'; ?>
-
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">
         <i class="fas fa-arrow-up"></i>
     </button>
+
+    <!-- Footer -->
+    <footer class="main-footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="row align-items-start">
+                    <!-- First Column: Logo and Social -->
+                    <div class="col-lg-3 col-md-6 mb-4">
+                        <div class="footer-brand">
+                            <div class="footer-logo" style="margin-bottom: 20px;">
+                                <img src="http://169.239.251.102:442/~chelsea.somuah/uploads/GadgetGarageLOGO.png"
+                                    alt="Gadget Garage">
+                            </div>
+                            <p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+                            <div class="social-links">
+                                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                                <a href="#" class="social-link"><i class="fab fa-linkedin-in"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Navigation Links -->
+                    <div class="col-lg-5 col-md-12">
+                        <div class="row">
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Get Help</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Help Center</a></li>
+                                    <li><a href="contact.php">Track Order</a></li>
+                                    <li><a href="terms_conditions.php">Shipping Info</a></li>
+                                    <li><a href="terms_conditions.php">Returns</a></li>
+                                    <li><a href="contact.php">Contact Us</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Company</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Careers</a></li>
+                                    <li><a href="contact.php">About</a></li>
+                                    <li><a href="contact.php">Stores</a></li>
+                                    <li><a href="contact.php">Want to Collab?</a></li>
+                                </ul>
+                            </div>
+                            <div class="col-lg-4 col-md-6 mb-4">
+                                <h5 class="footer-title">Quick Links</h5>
+                                <ul class="footer-links">
+                                    <li><a href="contact.php">Size Guide</a></li>
+                                    <li><a href="contact.php">Sitemap</a></li>
+                                    <li><a href="contact.php">Gift Cards</a></li>
+                                    <li><a href="contact.php">Check Gift Card Balance</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Right Side: Email Signup Form -->
+                    <div class="col-lg-4 col-md-12 mb-4">
+                        <div class="newsletter-signup-section">
+                            <h3 class="newsletter-title">SIGN UP FOR DISCOUNTS + UPDATES</h3>
+                            <form class="newsletter-form" id="newsletterForm">
+                                <input type="text" class="newsletter-input" placeholder="Phone Number or Email" required>
+                                <button type="submit" class="newsletter-submit-btn">
+                                    <i class="fas fa-arrow-right"></i>
+                                </button>
+                            </form>
+                            <p class="newsletter-disclaimer">
+                                By signing up for email, you agree to Gadget Garage's <a href="terms_conditions.php">Terms of Service</a> and <a href="legal.php">Privacy Policy</a>.
+                            </p>
+                            <p class="newsletter-disclaimer">
+                                By submitting your phone number, you agree to receive recurring automated promotional and personalized marketing text messages (e.g. cart reminders) from Gadget Garage at the cell number used when signing up. Consent is not a condition of any purchase. Reply HELP for help and STOP to cancel. Msg frequency varies. Msg & data rates may apply. <a href="terms_conditions.php">View Terms</a> & <a href="legal.php">Privacy</a>.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <hr class="footer-divider">
+                <div class="footer-bottom">
+                    <div class="row align-items-center">
+                        <div class="col-md-12 text-center">
+                            <p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </footer>
 
 </body>
 

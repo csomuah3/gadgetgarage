@@ -32,6 +32,7 @@ if (!$input) {
 
 $customer_email = isset($input['email']) ? trim($input['email']) : '';
 $custom_total = isset($input['total_amount']) ? floatval($input['total_amount']) : null;
+$store_credits_applied = isset($input['store_credits_applied']) ? floatval($input['store_credits_applied']) : 0;
 
 // Validate email
 if (!$customer_email || !filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
@@ -86,6 +87,7 @@ try {
         $_SESSION['paystack_original_amount'] = $custom_total ? get_cart_total_ctr($customer_id, $ip_address) : $cart_total;
         $_SESSION['paystack_email'] = $customer_email;
         $_SESSION['paystack_timestamp'] = time();
+        $_SESSION['store_credits_applied'] = $store_credits_applied;
 
         echo json_encode([
             'status' => 'success',

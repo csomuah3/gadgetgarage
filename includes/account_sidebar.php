@@ -12,6 +12,7 @@
     <ul class="sidebar-nav">
         <li><a href="account.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'account.php' ? 'active' : ''; ?>"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
         <li><a href="my_orders.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'my_orders.php' ? 'active' : ''; ?>"><i class="fas fa-box"></i>My Orders</a></li>
+        <li><a href="store_credits.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'store_credits.php' ? 'active' : ''; ?>"><i class="fas fa-credit-card"></i>Store Credits</a></li>
         <li><a href="wishlist.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'wishlist.php' ? 'active' : ''; ?>"><i class="fas fa-heart"></i>My Wishlist</a></li>
         <li><a href="compare.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'compare.php' ? 'active' : ''; ?>"><i class="fas fa-balance-scale"></i>Compare</a></li>
         <li><a href="contact.php" class="<?php echo basename($_SERVER['PHP_SELF']) == 'contact.php' ? 'active' : ''; ?>"><i class="fas fa-question-circle"></i>Help Center</a></li>

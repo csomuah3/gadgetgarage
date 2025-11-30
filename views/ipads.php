@@ -39,13 +39,28 @@ foreach ($categories as $cat) {
 if ($ipad_category_id) {
     $ipad_products = get_products_by_category_ctr($ipad_category_id);
 } else {
-    // Fallback: get all products and filter by category name
+    // Fallback: get all products and filter by category name - STRICT: ONLY iPads/Tablets, EXCLUDE phones
     $all_products = get_all_products_ctr();
     $ipad_products = array_filter($all_products, function ($product) {
         $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
-        return (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
+        // Include only iPad/tablet products, explicitly exclude phones
+        $is_ipad = (strpos($cat_name, 'ipad') !== false || strpos($cat_name, 'tablet') !== false);
+        $is_phone = (strpos($cat_name, 'phone') !== false || strpos($cat_name, 'smartphone') !== false);
+        return $is_ipad && !$is_phone;
     });
 }
+
+// Additional filter to ensure NO phones appear on iPads page
+$ipad_products = array_filter($ipad_products, function ($product) {
+    $cat_name = isset($product['cat_name']) ? strtolower($product['cat_name']) : '';
+    $product_title = isset($product['product_title']) ? strtolower($product['product_title']) : '';
+    // Exclude any products with phone-related keywords
+    $has_phone_keywords = (strpos($cat_name, 'phone') !== false || 
+                          strpos($cat_name, 'smartphone') !== false ||
+                          strpos($product_title, 'iphone') !== false ||
+                          strpos($product_title, 'samsung galaxy') !== false);
+    return !$has_phone_keywords;
+});
 
 // Get categories and brands from database (if not already loaded)
 if (empty($categories)) {
@@ -1197,7 +1212,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
             gap: 35px;
             margin-bottom: 50px;
             width: 100%;
@@ -1654,7 +1669,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 
         @media (max-width: 768px) {
             .product-grid {
-                grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+                grid-template-columns: repeat(auto-fill, minmax(450px, 1fr));
                 gap: 25px;
             }
 
@@ -1785,7 +1800,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
                 </div>
 
                 <!-- Products Grid -->
-                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 25px;">
+                <div id="productGrid" class="product-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(500px, 1fr)); gap: 25px;">
                     <?php foreach ($products_to_display as $product): ?>
                         <div class="product-card" onclick="viewProduct(<?php echo $product['product_id']; ?>)" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
                             <div class="product-image-container" style="position: relative; overflow: hidden; background: #f9fafb;">
@@ -1858,27 +1873,8 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
         });
     </script>
 
-    <!-- Recommended for You Section -->
-    <div class="container mt-5 mb-5">
-        <h2 style="text-align: center; margin-bottom: 30px; color: #1f2937; font-weight: 700;">RECOMMENDED FOR YOU</h2>
-        <div class="row">
-            <?php foreach ($recommended_products as $product): 
-                $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
-            ?>
-                <div class="col-lg-4 col-md-6 mb-3">
-                    <div class="product-card" onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
-                        <div style="overflow: hidden; background: #f9fafb;">
-                            <img src="<?php echo htmlspecialchars($product_image_url); ?>" alt="<?php echo htmlspecialchars($product['product_title']); ?>" style="width: 100%; height: 250px; object-fit: cover;">
-                        </div>
-                        <div style="padding: 15px;">
-                            <h5 style="font-size: 1rem; font-weight: 600; color: #1f2937; margin-bottom: 8px; min-height: 40px;"><?php echo htmlspecialchars($product['product_title']); ?></h5>
-                            <div style="font-size: 1.2rem; font-weight: 700; color: #2563eb;">GH₵ <?php echo number_format($product['product_price'], 2); ?></div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
+    <!-- AI Recommendations Section -->
+    <?php include '../includes/ai_recommendations_section.php'; ?>
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">

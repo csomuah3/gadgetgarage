@@ -1489,36 +1489,8 @@ try {
                         <?php endif; ?>
                     </div>
 
-                    <!-- Recommended for You Section -->
-                    <div class="dashboard-section">
-                        <div class="section-header">
-                            <h3 class="section-title">RECOMMENDED FOR YOU</h3>
-                        </div>
-                        <?php if (!empty($recommended_products)): ?>
-                            <div class="products-grid">
-                                <?php foreach ($recommended_products as $product): 
-                                    $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
-                                ?>
-                                    <div class="product-card">
-                                        <a href="single_product.php?pid=<?= $product['product_id'] ?>" style="text-decoration: none; color: inherit;">
-                                            <div class="product-image-container">
-                                                <img src="<?= htmlspecialchars($product_image_url) ?>" alt="<?= htmlspecialchars($product['product_title']) ?>">
-                                            </div>
-                                            <div class="product-info">
-                                                <div class="product-title"><?= htmlspecialchars($product['product_title']) ?></div>
-                                                <div class="product-price">GH₵<?= number_format($product['product_price'], 2) ?></div>
-                                            </div>
-                                        </a>
-                                    </div>
-                                <?php endforeach; ?>
-                            </div>
-                        <?php else: ?>
-                            <div class="empty-section">
-                                <i class="fas fa-box-open"></i>
-                                <p>No recommendations available</p>
-                            </div>
-                        <?php endif; ?>
-                    </div>
+                    <!-- AI Recommendations Section -->
+                    <?php include '../includes/ai_recommendations_section.php'; ?>
                 </div>
             </div>
         </main>

@@ -43,18 +43,34 @@ try {
         $customer_id = $_SESSION['user_id'];
         $ip_address = $_SERVER['REMOTE_ADDR'];
 
+        // Check for store credits applied (from session)
+        $store_credits_applied = isset($_SESSION['store_credits_applied']) ? floatval($_SESSION['store_credits_applied']) : 0;
+        
         // Process cart to order
         $order_result = process_cart_to_order_without_payment_ctr($customer_id, $ip_address);
 
         if ($order_result) {
             $order_id = $order_result['order_id'];
             $cart_total = $order_result['total_amount'];
+            
+            // Apply store credits if any were used
+            $final_total = $cart_total;
+            if ($store_credits_applied > 0) {
+                require_once __DIR__ . '/../helpers/store_credit_helper.php';
+                $storeCreditHelper = new StoreCreditHelper();
+                $credit_result = $storeCreditHelper->applyCreditsToOrder($customer_id, $cart_total, $order_id);
+                
+                if ($credit_result && $credit_result['applied_amount'] > 0) {
+                    $final_total = $credit_result['remaining_total'];
+                    error_log("Applied GH₵{$credit_result['applied_amount']} in store credits to order #$order_id. Remaining: GH₵$final_total");
+                }
+            }
 
-            // Record payment
+            // Record payment (using the amount after store credits if applied)
             $payment_id = record_payment_ctr(
                 $customer_id,
                 $order_id,
-                $cart_total,
+                $final_total,
                 'GHS',
                 'paystack',
                 $reference
@@ -77,6 +93,7 @@ try {
                 unset($_SESSION['paystack_amount']);
                 unset($_SESSION['paystack_email']);
                 unset($_SESSION['paystack_timestamp']);
+                unset($_SESSION['store_credits_applied']);
 
                 echo json_encode([
                     'status' => 'success',

@@ -1120,8 +1120,7 @@ function getOrderStatus($order_date) {
 
     <script>
         // View Order Details Function
-        // View Order Details Function (Make globally available)
-        window.viewOrderDetails = function(orderId, orderReference) {
+        function viewOrderDetails(orderId, orderReference) {
             console.log('Loading order details for order ID:', orderId);
 
             // Fetch order details
@@ -1170,7 +1169,7 @@ function getOrderStatus($order_date) {
         }
 
         // Show Order Details Modal
-        window.showOrderDetailsModal = function(order, orderReference) {
+        function showOrderDetailsModal(order, orderReference) {
             const orderDate = new Date(order.order_date);
             const estimatedDelivery = new Date(orderDate);
             estimatedDelivery.setDate(estimatedDelivery.getDate() + 4);
@@ -1297,8 +1296,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Track Order Function - Horizontal Timeline (Make globally available)
-        window.trackOrder = function(orderReference, orderDate) {
+        // Track Order Function - Horizontal Timeline
+        function trackOrder(orderReference, orderDate) {
             const orderDateTime = new Date(orderDate);
             const now = new Date();
             const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
@@ -1391,8 +1390,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Request Refund Function (Make globally available)
-        window.requestRefund = function(orderId, orderReference) {
+        // Request Refund Function
+        function requestRefund(orderId, orderReference) {
             const refundFormHTML = `
                 <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -1543,8 +1542,8 @@ function getOrderStatus($order_date) {
             });
         }
 
-        // Cancel Order Function (Make globally available)
-        window.cancelOrder = function(orderId, orderReference) {
+        // Cancel Order Function
+        function cancelOrder(orderId, orderReference) {
             // Confirm cancellation with SweetAlert
             Swal.fire({
                 title: 'Cancel Order?',
@@ -1637,7 +1636,7 @@ function getOrderStatus($order_date) {
         }
 
         // Display Order Details in Modal
-        window.displayOrderDetails = function(order) {
+        function displayOrderDetails(order) {
             const content = `
                 <div class="order-info-section">
                     <h6><i class="fas fa-info-circle me-2"></i>Order Information</h6>
@@ -1905,8 +1904,7 @@ function getOrderStatus($order_date) {
 
         // Load dark mode preference
         // Open Rating Modal Function
-        // Open Rating Modal Function (Make globally available)
-        window.openRatingModal = async function(orderId) {
+        async function openRatingModal(orderId) {
             try {
                 // Fetch order details
                 const response = await fetch(`../actions/get_order_details.php?order_id=${orderId}`);

@@ -527,7 +527,7 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
             gap: 25px;
             margin-bottom: 40px;
         }
@@ -2010,27 +2010,6 @@ $recommended_products = array_slice($all_products_for_recommendations, 0, 3);
         });
     </script>
 
-    <!-- Recommended for You Section -->
-    <div class="container mt-5 mb-5">
-        <h2 style="text-align: center; margin-bottom: 30px; color: #1f2937; font-weight: 700;">RECOMMENDED FOR YOU</h2>
-        <div class="row">
-            <?php foreach ($recommended_products as $product): 
-                $product_image_url = get_product_image_url($product['product_image'] ?? '', $product['product_title'] ?? '');
-            ?>
-                <div class="col-lg-4 col-md-6 mb-3">
-                    <div class="product-card" onclick="window.location.href='single_product.php?pid=<?php echo $product['product_id']; ?>'" style="cursor: pointer; background: white; border-radius: 12px; overflow: hidden; border: 1px solid #e5e7eb; transition: transform 0.2s;">
-                        <div style="overflow: hidden; background: #f9fafb;">
-                            <img src="<?php echo htmlspecialchars($product_image_url); ?>" alt="<?php echo htmlspecialchars($product['product_title']); ?>" style="width: 100%; height: 250px; object-fit: cover;">
-                        </div>
-                        <div style="padding: 15px;">
-                            <h5 style="font-size: 1rem; font-weight: 600; color: #1f2937; margin-bottom: 8px; min-height: 40px;"><?php echo htmlspecialchars($product['product_title']); ?></h5>
-                            <div style="font-size: 1.2rem; font-weight: 700; color: #2563eb;">GH₵ <?php echo number_format($product['product_price'], 2); ?></div>
-                        </div>
-                    </div>
-                </div>
-            <?php endforeach; ?>
-        </div>
-    </div>
 
     <!-- Scroll to Top Button -->
     <button id="scrollToTopBtn" class="scroll-to-top" aria-label="Scroll to top">

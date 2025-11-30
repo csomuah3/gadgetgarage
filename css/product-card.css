@@ -88,7 +88,7 @@ body {
     position: relative !important;
     transform-origin: center !important;
     box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06) !important;
-    max-width: 380px;
+    max-width: 550px;
     margin: 0 auto;
 }
 
@@ -419,16 +419,16 @@ body {
 /* Grid Layout for Multiple Cards */
 .product-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(480px, 1fr));
     gap: 30px;
     padding: 20px;
-    max-width: 1600px;
+    max-width: 1800px;
     margin: 0 auto;
 }
 
 @media (max-width: 768px) {
     .product-grid {
-        grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
         gap: 20px;
         padding: 10px;
     }

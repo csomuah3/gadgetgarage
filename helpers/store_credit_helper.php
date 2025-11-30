@@ -113,10 +113,8 @@ class StoreCreditHelper {
                         'description' => $credit['description']
                     ];
 
-                    // Log the credit usage
-                    if ($order_id) {
-                        $this->logCreditUsage($credit_id, $order_id, $to_use);
-                    }
+                    // Note: Credit usage is tracked by remaining_amount decrease
+                    // Detailed logging can be added to a separate audit table if needed
                 }
             }
         }
@@ -195,11 +193,11 @@ class StoreCreditHelper {
         $expires_in_days = intval($expires_in_days);
 
         $sql = "INSERT INTO store_credits (
-                    customer_id, amount, source_type, source_reference,
-                    description, expires_at, created_at
+                    customer_id, credit_amount, remaining_amount, source,
+                    admin_notes, expires_at, created_at, status, admin_verified, verified_at
                 ) VALUES (
-                    $customer_id, $amount, '$source_type', '$source_reference',
-                    '$description', DATE_ADD(NOW(), INTERVAL $expires_in_days DAY), NOW()
+                    $customer_id, $amount, $amount, '$source_type',
+                    '$description', DATE_ADD(NOW(), INTERVAL $expires_in_days DAY), NOW(), 'active', 1, NOW()
                 )";
 
         if ($this->db->db_write_query($sql)) {

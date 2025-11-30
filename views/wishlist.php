@@ -45,6 +45,7 @@ $first_name = explode(' ', $user_name)[0];
     <link rel="shortcut icon" type="image/png" href="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-17at10.07.19AM.png">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <!-- Reusable Header CSS -->
     <link href="../includes/header.css" rel="stylesheet">
@@ -665,8 +666,16 @@ $first_name = explode(' ', $user_name)[0];
                 })
                 .then(data => {
                     if (data.success) {
-                        // Show success message
-                        alert('Item added to cart successfully!');
+                        // Show success message with SweetAlert
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success!',
+                            text: 'Item added to cart successfully!',
+                            confirmButtonColor: '#008060',
+                            confirmButtonText: 'OK',
+                            timer: 3000,
+                            timerProgressBar: true
+                        });
 
                         // Update cart count if available
                         if (data.cart_count !== undefined) {
@@ -681,12 +690,26 @@ $first_name = explode(' ', $user_name)[0];
                             window.showCartSidebar();
                         }
                     } else {
-                        alert(data.message || 'Failed to add item to cart');
+                        // Show error message with SweetAlert
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: data.message || 'Failed to add item to cart',
+                            confirmButtonColor: '#ef4444',
+                            confirmButtonText: 'OK'
+                        });
                     }
                 })
                 .catch(error => {
                     console.error('Error adding to cart:', error);
-                    alert('Failed to add item to cart. Please try again.');
+                    // Show error message with SweetAlert
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Failed to add item to cart. Please try again.',
+                        confirmButtonColor: '#ef4444',
+                        confirmButtonText: 'OK'
+                    });
                 });
         };
 

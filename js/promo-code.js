@@ -61,18 +61,25 @@ async function applyPromoCode() {
         return;
     }
 
-    // Get cart total from the page - first check if we're on cart page with originalTotal
+    // Get cart total from the page - prioritize cart page original total
     let cartTotal = 0;
 
     console.log('PROMO-CODE.JS DEBUG: window.originalTotal =', window.originalTotal);
+    console.log('PROMO-CODE.JS DEBUG: window.cartPageOriginalTotal =', window.cartPageOriginalTotal);
 
-    // Check if originalTotal is available (from cart.php)
-    if (typeof window.originalTotal !== 'undefined' && window.originalTotal > 0) {
+    // Priority 1: Use cart page original total if available (from checkout page)
+    if (typeof window.cartPageOriginalTotal !== 'undefined' && window.cartPageOriginalTotal > 0) {
+        cartTotal = parseFloat(window.cartPageOriginalTotal);
+        console.log('PROMO-CODE.JS DEBUG: Using cartPageOriginalTotal from checkout page:', cartTotal);
+    }
+    // Priority 2: Check if originalTotal is available (from cart.php)
+    else if (typeof window.originalTotal !== 'undefined' && window.originalTotal > 0) {
         cartTotal = parseFloat(window.originalTotal);
         console.log('PROMO-CODE.JS DEBUG: Using originalTotal from cart page:', cartTotal);
-    } else {
-        // Fallback: try to extract from DOM elements
-        const cartTotalElement = document.querySelector('#cartTotal, .total-amount, [data-original-total]');
+    } 
+    // Priority 3: Try to extract from DOM elements
+    else {
+        const cartTotalElement = document.querySelector('#cartTotal, .total-amount, [data-original-total], #subtotal');
         console.log('PROMO-CODE.JS DEBUG: cartTotalElement found:', !!cartTotalElement);
 
         if (cartTotalElement) {
@@ -126,13 +133,20 @@ async function applyPromoCode() {
         console.log('PROMO-CODE.JS DEBUG: result.discount_amount:', result.discount_amount);
 
         if (result.success) {
-            // Check if store credits are applied - if yes, remove them
+            // Check if store credits are applied - if yes, remove them (mutual exclusivity)
             const applyStoreCreditsCheckbox = document.getElementById('applyStoreCredits');
             if (applyStoreCreditsCheckbox && applyStoreCreditsCheckbox.checked) {
                 // Uncheck store credits and remove deduction
                 applyStoreCreditsCheckbox.checked = false;
                 if (typeof handleStoreCreditsToggle === 'function') {
                     handleStoreCreditsToggle(false);
+                }
+                // Clear store credits from sessionStorage
+                sessionStorage.removeItem('appliedStoreCredits');
+                // Hide store credit row on checkout page if exists
+                const storeCreditsRow = document.getElementById('storeCreditsRow');
+                if (storeCreditsRow) {
+                    storeCreditsRow.style.display = 'none';
                 }
                 // Show message
                 if (promoMessage) {
@@ -156,6 +170,14 @@ async function applyPromoCode() {
             const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
             if (storeCreditsExclusiveMessage) {
                 storeCreditsExclusiveMessage.style.display = 'block';
+            }
+            
+            // Update checkout page if we're on checkout
+            if (typeof window.checkAndApplyPromoFromCart === 'function') {
+                // Reload the cart data display
+                setTimeout(() => {
+                    window.checkAndApplyPromoFromCart();
+                }, 100);
             }
 
             appliedPromo = result;
@@ -254,6 +276,14 @@ function removePromoCode() {
     const storeCreditsExclusiveMessage = document.getElementById('storeCreditsExclusiveMessage');
     if (storeCreditsExclusiveMessage) {
         storeCreditsExclusiveMessage.style.display = 'none';
+    }
+    
+    // Update checkout page if we're on checkout
+    if (typeof window.checkAndApplyPromoFromCart === 'function') {
+        // Reload the cart data display
+        setTimeout(() => {
+            window.checkAndApplyPromoFromCart();
+        }, 100);
     }
 
     // Hide applied promo section

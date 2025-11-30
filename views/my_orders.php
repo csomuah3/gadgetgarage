@@ -135,8 +135,17 @@ function getOrderStatus($order_date)
                         if (typeof Swal !== 'undefined') {
                             Swal.close();
                         }
-                        if (typeof showOrderDetailsModal === 'function') {
-                            showOrderDetailsModal(data.order, orderReference);
+                        // Call the modal function - it's defined in bottom script
+                        if (typeof window.showOrderDetailsModal === 'function') {
+                            window.showOrderDetailsModal(data.order, orderReference);
+                        } else {
+                            console.error('showOrderDetailsModal function not found');
+                            Swal.fire({
+                                icon: 'error',
+                                title: 'Error',
+                                text: 'Unable to display order details. Please refresh the page.',
+                                confirmButtonColor: '#3b82f6'
+                            });
                         }
                     } else {
                         if (typeof Swal !== 'undefined') {
@@ -779,16 +788,16 @@ function getOrderStatus($order_date)
             overflow-x: hidden;
         }
 
+        
+        
 
+        
 
+        
 
+        
 
-
-
-
-
-
-
+        
 
         /* Header styles are now in header.css */
 
@@ -1459,7 +1468,7 @@ function getOrderStatus($order_date)
 
 <body class="page-background">
     <?php include '../includes/header.php'; ?>
-
+    
     <!-- Account Layout -->
     <div class="account-layout">
         <!-- Account Sidebar -->
@@ -1532,8 +1541,8 @@ function getOrderStatus($order_date)
                                                 }
                                                 ?>
                                                 <img src="<?= $image_url ?>"
-                                                    alt="<?= htmlspecialchars($item['product_title'] ?? 'Product') ?>"
-                                                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+                                                     alt="<?= htmlspecialchars($item['product_title'] ?? 'Product') ?>"
+                                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
                                             </div>
                                         <?php endforeach; ?>
 
@@ -1619,8 +1628,8 @@ function getOrderStatus($order_date)
                                                 }
                                                 ?>
                                                 <img src="<?= $image_url ?>"
-                                                    alt="<?= htmlspecialchars($item['product_title'] ?? 'Product') ?>"
-                                                    onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
+                                                     alt="<?= htmlspecialchars($item['product_title'] ?? 'Product') ?>"
+                                                     onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iODAiIGhlaWdodD0iODAiIHZpZXdCb3g9IjAgMCA4MCA4MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9IjgwIiBoZWlnaHQ9IjgwIiBmaWxsPSIjRjNGNEY2Ii8+Cjx0ZXh0IHg9IjQwIiB5PSI0MCIgZm9udC1mYW1pbHk9IkFyaWFsLCBzYW5zLXNlcmlmIiBmb250LXNpemU9IjgiIGZpbGw9IiM2QjcyODAiIHRleHQtYW5jaG9yPSJtaWRkbGUiIGRvbWluYW50LWJhc2VsaW5lPSJtaWRkbGUiPk5vIEltYWdlPC90ZXh0Pgo8L3N2Zz4K'">
                                             </div>
                                         <?php endforeach; ?>
 
@@ -1782,11 +1791,12 @@ function getOrderStatus($order_date)
 
     <script>
         // Helper function for showing order details modal (used by viewOrderDetails from head)
-        function showOrderDetailsModal(order, orderReference) {
+        // Make it globally accessible
+        window.showOrderDetailsModal = function(order, orderReference) {
             const orderDate = new Date(order.order_date);
             const estimatedDelivery = new Date(orderDate);
             estimatedDelivery.setDate(estimatedDelivery.getDate() + 4);
-
+            
             const formatDate = (date) => {
                 const days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
                 const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
@@ -2018,44 +2028,44 @@ function getOrderStatus($order_date)
 
                     // Submit refund request
                     fetch('../actions/submit_refund_action.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                            body: JSON.stringify(result.value)
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                Swal.fire({
-                                    title: 'Request Submitted!',
-                                    html: `Your refund request for order <strong>#${orderReference}</strong> has been submitted successfully.<br><br>
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(result.value)
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            Swal.fire({
+                                title: 'Request Submitted!',
+                                html: `Your refund request for order <strong>#${orderReference}</strong> has been submitted successfully.<br><br>
                                        <strong>Reference ID:</strong> ${data.refund_id}<br><br>
                                        You will receive an email confirmation shortly. Our team will review your request within 2-3 business days.`,
-                                    icon: 'success',
-                                    confirmButtonText: 'OK',
-                                    confirmButtonColor: '#10b981'
-                                });
-                            } else {
-                                Swal.fire({
-                                    title: 'Request Failed',
-                                    text: data.message || 'There was an error submitting your refund request. Please try again.',
-                                    icon: 'error',
-                                    confirmButtonText: 'OK',
-                                    confirmButtonColor: '#ef4444'
-                                });
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
+                                icon: 'success',
+                                confirmButtonText: 'OK',
+                                confirmButtonColor: '#10b981'
+                            });
+                        } else {
                             Swal.fire({
-                                title: 'Network Error',
-                                text: 'Unable to submit your request. Please check your internet connection and try again.',
+                                title: 'Request Failed',
+                                text: data.message || 'There was an error submitting your refund request. Please try again.',
                                 icon: 'error',
                                 confirmButtonText: 'OK',
                                 confirmButtonColor: '#ef4444'
                             });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        Swal.fire({
+                            title: 'Network Error',
+                            text: 'Unable to submit your request. Please check your internet connection and try again.',
+                            icon: 'error',
+                            confirmButtonText: 'OK',
+                            confirmButtonColor: '#ef4444'
                         });
+                    });
                 }
             });
         }

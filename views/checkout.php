@@ -839,8 +839,23 @@ try {
 						<span class="text-success" id="discountLabel">
 							<i class="fas fa-tag me-1"></i>
 							Discount (<span id="discountPercent">20</span>%):
+							<span class="badge bg-success ms-2" id="discountBadge" style="font-size: 0.7rem; padding: 2px 6px;">
+								<i class="fas fa-check-circle me-1"></i>Applied from Cart
+							</span>
 						</span>
 						<span class="ms-auto text-success" id="discountAmount">-GH₵ 0.00</span>
+					</div>
+
+					<!-- Store Credit Row (hidden by default) -->
+					<div class="summary-row store-credits-row" id="storeCreditsRow" style="display: none;">
+						<span class="text-primary" id="storeCreditsLabel">
+							<i class="fas fa-credit-card me-1"></i>
+							Store Credits Applied:
+							<span class="badge bg-primary ms-2" id="storeCreditsBadge" style="font-size: 0.7rem; padding: 2px 6px;">
+								<i class="fas fa-check-circle me-1"></i>Applied from Cart
+							</span>
+						</span>
+						<span class="ms-auto text-primary" id="storeCreditsAmount">-GH₵ 0.00</span>
 					</div>
 
 					<div class="summary-row total">
@@ -1325,71 +1340,154 @@ try {
 			checkAndApplyPromoFromCart();
 		}
 
-		function checkAndApplyPromoFromCart() {
-			console.log('Checking for promo code in localStorage...');
-			const appliedPromo = localStorage.getItem('appliedPromo');
-			console.log('Raw localStorage value:', appliedPromo);
+		// Make function globally accessible for promo-code.js
+		window.checkAndApplyPromoFromCart = function() {
+			console.log('Checking for cart data from localStorage/sessionStorage...');
 			
+			// Read discount data from localStorage
+			const appliedPromo = localStorage.getItem('appliedPromo');
+			// Read store credit data from sessionStorage
+			const appliedStoreCredits = sessionStorage.getItem('appliedStoreCredits');
+			
+			// Get original cart total from PHP
+			const originalCartTotal = <?php echo $cart_total; ?>;
+			
+			// Initialize variables
+			let finalTotal = originalCartTotal;
+			let discountAmount = 0;
+			let storeCreditsAmount = 0;
+			let activeMethod = null; // 'discount' or 'store_credit'
+			
+			// Process discount if exists
 			if (appliedPromo) {
 				try {
 					const promoData = JSON.parse(appliedPromo);
 					console.log('Promo data parsed successfully:', promoData);
-
+					
+					discountAmount = promoData.discount_amount || 0;
+					finalTotal = promoData.new_total || originalCartTotal;
+					activeMethod = 'discount';
+					
+					// Show discount row
 					const discountRow = document.getElementById('discountRow');
 					if (discountRow) {
 						discountRow.style.display = 'flex';
 						
 						const discountLabel = document.getElementById('discountLabel');
 						if (discountLabel) {
+							let discountText = '';
 							if (promoData.discount_type === 'fixed') {
-								discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>Discount (' + (promoData.promo_code || 'Discount') + '):';
+								discountText = 'Discount (' + (promoData.promo_code || 'Discount') + '):';
 							} else {
-								discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>Discount (' + promoData.discount_value + '%):';
+								discountText = 'Discount (' + promoData.discount_value + '%):';
 							}
+							discountLabel.innerHTML = '<i class="fas fa-tag me-1"></i>' + discountText + 
+								'<span class="badge bg-success ms-2" style="font-size: 0.7rem; padding: 2px 6px;"><i class="fas fa-check-circle me-1"></i>Applied from Cart</span>';
 						}
 						
 						const discountAmountElement = document.getElementById('discountAmount');
 						if (discountAmountElement) {
-							discountAmountElement.textContent = '-GH₵ ' + promoData.discount_amount.toFixed(2);
-						}
-						
-						const finalTotalElement = document.getElementById('finalTotal');
-						if (finalTotalElement) {
-							finalTotalElement.textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
+							discountAmountElement.textContent = '-GH₵ ' + discountAmount.toFixed(2);
 						}
 					}
-
-					const subtotalElement = document.getElementById('subtotal');
-					if (subtotalElement) {
-						subtotalElement.textContent = 'GH₵ ' + promoData.original_total.toFixed(2);
+					
+					// Hide store credit row if discount is active
+					const storeCreditsRow = document.getElementById('storeCreditsRow');
+					if (storeCreditsRow) {
+						storeCreditsRow.style.display = 'none';
 					}
-
-					const completeOrderBtn = document.getElementById('simulatePaymentBtn');
-					if (completeOrderBtn) {
-						completeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Complete Order - GH₵ ' + promoData.new_total.toFixed(2);
-					}
-
-					const checkoutTotalDisplay = document.getElementById('checkoutTotalDisplay');
-					if (checkoutTotalDisplay) {
-						checkoutTotalDisplay.textContent = 'GH₵ ' + promoData.new_total.toFixed(2);
-					}
-
+					
+					// Store in window for later use
 					if (typeof window !== 'undefined') {
-						window.discountedTotal = promoData.new_total;
-						window.originalTotal = promoData.original_total;
-						window.discountAmount = promoData.discount_amount;
+						window.discountedTotal = finalTotal;
+						window.originalTotal = promoData.original_total || originalCartTotal;
+						window.discountAmount = discountAmount;
 						window.appliedPromoCode = promoData.promo_code;
 					}
-
-					console.log('Promo applied successfully. New total:', promoData.new_total);
+					
+					console.log('Discount applied from cart. Final total:', finalTotal);
 				} catch (error) {
 					console.error('Error applying promo from cart:', error);
 					localStorage.removeItem('appliedPromo');
 				}
-			} else {
-				console.log('No promo code found in localStorage');
 			}
-		}
+			
+			// Process store credits if exists (only if discount is not active)
+			if (appliedStoreCredits && !activeMethod) {
+				try {
+					storeCreditsAmount = parseFloat(appliedStoreCredits) || 0;
+					if (storeCreditsAmount > 0) {
+						finalTotal = Math.max(0, originalCartTotal - storeCreditsAmount);
+						activeMethod = 'store_credit';
+						
+						// Show store credit row
+						const storeCreditsRow = document.getElementById('storeCreditsRow');
+						if (storeCreditsRow) {
+							storeCreditsRow.style.display = 'flex';
+							
+							const storeCreditsAmountElement = document.getElementById('storeCreditsAmount');
+							if (storeCreditsAmountElement) {
+								storeCreditsAmountElement.textContent = '-GH₵ ' + storeCreditsAmount.toFixed(2);
+							}
+						}
+						
+						// Hide discount row if store credit is active
+						const discountRow = document.getElementById('discountRow');
+						if (discountRow) {
+							discountRow.style.display = 'none';
+						}
+						
+						// Store in window for later use
+						if (typeof window !== 'undefined') {
+							window.storeCreditsApplied = storeCreditsAmount;
+							window.originalTotal = originalCartTotal;
+						}
+						
+						console.log('Store credits applied from cart. Final total:', finalTotal);
+					}
+				} catch (error) {
+					console.error('Error applying store credits from cart:', error);
+					sessionStorage.removeItem('appliedStoreCredits');
+				}
+			}
+			
+			// Update subtotal display (show original total)
+			const subtotalElement = document.getElementById('subtotal');
+			if (subtotalElement) {
+				if (activeMethod === 'discount' && window.originalTotal) {
+					subtotalElement.textContent = 'GH₵ ' + window.originalTotal.toFixed(2);
+				} else {
+					subtotalElement.textContent = 'GH₵ ' + originalCartTotal.toFixed(2);
+				}
+			}
+			
+			// Update final total display
+			const finalTotalElement = document.getElementById('finalTotal');
+			if (finalTotalElement) {
+				finalTotalElement.textContent = 'GH₵ ' + finalTotal.toFixed(2);
+			}
+			
+			// Update payment button
+			const completeOrderBtn = document.getElementById('simulatePaymentBtn');
+			if (completeOrderBtn) {
+				completeOrderBtn.innerHTML = '<i class="fas fa-lock me-2"></i>Complete Order - GH₵ ' + finalTotal.toFixed(2);
+			}
+			
+			// Update large total display at top
+			const checkoutTotalDisplay = document.getElementById('checkoutTotalDisplay');
+			if (checkoutTotalDisplay) {
+				checkoutTotalDisplay.textContent = 'GH₵ ' + finalTotal.toFixed(2);
+			}
+			
+			// Store final total for payment processing
+			if (typeof window !== 'undefined') {
+				window.cartPageFinalTotal = finalTotal;
+				window.cartPageOriginalTotal = originalCartTotal;
+				window.activeMethod = activeMethod;
+			}
+			
+			console.log('Cart data loaded. Active method:', activeMethod, 'Final total:', finalTotal);
+		};
 
 		function createFloatingBubbles() {
 			const bubblesContainer = document.getElementById('floatingBubbles');
@@ -1506,15 +1604,28 @@ try {
 				return;
 			}
 
-			const appliedPromo = localStorage.getItem('appliedPromo');
+			// Use the total from cart page (already calculated and stored)
 			let totalAmount = <?php echo $cart_total; ?>;
-
-			if (appliedPromo) {
-				try {
-					const promoData = JSON.parse(appliedPromo);
-					totalAmount = promoData.new_total;
-				} catch (error) {
-					console.error('Error parsing promo data:', error);
+			
+			// Check if we have a final total from cart page
+			if (typeof window.cartPageFinalTotal !== 'undefined' && window.cartPageFinalTotal !== null) {
+				totalAmount = window.cartPageFinalTotal;
+				console.log('Using cart page final total:', totalAmount);
+			} else {
+				// Fallback: check localStorage/sessionStorage
+				const appliedPromo = localStorage.getItem('appliedPromo');
+				const appliedStoreCredits = sessionStorage.getItem('appliedStoreCredits');
+				
+				if (appliedPromo) {
+					try {
+						const promoData = JSON.parse(appliedPromo);
+						totalAmount = promoData.new_total;
+					} catch (error) {
+						console.error('Error parsing promo data:', error);
+					}
+				} else if (appliedStoreCredits) {
+					const creditsAmount = parseFloat(appliedStoreCredits) || 0;
+					totalAmount = Math.max(0, totalAmount - creditsAmount);
 				}
 			}
 
@@ -1533,6 +1644,17 @@ try {
 				showConfirmButton: false
 			});
 
+			// Get store credits applied (if any)
+			let storeCreditsApplied = 0;
+			if (typeof window.storeCreditsApplied !== 'undefined') {
+				storeCreditsApplied = window.storeCreditsApplied;
+			} else {
+				const appliedStoreCredits = sessionStorage.getItem('appliedStoreCredits');
+				if (appliedStoreCredits) {
+					storeCreditsApplied = parseFloat(appliedStoreCredits) || 0;
+				}
+			}
+			
 			fetch('../actions/paystack_init_transaction.php', {
 				method: 'POST',
 				headers: {
@@ -1541,7 +1663,8 @@ try {
 				body: JSON.stringify({
 					email: customerEmail,
 					total_amount: totalAmount,
-					payment_method: selectedPaymentMethod
+					payment_method: selectedPaymentMethod,
+					store_credits_applied: storeCreditsApplied > 0 ? storeCreditsApplied : 0
 				})
 			})
 			.then(response => response.json())

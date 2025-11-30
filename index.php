@@ -1454,172 +1454,6 @@ try {
 			color: #008060;
 	}
 
-	/* Live Deal Ticker - Left Edge */
-	.live-deal-ticker {
-		position: fixed;
-		left: 20px;
-		top: 120px; /* Below header */
-		width: 280px;
-		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-		border-radius: 16px;
-		padding: 20px;
-		box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
-		z-index: 900;
-		display: none; /* Hidden by default, show on large screens */
-		animation: slideInLeft 0.6s ease-out;
-	}
-
-	@keyframes slideInLeft {
-		from {
-			opacity: 0;
-			transform: translateX(-100px);
-		}
-		to {
-			opacity: 1;
-			transform: translateX(0);
-		}
-	}
-
-	/* Show only on large screens */
-	@media (min-width: 1400px) {
-		.live-deal-ticker {
-			display: block;
-		}
-	}
-
-	.deal-ticker-header {
-		display: flex;
-		align-items: center;
-		gap: 10px;
-		margin-bottom: 20px;
-		padding-bottom: 15px;
-		border-bottom: 2px solid rgba(255, 255, 255, 0.3);
-	}
-
-	.ticker-icon {
-		font-size: 1.8rem;
-		animation: pulse 2s ease-in-out infinite;
-	}
-
-	@keyframes pulse {
-		0%, 100% {
-			transform: scale(1);
-		}
-		50% {
-			transform: scale(1.2);
-		}
-	}
-
-	.deal-ticker-header h3 {
-		color: white;
-		font-size: 1.3rem;
-		font-weight: 700;
-		margin: 0;
-		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
-	}
-
-	.deal-ticker-content {
-		position: relative;
-		min-height: 400px;
-		overflow: hidden;
-	}
-
-	.deal-item {
-		background: white;
-		border-radius: 12px;
-		padding: 16px;
-		margin-bottom: 12px;
-		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-		cursor: pointer;
-		transition: all 0.3s ease;
-		opacity: 0;
-		animation: fadeInUp 0.5s ease forwards;
-		position: relative;
-		overflow: hidden;
-	}
-
-	.deal-item::before {
-		content: '';
-		position: absolute;
-		top: 0;
-		left: -100%;
-		width: 100%;
-		height: 100%;
-		background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-		transition: left 0.5s;
-	}
-
-	.deal-item:hover::before {
-		left: 100%;
-	}
-
-	.deal-item:hover {
-		transform: translateY(-4px);
-		box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
-	}
-
-	@keyframes fadeInUp {
-		from {
-			opacity: 0;
-			transform: translateY(20px);
-		}
-		to {
-			opacity: 1;
-			transform: translateY(0);
-		}
-	}
-
-	.deal-item.fade-out {
-		animation: fadeOutDown 0.5s ease forwards;
-	}
-
-	@keyframes fadeOutDown {
-		from {
-			opacity: 1;
-			transform: translateY(0);
-		}
-		to {
-			opacity: 0;
-			transform: translateY(-20px);
-		}
-	}
-
-	.deal-emoji {
-		font-size: 1.5rem;
-		margin-right: 8px;
-	}
-
-	.deal-text {
-		color: #1f2937;
-		font-size: 0.95rem;
-		font-weight: 600;
-		line-height: 1.4;
-		margin: 0;
-	}
-
-	.deal-badge {
-		display: inline-block;
-		background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
-		color: white;
-		padding: 4px 10px;
-		border-radius: 6px;
-		font-size: 0.75rem;
-		font-weight: 700;
-		margin-top: 8px;
-		text-transform: uppercase;
-		letter-spacing: 0.5px;
-		animation: glow 2s ease-in-out infinite;
-	}
-
-	@keyframes glow {
-		0%, 100% {
-			box-shadow: 0 0 5px rgba(239, 68, 68, 0.5);
-		}
-		50% {
-			box-shadow: 0 0 20px rgba(239, 68, 68, 0.8), 0 0 30px rgba(239, 68, 68, 0.4);
-		}
-	}
-
 	/* Hero Section */
 	/* Hero Banner Styles */
 	/* ——— Layout shell ——— */
@@ -1628,7 +1462,7 @@ try {
 		width: 100%;
 		max-width: 100%;
 		margin: 0 auto;
-		padding: 15px;
+		padding: 8px 15px;
 		background: #ffffff;
 	}
 
@@ -1636,10 +1470,10 @@ try {
 		display: grid;
 		grid-template-columns: 1.5fr 4fr 1.5fr;
 		/* left slideshow | hero carousel | right side banners */
-		gap: 28px;
+		gap: 15px;
 		/* spacing between cards */
 		align-items: start;
-		min-height: 80px;
+		min-height: 45px;
 		/* hero height */
 	}
 
@@ -1648,8 +1482,8 @@ try {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		min-height: 80px;
-		border-radius: 14px;
+		min-height: 45px;
+		border-radius: 10px;
 		overflow: hidden;
 		background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
 		box-shadow: 0 4px 15px rgba(102, 126, 234, 0.2);
@@ -1659,7 +1493,7 @@ try {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		min-height: 80px;
+		min-height: 45px;
 	}
 
 	.ai-slide {
@@ -1668,7 +1502,7 @@ try {
 		left: 0;
 		width: 100%;
 		height: 100%;
-		min-height: 80px;
+		min-height: 45px;
 		opacity: 0;
 		visibility: hidden;
 		transform: translateX(-20px);
@@ -1676,7 +1510,7 @@ try {
 		display: flex;
 		align-items: center;
 		justify-content: center;
-		padding: 15px;
+		padding: 8px;
 		box-sizing: border-box;
 	}
 
@@ -1696,38 +1530,38 @@ try {
 	.ai-slide-badge {
 		display: inline-block;
 		background: rgba(255, 255, 255, 0.25);
-		padding: 4px 10px;
-		border-radius: 12px;
-		font-size: 0.7rem;
+		padding: 2px 6px;
+		border-radius: 8px;
+		font-size: 0.55rem;
 		font-weight: 700;
-		letter-spacing: 0.5px;
-		margin-bottom: 8px;
+		letter-spacing: 0.3px;
+		margin-bottom: 3px;
 		backdrop-filter: blur(10px);
 	}
 
 	.ai-slide-title {
-		font-size: 1.1rem;
+		font-size: 0.8rem;
 		font-weight: 700;
-		margin: 0 0 4px 0;
+		margin: 0 0 2px 0;
 		text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 	}
 
 	.ai-slide-text {
-		font-size: 0.8rem;
-		margin: 0 0 10px 0;
+		font-size: 0.65rem;
+		margin: 0 0 5px 0;
 		opacity: 0.95;
-		line-height: 1.3;
+		line-height: 1.2;
 	}
 
 	.ai-slide-btn {
 		display: inline-block;
 		background: white;
 		color: #667eea;
-		padding: 6px 16px;
-		border-radius: 20px;
+		padding: 3px 10px;
+		border-radius: 12px;
 		text-decoration: none;
 		font-weight: 700;
-		font-size: 0.75rem;
+		font-size: 0.6rem;
 		transition: all 0.3s ease;
 		box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 	}
@@ -1772,8 +1606,8 @@ try {
 		position: relative;
 		width: 100%;
 		height: 100%;
-		min-height: 80px;
-		border-radius: 14px;
+		min-height: 45px;
+		border-radius: 10px;
 		overflow: visible;
 		background: #f0f4f8;
 		/* Fallback background */
@@ -2057,13 +1891,13 @@ try {
 			text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
 		}
 
-		.banner-copy {
-			display: flex;
-			flex-direction: column;
-			justify-content: center;
-			gap: 24px;
-			padding: 20px 0;
-		}
+	.banner-copy {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		gap: 8px;
+		padding: 5px 0;
+	}
 
 		/* Brand Logo Section */
 		.brand-logo-section {
@@ -2086,15 +1920,15 @@ try {
 			transition-duration: 0.3s;
 		}
 
-		.brand-logo {
-			height: 32px;
-			width: auto;
-			filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
-		}
+	.brand-logo {
+		height: 18px;
+		width: auto;
+		filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+	}
 
-		.apple-logo {
-			height: 36px;
-		}
+	.apple-logo {
+		height: 20px;
+	}
 
 		.fujifilm-logo,
 		.samsung-logo {
@@ -2121,18 +1955,18 @@ try {
 			align-items: flex-start;
 		}
 
-		.text-line {
-			font-size: clamp(42px, 6vw, 64px);
-			font-weight: 400;
-			line-height: 1.2;
-			color: inherit;
-			margin: 0;
-			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
-				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-			transform: translateY(0);
-			font-family: 'Georgia', 'Times New Roman', serif;
-			letter-spacing: 0.5px;
-		}
+	.text-line {
+		font-size: clamp(18px, 3vw, 28px);
+		font-weight: 400;
+		line-height: 1.1;
+		color: inherit;
+		margin: 0;
+		transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
+			transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+		transform: translateY(0);
+		font-family: 'Georgia', 'Times New Roman', serif;
+		letter-spacing: 0.3px;
+	}
 
 		/* Enhanced staggered delays for text lines */
 		.hero-slide .text-line:nth-child(1) {
@@ -6090,17 +5924,6 @@ try {
 
 <body>
 	<?php include 'includes/header.php'; ?>
-
-	<!-- Left Edge Live Deal Ticker -->
-	<div class="live-deal-ticker">
-		<div class="deal-ticker-header">
-			<span class="ticker-icon">🔥</span>
-			<h3>Hot Deals</h3>
-		</div>
-		<div class="deal-ticker-content" id="dealTickerContent">
-			<!-- Deals will be populated by JavaScript -->
-		</div>
-	</div>
 
 	<!-- Hero Banner Section (matching demo) -->
 	<section class="hero-banner-section">
@@ -11347,105 +11170,6 @@ try {
 	})();
 </script>
 
-<!-- Live Deal Ticker Script -->
-<script>
-	// Deal ticker data and animation
-	const dealTickerDeals = [
-		{ emoji: '⚡', text: 'iPhone 13 Pro Max', badge: 'Only 2 Left!' },
-		{ emoji: '🔥', text: 'Save GH₵2000 on MacBooks', badge: 'Hot Deal' },
-		{ emoji: '💎', text: 'Samsung Galaxy S23 Ultra', badge: '3 Left' },
-		{ emoji: '⚡', text: 'iPad Pro - Excellent Condition', badge: 'Limited Stock' },
-		{ emoji: '🎯', text: 'AirPods Pro 2nd Gen', badge: 'Save GH₵500' },
-		{ emoji: '🔥', text: 'Dell XPS 15 - Like New', badge: 'Only 1 Left!' },
-		{ emoji: '💥', text: 'PlayStation 5', badge: 'Back in Stock' },
-		{ emoji: '⚡', text: 'Apple Watch Series 8', badge: 'Save GH₵800' },
-		{ emoji: '🌟', text: 'Nintendo Switch OLED', badge: '5 Left' },
-		{ emoji: '🔥', text: 'MacBook Air M2', badge: 'Hot Deal' }
-	];
-
-	let currentDealIndex = 0;
-	const maxVisibleDeals = 5;
-	let dealTickerInterval;
-
-	function createDealElement(deal) {
-		const dealItem = document.createElement('div');
-		dealItem.className = 'deal-item';
-		dealItem.innerHTML = `
-			<span class="deal-emoji">${deal.emoji}</span>
-			<p class="deal-text">${deal.text}</p>
-			<span class="deal-badge">${deal.badge}</span>
-		`;
-		return dealItem;
-	}
-
-	function initializeDealTicker() {
-		const container = document.getElementById('dealTickerContent');
-		if (!container) return;
-
-		// Add initial deals
-		for (let i = 0; i < maxVisibleDeals; i++) {
-			const deal = dealTickerDeals[i % dealTickerDeals.length];
-			const dealElement = createDealElement(deal);
-			dealElement.style.animationDelay = `${i * 0.1}s`;
-			container.appendChild(dealElement);
-		}
-
-		currentDealIndex = maxVisibleDeals;
-
-		// Start rotating deals
-		startDealRotation();
-	}
-
-	function startDealRotation() {
-		dealTickerInterval = setInterval(() => {
-			rotateDeal();
-		}, 4000); // Change deal every 4 seconds
-	}
-
-	function rotateDeal() {
-		const container = document.getElementById('dealTickerContent');
-		if (!container) return;
-
-		const deals = container.querySelectorAll('.deal-item');
-		if (deals.length === 0) return;
-
-		// Fade out the first deal
-		const firstDeal = deals[0];
-		firstDeal.classList.add('fade-out');
-
-		// After fade out, remove it and add new deal
-		setTimeout(() => {
-			firstDeal.remove();
-
-			// Add new deal at the end
-			const newDeal = dealTickerDeals[currentDealIndex % dealTickerDeals.length];
-			const newDealElement = createDealElement(newDeal);
-			container.appendChild(newDealElement);
-
-			currentDealIndex++;
-		}, 500);
-	}
-
-	// Initialize on page load
-	document.addEventListener('DOMContentLoaded', () => {
-		// Wait a bit before showing ticker
-		setTimeout(() => {
-			initializeDealTicker();
-		}, 1000);
-	});
-
-	// Pause rotation on hover
-	const ticker = document.querySelector('.live-deal-ticker');
-	if (ticker) {
-		ticker.addEventListener('mouseenter', () => {
-			clearInterval(dealTickerInterval);
-		});
-
-		ticker.addEventListener('mouseleave', () => {
-			startDealRotation();
-		});
-	}
-</script>
 
 </body>
 

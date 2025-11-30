@@ -38,6 +38,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     add_admin_response_ctr($message_id, 'Spoke to AI - Issue handled automatically.', $admin_id);
                 }
                 $success_message = "Status updated successfully.";
+                // Redirect to prevent form resubmission and clear modal state
+                header("Location: " . $_SERVER['REQUEST_URI'] . "?success=1");
+                exit();
             } else {
                 $error_message = "Failed to update status.";
             }
@@ -51,6 +54,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         if (add_admin_response_ctr($message_id, $response, $admin_id)) {
             $success_message = "Response added successfully.";
+            // Redirect to prevent form resubmission and clear modal state
+            header("Location: " . $_SERVER['REQUEST_URI'] . "?success=2");
+            exit();
         } else {
             $error_message = "Failed to add response.";
         }
@@ -263,163 +269,131 @@ try {
 <div class="row g-4">
     <div class="col-12">
         <div class="admin-card" style="animation-delay: 0.7s;">
-            <div class="card-header-custom">
-                <h5><i class="fas fa-list me-2"></i>Support Tickets</h5>
-                <div class="ms-auto">
-                    <button class="btn btn-light btn-sm" onclick="refreshMessages()" id="refreshBtn">
-                        <i class="fas fa-sync-alt me-1"></i> Refresh
-                    </button>
-                </div>
+            <div class="card-header-custom d-flex justify-content-between align-items-center">
+                <h5 class="mb-0"><i class="fas fa-comments me-2"></i>Support Tickets</h5>
+                <button class="btn btn-light btn-sm" onclick="refreshMessages()" id="refreshBtn" style="background: rgba(255,255,255,0.2); border: 1px solid rgba(255,255,255,0.3); color: white;">
+                    <i class="fas fa-sync-alt me-1"></i> Refresh
+                </button>
             </div>
-            <div class="card-body-custom p-0">
+            <div class="card-body-custom">
                 <?php if (empty($messages)): ?>
                     <div class="text-center py-5">
-                        <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                        <h3>No Support Tickets Found</h3>
-                        <p class="text-muted">There are no support messages matching your criteria.</p>
+                        <div class="glass-card-empty">
+                            <i class="fas fa-inbox fa-4x mb-3" style="color: rgba(100, 116, 139, 0.5);"></i>
+                            <h3 style="color: var(--primary-navy);">No Support Tickets Found</h3>
+                            <p style="color: #64748b;">There are no support messages matching your criteria.</p>
+                        </div>
                     </div>
                 <?php else: ?>
-                    <div class="support-messages">
-                        <?php foreach ($messages as $index => $message): ?>
-                            <div class="support-message-item priority-<?= $message['priority'] ?? 'normal' ?>" style="animation-delay: <?= 0.8 + ($index * 0.1) ?>s;">
-                                <div class="message-header">
-                                    <div class="d-flex align-items-center justify-content-between">
-                                        <div class="d-flex align-items-center">
-                                            <div class="customer-avatar me-3">
-                                                <i class="fas fa-user"></i>
-                                            </div>
-                                            <div>
-                                                <div class="d-flex align-items-center mb-1">
-                                                    <span class="subject-tag subject-<?= $message['subject'] ?? 'general' ?>">
-                                                        <?php
-                                                        $subject_labels = [
-                                                            'order' => 'Order',
-                                                            'device_quality' => 'Device Issue',
-                                                            'repair' => 'Repair',
-                                                            'device_drop' => 'Device Drop',
-                                                            'tech_revival' => 'Tech Revival',
-                                                            'billing' => 'Billing',
-                                                            'account' => 'Account',
-                                                            'general' => 'General'
-                                                        ];
-                                                        echo $subject_labels[$message['subject'] ?? 'general'] ?? ($message['subject'] ?? 'General');
-                                                        ?>
-                                                    </span>
-                                                    <strong><?= htmlspecialchars($message['customer_name'] ?? $message['full_name'] ?? 'Unknown Customer') ?></strong>
-                                                </div>
-                                                <?php if (!empty($message['customer_email'] ?? $message['email'] ?? '')): ?>
-                                                    <small class="text-muted"><i class="fas fa-envelope me-1"></i><?= htmlspecialchars($message['customer_email'] ?? $message['email'] ?? '') ?></small>
-                                                <?php endif; ?>
-                                            </div>
+                    <div class="support-messages-grid">
+                        <?php 
+                        $subject_labels = [
+                            'order' => 'Order',
+                            'device_quality' => 'Device Issue',
+                            'repair' => 'Repair',
+                            'device_drop' => 'Device Drop',
+                            'tech_revival' => 'Tech Revival',
+                            'billing' => 'Billing',
+                            'account' => 'Account',
+                            'general' => 'General'
+                        ];
+                        $status_labels = [
+                            'spoke_to_ai' => 'Spoke to AI',
+                            'reached_out_via_mail' => 'Reached Out via Mail',
+                            'reached_out_via_call' => 'Reached Out via Call',
+                            'reached_out_via_text' => 'Reached Out via Text',
+                            'customer_needs_to_come_in' => 'Customer Needs to Come In',
+                            'new' => 'New',
+                            'in_progress' => 'In Progress',
+                            'resolved' => 'Resolved',
+                            'closed' => 'Closed'
+                        ];
+                        foreach ($messages as $index => $message): 
+                            $status = $message['status'] ?? 'new';
+                            $current_status = ($status === 'new' || empty($status)) ? 'spoke_to_ai' : $status;
+                        ?>
+                            <div class="glass-message-card" style="animation-delay: <?= 0.8 + ($index * 0.1) ?>s;">
+                                <div class="message-card-header">
+                                    <div class="d-flex align-items-center gap-3">
+                                        <div class="customer-avatar-glass">
+                                            <i class="fas fa-user"></i>
                                         </div>
-                                        <div class="d-flex align-items-center gap-3">
-                                            <span class="status-badge status-<?= $message['status'] ?? 'new' ?>">
-                                                <?php
-                                                $status = $message['status'] ?? 'new';
-                                                $status_labels = [
-                                                    'spoke_to_ai' => 'Spoke to AI',
-                                                    'reached_out_via_mail' => 'Reached Out via Mail',
-                                                    'reached_out_via_call' => 'Reached Out via Call',
-                                                    'reached_out_via_text' => 'Reached Out via Text',
-                                                    'customer_needs_to_come_in' => 'Customer Needs to Come In',
-                                                    'new' => 'New',
-                                                    'in_progress' => 'In Progress',
-                                                    'resolved' => 'Resolved',
-                                                    'closed' => 'Closed'
-                                                ];
-                                                echo $status_labels[$status] ?? ucfirst(str_replace('_', ' ', $status));
-                                                ?>
+                                        <div class="flex-grow-1">
+                                            <div class="d-flex align-items-center gap-2 mb-1">
+                                                <span class="subject-badge subject-<?= $message['subject'] ?? 'general' ?>">
+                                                    <?= $subject_labels[$message['subject'] ?? 'general'] ?? 'General' ?>
+                                                </span>
+                                                <strong class="customer-name"><?= htmlspecialchars($message['customer_name'] ?? $message['full_name'] ?? 'Unknown Customer') ?></strong>
+                                            </div>
+                                            <?php if (!empty($message['customer_email'] ?? $message['email'] ?? '')): ?>
+                                                <small class="customer-email">
+                                                    <i class="fas fa-envelope me-1"></i>
+                                                    <?= htmlspecialchars($message['customer_email'] ?? $message['email'] ?? '') ?>
+                                                </small>
+                                            <?php endif; ?>
+                                        </div>
+                                        <div class="message-meta">
+                                            <span class="status-badge-glass status-<?= $status ?>">
+                                                <?= $status_labels[$status] ?? ucfirst(str_replace('_', ' ', $status)) ?>
                                             </span>
-                                            <small class="text-muted"><?= date('M j, Y g:i A', strtotime($message['created_at'])) ?></small>
+                                            <small class="message-date"><?= date('M j, Y g:i A', strtotime($message['created_at'])) ?></small>
                                         </div>
                                     </div>
                                 </div>
 
-                                <div class="message-body mt-3">
-                                    <p class="message-text"><?= nl2br(htmlspecialchars($message['message'])) ?></p>
+                                <div class="message-card-body">
+                                    <div class="message-content">
+                                        <p><?= nl2br(htmlspecialchars($message['message'])) ?></p>
+                                    </div>
 
                                     <?php if (isset($message['admin_response']) && $message['admin_response']): ?>
-                                        <div class="admin-response">
-                                            <div class="response-header">
+                                        <div class="admin-response-glass">
+                                            <div class="response-header-glass">
                                                 <i class="fas fa-reply me-2"></i>
                                                 <strong>Admin Response</strong>
                                             </div>
-                                            <div class="response-content">
+                                            <div class="response-content-glass">
                                                 <?= nl2br(htmlspecialchars($message['admin_response'])) ?>
                                             </div>
-                                            <small class="text-muted">
-                                                Responded on <?= date('M j, Y g:i A', strtotime($message['response_date'])) ?>
+                                            <small class="response-date">
+                                                <?= date('M j, Y g:i A', strtotime($message['response_date'] ?? $message['updated_at'] ?? 'now')) ?>
                                             </small>
                                         </div>
                                     <?php endif; ?>
 
-                                    <div class="message-actions mt-3">
-                                        <div class="btn-group" role="group">
-                                            <button class="btn btn-sm btn-outline-primary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#responseModal<?= $message['message_id'] ?>">
-                                                <i class="fas fa-reply me-1"></i>Response
-                                            </button>
-                                            <button class="btn btn-sm btn-outline-secondary"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#statusModal<?= $message['message_id'] ?>">
-                                                <i class="fas fa-edit me-1"></i>Update
-                                            </button>
-                                        </div>
+                                    <div class="message-actions-glass">
+                                        <button class="btn-update-glass" 
+                                                data-bs-toggle="modal"
+                                                data-bs-target="#updateModal<?= $message['message_id'] ?>">
+                                            <i class="fas fa-edit me-2"></i>Update
+                                        </button>
                                     </div>
                                 </div>
                             </div>
 
-                            <!-- Response Modal -->
-                            <div class="modal fade" id="responseModal<?= $message['message_id'] ?>" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content modern-modal">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title"><i class="fas fa-reply me-2"></i>Add Response</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                            <!-- Update Modal -->
+                            <div class="modal fade" id="updateModal<?= $message['message_id'] ?>" tabindex="-1">
+                                <div class="modal-dialog modal-dialog-centered">
+                                    <div class="modal-content glass-modal">
+                                        <div class="modal-header glass-modal-header">
+                                            <h5 class="modal-title">
+                                                <i class="fas fa-edit me-2"></i>Update Support Ticket
+                                            </h5>
+                                            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
                                         </div>
-                                        <form method="POST">
-                                            <div class="modal-body">
+                                        <form method="POST" id="updateForm<?= $message['message_id'] ?>" onsubmit="return handleFormSubmit(this)">
+                                            <div class="modal-body glass-modal-body">
                                                 <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
-                                                <div class="form-group">
-                                                    <label for="response" class="form-label-modern">Your Response</label>
-                                                    <textarea class="form-control-modern" name="response" rows="5"
-                                                              placeholder="Summary of what you told the customer..." required></textarea>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" name="add_response" class="btn-primary-custom">
-                                                    <i class="fas fa-paper-plane me-2"></i>Send Response
-                                                </button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Status Update Modal -->
-                            <div class="modal fade" id="statusModal<?= $message['message_id'] ?>" tabindex="-1">
-                                <div class="modal-dialog">
-                                    <div class="modal-content modern-modal">
-                                        <div class="modal-header">
-                                            <h5 class="modal-title"><i class="fas fa-edit me-2"></i>Update Status</h5>
-                                            <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                                        </div>
-                                        <form method="POST" id="statusForm<?= $message['message_id'] ?>">
-                                            <div class="modal-body">
-                                                <input type="hidden" name="message_id" value="<?= $message['message_id'] ?>">
-                                                <div class="form-group mb-3">
-                                                    <label for="status<?= $message['message_id'] ?>" class="form-label-modern">Update</label>
-                                                    <?php 
-                                                    $current_status = $message['status'] ?? 'new';
-                                                    // Set default to "spoke_to_ai" for new messages
-                                                    if ($current_status === 'new' || empty($current_status)) {
-                                                        $current_status = 'spoke_to_ai';
-                                                    }
-                                                    $needs_response = $current_status === 'customer_needs_to_come_in';
-                                                    ?>
-                                                    <select class="form-control-modern" name="status" id="status<?= $message['message_id'] ?>" required onchange="toggleResponseField(<?= $message['message_id'] ?>)">
+                                                
+                                                <div class="form-group-glass mb-4">
+                                                    <label for="updateStatus<?= $message['message_id'] ?>" class="form-label-glass">
+                                                        <i class="fas fa-tag me-2"></i>Update
+                                                    </label>
+                                                    <select class="form-control-glass" 
+                                                            name="status" 
+                                                            id="updateStatus<?= $message['message_id'] ?>" 
+                                                            required 
+                                                            onchange="handleStatusChange(<?= $message['message_id'] ?>)">
                                                         <option value="spoke_to_ai" <?= $current_status === 'spoke_to_ai' ? 'selected' : '' ?>>Spoke to AI</option>
                                                         <option value="reached_out_via_mail" <?= $current_status === 'reached_out_via_mail' ? 'selected' : '' ?>>Reached Out via Mail</option>
                                                         <option value="reached_out_via_call" <?= $current_status === 'reached_out_via_call' ? 'selected' : '' ?>>Reached Out via Call</option>
@@ -429,17 +403,30 @@ try {
                                                         <option value="closed" <?= $current_status === 'closed' ? 'selected' : '' ?>>Closed</option>
                                                     </select>
                                                 </div>
-                                                <div class="form-group" id="responseGroup<?= $message['message_id'] ?>" style="display: <?= $needs_response ? 'block' : 'none'; ?>;">
-                                                    <label for="response<?= $message['message_id'] ?>" class="form-label-modern">Response <span class="text-danger">*</span></label>
-                                                    <textarea class="form-control-modern" name="response" id="response<?= $message['message_id'] ?>" rows="4"
-                                                              placeholder="Enter details about what the customer needs to know if they have to come in..." <?= $needs_response ? 'required' : '' ?>></textarea>
-                                                    <small class="text-muted">This will be sent to the customer.</small>
+
+                                                <div class="form-group-glass" id="responseGroup<?= $message['message_id'] ?>" style="display: <?= $current_status === 'customer_needs_to_come_in' ? 'block' : 'none'; ?>;">
+                                                    <label for="updateResponse<?= $message['message_id'] ?>" class="form-label-glass">
+                                                        <i class="fas fa-comment me-2"></i>Response 
+                                                        <span class="text-danger">*</span>
+                                                    </label>
+                                                    <textarea class="form-control-glass" 
+                                                              name="response" 
+                                                              id="updateResponse<?= $message['message_id'] ?>" 
+                                                              rows="5"
+                                                              placeholder="Enter details about what the customer needs to know if they have to come in..."
+                                                              <?= $current_status === 'customer_needs_to_come_in' ? 'required' : '' ?>></textarea>
+                                                    <small class="form-help-text">
+                                                        <i class="fas fa-info-circle me-1"></i>
+                                                        This response will be sent to the customer.
+                                                    </small>
                                                 </div>
                                             </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                                                <button type="submit" name="update_status" class="btn-primary-custom">
-                                                    <i class="fas fa-save me-2"></i>Update Status
+                                            <div class="modal-footer glass-modal-footer">
+                                                <button type="button" class="btn-cancel-glass" data-bs-dismiss="modal">
+                                                    <i class="fas fa-times me-1"></i>Cancel
+                                                </button>
+                                                <button type="submit" name="update_status" class="btn-submit-glass">
+                                                    <i class="fas fa-save me-1"></i>Update Status
                                                 </button>
                                             </div>
                                         </form>
@@ -455,7 +442,7 @@ try {
 </div>
 
 <style>
-/* Additional styles for support messages */
+/* Analytics Cards */
 .analytics-card {
     transition: all 0.3s ease;
     animation: fadeInUp 0.6s ease forwards;
@@ -480,186 +467,325 @@ try {
     margin: 0;
 }
 
-.support-messages {
-    max-height: 600px;
+/* Glassmorphic Support Messages */
+.support-messages-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+    max-height: 70vh;
     overflow-y: auto;
+    padding: 0.5rem;
 }
 
-.support-message-item {
-    padding: 20px;
-    border-bottom: 1px solid #e5e7eb;
-    transition: all 0.3s ease;
+.glass-message-card {
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(20px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     animation: fadeInUp 0.6s ease forwards;
     opacity: 0;
+    position: relative;
+    overflow: hidden;
 }
 
-.support-message-item:last-child {
-    border-bottom: none;
+.glass-message-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    transition: left 0.6s ease;
 }
 
-.support-message-item:hover {
-    background: rgba(59, 130, 246, 0.05);
-    border-radius: 8px;
-    margin: 2px;
-    padding: 18px;
+.glass-message-card:hover::before {
+    left: 100%;
 }
 
-.priority-urgent {
-    border-left: 4px solid #ef4444;
+.glass-message-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.15);
+    border-color: rgba(59, 130, 246, 0.3);
 }
 
-.priority-high {
-    border-left: 4px solid #f59e0b;
+.message-card-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 }
 
-.priority-normal {
-    border-left: 4px solid #3b82f6;
-}
-
-.priority-low {
-    border-left: 4px solid #6b7280;
-}
-
-.customer-avatar {
-    width: 40px;
-    height: 40px;
-    border-radius: 10px;
+.customer-avatar-glass {
+    width: 50px;
+    height: 50px;
+    border-radius: 15px;
     background: var(--gradient-primary);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
+    font-size: 1.2rem;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
 }
 
-.subject-tag {
+.customer-name {
+    color: var(--primary-navy);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+
+.customer-email {
+    color: #64748b;
+    font-size: 0.9rem;
+}
+
+.message-meta {
+    text-align: right;
+}
+
+.message-date {
+    display: block;
+    color: #94a3b8;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+}
+
+.subject-badge {
     font-size: 0.7rem;
-    padding: 4px 8px;
+    padding: 0.35rem 0.75rem;
     border-radius: 12px;
-    margin-right: 8px;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
 }
 
-.subject-order {
-    background: #3b82f6;
-    color: white;
-}
+.subject-order { background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; }
+.subject-device_quality { background: linear-gradient(135deg, #ef4444, #dc2626); color: white; }
+.subject-repair { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; }
+.subject-device_drop { background: linear-gradient(135deg, #10b981, #059669); color: white; }
+.subject-tech_revival { background: linear-gradient(135deg, #8b5cf6, #7c3aed); color: white; }
+.subject-billing { background: linear-gradient(135deg, #06b6d4, #0891b2); color: white; }
+.subject-account { background: linear-gradient(135deg, #84cc16, #65a30d); color: white; }
+.subject-general { background: linear-gradient(135deg, #6b7280, #4b5563); color: white; }
 
-.subject-device_quality {
-    background: #ef4444;
-    color: white;
-}
-
-.subject-repair {
-    background: #f59e0b;
-    color: white;
-}
-
-.subject-device_drop {
-    background: #10b981;
-    color: white;
-}
-
-.subject-tech_revival {
-    background: #8b5cf6;
-    color: white;
-}
-
-.subject-billing {
-    background: #06b6d4;
-    color: white;
-}
-
-.subject-account {
-    background: #84cc16;
-    color: white;
-}
-
-.subject-general {
-    background: #6b7280;
-    color: white;
-}
-
-.status-badge {
-    padding: 0.25rem 0.75rem;
+.status-badge-glass {
+    padding: 0.4rem 1rem;
     border-radius: 12px;
     font-size: 0.75rem;
-    font-weight: 600;
+    font-weight: 700;
     text-transform: uppercase;
+    letter-spacing: 0.5px;
+    display: inline-block;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.status-new {
-    background: #fee2e2;
-    color: #991b1b;
+.status-new { background: rgba(254, 226, 226, 0.8); color: #991b1b; }
+.status-in_progress { background: rgba(254, 243, 199, 0.8); color: #92400e; }
+.status-resolved { background: rgba(209, 250, 229, 0.8); color: #065f46; }
+.status-closed { background: rgba(243, 244, 246, 0.8); color: #374151; }
+.status-reached_out_via_mail { background: rgba(219, 234, 254, 0.8); color: #1e40af; }
+.status-reached_out_via_call { background: rgba(220, 252, 231, 0.8); color: #166534; }
+.status-reached_out_via_text { background: rgba(254, 243, 199, 0.8); color: #92400e; }
+.status-spoke_to_ai { background: rgba(224, 231, 255, 0.8); color: #3730a3; }
+.status-customer_needs_to_come_in { background: rgba(254, 243, 199, 0.8); color: #92400e; }
+
+.message-card-body {
+    margin-top: 1rem;
 }
 
-.status-in_progress {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.status-resolved {
-    background: #d1fae5;
-    color: #065f46;
-}
-
-.status-closed {
-    background: #f3f4f6;
+.message-content {
     color: #374151;
+    line-height: 1.7;
+    margin-bottom: 1.25rem;
+    font-size: 0.95rem;
 }
 
-.status-reached_out_via_mail {
-    background: #dbeafe;
-    color: #1e40af;
+.message-content p {
+    margin: 0;
 }
 
-.status-reached_out_via_call {
-    background: #dcfce7;
-    color: #166534;
+.admin-response-glass {
+    background: rgba(59, 130, 246, 0.1);
+    backdrop-filter: blur(10px);
+    padding: 1.25rem;
+    border-radius: 15px;
+    margin: 1.25rem 0;
+    border-left: 4px solid var(--electric-blue);
+    border: 1px solid rgba(59, 130, 246, 0.2);
 }
 
-.status-reached_out_via_text {
-    background: #fef3c7;
-    color: #92400e;
+.response-header-glass {
+    color: var(--electric-blue);
+    font-weight: 700;
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    font-size: 0.95rem;
 }
 
-.status-spoke_to_ai {
-    background: #e0e7ff;
-    color: #3730a3;
-}
-
-.status-customer_needs_to_come_in {
-    background: #fef3c7;
-    color: #92400e;
-}
-
-.message-text {
+.response-content-glass {
     color: #374151;
+    margin-bottom: 0.5rem;
     line-height: 1.6;
 }
 
-.admin-response {
-    background: rgba(59, 130, 246, 0.1);
-    padding: 15px;
-    border-radius: 8px;
-    margin-top: 15px;
-    border-left: 3px solid #3b82f6;
+.response-date {
+    color: #94a3b8;
+    font-size: 0.85rem;
 }
 
-.response-header {
-    color: #3b82f6;
+.message-actions-glass {
+    margin-top: 1.5rem;
+    display: flex;
+    justify-content: flex-end;
+}
+
+.btn-update-glass {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
     font-weight: 600;
-    margin-bottom: 8px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    display: inline-flex;
+    align-items: center;
 }
 
-.response-content {
-    color: #374151;
-    margin-bottom: 8px;
+.btn-update-glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    color: white;
+}
+
+.glass-card-empty {
+    padding: 3rem;
+    background: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+/* Glass Modal */
+.glass-modal {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 24px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+}
+
+.glass-modal-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-radius: 24px 24px 0 0;
+    padding: 1.5rem;
+    border-bottom: none;
+}
+
+.glass-modal-body {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.glass-modal-footer {
+    padding: 1.5rem 2rem;
+    background: rgba(248, 250, 252, 0.8);
+    border-top: 1px solid rgba(226, 232, 240, 0.5);
+    border-radius: 0 0 24px 24px;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.form-group-glass {
+    margin-bottom: 1.5rem;
+}
+
+.form-label-glass {
+    font-weight: 700;
+    color: var(--primary-navy);
+    margin-bottom: 0.75rem;
+    display: block;
+    font-size: 0.95rem;
+}
+
+.form-control-glass {
+    width: 100%;
+    padding: 1rem 1.25rem;
+    border: 2px solid rgba(226, 232, 240, 0.6);
+    border-radius: 15px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    resize: vertical;
+    color: var(--primary-navy);
+}
+
+.form-control-glass:focus {
+    outline: none;
+    border-color: var(--electric-blue);
+    box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.15);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.form-help-text {
+    display: block;
+    margin-top: 0.5rem;
+    color: #64748b;
+    font-size: 0.85rem;
+}
+
+.btn-cancel-glass {
+    background: rgba(100, 116, 139, 0.1);
+    color: #64748b;
+    border: 2px solid rgba(100, 116, 139, 0.2);
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-cancel-glass:hover {
+    background: rgba(100, 116, 139, 0.2);
+    color: #475569;
+    border-color: rgba(100, 116, 139, 0.3);
+}
+
+.btn-submit-glass {
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    display: inline-flex;
+    align-items: center;
+}
+
+.btn-submit-glass:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(59, 130, 246, 0.4);
+    color: white;
 }
 
 .quick-stats .stat-item {
     padding: 8px 0;
-    border-bottom: 1px solid #e5e7eb;
+    border-bottom: 1px solid rgba(226, 232, 240, 0.5);
 }
 
 .quick-stats .stat-item:last-child {
@@ -672,44 +798,6 @@ try {
     height: 300px;
 }
 
-.modern-modal .modal-content {
-    border: none;
-    border-radius: 20px;
-    box-shadow: var(--shadow-lg);
-    backdrop-filter: blur(20px);
-}
-
-.modern-modal .modal-header {
-    background: var(--gradient-primary);
-    color: white;
-    border-radius: 20px 20px 0 0;
-}
-
-.form-label-modern {
-    font-weight: 600;
-    color: var(--primary-navy);
-    margin-bottom: 0.5rem;
-    display: block;
-}
-
-.form-control-modern {
-    width: 100%;
-    padding: 0.875rem 1rem;
-    border: 2px solid #e2e8f0;
-    border-radius: 12px;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    background: rgba(255, 255, 255, 0.9);
-    backdrop-filter: blur(10px);
-    resize: vertical;
-}
-
-.form-control-modern:focus {
-    outline: none;
-    border-color: var(--electric-blue);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
-}
-
 /* Counter Animation */
 @keyframes countUp {
     from { opacity: 0; transform: translateY(20px); }
@@ -718,6 +806,25 @@ try {
 
 .counter-animate {
     animation: countUp 0.6s ease forwards;
+}
+
+/* Scrollbar Styling */
+.support-messages-grid::-webkit-scrollbar {
+    width: 8px;
+}
+
+.support-messages-grid::-webkit-scrollbar-track {
+    background: rgba(241, 245, 249, 0.5);
+    border-radius: 10px;
+}
+
+.support-messages-grid::-webkit-scrollbar-thumb {
+    background: rgba(59, 130, 246, 0.3);
+    border-radius: 10px;
+}
+
+.support-messages-grid::-webkit-scrollbar-thumb:hover {
+    background: rgba(59, 130, 246, 0.5);
 }
 </style>
 
@@ -811,12 +918,11 @@ function filterByStatus(status) {
     window.location.href = url.toString();
 }
 
-// Toggle response field based on status selection
-function toggleResponseField(messageId) {
-    const statusSelect = document.getElementById('status' + messageId);
+// Handle status change - show/hide response field
+function handleStatusChange(messageId) {
+    const statusSelect = document.getElementById('updateStatus' + messageId);
     const responseGroup = document.getElementById('responseGroup' + messageId);
-    const responseTextarea = document.getElementById('response' + messageId);
-    const form = document.getElementById('statusForm' + messageId);
+    const responseTextarea = document.getElementById('updateResponse' + messageId);
     
     if (!statusSelect || !responseGroup || !responseTextarea) return;
     
@@ -829,32 +935,61 @@ function toggleResponseField(messageId) {
     } else {
         responseGroup.style.display = 'none';
         responseTextarea.removeAttribute('required');
-        responseTextarea.value = ''; // Clear the field when hidden
-    }
-    
-    // Initialize on modal show - check current status
-    const modal = document.getElementById('statusModal' + messageId);
-    if (modal) {
-        modal.addEventListener('show.bs.modal', function() {
-            setTimeout(() => toggleResponseField(messageId), 100);
-        });
+        responseTextarea.value = '';
     }
 }
 
-// Initialize all status modals when they open
+// Check for success messages from URL parameters
 document.addEventListener('DOMContentLoaded', function() {
-    // Find all status modals and initialize their response fields
-    const statusModals = document.querySelectorAll('[id^="statusModal"]');
-    statusModals.forEach(function(modal) {
+    const urlParams = new URLSearchParams(window.location.search);
+    const success = urlParams.get('success');
+
+    if (success === '1') {
+        // Show success message for status update
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            <i class="fas fa-check-circle me-2"></i>
+            Status updated successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        const container = document.querySelector('.container-fluid');
+        if (container) {
+            container.insertBefore(alertDiv, container.firstChild);
+        }
+
+        // Clean the URL
+        const newUrl = window.location.pathname + window.location.search.replace(/[?&]success=\d+/, '').replace(/^&/, '?');
+        window.history.replaceState({}, '', newUrl === window.location.pathname + '?' ? window.location.pathname : newUrl);
+    } else if (success === '2') {
+        // Show success message for response added
+        const alertDiv = document.createElement('div');
+        alertDiv.className = 'alert alert-success alert-dismissible fade show';
+        alertDiv.innerHTML = `
+            <i class="fas fa-check-circle me-2"></i>
+            Response added successfully!
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        const container = document.querySelector('.container-fluid');
+        if (container) {
+            container.insertBefore(alertDiv, container.firstChild);
+        }
+
+        // Clean the URL
+        const newUrl = window.location.pathname + window.location.search.replace(/[?&]success=\d+/, '').replace(/^&/, '?');
+        window.history.replaceState({}, '', newUrl === window.location.pathname + '?' ? window.location.pathname : newUrl);
+    }
+
+    // Initialize modals when they open
+    const updateModals = document.querySelectorAll('[id^="updateModal"]');
+    updateModals.forEach(function(modal) {
         modal.addEventListener('show.bs.modal', function() {
-            const messageId = modal.id.replace('statusModal', '');
-            setTimeout(() => toggleResponseField(messageId), 100);
+            const messageId = modal.id.replace('updateModal', '');
+            setTimeout(() => handleStatusChange(messageId), 100);
         });
     });
-});
 
-// Initialize animations and charts when page loads
-document.addEventListener('DOMContentLoaded', function() {
+    // Initialize animations and charts when page loads
     // Start counter animations
     setTimeout(animateCounters, 500);
 
@@ -871,7 +1006,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // Animate support message items
-    const items = document.querySelectorAll('.support-message-item');
+    const items = document.querySelectorAll('.glass-message-card');
     items.forEach((item, index) => {
         setTimeout(() => {
             item.style.opacity = '1';
@@ -879,6 +1014,49 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 1000 + (index * 100));
     });
 });
+
+// Handle form submission to prevent blue page issue
+function handleFormSubmit(form) {
+    // Disable the submit button to prevent double submission
+    const submitBtn = form.querySelector('button[type="submit"]');
+    if (submitBtn) {
+        const originalText = submitBtn.innerHTML;
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-1"></i> Updating...';
+        submitBtn.disabled = true;
+
+        // Re-enable after a delay if the form submission fails
+        setTimeout(() => {
+            if (submitBtn.disabled) {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }, 5000);
+    }
+
+    // Validate required fields
+    const status = form.querySelector('select[name="status"]').value;
+    const response = form.querySelector('textarea[name="response"]');
+
+    if (status === 'customer_needs_to_come_in' && response && !response.value.trim()) {
+        alert('Response is required when customer needs to come in.');
+        if (submitBtn) {
+            submitBtn.innerHTML = originalText;
+            submitBtn.disabled = false;
+        }
+        return false;
+    }
+
+    // Close the modal before submission to prevent blue page
+    const modal = form.closest('.modal');
+    if (modal) {
+        const bsModal = bootstrap.Modal.getInstance(modal);
+        if (bsModal) {
+            bsModal.hide();
+        }
+    }
+
+    return true; // Allow form submission
+}
 
 // Manual refresh function
 function refreshMessages() {

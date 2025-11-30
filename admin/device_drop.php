@@ -428,7 +428,24 @@ require_once 'includes/admin_header.php';
                         })
                     });
 
-                    const result = await response.json();
+                    // Check if response is ok
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+
+                    // Get response text first to debug
+                    const responseText = await response.text();
+                    console.log('Response text:', responseText);
+
+                    // Try to parse JSON
+                    let result;
+                    try {
+                        result = JSON.parse(responseText);
+                    } catch (parseError) {
+                        console.error('JSON parse error:', parseError);
+                        console.error('Response text:', responseText);
+                        throw new Error('Invalid response from server');
+                    }
 
                     if (result.status === 'success') {
                         Swal.fire({

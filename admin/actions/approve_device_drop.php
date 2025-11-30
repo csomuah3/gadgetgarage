@@ -7,11 +7,23 @@ ini_set('display_errors', 0);
 ini_set('log_errors', 1);
 error_reporting(E_ALL);
 
-session_start();
+// Set JSON header immediately
 header('Content-Type: application/json');
 
+session_start();
+
 require_once __DIR__ . '/../../settings/core.php';
-require_admin(); // Only admins can access this
+
+// Check admin access for AJAX request
+if (!check_admin()) {
+    ob_clean();
+    echo json_encode([
+        'status' => 'error',
+        'message' => 'Access denied. Admin privileges required.'
+    ]);
+    ob_end_flush();
+    exit();
+}
 
 require_once __DIR__ . '/../../settings/db_class.php';
 
@@ -51,6 +63,12 @@ if (!$request_id) {
 }
 
 try {
+    // Additional output buffer security
+    while (ob_get_level()) {
+        ob_end_clean();
+    }
+    ob_start();
+
     $db = new db_connection();
     if (!$db->db_connect()) {
         ob_clean();
@@ -143,25 +161,33 @@ try {
 
     // Clean any output and send JSON response
     ob_clean();
-    echo json_encode([
+    $response_data = [
         'status' => 'success',
         'message' => $message,
         'request_id' => $request_id,
         'payment_method' => $request['payment_method'],
         'amount' => $request['final_amount']
-    ]);
+    ];
+
+    $json_response = json_encode($response_data);
+    error_log("Device Drop Approval Success Response: " . $json_response);
+    echo $json_response;
     ob_end_flush();
     exit();
 
 } catch (Exception $e) {
     error_log("Device Drop Approval Error: " . $e->getMessage());
-    
+
     // Clean any output and send error JSON
     ob_clean();
-    echo json_encode([
+    $error_response = [
         'status' => 'error',
         'message' => 'Failed to approve request: ' . $e->getMessage()
-    ]);
+    ];
+
+    $json_error_response = json_encode($error_response);
+    error_log("Device Drop Approval Error Response: " . $json_error_response);
+    echo $json_error_response;
     ob_end_flush();
     exit();
 }

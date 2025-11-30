@@ -381,11 +381,39 @@ class AIHelper {
         $prompt .= "- Be conservative but fair in valuation, ensuring minimum is met\n";
         $prompt .= "- Consider depreciation, wear and tear, and local market conditions\n\n";
 
-        $prompt .= "Condition Multipliers:\n";
+        $prompt .= "CRITICAL VALUATION FACTORS (These MUST significantly influence the price):\n\n";
+        $prompt .= "1. BATTERY HEALTH:\n";
+        $prompt .= "   - Battery health above 80%: INCREASE the valuation by 15-25%\n";
+        $prompt .= "   - Battery health 60-80%: Standard valuation (no adjustment)\n";
+        $prompt .= "   - Battery health below 60%: DECREASE the valuation by 10-20%\n";
+        $prompt .= "   - Extract battery health percentage from the description if mentioned (e.g., '85% battery', 'battery at 90%')\n\n";
+        
+        $prompt .= "2. YEARS OF USAGE:\n";
+        $prompt .= "   - Less than 1 year old: INCREASE valuation by 20-30% (device is very new)\n";
+        $prompt .= "   - 1-2 years old: INCREASE valuation by 10-15% (relatively new)\n";
+        $prompt .= "   - 2-3 years old: Standard valuation (no adjustment)\n";
+        $prompt .= "   - 3-4 years old: DECREASE valuation by 10-15% (older device)\n";
+        $prompt .= "   - More than 4 years old: DECREASE valuation by 20-30% (significantly aged)\n";
+        $prompt .= "   - Extract years of usage from the description if mentioned (e.g., 'used for 1 year', '2 years old', 'bought in 2023')\n\n";
+        
+        $prompt .= "3. REPAIR HISTORY:\n";
+        $prompt .= "   - If device has been repaired before: DECREASE valuation by 15-25%\n";
+        $prompt .= "   - Multiple repairs: DECREASE valuation by 25-35%\n";
+        $prompt .= "   - No repair history mentioned: No adjustment (assume no repairs)\n";
+        $prompt .= "   - Look for keywords in description: 'repaired', 'fixed', 'screen replaced', 'battery replaced', 'serviced', 'maintenance'\n\n";
+
+        $prompt .= "Condition Multipliers (base multipliers, then apply the factors above):\n";
         $prompt .= "- Excellent (like new): 85-90% of current retail\n";
         $prompt .= "- Good (minor wear): 70-80% of current retail\n";
         $prompt .= "- Fair (visible wear, some issues): 50-65% of current retail\n";
         $prompt .= "- Poor (major issues, significant damage): 20-40% of current retail\n\n";
+        
+        $prompt .= "VALUATION PROCESS:\n";
+        $prompt .= "1. Start with base valuation based on device type, brand, model, and condition\n";
+        $prompt .= "2. Extract battery health, years of usage, and repair history from the description\n";
+        $prompt .= "3. Apply adjustments based on the three critical factors above\n";
+        $prompt .= "4. Ensure final value meets the GH₵3000 minimum\n";
+        $prompt .= "5. In your value_reasoning, explicitly mention how battery health, years of usage, and repair history affected the price\n\n";
 
         $prompt .= "Respond ONLY in valid JSON with this exact structure (no explanations, no extra text):\n";
         $prompt .= "{\n";

@@ -1121,52 +1121,25 @@ function getOrderStatus($order_date) {
 
     <script>
         // View Order Details Function
-        // View Order Details Function (Make globally available)
-        window.viewOrderDetails = function(orderId, orderReference) {
-            console.log('Loading order details for order ID:', orderId);
+        function viewOrderDetails(orderId) {
+            const modal = new bootstrap.Modal(document.getElementById('orderDetailsModal'));
+            modal.show();
 
             // Fetch order details
-            fetch(`../actions/get_order_details.php?order_id=${orderId}`)
-                .then(response => {
-                    console.log('Response status:', response.status);
-                    if (!response.ok) {
-                        throw new Error(`HTTP error! status: ${response.status}`);
-                    }
-                    return response.text();
-                })
-                .then(text => {
-                    console.log('Raw response:', text);
-                    try {
-                        const data = JSON.parse(text);
-                        console.log('Parsed JSON:', data);
-
-                        if (data.success) {
-                            showOrderDetailsModal(data.order, orderReference);
-                        } else {
-                            console.error('API returned error:', data.message);
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: data.message || 'Failed to load order details'
-                            });
-                        }
-                    } catch (parseError) {
-                        console.error('JSON parse error:', parseError);
-                        console.error('Response text:', text);
-                        Swal.fire({
-                            icon: 'error',
-                            title: 'Error',
-                            text: 'Invalid response from server'
-                        });
+            fetch('../actions/get_order_details_action.php?id=' + orderId)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        displayOrderDetails(data.order);
+                    } else {
+                        document.getElementById('orderDetailsContent').innerHTML =
+                            '<div class="alert alert-danger">Failed to load order details: ' + data.message + '</div>';
                     }
                 })
                 .catch(error => {
-                    console.error('Fetch error:', error);
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: 'Failed to load order details: ' + error.message
-                    });
+                    console.error('Error:', error);
+                    document.getElementById('orderDetailsContent').innerHTML =
+                        '<div class="alert alert-danger">Failed to load order details. Please try again.</div>';
                 });
         }
 
@@ -1300,7 +1273,13 @@ function getOrderStatus($order_date) {
 
         // Track Order Function - Horizontal Timeline
         // Track Order Function (Make globally available)
-        window.trackOrder = function(orderReference, orderDate) {
+        function trackOrder(orderReference) {
+            // Redirect to tracking page with order reference
+            window.location.href = 'track_order.php?ref=' + encodeURIComponent(orderReference);
+        }
+
+        // Fix the old function implementation
+        function trackOrder_old(orderReference) {
             const orderDateTime = new Date(orderDate);
             const now = new Date();
             const daysSinceOrder = Math.floor((now - orderDateTime) / (1000 * 60 * 60 * 24));
@@ -1395,7 +1374,7 @@ function getOrderStatus($order_date) {
 
         // Request Refund Function
         // Request Refund Function (Make globally available)
-        window.requestRefund = function(orderId, orderReference) {
+        function requestRefund(orderId, orderReference) {
             const refundFormHTML = `
                 <form id="refundForm" style="text-align: left; max-width: 600px; margin: 0 auto;">
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
@@ -1548,7 +1527,7 @@ function getOrderStatus($order_date) {
 
         // Cancel Order Function
         // Cancel Order Function (Make globally available)
-        window.cancelOrder = function(orderId, orderReference) {
+        function cancelOrder(orderId, orderReference) {
             // Confirm cancellation with SweetAlert
             Swal.fire({
                 title: 'Cancel Order?',
@@ -1782,7 +1761,7 @@ function getOrderStatus($order_date) {
         let moreDropdownTimeout;
         let userDropdownTimeout;
 
-        window.showDropdown = function() {
+        function showDropdown() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
@@ -1790,7 +1769,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.hideDropdown = function() {
+        function hideDropdown() {
             const dropdown = document.getElementById('shopDropdown');
             if (dropdown) {
                 clearTimeout(dropdownTimeout);
@@ -1800,7 +1779,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.showShopDropdown = function() {
+        function showShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
             if (dropdown) {
                 clearTimeout(shopDropdownTimeout);
@@ -1808,7 +1787,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.hideShopDropdown = function() {
+        function hideShopDropdown() {
             const dropdown = document.getElementById('shopCategoryDropdown');
             if (dropdown) {
                 clearTimeout(shopDropdownTimeout);
@@ -1818,7 +1797,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.showMoreDropdown = function() {
+        function showMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
@@ -1826,7 +1805,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.hideMoreDropdown = function() {
+        function hideMoreDropdown() {
             const dropdown = document.getElementById('moreDropdown');
             if (dropdown) {
                 clearTimeout(moreDropdownTimeout);
@@ -1836,7 +1815,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.showUserDropdown = function() {
+        function showUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 clearTimeout(userDropdownTimeout);
@@ -1844,7 +1823,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.hideUserDropdown = function() {
+        function hideUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 clearTimeout(userDropdownTimeout);
@@ -1854,7 +1833,7 @@ function getOrderStatus($order_date) {
             }
         };
 
-        window.toggleUserDropdown = function() {
+        function toggleUserDropdown() {
             const dropdown = document.getElementById('userDropdownMenu');
             if (dropdown) {
                 dropdown.classList.toggle('show');
@@ -1867,24 +1846,24 @@ function getOrderStatus($order_date) {
             const brandsDropdown = document.getElementById('shopDropdown');
 
             if (shopCategoriesBtn && brandsDropdown) {
-                shopCategoriesBtn.addEventListener('mouseenter', window.showDropdown);
-                shopCategoriesBtn.addEventListener('mouseleave', window.hideDropdown);
+                shopCategoriesBtn.addEventListener('mouseenter', showDropdown);
+                shopCategoriesBtn.addEventListener('mouseleave', hideDropdown);
                 brandsDropdown.addEventListener('mouseenter', function() {
                     clearTimeout(dropdownTimeout);
                 });
-                brandsDropdown.addEventListener('mouseleave', window.hideDropdown);
+                brandsDropdown.addEventListener('mouseleave', hideDropdown);
             }
 
             const userAvatar = document.querySelector('.user-avatar');
             const userDropdown = document.getElementById('userDropdownMenu');
 
             if (userAvatar && userDropdown) {
-                userAvatar.addEventListener('mouseenter', window.showUserDropdown);
-                userAvatar.addEventListener('mouseleave', window.hideUserDropdown);
+                userAvatar.addEventListener('mouseenter', showUserDropdown);
+                userAvatar.addEventListener('mouseleave', hideUserDropdown);
                 userDropdown.addEventListener('mouseenter', function() {
                     clearTimeout(userDropdownTimeout);
                 });
-                userDropdown.addEventListener('mouseleave', window.hideUserDropdown);
+                userDropdown.addEventListener('mouseleave', hideUserDropdown);
             }
         });
 
@@ -1910,7 +1889,7 @@ function getOrderStatus($order_date) {
         // Load dark mode preference
         // Open Rating Modal Function
         // Open Rating Modal Function (Make globally available)
-        window.openRatingModal = async function(orderId) {
+        async function openRatingModal(orderId) {
             try {
                 // Fetch order details
                 const response = await fetch(`../actions/get_order_details.php?order_id=${orderId}`);

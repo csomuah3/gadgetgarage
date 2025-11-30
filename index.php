@@ -2160,11 +2160,14 @@ try {
 		}
 
 		/* ——— Right column (two stacked cards) ——— */
-		.side-banners {
-			display: grid;
-			grid-template-rows: 1fr 1fr;
-			gap: 28px;
-		}
+	.side-banners {
+		display: grid;
+		grid-template-rows: 1fr;
+		gap: 5px;
+		height: 28px !important;
+		max-height: 28px !important;
+		overflow: hidden;
+	}
 
 		/* SERVICES STRIP */
 		.services-strip {

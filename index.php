@@ -1772,8 +1772,8 @@ try {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: 8px;
-		padding: 5px 0;
+		gap: 3px;
+		padding: 2px 0;
 	}
 
 		/* Brand Logo Section */

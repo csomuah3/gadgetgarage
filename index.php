@@ -1777,8 +1777,8 @@ try {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: 3px;
-		padding: 2px 0;
+		gap: 12px;
+		padding: 10px 0;
 	}
 
 		/* Brand Logo Section */
@@ -2163,9 +2163,9 @@ try {
 	.side-banners {
 		display: grid;
 		grid-template-rows: 1fr;
-		gap: 5px;
-		height: 28px !important;
-		max-height: 28px !important;
+		gap: 12px;
+		height: 150px !important;
+		max-height: 150px !important;
 		overflow: hidden;
 	}
 

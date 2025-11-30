@@ -840,7 +840,7 @@ $products_to_display = array_slice($filtered_products, $offset, $products_per_pa
 
         /* Flash Deals Hero Section */
         .flash-deals-hero {
-            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             padding: 60px 20px;
             margin: 20px 0 40px;
             border-radius: 20px;

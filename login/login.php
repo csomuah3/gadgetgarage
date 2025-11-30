@@ -1372,7 +1372,7 @@ try {
 
 		.submit-btn {
 			width: 100%;
-			background: var(--gradient-primary);
+			background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
 			color: white;
 			border: none;
 			padding: 22px;
@@ -1388,7 +1388,7 @@ try {
 
 		.submit-btn:hover {
 			transform: translateY(-2px);
-			box-shadow: 0 12px 30px rgba(0, 128, 96, 0.4);
+			box-shadow: 0 12px 30px rgba(59, 130, 246, 0.4);
 		}
 
 		.submit-btn:active {

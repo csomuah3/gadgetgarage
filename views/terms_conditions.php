@@ -312,7 +312,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
 
         /* Terms Page Styles */
         .terms-hero {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             color: white;
             padding: 80px 0;
             text-align: center;
@@ -338,7 +338,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
         }
 
         .terms-section h2 {
-            color: #667eea;
+            color: #3b82f6;
             margin-bottom: 20px;
             font-weight: 600;
         }
@@ -370,7 +370,7 @@ $page_title = "Terms & Conditions - GadgetGarage";
         }
 
         .contact-info {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             color: white;
             padding: 30px;
             border-radius: 16px;

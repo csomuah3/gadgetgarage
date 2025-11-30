@@ -213,7 +213,7 @@ try {
             outline: none;
             border-color: #008060;
             background: white;
-            box-shadow: 0 0 0 3px rgba(139, 95, 191, 0.1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .search-icon {
@@ -409,9 +409,9 @@ try {
             right: 0;
             background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(20px);
-            border: 1px solid rgba(139, 95, 191, 0.2);
+            border: 1px solid rgba(59, 130, 246, 0.2);
             border-radius: 15px;
-            box-shadow: 0 8px 32px rgba(139, 95, 191, 0.15);
+            box-shadow: 0 8px 32px rgba(59, 130, 246, 0.15);
             padding: 15px 0;
             min-width: 220px;
             z-index: 1000;
@@ -443,7 +443,7 @@ try {
         }
 
         .dropdown-item-custom:hover {
-            background: rgba(139, 95, 191, 0.1);
+            background: rgba(59, 130, 246, 0.1);
             color: #008060;
             transform: translateX(3px);
         }
@@ -456,7 +456,7 @@ try {
 
         .dropdown-divider-custom {
             height: 1px;
-            background: linear-gradient(90deg, transparent, rgba(139, 95, 191, 0.2), transparent);
+            background: linear-gradient(90deg, transparent, rgba(59, 130, 246, 0.2), transparent);
             margin: 8px 0;
         }
 
@@ -946,7 +946,7 @@ try {
         }
 
         .cart-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
             color: white;
             padding: 4rem 0;
             margin-bottom: 2rem;
@@ -1227,7 +1227,7 @@ try {
         .cart-item .product-price {
             font-size: 1.5rem !important;
             font-weight: 800 !important;
-            color: #667eea !important;
+            color: #3b82f6 !important;
             margin-bottom: 0.5rem !important;
         }
 
@@ -1310,8 +1310,8 @@ try {
         }
 
         .promo-section-redesign .form-control:focus {
-            border-color: #667eea !important;
-            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+            border-color: #3b82f6 !important;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
         }
 
         .promo-section-redesign .btn {

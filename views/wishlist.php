@@ -680,7 +680,7 @@ if ($is_logged_in) {
             }
         });
 
-        window.removeFromWishlist = function(productId, button) {
+        function removeFromWishlist(productId, button) {
             fetch('../actions/remove_from_wishlist.php', {
                     method: 'POST',
                     headers: {

@@ -80,58 +80,78 @@ try {
 
 
 
-		/* Page Title */
+		/* Modern Checkout Header */
 		.page-title {
 			text-align: center;
-			padding: 5px 0;
-			font-size: 2.8rem;
+			padding: 2rem 0 1.5rem 0;
+			font-size: 2.5rem;
 			font-weight: 800;
 			color: #1f2937;
 			margin: 0;
+			letter-spacing: -0.5px;
+			animation: fadeInDown 0.6s ease-out;
+		}
+
+		@keyframes fadeInDown {
+			from {
+				opacity: 0;
+				transform: translateY(-20px);
+			}
+			to {
+				opacity: 1;
+				transform: translateY(0);
+			}
 		}
 
 		.checkout-header {
-			background: transparent;
+			background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(59, 130, 246, 0.05) 100%);
+			border-bottom: 1px solid rgba(59, 130, 246, 0.1);
 			color: #1f2937;
-			padding: 0.3rem 0;
-			margin-bottom: 0.3rem;
+			padding: 1.5rem 0 2rem 0;
+			margin-bottom: 2rem;
 		}
 
 		.checkout-steps {
 			display: flex;
 			justify-content: center;
-			margin-bottom: 0.5rem;
+			gap: 30px;
+			margin: 20px 0 30px 0;
 		}
 
 		.step {
 			display: flex;
 			align-items: center;
-			color: #000000;
-			font-weight: 500;
+			color: #6b7280;
+			font-weight: 600;
+			transition: all 0.3s ease;
 		}
 
 		.step.active {
-			color: #000000;
+			color: #1f2937;
 		}
 
 		.step-number {
-			width: 40px;
-			height: 40px;
+			width: 45px;
+			height: 45px;
 			border-radius: 50%;
-			background: #e5e7eb;
-			border: 2px solid #9ca3af;
+			background: rgba(229, 231, 235, 0.5);
+			border: 2px solid #d1d5db;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin-right: 10px;
-			font-weight: 600;
-			color: #000000;
+			margin-right: 12px;
+			font-weight: 700;
+			color: #6b7280;
+			transition: all 0.3s ease;
+			font-size: 1.1rem;
 		}
 
 		.step.active .step-number {
-			background: #000000;
-			border-color: #000000;
+			background: linear-gradient(135deg, #3b82f6, #2563eb);
+			border-color: #3b82f6;
 			color: #ffffff;
+			box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+			transform: scale(1.05);
 		}
 
 		.step-divider {
@@ -228,11 +248,13 @@ try {
 		}
 
 		.order-summary {
-			background: #f8f9ff;
+			background: rgba(248, 249, 255, 0.6);
+			backdrop-filter: blur(10px);
 			border-radius: 15px;
 			padding: 2rem;
 			position: sticky;
 			top: 120px;
+			border: 1px solid rgba(229, 231, 235, 0.4);
 		}
 
 		.summary-row {
@@ -1337,7 +1359,7 @@ try {
 
 		// Make function globally accessible for promo-code.js - MUST BE DEFINED BEFORE USE
 		window.checkAndApplyPromoFromCart = function() {
-			const VAT_RATE = 0.125; // 12.5% VAT
+			const VAT_RATE = 0.05; // 5% VAT
 			
 			// Read discount data from localStorage
 			const appliedPromo = localStorage.getItem('appliedPromo');
@@ -1484,7 +1506,7 @@ try {
 				subtotalElement.textContent = 'GH₵ ' + subtotal.toFixed(2);
 			}
 			
-			// Update VAT display (12.5% of subtotal after discount/credits)
+			// Update VAT display (5% of subtotal after discount/credits)
 			const taxAmountElement = document.getElementById('taxAmount');
 			if (taxAmountElement) {
 				taxAmountElement.textContent = 'GH₵ ' + vatAmount.toFixed(2);

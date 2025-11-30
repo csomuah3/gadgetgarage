@@ -335,7 +335,7 @@ function removePromoCode() {
 function updateCartTotals(originalTotal, newTotal, discountAmount) {
     console.log('PROMO-CODE.JS DEBUG: updateCartTotals called with originalTotal:', originalTotal, 'newTotal:', newTotal, 'discountAmount:', discountAmount);
 
-    const VAT_RATE = 0.125; // 12.5% VAT
+    const VAT_RATE = 0.05; // 5% VAT
 
     // Update subtotal to show original cart total (unchanged)
     const cartSubtotalElement = document.getElementById('cartSubtotal');
@@ -353,8 +353,8 @@ function updateCartTotals(originalTotal, newTotal, discountAmount) {
     
     if (discountRow) {
         if (discountAmount > 0) {
-            discountRow.style.display = 'flex';
-            console.log('PROMO-CODE.JS DEBUG: Showed discount row');
+        discountRow.style.display = 'flex';
+        console.log('PROMO-CODE.JS DEBUG: Showed discount row');
             
             // Show subtotal after discount
             if (subtotalAfterRow && subtotalAfterElement) {

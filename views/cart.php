@@ -96,6 +96,8 @@ try {
 
         body {
             font-family: "Times New Roman", Times, serif;
+            font-size: 1.1rem;
+            font-weight: 600;
             background-color: #ffffff;
             color: #1a1a1a;
             overflow-x: hidden;
@@ -971,37 +973,160 @@ try {
             color: white;
         }
 
-        .cart-header {
-            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 50%, #60a5fa 100%);
-            color: white;
-            padding: 4rem 0;
-            margin-bottom: 2rem;
+        /* Modern Cart Header */
+        .modern-cart-header {
+            background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(59, 130, 246, 0.05) 100%);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            padding: 2.5rem 0 2rem 0;
+            margin-bottom: 3rem;
+            animation: fadeInDown 0.6s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .cart-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .cart-title-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex: 1;
+        }
+
+        .cart-icon-wrapper {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.25);
             position: relative;
             overflow: hidden;
         }
 
-        .cart-header::before {
+        .cart-icon-wrapper::before {
             content: '';
             position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 100" fill="%23ffffff" opacity="0.1"><polygon points="0,0 1000,0 1000,100 0,70"/></svg>') no-repeat bottom;
-            background-size: cover;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmerIcon 3s infinite;
         }
 
-        .cart-header h1 {
-            font-size: 3.5rem !important;
-            font-weight: 800 !important;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
-            margin-bottom: 1rem !important;
+        @keyframes shimmerIcon {
+            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
         }
 
-        .cart-header p {
-            font-size: 1.4rem !important;
-            opacity: 0.9;
+        .cart-icon-wrapper i {
+            font-size: 2rem;
+            color: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        .cart-title-text h1 {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: #1f2937;
+            margin: 0 0 8px 0;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .cart-subtitle {
+            font-size: 1.05rem;
+            color: #6b7280;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-weight: 500;
+        }
+
+        .cart-count-badge {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+                box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+            }
+            50% {
+                transform: scale(1.05);
+                box-shadow: 0 4px 12px rgba(59, 130, 246, 0.4);
+            }
+        }
+
+        .cart-quick-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            padding: 18px 30px;
+            border-radius: 50px;
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .cart-quick-info:hover {
+            background: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 6px 20px rgba(59, 130, 246, 0.15);
+            transform: translateY(-2px);
+        }
+
+        .quick-info-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #1f2937;
+            font-weight: 600;
+            font-size: 1.05rem;
+        }
+
+        .quick-info-item i {
+            color: #3b82f6;
+            font-size: 1.2rem;
+            transition: transform 0.3s ease;
+        }
+
+        .cart-quick-info:hover .quick-info-item i {
+            transform: scale(1.1);
+        }
+
+        .quick-info-divider {
+            width: 1px;
+            height: 30px;
+            background: rgba(59, 130, 246, 0.2);
         }
 
         .cart-item {
@@ -1122,20 +1247,42 @@ try {
         }
 
         .cart-summary {
-            background: #ffffff;
-            border-radius: 8px;
-            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-            padding: 1.5rem;
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            padding: 2.5rem;
             position: sticky;
             top: 100px;
-            border: 1px solid #e5e7eb;
+            border: 1px solid rgba(229, 231, 235, 0.6);
             transition: none;
+            min-height: 500px;
         }
 
         .cart-summary:hover {
             transform: none;
-            box-shadow: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             border-color: #e5e7eb;
+        }
+
+        .cart-summary .d-flex {
+            font-size: 1.05rem;
+            margin-bottom: 1rem;
+        }
+
+        .cart-summary .fw-bold {
+            font-weight: 700;
+        }
+
+        .cart-summary .fs-5 {
+            font-size: 1.3rem !important;
+        }
+
+        .cart-summary h4 {
+            font-size: 1.5rem !important;
+            font-weight: 700 !important;
+            margin-bottom: 1.5rem !important;
+            color: #1f2937 !important;
         }
 
         .cart-summary h3 {
@@ -1305,18 +1452,19 @@ try {
 
         /* Enhanced Promo Code Section */
         .promo-section-redesign {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            border: 2px solid rgba(102, 126, 234, 0.1);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(248, 250, 252, 0.5));
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            border: 1px solid rgba(102, 126, 234, 0.15);
             transition: all 0.3s ease;
-            padding: 2rem;
+            padding: 2.5rem;
             margin-bottom: 2rem;
         }
 
         .promo-section-redesign:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(102, 126, 234, 0.12);
+            transform: none;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.12);
             border-color: rgba(102, 126, 234, 0.2);
         }
 
@@ -1349,18 +1497,19 @@ try {
 
         /* Store Credits Box (Similar to Discount Box) */
         .store-credits-box {
-            background: linear-gradient(145deg, #ffffff, #f8fafc);
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(59, 130, 246, 0.08);
-            border: 2px solid rgba(59, 130, 246, 0.1);
+            background: linear-gradient(145deg, rgba(255, 255, 255, 0.7), rgba(248, 250, 252, 0.5));
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+            border: 1px solid rgba(59, 130, 246, 0.15);
             transition: all 0.3s ease;
-            padding: 2rem;
+            padding: 2.5rem;
             margin-bottom: 2rem;
         }
 
         .store-credits-box:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 40px rgba(59, 130, 246, 0.12);
+            transform: none;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.12);
             border-color: rgba(59, 130, 246, 0.2);
         }
 
@@ -1574,8 +1723,31 @@ try {
                 height: 80px;
             }
 
-            .cart-header {
-                padding: 2rem 0;
+            .modern-cart-header {
+                padding: 1.5rem 0;
+            }
+
+            .cart-header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .cart-icon-wrapper {
+                width: 50px;
+                height: 50px;
+            }
+
+            .cart-icon-wrapper i {
+                font-size: 1.5rem;
+            }
+
+            .cart-title-text h1 {
+                font-size: 1.8rem;
+            }
+
+            .cart-quick-info {
+                width: 100%;
+                justify-content: center;
             }
 
             .cart-item {
@@ -1836,30 +2008,39 @@ try {
     <!-- Reusable Header Component -->
     <?php include '../includes/header.php'; ?>
 
-    <!-- Cart Content -->
-    <!-- Page Title -->
-    <div class="container-fluid">
-        <div class="text-center py-3">
-            <h1 style="color: #1f2937; font-weight: 700; margin: 0;">Shopping Cart</h1>
-        </div>
-    </div>
-
-    <div class="cart-header">
+    <!-- Modern Cart Header -->
+    <div class="modern-cart-header">
         <div class="container">
-            <div class="row align-items-center">
-                <div class="col-md-8">
-                    <h1 class="mb-2">
-                        <i class="fas fa-shopping-cart me-3"></i>
-                        Your Shopping Cart
-                    </h1>
-                    <p class="mb-0 fs-5">
-                        <?php if ($cart_count > 0): ?>
-                            You have <?php echo $cart_count; ?> item<?php echo $cart_count > 1 ? 's' : ''; ?> in your cart
-                        <?php else: ?>
-                            Your cart is currently empty
-                        <?php endif; ?>
-                    </p>
+            <div class="cart-header-content">
+                <div class="cart-title-section">
+                    <div class="cart-icon-wrapper">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="cart-title-text">
+                        <h1>Shopping Cart</h1>
+                        <p class="cart-subtitle">
+                            <?php if ($cart_count > 0): ?>
+                                <span class="cart-count-badge"><?php echo $cart_count; ?></span>
+                                <?php echo $cart_count > 1 ? 'items' : 'item'; ?> ready for checkout
+                            <?php else: ?>
+                                <span class="text-muted">Your cart is currently empty</span>
+                            <?php endif; ?>
+                        </p>
+                    </div>
                 </div>
+                <?php if ($cart_count > 0): ?>
+                <div class="cart-quick-info">
+                    <div class="quick-info-item">
+                        <i class="fas fa-box"></i>
+                        <span><?php echo $cart_count; ?> Items</span>
+                    </div>
+                    <div class="quick-info-divider"></div>
+                    <div class="quick-info-item">
+                        <i class="fas fa-tag"></i>
+                        <span>GH₵ <?php echo number_format($cart_total, 2); ?></span>
+                    </div>
+                </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
@@ -2000,8 +2181,8 @@ try {
                     </div>
 
                     <!-- Store Credits Section (Separate Box) -->
-                    <?php if ($is_logged_in): ?>
-                    <div class="store-credits-box <?php echo ($store_credit_balance <= 500) ? 'disabled' : ''; ?>" id="storeCreditsBox">
+                    <?php if ($is_logged_in && $store_credit_balance > 0): ?>
+                    <div class="store-credits-box" id="storeCreditsBox">
                         <div class="store-credits-header">
                             <i class="fas fa-credit-card me-2"></i>
                             <strong>STORE CREDITS</strong>
@@ -2015,39 +2196,26 @@ try {
                                     </div>
                                 </div>
                             </div>
-                            
-                            <?php if ($store_credit_balance > 500): ?>
-                                <div class="form-check store-credits-checkbox-container">
-                                    <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
-                                    <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
-                                        <strong>Apply Store Credits to this order</strong>
-                                    </label>
-                                </div>
-                                <small class="text-muted d-block mt-2" id="storeCreditsInfo">
-                                    <i class="fas fa-info-circle me-1"></i>
-                                    <span id="storeCreditsInfoText">
-                                        You can use up to GH₵ <?php 
-                                        $max_usable = max(0, $store_credit_balance - 500);
-                                        $display_max = min($max_usable, $cart_total);
-                                        echo number_format($display_max, 2); 
-                                        ?> from your store credits. You must keep at least GH₵ 500.00 in your balance.
-                                    </span>
-                                </small>
-                                <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
-                                    <i class="fas fa-exclamation-triangle me-1"></i>
-                                    <small>Discount code is active. Store credits cannot be used.</small>
-                                </div>
-                            <?php else: ?>
-                                <div class="alert alert-info mb-0" style="font-size: 0.9rem; padding: 12px;">
-                                    <i class="fas fa-info-circle me-2"></i>
-                                    <?php if ($store_credit_balance == 0): ?>
-                                        You don't have any store credits yet. <a href="device_drop.php" class="alert-link">Trade in a device</a> to earn credits!
-                                    <?php else: ?>
-                                        You need at least GH₵ 500.01 in store credits to use them (you must keep GH₵ 500 minimum). 
-                                        Current balance: GH₵ <?php echo number_format($store_credit_balance, 2); ?>
-                                    <?php endif; ?>
-                                </div>
-                            <?php endif; ?>
+                            <div class="form-check store-credits-checkbox-container">
+                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
+                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
+                                    <strong>Apply Store Credits to this order</strong>
+                                </label>
+                            </div>
+                            <small class="text-muted d-block mt-2" id="storeCreditsInfo">
+                                <i class="fas fa-info-circle me-1"></i>
+                                <span id="storeCreditsInfoText">
+                                    You can use up to GH₵ <?php 
+                                    $max_usable = max(0, $store_credit_balance - 500);
+                                    $display_max = min($max_usable, $cart_total);
+                                    echo number_format($display_max, 2); 
+                                    ?> from your store credits. You must keep at least GH₵ 500.00 in your balance.
+                                </span>
+                            </small>
+                            <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">
+                                <i class="fas fa-exclamation-triangle me-1"></i>
+                                <small>Discount code is active. Store credits cannot be used.</small>
+                            </div>
                         </div>
                     </div>
                     <?php endif; ?>
@@ -2075,7 +2243,7 @@ try {
                         </div>
 
                         <!-- Store Credits Applied Row (hidden by default, mutually exclusive with discount) -->
-                        <?php if ($is_logged_in): ?>
+                        <?php if ($is_logged_in && $store_credit_balance > 0): ?>
                         <div class="d-flex justify-content-between mb-3 store-credits-row" id="storeCreditsRow" style="display: none;">
                             <span class="text-success">
                                 <i class="fas fa-credit-card me-1"></i>
@@ -2091,17 +2259,17 @@ try {
                             <span class="fw-bold" id="subtotalAfter">GH₵ <?php echo number_format($cart_total, 2); ?></span>
                         </div>
 
-                        <!-- VAT Row (12.5% calculated on subtotal after discount/credits) -->
+                        <!-- VAT Row (5% calculated on subtotal after discount/credits) -->
                         <div class="d-flex justify-content-between mb-3" id="vatRow">
-                            <span>VAT (12.5%):</span>
-                            <span class="fw-bold" id="vatAmount">GH₵ <?php echo number_format($cart_total * 0.125, 2); ?></span>
+                            <span>VAT (5%):</span>
+                            <span class="fw-bold" id="vatAmount">GH₵ <?php echo number_format($cart_total * 0.05, 2); ?></span>
                         </div>
 
                         <hr>
 
                         <div class="d-flex justify-content-between mb-4">
                             <span class="fs-5 fw-bold">Total:</span>
-                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GH₵ <?php echo number_format($cart_total * 1.125, 2); ?></span>
+                            <span class="fs-5 fw-bold text-primary" id="cartTotal">GH₵ <?php echo number_format($cart_total * 1.05, 2); ?></span>
                         </div>
 
                         <?php if ($is_logged_in): ?>
@@ -2219,7 +2387,7 @@ try {
 
     <script>
         // Store Credits Functions - Define before DOMContentLoaded
-        const VAT_RATE = 0.125; // 12.5% VAT
+        const VAT_RATE = 0.05; // 5% VAT
         
         function handleStoreCreditsToggle(isChecked) {
             console.log('handleStoreCreditsToggle called with:', isChecked);
@@ -2333,9 +2501,9 @@ try {
                 });
 
                 // Apply store credits
-                storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
-                storeCreditsRow.style.display = 'flex';
-                
+                    storeCreditsAmount.textContent = '-GH₵ ' + creditsToApply.toFixed(2);
+                    storeCreditsRow.style.display = 'flex';
+                    
                 // Calculate subtotal after credits
                 const subtotalAfterCredits = Math.max(0, subtotal - creditsToApply);
                 
@@ -2354,9 +2522,9 @@ try {
                 // Calculate final total (subtotal after credits + VAT)
                 const finalTotal = subtotalAfterCredits + vat;
                 cartTotal.textContent = 'GH₵ ' + finalTotal.toFixed(2);
-                
-                // Update session storage
-                sessionStorage.setItem('appliedStoreCredits', creditsToApply.toFixed(2));
+                    
+                    // Update session storage
+                    sessionStorage.setItem('appliedStoreCredits', creditsToApply.toFixed(2));
                 sessionStorage.setItem('subtotalAfterCredits', subtotalAfterCredits.toFixed(2));
                 sessionStorage.setItem('vatAmount', vat.toFixed(2));
                 sessionStorage.setItem('finalTotal', finalTotal.toFixed(2));

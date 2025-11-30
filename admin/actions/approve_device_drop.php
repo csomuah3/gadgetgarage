@@ -76,7 +76,7 @@ try {
         // Create store credit for the user
 
         // First, find the user by email
-        $user_check_sql = "SELECT customer_id FROM customers WHERE customer_email = ? LIMIT 1";
+        $user_check_sql = "SELECT customer_id FROM customer WHERE customer_email = ? LIMIT 1";
         $user = $db->db_prepare_fetch_one($user_check_sql, 's', [$request['email']]);
 
         if ($user) {

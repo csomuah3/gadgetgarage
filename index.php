@@ -1473,7 +1473,9 @@ try {
 		gap: 8px;
 		/* spacing between cards */
 		align-items: start;
-		min-height: 28px;
+		min-height: 28px !important;
+		max-height: 28px !important;
+		height: 28px !important;
 		/* hero height - MUCH SHORTER */
 	}
 
@@ -1482,8 +1484,9 @@ try {
 	.hero-carousel-wrapper {
 		position: relative;
 		width: 100%;
-		height: 100%;
-		min-height: 28px;
+		height: 28px !important;
+		min-height: 28px !important;
+		max-height: 28px !important;
 		border-radius: 8px;
 		overflow: visible;
 		background: #f0f4f8;
@@ -1504,7 +1507,7 @@ try {
 		display: none;
 		grid-template-columns: 1.5fr 1fr;
 		gap: 10px;
-		padding: 8px 12px;
+		padding: 5px 8px !important;
 		border-radius: 8px;
 		overflow: hidden;
 		align-items: center;
@@ -1512,7 +1515,9 @@ try {
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 100%;
+		height: 28px !important;
+		min-height: 28px !important;
+		max-height: 28px !important;
 		opacity: 0;
 		visibility: hidden;
 		z-index: 1;

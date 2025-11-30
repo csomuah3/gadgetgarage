@@ -4077,7 +4077,7 @@ try {
                             </div>
                             <div class="related-product-content">
                                 <h5 class="related-product-title"><?php echo htmlspecialchars($related_product['product_title']); ?></h5>
-                                <div class="related-product-price">GH₵ <?php echo number_format(floatval($related_product['product_price']), 2); ?></div>
+                                <div class="related-product-price">GH₵ <?php echo number_format((float)($related_product['product_price'] ?? 0), 2); ?></div>
                                 <div class="related-product-meta">
                                     <span class="related-meta-tag">
                                         <i class="fas fa-tag"></i>

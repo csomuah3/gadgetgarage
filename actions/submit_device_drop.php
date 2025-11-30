@@ -248,8 +248,8 @@ try {
     $message .= "Customer: $first_name $last_name\n";
     $message .= "Email: $email\n";
     $message .= "Phone: $phone\n";
-    if ($asking_price) {
-        $message .= "Asking Price: GH₵ " . number_format(floatval($asking_price), 2) . "\n";
+    if ($asking_price !== null && is_numeric($asking_price) && $asking_price > 0) {
+        $message .= "Asking Price: GH₵ " . number_format((float)$asking_price, 2) . "\n";
     }
     if ($description) {
         $message .= "Description: $description\n";

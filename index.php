@@ -3238,12 +3238,12 @@ try {
 			align-items: center;
 			justify-content: center;
 		}
-		
+
 		.side-card.purple .side-copy {
 			width: 100%;
 			max-width: 100%;
 		}
-		
+
 		.side-card.purple .side-title {
 			white-space: normal;
 			word-wrap: break-word;

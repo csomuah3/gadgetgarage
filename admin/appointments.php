@@ -425,6 +425,115 @@ try {
     </div>
 </div>
 
+<!-- Appointment Details Modal -->
+<div class="modal fade" id="appointmentDetailsModal" tabindex="-1">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content modern-modal">
+            <div class="modal-header">
+                <h5 class="modal-title"><i class="fas fa-eye me-2"></i>Appointment Details</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="appointment-details-container">
+                    <!-- Appointment ID & Status -->
+                    <div class="detail-section mb-4">
+                        <div class="d-flex justify-content-between align-items-center mb-3">
+                            <h6 class="detail-label"><i class="fas fa-hashtag me-2"></i>Appointment ID</h6>
+                            <span id="detailAppointmentId" class="detail-value-badge">-</span>
+                        </div>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <h6 class="detail-label"><i class="fas fa-info-circle me-2"></i>Status</h6>
+                            <span id="detailStatus" class="status-badge">-</span>
+                        </div>
+                    </div>
+
+                    <!-- Customer Information -->
+                    <div class="detail-section mb-4">
+                        <h6 class="detail-section-title"><i class="fas fa-user me-2"></i>Customer Information</h6>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Name:</span>
+                                <span id="detailCustomerName" class="detail-value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Email:</span>
+                                <span id="detailCustomerEmail" class="detail-value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Phone:</span>
+                                <span id="detailCustomerPhone" class="detail-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Device & Issue Information -->
+                    <div class="detail-section mb-4">
+                        <h6 class="detail-section-title"><i class="fas fa-mobile-alt me-2"></i>Device & Issue</h6>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Device Type:</span>
+                                <span id="detailDeviceType" class="detail-value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Issue Type:</span>
+                                <span id="detailIssueName" class="detail-value">-</span>
+                            </div>
+                        </div>
+                        <div class="detail-item-full mt-3">
+                            <span class="detail-label">Issue Description:</span>
+                            <p id="detailIssueDescription" class="detail-value-text">-</p>
+                        </div>
+                    </div>
+
+                    <!-- Appointment Schedule -->
+                    <div class="detail-section mb-4">
+                        <h6 class="detail-section-title"><i class="fas fa-calendar-alt me-2"></i>Appointment Schedule</h6>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Date:</span>
+                                <span id="detailDate" class="detail-value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Time:</span>
+                                <span id="detailTime" class="detail-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Specialist & Pricing -->
+                    <div class="detail-section mb-4">
+                        <h6 class="detail-section-title"><i class="fas fa-user-cog me-2"></i>Service Details</h6>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Assigned Specialist:</span>
+                                <span id="detailSpecialist" class="detail-value">-</span>
+                            </div>
+                            <div class="detail-item">
+                                <span class="detail-label">Estimated Cost:</span>
+                                <span id="detailCost" class="detail-value-price">-</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Timestamps -->
+                    <div class="detail-section">
+                        <h6 class="detail-section-title"><i class="fas fa-clock me-2"></i>Timestamps</h6>
+                        <div class="detail-grid">
+                            <div class="detail-item">
+                                <span class="detail-label">Created:</span>
+                                <span id="detailCreatedAt" class="detail-value">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <style>
 /* Additional styles for appointments page */
 .analytics-card {
@@ -592,6 +701,121 @@ try {
 .counter-animate {
     animation: countUp 0.6s ease forwards;
 }
+
+/* Appointment Details Modal Styles */
+.appointment-details-container {
+    padding: 1rem 0;
+}
+
+.detail-section {
+    border-bottom: 1px solid #e5e7eb;
+    padding-bottom: 1.5rem;
+}
+
+.detail-section:last-child {
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.detail-section-title {
+    color: var(--primary-navy);
+    font-weight: 700;
+    font-size: 1.1rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.detail-item-full {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: #6b7280;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.detail-value {
+    color: var(--primary-navy);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.detail-value-text {
+    color: var(--primary-navy);
+    font-size: 0.95rem;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0.75rem;
+    background: #f9fafb;
+    border-radius: 8px;
+    border-left: 3px solid var(--electric-blue);
+}
+
+.detail-value-badge {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    font-weight: 700;
+    font-size: 1.1rem;
+}
+
+.detail-value-price {
+    color: #10b981;
+    font-weight: 700;
+    font-size: 1.2rem;
+}
+
+#appointmentDetailsModal .modal-content {
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+#appointmentDetailsModal .modal-header {
+    background: var(--gradient-primary);
+    color: white;
+    border-bottom: none;
+    padding: 1.5rem;
+}
+
+#appointmentDetailsModal .modal-body {
+    padding: 2rem;
+    max-height: 70vh;
+    overflow-y: auto;
+}
+
+#appointmentDetailsModal .modal-footer {
+    border-top: 1px solid #e5e7eb;
+    padding: 1rem 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    #appointmentDetailsModal .modal-body {
+        padding: 1.5rem;
+    }
+}
 </style>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -681,25 +905,68 @@ function updateStatus(appointmentId, currentStatus) {
     new bootstrap.Modal(document.getElementById('updateStatusModal')).show();
 }
 
+// Store appointments data for quick lookup
+const appointmentsData = <?= json_encode($appointments, JSON_HEX_APOS | JSON_HEX_QUOT) ?>;
+
 // View appointment details
 function viewAppointment(appointmentId) {
-    if (typeof Swal !== 'undefined') {
-        Swal.fire({
-            title: 'Appointment Details',
-            text: 'Appointment details for #' + appointmentId + ' - Feature coming soon!',
-            icon: 'info',
-            confirmButtonColor: '#D19C97',
-            confirmButtonText: 'OK'
+    // Find the appointment in the stored data
+    const appointment = appointmentsData.find(app => app.appointment_id == appointmentId);
+    
+    if (!appointment) {
+        alert('Appointment not found!');
+        return;
+    }
+    
+    // Populate modal with appointment data
+    document.getElementById('detailAppointmentId').textContent = '#' + appointment.appointment_id;
+    
+    // Status badge
+    const statusBadge = document.getElementById('detailStatus');
+    statusBadge.textContent = appointment.status.charAt(0).toUpperCase() + appointment.status.slice(1);
+    statusBadge.className = 'status-badge status-' + appointment.status.toLowerCase();
+    
+    // Customer information
+    document.getElementById('detailCustomerName').textContent = appointment.customer_name || 'Walk-in Customer';
+    document.getElementById('detailCustomerEmail').textContent = appointment.customer_email || 'N/A';
+    document.getElementById('detailCustomerPhone').textContent = appointment.customer_phone || 'N/A';
+    
+    // Device & Issue
+    document.getElementById('detailDeviceType').textContent = appointment.device_type || 'N/A';
+    document.getElementById('detailIssueName').textContent = appointment.issue_name || 'General Issue';
+    document.getElementById('detailIssueDescription').textContent = appointment.issue_description || 'No description provided';
+    
+    // Schedule
+    const appointmentDate = new Date(appointment.preferred_date);
+    document.getElementById('detailDate').textContent = appointmentDate.toLocaleDateString('en-US', { 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+    });
+    document.getElementById('detailTime').textContent = appointment.preferred_time || 'N/A';
+    
+    // Specialist & Cost
+    document.getElementById('detailSpecialist').textContent = appointment.specialist_name || 'Unassigned';
+    const cost = parseFloat(appointment.base_price) || 0;
+    document.getElementById('detailCost').textContent = cost > 0 ? 'GH₵' + cost.toFixed(2) : 'Not estimated';
+    
+    // Timestamps
+    if (appointment.created_at) {
+        const createdDate = new Date(appointment.created_at);
+        document.getElementById('detailCreatedAt').textContent = createdDate.toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
         });
     } else {
-        Swal.fire({
-            title: 'Appointment Details',
-            text: 'Appointment details for #' + appointmentId + ' - Feature coming soon!',
-            icon: 'info',
-            confirmButtonColor: '#007bff',
-            confirmButtonText: 'OK'
-        });
+        document.getElementById('detailCreatedAt').textContent = 'N/A';
     }
+    
+    // Show the modal
+    const modal = new bootstrap.Modal(document.getElementById('appointmentDetailsModal'));
+    modal.show();
 }
 
 // Initialize animations and charts when page loads

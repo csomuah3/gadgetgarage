@@ -1247,7 +1247,7 @@ if (!function_exists('generate_product_highlights')) {
 
         .product-grid {
             display: grid;
-            grid-template-columns: repeat(4, minmax(480px, 1fr));
+            grid-template-columns: repeat(4, minmax(420px, 1fr));
             gap: 20px;
             margin: 0;
             margin-bottom: 60px;

@@ -83,12 +83,12 @@ try {
 		/* Modern Checkout Header */
 		.page-title {
 			text-align: center;
-			padding: 2rem 0 1.5rem 0;
-			font-size: 2.5rem;
-			font-weight: 800;
+			padding: 1rem 0 0.75rem 0;
+			font-size: 1.75rem;
+			font-weight: 700;
 			color: #1f2937;
 			margin: 0;
-			letter-spacing: -0.5px;
+			letter-spacing: -0.3px;
 			animation: fadeInDown 0.6s ease-out;
 		}
 
@@ -107,15 +107,15 @@ try {
 			background: linear-gradient(135deg, rgba(30, 64, 175, 0.03) 0%, rgba(59, 130, 246, 0.05) 100%);
 			border-bottom: 1px solid rgba(59, 130, 246, 0.1);
 			color: #1f2937;
-			padding: 1.5rem 0 2rem 0;
+			padding: 1rem 0 1.25rem 0;
 			margin-bottom: 2rem;
 		}
 
 		.checkout-steps {
 			display: flex;
 			justify-content: center;
-			gap: 30px;
-			margin: 20px 0 30px 0;
+			gap: 20px;
+			margin: 12px 0 20px 0;
 		}
 
 		.step {
@@ -123,6 +123,7 @@ try {
 			align-items: center;
 			color: #6b7280;
 			font-weight: 600;
+			font-size: 0.95rem;
 			transition: all 0.3s ease;
 		}
 
@@ -131,19 +132,19 @@ try {
 		}
 
 		.step-number {
-			width: 45px;
-			height: 45px;
+			width: 38px;
+			height: 38px;
 			border-radius: 50%;
 			background: rgba(229, 231, 235, 0.5);
 			border: 2px solid #d1d5db;
 			display: flex;
 			align-items: center;
 			justify-content: center;
-			margin-right: 12px;
+			margin-right: 10px;
 			font-weight: 700;
 			color: #6b7280;
 			transition: all 0.3s ease;
-			font-size: 1.1rem;
+			font-size: 1rem;
 		}
 
 		.step.active .step-number {

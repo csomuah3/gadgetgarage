@@ -81,7 +81,23 @@ try {
             background-size: cover;
             background-position: center;
             background-attachment: fixed;
-            opacity: 0.45;
+            opacity: 0.7;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.85;
             z-index: -1;
             pointer-events: none;
         }
@@ -289,6 +305,91 @@ try {
             background: white;
             box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
             transform: translateY(-1px);
+        }
+
+        /* Custom Dropdown Styles (matching admin product page) */
+        .custom-dropdown {
+            position: relative;
+            width: 100%;
+        }
+
+        .dropdown-selected {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 20px;
+            border: 2px solid #93c5fd;
+            border-radius: 10px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            color: #1f2937;
+        }
+
+        .dropdown-selected:hover {
+            border-color: #4285f4;
+        }
+
+        .dropdown-selected.active {
+            border-color: #4285f4;
+            border-bottom-left-radius: 0;
+            border-bottom-right-radius: 0;
+            box-shadow: 0 0 0 3px rgba(66, 133, 244, 0.1);
+        }
+
+        .dropdown-text {
+            color: #666;
+        }
+
+        .dropdown-text.selected {
+            color: #1f2937;
+        }
+
+        .dropdown-arrow {
+            transition: transform 0.3s ease;
+            color: #666;
+            font-size: 0.875rem;
+        }
+
+        .dropdown-selected.active .dropdown-arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-options {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border: 2px solid #4285f4;
+            border-top: none;
+            border-radius: 0 0 10px 10px;
+            max-height: 250px;
+            overflow-y: auto;
+            z-index: 1000;
+            display: none;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .dropdown-option {
+            padding: 14px 20px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: background 0.2s ease;
+            color: #1f2937;
+        }
+
+        .dropdown-option:hover {
+            background: #f8f9fa;
+        }
+
+        .dropdown-option.selected {
+            background: #e3f2fd;
+            color: #4285f4;
+            font-weight: 600;
         }
 
         .form-input::placeholder,
@@ -1432,14 +1533,20 @@ try {
 
                         <div class="form-group">
                             <label for="deviceType" class="form-label required">Device Type</label>
-                            <select id="deviceType" name="device_type" class="form-select" required>
-                                <option value="">Select Device Type</option>
-                                <option value="smartphone">Smartphone</option>
-                                <option value="tablet">Tablet / iPad</option>
-                                <option value="laptop">Laptop</option>
-                                <option value="desktop">Desktop Computer</option>
-                                <option value="camera">Camera</option>
-                            </select>
+                            <div class="custom-dropdown" id="deviceTypeDropdown">
+                                <div class="dropdown-selected" id="deviceType-selected">
+                                    <span class="dropdown-text">Select Device Type</span>
+                                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                                </div>
+                                <div class="dropdown-options" id="deviceType-options">
+                                    <div class="dropdown-option" data-value="smartphone">Smartphone</div>
+                                    <div class="dropdown-option" data-value="tablet">Tablet / iPad</div>
+                                    <div class="dropdown-option" data-value="laptop">Laptop</div>
+                                    <div class="dropdown-option" data-value="desktop">Desktop Computer</div>
+                                    <div class="dropdown-option" data-value="camera">Camera</div>
+                                </div>
+                            </div>
+                            <input type="hidden" id="deviceType" name="device_type" value="" required>
                         </div>
 
                         <div class="form-group">
@@ -1725,7 +1832,83 @@ try {
         }
 
         // Update progress on input
+        // Custom Dropdown Functionality (matching admin product page)
+        function setupDeviceTypeDropdown() {
+            const dropdown = document.getElementById('deviceTypeDropdown');
+            const selected = document.getElementById('deviceType-selected');
+            const options = document.getElementById('deviceType-options');
+            const hiddenInput = document.getElementById('deviceType');
+
+            if (!dropdown || !selected || !options || !hiddenInput) {
+                console.error('Device type dropdown elements not found');
+                return;
+            }
+
+            // Toggle dropdown
+            selected.addEventListener('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+
+                const isActive = selected.classList.contains('active');
+
+                // Close all other dropdowns
+                document.querySelectorAll('.dropdown-selected.active').forEach(sel => {
+                    if (sel !== selected) {
+                        sel.classList.remove('active');
+                    }
+                });
+                document.querySelectorAll('.dropdown-options').forEach(opts => {
+                    if (opts !== options) {
+                        opts.style.display = 'none';
+                    }
+                });
+
+                // Toggle current dropdown
+                if (isActive) {
+                    selected.classList.remove('active');
+                    options.style.display = 'none';
+                } else {
+                    selected.classList.add('active');
+                    options.style.display = 'block';
+                }
+            });
+
+            // Handle option selection
+            options.addEventListener('click', (e) => {
+                if (e.target.classList.contains('dropdown-option')) {
+                    const value = e.target.getAttribute('data-value');
+                    const text = e.target.textContent;
+
+                    // Update selected text and value
+                    selected.querySelector('.dropdown-text').textContent = text;
+                    selected.querySelector('.dropdown-text').classList.add('selected');
+                    hiddenInput.value = value;
+
+                    // Update selected option
+                    options.querySelectorAll('.dropdown-option').forEach(opt => opt.classList.remove('selected'));
+                    e.target.classList.add('selected');
+
+                    // Close dropdown
+                    selected.classList.remove('active');
+                    options.style.display = 'none';
+
+                    // Trigger change event for form validation
+                    hiddenInput.dispatchEvent(new Event('change', { bubbles: true }));
+                }
+            });
+
+            // Close dropdown when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!dropdown.contains(e.target)) {
+                    selected.classList.remove('active');
+                    options.style.display = 'none';
+                }
+            });
+        }
+
         document.addEventListener('DOMContentLoaded', function() {
+            // Initialize device type dropdown
+            setupDeviceTypeDropdown();
             const form = document.getElementById('deviceDropForm');
             const inputs = form.querySelectorAll('input, select, textarea');
             

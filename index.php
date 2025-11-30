@@ -1553,6 +1553,27 @@ try {
 			}
 		}
 
+		/* iPad specific Ken Burns animation - 3x scale */
+		.hero-slide[data-product="ipad"].active .product-image {
+			animation: kenBurnsZoomPanIpad 8s ease-out forwards;
+		}
+
+		@keyframes kenBurnsZoomPanIpad {
+			0% {
+				transform: translateY(-120px) scale(3.3) translateX(-3%);
+				opacity: 0;
+			}
+
+			10% {
+				opacity: 1;
+			}
+
+			100% {
+				transform: translateY(-120px) scale(3.9) translateX(0);
+				opacity: 1;
+			}
+		}
+
 		/* Alternate zoom direction for variety */
 		.hero-slide[data-product="iphone"] .product-image {
 			animation: kenBurnsZoomPanAlt 8s ease-out forwards;
@@ -2053,6 +2074,18 @@ try {
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 		}
 
+		/* iPad specific - 3x larger */
+		.hero-slide[data-product="ipad"] .banner-media .product-image {
+			max-height: 2100px;
+			min-height: 1650px;
+			max-width: 100%;
+			transform: translateY(-120px) translateX(0) scale(3.9);
+		}
+
+		.hero-slide[data-product="ipad"].active .product-image {
+			transform: translateY(-120px) translateX(0) scale(3.9);
+		}
+
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
@@ -2072,6 +2105,11 @@ try {
 			transform: translateY(-120px) translateX(0) scale(1.3);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
+		}
+
+		/* iPad specific - 3x scale for active state */
+		.hero-slide[data-product="ipad"].active .product-image {
+			transform: translateY(-120px) translateX(0) scale(3.9);
 		}
 
 		/* Navigation Dots */

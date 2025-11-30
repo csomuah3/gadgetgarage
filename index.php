@@ -1076,9 +1076,12 @@ try {
 		}
 
 		@keyframes cartPulse {
-			0%, 100% {
+
+			0%,
+			100% {
 				transform: scale(1);
 			}
+
 			50% {
 				transform: scale(1.1);
 			}
@@ -1468,8 +1471,8 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 4.5fr 1.2fr;
-			/* much wider left + slightly wider right for promo box */
+			grid-template-columns: 4fr 1.5fr;
+			/* wider right column for promo box */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
@@ -3231,6 +3234,21 @@ try {
 			/* reduced right padding from 28px to 16px */
 			grid-template-columns: 1fr;
 			/* single column since no image */
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+		
+		.side-card.purple .side-copy {
+			width: 100%;
+			max-width: 100%;
+		}
+		
+		.side-card.purple .side-title {
+			white-space: normal;
+			word-wrap: break-word;
+			overflow-wrap: break-word;
+			line-height: 1.3 !important;
 		}
 
 		/* texts on side cards */
@@ -5626,8 +5644,11 @@ try {
 
 					<!-- Bottom -->
 					<article class="side-card purple">
-						<div class="side-copy" style="text-align: center; width: 100%; padding-right: 0; margin-right: 0;">
-							<h3 class="side-title" style="margin-bottom: 0; font-size: clamp(20px, 2.2vw, 32px); line-height: 1.2;">Use Code 'BLACKFRIDAY20' FOR ₵₵₵ OFF !!!</h3>
+						<div class="side-copy" style="text-align: center; width: 100%; padding: 0; margin: 0;">
+							<h3 class="side-title" style="margin: 0; font-size: clamp(18px, 2vw, 28px); line-height: 1.4; white-space: normal; word-wrap: break-word;">
+								Use Code 'BLACKFRIDAY20'<br>
+								FOR ₵₵₵ OFF !!!
+							</h3>
 						</div>
 					</article>
 				</div>

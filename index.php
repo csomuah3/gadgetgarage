@@ -1506,6 +1506,7 @@ try {
 			padding: 60px 60px;
 			border-radius: 14px;
 			overflow: hidden;
+			align-items: center;
 			position: absolute;
 			top: 0;
 			left: 0;
@@ -1551,7 +1552,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.6) translateX(0);
+				transform: translateY(-120px) scale(1.67) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1572,7 +1573,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.6) translateX(0);
+				transform: translateY(-120px) scale(1.67) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1597,7 +1598,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.6) translateX(0);
+				transform: translateY(-120px) scale(1.67) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -2056,12 +2057,13 @@ try {
 
 		.banner-media {
 			display: flex;
-			align-items: flex-start;
+			align-items: center;
 			justify-content: center;
 			position: relative;
 			height: 100%;
 			min-height: 350px;
 			padding-top: 0px;
+			overflow: visible;
 		}
 
 		.banner-media .product-image {
@@ -2069,9 +2071,9 @@ try {
 			height: auto;
 			max-height: 700px;
 			min-height: 550px;
-			max-width: 90%;
+			max-width: 95%;
 			object-fit: contain;
-			transform: translateY(-120px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.67);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1),
 				transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
@@ -2082,11 +2084,11 @@ try {
 			max-height: 1075px;
 			min-height: 850px;
 			max-width: 100%;
-			transform: translateY(-120px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.67);
 		}
 
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.67);
 		}
 
 		/* Image animations - fade out for exiting */
@@ -2105,14 +2107,14 @@ try {
 		/* Image animations - active state (visible, animated entrance) */
 		.hero-slide.active .product-image {
 			opacity: 1;
-			transform: translateY(-120px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.67);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
 
 		/* iPad specific - scaled for active state */
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.6);
+			transform: translateY(-120px) translateX(0) scale(1.67);
 		}
 
 		/* Navigation Dots */
@@ -3226,9 +3228,77 @@ try {
 			color: #111;
 		}
 
+		/* Trade-In Card Specific Styles */
+		.trade-in-card {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			justify-content: center;
+			text-align: center;
+			padding: 30px 24px;
+		}
+
+		.trade-in-card .side-copy {
+			width: 100%;
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			gap: 12px;
+		}
+
+		.trade-in-icon {
+			font-size: 3rem;
+			color: #111;
+			margin-bottom: 8px;
+			opacity: 0.9;
+		}
+
+		.trade-in-card .side-title {
+			margin-bottom: 8px;
+			line-height: 1.2;
+		}
+
+		.trade-in-incentive {
+			font-size: clamp(14px, 1.5vw, 18px);
+			font-weight: 700;
+			color: #d97706;
+			margin: 4px 0;
+			line-height: 1.3;
+		}
+
+		.trade-in-subtext {
+			font-size: clamp(12px, 1.2vw, 14px);
+			color: #555;
+			margin: 4px 0 12px;
+			line-height: 1.4;
+		}
+
+		.trade-in-btn {
+			background: #111;
+			color: #ffd21f;
+			padding: 12px 24px;
+			border-radius: 8px;
+			font-weight: 800;
+			font-size: clamp(13px, 1.4vw, 16px);
+			text-transform: uppercase;
+			letter-spacing: 1px;
+			text-decoration: none;
+			display: inline-block;
+			transition: all 0.3s ease;
+			margin-top: 8px;
+			border: 2px solid #111;
+		}
+
+		.trade-in-btn:hover {
+			background: #ffd21f;
+			color: #111;
+			transform: translateY(-2px);
+			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+		}
+
 		.side-card.purple {
-			background: linear-gradient(135deg, #1E3A5F, #2563EB);
-			/* blue gradient */
+			background: linear-gradient(135deg, #2563EB, #1e40af);
+			/* vibrant blue gradient */
 			color: #fff;
 			padding: 36px 16px 36px 28px;
 			/* reduced right padding from 28px to 16px */
@@ -3237,6 +3307,7 @@ try {
 			display: flex;
 			align-items: center;
 			justify-content: center;
+			flex-direction: column;
 		}
 
 		.side-card.purple .side-copy {
@@ -3249,6 +3320,43 @@ try {
 			word-wrap: break-word;
 			overflow-wrap: break-word;
 			line-height: 1.3 !important;
+		}
+
+		/* Countdown Timer Styles */
+		.countdown-timer {
+			display: flex;
+			justify-content: center;
+			gap: 12px;
+			margin-bottom: 20px;
+			flex-wrap: wrap;
+		}
+
+		.countdown-item {
+			display: flex;
+			flex-direction: column;
+			align-items: center;
+			background: rgba(255, 255, 255, 0.15);
+			backdrop-filter: blur(10px);
+			padding: 12px 16px;
+			border-radius: 10px;
+			min-width: 60px;
+			border: 1px solid rgba(255, 255, 255, 0.2);
+		}
+
+		.countdown-number {
+			font-size: clamp(24px, 3vw, 32px);
+			font-weight: 800;
+			line-height: 1;
+			margin-bottom: 4px;
+			color: #fff;
+		}
+
+		.countdown-label {
+			font-size: clamp(10px, 1vw, 12px);
+			font-weight: 600;
+			text-transform: uppercase;
+			letter-spacing: 0.5px;
+			color: rgba(255, 255, 255, 0.9);
 		}
 
 		/* texts on side cards */
@@ -3290,11 +3398,86 @@ try {
 			object-fit: cover;
 		}
 
+		/* ——— Left Side Banner (Flash Deals) ——— */
+		.left-banner-card {
+			border-radius: 14px;
+			position: relative;
+			overflow: hidden;
+			min-height: 620px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			background-size: cover;
+			background-position: center;
+			background-repeat: no-repeat;
+		}
+
+		.left-banner-card::before {
+			content: '';
+			position: absolute;
+			top: 0;
+			left: 0;
+			right: 0;
+			bottom: 0;
+			background: rgba(0, 0, 0, 0.1);
+			z-index: 1;
+		}
+
+		.left-banner-content {
+			position: relative;
+			z-index: 2;
+			width: 100%;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			padding: 20px;
+		}
+
+		.flash-deals-btn {
+			background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 50%, #ff4757 100%);
+			color: white;
+			padding: 18px 36px;
+			border-radius: 50px;
+			font-size: clamp(16px, 2vw, 20px);
+			font-weight: 800;
+			text-transform: uppercase;
+			letter-spacing: 1.5px;
+			text-decoration: none;
+			display: inline-flex;
+			align-items: center;
+			gap: 10px;
+			box-shadow: 0 8px 24px rgba(255, 107, 107, 0.4);
+			transition: all 0.3s ease;
+			border: 2px solid rgba(255, 255, 255, 0.3);
+			position: relative;
+			overflow: hidden;
+		}
+
+		.flash-deals-btn::before {
+			content: '⚡';
+			font-size: 1.3em;
+		}
+
+		.flash-deals-btn:hover {
+			transform: translateY(-3px) scale(1.05);
+			box-shadow: 0 12px 32px rgba(255, 107, 107, 0.6);
+			background: linear-gradient(135deg, #ff5252 0%, #e63946 50%, #ff1744 100%);
+		}
+
+		.flash-deals-btn:active {
+			transform: translateY(-1px) scale(1.02);
+		}
+
 		/* ——— Responsiveness ——— */
 		@media (max-width: 992px) {
 			.hero-grid {
 				grid-template-columns: 1fr;
 				min-height: auto;
+			}
+
+			.left-banner-card {
+				min-height: 300px;
 			}
 
 			.side-banners {
@@ -5506,7 +5689,16 @@ try {
 	<section class="hero-banner-section">
 		<div class="container">
 			<div class="hero-grid">
-				<!-- LEFT: MAIN BANNER CAROUSEL -->
+				<!-- LEFT: FLASH DEALS BANNER -->
+				<article class="left-banner-card" style="background-image: url('http://169.239.251.102:442/~chelsea.somuah/uploads/newsf.png');">
+					<div class="left-banner-content">
+						<a href="views/flash_deals.php" class="flash-deals-btn" data-translate>
+							FLASH DEALS
+						</a>
+					</div>
+				</article>
+
+				<!-- MIDDLE: MAIN BANNER CAROUSEL -->
 				<div class="hero-carousel-wrapper">
 					<div class="hero-carousel" id="heroCarousel">
 						<!-- Product 1: iPad -->
@@ -5516,12 +5708,12 @@ try {
 									<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z'/></svg>" alt="Apple" class="brand-logo apple-logo" />
 								</div>
 								<div class="banner-text-stack">
-									<div class="text-line brand-name">Apple</div>
-									<div class="text-line product-name">iPad Pro</div>
-									<div class="text-line product-desc">Powerful performance meets portability in this refurbished iPad Pro</div>
-									<div class="text-line tagline-1">SMART TECH</div>
-									<div class="text-line tagline-2">SMARTER SPENDING</div>
-									<div class="text-line price-line">Starting At</div>
+									<div class="text-line brand-name" data-translate>Apple</div>
+									<div class="text-line product-name" data-translate>iPad Pro</div>
+									<div class="text-line product-desc" data-translate>Powerful performance meets portability in this refurbished iPad Pro</div>
+									<div class="text-line tagline-1" data-translate>SMART TECH</div>
+									<div class="text-line tagline-2" data-translate>SMARTER SPENDING</div>
+									<div class="text-line price-line" data-translate>Starting At</div>
 									<div class="text-line price-amount">GH₵ 2,500.00</div>
 								</div>
 								<div class="social-buttons">
@@ -5529,7 +5721,7 @@ try {
 									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
 									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
 								</div>
-								<a href="views/all_product.php?category=ipads" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+								<a href="views/ipads.php" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad-removebg-preview.png" alt="Apple iPad Pro" class="product-image" />
@@ -5543,12 +5735,12 @@ try {
 									<img src="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='white'><path d='M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z'/></svg>" alt="Apple" class="brand-logo apple-logo" />
 								</div>
 								<div class="banner-text-stack">
-									<div class="text-line brand-name">Apple</div>
-									<div class="text-line product-name">iPhone</div>
-									<div class="text-line product-desc">Experience premium features and reliability in this certified refurbished iPhone</div>
-									<div class="text-line tagline-1">SMART TECH</div>
-									<div class="text-line tagline-2">SMARTER SPENDING</div>
-									<div class="text-line price-line">Starting At</div>
+									<div class="text-line brand-name" data-translate>Apple</div>
+									<div class="text-line product-name" data-translate>iPhone</div>
+									<div class="text-line product-desc" data-translate>Experience premium features and reliability in this certified refurbished iPhone</div>
+									<div class="text-line tagline-1" data-translate>SMART TECH</div>
+									<div class="text-line tagline-2" data-translate>SMARTER SPENDING</div>
+									<div class="text-line price-line" data-translate>Starting At</div>
 									<div class="text-line price-amount">GH₵ 1,800.00</div>
 								</div>
 								<div class="social-buttons">
@@ -5556,7 +5748,7 @@ try {
 									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
 									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
 								</div>
-								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+								<a href="views/smartphones.php" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/iphone_-removebg-preview.png" alt="Apple iPhone" class="product-image" />
@@ -5570,12 +5762,12 @@ try {
 									<div class="brand-logo fujifilm-logo">FUJIFILM</div>
 								</div>
 								<div class="banner-text-stack">
-									<div class="text-line brand-name">Fujifilm</div>
-									<div class="text-line product-name">Instax Mini</div>
-									<div class="text-line product-desc">Instant photography fun with this popular refurbished instant camera</div>
-									<div class="text-line tagline-1">SMART TECH</div>
-									<div class="text-line tagline-2">SMARTER SPENDING</div>
-									<div class="text-line price-line">Starting At</div>
+									<div class="text-line brand-name" data-translate>Fujifilm</div>
+									<div class="text-line product-name" data-translate>Instax Mini</div>
+									<div class="text-line product-desc" data-translate>Instant photography fun with this popular refurbished instant camera</div>
+									<div class="text-line tagline-1" data-translate>SMART TECH</div>
+									<div class="text-line tagline-2" data-translate>SMARTER SPENDING</div>
+									<div class="text-line price-line" data-translate>Starting At</div>
 									<div class="text-line price-amount">GH₵ 450.00</div>
 								</div>
 								<div class="social-buttons">
@@ -5583,7 +5775,7 @@ try {
 									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
 									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
 								</div>
-								<a href="views/all_product.php?category=cameras" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+								<a href="views/cameras.php" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/polaroid-removebg-preview.png" alt="Fujifilm Instax Mini" class="product-image" />
@@ -5597,12 +5789,12 @@ try {
 									<div class="brand-logo samsung-logo">SAMSUNG</div>
 								</div>
 								<div class="banner-text-stack">
-									<div class="text-line brand-name">Samsung</div>
-									<div class="text-line product-name">Galaxy Z Fold</div>
-									<div class="text-line product-desc">Cutting-edge foldable technology at an unbeatable refurbished price</div>
-									<div class="text-line tagline-1">SMART TECH</div>
-									<div class="text-line tagline-2">SMARTER SPENDING</div>
-									<div class="text-line price-line">Starting At</div>
+									<div class="text-line brand-name" data-translate>Samsung</div>
+									<div class="text-line product-name" data-translate>Galaxy Z Fold</div>
+									<div class="text-line product-desc" data-translate>Cutting-edge foldable technology at an unbeatable refurbished price</div>
+									<div class="text-line tagline-1" data-translate>SMART TECH</div>
+									<div class="text-line tagline-2" data-translate>SMARTER SPENDING</div>
+									<div class="text-line price-line" data-translate>Starting At</div>
 									<div class="text-line price-amount">GH₵ 3,200.00</div>
 								</div>
 								<div class="social-buttons">
@@ -5610,7 +5802,7 @@ try {
 									<a href="#" class="social-btn facebook" aria-label="Share on Facebook"><i class="fab fa-facebook"></i></a>
 									<a href="#" class="social-btn twitter" aria-label="Share on Twitter"><i class="fab fa-twitter"></i></a>
 								</div>
-								<a href="views/all_product.php?category=smartphones" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
+								<a href="views/smartphones.php" class="btn-primary"><span data-translate="shop_now">SHOP NOW</span></a>
 							</div>
 							<div class="banner-media">
 								<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/images-42.jpeg-removebg-preview.png" alt="Samsung Galaxy Z Fold" class="product-image" />
@@ -5629,23 +5821,43 @@ try {
 				<!-- RIGHT: TWO SIDE CARDS -->
 				<div class="side-banners">
 					<!-- Top -->
-					<article class="side-card yellow">
+					<article class="side-card yellow trade-in-card">
 						<div class="side-copy">
-							<h3 class="side-title">T900 Ultra<br>Watch</h3>
-							<p class="side-price">Starting <span class="price">GH₵ 19.00</span></p>
-							<a href="views/all_product.php" class="side-link"><span data-translate="shop_now">SHOP NOW</span></a>
-						</div>
-						<div class="side-media">
-							<img
-								src="https://images.unsplash.com/photo-1603791452906-bcce5e6d47a5?q=80&w=1200&auto=format&fit=crop"
-								alt="Watch" />
+							<div class="trade-in-icon">
+								<i class="fas fa-exchange-alt"></i>
+							</div>
+							<h3 class="side-title">Trade Up,<br>Save Big</h3>
+							<p class="trade-in-incentive">Get 10% Extra Credit<br>+ Instant Discount</p>
+							<p class="trade-in-subtext">Turn your old device<br>into savings</p>
+							<a href="views/device_drop.php" class="trade-in-btn">TRADE IN NOW</a>
 						</div>
 					</article>
 
 					<!-- Bottom -->
 					<article class="side-card purple">
 						<div class="side-copy" style="text-align: center; width: 100%; padding: 0; margin: 0;">
-							<h3 class="side-title" style="margin: 0; font-size: clamp(18px, 2vw, 28px); line-height: 1.4; white-space: normal; word-wrap: break-word;">
+							<!-- Countdown Timer -->
+							<div class="countdown-timer" id="blackfridayCountdown">
+								<div class="countdown-item">
+									<div class="countdown-number" id="days">00</div>
+									<div class="countdown-label" data-translate>Days</div>
+								</div>
+								<div class="countdown-item">
+									<div class="countdown-number" id="hours">00</div>
+									<div class="countdown-label" data-translate>Hours</div>
+								</div>
+								<div class="countdown-item">
+									<div class="countdown-number" id="minutes">00</div>
+									<div class="countdown-label" data-translate>Minutes</div>
+								</div>
+								<div class="countdown-item">
+									<div class="countdown-number" id="seconds">00</div>
+									<div class="countdown-label" data-translate>Seconds</div>
+								</div>
+							</div>
+
+							<!-- Promo Text -->
+							<h3 class="side-title" style="margin: 0; font-size: clamp(18px, 2vw, 28px); line-height: 1.4; white-space: normal; word-wrap: break-word;" data-translate>
 								Use Code 'BLACKFRIDAY20'<br>
 								FOR ₵₵₵ OFF !!!
 							</h3>
@@ -5667,8 +5879,8 @@ try {
 							<i class="fas fa-shipping-fast"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Free Shipping</h5>
-							<p>Free shipping all order over GH₵ 2000</p>
+							<h5 data-translate>Free Shipping</h5>
+							<p data-translate>Free shipping all order over GH₵ 2000</p>
 						</div>
 					</div>
 				</div>
@@ -5678,8 +5890,8 @@ try {
 							<i class="fas fa-undo"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Free Returns</h5>
-							<p>Back guarantee under 72 hours</p>
+							<h5 data-translate>Free Returns</h5>
+							<p data-translate>Back guarantee under 72 hours</p>
 						</div>
 					</div>
 				</div>
@@ -5689,8 +5901,8 @@ try {
 							<i class="fas fa-user-friends"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Member Discount</h5>
-							<p>On every order over GH₵ 2000.00</p>
+							<h5 data-translate>Member Discount</h5>
+							<p data-translate>On every order over GH₵ 2000.00</p>
 						</div>
 					</div>
 				</div>
@@ -5700,8 +5912,8 @@ try {
 							<i class="fas fa-gift"></i>
 						</div>
 						<div class="feature-content">
-							<h5>Special Gifts</h5>
-							<p>New product get special gifts</p>
+							<h5 data-translate>Special Gifts</h5>
+							<p data-translate>New product get special gifts</p>
 						</div>
 					</div>
 				</div>
@@ -5713,13 +5925,13 @@ try {
 	<!-- Most Popular Categories -->
 	<section class="popular-categories">
 		<div class="container">
-			<h2 class="section-title">SHOP BY CATEGORY</h2>
+			<h2 class="section-title" data-translate>SHOP BY CATEGORY</h2>
 			<div class="category-grid-container">
 				<!-- Large Category on Left -->
 				<div class="category-large" onclick="window.location.href='views/flash_deals.php'" style="cursor: pointer;">
 					<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/black-friday-sale-offer-deals-background_1055-8959.avif" alt="Flash Deals">
 					<div class="category-large-overlay">
-						<h4>Flash Deals</h4>
+						<h4 data-translate>Flash Deals</h4>
 					</div>
 				</div>
 
@@ -5729,28 +5941,28 @@ try {
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/ipad.jpg" alt="iPads">
 						<div class="category-small-overlay">
 							<h4><span data-translate="ipads">IPads and Tablets</span></h4>
-							<p>From GH₵ 3000</p>
+							<p data-translate>From GH₵ 3000</p>
 						</div>
 					</div>
 					<div class="category-small" onclick="window.location.href='views/smartphones.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/smartphones.webp" alt="Smartphones">
 						<div class="category-small-overlay">
 							<h4><span data-translate="smartphones">Smartphones</span></h4>
-							<p>From GH₵ 2500</p>
+							<p data-translate>From GH₵ 2500</p>
 						</div>
 					</div>
 					<div class="category-small" onclick="window.location.href='views/laptops.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/laptop.jpg" alt="Laptops">
 						<div class="category-small-overlay">
 							<h4><span data-translate="laptops">Laptops and Desktops</span></h4>
-							<p>From GH₵ 4000</p>
+							<p data-translate>From GH₵ 4000</p>
 						</div>
 					</div>
 					<div class="category-small" onclick="window.location.href='views/photography_video.php'" style="cursor: pointer;">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/photography.jpg" alt="Photography">
 						<div class="category-small-overlay">
 							<h4><span data-translate="photography">Photography and Video Equipment</span></h4>
-							<p>From GH₵ 5000</p>
+							<p data-translate>From GH₵ 5000</p>
 						</div>
 					</div>
 				</div>
@@ -5764,7 +5976,7 @@ try {
 			<div class="section-header">
 				<h2 class="featured-ig-title">
 					<i class="fab fa-instagram"></i>
-					Featured on IG this Week
+					<span data-translate>Featured on IG this Week</span>
 				</h2>
 			</div>
 
@@ -5786,10 +5998,10 @@ try {
 												</div>
 											</div>
 											<div class="ig-content">
-												<h3 class="ig-product-title"><?= htmlspecialchars($product['product_title']) ?></h3>
+												<h3 class="ig-product-title" data-translate><?= htmlspecialchars($product['product_title']) ?></h3>
 												<div class="ig-price">GH₵ <?= number_format($product['product_price'], 2) ?></div>
 												<button class="ig-add-cart-btn" onclick="event.preventDefault(); addToCart(<?= $product['product_id'] ?>, 1);">
-													<i class="fas fa-shopping-cart"></i> Add to Cart
+													<i class="fas fa-shopping-cart"></i> <span data-translate>Add to Cart</span>
 												</button>
 											</div>
 										</a>
@@ -5806,12 +6018,12 @@ try {
 										<div class="ig-image-container">
 											<div class="ig-placeholder">
 												<i class="fab fa-instagram"></i>
-												<p>Product Frame <?= $i + 1 ?></p>
+												<p data-translate>Product Frame <?= $i + 1 ?></p>
 											</div>
 											<div class="ig-gradient-overlay"></div>
 										</div>
 										<div class="ig-content">
-											<h3 class="ig-product-title">Coming Soon</h3>
+											<h3 class="ig-product-title" data-translate>Coming Soon</h3>
 											<div class="ig-price">GH₵ 0.00</div>
 										</div>
 									</div>
@@ -5895,7 +6107,7 @@ try {
 						pointer-events: none;
 						animation-delay: 1.2s;
 					">
-						4 customers viewing this
+						<span data-translate>4 customers viewing this</span>
 					</div>
 
 					<div class="deal-discount">-23%</div>
@@ -5923,8 +6135,8 @@ try {
 					<div class="deal-image-container">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.24.50AM.png" alt="HP LAPTOP " class="deal-image">
 					</div>
-					<div class="deal-brand">HP Elitebook</div>
-					<h3 class="deal-title">HP EliteBook X G1i 14 inch Notebook Next Gen AI PC Wolf Pro Security Edition</h3>
+					<div class="deal-brand" data-translate>HP Elitebook</div>
+					<h3 class="deal-title" data-translate>HP EliteBook X G1i 14 inch Notebook Next Gen AI PC Wolf Pro Security Edition</h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="far fa-star"></i>
@@ -5942,23 +6154,23 @@ try {
 						<div class="countdown-grid">
 							<div class="countdown-item">
 								<span class="countdown-number" id="days1">12</span>
-								<span class="countdown-label">Days</span>
+								<span class="countdown-label" data-translate>Days</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="hours1">15</span>
-								<span class="countdown-label">Hour</span>
+								<span class="countdown-label" data-translate>Hour</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="minutes1">35</span>
-								<span class="countdown-label">Min</span>
+								<span class="countdown-label" data-translate>Min</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="seconds1">01</span>
-								<span class="countdown-label">Sec</span>
+								<span class="countdown-label" data-translate>Sec</span>
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'" data-translate>OPTIONS</button>
 				</div>
 
 				<!-- Deal 2: Apple iPad -->
@@ -5982,14 +6194,14 @@ try {
 						pointer-events: none;
 						animation-delay: 3.5s;
 					">
-						5 customers added to cart
+						<span data-translate>5 customers added to cart</span>
 					</div>
 					<div class="deal-discount">-8%</div>
 					<div class="deal-image-container">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.30.25AM.png" alt="iPad m2" class="deal-image">
 					</div>
-					<div class="deal-brand">Apple M2</div>
-					<h3 class="deal-title">Apple iPad Pro 12.9" 6th Gen M2 256GB Wi-Fi </h3>
+					<div class="deal-brand" data-translate>Apple M2</div>
+					<h3 class="deal-title" data-translate>Apple iPad Pro 12.9" 6th Gen M2 256GB Wi-Fi </h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="fas fa-star"></i>
@@ -6008,23 +6220,23 @@ try {
 						<div class="countdown-grid">
 							<div class="countdown-item">
 								<span class="countdown-number" id="days2">12</span>
-								<span class="countdown-label">Days</span>
+								<span class="countdown-label" data-translate>Days</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="hours2">15</span>
-								<span class="countdown-label">Hour</span>
+								<span class="countdown-label" data-translate>Hour</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="minutes2">35</span>
-								<span class="countdown-label">Min</span>
+								<span class="countdown-label" data-translate>Min</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="seconds2">01</span>
-								<span class="countdown-label">Sec</span>
+								<span class="countdown-label" data-translate>Sec</span>
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'" data-translate>OPTIONS</button>
 				</div>
 
 				<!-- Deal 3: LG Apple iPad Mini -->
@@ -6048,14 +6260,14 @@ try {
 						pointer-events: none;
 						animation-delay: 2.8s;
 					">
-						10 customers interested
+						<span data-translate>10 customers interested</span>
 					</div>
 					<div class="deal-discount">-19%</div>
 					<div class="deal-image-container">
 						<img src="http://169.239.251.102:442/~chelsea.somuah/uploads/Screenshot2025-11-22at10.33.38AM.png" alt="Apple iPad Mini" class="deal-image">
 					</div>
-					<div class="deal-brand">Sony</div>
-					<h3 class="deal-title">Sony a7R V Mirrorless Camera</h3>
+					<div class="deal-brand" data-translate>Sony</div>
+					<h3 class="deal-title" data-translate>Sony a7R V Mirrorless Camera</h3>
 					<div class="deal-rating">
 						<div class="stars">
 							<i class="fas fa-star"></i>
@@ -6074,23 +6286,23 @@ try {
 						<div class="countdown-grid">
 							<div class="countdown-item">
 								<span class="countdown-number" id="days3">12</span>
-								<span class="countdown-label">Days</span>
+								<span class="countdown-label" data-translate>Days</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="hours3">15</span>
-								<span class="countdown-label">Hour</span>
+								<span class="countdown-label" data-translate>Hour</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="minutes3">35</span>
-								<span class="countdown-label">Min</span>
+								<span class="countdown-label" data-translate>Min</span>
 							</div>
 							<div class="countdown-item">
 								<span class="countdown-number" id="seconds3">01</span>
-								<span class="countdown-label">Sec</span>
+								<span class="countdown-label" data-translate>Sec</span>
 							</div>
 						</div>
 					</div>
-					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'">OPTIONS</button>
+					<button class="deal-options-btn" onclick="window.location.href='views/flash_deals.php'" data-translate>OPTIONS</button>
 				</div>
 			</div>
 		</div>
@@ -6235,8 +6447,8 @@ try {
 				<div class="newsletter-icon-wrapper">
 					<i class="fas fa-envelope"></i>
 				</div>
-				<h2 class="newsletter-title">Be the First to Discover Amazing Mid-Week Deals!</h2>
-				<p class="newsletter-description">
+				<h2 class="newsletter-title" data-translate>Be the First to Discover Amazing Mid-Week Deals!</h2>
+				<p class="newsletter-description" data-translate>
 					Subscribe to our newsletter and get exclusive access to special offers, new arrivals, and limited-time deals delivered straight to your inbox.
 				</p>
 				<form class="newsletter-form" id="newsletterForm" onsubmit="subscribeNewsletterSection(event)">
@@ -6245,15 +6457,16 @@ try {
 						class="newsletter-input"
 						id="newsletterEmailInput"
 						placeholder="Enter your email address"
+						data-translate-placeholder
 						required
 						autocomplete="email">
 					<button type="submit" class="newsletter-submit-btn" id="newsletterSubmitBtn">
-						<i class="fas fa-paper-plane"></i> Subscribe
+						<i class="fas fa-paper-plane"></i> <span data-translate>Subscribe</span>
 					</button>
 				</form>
 				<div class="newsletter-message" id="newsletterMessage"></div>
 				<p class="newsletter-privacy">
-					<i class="fas fa-lock"></i> We respect your privacy. Unsubscribe at any time.
+					<i class="fas fa-lock"></i> <span data-translate>We respect your privacy. Unsubscribe at any time.</span>
 				</p>
 			</div>
 		</div>
@@ -6334,6 +6547,65 @@ try {
 				}, 5000);
 			}
 		}
+
+		// Black Friday Countdown Timer (5 days)
+		function initBlackFridayCountdown() {
+			const daysEl = document.getElementById('days');
+			const hoursEl = document.getElementById('hours');
+			const minutesEl = document.getElementById('minutes');
+			const secondsEl = document.getElementById('seconds');
+
+			if (!daysEl || !hoursEl || !minutesEl || !secondsEl) {
+				return; // Elements not found, exit
+			}
+
+			// Set countdown to 5 days from now
+			const now = new Date().getTime();
+			const fiveDaysInMs = 5 * 24 * 60 * 60 * 1000; // 5 days in milliseconds
+			const countdownDate = now + fiveDaysInMs;
+
+			function updateCountdown() {
+				const now = new Date().getTime();
+				const distance = countdownDate - now;
+
+				if (distance < 0) {
+					// Countdown finished, reset to 5 days
+					const newCountdownDate = new Date().getTime() + fiveDaysInMs;
+					const newDistance = newCountdownDate - now;
+
+					const days = Math.floor(newDistance / (1000 * 60 * 60 * 24));
+					const hours = Math.floor((newDistance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					const minutes = Math.floor((newDistance % (1000 * 60 * 60)) / (1000 * 60));
+					const seconds = Math.floor((newDistance % (1000 * 60)) / 1000);
+
+					daysEl.textContent = String(days).padStart(2, '0');
+					hoursEl.textContent = String(hours).padStart(2, '0');
+					minutesEl.textContent = String(minutes).padStart(2, '0');
+					secondsEl.textContent = String(seconds).padStart(2, '0');
+				} else {
+					const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+					const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+					const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+					const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+					daysEl.textContent = String(days).padStart(2, '0');
+					hoursEl.textContent = String(hours).padStart(2, '0');
+					minutesEl.textContent = String(minutes).padStart(2, '0');
+					secondsEl.textContent = String(seconds).padStart(2, '0');
+				}
+			}
+
+			// Update immediately
+			updateCountdown();
+
+			// Update every second
+			setInterval(updateCountdown, 1000);
+		}
+
+		// Initialize countdown when DOM is ready
+		document.addEventListener('DOMContentLoaded', function() {
+			initBlackFridayCountdown();
+		});
 	</script>
 
 	<!-- Footer -->
@@ -6348,7 +6620,7 @@ try {
 									alt="Gadget Garage"
 									style="height: 35px; width: auto; object-fit: contain;">
 							</div>
-							<p class="footer-description">Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
+							<p class="footer-description" data-translate>Your trusted partner for premium tech devices, expert repairs, and innovative solutions.</p>
 							<div class="social-links">
 								<a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
 								<a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
@@ -6358,43 +6630,43 @@ try {
 						</div>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Shop</h5>
+						<h5 class="footer-title" data-translate>Shop</h5>
 						<ul class="footer-links">
-							<li><a href="views/all_product.php?category=smartphones">Smartphones</a></li>
-							<li><a href="views/all_product.php?category=laptops">Laptops</a></li>
-							<li><a href="views/all_product.php?category=ipads">Tablets</a></li>
-							<li><a href="views/all_product.php?category=cameras">Cameras</a></li>
-							<li><a href="views/all_product.php?category=video_equipment">Video Equipment</a></li>
+							<li><a href="views/smartphones.php" data-translate>Smartphones</a></li>
+							<li><a href="views/laptops.php" data-translate>Laptops</a></li>
+							<li><a href="views/ipads.php" data-translate>Tablets</a></li>
+							<li><a href="views/cameras.php" data-translate>Cameras</a></li>
+							<li><a href="views/video_equipment.php" data-translate>Video Equipment</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Services</h5>
+						<h5 class="footer-title" data-translate>Services</h5>
 						<ul class="footer-links">
-							<li><a href="views/repair_services.php">Device Repair</a></li>
-							<li><a href="views/contact.php">Tech Support</a></li>
-							<li><a href="views/repair_services.php">Data Recovery</a></li>
-							<li><a href="views/contact.php">Setup Services</a></li>
-							<li><a href="views/terms_conditions.php">Warranty</a></li>
+							<li><a href="views/repair_services.php" data-translate>Device Repair</a></li>
+							<li><a href="views/contact.php" data-translate>Tech Support</a></li>
+							<li><a href="views/repair_services.php" data-translate>Data Recovery</a></li>
+							<li><a href="views/contact.php" data-translate>Setup Services</a></li>
+							<li><a href="views/terms_conditions.php" data-translate>Warranty</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Company</h5>
+						<h5 class="footer-title" data-translate>Company</h5>
 						<ul class="footer-links">
-							<li><a href="views/contact.php">About Us</a></li>
-							<li><a href="views/contact.php">Contact</a></li>
-							<li><a href="views/contact.php">Careers</a></li>
-							<li><a href="views/contact.php">Blog</a></li>
-							<li><a href="views/contact.php">Press</a></li>
+							<li><a href="views/contact.php" data-translate>About Us</a></li>
+							<li><a href="views/contact.php" data-translate>Contact</a></li>
+							<li><a href="views/contact.php" data-translate>Careers</a></li>
+							<li><a href="views/contact.php" data-translate>Blog</a></li>
+							<li><a href="views/contact.php" data-translate>Press</a></li>
 						</ul>
 					</div>
 					<div class="col-lg-2 col-md-6 mb-4">
-						<h5 class="footer-title">Support</h5>
+						<h5 class="footer-title" data-translate>Support</h5>
 						<ul class="footer-links">
-							<li><a href="views/contact.php">Help Center</a></li>
-							<li><a href="views/terms_conditions.php">Shipping Info</a></li>
-							<li><a href="views/terms_conditions.php">Returns</a></li>
-							<li><a href="views/legal.php">Privacy Policy</a></li>
-							<li><a href="views/terms_conditions.php">Terms of Service</a></li>
+							<li><a href="views/contact.php" data-translate>Help Center</a></li>
+							<li><a href="views/terms_conditions.php" data-translate>Shipping Info</a></li>
+							<li><a href="views/terms_conditions.php" data-translate>Returns</a></li>
+							<li><a href="views/legal.php" data-translate>Privacy Policy</a></li>
+							<li><a href="views/terms_conditions.php" data-translate>Terms of Service</a></li>
 						</ul>
 					</div>
 				</div>
@@ -6402,7 +6674,7 @@ try {
 				<div class="footer-bottom">
 					<div class="row align-items-center">
 						<div class="col-md-6">
-							<p class="copyright">&copy; 2024 Gadget Garage. All rights reserved.</p>
+							<p class="copyright" data-translate>&copy; 2024 Gadget Garage. All rights reserved.</p>
 						</div>
 						<div class="col-md-6 text-end">
 							<div class="payment-methods">
@@ -8776,7 +9048,7 @@ try {
 			<!-- Shop Flash Deals Button -->
 			<button class="shop-flash-deals-btn" onclick="goToFlashDeals()">
 				<i class="fas fa-bolt"></i>
-				Shop Flash Deals
+				<span data-translate>Shop Flash Deals</span>
 			</button>
 		</div>
 	</div>

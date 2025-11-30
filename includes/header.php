@@ -302,8 +302,8 @@ $is_logged_in = isset($_SESSION['user_id']);
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=smartphones"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
-                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=ipads"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/smartphones.php"><i class="fas fa-mobile-alt"></i> <span data-translate="smartphones">Smartphones</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/ipads.php"><i class="fas fa-tablet-alt"></i> <span data-translate="ipads">iPads</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
@@ -313,8 +313,8 @@ $is_logged_in = isset($_SESSION['user_id']);
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=laptops"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
-                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=desktops"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/laptops.php"><i class="fas fa-laptop"></i> <span data-translate="laptops">Laptops</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/desktops.php"><i class="fas fa-desktop"></i> <span data-translate="desktops">Desktops</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column">
@@ -324,8 +324,8 @@ $is_logged_in = isset($_SESSION['user_id']);
                                 </a>
                             </h4>
                             <ul>
-                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=cameras"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
-                                <li><a href="<?php echo $base_path; ?>views/all_product.php?category=video_equipment"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/cameras.php"><i class="fas fa-camera"></i> <span data-translate="cameras">Cameras</span></a></li>
+                                <li><a href="<?php echo $base_path; ?>views/video_equipment.php"><i class="fas fa-video"></i> <span data-translate="video_equipment">Video Equipment</span></a></li>
                             </ul>
                         </div>
                         <div class="dropdown-column featured">

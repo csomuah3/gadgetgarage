@@ -2000,7 +2000,7 @@ try {
                     </div>
 
                     <!-- Store Credits Section (Separate Box) -->
-                    <?php if ($is_logged_in && $store_credit_balance > 0): ?>
+                    <?php if ($is_logged_in): ?>
                     <div class="store-credits-box" id="storeCreditsBox">
                         <div class="store-credits-header">
                             <i class="fas fa-credit-card me-2"></i>
@@ -2016,19 +2016,23 @@ try {
                                 </div>
                             </div>
                             <div class="form-check store-credits-checkbox-container">
-                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;">
-                                <label class="form-check-label" for="applyStoreCredits" style="cursor: pointer;">
+                                <input class="form-check-input" type="checkbox" id="applyStoreCredits" style="cursor: pointer;" <?php echo ($store_credit_balance <= 0) ? 'disabled' : ''; ?>>
+                                <label class="form-check-label" for="applyStoreCredits" style="cursor: <?php echo ($store_credit_balance <= 0) ? 'not-allowed; opacity: 0.6;' : 'pointer;'; ?>">
                                     <strong>Apply Store Credits to this order</strong>
                                 </label>
                             </div>
                             <small class="text-muted d-block mt-2" id="storeCreditsInfo">
                                 <i class="fas fa-info-circle me-1"></i>
                                 <span id="storeCreditsInfoText">
-                                    You can use up to GH₵ <?php 
-                                    $max_usable = max(0, $store_credit_balance - 500);
-                                    $display_max = min($max_usable, $cart_total);
-                                    echo number_format($display_max, 2); 
-                                    ?> from your store credits (GH₵500 minimum reserve)
+                                    <?php if ($store_credit_balance > 0): ?>
+                                        You can use up to GH₵ <?php 
+                                        $max_usable = max(0, $store_credit_balance - 500);
+                                        $display_max = min($max_usable, $cart_total);
+                                        echo number_format($display_max, 2); 
+                                        ?> from your store credits (GH₵500 minimum reserve)
+                                    <?php else: ?>
+                                        You don't have any store credits available. Current balance: GH₵ <?php echo number_format($store_credit_balance, 2); ?>
+                                    <?php endif; ?>
                                 </span>
                             </small>
                             <div id="storeCreditsExclusiveMessage" class="mt-2 text-warning" style="display: none;">

@@ -1473,8 +1473,8 @@ try {
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 375px;
-			/* hero height */
+			min-height: 280px;
+			/* very short hero height */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 375px;
+			min-height: 280px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -3446,7 +3446,7 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 375px;
+			min-height: 280px;
 			display: flex;
 			align-items: center;
 			justify-content: center;

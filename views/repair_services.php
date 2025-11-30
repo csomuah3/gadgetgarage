@@ -170,23 +170,25 @@ try {
 		}
 
 		.hero-title {
-			font-size: 2.5rem;
+			font-size: 4rem;
 			font-weight: 700;
-			color: #1e3a8a;
+			color: #000000;
 			margin-bottom: 1rem;
 		}
 
 		.hero-subtitle {
-			font-size: 1.1rem;
-			color: #2563EB;
+			font-size: 1.8rem;
+			color: #000000;
 			margin-bottom: 0.5rem;
+			font-weight: 600;
 		}
 
 		.hero-description {
-			color: #64748b;
-			font-size: 1rem;
+			color: #000000;
+			font-size: 1.5rem;
 			max-width: 600px;
 			margin: 0 auto;
+			font-weight: 500;
 		}
 
 		.progress-steps {
@@ -201,8 +203,9 @@ try {
 			display: flex;
 			align-items: center;
 			gap: 0.5rem;
-			color: #6b7280;
-			font-weight: 500;
+			color: #000000;
+			font-weight: 600;
+			font-size: 1.3rem;
 		}
 
 		.step-number {
@@ -237,9 +240,9 @@ try {
 
 		.section-title {
 			text-align: center;
-			font-size: 2rem;
+			font-size: 3.5rem;
 			font-weight: 700;
-			color: #1e3a8a;
+			color: #000000;
 			margin-bottom: 2.5rem;
 		}
 
@@ -291,18 +294,20 @@ try {
 		}
 
 		.issue-title {
-			font-size: 1.25rem;
-			font-weight: 600;
-			color: #1f2937;
+			font-size: 1.8rem;
+			font-weight: 700;
+			color: #000000;
 			margin-bottom: 1rem;
 			text-align: center;
 		}
 
 		.issue-description {
-			color: #6b7280;
+			color: #000000;
 			text-align: center;
 			margin-bottom: 1.5rem;
 			line-height: 1.6;
+			font-size: 1.2rem;
+			font-weight: 500;
 		}
 
 		.issue-price {
@@ -311,15 +316,16 @@ try {
 		}
 
 		.price-range {
-			font-size: 1.1rem;
-			font-weight: 600;
-			color: #2563EB;
+			font-size: 1.5rem;
+			font-weight: 700;
+			color: #000000;
 		}
 
 		.price-label {
-			font-size: 0.9rem;
-			color: #6b7280;
+			font-size: 1.1rem;
+			color: #000000;
 			margin-top: 0.25rem;
+			font-weight: 600;
 		}
 
 		.continue-btn {
@@ -364,7 +370,23 @@ try {
 
 		@media (max-width: 768px) {
 			.hero-title {
-				font-size: 2rem;
+				font-size: 3rem;
+			}
+			
+			.hero-subtitle {
+				font-size: 1.5rem;
+			}
+			
+			.hero-description {
+				font-size: 1.3rem;
+			}
+			
+			.section-title {
+				font-size: 2.5rem;
+			}
+			
+			.step {
+				font-size: 1.1rem;
 			}
 
 			.progress-steps {
@@ -603,8 +625,8 @@ try {
 	<section class="hero-section">
 		<div class="container">
 			<div class="d-flex justify-content-center align-items-center mb-3">
-				<i class="fas fa-tools me-2" style="color: #2563EB; font-size: 1.5rem;"></i>
-				<span style="color: #2563EB; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px;">Professional Repair Services</span>
+				<i class="fas fa-tools me-2" style="color: #000000; font-size: 2rem;"></i>
+				<span style="color: #000000; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; font-size: 1.4rem;">Professional Repair Services</span>
 			</div>
 
 			<h1 class="hero-title">Device Repair Services</h1>

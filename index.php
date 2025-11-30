@@ -1472,8 +1472,8 @@ try {
 			/* left banner | hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
-			align-items: stretch;
-			min-height: 245px;
+			align-items: start;
+			min-height: 620px;
 			/* hero height */
 		}
 
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 245px;
+			min-height: 620px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -1549,7 +1549,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.67) translateX(0);
+				transform: translateY(-120px) scale(1.6) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1570,7 +1570,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.67) translateX(0);
+				transform: translateY(-120px) scale(1.6) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1595,7 +1595,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(1.67) translateX(0);
+				transform: translateY(-120px) scale(1.6) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -1735,8 +1735,7 @@ try {
 
 		/* Apple-style Product Gradients - Premium & Sophisticated */
 		.hero-slide[data-gradient="ipad-gradient"] {
-			background: linear-gradient(135deg, #3bdcff 0%, #ffa7a7 50%, #a2d2f4 100%) !important;
-			/* new gradient: cyan to pink to light blue */
+			background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #8e9aaf 100%) !important;
 			color: #ffffff !important;
 			box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 		}
@@ -2084,10 +2083,6 @@ try {
 			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
-		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.6);
-		}
-
 		/* Image animations - fade out for exiting */
 		.hero-slide.exiting .product-image {
 			opacity: 0;
@@ -2107,11 +2102,6 @@ try {
 			transform: translateY(-120px) translateX(0) scale(1.6);
 			transition: opacity 0.8s cubic-bezier(0.23, 1, 0.32, 1) 0.6s,
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
-		}
-
-		/* iPad specific - scaled for active state */
-		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(1.6);
 		}
 
 		/* Navigation Dots */
@@ -3445,7 +3435,7 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 245px;
+			height: 100%;
 			display: flex;
 			align-items: center;
 			justify-content: center;

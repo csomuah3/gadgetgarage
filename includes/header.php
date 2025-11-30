@@ -577,6 +577,8 @@ document.addEventListener('DOMContentLoaded', function() {
 </script>
 
 <!-- Wishlist Badge Update Script -->
+<!-- SweetAlert2 for modern alerts -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="<?php echo $base_path; ?>js/wishlist.js"></script>
 
 <!-- Purchase Notifications -->

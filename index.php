@@ -1560,7 +1560,7 @@ try {
 
 		@keyframes kenBurnsZoomPanIpad {
 			0% {
-				transform: translateY(-120px) scale(3.3) translateX(-3%);
+				transform: translateY(-120px) scale(1.9) translateX(-3%);
 				opacity: 0;
 			}
 
@@ -1569,7 +1569,7 @@ try {
 			}
 
 			100% {
-				transform: translateY(-120px) scale(3.9) translateX(0);
+				transform: translateY(-120px) scale(2.2) translateX(0);
 				opacity: 1;
 			}
 		}
@@ -2074,16 +2074,16 @@ try {
 			filter: drop-shadow(0 10px 30px rgba(0, 0, 0, 0.3));
 		}
 
-		/* iPad specific - 3x larger */
+		/* iPad specific - scaled appropriately */
 		.hero-slide[data-product="ipad"] .banner-media .product-image {
-			max-height: 2100px;
-			min-height: 1650px;
+			max-height: 1200px;
+			min-height: 950px;
 			max-width: 100%;
-			transform: translateY(-120px) translateX(0) scale(3.9);
+			transform: translateY(-120px) translateX(0) scale(2.2);
 		}
 
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(3.9);
+			transform: translateY(-120px) translateX(0) scale(2.2);
 		}
 
 		/* Image animations - fade out for exiting */
@@ -2107,9 +2107,9 @@ try {
 				transform 1s cubic-bezier(0.23, 1, 0.32, 1) 0.6s;
 		}
 
-		/* iPad specific - 3x scale for active state */
+		/* iPad specific - scaled for active state */
 		.hero-slide[data-product="ipad"].active .product-image {
-			transform: translateY(-120px) translateX(0) scale(3.9);
+			transform: translateY(-120px) translateX(0) scale(2.2);
 		}
 
 		/* Navigation Dots */

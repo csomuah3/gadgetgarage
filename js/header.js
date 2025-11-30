@@ -103,40 +103,109 @@ function initializeLanguageDropdown() {
 
     // Handle option selection
     optionsList.forEach(option => {
-        option.addEventListener('click', (e) => {
+        option.addEventListener('click', async (e) => {
             e.preventDefault();
             e.stopPropagation();
 
             const langCode = option.getAttribute('data-value');
             
-            // Update selected display
+            // Get language details
             const flag = option.querySelector('.language-flag').textContent;
             const langName = option.querySelector('.language-name').textContent;
             const codeMatch = langName.match(/\((\w+)\)/);
             const code = codeMatch ? codeMatch[1] : langCode.toUpperCase();
+            
+            // Extract just the language name (without code)
+            const languageNameOnly = langName.split('(')[0].trim();
 
-            selected.querySelector('.language-flag').textContent = flag;
-            selected.querySelector('.language-code').textContent = code;
+            // Check if this is already the selected language
+            const currentSelected = options.querySelector('.language-dropdown-option.selected');
+            if (currentSelected && currentSelected.getAttribute('data-value') === langCode) {
+                // Already selected, just close dropdown
+                selected.classList.remove('active');
+                options.style.display = 'none';
+                return;
+            }
 
-            // Update selected state
-            optionsList.forEach(opt => opt.classList.remove('selected'));
-            option.classList.add('selected');
-
-            // Add checkmark to selected option
-            optionsList.forEach(opt => {
-                const check = opt.querySelector('.language-check');
-                if (check) check.remove();
-            });
-            const checkIcon = document.createElement('i');
-            checkIcon.className = 'fas fa-check language-check';
-            option.appendChild(checkIcon);
-
-            // Close dropdown
+            // Close dropdown first
             selected.classList.remove('active');
             options.style.display = 'none';
 
-            // Change language
-            changeLanguage(langCode);
+            // Show SweetAlert confirmation
+            if (typeof Swal !== 'undefined') {
+                const result = await Swal.fire({
+                    title: 'Change Language?',
+                    html: `
+                        <div style="text-align: center; padding: 20px 0;">
+                            <div style="font-size: 3rem; margin-bottom: 15px;">${flag}</div>
+                            <p style="font-size: 1.2rem; font-weight: 600; color: #1f2937; margin-bottom: 10px;">
+                                ${languageNameOnly}
+                            </p>
+                            <p style="color: #6b7280; font-size: 0.95rem;">
+                                The page will refresh to apply the new language.
+                            </p>
+                        </div>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Yes, Change Language',
+                    cancelButtonText: 'Cancel',
+                    confirmButtonColor: '#2563EB',
+                    cancelButtonColor: '#6b7280',
+                    reverseButtons: true,
+                    customClass: {
+                        popup: 'language-change-popup',
+                        confirmButton: 'language-confirm-btn',
+                        cancelButton: 'language-cancel-btn'
+                    }
+                });
+
+                if (result.isConfirmed) {
+                    // User confirmed, proceed with language change
+                    // Update selected display
+                    selected.querySelector('.language-flag').textContent = flag;
+                    selected.querySelector('.language-code').textContent = code;
+
+                    // Update selected state
+                    optionsList.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+
+                    // Add checkmark to selected option
+                    optionsList.forEach(opt => {
+                        const check = opt.querySelector('.language-check');
+                        if (check) check.remove();
+                    });
+                    const checkIcon = document.createElement('i');
+                    checkIcon.className = 'fas fa-check language-check';
+                    option.appendChild(checkIcon);
+
+                    // Change language
+                    changeLanguage(langCode);
+                }
+            } else {
+                // Fallback if SweetAlert is not available
+                if (confirm(`Change language to ${languageNameOnly}? The page will refresh.`)) {
+                    // Update selected display
+                    selected.querySelector('.language-flag').textContent = flag;
+                    selected.querySelector('.language-code').textContent = code;
+
+                    // Update selected state
+                    optionsList.forEach(opt => opt.classList.remove('selected'));
+                    option.classList.add('selected');
+
+                    // Add checkmark to selected option
+                    optionsList.forEach(opt => {
+                        const check = opt.querySelector('.language-check');
+                        if (check) check.remove();
+                    });
+                    const checkIcon = document.createElement('i');
+                    checkIcon.className = 'fas fa-check language-check';
+                    option.appendChild(checkIcon);
+
+                    // Change language
+                    changeLanguage(langCode);
+                }
+            }
         });
     });
 
@@ -167,8 +236,20 @@ function changeLanguage(language) {
         languageDropdown.style.pointerEvents = 'none';
     }
 
-    // Show loading notification
-    if (typeof showNotification === 'function') {
+    // Show loading notification with SweetAlert
+    if (typeof Swal !== 'undefined') {
+        Swal.fire({
+            title: 'Changing Language...',
+            text: 'Please wait while we update the language.',
+            icon: 'info',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            showConfirmButton: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+    } else if (typeof showNotification === 'function') {
         showNotification('Changing language...', 'info');
     }
 
@@ -190,7 +271,8 @@ function changeLanguage(language) {
                     text: 'The website language has been updated. Refreshing page...',
                     icon: 'success',
                     timer: 1500,
-                    showConfirmButton: false
+                    showConfirmButton: false,
+                    timerProgressBar: true
                 }).then(() => {
                     // Refresh the page to apply new language
                     window.location.reload();

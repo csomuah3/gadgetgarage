@@ -406,6 +406,68 @@ class AIHelper {
             throw new Exception("Unable to assess device value at this time. Please try again.");
         }
     }
+
+    /**
+     * Translate content to target language using OpenAI
+     * @param array $content Array of text strings to translate
+     * @param string $target_language Target language code (en, es, fr, de)
+     * @return array Translated content in same order as input
+     */
+    public function translateContent($content, $target_language) {
+        if (empty($content) || !is_array($content)) {
+            return [];
+        }
+
+        // Language names mapping
+        $language_names = [
+            'en' => 'English',
+            'es' => 'Spanish',
+            'fr' => 'French',
+            'de' => 'German'
+        ];
+
+        $target_lang_name = $language_names[$target_language] ?? 'English';
+
+        // Build prompt for batch translation
+        $prompt = "You are a professional translator. Translate the following text content from English to {$target_lang_name}.\n\n";
+        $prompt .= "IMPORTANT RULES:\n";
+        $prompt .= "1. Maintain the exact same format and structure\n";
+        $prompt .= "2. Keep HTML tags, placeholders, and special characters unchanged\n";
+        $prompt .= "3. Preserve brand names (Gadget Garage, etc.) as-is\n";
+        $prompt .= "4. Keep currency symbols and numbers unchanged\n";
+        $prompt .= "5. Return ONLY a JSON array with translations in the same order\n";
+        $prompt .= "6. Each translation should be a string in the array\n";
+        $prompt .= "7. If text is already in the target language, return it as-is\n\n";
+        $prompt .= "Content to translate (as JSON array):\n";
+        $prompt .= json_encode($content, JSON_UNESCAPED_UNICODE) . "\n\n";
+        $prompt .= "Return ONLY the JSON array of translations, nothing else. No explanations, no markdown, just the array.";
+
+        try {
+            $response = $this->callOpenAI($prompt, 2000); // Higher token limit for batch translation
+            
+            // Clean response - remove markdown code blocks if present
+            $response = trim($response);
+            $response = preg_replace('/^```json\s*/', '', $response);
+            $response = preg_replace('/^```\s*/', '', $response);
+            $response = preg_replace('/\s*```$/', '', $response);
+            $response = trim($response);
+            
+            // Parse JSON response
+            $translations = json_decode($response, true);
+            
+            if (!is_array($translations) || count($translations) !== count($content)) {
+                error_log("Translation count mismatch. Expected: " . count($content) . ", Got: " . (is_array($translations) ? count($translations) : 0));
+                // Fallback: return original content
+                return $content;
+            }
+            
+            return $translations;
+        } catch (Exception $e) {
+            error_log("AI Translation Error: " . $e->getMessage());
+            // Fallback: return original content
+            return $content;
+        }
+    }
 }
 ?>
 

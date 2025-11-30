@@ -219,10 +219,111 @@ function initializeLanguageDropdown() {
 }
 
 /**
+ * Collect all translatable content from the page
+ */
+function collectTranslatableContent() {
+    const content = [];
+    const elements = [];
+    
+    // Collect elements with data-translate attribute
+    document.querySelectorAll('[data-translate]').forEach(element => {
+        const text = element.textContent.trim();
+        if (text) {
+            content.push(text);
+            elements.push({ element: element, type: 'text' });
+        }
+    });
+    
+    // Collect placeholder text
+    document.querySelectorAll('[data-translate-placeholder]').forEach(element => {
+        const placeholder = element.placeholder || element.getAttribute('placeholder');
+        if (placeholder) {
+            content.push(placeholder);
+            elements.push({ element: element, type: 'placeholder' });
+        }
+    });
+    
+    return { content, elements };
+}
+
+/**
+ * Update page with translated content
+ */
+function updatePageWithTranslations(translations, elements) {
+    let translationIndex = 0;
+    
+    elements.forEach(item => {
+        if (item.type === 'placeholder') {
+            // Update placeholder
+            if (translations[translationIndex]) {
+                item.element.placeholder = translations[translationIndex];
+                item.element.setAttribute('placeholder', translations[translationIndex]);
+            }
+            translationIndex++;
+        } else if (item.type === 'text') {
+            // Update text content
+            if (translations[translationIndex]) {
+                item.element.textContent = translations[translationIndex];
+            }
+            translationIndex++;
+        }
+    });
+}
+
+/**
+ * Translate index page dynamically using OpenAI
+ */
+async function translateIndexPage(targetLanguage) {
+    try {
+        // Collect all translatable content
+        const { content, elements } = collectTranslatableContent();
+        
+        if (content.length === 0) {
+            console.log('No translatable content found');
+            return false;
+        }
+        
+        console.log(`Translating ${content.length} items to ${targetLanguage}`);
+        
+        // Send to translation API
+        const response = await fetch('actions/translate_content.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                content: content,
+                target_language: targetLanguage
+            })
+        });
+        
+        const data = await response.json();
+        
+        if (data.status === 'success' && data.translations) {
+            // Update page with translations
+            updatePageWithTranslations(data.translations, elements);
+            console.log('Page translated successfully');
+            return true;
+        } else {
+            console.error('Translation failed:', data.message);
+            return false;
+        }
+    } catch (error) {
+        console.error('Translation error:', error);
+        return false;
+    }
+}
+
+/**
  * Change website language
  */
 function changeLanguage(language) {
     console.log('Changing language to:', language);
+
+    // Check if we're on the index page
+    const isIndexPage = window.location.pathname.endsWith('index.php') || 
+                        window.location.pathname.endsWith('/') ||
+                        window.location.pathname.includes('index.php');
 
     // Show loading state
     const languageSelect = document.querySelector('select[onchange*="changeLanguage"]');
@@ -240,7 +341,7 @@ function changeLanguage(language) {
     if (typeof Swal !== 'undefined') {
         Swal.fire({
             title: 'Changing Language...',
-            text: 'Please wait while we update the language.',
+            text: isIndexPage ? 'Translating page content with AI...' : 'Please wait while we update the language.',
             icon: 'info',
             allowOutsideClick: false,
             allowEscapeKey: false,
@@ -253,7 +354,7 @@ function changeLanguage(language) {
         showNotification('Changing language...', 'info');
     }
 
-    // Send AJAX request to change language
+    // First, update the session language
     const formData = new FormData();
     formData.append('language', language);
 
@@ -262,28 +363,67 @@ function changeLanguage(language) {
         body: formData
     })
     .then(response => response.json())
-    .then(data => {
+    .then(async (data) => {
         if (data.status === 'success') {
-            // Show success notification
-            if (typeof Swal !== 'undefined') {
-                Swal.fire({
-                    title: 'Language Changed!',
-                    text: 'The website language has been updated. Refreshing page...',
-                    icon: 'success',
-                    timer: 1500,
-                    showConfirmButton: false,
-                    timerProgressBar: true
-                }).then(() => {
-                    // Refresh the page to apply new language
-                    window.location.reload();
-                });
-            } else {
-                if (typeof showNotification === 'function') {
-                    showNotification('Language changed successfully! Refreshing page...', 'success');
+            // If on index page, translate dynamically
+            if (isIndexPage) {
+                const translationSuccess = await translateIndexPage(language);
+                
+                if (translationSuccess) {
+                    // Show success notification
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Language Changed!',
+                            text: 'Page has been translated successfully.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        });
+                    } else {
+                        if (typeof showNotification === 'function') {
+                            showNotification('Language changed successfully!', 'success');
+                        }
+                    }
+                } else {
+                    // Translation failed, fallback to refresh
+                    if (typeof Swal !== 'undefined') {
+                        Swal.fire({
+                            title: 'Language Changed!',
+                            text: 'Translating page... Refreshing...',
+                            icon: 'info',
+                            timer: 1500,
+                            showConfirmButton: false,
+                            timerProgressBar: true
+                        }).then(() => {
+                            window.location.reload();
+                        });
+                    } else {
+                        window.location.reload();
+                    }
                 }
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1500);
+            } else {
+                // Not index page, refresh normally
+                if (typeof Swal !== 'undefined') {
+                    Swal.fire({
+                        title: 'Language Changed!',
+                        text: 'The website language has been updated. Refreshing page...',
+                        icon: 'success',
+                        timer: 1500,
+                        showConfirmButton: false,
+                        timerProgressBar: true
+                    }).then(() => {
+                        // Refresh the page to apply new language
+                        window.location.reload();
+                    });
+                } else {
+                    if (typeof showNotification === 'function') {
+                        showNotification('Language changed successfully! Refreshing page...', 'success');
+                    }
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                }
             }
         } else {
             // Show error notification

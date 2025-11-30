@@ -1468,13 +1468,13 @@ try {
 
 		.hero-grid {
 			display: grid;
-			grid-template-columns: 1.2fr 4fr 1.5fr;
+			grid-template-columns: 1.5fr 4fr 1.5fr;
 			/* left banner | hero carousel | right side banners */
 			gap: 28px;
 			/* spacing between cards */
 			align-items: stretch;
-			min-height: 620px;
-			/* increased height for better text arrangement */
+			min-height: 480px;
+			/* shorter height for better proportions */
 		}
 
 		/* ——— Hero Carousel Wrapper ——— */
@@ -1482,7 +1482,7 @@ try {
 			position: relative;
 			width: 100%;
 			height: 100%;
-			min-height: 620px;
+			min-height: 480px;
 			border-radius: 14px;
 			overflow: hidden;
 			background: #f0f4f8;
@@ -3331,7 +3331,8 @@ try {
 		.side-card.purple {
 			background: linear-gradient(135deg, #2563EB, #1e40af);
 			/* vibrant blue gradient */
-			color: #fff;
+			color: #111;
+			/* black text for better contrast */
 			padding: 36px 16px 36px 28px;
 			/* reduced right padding from 28px to 16px */
 			grid-template-columns: 1fr;
@@ -3352,6 +3353,8 @@ try {
 			word-wrap: break-word;
 			overflow-wrap: break-word;
 			line-height: 1.3 !important;
+			color: #111;
+			/* black text */
 		}
 
 		/* Countdown Timer Styles */
@@ -3367,12 +3370,12 @@ try {
 			display: flex;
 			flex-direction: column;
 			align-items: center;
-			background: rgba(255, 255, 255, 0.15);
-			backdrop-filter: blur(10px);
+			background: linear-gradient(135deg, #ffb3ba 0%, #ffcccb 30%, #b3d9ff 70%, #87ceeb 100%);
+			/* light blue gradient matching iPad gradient */
 			padding: 12px 16px;
 			border-radius: 10px;
 			min-width: 60px;
-			border: 1px solid rgba(255, 255, 255, 0.2);
+			border: 1px solid rgba(179, 217, 255, 0.3);
 		}
 
 		.countdown-number {
@@ -3380,7 +3383,8 @@ try {
 			font-weight: 800;
 			line-height: 1;
 			margin-bottom: 4px;
-			color: #fff;
+			color: #111;
+			/* black text */
 		}
 
 		.countdown-label {
@@ -3388,7 +3392,8 @@ try {
 			font-weight: 600;
 			text-transform: uppercase;
 			letter-spacing: 0.5px;
-			color: rgba(255, 255, 255, 0.9);
+			color: #333;
+			/* dark gray/black text */
 		}
 
 		/* texts on side cards */
@@ -3435,7 +3440,7 @@ try {
 			border-radius: 14px;
 			position: relative;
 			overflow: hidden;
-			min-height: 620px;
+			min-height: 480px;
 			display: flex;
 			align-items: center;
 			justify-content: center;

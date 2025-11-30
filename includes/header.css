@@ -747,6 +747,7 @@ body.dark-mode .simple-dropdown ul li a:hover {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     margin: 0;
     width: 100%;
+    overflow: visible !important;
 }
 
 .nav-menu {
@@ -754,6 +755,9 @@ body.dark-mode .simple-dropdown ul li a:hover {
     align-items: center;
     width: 100%;
     padding-left: 280px;
+    overflow: visible !important;
+    position: relative;
+    z-index: 100000;
 }
 
 .nav-item {
@@ -884,8 +888,10 @@ body.dark-mode .simple-dropdown ul li a:hover {
 
 /* Navigation Dropdown Styles */
 .nav-dropdown {
-    position: relative;
+    position: relative !important;
     display: inline-block;
+    z-index: 100000 !important;
+    overflow: visible !important;
 }
 
 .simple-dropdown {
@@ -952,9 +958,10 @@ body.dark-mode .simple-dropdown ul li a:hover {
     visibility: hidden;
     transform: translateY(-10px);
     transition: all 0.3s ease;
-    z-index: 10000 !important;
-    display: block;
+    z-index: 99999 !important;
+    display: block !important;
     pointer-events: none;
+    margin-top: 8px;
 }
 
 .mega-dropdown.show {
@@ -963,6 +970,7 @@ body.dark-mode .simple-dropdown ul li a:hover {
     transform: translateY(0) !important;
     display: block !important;
     pointer-events: auto !important;
+    z-index: 99999 !important;
 }
 
 .dropdown-content {
@@ -1057,5 +1065,24 @@ body.dark-mode .simple-dropdown ul li a:hover {
 .shop-now-btn:hover {
     background: #006b4e;
     color: white;
+}
+
+/* CRITICAL: Ensure dropdowns are never clipped on any page */
+body, html {
+    overflow-x: hidden;
+}
+
+/* Ensure nav containers don't clip dropdowns */
+.main-nav,
+.nav-menu,
+.nav-dropdown,
+.container-fluid {
+    overflow: visible !important;
+}
+
+/* Force mega dropdown to be above everything */
+#shopCategoryDropdown {
+    z-index: 99999 !important;
+    position: absolute !important;
 }
 

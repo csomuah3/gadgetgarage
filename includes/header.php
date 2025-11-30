@@ -424,6 +424,8 @@ window.showShopDropdown = function() {
         dropdown.style.display = 'block';
         dropdown.style.opacity = '1';
         dropdown.style.visibility = 'visible';
+        dropdown.style.zIndex = '99999';
+        dropdown.style.pointerEvents = 'auto';
     }
 };
 
@@ -435,6 +437,7 @@ window.hideShopDropdown = function() {
             dropdown.classList.remove('show');
             dropdown.style.opacity = '0';
             dropdown.style.visibility = 'hidden';
+            dropdown.style.pointerEvents = 'none';
         }, 300);
     }
 };

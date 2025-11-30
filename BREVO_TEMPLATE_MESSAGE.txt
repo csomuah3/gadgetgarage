@@ -1,2 +1,0 @@
-Hi {{contact.FIRSTNAME}}! Your order #{{params.ORDER_ID}} has been confirmed. Total: GH¢{{params.AMOUNT}}. Expected delivery: {{params.DELIVERY_DATE}}. Track: {{params.TRACKING_URL}}
-

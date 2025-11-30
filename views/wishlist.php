@@ -641,7 +641,8 @@ $first_name = explode(' ', $user_name)[0];
             }
         });
 
-        function removeFromWishlist(productId, button) {
+        // Remove from Wishlist Function (Make globally available)
+        window.removeFromWishlist = function(productId, button) {
             fetch('../actions/remove_from_wishlist.php', {
                     method: 'POST',
                     headers: {
@@ -677,7 +678,8 @@ $first_name = explode(' ', $user_name)[0];
                 });
         }
 
-        function addToCartFromWishlist(productId) {
+        // Add to Cart from Wishlist Function (Make globally available)
+        window.addToCartFromWishlist = function(productId) {
             fetch('../actions/add_to_cart.php', {
                     method: 'POST',
                     headers: {

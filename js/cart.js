@@ -840,7 +840,7 @@ function showAddedToCartPopup(data) {
     popup.innerHTML = `
         <div class="cart-popup">
             <div class="cart-popup-header">
-                <h3><i class="fas fa-check-circle text-success"></i> Added to Cart!</h3>
+                <h3><i class="fas fa-check-circle" style="color: #2563eb;"></i> Added to Cart!</h3>
                 <button class="cart-popup-close" onclick="closeAddedToCartPopup()">
                     <i class="fas fa-times"></i>
                 </button>
@@ -1243,15 +1243,17 @@ style.textContent = `
         left: 0;
         width: 100%;
         height: 100%;
-        background: rgba(0, 0, 0, 0.5);
+        background: transparent;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: flex-end;
+        align-items: flex-start;
+        padding-top: 120px;
+        padding-right: 20px;
         z-index: 10001;
         opacity: 0;
         visibility: hidden;
         transition: all 0.3s ease;
-        backdrop-filter: blur(3px);
+        pointer-events: none;
     }
 
     .cart-popup-overlay.show {
@@ -1265,18 +1267,19 @@ style.textContent = `
         width: 90%;
         max-width: 520px;
         box-shadow: 0 25px 80px rgba(0, 0, 0, 0.25);
-        transform: scale(0.8) translateY(30px);
+        transform: translateX(100px);
         transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         overflow: hidden;
         border: 1px solid rgba(255, 255, 255, 0.2);
+        pointer-events: auto;
     }
 
     .cart-popup-overlay.show .cart-popup {
-        transform: scale(1) translateY(0);
+        transform: translateX(0);
     }
 
     .cart-popup-header {
-        background: linear-gradient(135deg, #10b981, #059669);
+        background: linear-gradient(135deg, #2563eb, #1d4ed8);
         color: white;
         padding: 20px 24px;
         display: flex;
@@ -1394,7 +1397,7 @@ style.textContent = `
     .item-price {
         font-size: 1.2rem;
         font-weight: 700;
-        color: #059669;
+        color: #2563eb;
     }
 
     .cart-summary {
@@ -1429,7 +1432,7 @@ style.textContent = `
     }
 
     .subtotal strong {
-        color: #059669;
+        color: #2563eb;
         font-size: 1.2rem;
     }
 
@@ -1437,17 +1440,17 @@ style.textContent = `
         display: flex;
         align-items: center;
         gap: 8px;
-        background: #dcfdf7;
-        color: #065f46;
+        background: #dbeafe;
+        color: #1e40af;
         padding: 8px 12px;
         border-radius: 8px;
         font-size: 0.9rem;
         font-weight: 600;
-        border: 1px solid #a7f3d0;
+        border: 1px solid #93c5fd;
     }
 
     .shipping-badge i {
-        color: #059669;
+        color: #2563eb;
     }
 
     .cart-popup-footer {

@@ -32,22 +32,57 @@ log_paystack_activity('info', 'PayStack callback accessed', [
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+            background: transparent;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            position: relative;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('http://169.239.251.102:442/~chelsea.somuah/uploads/ChatGPTImageNov19202511_50_42PM.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.7;
+            z-index: -2;
+            pointer-events: none;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #065079 0%, #a6cfed 33%, #006ab8 66%, #70c2ff 100%);
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            opacity: 0.85;
+            z-index: -1;
+            pointer-events: none;
         }
 
         .payment-container {
             max-width: 500px;
             width: 90%;
-            background: white;
+            background: rgba(255, 255, 255, 0.95);
             padding: 60px 40px;
             border-radius: 20px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .spinner {

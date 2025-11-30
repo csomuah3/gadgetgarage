@@ -1,6 +1,17 @@
 <?php
+// Start output buffering to catch any errors/warnings
+ob_start();
+
+// Suppress error display (we'll catch them in logs)
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+error_reporting(E_ALL);
+
 session_start();
 header('Content-Type: application/json');
+
+// Clear any output that might have been generated
+ob_clean();
 
 require_once __DIR__ . '/../../settings/core.php';
 require_admin(); // Only admins can access this
@@ -123,6 +134,8 @@ try {
         $message = "Request approved successfully.";
     }
 
+    // Clean any output and send JSON response
+    ob_clean();
     echo json_encode([
         'status' => 'success',
         'message' => $message,
@@ -130,12 +143,28 @@ try {
         'payment_method' => $request['payment_method'],
         'amount' => $request['final_amount']
     ]);
+    ob_end_flush();
+    exit();
 
 } catch (Exception $e) {
     error_log("Device Drop Approval Error: " . $e->getMessage());
+    
+    // Clean any output and send error JSON
+    ob_clean();
     echo json_encode([
         'status' => 'error',
         'message' => 'Failed to approve request: ' . $e->getMessage()
     ]);
+    ob_end_flush();
+    exit();
 }
+
+// Fallback - should never reach here
+ob_clean();
+echo json_encode([
+    'status' => 'error',
+    'message' => 'Unexpected error occurred'
+]);
+ob_end_flush();
+exit();
 ?>

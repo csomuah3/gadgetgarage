@@ -193,12 +193,31 @@ $is_logged_in = isset($_SESSION['user_id']);
                                 <i class="fas fa-globe"></i>
                                 <div class="language-selector">
                                     <span>Language</span>
-                                    <select class="form-select form-select-sm" style="border: none; background: transparent; font-size: 0.8rem;" onchange="changeLanguage(this.value)">
-                                        <option value="en">🇬🇧 EN</option>
-                                        <option value="es">🇪🇸 ES</option>
-                                        <option value="fr">🇫🇷 FR</option>
-                                        <option value="de">🇩🇪 DE</option>
-                                    </select>
+                                    <?php
+                                    // Get current language from session
+                                    require_once(__DIR__ . '/language_config.php');
+                                    $current_lang = $_SESSION['language'] ?? 'en';
+                                    $current_lang_data = $available_languages[$current_lang] ?? $available_languages['en'];
+                                    ?>
+                                    <div class="custom-language-dropdown" id="languageDropdown">
+                                        <div class="language-dropdown-selected" id="language-selected">
+                                            <span class="language-flag"><?php echo $current_lang_data['flag']; ?></span>
+                                            <span class="language-code"><?php echo $current_lang_data['code']; ?></span>
+                                            <i class="fas fa-chevron-down language-dropdown-arrow"></i>
+                                        </div>
+                                        <div class="language-dropdown-options" id="language-options">
+                                            <?php foreach ($available_languages as $lang_code => $lang_data): ?>
+                                                <div class="language-dropdown-option <?php echo $lang_code === $current_lang ? 'selected' : ''; ?>" 
+                                                     data-value="<?php echo $lang_code; ?>">
+                                                    <span class="language-flag"><?php echo $lang_data['flag']; ?></span>
+                                                    <span class="language-name"><?php echo $lang_data['name']; ?> (<?php echo $lang_data['code']; ?>)</span>
+                                                    <?php if ($lang_code === $current_lang): ?>
+                                                        <i class="fas fa-check language-check"></i>
+                                                    <?php endif; ?>
+                                                </div>
+                                            <?php endforeach; ?>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <div class="dropdown-item-custom">

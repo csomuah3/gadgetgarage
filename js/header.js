@@ -63,6 +63,93 @@ function closeDropdownOnOutsideClick(event) {
 }
 
 /**
+ * Initialize custom language dropdown
+ */
+function initializeLanguageDropdown() {
+    const dropdown = document.getElementById('languageDropdown');
+    if (!dropdown) return;
+
+    const selected = document.getElementById('language-selected');
+    const options = document.getElementById('language-options');
+    const optionsList = options.querySelectorAll('.language-dropdown-option');
+
+    // Toggle dropdown on click
+    selected.addEventListener('click', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const isActive = selected.classList.contains('active');
+
+        // Close all other dropdowns
+        document.querySelectorAll('.language-dropdown-selected.active').forEach(sel => {
+            if (sel !== selected) {
+                sel.classList.remove('active');
+            }
+        });
+        document.querySelectorAll('.language-dropdown-options').forEach(opts => {
+            if (opts !== options) {
+                opts.style.display = 'none';
+            }
+        });
+
+        if (isActive) {
+            selected.classList.remove('active');
+            options.style.display = 'none';
+        } else {
+            selected.classList.add('active');
+            options.style.display = 'block';
+        }
+    });
+
+    // Handle option selection
+    optionsList.forEach(option => {
+        option.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const langCode = option.getAttribute('data-value');
+            
+            // Update selected display
+            const flag = option.querySelector('.language-flag').textContent;
+            const langName = option.querySelector('.language-name').textContent;
+            const codeMatch = langName.match(/\((\w+)\)/);
+            const code = codeMatch ? codeMatch[1] : langCode.toUpperCase();
+
+            selected.querySelector('.language-flag').textContent = flag;
+            selected.querySelector('.language-code').textContent = code;
+
+            // Update selected state
+            optionsList.forEach(opt => opt.classList.remove('selected'));
+            option.classList.add('selected');
+
+            // Add checkmark to selected option
+            optionsList.forEach(opt => {
+                const check = opt.querySelector('.language-check');
+                if (check) check.remove();
+            });
+            const checkIcon = document.createElement('i');
+            checkIcon.className = 'fas fa-check language-check';
+            option.appendChild(checkIcon);
+
+            // Close dropdown
+            selected.classList.remove('active');
+            options.style.display = 'none';
+
+            // Change language
+            changeLanguage(langCode);
+        });
+    });
+
+    // Close dropdown when clicking outside
+    document.addEventListener('click', function(e) {
+        if (!dropdown.contains(e.target)) {
+            selected.classList.remove('active');
+            options.style.display = 'none';
+        }
+    });
+}
+
+/**
  * Change website language
  */
 function changeLanguage(language) {
@@ -70,8 +157,14 @@ function changeLanguage(language) {
 
     // Show loading state
     const languageSelect = document.querySelector('select[onchange*="changeLanguage"]');
+    const languageDropdown = document.getElementById('language-selected');
+    
     if (languageSelect) {
         languageSelect.disabled = true;
+    }
+    if (languageDropdown) {
+        languageDropdown.style.opacity = '0.6';
+        languageDropdown.style.pointerEvents = 'none';
     }
 
     // Show loading notification
@@ -129,6 +222,10 @@ function changeLanguage(language) {
             if (languageSelect) {
                 languageSelect.disabled = false;
             }
+            if (languageDropdown) {
+                languageDropdown.style.opacity = '1';
+                languageDropdown.style.pointerEvents = 'auto';
+            }
         }
     })
     .catch(error => {
@@ -151,6 +248,10 @@ function changeLanguage(language) {
         // Re-enable the select
         if (languageSelect) {
             languageSelect.disabled = false;
+        }
+        if (languageDropdown) {
+            languageDropdown.style.opacity = '1';
+            languageDropdown.style.pointerEvents = 'auto';
         }
     });
 }
@@ -297,6 +398,9 @@ document.addEventListener('DOMContentLoaded', function() {
     if (languageSelect) {
         languageSelect.value = currentLang;
     }
+
+    // Initialize custom language dropdown
+    initializeLanguageDropdown();
 
     console.log('Header JavaScript initialized');
 });

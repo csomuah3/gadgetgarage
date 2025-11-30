@@ -3445,14 +3445,17 @@ try {
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: transparent;
             z-index: 10000;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            align-items: flex-start;
+            justify-content: flex-end;
+            padding-top: 120px;
+            padding-right: 20px;
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
+            pointer-events: none;
         }
 
         .cart-popup-overlay.show {
@@ -3467,13 +3470,14 @@ try {
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
-            transform: scale(0.8);
+            transform: translateX(100px);
             transition: transform 0.3s ease;
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            pointer-events: auto;
         }
 
         .cart-popup-overlay.show .cart-popup {
-            transform: scale(1);
+            transform: translateX(0);
         }
 
         .cart-popup-header {
@@ -3482,7 +3486,7 @@ try {
             align-items: center;
             padding: 20px;
             border-bottom: 1px solid #e5e7eb;
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
             border-radius: 12px 12px 0 0;
         }
@@ -3564,7 +3568,7 @@ try {
         .item-price {
             font-size: 1.1rem;
             font-weight: 700;
-            color: #10b981;
+            color: #2563eb;
         }
 
         .cart-summary {
@@ -3592,7 +3596,7 @@ try {
         }
 
         .shipping-badge {
-            background: linear-gradient(135deg, #10b981, #059669);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
             padding: 8px 12px;
             border-radius: 6px;
@@ -4164,7 +4168,7 @@ function showAddedToCartPopup(data) {
     popup.innerHTML =
         '<div class="cart-popup">' +
             '<div class="cart-popup-header">' +
-                '<h3><i class="fas fa-check-circle text-success"></i> Added to Cart!</h3>' +
+                '<h3><i class="fas fa-check-circle" style="color: #2563eb;"></i> Added to Cart!</h3>' +
                 '<button class="cart-popup-close" onclick="closeAddedToCartPopup()">' +
                     '<i class="fas fa-times"></i>' +
                 '</button>' +

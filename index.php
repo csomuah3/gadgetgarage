@@ -3251,11 +3251,14 @@ try {
 			color: #111;
 			margin-bottom: 8px;
 			opacity: 0.9;
+			animation: bounce 2.2s ease-in-out infinite;
 		}
 
 		.trade-in-card .side-title {
 			margin-bottom: 8px;
 			line-height: 1.2;
+			animation: bounce 2s ease-in-out infinite;
+			animation-delay: 0.2s;
 		}
 
 		.trade-in-incentive {
@@ -3264,6 +3267,8 @@ try {
 			color: #d97706;
 			margin: 4px 0;
 			line-height: 1.3;
+			animation: bounceGentle 2.5s ease-in-out infinite;
+			animation-delay: 0.5s;
 		}
 
 		.trade-in-subtext {
@@ -3271,6 +3276,8 @@ try {
 			color: #555;
 			margin: 4px 0 12px;
 			line-height: 1.4;
+			animation: bounceGentle 3s ease-in-out infinite;
+			animation-delay: 0.8s;
 		}
 
 		.trade-in-btn {
@@ -3287,6 +3294,8 @@ try {
 			transition: all 0.3s ease;
 			margin-top: 8px;
 			border: 2px solid #111;
+			animation: bounceGentle 2.8s ease-in-out infinite;
+			animation-delay: 1s;
 		}
 
 		.trade-in-btn:hover {
@@ -3295,6 +3304,32 @@ try {
 			transform: translateY(-2px);
 			box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
 		}
+
+		/* Bouncing Animation for Trade-In Card Text */
+		@keyframes bounce {
+
+			0%,
+			100% {
+				transform: translateY(0);
+			}
+
+			50% {
+				transform: translateY(-10px);
+			}
+		}
+
+		@keyframes bounceGentle {
+
+			0%,
+			100% {
+				transform: translateY(0);
+			}
+
+			50% {
+				transform: translateY(-6px);
+			}
+		}
+
 
 		.side-card.purple {
 			background: linear-gradient(135deg, #2563EB, #1e40af);

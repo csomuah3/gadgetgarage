@@ -1,10 +1,25 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+ini_set('display_errors', 0);
+ini_set('display_startup_errors', 0);
 error_reporting(E_ALL);
 
 require_once __DIR__ . '/../settings/core.php';
-require_admin(); // only admins
+
+// Check admin access for proper error handling
+if (!check_admin()) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        // If it's an AJAX/form request, return JSON error
+        header('Content-Type: application/json');
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Access denied. Admin privileges required.'
+        ]);
+        exit();
+    } else {
+        // If it's a page request, redirect to login
+        redirect('/login/login.php');
+    }
+}
 
 $page_title = "Support Messages";
 

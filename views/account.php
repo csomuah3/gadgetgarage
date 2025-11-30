@@ -27,6 +27,16 @@ try {
     $wishlist_items = get_wishlist_items_ctr($customer_id);
     $wishlist_items = array_slice($wishlist_items, 0, 4); // Limit to 4 items for dashboard
 
+    // Get store credit balance for dashboard display
+    $store_credit_balance = 0;
+    try {
+        require_once(__DIR__ . '/../helpers/store_credit_helper.php');
+        $storeCreditHelper = new StoreCreditHelper();
+        $store_credit_balance = $storeCreditHelper->getTotalAvailableCredit($customer_id);
+    } catch (Exception $e) {
+        error_log("Failed to load store credit balance: " . $e->getMessage());
+    }
+
     // Get random products for "Recommended for You"
     $all_products = get_all_products_ctr();
     shuffle($all_products);
@@ -1437,6 +1447,44 @@ try {
         <main class="content-area">
             <div class="page-header">
                 <h1 class="page-title">HI, <?= strtoupper(htmlspecialchars($first_name)) ?>!</h1>
+            </div>
+
+            <!-- Account Stats -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-credit-card"></i>
+                    </div>
+                    <div class="stat-value">GH₵<?= number_format($store_credit_balance, 2) ?></div>
+                    <div class="stat-label">Store Credits</div>
+                    <?php if ($store_credit_balance > 0): ?>
+                        <small class="text-success">Available for shopping</small>
+                    <?php else: ?>
+                        <small class="text-muted">Drop off devices to earn credits</small>
+                    <?php endif; ?>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-shopping-cart"></i>
+                    </div>
+                    <div class="stat-value"><?= $cart_count ?></div>
+                    <div class="stat-label">Cart Items</div>
+                    <?php if ($cart_count > 0): ?>
+                        <small class="text-primary">Total: GH₵<?= number_format($cart_total, 2) ?></small>
+                    <?php else: ?>
+                        <small class="text-muted">Your cart is empty</small>
+                    <?php endif; ?>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <div class="stat-value"><?= count($wishlist_items) ?></div>
+                    <div class="stat-label">Wishlist Items</div>
+                    <small class="text-muted">Items you want to buy later</small>
+                </div>
             </div>
 
             <div class="dashboard-container">

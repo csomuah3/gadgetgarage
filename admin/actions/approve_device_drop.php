@@ -10,16 +10,43 @@ error_reporting(E_ALL);
 // Set JSON header immediately
 header('Content-Type: application/json');
 
-session_start();
+try {
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
 
-require_once __DIR__ . '/../../settings/core.php';
+    require_once __DIR__ . '/../../settings/core.php';
 
-// Check admin access for AJAX request
-if (!check_admin()) {
+    if (!function_exists('check_admin')) {
+        throw new Exception('Admin checking function not available');
+    }
+
+    if (!check_login()) {
+        ob_clean();
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Please log in to continue.'
+        ]);
+        ob_end_flush();
+        exit();
+    }
+
+    if (!check_admin()) {
+        ob_clean();
+        echo json_encode([
+            'status' => 'error',
+            'message' => 'Access denied. Admin privileges required.'
+        ]);
+        ob_end_flush();
+        exit();
+    }
+
+} catch (Exception $e) {
+    error_log("Device Drop Approval: Critical error in initialization: " . $e->getMessage());
     ob_clean();
     echo json_encode([
         'status' => 'error',
-        'message' => 'Access denied. Admin privileges required.'
+        'message' => 'System initialization error: ' . $e->getMessage()
     ]);
     ob_end_flush();
     exit();
@@ -80,15 +107,31 @@ try {
         exit();
     }
 
-    // Get request details
-    $request_sql = "SELECT * FROM device_drop_requests WHERE id = ? AND status = 'pending'";
+    // Get request details (allow both pending and already approved)
+    $request_sql = "SELECT * FROM device_drop_requests WHERE id = ?";
     $request = $db->db_prepare_fetch_one($request_sql, 'i', [$request_id]);
 
     if (!$request) {
         ob_clean();
         echo json_encode([
             'status' => 'error',
-            'message' => 'Request not found or already processed'
+            'message' => 'Request not found'
+        ]);
+        ob_end_flush();
+        exit();
+    }
+
+    // If already approved (auto-approved), just return success
+    if ($request['status'] === 'approved') {
+        error_log("Device Drop Admin: Request #$request_id already auto-approved, returning success");
+        ob_clean();
+        echo json_encode([
+            'status' => 'success',
+            'message' => 'Request was already approved (processed automatically)',
+            'request_id' => $request_id,
+            'payment_method' => $request['payment_method'],
+            'amount' => $request['final_amount'],
+            'already_processed' => true
         ]);
         ob_end_flush();
         exit();

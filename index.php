@@ -1470,12 +1470,12 @@ try {
 		display: grid;
 		grid-template-columns: 4fr 1.5fr;
 		/* hero carousel | right side banners */
-		gap: 12px;
+		gap: 20px;
 		/* spacing between cards */
 		align-items: start;
-		min-height: 150px !important;
-		max-height: 150px !important;
-		height: 150px !important;
+		min-height: 420px !important;
+		max-height: 420px !important;
+		height: 420px !important;
 		/* hero height */
 	}
 
@@ -1484,10 +1484,10 @@ try {
 	.hero-carousel-wrapper {
 		position: relative;
 		width: 100%;
-		height: 150px !important;
-		min-height: 150px !important;
-		max-height: 150px !important;
-		border-radius: 12px;
+		height: 420px !important;
+		min-height: 420px !important;
+		max-height: 420px !important;
+		border-radius: 16px;
 		overflow: visible;
 		background: #f0f4f8;
 		/* Fallback background */
@@ -1506,18 +1506,18 @@ try {
 	.hero-slide {
 		display: none;
 		grid-template-columns: 1.5fr 1fr;
-		gap: 20px;
-		padding: 20px 30px !important;
-		border-radius: 12px;
+		gap: 40px;
+		padding: 50px 60px !important;
+		border-radius: 16px;
 		overflow: hidden;
 		align-items: center;
 		position: absolute;
 		top: 0;
 		left: 0;
 		width: 100%;
-		height: 150px !important;
-		min-height: 150px !important;
-		max-height: 150px !important;
+		height: 420px !important;
+		min-height: 420px !important;
+		max-height: 420px !important;
 		opacity: 0;
 		visibility: hidden;
 		z-index: 1;
@@ -1777,8 +1777,8 @@ try {
 		display: flex;
 		flex-direction: column;
 		justify-content: center;
-		gap: 12px;
-		padding: 10px 0;
+		gap: 24px;
+		padding: 20px 0;
 	}
 
 		/* Brand Logo Section */
@@ -2162,10 +2162,10 @@ try {
 		/* ——— Right column (two stacked cards) ——— */
 	.side-banners {
 		display: grid;
-		grid-template-rows: 1fr;
-		gap: 12px;
-		height: 150px !important;
-		max-height: 150px !important;
+		grid-template-rows: 1fr 1fr;
+		gap: 20px;
+		height: 420px !important;
+		max-height: 420px !important;
 		overflow: hidden;
 	}
 
